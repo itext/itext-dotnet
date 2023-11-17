@@ -133,7 +133,29 @@ namespace iText.Signatures {
         }
 
         internal static List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
-            return FACTORY.CreateX509CertificateParser().ReadAllCerts(contentsKey);
+            List<IX509Certificate> certificates = FACTORY.CreateX509CertificateParser().ReadAllCerts(contentsKey);
+            if (certificates.IsEmpty()) {
+                using (MemoryStream data = new MemoryStream(contentsKey)) {
+                    certificates = FACTORY.GetBouncyCastleUtil().ReadPkcs7Certs(data);
+                }
+            }
+
+            return certificates;
+        }
+        
+        internal static List<IX509Certificate> ReadAllCerts(Stream data) {
+            using (MemoryStream bout = new MemoryStream()) {
+                byte[] buf = new byte[1024];
+                while (true) {
+                    int n = data.JRead(buf, 0, buf.Length);
+                    if (n <= 0) {
+                        break;
+                    }
+                    bout.Write(buf, 0, n);
+                }
+                byte[] certsData = bout.ToArray();
+                return ReadAllCerts(certsData);
+            }
         }
 
         internal static T GetFirstElement<T>(IEnumerable<T> enumerable) {

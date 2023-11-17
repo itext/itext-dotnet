@@ -100,6 +100,8 @@ namespace iText.Bouncycastle {
         private static readonly BouncyCastleTestConstantsFactory BOUNCY_CASTLE_TEST_CONSTANTS =
             new BouncyCastleTestConstantsFactory();
 
+        private static readonly IBouncyCastleUtil BOUNCY_CASTLE_UTIL = new BouncyCastleUtil();
+
         /// <summary>
         /// Creates
         /// <see cref="iText.Commons.Bouncycastle.IBouncyCastleFactory"/>
@@ -432,7 +434,6 @@ namespace iText.Bouncycastle {
                 return new BasicOcspResponseBC((BasicOcspResponse) response);
             }
             return null;
-            
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1058,8 +1059,8 @@ namespace iText.Bouncycastle {
             return false;
         }
         
-        /// <inheritdoc/>
-        public void  IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
+        /// <summary><inheritDoc/></summary>
+        public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
             // all features supported
         }
         
@@ -1068,7 +1069,12 @@ namespace iText.Bouncycastle {
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
         }
 
-        private class BouncyCastlePasswordFinder : IPasswordFinder {
+        /// <summary><inheritDoc/></summary>
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
+            return BOUNCY_CASTLE_UTIL;
+        } 
+
+        internal class BouncyCastlePasswordFinder : IPasswordFinder {
             private readonly char[] password;
 
             public BouncyCastlePasswordFinder(char[] password) {

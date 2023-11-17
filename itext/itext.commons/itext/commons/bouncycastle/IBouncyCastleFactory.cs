@@ -1511,5 +1511,11 @@ namespace iText.Commons.Bouncycastle {
         ///             AES_256 = 5</param>
         /// <param name="withCertificate"> true when used with a certificate, false otherwise</param>        
         void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate);
+
+        /// <summary>
+        /// Get Bouncy-Castle Util instance implementation related to this <see cref="IBouncyCastleFactory"/>
+        /// </summary>
+        /// <returns><see cref="IBouncyCastleUtil"/> instance implementation</returns>
+        IBouncyCastleUtil GetBouncyCastleUtil();
     }
 }

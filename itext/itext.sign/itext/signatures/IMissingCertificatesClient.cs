@@ -20,20 +20,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
+using iText.Commons.Bouncycastle.Cert;
 
-namespace iText.Signatures.Logs {
-    /// <summary>Class which contains constants to be used in logging inside sign module.</summary>
-    public sealed class SignLogMessageConstant {
-        public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
-
-        public const String EXCEPTION_WITHOUT_MESSAGE = "Unexpected exception without message was thrown during keystore processing";
-
-        public const String UNABLE_TO_PARSE_AIA_CERT = "Unable to parse certificates coming from authority info " 
-            + "access extension. Those won't be included into the certificate chain.";
-
-        private SignLogMessageConstant() {
-        }
-        // Private constructor will prevent the instantiation of this class directly
+namespace iText.Signatures {
+    /// <summary>Interface client to support Certificate Chain with Missing Certificates.</summary>
+    public interface IMissingCertificatesClient {
+        /// <summary>Retrieves missing certificates in chain using Authority Information Access (AIA) Extension.</summary>
+        /// <param name="chain">certificate chain to restore with at least signing certificate.</param>
+        /// <returns>
+        /// full chain of trust or maximum chain that could be restored in case missing certificates cannot be
+        /// retrieved from AIA extension.
+        /// </returns>
+        IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] chain);
     }
 }

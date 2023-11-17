@@ -102,6 +102,7 @@ namespace iText.Bouncycastlefips {
     public class BouncyCastleFipsFactory : IBouncyCastleFactory {
         private static readonly String PROVIDER_NAME = "BCFIPS";
         private static readonly BouncyCastleFipsTestConstantsFactory BOUNCY_CASTLE_FIPS_TEST_CONSTANTS = new BouncyCastleFipsTestConstantsFactory();
+        private static readonly IBouncyCastleUtil BOUNCY_CASTLE_UTIL = new BouncyCastleFipsUtil();
         private static readonly String FIPS_MODE_ENVIRONMENT_VARIABLE_NAME = "ITEXT_DOTNET_BOUNCY_CASTLE_FIPS_MODE";
         private static readonly String APPROVED_MODE_VALUE = "approved_mode";
 
@@ -1120,7 +1121,7 @@ namespace iText.Bouncycastlefips {
             return CryptoServicesRegistrar.IsInApprovedOnlyMode();
         }
         
-        /// <inheritdoc/>
+        /// <summary><inheritDoc/></summary>
         public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
             if (withCertificate) {
                 throw new UnsupportedEncryptionFeatureException(
@@ -1137,6 +1138,11 @@ namespace iText.Bouncycastlefips {
                 .SetPersonalizationString(personalizationString).Build(
                     entropySource.GenerateSeed(256 / (2 * 8)), true, 
                     Strings.ToByteArray("number only used once"));
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
+            return BOUNCY_CASTLE_UTIL;
         }
         
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {

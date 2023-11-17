@@ -117,6 +117,33 @@ namespace iText.Signatures {
             return null;
         }
 
+        // Missing certificates in chain
+        /// <summary>Retrieves the URL for the issuer lists certificates for the given certificate.</summary>
+        /// <param name="certificate">the certificate</param>
+        /// <returns>the URL or null.</returns>
+        public static String GetIssuerCertURL(IX509Certificate certificate) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
+                if (obj == null) {
+                    return null;
+                }
+                IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(obj);
+                for (int i = 0; i < accessDescriptions.Size(); i++) {
+                    IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
+                    IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
+                    if (accessDescription.Size() == 2 && id != null && SecurityIDs.ID_CA_ISSUERS.Equals(id.GetId())) {
+                        IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
+                        return GetStringFromGeneralName(description);
+                    }
+                }
+            }
+            catch (System.IO.IOException) {
+                return null;
+            }
+            return null;
+        }
+
         // Time Stamp Authority
         /// <summary>Gets the URL of the TSA if it's available on the certificate</summary>
         /// <param name="certificate">a certificate</param>
@@ -137,6 +164,22 @@ namespace iText.Signatures {
             catch (System.IO.IOException) {
                 return null;
             }
+        }
+
+        /// <summary>Checks if the certificate is signed by provided issuer certificate.</summary>
+        /// <param name="subjectCertificate">a certificate to check</param>
+        /// <param name="issuerCertificate">an issuer certificate to check</param>
+        /// <returns>true if the first passed certificate is signed by next passed certificate.</returns>
+        internal static bool IsIssuerCertificate(IX509Certificate subjectCertificate, IX509Certificate issuerCertificate
+            ) {
+            return subjectCertificate.GetIssuerDN().Equals(issuerCertificate.GetSubjectDN());
+        }
+
+        /// <summary>Checks if the certificate is self-signed.</summary>
+        /// <param name="certificate">a certificate to check</param>
+        /// <returns>true if the certificate is self-signed.</returns>
+        internal static bool IsSelfSigned(IX509Certificate certificate) {
+            return certificate.GetIssuerDN().Equals(certificate.GetSubjectDN());
         }
 
         // helper methods

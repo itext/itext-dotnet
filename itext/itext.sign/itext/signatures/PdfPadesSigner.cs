@@ -49,6 +49,8 @@ namespace iText.Signatures {
 
         private ICrlClient crlClient;
 
+        private IMissingCertificatesClient missingCertificatesClient = new MissingCertificatesClient();
+
         private int estimatedSize = 0;
 
         private String timestampSignatureName;
@@ -103,7 +105,8 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineBProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IExternalSignature externalSignature) {
-            PerformSignDetached(signerProperties, true, externalSignature, chain, null);
+            IX509Certificate[] fullChain = missingCertificatesClient.RetrieveMissingCertificates(chain);
+            PerformSignDetached(signerProperties, true, externalSignature, fullChain, null);
         }
 
         /// <summary>
@@ -151,7 +154,8 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IExternalSignature externalSignature, ITSAClient tsaClient) {
-            PerformSignDetached(signerProperties, true, externalSignature, chain, tsaClient);
+            IX509Certificate[] fullChain = missingCertificatesClient.RetrieveMissingCertificates(chain);
+            PerformSignDetached(signerProperties, true, externalSignature, fullChain, tsaClient);
         }
 
         /// <summary>
@@ -204,9 +208,10 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IExternalSignature externalSignature, ITSAClient tsaClient) {
-            CreateRevocationClients(chain, true);
+            IX509Certificate[] fullChain = missingCertificatesClient.RetrieveMissingCertificates(chain);
+            CreateRevocationClients(fullChain, true);
             try {
-                PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
+                PerformSignDetached(signerProperties, false, externalSignature, fullChain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(outputStream), 
                         new StampingProperties().UseAppendMode())) {
@@ -270,9 +275,10 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTAProfile(SignerProperties signerProperties, IX509Certificate[] chain
             , IExternalSignature externalSignature, ITSAClient tsaClient) {
-            CreateRevocationClients(chain, true);
+            IX509Certificate[] fullChain = missingCertificatesClient.RetrieveMissingCertificates(chain);
+            CreateRevocationClients(fullChain, true);
             try {
-                PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
+                PerformSignDetached(signerProperties, false, externalSignature, fullChain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(CreateOutputStream
                         ()), new StampingProperties().UseAppendMode())) {
@@ -485,6 +491,36 @@ namespace iText.Signatures {
         /// </returns>
         public virtual iText.Signatures.PdfPadesSigner SetCrlClient(ICrlClient crlClient) {
             this.crlClient = crlClient;
+            return this;
+        }
+
+        /// <summary>
+        /// Set
+        /// <see cref="IMissingCertificatesClient"/>
+        /// to be used before main signing operation.
+        /// </summary>
+        /// <remarks>
+        /// Set
+        /// <see cref="IMissingCertificatesClient"/>
+        /// to be used before main signing operation.
+        /// <para />
+        /// If none is set,
+        /// <see cref="MissingCertificatesClient"/>
+        /// instance will be used instead.
+        /// </remarks>
+        /// <param name="missingCertificatesClient">
+        /// 
+        /// <see cref="IMissingCertificatesClient"/>
+        /// instance to be used for getting missing
+        /// certificates in chain.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>.
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetMissingCertificatesClient(IMissingCertificatesClient missingCertificatesClient
+            ) {
+            this.missingCertificatesClient = missingCertificatesClient;
             return this;
         }
 

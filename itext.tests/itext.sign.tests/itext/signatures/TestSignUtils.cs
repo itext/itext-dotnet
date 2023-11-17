@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
@@ -60,6 +61,21 @@ namespace iText.Signatures {
                 SignatureUtil sigUtil = new SignatureUtil(outDocument);
                 PdfPKCS7 signatureData = sigUtil.ReadSignatureData(signatureName);
                 NUnit.Framework.Assert.IsTrue(signatureData.VerifySignatureIntegrityAndAuthenticity());
+            }
+        }
+
+        public static void SignedDocumentContainsCerts(Stream inputStream, IList<IX509Certificate> expectedCertificates
+            ) {
+            using (PdfDocument outDocument = new PdfDocument(new PdfReader(inputStream))) {
+                SignatureUtil sigUtil = new SignatureUtil(outDocument);
+                IList<IX509Certificate> actualCertificates = JavaUtil.ArraysAsList(sigUtil.ReadSignatureData("Signature1")
+                    .GetCertificates());
+                // Searching for every certificate we expect should be in the resulting document.
+                NUnit.Framework.Assert.AreEqual(expectedCertificates.Count, actualCertificates.Count);
+                foreach (IX509Certificate expectedCert in expectedCertificates) {
+                    NUnit.Framework.Assert.IsTrue(actualCertificates.Any((cert) => ((IX509Certificate)cert).GetSubjectDN().Equals
+                        (expectedCert.GetSubjectDN())));
+                }
             }
         }
 

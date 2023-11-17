@@ -20,6 +20,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastlefips.Cert;
@@ -29,6 +31,7 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Cert;
+using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Utilities.IO;
 
 namespace iText.Bouncycastlefips.X509 {
@@ -53,15 +56,46 @@ namespace iText.Bouncycastlefips.X509 {
             List<IX509Certificate> certs = new List<IX509Certificate>();
             sData = null;
             sDataObjectCount = 0;
-            X509Certificate cert;
-            MemoryStream stream = new MemoryStream(contentsKey);
-            while ((cert = ReadCertificate(stream)) != null) {
-                certs.Add(new X509CertificateBCFips(cert));
+            try {
+                // Try parsing der encoded certificates.
+                using (MemoryStream stream = new MemoryStream(contentsKey)) {
+                    X509Certificate cert;
+                    while ((cert = ReadDerCertificate(stream)) != null) {
+                        certs.Add(new X509CertificateBCFips(cert));
+                    }
+                }
             }
+            catch (Exception) {
+                // Certificates aren't der encoded, try parsing pem certificate.
+                try {
+                    using (MemoryStream stream = new MemoryStream(contentsKey)) {
+                        foreach (IX509Certificate certificate in ReadPemCertificates(stream)) {
+                            certs.Add(certificate);
+                        }
+                    }
+                }
+                catch (Exception) {
+                    // Certificates aren't pem encoded, return what we have.
+                }
+            }
+
             return certs;
         }
+
+        private List<IX509Certificate> ReadPemCertificates(MemoryStream stream) {
+            using (TextReader file = new StreamReader(stream)) {
+                OpenSslPemReader reader = new OpenSslPemReader(file);
+                Object readObject = reader.ReadObject();
+                List<IX509Certificate> certificates = new List<IX509Certificate>();
+                while (readObject != null) {
+                    certificates.Add(new X509CertificateBCFips((X509Certificate)readObject));
+                    readObject = reader.ReadObject();
+                }
+                return certificates;
+            }
+        }
         
-        private X509Certificate ReadCertificate(MemoryStream stream) {
+        private X509Certificate ReadDerCertificate(MemoryStream stream) {
             if (sData != null) {
                 if (sDataObjectCount != sData.Count) {
                     return GetCertificate();

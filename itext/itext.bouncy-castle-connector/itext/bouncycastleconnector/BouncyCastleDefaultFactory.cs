@@ -665,5 +665,9 @@ namespace iText.Bouncycastleconnector {
         public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
     }
 }
