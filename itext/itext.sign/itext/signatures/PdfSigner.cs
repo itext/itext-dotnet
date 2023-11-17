@@ -476,6 +476,34 @@ namespace iText.Signatures {
             return this;
         }
 
+        /// <summary>Returns the signing reason.</summary>
+        /// <returns>The signing reason.</returns>
+        public virtual String GetReason() {
+            return appearance.GetReason();
+        }
+
+        /// <summary>Sets the signing reason.</summary>
+        /// <param name="reason">A new signing reason.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetReason(String reason) {
+            appearance.SetReason(reason);
+            return this;
+        }
+
+        /// <summary>Returns the signing location.</summary>
+        /// <returns>The signing location.</returns>
+        public virtual String GetLocation() {
+            return appearance.GetLocation();
+        }
+
+        /// <summary>Sets the signing location.</summary>
+        /// <param name="location">A new signing location.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetLocation(String location) {
+            appearance.SetLocation(location);
+            return this;
+        }
+
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
         /// <remarks>
         /// Signs the document using the detached mode, CMS or CAdES equivalent.
@@ -582,8 +610,8 @@ namespace iText.Signatures {
             }
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
-            dic.SetReason(appearance.GetReason());
-            dic.SetLocation(appearance.GetLocation());
+            dic.SetReason(GetReason());
+            dic.SetLocation(GetLocation());
             dic.SetSignatureCreator(GetSignatureCreator());
             dic.SetContact(GetContact());
             dic.SetDate(new PdfDate(GetSignDate()));
@@ -1233,10 +1261,10 @@ namespace iText.Signatures {
         private PdfSignature CreateSignatureDictionary(bool includeDate) {
             PdfSignature dic = new PdfSignature();
             PdfSignatureAppearance appearance = GetSignatureAppearance();
-            dic.SetReason(appearance.GetReason());
-            dic.SetLocation(appearance.GetLocation());
-            dic.SetSignatureCreator(appearance.GetSignatureCreator());
-            dic.SetContact(appearance.GetContact());
+            dic.SetReason(GetReason());
+            dic.SetLocation(GetLocation());
+            dic.SetSignatureCreator(GetSignatureCreator());
+            dic.SetContact(GetContact());
             if (includeDate) {
                 dic.SetDate(new PdfDate(GetSignDate()));
             }

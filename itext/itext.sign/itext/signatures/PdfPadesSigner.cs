@@ -522,6 +522,8 @@ namespace iText.Signatures {
             signer.SetSignDate(signerProperties.GetSignDate());
             signer.SetSignatureCreator(signerProperties.GetSignatureCreator());
             signer.SetContact(signerProperties.GetContact());
+            signer.SetReason(signerProperties.GetReason());
+            signer.SetLocation(signerProperties.GetLocation());
             signer.SetSignatureAppearance(signerProperties.GetSignatureAppearance());
             return signer;
         }

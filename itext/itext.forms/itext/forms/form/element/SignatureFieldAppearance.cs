@@ -43,6 +43,10 @@ namespace iText.Forms.Form.Element {
         /// <summary>Collection of the layout elements which will be rendered as a signature content.</summary>
         private readonly IList<IElement> contentElements = new List<IElement>();
 
+        private SignedAppearanceText signedAppearanceText;
+
+        private String signerName;
+
         /// <summary>We should support signing of existing fields with dots in name, but dots are now allowed in model element id.
         ///     </summary>
         /// <remarks>
@@ -85,7 +89,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(SignedAppearanceText description
             ) {
-            AddTextContent(description.GenerateDescriptionText());
+            PrepareContent(null, description);
             return this;
         }
 
@@ -97,6 +101,7 @@ namespace iText.Forms.Form.Element {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String description) {
+            PrepareContent(null, null);
             AddTextContent(description);
             return this;
         }
@@ -115,8 +120,8 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(SignedAppearanceText description
             , ImageData image) {
+            PrepareContent(null, description);
             AddImageContent(image);
-            AddTextContent(description.GenerateDescriptionText());
             return this;
         }
 
@@ -130,6 +135,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String description, ImageData 
             image) {
+            PrepareContent(null, null);
             AddImageContent(image);
             AddTextContent(description);
             return this;
@@ -143,6 +149,7 @@ namespace iText.Forms.Form.Element {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(ImageData image) {
+            PrepareContent(null, null);
             AddImageContent(image);
             return this;
         }
@@ -161,18 +168,13 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String signerName, SignedAppearanceText
              description) {
-            AddTextContent(signerName);
-            AddTextContent(description.GenerateDescriptionText());
+            PrepareContent(signerName, description);
             return this;
         }
 
         /// <summary>Sets the content for this signature.</summary>
         /// <param name="signerName">the name of the signer from the certificate.</param>
-        /// <param name="description">
-        /// 
-        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
-        /// instance representing the signature text identifying the signer.
-        /// </param>
+        /// <param name="description">the signature text identifying the signer.</param>
         /// <returns>
         /// this same
         /// <see cref="SignatureFieldAppearance"/>
@@ -180,7 +182,7 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(String signerName, String description
             ) {
-            AddTextContent(signerName);
+            PrepareContent(signerName, null);
             AddTextContent(description);
             return this;
         }
@@ -193,14 +195,50 @@ namespace iText.Forms.Form.Element {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Form.Element.SignatureFieldAppearance SetContent(Div data) {
+            PrepareContent(null, null);
             contentElements.Add(data);
             return this;
         }
 
-        /// <summary>Gets the content for this signature.</summary>
+        /// <summary>Gets the final content for this signature.</summary>
         /// <returns>collection of the layout elements which will be rendered as a signature content.</returns>
         public virtual IList<IElement> GetContentElements() {
+            if (signerName != null) {
+                AddTextContent(0, signerName);
+                signerName = null;
+            }
+            if (signedAppearanceText != null) {
+                AddTextContent(signedAppearanceText.GenerateDescriptionText());
+                signedAppearanceText = null;
+            }
             return JavaCollectionsUtil.UnmodifiableList(contentElements);
+        }
+
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
+        /// instance for this signature.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
+        /// instance if it was set by
+        /// <see cref="SetContent(iText.Forms.Fields.Properties.SignedAppearanceText)"/>
+        /// , null otherwise.
+        /// </returns>
+        public virtual SignedAppearanceText GetSignedAppearanceText() {
+            return signedAppearanceText;
+        }
+
+        /// <summary>
+        /// Replaces the signer name for this signature if it was set by
+        /// <see cref="SetContent(iText.Forms.Fields.Properties.SignedAppearanceText)"/>.
+        /// </summary>
+        /// <param name="signerName">signer name to set.</param>
+        public virtual void SetSignerName(String signerName) {
+            if (this.signerName != null) {
+                this.signerName = signerName;
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -221,8 +259,18 @@ namespace iText.Forms.Form.Element {
             return new SignatureAppearanceRenderer(this);
         }
 
+        private void PrepareContent(String signer, SignedAppearanceText description) {
+            contentElements.Clear();
+            signedAppearanceText = description;
+            signerName = signer;
+        }
+
         private void AddTextContent(String text) {
-            contentElements.Add(new Paragraph(text).SetMargin(0).SetMultipliedLeading(0.9f));
+            AddTextContent(contentElements.Count, text);
+        }
+
+        private void AddTextContent(int index, String text) {
+            contentElements.Add(index, new Paragraph(text).SetMargin(0).SetMultipliedLeading(0.9f));
         }
 
         private void AddImageContent(ImageData imageData) {

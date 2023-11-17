@@ -57,6 +57,13 @@ namespace iText.Forms.Fields.Properties {
         }
 
         /// <summary>Sets the signing reason.</summary>
+        /// <remarks>
+        /// Sets the signing reason.
+        /// <para />
+        /// Note, that this reason won't be passed to the signature dictionary. If none is set, value set by
+        /// <c>PdfSigner#setReason</c>
+        /// will be used.
+        /// </remarks>
         /// <param name="reason">signing reason.</param>
         /// <returns>
         /// this same
@@ -75,6 +82,13 @@ namespace iText.Forms.Fields.Properties {
         }
 
         /// <summary>Sets the signing location.</summary>
+        /// <remarks>
+        /// Sets the signing location.
+        /// <para />
+        /// Note, that this location won't be passed to the signature dictionary. If none is set, value set by
+        /// <c>PdfSigner#setLocation</c>
+        /// will be used.
+        /// </remarks>
         /// <param name="location">new signing location.</param>
         /// <returns>
         /// this same
@@ -87,6 +101,11 @@ namespace iText.Forms.Fields.Properties {
         }
 
         /// <summary>Sets the name of the signer from the certificate.</summary>
+        /// <remarks>
+        /// Sets the name of the signer from the certificate.
+        /// <para />
+        /// Note, that the signer name will be replaced by the one from the signing certificate during the actual signing.
+        /// </remarks>
         /// <param name="signedBy">name of the signer.</param>
         /// <returns>
         /// this same
@@ -111,6 +130,13 @@ namespace iText.Forms.Fields.Properties {
         }
 
         /// <summary>Sets the signature date.</summary>
+        /// <remarks>
+        /// Sets the signature date.
+        /// <para />
+        /// Note, that the signing date will be replaced by the one from the
+        /// <c>PdfSigner</c>
+        /// during the signing.
+        /// </remarks>
         /// <param name="signDate">new signature date.</param>
         /// <returns>
         /// this same
