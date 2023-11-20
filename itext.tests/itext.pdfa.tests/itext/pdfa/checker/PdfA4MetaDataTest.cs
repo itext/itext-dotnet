@@ -27,10 +27,10 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 using iText.Pdfa;
 using iText.Pdfa.Exceptions;
 using iText.Test;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfa.Checker {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -515,6 +515,26 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4DocumentMetaDataIsNotUTF8Encoded() {
+            String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithEmpty.xmp"));
+            XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
+            MemoryStream os = new MemoryStream();
+            XMPMetaFactory.Serialize(xmpMeta, os);
+            doc.SetXmpMetadata(xmpMeta, new SerializeOptions().SetEncodeUTF16BE(true));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                doc.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INVALID_XMP_METADATA_ENCODING, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentPageMetaDataIsNotUTF8Encoded() {
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "encodedXmp.xmp"));
             String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
@@ -523,13 +543,13 @@ namespace iText.Pdfa.Checker {
                 , FileMode.Open, FileAccess.Read)));
             doc.AddNewPage();
             doc.GetPage(1).SetXmpMetadata(bytes);
-            doc.Close();
-            //should throw exception
-            //TODO DEVSIX-7886: Change assertion by catching the exception when closing the document and verify the content.
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                doc.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INVALID_XMP_METADATA_ENCODING, e.Message);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         private void GeneratePdfADocument(PdfAConformanceLevel conformanceLevel, String outPdf, Action<PdfDocument
             > consumer) {
             if (outPdf == null) {

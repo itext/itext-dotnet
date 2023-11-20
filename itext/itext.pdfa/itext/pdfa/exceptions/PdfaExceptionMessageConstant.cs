@@ -37,6 +37,8 @@ namespace iText.Pdfa.Exceptions {
 
         public const String NAME_DICTIONARY_SHALL_CONTAIN_EMBEDDED_FILES_KEY = "Conforming file shall contain an EmbeddedFiles key in the name dictionary of the document catalog dictionary.";
 
+        public const String INVALID_XMP_METADATA_ENCODING = "XMP metadata shall always be UTF-8 encoded.";
+
         public const String THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION = "The file header shall begin at byte zero and shall consist of “%PDF-{0}.n”";
 
         public const String THE_CATALOG_VERSION_SHALL_CONTAIN_RIGHT_PDF_VERSION = "The catalog version key shall begin at byte zero and shall consist of “%PDF-{0}.n”";
