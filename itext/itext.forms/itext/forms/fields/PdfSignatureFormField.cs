@@ -31,6 +31,9 @@ namespace iText.Forms.Fields {
         /// <summary>Indicates if we need to reuse the existing appearance as a background layer.</summary>
         private bool reuseAppearance = false;
 
+        /// <summary>Indicates if we need to ignore page rotation for the signature field annotation.</summary>
+        private bool ignorePageRotation = true;
+
         /// <summary>Background level of the signature appearance.</summary>
         private PdfFormXObject n0;
 
@@ -154,6 +157,25 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Sets the boolean value which indicates if page rotation should be ignored for the signature appearance.
+        ///     </summary>
+        /// <remarks>
+        /// Sets the boolean value which indicates if page rotation should be ignored for the signature appearance.
+        /// <para />
+        /// Default value is
+        /// <see langword="true"/>.
+        /// </remarks>
+        /// <param name="ignore">boolean value to set.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="PdfSignatureFormField"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfSignatureFormField SetIgnorePageRotation(bool ignore) {
+            this.ignorePageRotation = ignore;
+            return this;
+        }
+
         /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
         /// <returns>n0 layer xObject.</returns>
         internal virtual PdfFormXObject GetBackgroundLayer() {
@@ -170,6 +192,13 @@ namespace iText.Forms.Fields {
         /// <returns>appearances reusing flag value.</returns>
         internal virtual bool IsReuseAppearance() {
             return reuseAppearance;
+        }
+
+        /// <summary>Indicates if page rotation should be ignored for the signature appearance.</summary>
+        /// <returns>the boolean value which indicates if we need to ignore page rotation for the signature appearance.
+        ///     </returns>
+        internal virtual bool IsPageRotationIgnored() {
+            return this.ignorePageRotation;
         }
     }
 }
