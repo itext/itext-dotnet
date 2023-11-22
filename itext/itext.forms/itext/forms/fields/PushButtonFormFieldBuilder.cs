@@ -76,6 +76,9 @@ namespace iText.Forms.Fields {
                 }
             }
             field.DisableFieldRegeneration();
+            if (this.GetFont() != null) {
+                field.SetFont(this.GetFont());
+            }
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetPushButton(true);
             field.SetFieldName(GetFormFieldName());

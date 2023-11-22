@@ -58,6 +58,11 @@ namespace iText.Forms.Fields {
                 signatureFormField = PdfFormCreator.CreateSignatureFormField(annotation, GetDocument());
                 SetPageToField(signatureFormField);
             }
+            // we can't use setFont() here, because the signature values can only be created one time on first
+            // appearance generation, so we avoid the generation call until the moment we have all the necessary data
+            if (GetFont() != null) {
+                signatureFormField.font = GetFont();
+            }
             signatureFormField.pdfAConformanceLevel = GetConformanceLevel();
             signatureFormField.SetFieldName(GetFormFieldName());
             return signatureFormField;

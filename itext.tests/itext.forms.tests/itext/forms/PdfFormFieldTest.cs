@@ -1567,6 +1567,25 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void PdfWithSignatureAndFontInBuilderFieldTest() {
+            String fileName = destinationFolder + "pdfWithSignatureAndFontInBuilderFieldTestFieldTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+            pdfDoc.AddNewPage();
+            PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new Rectangle
+                (100, 600, 400, 150)).SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER)).CreateSignature();
+            signField.GetPdfObject().Put(PdfName.Name, new PdfName("test name"));
+            signField.GetPdfObject().Put(PdfName.Reason, new PdfString("test reason"));
+            signField.GetPdfObject().Put(PdfName.Location, new PdfString("test location"));
+            signField.GetPdfObject().Put(PdfName.ContactInfo, new PdfString("test contact"));
+            signField.GetFirstFormAnnotation().SetBackgroundColor(ColorConstants.PINK).SetColor(ColorConstants.WHITE);
+            form.AddField(signField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_pdfWithSignatureAndFontInBuilderFieldTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
         internal class CustomButtonFormField : PdfButtonFormField {
             private int counter = 0;
 

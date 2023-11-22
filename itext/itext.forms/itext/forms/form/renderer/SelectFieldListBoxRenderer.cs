@@ -172,13 +172,10 @@ namespace iText.Forms.Form.Renderer {
             ListBoxField lbModelElement = (ListBoxField)modelElement;
             IList<String> selectedOptions = lbModelElement.GetSelectedStrings();
             ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetConformanceLevel(GetConformanceLevel
-                (doc)).SetWidgetRectangle(area);
+                (doc)).SetFont(font).SetWidgetRectangle(area);
             SetupBuilderValues(builder, lbModelElement);
             PdfChoiceFormField choiceField = builder.CreateList();
             choiceField.DisableFieldRegeneration();
-            if (font != null) {
-                choiceField.SetFont(font);
-            }
             choiceField.SetFontSize(fontSize.GetValue());
             choiceField.SetMultiSelect(IsMultiple());
             choiceField.SetListSelected(selectedOptions.ToArray(new String[selectedOptions.Count]));

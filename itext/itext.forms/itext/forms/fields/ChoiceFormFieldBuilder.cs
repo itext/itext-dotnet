@@ -127,6 +127,9 @@ namespace iText.Forms.Fields {
             }
             field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();
+            if (this.GetFont() != null) {
+                field.SetFont(this.GetFont());
+            }
             field.SetFieldFlags(flags);
             field.SetFieldName(GetFormFieldName());
             if (options == null) {

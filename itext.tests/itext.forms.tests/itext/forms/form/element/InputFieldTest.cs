@@ -316,6 +316,21 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SetFontInputFieldTest() {
+            String outPdf = DESTINATION_FOLDER + "setFontInputField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_setFontInputField.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                InputField inputField = new InputField("inputField");
+                inputField.SetInteractive(true);
+                inputField.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+                inputField.SetFontSize(10);
+                inputField.SetValue("Some value");
+                document.Add(inputField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MultiPageInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "multiPageInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_multiPageInputField.pdf";
