@@ -514,7 +514,7 @@ namespace iText.Pdfa.Checker {
             PdfPattern pattern = new PdfPattern.Tiling(200, 200);
             ((PdfStream)pattern.GetPdfObject()).SetData(newContent);
             Color color = new PatternColor(pattern);
-            pdfA1Checker.CheckColor(color, new PdfDictionary(), true, null);
+            pdfA1Checker.CheckColor(null, color, new PdfDictionary(), true, null);
         }
 
         private void CheckInShadingPattern(PdfObject @object) {

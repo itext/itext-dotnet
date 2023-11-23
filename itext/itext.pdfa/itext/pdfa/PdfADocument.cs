@@ -204,7 +204,7 @@ namespace iText.Pdfa {
 
                 case IsoKey.FILL_COLOR: {
                     gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetFillColor(), currentColorSpaces, true, contentStream);
+                    checker.CheckColor(gState, gState.GetFillColor(), currentColorSpaces, true, contentStream);
                     break;
                 }
 
@@ -215,7 +215,7 @@ namespace iText.Pdfa {
 
                 case IsoKey.STROKE_COLOR: {
                     gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
+                    checker.CheckColor(gState, gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
                     break;
                 }
 

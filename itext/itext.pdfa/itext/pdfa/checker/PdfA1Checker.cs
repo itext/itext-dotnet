@@ -121,8 +121,16 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
+        /// <summary><inheritDoc/></summary>
+        [Obsolete]
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
             ) {
+            CheckColor(null, color, currentColorSpaces, fill, stream);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void CheckColor(CanvasGraphicsState graphicsState, Color color, PdfDictionary currentColorSpaces
+            , bool? fill, PdfStream stream) {
             CheckColorSpace(color.GetColorSpace(), stream, currentColorSpaces, true, fill);
             if (color is PatternColor) {
                 PdfPattern pattern = ((PatternColor)color).GetPattern();

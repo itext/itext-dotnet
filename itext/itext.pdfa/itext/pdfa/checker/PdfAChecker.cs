@@ -334,8 +334,28 @@ namespace iText.Pdfa.Checker {
         /// </param>
         /// <param name="fill">whether the color is used for fill or stroke operations</param>
         /// <param name="contentStream">current content stream</param>
+        [System.ObsoleteAttribute(@"in favor of checkColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, Boolean fill, PdfStream contentStream)"
+            )]
         public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
             );
+
+        /// <summary>
+        /// This method checks compliance with the color restrictions imposed by the
+        /// available color spaces in the document.
+        /// </summary>
+        /// <param name="gState">canvas graphics state</param>
+        /// <param name="color">the color to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="fill">whether the color is used for fill or stroke operations</param>
+        /// <param name="contentStream">current content stream</param>
+        [System.ObsoleteAttribute(@"This method will be abstract in next major release")]
+        public virtual void CheckColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, 
+            bool? fill, PdfStream contentStream) {
+        }
 
         /// <summary>
         /// This method performs a range of checks on the given color space, depending

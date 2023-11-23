@@ -144,16 +144,29 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
+        /// <summary><inheritDoc/></summary>
+        [Obsolete]
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
             ) {
+            CheckColor(null, color, currentColorSpaces, fill, contentStream);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void CheckColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, 
+            bool? fill, PdfStream contentStream) {
             if (color is PatternColor) {
                 PdfPattern pattern = ((PatternColor)color).GetPattern();
                 if (pattern is PdfPattern.Shading) {
                     PdfDictionary shadingDictionary = ((PdfPattern.Shading)pattern).GetShading();
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), contentStream, currentColorSpaces, true, true);
-                    PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new PdfA2Checker.UpdateCanvasGraphicsState(extGStateDict);
+                    if (gState == null) {
+                        //Note that this method of getting ExtGState won't work for PatternType = 1, and won't always work
+                        //for PatternType = 2, since it's an optional parameter there, so this code is just a fallback for the
+                        //user input.
+                        PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
+                        gState = new PdfA2Checker.UpdateCanvasGraphicsState(extGStateDict);
+                    }
                     CheckExtGState(gState, contentStream);
                 }
                 else {
@@ -162,7 +175,7 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
-            base.CheckColor(color, currentColorSpaces, fill, contentStream);
+            base.CheckColor(gState, color, currentColorSpaces, fill, contentStream);
         }
 
         /// <summary><inheritDoc/></summary>
