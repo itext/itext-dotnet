@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 
@@ -77,6 +79,21 @@ namespace iText.Pdfa.Checker {
         // and doesn't return any value. The only result is exception which
         // was or wasn't thrown. Successful scenario is tested here therefore
         // no assertion is provided
+        [NUnit.Framework.Test]
+        public virtual void DeprecatedCheckColorShadingTest() {
+            PdfDictionary patternDict = new PdfDictionary();
+            patternDict.Put(PdfName.ExtGState, new PdfDictionary());
+            PdfPattern.Shading pattern = new PdfPattern.Shading(patternDict);
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.ColorSpace, PdfName.DeviceCMYK);
+            pattern.SetShading(dictionary);
+            Color color = new PatternColor(pattern);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfA1Checker.CheckColor(color, new PdfDictionary(), true, null);
+            }
+            );
+        }
+
         [NUnit.Framework.Test]
         public virtual void CheckSignatureTest() {
             PdfDictionary dict = new PdfDictionary();

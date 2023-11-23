@@ -618,6 +618,48 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithNullDestination() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "linkAnnotationWithNullDestinationTest.pdf";
+            String cmpDocument = sourceFolder + "cmp_linkAnnotationWithNullDestinationTest.pdf";
+            String mergedDocument = destinationFolder + "mergedLinkAnnotationWithNullDestinationTest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithNullDestinationInGoTo() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "linkAnnotationWithNullDestinationInGoToTest.pdf";
+            String cmpDocument = sourceFolder + "cmp_linkAnnotationWithNullDestinationInGoToTest.pdf";
+            String mergedDocument = destinationFolder + "mergedLinkAnnotationWithNullDestinationInGoToTest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentsWithPdfNullDestinationInGoTo() {
+            String firstPdfDocument = sourceFolder + "doc1.pdf";
+            String secondPdfDocument = sourceFolder + "linkAnnotationWithPdfNullDestinationInGoToTest.pdf";
+            String cmpDocument = sourceFolder + "cmp_linkAnnotationWithPdfNullDestinationInGoToTest.pdf";
+            String mergedDocument = destinationFolder + "mergedLinkAnnotationWithPdfNullDestinationInGoToTest.pdf";
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPdfDocument));
+            sources.Add(new FileInfo(secondPdfDocument));
+            MergePdfs(sources, mergedDocument, new PdfMergerProperties().SetMergeScripts(true), true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocument, cmpDocument, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.CANNOT_MERGE_ENTRY)]
         public virtual void MergeDocumentsWithNamesJSInDestination() {
             String firstPdfDocument = sourceFolder + "cmp_mergeJS.pdf";

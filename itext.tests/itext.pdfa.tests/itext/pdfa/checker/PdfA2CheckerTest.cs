@@ -314,6 +314,21 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DeprecatedCheckColorShadingTest() {
+            PdfDictionary patternDict = new PdfDictionary();
+            patternDict.Put(PdfName.ExtGState, new PdfDictionary());
+            PdfPattern.Shading pattern = new PdfPattern.Shading(patternDict);
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.ColorSpace, PdfName.DeviceCMYK);
+            pattern.SetShading(dictionary);
+            Color color = new PatternColor(pattern);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfA2Checker.CheckColor(color, new PdfDictionary(), true, null);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckColorShadingWithoutExtGStatePropertyInPatternDictTest() {
             PdfDictionary patternDict = new PdfDictionary();
             patternDict.Put(PdfName.PatternType, new PdfNumber(2));
