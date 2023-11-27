@@ -30,19 +30,19 @@ using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>
-    /// <see cref="IMissingCertificatesClient"/>
+    /// <see cref="IIssuingCertificateRetriever"/>
     /// default implementation.
     /// </summary>
-    public class MissingCertificatesClient : IMissingCertificatesClient {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.MissingCertificatesClient
+    public class IssuingCertificateRetriever : IIssuingCertificateRetriever {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.IssuingCertificateRetriever
             ));
 
         /// <summary>
         /// Creates
-        /// <see cref="MissingCertificatesClient"/>
+        /// <see cref="IssuingCertificateRetriever"/>
         /// instance.
         /// </summary>
-        public MissingCertificatesClient() {
+        public IssuingCertificateRetriever() {
         }
 
         // Empty constructor.
@@ -70,7 +70,8 @@ namespace iText.Signatures {
                 }
                 else {
                     // Get missing certificates using AIA Extensions
-                    ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(lastAddedCert);
+                    String url = CertificateUtil.GetIssuerCertURL((IX509Certificate)lastAddedCert);
+                    ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
                     if (certificatesFromAIA == null || certificatesFromAIA.IsEmpty()) {
                         // Unable to retrieve missing certificates
                         while (i < chain.Length) {
@@ -84,6 +85,27 @@ namespace iText.Signatures {
                 lastAddedCert = fullChain[fullChain.Count - 1];
             }
             return fullChain.ToArray(new IX509Certificate[0]);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <param name="crl">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual IX509Certificate[] GetCrlIssuerCertificates(IX509Crl crl) {
+            // Usually CRLs are signed using CA certificate, so we don’t need to do anything extra and the revocation data
+            // is already collected. However, it is possible to sign it with any other certificate.
+            // IssuingDistributionPoint extension: https://datatracker.ietf.org/doc/html/rfc5280#section-5.2.5
+            // Nothing special for the indirect CRLs.
+            // AIA Extension
+            String url = CertificateUtil.GetIssuerCertURL(crl);
+            IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
+            return certificatesFromAIA == null ? new IX509Certificate[0] : RetrieveMissingCertificates(certificatesFromAIA
+                .ToArray(new IX509Certificate[0]));
         }
 
         /// <summary>
@@ -111,8 +133,7 @@ namespace iText.Signatures {
             return SignUtils.ReadAllCerts(certsData);
         }
 
-        private ICollection<IX509Certificate> ProcessCertificatesFromAIA(IX509Certificate certificate) {
-            String url = CertificateUtil.GetIssuerCertURL((IX509Certificate)certificate);
+        private ICollection<IX509Certificate> ProcessCertificatesFromAIA(String url) {
             if (url == null) {
                 // We don't have any URIs to the issuer certificates in AuthorityInfoAccess extension
                 return null;

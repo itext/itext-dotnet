@@ -74,6 +74,11 @@ namespace iText.Signatures {
             return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
+        internal static byte[] GetExtensionValueByOid(IX509Crl crl, String oid) {
+            IAsn1OctetString extensionValue = crl.GetExtensionValue(oid);;
+            return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
+        }
+
         internal static IDigest GetMessageDigest(String hashAlgorithm) {
             return FACTORY.CreateIDigest(hashAlgorithm);
         }

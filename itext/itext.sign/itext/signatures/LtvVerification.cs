@@ -56,6 +56,12 @@ namespace iText.Signatures {
 
         private bool used = false;
 
+        private LtvVerification.RevocationDataNecessity revocationDataNecessity = LtvVerification.RevocationDataNecessity
+            .OPTIONAL;
+
+        private IIssuingCertificateRetriever issuingCertificateRetriever = new DefaultIssuingCertificateRetriever(
+            );
+
         /// <summary>What type of verification to include.</summary>
         public enum Level {
             /// <summary>Include only OCSP.</summary>
@@ -75,15 +81,10 @@ namespace iText.Signatures {
             /// <summary>Include verification for the whole chain of certificates.</summary>
             WHOLE_CHAIN,
             /// <summary>
-            /// Include verification for the whole chain of certificates
-            /// and certificates used to create OCSP revocation data responses.
+            /// Include verification for the whole certificates chain, certificates used to create OCSP responses,
+            /// CRL response certificates and timestamp certificates included in the signatures.
             /// </summary>
-            CHAIN_AND_OCSP_RESPONSE_CERTIFICATES,
-            /// <summary>
-            /// Include verification for the whole certificates chain, certificates used to create OCSP responses
-            /// and timestamp certificates included in the signatures.
-            /// </summary>
-            CHAIN_OCSP_AND_TIMESTAMP_CERTIFICATES
+            ALL_CERTIFICATES
         }
 
         /// <summary>
@@ -121,6 +122,64 @@ namespace iText.Signatures {
             this.sgnUtil = new SignatureUtil(document);
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="RevocationDataNecessity"/>
+        /// option to specify the necessity of revocation data.
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="RevocationDataNecessity"/>
+        /// option to specify the necessity of revocation data.
+        /// <para />
+        /// Default value is
+        /// <see cref="RevocationDataNecessity.OPTIONAL"/>.
+        /// </remarks>
+        /// <param name="revocationDataNecessity">
+        /// 
+        /// <see cref="RevocationDataNecessity"/>
+        /// value to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="LtvVerification"/>
+        /// instance.
+        /// </returns>
+        public virtual LtvVerification SetRevocationDataNecessity(LtvVerification.RevocationDataNecessity revocationDataNecessity
+            ) {
+            this.revocationDataNecessity = revocationDataNecessity;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance needed to get CRL issuer certificates (using AIA extension).
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance needed to get CRL issuer certificates (using AIA extension).
+        /// <para />
+        /// Default value is
+        /// <see cref="DefaultIssuingCertificateRetriever"/>.
+        /// </remarks>
+        /// <param name="issuingCertificateRetriever">
+        /// 
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="LtvVerification"/>
+        /// instance.
+        /// </returns>
+        public virtual LtvVerification SetIssuingCertificateRetriever(IIssuingCertificateRetriever issuingCertificateRetriever
+            ) {
+            this.issuingCertificateRetriever = issuingCertificateRetriever;
+            return this;
+        }
+
         /// <summary>Add verification for a particular signature.</summary>
         /// <param name="signatureName">the signature to validate (it may be a timestamp)</param>
         /// <param name="ocsp">the interface to get the OCSP</param>
@@ -131,22 +190,6 @@ namespace iText.Signatures {
         /// <returns>true if a validation was generated, false otherwise</returns>
         public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
              certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude) {
-            return AddVerification(signatureName, ocsp, crl, certOption, level, certInclude, LtvVerification.RevocationDataNecessity
-                .OPTIONAL);
-        }
-
-        /// <summary>Add verification for a particular signature.</summary>
-        /// <param name="signatureName">the signature to validate (it may be a timestamp)</param>
-        /// <param name="ocsp">the interface to get the OCSP</param>
-        /// <param name="crl">the interface to get the CRL</param>
-        /// <param name="certOption">options as to how many certificates to include</param>
-        /// <param name="level">the validation options to include</param>
-        /// <param name="certInclude">certificate inclusion options</param>
-        /// <param name="revocationDataNecessity">option to specify the necessity of revocation data</param>
-        /// <returns>true if a validation was generated, false otherwise.</returns>
-        public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
-             certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, LtvVerification.RevocationDataNecessity
-             revocationDataNecessity) {
             if (used) {
                 throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
@@ -156,12 +199,12 @@ namespace iText.Signatures {
             IX509Certificate signingCert = pk.GetSigningCertificate();
             LtvVerification.ValidationData validationData = new LtvVerification.ValidationData();
             ICollection<IX509Certificate> processedCerts = new HashSet<IX509Certificate>();
-            AddRevocationDataForChain(signingCert, certificateChain, ocsp, crl, level, certInclude, certOption, revocationDataNecessity
-                , validationData, processedCerts);
-            if (certOption == LtvVerification.CertificateOption.CHAIN_OCSP_AND_TIMESTAMP_CERTIFICATES) {
+            AddRevocationDataForChain(signingCert, certificateChain, ocsp, crl, level, certInclude, certOption, validationData
+                , processedCerts);
+            if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                 IX509Certificate[] timestampCertsChain = pk.GetTimestampCertificates();
-                AddRevocationDataForChain(signingCert, timestampCertsChain, ocsp, crl, level, certInclude, certOption, revocationDataNecessity
-                    , validationData, processedCerts);
+                AddRevocationDataForChain(signingCert, timestampCertsChain, ocsp, crl, level, certInclude, certOption, validationData
+                    , processedCerts);
             }
             if (validationData.crls.Count == 0 && validationData.ocsps.Count == 0) {
                 return false;
@@ -248,8 +291,8 @@ namespace iText.Signatures {
 
         private void AddRevocationDataForChain(IX509Certificate signingCert, IX509Certificate[] certChain, IOcspClient
              ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, 
-            LtvVerification.CertificateOption certOption, LtvVerification.RevocationDataNecessity dataNecessity, LtvVerification.ValidationData
-             validationData, ICollection<IX509Certificate> processedCerts) {
+            LtvVerification.CertificateOption certOption, LtvVerification.ValidationData validationData, ICollection
+            <IX509Certificate> processedCerts) {
             foreach (IX509Certificate certificate in certChain) {
                 IX509Certificate cert = (IX509Certificate)certificate;
                 LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
@@ -258,15 +301,15 @@ namespace iText.Signatures {
                     processedCerts.Contains(cert)) {
                     continue;
                 }
-                AddRevocationDataForCertificate(signingCert, certChain, cert, ocsp, crl, level, certInclude, certOption, dataNecessity
-                    , validationData, processedCerts);
+                AddRevocationDataForCertificate(signingCert, certChain, cert, ocsp, crl, level, certInclude, certOption, validationData
+                    , processedCerts);
             }
         }
 
         private void AddRevocationDataForCertificate(IX509Certificate signingCert, IX509Certificate[] certificateChain
             , IX509Certificate cert, IOcspClient ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion
-             certInclude, LtvVerification.CertificateOption certOption, LtvVerification.RevocationDataNecessity dataNecessity
-            , LtvVerification.ValidationData validationData, ICollection<IX509Certificate> processedCerts) {
+             certInclude, LtvVerification.CertificateOption certOption, LtvVerification.ValidationData validationData
+            , ICollection<IX509Certificate> processedCerts) {
             processedCerts.Add(cert);
             byte[] ocspEnc = null;
             bool revocationDataAdded = false;
@@ -276,13 +319,12 @@ namespace iText.Signatures {
                     validationData.ocsps.Add(BuildOCSPResponse(ocspEnc));
                     revocationDataAdded = true;
                     LOGGER.LogInformation("OCSP added");
-                    if (certOption == LtvVerification.CertificateOption.CHAIN_AND_OCSP_RESPONSE_CERTIFICATES || certOption == 
-                        LtvVerification.CertificateOption.CHAIN_OCSP_AND_TIMESTAMP_CERTIFICATES) {
+                    if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                         IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse
                             (ocspEnc));
                         IList<IX509Certificate> certsList = IterableToList(certs);
                         AddRevocationDataForChain(signingCert, certsList.ToArray(new IX509Certificate[0]), ocsp, crl, level, certInclude
-                            , certOption, dataNecessity, validationData, processedCerts);
+                            , certOption, validationData, processedCerts);
                     }
                 }
             }
@@ -302,12 +344,18 @@ namespace iText.Signatures {
                             validationData.crls.Add(cim);
                             revocationDataAdded = true;
                             LOGGER.LogInformation("CRL added");
+                            if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
+                                IX509Certificate[] certsList = issuingCertificateRetriever.GetCrlIssuerCertificates(SignUtils.ParseCrlFromStream
+                                    (new MemoryStream(cim)));
+                                AddRevocationDataForChain(signingCert, certsList, ocsp, crl, level, certInclude, certOption, validationData
+                                    , processedCerts);
+                            }
                         }
                     }
                 }
             }
-            if (dataNecessity == LtvVerification.RevocationDataNecessity.REQUIRED_FOR_SIGNING_CERTIFICATE && signingCert
-                .Equals(cert) && !revocationDataAdded) {
+            if (revocationDataNecessity == LtvVerification.RevocationDataNecessity.REQUIRED_FOR_SIGNING_CERTIFICATE &&
+                 signingCert.Equals(cert) && !revocationDataAdded) {
                 throw new PdfException(SignExceptionMessageConstant.NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE);
             }
             if (certInclude == LtvVerification.CertificateInclusion.YES) {

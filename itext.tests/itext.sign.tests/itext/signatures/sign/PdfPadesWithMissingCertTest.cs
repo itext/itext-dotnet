@@ -103,9 +103,9 @@ namespace iText.Signatures.Sign {
             SignerProperties signerProperties = CreateSignerProperties();
             MemoryStream outputStream = new MemoryStream();
             PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
-            IMissingCertificatesClient missingCertificatesClient = new _MissingCertificatesClient_118(firstMissingCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_118(firstMissingCertFileName
                 , secondMissingCertFileName);
-            padesSigner.SetMissingCertificatesClient(missingCertificatesClient);
+            padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
             padesSigner.SignWithBaselineBProfile(signerProperties, new IX509Certificate[] { signCert, rootCert }, signPrivateKey
                 );
             TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
@@ -119,8 +119,8 @@ namespace iText.Signatures.Sign {
             TestSignUtils.SignedDocumentContainsCerts(new MemoryStream(outputStream.ToArray()), expectedCerts);
         }
 
-        private sealed class _MissingCertificatesClient_118 : MissingCertificatesClient {
-            public _MissingCertificatesClient_118(String firstMissingCertFileName, String secondMissingCertFileName) {
+        private sealed class _IssuingCertificateRetriever_118 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_118(String firstMissingCertFileName, String secondMissingCertFileName) {
                 this.firstMissingCertFileName = firstMissingCertFileName;
                 this.secondMissingCertFileName = secondMissingCertFileName;
             }

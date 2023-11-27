@@ -90,6 +90,20 @@ namespace iText.Signatures {
             return SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(url)));
         }
 
+        /// <summary>Retrieves the URL for the issuer certificate for the given CRL.</summary>
+        /// <param name="crl">the CRL response</param>
+        /// <returns>the URL or null.</returns>
+        public static String GetIssuerCertURL(IX509Crl crl) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(crl, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
+                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+            }
+            catch (System.IO.IOException) {
+                return null;
+            }
+        }
+
         // Online Certificate Status Protocol
         /// <summary>Retrieves the OCSP URL from the given certificate.</summary>
         /// <param name="certificate">the certificate</param>
@@ -98,23 +112,11 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                if (obj == null) {
-                    return null;
-                }
-                IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(obj);
-                for (int i = 0; i < accessDescriptions.Size(); i++) {
-                    IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
-                    IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
-                    if (accessDescription.Size() == 2 && id != null && SecurityIDs.ID_OCSP.Equals(id.GetId())) {
-                        IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
-                        return GetStringFromGeneralName(description);
-                    }
-                }
+                return GetValueFromAIAExtension(obj, SecurityIDs.ID_OCSP);
             }
             catch (System.IO.IOException) {
                 return null;
             }
-            return null;
         }
 
         // Missing certificates in chain
@@ -125,23 +127,11 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                if (obj == null) {
-                    return null;
-                }
-                IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(obj);
-                for (int i = 0; i < accessDescriptions.Size(); i++) {
-                    IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
-                    IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
-                    if (accessDescription.Size() == 2 && id != null && SecurityIDs.ID_CA_ISSUERS.Equals(id.GetId())) {
-                        IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
-                        return GetStringFromGeneralName(description);
-                    }
-                }
+                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
             }
             catch (System.IO.IOException) {
                 return null;
             }
-            return null;
         }
 
         // Time Stamp Authority
@@ -188,15 +178,40 @@ namespace iText.Signatures {
         /// <returns>
         /// the extension value as an
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
-        /// object
+        /// object.
         /// </returns>
         private static IAsn1Object GetExtensionValue(IX509Certificate certificate, String oid) {
-            byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
-            if (bytes == null) {
+            return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(certificate, oid));
+        }
+
+        /// <param name="crl">the CRL from which we need the ExtensionValue</param>
+        /// <param name="oid">the Object Identifier value for the extension.</param>
+        /// <returns>
+        /// the extension value as an
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
+        /// object.
+        /// </returns>
+        private static IAsn1Object GetExtensionValue(IX509Crl crl, String oid) {
+            return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(crl, oid));
+        }
+
+        /// <summary>
+        /// Converts extension value represented as byte array to
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
+        /// object.
+        /// </summary>
+        /// <param name="extensionValue">the extension value as byte array</param>
+        /// <returns>
+        /// the extension value as an
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
+        /// object.
+        /// </returns>
+        private static IAsn1Object GetExtensionValueFromByteArray(byte[] extensionValue) {
+            if (extensionValue == null) {
                 return null;
             }
             IAsn1OctetString octs;
-            using (IAsn1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(bytes))) {
+            using (IAsn1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(extensionValue))) {
                 octs = FACTORY.CreateASN1OctetString(aIn.ReadObject());
             }
             using (IAsn1InputStream aIn_1 = FACTORY.CreateASN1InputStream(new MemoryStream(octs.GetOctets()))) {
@@ -215,6 +230,27 @@ namespace iText.Signatures {
             IAsn1TaggedObject taggedObject = FACTORY.CreateASN1TaggedObject(names);
             return iText.Commons.Utils.JavaUtil.GetStringForBytes(FACTORY.CreateASN1OctetString(taggedObject, false).GetOctets
                 (), iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+        }
+
+        /// <summary>Retrieves accessLocation value for specified accessMethod from the Authority Information Access extension.
+        ///     </summary>
+        /// <param name="extensionValue">Authority Information Access extension value</param>
+        /// <param name="accessMethod">accessMethod OID; usually id-ad-caIssuers or id-ad-ocsp</param>
+        /// <returns>the location (URI) of the information.</returns>
+        private static String GetValueFromAIAExtension(IAsn1Object extensionValue, String accessMethod) {
+            if (extensionValue == null) {
+                return null;
+            }
+            IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(extensionValue);
+            for (int i = 0; i < accessDescriptions.Size(); i++) {
+                IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
+                IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
+                if (accessDescription.Size() == 2 && id != null && accessMethod.Equals(id.GetId())) {
+                    IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
+                    return GetStringFromGeneralName(description);
+                }
+            }
+            return null;
         }
     }
 }
