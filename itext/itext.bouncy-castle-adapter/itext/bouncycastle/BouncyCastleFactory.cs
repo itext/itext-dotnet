@@ -1036,6 +1036,11 @@ namespace iText.Bouncycastle {
         public bool IsNullExtension(IX509Extension ext) {
             return ((X509ExtensionBC)ext).GetX509Extension() == null;
         }
+
+        /// <summary><inheritDoc/></summary>
+        public bool IsNull(IAsn1Encodable encodable) {
+            return ((Asn1EncodableBC)encodable).GetEncodable() == null;
+        }
         
         /// <summary><inheritDoc/></summary>
         public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {

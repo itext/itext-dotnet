@@ -1470,6 +1470,8 @@ namespace iText.Commons.Bouncycastle {
         /// otherwise
         /// </returns>
         bool IsNullExtension(IX509Extension extNonce);
+
+        bool IsNull(IAsn1Encodable encodable);
         
         /// <summary>
         /// Create

@@ -328,7 +328,7 @@ namespace iText.Signatures {
                         IAttributeTable attble = BOUNCY_CASTLE_FACTORY.CreateAttributeTable(unat);
                         IPkcsObjectIdentifiers ipkcsObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreatePKCSObjectIdentifiers();
                         IAttribute ts = attble.Get(ipkcsObjectIdentifiers.GetIdAaSignatureTimeStampToken());
-                        if (ts != null && ts.GetAttrValues().Size() > 0) {
+                        if (!BOUNCY_CASTLE_FACTORY.IsNull(ts) && ts.GetAttrValues().Size() > 0) {
                             IAsn1Set attributeValues = ts.GetAttrValues();
                             IAsn1Sequence tokenSequence = BOUNCY_CASTLE_FACTORY.CreateASN1SequenceInstance(attributeValues.GetObjectAt
                                 (0));

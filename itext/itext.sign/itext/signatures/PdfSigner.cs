@@ -591,7 +591,7 @@ namespace iText.Signatures {
                     estimatedSize += 4192;
                 }
                 if (tsaClient != null) {
-                    estimatedSize += 4192;
+                    estimatedSize += tsaClient.GetTokenSizeEstimate() + 96;
                 }
             }
             appearance.SetCertificate(chain[0]);
@@ -732,7 +732,8 @@ namespace iText.Signatures {
                     .Message, e);
             }
             if (contentEstimated + 2 < tsToken.Length) {
-                throw new System.IO.IOException("Not enough space");
+                throw new System.IO.IOException(MessageFormatUtil.Format(SignExceptionMessageConstant.TOKEN_ESTIMATION_SIZE_IS_NOT_LARGE_ENOUGH
+                    , contentEstimated, tsToken.Length));
             }
             byte[] paddedSig = new byte[contentEstimated];
             Array.Copy(tsToken, 0, paddedSig, 0, tsToken.Length);
