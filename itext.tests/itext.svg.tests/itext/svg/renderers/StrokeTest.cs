@@ -54,6 +54,11 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void StrokeWithDashesTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashes");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AdvancedStrokeTest() {
             //TODO: update cmp-file after DEVSIX-2258
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeAdvanced");

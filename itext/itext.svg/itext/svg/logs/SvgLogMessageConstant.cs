@@ -49,6 +49,9 @@ namespace iText.Svg.Logs {
 
         public const String PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE = "Pattern width or height is negative value. This pattern will not be rendered.";
 
+        public const String PERCENTAGE_VALUES_IN_STROKE_DASHARRAY_AND_STROKE_DASHOFFSET_ARE_NOT_SUPPORTED = "Percentage values in 'stroke-dasharray' and 'stroke-dashoffset' attributes are not supported. "
+             + "Attribute will be ignored completely.";
+
         public const String MISSING_WIDTH = "Top Svg tag has no defined width attribute and viewbox width is not present, so browser default of 300px "
              + "is used";
 
