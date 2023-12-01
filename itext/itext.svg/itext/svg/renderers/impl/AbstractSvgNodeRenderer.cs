@@ -307,35 +307,24 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        /// <summary>Parse absolute length.</summary>
+        /// <summary>Parse length attributes.</summary>
         /// <param name="length">
         /// 
         /// <see cref="System.String"/>
         /// for parsing
         /// </param>
-        /// <param name="percentRelativeValue">the value on which percent length is based on</param>
+        /// <param name="percentBaseValue">the value on which percent length is based on</param>
         /// <param name="defaultValue">default value if length is not recognized</param>
         /// <param name="context">
         /// current
         /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
         /// </param>
         /// <returns>absolute value in points</returns>
-        protected internal virtual float ParseAbsoluteLength(String length, float percentRelativeValue, float defaultValue
+        protected internal virtual float ParseAbsoluteLength(String length, float percentBaseValue, float defaultValue
             , SvgDrawContext context) {
-            if (CssTypesValidationUtils.IsPercentageValue(length)) {
-                return CssDimensionParsingUtils.ParseRelativeValue(length, percentRelativeValue);
-            }
-            else {
-                float em = GetCurrentFontSize();
-                float rem = context.GetCssContext().GetRootFontSize();
-                UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(length, em, rem);
-                if (unitValue != null && unitValue.IsPointValue()) {
-                    return unitValue.GetValue();
-                }
-                else {
-                    return defaultValue;
-                }
-            }
+            float em = GetCurrentFontSize();
+            float rem = context.GetCssContext().GetRootFontSize();
+            return CssDimensionParsingUtils.ParseLength(length, percentBaseValue, defaultValue, em, rem);
         }
 
         private TransparentColor GetColorFromAttributeValue(SvgDrawContext context, String rawColorValue, float objectBoundingBoxMargin
@@ -444,7 +433,7 @@ namespace iText.Svg.Renderers.Impl {
                 String strokeDashArrayRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHARRAY);
                 String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
                 SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                    (strokeDashArrayRawValue, strokeDashOffsetRawValue);
+                    (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(), context);
                 if (lineDashParameters != null) {
                     currentCanvas.SetLineDash(lineDashParameters.GetDashArray(), lineDashParameters.GetDashPhase());
                 }

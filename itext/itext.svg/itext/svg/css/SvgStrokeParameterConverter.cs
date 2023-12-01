@@ -22,12 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
-using iText.Svg.Logs;
+using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Css {
@@ -37,27 +35,24 @@ namespace iText.Svg.Css {
         private SvgStrokeParameterConverter() {
         }
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.SvgStrokeParameterConverter
-            ));
-
         /// <summary>Convert stroke related SVG parameters and attributes into PDF line dash parameters.</summary>
         /// <param name="strokeDashArray">'stroke-dasharray' css property value.</param>
         /// <param name="strokeDashOffset">'stroke-dashoffset' css property value.</param>
+        /// <param name="fontSize">font size of the current element.</param>
+        /// <param name="context">the svg draw context.</param>
         /// <returns>
         /// PDF line dash parameters represented by
         /// <see cref="PdfLineDashParameters"/>.
         /// </returns>
         public static SvgStrokeParameterConverter.PdfLineDashParameters ConvertStrokeDashParameters(String strokeDashArray
-            , String strokeDashOffset) {
+            , String strokeDashOffset, float fontSize, SvgDrawContext context) {
             if (strokeDashArray != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(strokeDashArray)) {
+                float rem = context.GetCssContext().GetRootFontSize();
+                float viewPortHeight = context.GetCurrentViewPort().GetHeight();
+                float viewPortWidth = context.GetCurrentViewPort().GetWidth();
+                float percentBaseValue = (float)(Math.Sqrt(viewPortHeight * viewPortHeight + viewPortWidth * viewPortWidth
+                    ) / Math.Sqrt(2));
                 IList<String> dashArray = SvgCssUtils.SplitValueList(strokeDashArray);
-                foreach (String dashArrayItem in dashArray) {
-                    if (CssTypesValidationUtils.IsPercentageValue(dashArrayItem)) {
-                        LOGGER.LogError(SvgLogMessageConstant.PERCENTAGE_VALUES_IN_STROKE_DASHARRAY_AND_STROKE_DASHOFFSET_ARE_NOT_SUPPORTED
-                            );
-                        return null;
-                    }
-                }
                 if (dashArray.Count > 0) {
                     if (dashArray.Count % 2 == 1) {
                         // If an odd number of values is provided, then the list of values is repeated to yield an even
@@ -66,19 +61,14 @@ namespace iText.Svg.Css {
                     }
                     float[] dashArrayFloat = new float[dashArray.Count];
                     for (int i = 0; i < dashArray.Count; i++) {
-                        dashArrayFloat[i] = CssDimensionParsingUtils.ParseAbsoluteLength(dashArray[i]);
+                        dashArrayFloat[i] = CssDimensionParsingUtils.ParseLength(dashArray[i], percentBaseValue, 1f, fontSize, rem
+                            );
                     }
                     // Parse stroke dash offset
                     float dashPhase = 0;
                     if (strokeDashOffset != null && !String.IsNullOrEmpty(strokeDashOffset) && !SvgConstants.Values.NONE.EqualsIgnoreCase
                         (strokeDashOffset)) {
-                        if (CssTypesValidationUtils.IsPercentageValue(strokeDashOffset)) {
-                            LOGGER.LogError(SvgLogMessageConstant.PERCENTAGE_VALUES_IN_STROKE_DASHARRAY_AND_STROKE_DASHOFFSET_ARE_NOT_SUPPORTED
-                                );
-                        }
-                        else {
-                            dashPhase = CssDimensionParsingUtils.ParseAbsoluteLength(strokeDashOffset);
-                        }
+                        dashPhase = CssDimensionParsingUtils.ParseLength(strokeDashOffset, percentBaseValue, 1f, fontSize, rem);
                     }
                     return new SvgStrokeParameterConverter.PdfLineDashParameters(dashArrayFloat, dashPhase);
                 }

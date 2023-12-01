@@ -20,50 +20,48 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Svg.Logs;
+using iText.Kernel.Geom;
+using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     [NUnit.Framework.Category("UnitTest")]
     public class SvgStrokeParameterConverterUnitTest : ExtendedITextTest {
-        [LogMessage(SvgLogMessageConstant.PERCENTAGE_VALUES_IN_STROKE_DASHARRAY_AND_STROKE_DASHOFFSET_ARE_NOT_SUPPORTED
-            )]
         [NUnit.Framework.Test]
-        public virtual void TestStrokeDashArrayPercentsAreNotSupported() {
-            NUnit.Framework.Assert.IsNull(SvgStrokeParameterConverter.ConvertStrokeDashParameters("5,3%", null));
+        public virtual void TestStrokeDashArrayPercents() {
+            SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
+                ("10pt,3%", null, 12f, CreateTextSvgContext());
+            NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 10, 30
+                 }, 0), result);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStrokeDashArrayOddNumberOfValues() {
             SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                ("5pt", null);
-            NUnit.Framework.Assert.IsNotNull(result);
-            NUnit.Framework.Assert.AreEqual(0, result.GetDashPhase(), 0);
-            iText.Test.TestUtil.AreEqual(new float[] { 5, 5 }, result.GetDashArray(), 1e-5f);
+                ("5pt", null, 12f, CreateTextSvgContext());
+            NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 5, 5 }
+                , 0), result);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestEmptyStrokeDashArray() {
             SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                ("", null);
+                ("", null, 12f, CreateTextSvgContext());
             NUnit.Framework.Assert.IsNull(result);
         }
 
-        [LogMessage(SvgLogMessageConstant.PERCENTAGE_VALUES_IN_STROKE_DASHARRAY_AND_STROKE_DASHOFFSET_ARE_NOT_SUPPORTED
-            )]
         [NUnit.Framework.Test]
-        public virtual void TestStrokeDashOffsetPercentsAreNotSupported() {
+        public virtual void TestStrokeDashOffsetPercents() {
             SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                ("5pt,3pt", "10%");
+                ("5pt,3pt", "10%", 12f, CreateTextSvgContext());
             NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 5, 3 }
-                , 0), result);
+                , 100), result);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestEmptyStrokeDashOffset() {
             SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                ("5pt,3pt", "");
+                ("5pt,3pt", "", 12f, CreateTextSvgContext());
             NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 5, 3 }
                 , 0), result);
         }
@@ -71,9 +69,31 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void TestStrokeDashOffset() {
             SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                ("5pt,3pt", "10");
+                ("5pt,3pt", "10", 12f, CreateTextSvgContext());
             NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 5, 3 }
                 , 7.5f), result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStrokeEm() {
+            SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
+                ("1em,2em", "0.5em", 8f, CreateTextSvgContext());
+            NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 8, 16 }
+                , 4), result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestStrokeRem() {
+            SvgStrokeParameterConverter.PdfLineDashParameters result = SvgStrokeParameterConverter.ConvertStrokeDashParameters
+                ("1rem,2rem", "0.5rem", 12f, CreateTextSvgContext());
+            NUnit.Framework.Assert.AreEqual(new SvgStrokeParameterConverter.PdfLineDashParameters(new float[] { 12, 24
+                 }, 6), result);
+        }
+
+        private SvgDrawContext CreateTextSvgContext() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            context.AddViewPort(new Rectangle(1000, 1000));
+            return context;
         }
     }
 }
