@@ -2975,6 +2975,22 @@ namespace iText.Layout {
                  + "cmp_" + fileName, destinationFolder));
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, LogLevel = LogLevelConstants.WARN
+            )]
+        public virtual void NegativeLayoutAreaTest() {
+            String testName = "negativeLayoutAreaTable.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(595.0f, 50.0f));
+            doc.Add(new Table(new float[] { 1, 1 }).AddCell(new Cell().SetHeight(10.0f)));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 

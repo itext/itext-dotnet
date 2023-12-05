@@ -747,8 +747,6 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherTableTest01() {
-            // TODO DEVSIX-1092 There should be no path of the 15th row on the first page,
-            // since the layout box is only of 1 px height
             String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherTableTest01.pdf";
             String outFile = destinationFolder + "smallFloatInsideKeptTogetherTableTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));

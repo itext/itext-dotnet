@@ -332,8 +332,8 @@ namespace iText.Layout.Renderer {
             }
             // in this case layout result need to be changed
             if (overflowRenderer_1 != null || processOverflowedFloats) {
-                layoutResult_1 = !anythingPlaced && !waitingOverflowFloatRenderers.IsEmpty() ? LayoutResult.NOTHING : LayoutResult
-                    .PARTIAL;
+                layoutResult_1 = !anythingPlaced && (!waitingOverflowFloatRenderers.IsEmpty() || !IsAnythingOccupied()) ? 
+                    LayoutResult.NOTHING : LayoutResult.PARTIAL;
             }
             // nothing was placed and there are some overflowed floats
             // either something was placed or (since there are no overflowed floats) there is overflow renderer
@@ -1066,6 +1066,10 @@ namespace iText.Layout.Renderer {
             if (anythingPlaced && HasOwnProperty(Property.FORCED_PLACEMENT)) {
                 DeleteOwnProperty(Property.FORCED_PLACEMENT);
             }
+        }
+
+        private bool IsAnythingOccupied() {
+            return !(occupiedArea.GetBBox().GetHeight() < EPS);
         }
 
         private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IRenderer
