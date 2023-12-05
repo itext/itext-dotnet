@@ -293,7 +293,9 @@ namespace iText.Signatures {
              ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, 
             LtvVerification.CertificateOption certOption, LtvVerification.ValidationData validationData, ICollection
             <IX509Certificate> processedCerts) {
-            foreach (IX509Certificate certificate in certChain) {
+            IX509Certificate[] fullChain = certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES ? RetrieveMissingCertificates
+                (certChain) : certChain;
+            foreach (IX509Certificate certificate in fullChain) {
                 IX509Certificate cert = (IX509Certificate)certificate;
                 LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
                     )));
@@ -301,7 +303,7 @@ namespace iText.Signatures {
                     processedCerts.Contains(cert)) {
                     continue;
                 }
-                AddRevocationDataForCertificate(signingCert, certChain, cert, ocsp, crl, level, certInclude, certOption, validationData
+                AddRevocationDataForCertificate(signingCert, fullChain, cert, ocsp, crl, level, certInclude, certOption, validationData
                     , processedCerts);
             }
         }
@@ -535,6 +537,18 @@ namespace iText.Signatures {
             public IList<byte[]> ocsps = new List<byte[]>();
 
             public IList<byte[]> certs = new List<byte[]>();
+        }
+
+        private IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] certChain) {
+            IDictionary<String, IX509Certificate> restoredChain = new LinkedDictionary<String, IX509Certificate>();
+            IX509Certificate[] subChain;
+            foreach (IX509Certificate certificate in certChain) {
+                subChain = issuingCertificateRetriever.RetrieveMissingCertificates(new IX509Certificate[] { certificate });
+                foreach (IX509Certificate cert in subChain) {
+                    restoredChain.Put(((IX509Certificate)cert).GetSubjectDN().ToString(), cert);
+                }
+            }
+            return restoredChain.Values.ToArray(new IX509Certificate[0]);
         }
     }
 }

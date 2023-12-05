@@ -163,7 +163,7 @@ namespace iText.Signatures {
                 return null;
             }
             Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
-            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
+            return @in == null ? null : BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
         }
 
         /// <summary>

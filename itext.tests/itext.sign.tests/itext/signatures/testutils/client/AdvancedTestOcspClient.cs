@@ -39,7 +39,7 @@ namespace iText.Signatures.Testutils.Client {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private readonly IDictionary<String, TestOcspResponseBuilder> issuerIdToResponseBuilder = new LinkedDictionary
+        private readonly IDictionary<String, TestOcspResponseBuilder> subjectNameToResponseBuilder = new LinkedDictionary
             <String, TestOcspResponseBuilder>();
 
         public AdvancedTestOcspClient(OCSPVerifier verifier)
@@ -50,7 +50,10 @@ namespace iText.Signatures.Testutils.Client {
             , String url) {
             IOcspRequest request = GenerateOCSPRequest(rootCert, checkCert.GetSerialNumber());
             byte[] array = request.GetEncoded();
-            TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(checkCert.GetSerialNumber().ToString(16));
+            TestOcspResponseBuilder builder = subjectNameToResponseBuilder.Get(checkCert.GetSubjectDN().ToString());
+            if (builder == null) {
+                return null;
+            }
             try {
                 IOcspResponse resp = BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
                     ().GetSuccessful(), builder.MakeOcspResponseObject(array));
@@ -63,14 +66,14 @@ namespace iText.Signatures.Testutils.Client {
 
         public virtual iText.Signatures.Testutils.Client.AdvancedTestOcspClient AddBuilderForCertIssuer(IX509Certificate
              cert, IX509Certificate signingCert, IPrivateKey privateKey) {
-            issuerIdToResponseBuilder.Put(cert.GetSerialNumber().ToString(16), new TestOcspResponseBuilder(signingCert
-                , privateKey));
+            subjectNameToResponseBuilder.Put(cert.GetSubjectDN().ToString(), new TestOcspResponseBuilder(signingCert, 
+                privateKey));
             return this;
         }
 
         public virtual iText.Signatures.Testutils.Client.AdvancedTestOcspClient AddBuilderForCertIssuer(IX509Certificate
              cert, TestOcspResponseBuilder builder) {
-            issuerIdToResponseBuilder.Put(cert.GetSerialNumber().ToString(16), builder);
+            subjectNameToResponseBuilder.Put(cert.GetSubjectDN().ToString(), builder);
             return this;
         }
     }
