@@ -126,7 +126,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineBProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IPrivateKey privateKey) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineBProfile(signerProperties, chain, externalSignature);
         }
 
@@ -179,7 +179,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IPrivateKey privateKey, ITSAClient tsaClient) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineTProfile(signerProperties, chain, externalSignature, tsaClient);
         }
 
@@ -245,7 +245,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IPrivateKey privateKey, ITSAClient tsaClient) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineLTProfile(signerProperties, chain, externalSignature, tsaClient);
         }
 
@@ -312,7 +312,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTAProfile(SignerProperties signerProperties, IX509Certificate[] chain
             , IPrivateKey privateKey, ITSAClient tsaClient) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineLTAProfile(signerProperties, chain, externalSignature, tsaClient);
         }
 
@@ -622,6 +622,23 @@ namespace iText.Signatures {
             }
             if (ocspClient == null) {
                 ocspClient = new OcspClientBouncyCastle(null);
+            }
+        }
+
+        private String GetDigestAlgorithm(IPrivateKey privateKey) {
+            String signatureAlgorithm = SignUtils.GetPrivateKeyAlgorithm(privateKey);
+            switch (signatureAlgorithm) {
+                case "Ed25519": {
+                    return DigestAlgorithms.SHA512;
+                }
+
+                case "Ed448": {
+                    return DigestAlgorithms.SHAKE256;
+                }
+
+                default: {
+                    return DEFAULT_DIGEST_ALGORITHM;
+                }
             }
         }
     }

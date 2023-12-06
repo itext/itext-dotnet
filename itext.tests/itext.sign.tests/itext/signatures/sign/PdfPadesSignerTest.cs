@@ -27,6 +27,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
 using iText.Kernel.Exceptions;
@@ -39,7 +40,7 @@ using iText.Signatures.Testutils.Client;
 using iText.Test;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("IntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfPadesSignerTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         
@@ -182,6 +183,55 @@ namespace iText.Signatures.Sign {
             padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(IOException), () => padesSigner.SignWithBaselineLTAProfile
                 (signerProperties, signRsaChain, pks, testTsa));
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void PadesSignatureEd25519Test() {
+            NUnit.Framework.Assume.That(!FACTORY.IsInApprovedOnlyMode());
+            String fileName = "padesSignatureEd25519Test.pdf";
+            String outFileName = destinationFolder + fileName;
+            String cmpFileName = sourceFolder + "cmp_" + fileName;
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String signCertFileName = certsSrc + "signCertEd25519.pem";
+            IX509Certificate[] signEdDSAChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signEdDSAPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            SignerProperties signerProperties = CreateSignerProperties();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
+            if (FIPS_MODE) {
+                // algorithm identifier in key not recognised
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => padesSigner.SignWithBaselineBProfile
+                    (signerProperties, signEdDSAChain, signEdDSAPrivateKey));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.ALGORITHMS_NOT_SUPPORTED,
+                    "SHA512withEd25519", "Ed25519"), exception.Message);
+            } else {
+                padesSigner.SignWithBaselineBProfile(signerProperties, signEdDSAChain, signEdDSAPrivateKey);
+                TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PadesSignatureEd448Test() {
+            NUnit.Framework.Assume.That(!FACTORY.IsInApprovedOnlyMode());
+            String fileName = "padesSignatureEd448Test.pdf";
+            String outFileName = destinationFolder + fileName;
+            String cmpFileName = sourceFolder + "cmp_" + fileName;
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String signCertFileName = certsSrc + "signCertEd448.pem";
+            IX509Certificate[] signEdDSAChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signEdDSAPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            SignerProperties signerProperties = CreateSignerProperties();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
+            if (FIPS_MODE) {
+                // SHAKE256 is currently not supported in BCFIPS
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(AbstractGeneralSecurityException), () => padesSigner.SignWithBaselineBProfile
+                    (signerProperties, signEdDSAChain, signEdDSAPrivateKey));
+            }
+            else {
+                padesSigner.SignWithBaselineBProfile(signerProperties, signEdDSAChain, signEdDSAPrivateKey);
+                TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
+            }
         }
 
         private SignerProperties CreateSignerProperties() {
