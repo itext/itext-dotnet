@@ -21,32 +21,56 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfXrefTableTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfXrefTableTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfXrefTableTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
+            LogLevelConstants.ERROR)]
+        public virtual void OpenInvalidDocWithHugeRefTest() {
+            String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
+            NUnit.Framework.Assert.DoesNotThrow(() => new PdfDocument(new PdfReader(inputFile)));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
+            LogLevelConstants.ERROR)]
+        public virtual void OpenWithWriterInvalidDocWithHugeRefTest() {
+            String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
+            MemoryStream outputStream = new ByteArrayOutputStream();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(new PdfReader(inputFile
+                ), new PdfWriter(outputStream)));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateXMP() {
-            String created = destinationFolder + "testCreateAndUpdateXMP_create.pdf";
-            String updated = destinationFolder + "testCreateAndUpdateXMP_update.pdf";
+            String created = DESTINATION_FOLDER + "testCreateAndUpdateXMP_create.pdf";
+            String updated = DESTINATION_FOLDER + "testCreateAndUpdateXMP_update.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
@@ -80,9 +104,9 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateTwiceXMP() {
-            String created = destinationFolder + "testCreateAndUpdateTwiceXMP_create.pdf";
-            String updated = destinationFolder + "testCreateAndUpdateTwiceXMP_update.pdf";
-            String updatedAgain = destinationFolder + "testCreateAndUpdateTwiceXMP_updatedAgain.pdf";
+            String created = DESTINATION_FOLDER + "testCreateAndUpdateTwiceXMP_create.pdf";
+            String updated = DESTINATION_FOLDER + "testCreateAndUpdateTwiceXMP_update.pdf";
+            String updatedAgain = DESTINATION_FOLDER + "testCreateAndUpdateTwiceXMP_updatedAgain.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
