@@ -176,11 +176,13 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
                 TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
-                AssertDss(outputStream, rootCert);
+                AssertDss(outputStream, rootCert, signRsaCert, (IX509Certificate)tsaChain[0], (IX509Certificate)tsaChain[1
+                    ]);
             }
         }
 
-        private void AssertDss(MemoryStream outputStream, IX509Certificate rootCert) {
+        private void AssertDss(MemoryStream outputStream, IX509Certificate rootCert, IX509Certificate signRsaCert, 
+            IX509Certificate tsaCert, IX509Certificate rootTsaCert) {
             IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
             if (amountOfCrlsForRoot + amountOfCrlsForSign != 0) {
                 expectedNumberOfCrls.Put(rootCert.GetSubjectDN().ToString(), amountOfCrlsForRoot + amountOfCrlsForSign);
@@ -189,8 +191,14 @@ namespace iText.Signatures.Sign {
             if (amountOfOcspsForRoot + amountOfOcspsForSign != 0) {
                 expectedNumberOfOcsps.Put(rootCert.GetSubjectDN().ToString(), amountOfOcspsForRoot + amountOfOcspsForSign);
             }
+            IList<String> expectedCerts = JavaUtil.ArraysAsList(GetCertName(rootCert), GetCertName(signRsaCert), GetCertName
+                (tsaCert), GetCertName(rootTsaCert));
             TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
-                );
+                , expectedCerts);
+        }
+
+        private String GetCertName(IX509Certificate certificate) {
+            return certificate.GetSubjectDN().ToString();
         }
 
         private SignerProperties CreateSignerProperties() {

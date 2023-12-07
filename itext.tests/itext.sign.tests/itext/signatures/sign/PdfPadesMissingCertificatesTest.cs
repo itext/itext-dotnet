@@ -79,11 +79,11 @@ namespace iText.Signatures.Sign {
             IX509Certificate crlCert = (IX509Certificate)PemFileHelper.ReadFirstChain(crlCertFileName)[0];
             IX509Certificate ocspCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspCertFileName)[0];
             IPrivateKey ocspPrivateKey = PemFileHelper.ReadFirstKey(ocspCertFileName, password);
-            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(tsaCertFileName)[0];
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             SignerProperties signerProperties = CreateSignerProperties();
-            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            CrlClientOnline testCrlClient = new _CrlClientOnline_108(crlSignedByCrlCert, crlSignedByCA);
+            TestTsaClient testTsa = new TestTsaClient(JavaCollectionsUtil.SingletonList(tsaCert), tsaPrivateKey);
+            CrlClientOnline testCrlClient = new _CrlClientOnline_111(crlSignedByCrlCert, crlSignedByCA);
             IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IX509Certificate crlRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCrlFileName)[0];
             IX509Certificate ocspRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootOcspFileName)[0];
@@ -93,6 +93,8 @@ namespace iText.Signatures.Sign {
             IX509Certificate ocspIntermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediateOscpFileName
                 )[0];
             IX509Certificate tsaIntermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediateTsaFileName
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediateCertFileName
                 )[0];
             AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
             ocspClient.AddBuilderForCertIssuer(signCert, ocspCert, ocspPrivateKey);
@@ -108,7 +110,7 @@ namespace iText.Signatures.Sign {
                 , outputStream);
             padesSigner.SetCrlClient(testCrlClient);
             padesSigner.SetOcspClient(ocspClient);
-            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_142(crlCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_146(crlCertFileName
                 , intermediateCrlFileName, rootCrlFileName, intermediateTsaFileName, rootTsaFileName, intermediateOscpFileName
                 , rootOcspFileName, intermediateCertFileName, rootCertFileName);
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
@@ -123,12 +125,16 @@ namespace iText.Signatures.Sign {
             expectedNumberOfCrls.Put(rootCert.GetSubjectDN().ToString(), 1);
             // It is expected to have OCSP responses for all the root, CRL/OCSP/TSA intermediate certs, and signing cert.
             expectedNumberOfOcsps.Put(ocspCert.GetSubjectDN().ToString(), 8);
+            IList<String> certs = JavaUtil.ArraysAsList(GetCertName(rootCert), GetCertName(crlRootCert), GetCertName(crlCert
+                ), GetCertName(ocspCert), GetCertName(tsaRootCert), GetCertName(crlIntermediateCert), GetCertName(ocspIntermediateCert
+                ), GetCertName(tsaIntermediateCert), GetCertName(ocspRootCert), GetCertName(signCert), GetCertName(tsaCert
+                ), GetCertName(intermediateCert));
             TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
-                );
+                , certs);
         }
 
-        private sealed class _CrlClientOnline_108 : CrlClientOnline {
-            public _CrlClientOnline_108(String crlSignedByCrlCert, String crlSignedByCA) {
+        private sealed class _CrlClientOnline_111 : CrlClientOnline {
+            public _CrlClientOnline_111(String crlSignedByCrlCert, String crlSignedByCA) {
                 this.crlSignedByCrlCert = crlSignedByCrlCert;
                 this.crlSignedByCA = crlSignedByCA;
             }
@@ -145,8 +151,8 @@ namespace iText.Signatures.Sign {
             private readonly String crlSignedByCA;
         }
 
-        private sealed class _IssuingCertificateRetriever_142 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_142(String crlCertFileName, String intermediateCrlFileName, String rootCrlFileName
+        private sealed class _IssuingCertificateRetriever_146 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_146(String crlCertFileName, String intermediateCrlFileName, String rootCrlFileName
                 , String intermediateTsaFileName, String rootTsaFileName, String intermediateOscpFileName, String rootOcspFileName
                 , String intermediateCertFileName, String rootCertFileName) {
                 this.crlCertFileName = crlCertFileName;
@@ -205,6 +211,10 @@ namespace iText.Signatures.Sign {
             private readonly String intermediateCertFileName;
 
             private readonly String rootCertFileName;
+        }
+
+        private String GetCertName(IX509Certificate certificate) {
+            return certificate.GetSubjectDN().ToString();
         }
 
         private SignerProperties CreateSignerProperties() {

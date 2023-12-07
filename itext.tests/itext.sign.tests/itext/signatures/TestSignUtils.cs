@@ -36,18 +36,33 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         public static void AssertDssDict(Stream inputStream, IDictionary<String, int?> expectedNumberOfCrls, IDictionary
-            <String, int?> expectedNumberOfOcsp) {
+            <String, int?> expectedNumberOfOcsp, IList<String> expectedCerts) {
             using (PdfDocument outDocument = new PdfDocument(new PdfReader(inputStream))) {
                 PdfDictionary dss = outDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+                PdfArray certs = dss.GetAsArray(PdfName.Certs) == null ? new PdfArray() : dss.GetAsArray(PdfName.Certs);
+                IList<String> realCertificates = CreateCertsList(certs);
                 PdfArray crls = dss.GetAsArray(PdfName.CRLs) == null ? new PdfArray() : dss.GetAsArray(PdfName.CRLs);
                 IDictionary<String, int?> realNumberOfCrls = CreateCrlMap(crls);
                 PdfArray ocsps = dss.GetAsArray(PdfName.OCSPs) == null ? new PdfArray() : dss.GetAsArray(PdfName.OCSPs);
                 IDictionary<String, int?> realNumberOfOcsp = CreateOcspMap(ocsps);
+                if (expectedCerts != null) {
+                    NUnit.Framework.Assert.AreEqual(realCertificates.Count, expectedCerts.Count, "Certs entry in DSS dictionary isn't correct"
+                        );
+                    // Order agnostic list comparison.
+                    foreach (String expectedCert in expectedCerts) {
+                        NUnit.Framework.Assert.IsTrue(realCertificates.Any((cert) => cert.Equals(expectedCert)));
+                    }
+                }
                 NUnit.Framework.Assert.IsTrue(MapUtil.Equals(expectedNumberOfCrls, realNumberOfCrls), "CRLs entry in DSS dictionary isn't correct"
                     );
                 NUnit.Framework.Assert.IsTrue(MapUtil.Equals(expectedNumberOfOcsp, realNumberOfOcsp), "OCSPs entry in DSS dictionary isn't correct"
                     );
             }
+        }
+
+        public static void AssertDssDict(Stream inputStream, IDictionary<String, int?> expectedNumberOfCrls, IDictionary
+            <String, int?> expectedNumberOfOcsp) {
+            AssertDssDict(inputStream, expectedNumberOfCrls, expectedNumberOfOcsp, null);
         }
 
         public static void BasicCheckSignedDoc(String filePath, String signatureName) {
@@ -65,11 +80,11 @@ namespace iText.Signatures {
         }
 
         public static void SignedDocumentContainsCerts(Stream inputStream, IList<IX509Certificate> expectedCertificates
-            ) {
+            , String signatureName) {
             using (PdfDocument outDocument = new PdfDocument(new PdfReader(inputStream))) {
                 SignatureUtil sigUtil = new SignatureUtil(outDocument);
-                IList<IX509Certificate> actualCertificates = JavaUtil.ArraysAsList(sigUtil.ReadSignatureData("Signature1")
-                    .GetCertificates());
+                IList<IX509Certificate> actualCertificates = JavaUtil.ArraysAsList(sigUtil.ReadSignatureData(signatureName
+                    ).GetCertificates());
                 // Searching for every certificate we expect should be in the resulting document.
                 NUnit.Framework.Assert.AreEqual(expectedCertificates.Count, actualCertificates.Count);
                 foreach (IX509Certificate expectedCert in expectedCertificates) {
@@ -77,6 +92,18 @@ namespace iText.Signatures {
                         (expectedCert.GetSubjectDN())));
                 }
             }
+        }
+
+        private static IList<String> CreateCertsList(PdfArray certs) {
+            IList<String> certsNames = new List<String>();
+            foreach (PdfObject cert in certs) {
+                PdfStream certStream = (PdfStream)cert;
+                byte[] certBytes = certStream.GetBytes();
+                IX509Certificate certificate = (IX509Certificate)SignUtils.ReadAllCerts(certBytes).ToArray(new IX509Certificate
+                    [0])[0];
+                certsNames.Add(certificate.GetSubjectDN().ToString());
+            }
+            return certsNames;
         }
 
         private static IDictionary<String, int?> CreateCrlMap(PdfArray crls) {

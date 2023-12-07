@@ -85,11 +85,17 @@ namespace iText.Signatures.Sign {
             TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
             IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
             IDictionary<String, int?> expectedNumberOfOcsps = new Dictionary<String, int?>();
+            IList<String> expectedCerts = JavaUtil.ArraysAsList(GetCertName(caCert), GetCertName((IX509Certificate)signRsaChain
+                [0]), GetCertName((IX509Certificate)tsaChain[0]), GetCertName((IX509Certificate)tsaChain[1]));
             // It is expected to have two OCSP responses, one for timestamp cert and another timestamp root cert.
             expectedNumberOfOcsps.Put(caCert.GetSubjectDN().ToString(), 2);
             expectedNumberOfCrls.Put(caCert.GetSubjectDN().ToString(), 1);
             TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
-                );
+                , expectedCerts);
+        }
+
+        private String GetCertName(IX509Certificate certificate) {
+            return certificate.GetSubjectDN().ToString();
         }
 
         private SignerProperties CreateSignerProperties() {

@@ -87,10 +87,12 @@ namespace iText.Signatures.Sign {
             TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
             IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
             IDictionary<String, int?> expectedNumberOfOcsps = new Dictionary<String, int?>();
+            IList<String> expectedCerts = JavaUtil.ArraysAsList(GetCertName(rootCert), GetCertName(signRsaCert), GetCertName
+                ((IX509Certificate)tsaChain[0]), GetCertName((IX509Certificate)tsaChain[1]), GetCertName(ocspCert));
             // It is expected to have two OCSP responses, one for signing cert and another for OCSP response.
             expectedNumberOfOcsps.Put(ocspCert.GetSubjectDN().ToString(), 2);
             TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
-                );
+                , expectedCerts);
         }
 
         [NUnit.Framework.Test]
@@ -149,10 +151,16 @@ namespace iText.Signatures.Sign {
             TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
             IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
             IDictionary<String, int?> expectedNumberOfOcsps = new Dictionary<String, int?>();
+            IList<String> expectedCerts = JavaUtil.ArraysAsList(GetCertName(rootCert), GetCertName(signRsaCert), GetCertName
+                ((IX509Certificate)tsaChain[0]), GetCertName((IX509Certificate)tsaChain[1]));
             // It is expected to have one OCSP response, only for signing cert.
             expectedNumberOfOcsps.Put(signRsaCert.GetSubjectDN().ToString(), 1);
             TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
-                );
+                , expectedCerts);
+        }
+
+        private String GetCertName(IX509Certificate certificate) {
+            return certificate.GetSubjectDN().ToString();
         }
 
         private SignerProperties CreateSignerProperties() {

@@ -116,7 +116,8 @@ namespace iText.Signatures.Sign {
             else {
                 expectedCerts = JavaUtil.ArraysAsList(signCert, fistIntermediateCert, secondIntermediateCert, rootCert);
             }
-            TestSignUtils.SignedDocumentContainsCerts(new MemoryStream(outputStream.ToArray()), expectedCerts);
+            TestSignUtils.SignedDocumentContainsCerts(new MemoryStream(outputStream.ToArray()), expectedCerts, "Signature1"
+                );
         }
 
         private sealed class _IssuingCertificateRetriever_118 : IssuingCertificateRetriever {
