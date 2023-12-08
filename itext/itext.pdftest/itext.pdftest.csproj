@@ -47,7 +47,7 @@
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="lib\verapdf\greenfield-apps-1.22.2.jar">
+	<Content Include="lib\verapdf\greenfield-apps-1.25.116.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 	<Content Include="lib\verapdf\VeraPDF_license.txt">
