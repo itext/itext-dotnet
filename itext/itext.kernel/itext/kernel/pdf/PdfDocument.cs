@@ -47,6 +47,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Statistics;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -1027,14 +1028,14 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Get the
-        /// <see cref="PdfAConformanceLevel"/>
+        /// <see cref="IConformanceLevel"/>
         /// </summary>
         /// <returns>
         /// the
-        /// <see cref="PdfAConformanceLevel"/>
-        /// will be null if the document is not a PDF/A document
+        /// <see cref="IConformanceLevel"/>
+        /// will be null if the document does not have a conformance level specified
         /// </returns>
-        public virtual PdfAConformanceLevel GetConformanceLevel() {
+        public virtual IConformanceLevel GetConformanceLevel() {
             return null;
         }
 
@@ -1545,20 +1546,13 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
         /// <param name="obj">An object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key) {
+            CheckIsoConformance(obj, key, null, null);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
         /// <param name="obj">an object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         /// <param name="resources">
@@ -1569,13 +1563,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="contentStream">current content stream</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
+            CheckIsoConformance(obj, key, resources, contentStream, null);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
         /// <param name="obj">an object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         /// <param name="resources">
@@ -1587,6 +1578,14 @@ namespace iText.Kernel.Pdf {
         /// <param name="extra">extra data required for the check.</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             , Object extra) {
+            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
+            if (container == null) {
+                return;
+            }
+            container.Validate(obj, key, resources, contentStream, extra);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
@@ -2012,12 +2011,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
+        /// <summary>Checks whether PDF document conforms to a specific standard.</summary>
         protected internal virtual void CheckIsoConformance() {
+            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
+            if (container == null) {
+                return;
+            }
+            ValidationContext context = new ValidationContext().WithPdfDocument(this).WithFonts(GetDocumentFonts());
+            container.Validate(context);
         }
 
         /// <summary>

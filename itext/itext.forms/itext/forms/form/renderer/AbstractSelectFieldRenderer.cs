@@ -220,7 +220,10 @@ namespace iText.Forms.Form.Renderer {
             if (document == null) {
                 return null;
             }
-            return document.GetConformanceLevel();
+            if (document.GetConformanceLevel() is PdfAConformanceLevel) {
+                return (PdfAConformanceLevel)document.GetConformanceLevel();
+            }
+            return null;
         }
 
         protected internal virtual IList<IRenderer> GetOptionsMarkedSelected(IRenderer optionsSubTree) {

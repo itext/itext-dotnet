@@ -236,7 +236,10 @@ namespace iText.Forms.Form.Renderer {
             if (document == null) {
                 return null;
             }
-            return document.GetConformanceLevel();
+            if (document.GetConformanceLevel() is PdfAConformanceLevel) {
+                return (PdfAConformanceLevel)document.GetConformanceLevel();
+            }
+            return null;
         }
 
         /// <summary>Determines, whether the layout is based in the renderer itself or flat renderer.</summary>

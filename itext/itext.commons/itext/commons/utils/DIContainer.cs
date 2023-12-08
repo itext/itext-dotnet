@@ -78,5 +78,23 @@ namespace iText.Commons.Utils {
             }
             return (T)supplier;
         }
+
+        /// <summary>Checks if an instance is registered for a class.</summary>
+        /// <remarks>
+        /// Checks if an instance is registered for a class.
+        /// If the class is registered but the value is null, it will still return
+        /// <see langword="true"/>.
+        /// </remarks>
+        /// <param name="clazz">the class</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if an instance is registered,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsRegistered(Type clazz) {
+            return localInstances.ContainsKey(clazz) || instances.ContainsKey(clazz);
+        }
     }
 }

@@ -28,6 +28,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Utils;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -49,7 +50,7 @@ namespace iText.Pdfa.Checker {
     /// standard and its derivates will get their own implementation in the
     /// iText - pdfa project.
     /// </remarks>
-    public abstract class PdfAChecker {
+    public abstract class PdfAChecker : IValidationChecker {
         /// <summary>
         /// The Red-Green-Blue color profile as defined by the International Color
         /// Consortium.
@@ -162,6 +163,102 @@ namespace iText.Pdfa.Checker {
             CheckPages(catalog.GetDocument());
             CheckOpenAction(catalogDict.Get(PdfName.OpenAction));
             CheckColorsUsages();
+        }
+
+        public virtual void ValidateDocument(ValidationContext validationContext) {
+            foreach (PdfFont pdfFont in validationContext.GetFonts()) {
+                CheckFont(pdfFont);
+            }
+            PdfCatalog catalog = validationContext.GetPdfDocument().GetCatalog();
+            CheckDocument(catalog);
+        }
+
+        public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
+            CanvasGraphicsState gState;
+            PdfDictionary currentColorSpaces = null;
+            if (resources != null) {
+                currentColorSpaces = resources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
+            }
+            switch (key) {
+                case IsoKey.CANVAS_STACK: {
+                    CheckCanvasStack((char)obj);
+                    break;
+                }
+
+                case IsoKey.PDF_OBJECT: {
+                    CheckPdfObject((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.RENDERING_INTENT: {
+                    CheckRenderingIntent((PdfName)obj);
+                    break;
+                }
+
+                case IsoKey.INLINE_IMAGE: {
+                    CheckInlineImage((PdfStream)obj, currentColorSpaces);
+                    break;
+                }
+
+                case IsoKey.EXTENDED_GRAPHICS_STATE: {
+                    gState = (CanvasGraphicsState)obj;
+                    CheckExtGState(gState, contentStream);
+                    break;
+                }
+
+                case IsoKey.FILL_COLOR: {
+                    gState = (CanvasGraphicsState)obj;
+                    CheckColor(gState, gState.GetFillColor(), currentColorSpaces, true, contentStream);
+                    break;
+                }
+
+                case IsoKey.PAGE: {
+                    CheckSinglePage((PdfPage)obj);
+                    break;
+                }
+
+                case IsoKey.STROKE_COLOR: {
+                    gState = (CanvasGraphicsState)obj;
+                    CheckColor(gState, gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
+                    break;
+                }
+
+                case IsoKey.TAG_STRUCTURE_ELEMENT: {
+                    CheckTagStructureElement((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT_GLYPHS: {
+                    CheckFontGlyphs(((CanvasGraphicsState)obj).GetFont(), contentStream);
+                    break;
+                }
+
+                case IsoKey.XREF_TABLE: {
+                    CheckXrefTable((PdfXrefTable)obj);
+                    break;
+                }
+
+                case IsoKey.SIGNATURE: {
+                    CheckSignature((PdfDictionary)obj);
+                    break;
+                }
+
+                case IsoKey.SIGNATURE_TYPE: {
+                    CheckSignatureType(((bool?)obj).Value);
+                    break;
+                }
+
+                case IsoKey.CRYPTO: {
+                    CheckCrypto((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT: {
+                    CheckText((String)obj, (PdfFont)extra);
+                    break;
+                }
+            }
         }
 
         /// <summary>

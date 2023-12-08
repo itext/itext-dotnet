@@ -26,7 +26,7 @@ using iText.Kernel.XMP.Properties;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Enumeration of all the PDF/A conformance levels.</summary>
-    public class PdfAConformanceLevel {
+    public class PdfAConformanceLevel : IConformanceLevel {
         public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_1A = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("1", "A");
 

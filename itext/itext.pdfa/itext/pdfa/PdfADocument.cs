@@ -25,8 +25,8 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Pdfa.Checker;
 using iText.Pdfa.Exceptions;
@@ -153,111 +153,7 @@ namespace iText.Pdfa {
         }
 
         /// <summary><inheritDoc/></summary>
-        public override void CheckIsoConformance(Object obj, IsoKey key) {
-            CheckIsoConformance(obj, key, null, null);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            ) {
-            CheckIsoConformance(obj, key, resources, contentStream, null);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            , Object extra) {
-            if (!isPdfADocument) {
-                base.CheckIsoConformance(obj, key, resources, contentStream);
-                return;
-            }
-            CanvasGraphicsState gState;
-            PdfDictionary currentColorSpaces = null;
-            if (resources != null) {
-                currentColorSpaces = resources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
-            }
-            switch (key) {
-                case IsoKey.CANVAS_STACK: {
-                    checker.CheckCanvasStack((char)obj);
-                    break;
-                }
-
-                case IsoKey.PDF_OBJECT: {
-                    checker.CheckPdfObject((PdfObject)obj);
-                    break;
-                }
-
-                case IsoKey.RENDERING_INTENT: {
-                    checker.CheckRenderingIntent((PdfName)obj);
-                    break;
-                }
-
-                case IsoKey.INLINE_IMAGE: {
-                    checker.CheckInlineImage((PdfStream)obj, currentColorSpaces);
-                    break;
-                }
-
-                case IsoKey.EXTENDED_GRAPHICS_STATE: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckExtGState(gState, contentStream);
-                    break;
-                }
-
-                case IsoKey.FILL_COLOR: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState, gState.GetFillColor(), currentColorSpaces, true, contentStream);
-                    break;
-                }
-
-                case IsoKey.PAGE: {
-                    checker.CheckSinglePage((PdfPage)obj);
-                    break;
-                }
-
-                case IsoKey.STROKE_COLOR: {
-                    gState = (CanvasGraphicsState)obj;
-                    checker.CheckColor(gState, gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
-                    break;
-                }
-
-                case IsoKey.TAG_STRUCTURE_ELEMENT: {
-                    checker.CheckTagStructureElement((PdfObject)obj);
-                    break;
-                }
-
-                case IsoKey.FONT_GLYPHS: {
-                    checker.CheckFontGlyphs(((CanvasGraphicsState)obj).GetFont(), contentStream);
-                    break;
-                }
-
-                case IsoKey.XREF_TABLE: {
-                    checker.CheckXrefTable((PdfXrefTable)obj);
-                    break;
-                }
-
-                case IsoKey.SIGNATURE: {
-                    checker.CheckSignature((PdfDictionary)obj);
-                    break;
-                }
-
-                case IsoKey.SIGNATURE_TYPE: {
-                    checker.CheckSignatureType(((bool?)obj).Value);
-                    break;
-                }
-
-                case IsoKey.CRYPTO: {
-                    checker.CheckCrypto((PdfObject)obj);
-                    break;
-                }
-
-                case IsoKey.FONT: {
-                    checker.CheckText((String)obj, (PdfFont)extra);
-                    break;
-                }
-            }
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override PdfAConformanceLevel GetConformanceLevel() {
+        public override IConformanceLevel GetConformanceLevel() {
             if (isPdfADocument) {
                 return checker.GetConformanceLevel();
             }
@@ -329,12 +225,23 @@ namespace iText.Pdfa {
         }
 
         protected override void CheckIsoConformance() {
-            if (isPdfADocument) {
-                checker.CheckDocument(catalog);
-            }
-            else {
-                base.CheckIsoConformance();
-            }
+            SetCheckerIfChanged();
+            base.CheckIsoConformance();
+        }
+
+        /// <param name="obj">an object to conform.</param>
+        /// <param name="key">type of object to conform.</param>
+        /// <param name="resources">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
+        /// associated with an object to check.
+        /// </param>
+        /// <param name="contentStream">current content stream.</param>
+        /// <param name="extra">extra data required for the check.</param>
+        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
+            SetCheckerIfChanged();
+            base.CheckIsoConformance(obj, key, resources, contentStream, extra);
         }
 
         protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
@@ -356,15 +263,6 @@ namespace iText.Pdfa {
             }
         }
 
-        protected override void FlushFonts() {
-            if (isPdfADocument) {
-                foreach (PdfFont pdfFont in GetDocumentFonts()) {
-                    checker.CheckFont(pdfFont);
-                }
-            }
-            base.FlushFonts();
-        }
-
         /// <summary>
         /// Sets the checker that defines the requirements of the PDF/A standard
         /// depending on conformance level.
@@ -377,6 +275,34 @@ namespace iText.Pdfa {
             if (!isPdfADocument) {
                 return;
             }
+            SetChecker(GetCorrectCheckerFromConformance(conformanceLevel));
+        }
+
+        protected internal virtual void SetChecker(PdfAChecker checker) {
+            if (!isPdfADocument) {
+                return;
+            }
+            this.checker = checker;
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(checker);
+            this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+        }
+
+        private void SetCheckerIfChanged() {
+            if (!isPdfADocument) {
+                return;
+            }
+            if (!GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer validationContainer = GetDiContainer().GetInstance<ValidationContainer>();
+            if (validationContainer != null && !validationContainer.ContainsChecker(checker)) {
+                SetChecker(checker);
+            }
+        }
+
+        private static PdfAChecker GetCorrectCheckerFromConformance(PdfAConformanceLevel conformanceLevel) {
+            PdfAChecker checker;
             switch (conformanceLevel.GetPart()) {
                 case "1": {
                     checker = new PdfA1Checker(conformanceLevel);
@@ -402,6 +328,7 @@ namespace iText.Pdfa {
                     throw new ArgumentException(PdfaExceptionMessageConstant.CANNOT_FIND_PDFA_CHECKER_FOR_SPECIFIED_NAME);
                 }
             }
+            return checker;
         }
 
         /// <summary>Initializes tagStructureContext to track necessary information of document's tag structure.</summary>

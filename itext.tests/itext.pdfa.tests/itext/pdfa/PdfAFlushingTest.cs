@@ -23,14 +23,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.IO.Image;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
 using iText.Pdfa.Logs;
 using iText.Test;
 using iText.Test.Attributes;
+using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -110,6 +114,35 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED, LogLevel = LogLevelConstants.WARN
+            )]
+        public virtual void TryToFlushFontTest() {
+            String outPdf = destinationFolder + "tryToFlushFontTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_tryToFlushFontTest.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfADocument pdfDoc = (PdfADocument)new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent
+                ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is)).SetTagged();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            font.MakeIndirect(pdfDoc);
+            Document document = new Document(pdfDoc);
+            document.SetFont(font);
+            List list = new List();
+            list.Add("123");
+            // nothing happen (only log message was written)
+            font.Flush();
+            document.Add(list);
+            NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetTagStructureContext().GetTagStructureTargetVersion
+                ());
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         [LogMessage(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED)]
         public virtual void AddUnusedStreamObjectsTest() {

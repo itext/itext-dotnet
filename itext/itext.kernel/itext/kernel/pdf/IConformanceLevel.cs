@@ -21,24 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Kernel.Pdf {
-    /// <summary>Type of object to conform.</summary>
-    public enum IsoKey {
-        CANVAS_STACK,
-        FILL_COLOR,
-        EXTENDED_GRAPHICS_STATE,
-        INLINE_IMAGE,
-        PAGE,
-        PDF_OBJECT,
-        RENDERING_INTENT,
-        STROKE_COLOR,
-        TAG_STRUCTURE_ELEMENT,
-        FONT_GLYPHS,
-        XREF_TABLE,
-        SIGNATURE,
-        SIGNATURE_TYPE,
-        CRYPTO,
-        FONT,
-        CANVAS_BEGIN_MARKED_CONTENT,
-        CANVAS_WRITING_CONTENT
+    /// <summary>Interface for PDF conformance level.</summary>
+    /// <remarks>
+    /// Interface for PDF conformance level.
+    /// <para />
+    /// Conformance levels are extended PDF specifications that define subsets of PDF
+    /// functionality. An example of a conformance level is PDF/A, which is used for long-term archiving
+    /// and PDF/UA, which is used for accessible documents.
+    /// </remarks>
+    public interface IConformanceLevel {
     }
 }

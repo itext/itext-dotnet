@@ -1554,6 +1554,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Supplement = CreateDirectName("Supplement");
 
+        public static readonly iText.Kernel.Pdf.PdfName Suspects = CreateDirectName("Suspects");
+
         public static readonly iText.Kernel.Pdf.PdfName SV = CreateDirectName("SV");
 
         public static readonly iText.Kernel.Pdf.PdfName Sy = CreateDirectName("Sy");
