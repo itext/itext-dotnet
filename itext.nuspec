@@ -50,6 +50,8 @@
     <file src="itext\itext.layout\bin\Release\net461\itext.layout.xml" target="lib\net461" />
     <file src="itext\itext.pdfa\bin\Release\net461\itext.pdfa.dll" target="lib\net461" />
     <file src="itext\itext.pdfa\bin\Release\net461\itext.pdfa.xml" target="lib\net461" />
+    <file src="itext\itext.pdfua\bin\Release\net461\itext.pdfua.dll" target="lib\net461" />
+    <file src="itext\itext.pdfua\bin\Release\net461\itext.pdfua.xml" target="lib\net461" />
     <file src="itext\itext.forms\bin\Release\net461\itext.forms.dll" target="lib\net461" />
     <file src="itext\itext.forms\bin\Release\net461\itext.forms.xml" target="lib\net461" />
     <file src="itext\itext.barcodes\bin\Release\net461\itext.barcodes.dll" target="lib\net461" />
@@ -70,6 +72,8 @@
     <file src="itext\itext.layout\bin\Release\netstandard2.0\itext.layout.xml" target="lib\netstandard2.0" />
     <file src="itext\itext.pdfa\bin\Release\netstandard2.0\itext.pdfa.dll" target="lib\netstandard2.0" />
     <file src="itext\itext.pdfa\bin\Release\netstandard2.0\itext.pdfa.xml" target="lib\netstandard2.0" />
+    <file src="itext\itext.pdfua\bin\Release\netstandard2.0\itext.pdfua.dll" target="lib\netstandard2.0" />
+    <file src="itext\itext.pdfua\bin\Release\netstandard2.0\itext.pdfua.xml" target="lib\netstandard2.0" />
     <file src="itext\itext.forms\bin\Release\netstandard2.0\itext.forms.dll" target="lib\netstandard2.0" />
     <file src="itext\itext.forms\bin\Release\netstandard2.0\itext.forms.xml" target="lib\netstandard2.0" />
     <file src="itext\itext.barcodes\bin\Release\netstandard2.0\itext.barcodes.dll" target="lib\netstandard2.0" />
