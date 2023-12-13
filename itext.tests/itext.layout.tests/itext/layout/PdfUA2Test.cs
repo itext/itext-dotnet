@@ -30,6 +30,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
@@ -523,6 +524,126 @@ namespace iText.Layout {
                     .PDF_1_7));
                 section.Add(bibliography);
                 document.Add(section);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckMetadataNoTitleTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaMetadataNoTitleTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "simplePdfUA2.xmp"));
+                XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
+                pdfDocument.SetXmpMetadata(xmpMeta);
+                pdfDocument.SetTagged();
+                pdfDocument.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+                pdfDocument.GetCatalog().SetLang(new PdfString("en-US"));
+            }
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CheckMetadataDisplayDocTitleFalseTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaMetadataDisplayDocTitleFalseTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "simplePdfUA2.xmp"));
+                XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
+                pdfDocument.SetXmpMetadata(xmpMeta);
+                pdfDocument.SetTagged();
+                pdfDocument.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(false));
+                pdfDocument.GetCatalog().SetLang(new PdfString("en-US"));
+                PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
+                info.SetTitle("PdfUA2 Title");
+            }
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CheckMetadataNoViewerPrefTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaMetadataNoViewerPrefTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "simplePdfUA2.xmp"));
+                XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
+                pdfDocument.SetXmpMetadata(xmpMeta);
+                pdfDocument.SetTagged();
+                pdfDocument.GetCatalog().SetLang(new PdfString("en-US"));
+                PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
+                info.SetTitle("PdfUA2 Title");
+            }
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CheckEmbeddedFileTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaEmbeddedFileTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_pdfuaEmbeddedFileTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                CreateSimplePdfUA2Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                Paragraph paragraph = new Paragraph("Hello PdfUA2").SetFont(font);
+                new Document(pdfDocument).Add(paragraph);
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, SOURCE_FOLDER + "sample.wav", "sample.wav"
+                    , "sample", null, null);
+                pdfDocument.AddFileAttachment("specificname", spec);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckEmbeddedFileNoDescTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaEmbeddedFileNoDescTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                CreateSimplePdfUA2Document(pdfDocument);
+                PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, SOURCE_FOLDER + "sample.wav", "sample.wav"
+                    , "sample", null, null);
+                ((PdfDictionary)spec.GetPdfObject()).Remove(PdfName.Desc);
+                pdfDocument.AddFileAttachment("specificname", spec);
+            }
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CheckPageLabelTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaPageLabelTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_pdfuaPageLabelTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                CreateSimplePdfUA2Document(pdfDocument);
+                PdfPage pdfPage = pdfDocument.AddNewPage();
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                Paragraph paragraph = new Paragraph("Hello PdfUA2").SetFont(font);
+                new Document(pdfDocument).Add(paragraph);
+                pdfPage.SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null, 1);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPageNumberAndLabelTest() {
+            String outFile = DESTINATION_FOLDER + "pdfuaPageNumLabelTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_pdfuaPageNumLabelTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                CreateSimplePdfUA2Document(pdfDocument);
+                Document document = new Document(pdfDocument);
+                PdfPage pdfPage = pdfDocument.AddNewPage();
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                Paragraph paragraph = new Paragraph("Hello PdfUA2").SetFont(font);
+                document.Add(paragraph);
+                pdfPage.GetPdfObject().GetAsStream(PdfName.Contents).Put(PdfName.PageNum, new PdfNumber(5));
+                pdfPage.SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null, 5);
             }
             CompareAndValidate(outFile, cmpFile);
         }
