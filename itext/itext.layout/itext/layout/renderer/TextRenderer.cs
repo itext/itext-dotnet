@@ -1500,7 +1500,7 @@ namespace iText.Layout.Renderer {
                     return true;
                 }
                 else {
-                    throw new InvalidOperationException("Invalid FONT property value type.");
+                    throw new InvalidOperationException(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE);
                 }
             }
         }

@@ -1090,6 +1090,9 @@ namespace iText.Forms.Fields {
             if (parent is PdfButtonFormField) {
                 return ((PdfButtonFormField)parent).IsPushButton();
             }
+            if (parent is PdfSignatureFormField) {
+                return false;
+            }
             return true;
         }
 

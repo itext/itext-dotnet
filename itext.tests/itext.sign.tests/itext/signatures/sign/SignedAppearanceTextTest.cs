@@ -30,22 +30,38 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Element;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Exceptions;
+using iText.Pdfa;
+using iText.Pdfa.Exceptions;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Attributes;
+using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class SignedAppearanceTextTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/SignedAppearanceTextTest/";
+
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/font/";
+
+        private static readonly String PDFA_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/pdfa/";
 
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/SignedAppearanceTextTest/";
@@ -83,6 +99,105 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(new Rectangle(36, 676, 200, 15))));
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignPDFADocumentWithoutSettingFont() {
+            String srcFile = DESTINATION_FOLDER + "simplePDFA.pdf";
+            CreateSimplePDFADocument(srcFile).Close();
+            Rectangle rect = new Rectangle(50, 70, 400, 200);
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
+                ().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine("Test City"));
+            String outPdf = DESTINATION_FOLDER + "signPDFADocumentWithoutSettingFont.pdf";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(Exception), () => {
+                Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignPDFADocumentSettingBadFont() {
+            String srcFile = DESTINATION_FOLDER + "simplePDFA1.pdf";
+            CreateSimplePDFADocument(srcFile).Close();
+            Rectangle rect = new Rectangle(50, 70, 400, 200);
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFont(PdfFontFactory.CreateFont
+                (StandardFonts.COURIER)).SetContent(new SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil
+                .GetCurrentTime()).SetLocationLine("Test City"));
+            String outPdf = DESTINATION_FOLDER + "signPDFADocumentBadFont.pdf";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(e.Message, MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+                , "Courier"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultPdfATextTest() {
+            String srcFile = DESTINATION_FOLDER + "simplePDFADocument.pdf";
+            CreateSimplePDFADocument(srcFile).Close();
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(srcFile));
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+            String cmpPdf = SOURCE_FOLDER + "cmp_defaultSignedPDFAAppearanceTextTest.pdf";
+            String outPdf = DESTINATION_FOLDER + "defaultSignedPDFAAppearanceTextTest.pdf";
+            Rectangle rect = new Rectangle(50, 200, 400, 100);
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFont(font).SetContent(new 
+                SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine(
+                "Test City"));
+            Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                , GetTestMap(rect)));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignPdfAWithFormfieldAlreadyExistingTest() {
+            String srcFile = DESTINATION_FOLDER + "simplePDFADocumentWithSignature.pdf";
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            Document doc = CreateSimplePDFADocument(srcFile);
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearanceOg = (SignatureFieldAppearance)new SignatureFieldAppearance(fieldName).
+                SetFont(font).SetFontColor(ColorConstants.MAGENTA).SetContent(new SignedAppearanceText().SetSignedBy("Test"
+                ).SetReasonLine("Making pdfs safe").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine("Test City"
+                )).SetInteractive(true);
+            doc.Add(appearanceOg);
+            doc.Close();
+            String cmpPdf = SOURCE_FOLDER + "cmp_signPdfAWithFormfieldAlreadyExisting.pdf";
+            String outPdf = DESTINATION_FOLDER + "signPdfAWithFormfieldAlreadyExisting.pdf";
+            Rectangle rect = new Rectangle(50, 200, 400, 100);
+            PdfFont font1 = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFont(font1).SetContent(new 
+                SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine(
+                "Test City"));
+            Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        private static Document CreateSimplePDFADocument(String filename) {
+            WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0);
+            String icmProfile = PDFA_FOLDER + "sRGB Color Space Profile.icm";
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , new FileStream(icmProfile, FileMode.Open, FileAccess.Read));
+            PdfDocument document = new PdfADocument(new PdfWriter(filename, writerProperties), PdfAConformanceLevel.PDF_A_4
+                , outputIntent);
+            Document doc = new Document(document);
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            doc.Add(new Paragraph("Hello World!").SetFont(font));
+            document.AddNewPage();
+            return doc;
         }
 
         [NUnit.Framework.Test]

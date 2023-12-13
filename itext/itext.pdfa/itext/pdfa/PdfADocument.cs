@@ -119,7 +119,10 @@ namespace iText.Pdfa {
         /// <see langword="null"/>.
         /// </returns>
         public override PdfFont GetDefaultFont() {
-            return null;
+            if (isPdfADocument) {
+                return null;
+            }
+            return base.GetDefaultFont();
         }
 
         /// <summary>Opens a PDF/A document in the stamping mode.</summary>

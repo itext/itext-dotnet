@@ -29,6 +29,7 @@ using iText.Forms.Form;
 using iText.Forms.Logs;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -36,6 +37,7 @@ using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Test;
@@ -321,6 +323,46 @@ namespace iText.Forms.Form.Element {
                 PdfFormCreator.GetAcroForm(document.GetPdfDocument(), false).FlattenFields();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontSizeTest() {
+            String outPdf = DESTINATION_FOLDER + "fontSizeTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_fontSizeTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
+                //TODO DEVSIX-7970 Fontsize doesn't get recalculate correctly in SignatureFieldAppearance making the signature look absent
+                sigField.SetFontSize(20);
+                sigField.SetContent("test");
+                document.Add(sigField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontNullCustomCheck() {
+            String outPdf = DESTINATION_FOLDER + "fontNullCustomCheck.pdf";
+            PdfDocument pdfDoc = new _PdfDocument_413(new PdfWriter(outPdf));
+            Document document = new Document(pdfDoc);
+            SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
+            sigField.SetContent("test");
+            sigField.SetInteractive(true);
+            sigField.SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => {
+                document.Add(sigField);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE, e.Message);
+        }
+
+        private sealed class _PdfDocument_413 : PdfDocument {
+            public _PdfDocument_413(PdfWriter baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override PdfFont GetDefaultFont() {
+                return null;
+            }
         }
 
         [NUnit.Framework.Test]

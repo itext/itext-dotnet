@@ -20,9 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
-using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfa {
@@ -53,8 +50,6 @@ namespace iText.Pdfa {
     /// for PDF/A documents.
     /// </remarks>
     public class PdfAAgnosticPdfDocument : PdfADocument {
-        private PdfFont defaultFont;
-
         /// <summary>Opens a PDF/A document in stamping mode.</summary>
         /// <param name="reader">
         /// the
@@ -86,36 +81,6 @@ namespace iText.Pdfa {
         /// </param>
         public PdfAAgnosticPdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
             : base(reader, writer, properties, true) {
-        }
-
-        /// <summary>Get default font for the document: Helvetica, WinAnsi.</summary>
-        /// <remarks>
-        /// Get default font for the document: Helvetica, WinAnsi.
-        /// One instance per document.
-        /// </remarks>
-        /// <returns>
-        /// instance of
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// or
-        /// <see langword="null"/>
-        /// on error.
-        /// </returns>
-        public override PdfFont GetDefaultFont() {
-            // TODO DEVSIX-7850 investigate embedding default font into PDF/A documents while signing
-            if (defaultFont == null) {
-                try {
-                    defaultFont = PdfFontFactory.CreateFont();
-                    if (writer != null) {
-                        defaultFont.MakeIndirect(this);
-                    }
-                }
-                catch (System.IO.IOException e) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfDocument));
-                    logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT);
-                    defaultFont = null;
-                }
-            }
-            return defaultFont;
         }
     }
 }

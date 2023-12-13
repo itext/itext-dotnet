@@ -59,6 +59,8 @@ namespace iText.Layout.Exceptions {
 
         public const String INVALID_COLUMN_PROPERTIES = "Invalid column-count/column-width/column-gap properties, they're absent or have negative value";
 
+        public const String INVALID_FONT_PROPERTY_VALUE = "Invalid FONT property value type.";
+
         private LayoutExceptionMessageConstant() {
         }
     }
