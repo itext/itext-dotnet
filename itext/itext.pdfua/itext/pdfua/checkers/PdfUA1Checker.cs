@@ -27,6 +27,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Pdfua.Exceptions;
 
@@ -40,16 +41,20 @@ namespace iText.Pdfua.Checkers {
     public class PdfUA1Checker : IValidationChecker {
         private readonly PdfDocument pdfDocument;
 
+        private readonly TagStructureContext tagStructureContext;
+
         /// <summary>Creates PdfUA1Checker instance with PDF document which will be validated against PDF/UA-1 standard.
         ///     </summary>
         /// <param name="pdfDocument">the document to validate</param>
         public PdfUA1Checker(PdfDocument pdfDocument) {
             this.pdfDocument = pdfDocument;
+            this.tagStructureContext = new TagStructureContext(pdfDocument);
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual void ValidateDocument(ValidationContext validationContext) {
             CheckCatalog(validationContext.GetPdfDocument().GetCatalog());
+            CheckStructureTreeRoot(validationContext.GetPdfDocument().GetStructTreeRoot());
             CheckFonts(validationContext.GetFonts());
         }
 
@@ -94,11 +99,12 @@ namespace iText.Pdfua.Checkers {
         }
 
         private void CheckOnOpeningBeginMarkedContent(Object obj, Object extra) {
+            Tuple2<PdfName, PdfDictionary> currentBmc = (Tuple2<PdfName, PdfDictionary>)extra;
+            CheckStandardRoleMapping(currentBmc);
             Stack<Tuple2<PdfName, PdfDictionary>> stack = GetTagStack(obj);
             if (stack.IsEmpty()) {
                 return;
             }
-            Tuple2<PdfName, PdfDictionary> currentBmc = (Tuple2<PdfName, PdfDictionary>)extra;
             bool isRealContent = IsRealContent(currentBmc);
             bool isArtifact = PdfName.Artifact.Equals(currentBmc.GetFirst());
             if (isArtifact && IsInsideRealContent(stack)) {
@@ -106,6 +112,16 @@ namespace iText.Pdfua.Checkers {
             }
             if (isRealContent && IsInsideArtifact(stack)) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT);
+            }
+        }
+
+        private void CheckStandardRoleMapping(Tuple2<PdfName, PdfDictionary> tag) {
+            PdfNamespace @namespace = tagStructureContext.GetDocumentDefaultNamespace();
+            String role = tag.GetFirst().GetValue();
+            if (!StandardRoles.ARTIFACT.Equals(role) && !tagStructureContext.CheckIfRoleShallBeMappedToStandardRole(role
+                , @namespace)) {
+                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE
+                    , role));
             }
         }
 
@@ -156,6 +172,18 @@ namespace iText.Pdfua.Checkers {
                 if (markInfoSuspects != null && markInfoSuspects.GetValue()) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.SUSPECTS_ENTRY_IN_MARK_INFO_DICTIONARY_SHALL_NOT_HAVE_A_VALUE_OF_TRUE
                         );
+                }
+            }
+        }
+
+        private void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
+            PdfDictionary roleMap = structTreeRoot.GetRoleMap();
+            foreach (KeyValuePair<PdfName, PdfObject> entry in roleMap.EntrySet()) {
+                String role = entry.Key.GetValue();
+                IRoleMappingResolver roleMappingResolver = pdfDocument.GetTagStructureContext().GetRoleMappingResolver(role
+                    );
+                if (roleMappingResolver.CurrentRoleIsStandard()) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ONE_OR_MORE_STANDARD_ROLE_REMAPPED);
                 }
             }
         }

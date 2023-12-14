@@ -319,7 +319,7 @@ namespace iText.Pdfua {
             PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
                 ()));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SaveState().OpenTag(new CanvasTag(PdfName.Rect)).SetFillColor(ColorConstants.RED);
+            canvas.SaveState().OpenTag(new CanvasTag(PdfName.Art)).SetFillColor(ColorConstants.RED);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 canvas.Rectangle(new Rectangle(200, 200, 100, 100));
             }

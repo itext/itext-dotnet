@@ -25,6 +25,8 @@ using System;
 namespace iText.Pdfua.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class PdfUAExceptionMessageConstants {
+        public const String ONE_OR_MORE_STANDARD_ROLE_REMAPPED = "One or more standard types are remapped.";
+
         public const String TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING = "Tag hasn't been added before adding content to the canvas.";
 
         public const String CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT = "Content is neither marked as Artifact nor tagged as real content.";
@@ -42,6 +44,8 @@ namespace iText.Pdfua.Exceptions {
         public const String REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA = "Tagged content is present inside content marked as Artifact or vice versa.";
 
         public const String SUSPECTS_ENTRY_IN_MARK_INFO_DICTIONARY_SHALL_NOT_HAVE_A_VALUE_OF_TRUE = "Suspects entry in mark info dictionary shall not have a value of true.";
+
+        public const String TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE = "\"{0}\" tag mapping does not terminate with a standard type.";
 
         private PdfUAExceptionMessageConstants() {
         }
