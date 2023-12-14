@@ -125,6 +125,9 @@ namespace iText.Signatures {
         /// <summary>Indicates if we need to reuse the existing appearance as layer 0.</summary>
         private bool reuseAppearance = false;
 
+        // Option for backward compatibility.
+        private bool reuseAppearanceSet = false;
+
         /// <summary>Creates a PdfSignatureAppearance.</summary>
         /// <param name="document">PdfDocument</param>
         /// <param name="pageRect">Rectangle of the appearance</param>
@@ -394,6 +397,7 @@ namespace iText.Signatures {
             )]
         public virtual iText.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
             this.reuseAppearance = reuseAppearance;
+            this.reuseAppearanceSet = true;
             return this;
         }
 
@@ -636,6 +640,20 @@ namespace iText.Signatures {
         /// <returns>an appearances reusing flag value.</returns>
         internal virtual bool IsReuseAppearance() {
             return reuseAppearance;
+        }
+
+        /// <summary>
+        /// Checks if reuseAppearance value was set using
+        /// <see>this#setReuseAppearance(boolean)</see>.
+        /// </summary>
+        /// <remarks>
+        /// Checks if reuseAppearance value was set using
+        /// <see>this#setReuseAppearance(boolean)</see>.
+        /// Used for backward compatibility.
+        /// </remarks>
+        /// <returns>boolean value.</returns>
+        internal virtual bool IsReuseAppearanceSet() {
+            return reuseAppearanceSet;
         }
 
         /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
