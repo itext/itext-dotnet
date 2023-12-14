@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext7.font-asian</id>
-    <version>7.1.18</version>
+    <version>7.1.19</version>
     <title>iText 7 Asian Font</title>
     <authors>iText Software</authors>
     <owners>iText Software</owners>
@@ -13,7 +13,7 @@
     <description>iText Asian fonts for use in conjunction with iText 7, an open source PDF library</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2022 iText Group NV</copyright>
+    <copyright>Copyright (c) 1998-2023 Apryse Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf asian font-asian</tags>
   </metadata>

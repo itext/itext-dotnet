@@ -1,45 +1,24 @@
 /*
-
 This file is part of the iText (R) project.
-Copyright (c) 1998-2022 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Copyright (c) 1998-2023 Apryse Group NV
+Authors: Apryse Software.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
 You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
@@ -56,11 +35,11 @@ namespace iText.Kernel.Pdf {
     internal class PdfPagesTree {
         private readonly int leafSize = 10;
 
-        private IList<PdfIndirectReference> pageRefs;
+        private PdfPagesTree.NullUnlimitedList<PdfIndirectReference> pageRefs;
 
         private IList<PdfPages> parents;
 
-        private IList<PdfPage> pages;
+        private PdfPagesTree.NullUnlimitedList<PdfPage> pages;
 
         private PdfDocument document;
 
@@ -78,9 +57,9 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public PdfPagesTree(PdfCatalog pdfCatalog) {
             this.document = pdfCatalog.GetDocument();
-            this.pageRefs = new List<PdfIndirectReference>();
+            this.pageRefs = new PdfPagesTree.NullUnlimitedList<PdfIndirectReference>();
             this.parents = new List<PdfPages>();
-            this.pages = new List<PdfPage>();
+            this.pages = new PdfPagesTree.NullUnlimitedList<PdfPage>();
             if (pdfCatalog.GetPdfObject().ContainsKey(PdfName.Pages)) {
                 PdfDictionary pages = pdfCatalog.GetPdfObject().GetAsDictionary(PdfName.Pages);
                 if (pages == null) {
@@ -118,12 +97,12 @@ namespace iText.Kernel.Pdf {
                     pageNum));
             }
             --pageNum;
-            PdfPage pdfPage = pages[pageNum];
+            PdfPage pdfPage = pages.Get(pageNum);
             if (pdfPage == null) {
                 LoadPage(pageNum);
-                if (pageRefs[pageNum] != null) {
+                if (pageRefs.Get(pageNum) != null) {
                     int parentIndex = FindPageParent(pageNum);
-                    PdfObject pageObject = pageRefs[pageNum].GetRefersTo();
+                    PdfObject pageObject = pageRefs.Get(pageNum).GetRefersTo();
                     if (pageObject is PdfDictionary) {
                         pdfPage = document.GetPageFactory().CreatePdfPage((PdfDictionary)pageObject);
                         pdfPage.parentPages = parents[parentIndex];
@@ -137,7 +116,7 @@ namespace iText.Kernel.Pdf {
                     LOGGER.Error(MessageFormatUtil.Format(iText.IO.LogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
                         , pageNum + 1));
                 }
-                pages[pageNum] = pdfPage;
+                pages.Set(pageNum, pdfPage);
             }
             return pdfPage;
         }
@@ -165,7 +144,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets total number of @see PdfPages.</summary>
         /// <returns>total number of pages</returns>
         public virtual int GetNumberOfPages() {
-            return pageRefs.Count;
+            return pageRefs.Size();
         }
 
         /// <summary>
@@ -185,11 +164,11 @@ namespace iText.Kernel.Pdf {
             if (pageNum >= 0) {
                 return pageNum + 1;
             }
-            for (int i = 0; i < pageRefs.Count; i++) {
-                if (pageRefs[i] == null) {
+            for (int i = 0; i < pageRefs.Size(); i++) {
+                if (pageRefs.Get(i) == null) {
                     LoadPage(i);
                 }
-                if (pageRefs[i].Equals(pageDictionary.GetIndirectReference())) {
+                if (pageRefs.Get(i).Equals(pageDictionary.GetIndirectReference())) {
                     return i + 1;
                 }
             }
@@ -210,17 +189,17 @@ namespace iText.Kernel.Pdf {
             PdfPages pdfPages;
             if (root != null) {
                 // in this case we save tree structure
-                if (pageRefs.Count == 0) {
+                if (pageRefs.Size() == 0) {
                     pdfPages = root;
                 }
                 else {
-                    LoadPage(pageRefs.Count - 1);
+                    LoadPage(pageRefs.Size() - 1);
                     pdfPages = parents[parents.Count - 1];
                 }
             }
             else {
                 pdfPages = parents[parents.Count - 1];
-                if (pdfPages.GetCount() % leafSize == 0 && pageRefs.Count > 0) {
+                if (pdfPages.GetCount() % leafSize == 0 && pageRefs.Size() > 0) {
                     pdfPages = new PdfPages(pdfPages.GetFrom() + pdfPages.GetCount(), document);
                     parents.Add(pdfPages);
                 }
@@ -245,10 +224,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void AddPage(int index, PdfPage pdfPage) {
             --index;
-            if (index > pageRefs.Count) {
+            if (index > pageRefs.Size()) {
                 throw new IndexOutOfRangeException("index");
             }
-            if (index == pageRefs.Count) {
+            if (index == pageRefs.Size()) {
                 AddPage(pdfPage);
                 return;
             }
@@ -286,10 +265,10 @@ namespace iText.Kernel.Pdf {
 
         internal virtual void ReleasePage(int pageNumber) {
             --pageNumber;
-            if (pageRefs[pageNumber] != null && !pageRefs[pageNumber].CheckState(PdfObject.FLUSHED) && !pageRefs[pageNumber
-                ].CheckState(PdfObject.MODIFIED) && (pageRefs[pageNumber].GetOffset() > 0 || pageRefs[pageNumber].GetIndex
-                () >= 0)) {
-                pages[pageNumber] = null;
+            if (pageRefs.Get(pageNumber) != null && !pageRefs.Get(pageNumber).CheckState(PdfObject.FLUSHED) && !pageRefs
+                .Get(pageNumber).CheckState(PdfObject.MODIFIED) && (pageRefs.Get(pageNumber).GetOffset() > 0 || pageRefs
+                .Get(pageNumber).GetIndex() >= 0)) {
+                pages.Set(pageNumber, null);
             }
         }
 
@@ -299,7 +278,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPages"/>
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
-            if (pageRefs.Count == 0) {
+            if (pageRefs.Size() == 0) {
                 throw new PdfException(PdfException.DocumentHasNoPages);
             }
             if (generated) {
@@ -355,7 +334,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void LoadPage(int pageNum) {
-            PdfIndirectReference targetPage = pageRefs[pageNum];
+            PdfIndirectReference targetPage = pageRefs.Get(pageNum);
             if (targetPage != null) {
                 return;
             }
@@ -441,16 +420,15 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 int from = parent.GetFrom();
-                // Possible exception in case kids.getSize() < parent.getCount().
-                // In any case parent.getCount() has higher priority.
                 // NOTE optimization? when we already found needed index
-                for (int i = 0; i < parent.GetCount(); i++) {
+                int pageCount = Math.Min(parent.GetCount(), kids.Size());
+                for (int i = 0; i < pageCount; i++) {
                     PdfObject kid = kids.Get(i, false);
                     if (kid is PdfIndirectReference) {
-                        pageRefs[from + i] = (PdfIndirectReference)kid;
+                        pageRefs.Set(from + i, (PdfIndirectReference)kid);
                     }
                     else {
-                        pageRefs[from + i] = kid.GetIndirectReference();
+                        pageRefs.Set(from + i, kid.GetIndirectReference());
                     }
                 }
             }
@@ -473,8 +451,8 @@ namespace iText.Kernel.Pdf {
                 else {
                     CorrectPdfPagesFromProperty(parentIndex + 1, -1);
                 }
-                pageRefs.JRemoveAt(pageNum);
-                pages.JRemoveAt(pageNum);
+                pageRefs.Remove(pageNum);
+                pages.Remove(pageNum);
                 return true;
             }
             else {
@@ -503,6 +481,114 @@ namespace iText.Kernel.Pdf {
                 if (parents[i] != null) {
                     parents[i].CorrectFrom(correction);
                 }
+            }
+        }
+
+        /// <summary>
+        /// The class represents a list which allows null elements, but doesn't allocate a memory for them, in the rest of
+        /// cases it behaves like usual
+        /// <see cref="System.Collections.ArrayList{E}"/>
+        /// and should have the same complexity (because keys are unique
+        /// integers, so collisions are impossible).
+        /// </summary>
+        /// <remarks>
+        /// The class represents a list which allows null elements, but doesn't allocate a memory for them, in the rest of
+        /// cases it behaves like usual
+        /// <see cref="System.Collections.ArrayList{E}"/>
+        /// and should have the same complexity (because keys are unique
+        /// integers, so collisions are impossible). Class doesn't implement
+        /// <c>List</c>
+        /// interface because it provides
+        /// only methods which are in use in
+        /// <see cref="PdfPagesTree"/>
+        /// class.
+        /// </remarks>
+        /// <typeparam name="T">elements of the list</typeparam>
+        internal sealed class NullUnlimitedList<T> {
+            private readonly IDictionary<int, T> map = new Dictionary<int, T>();
+
+            private int size = 0;
+
+            // O(1)
+            public void Add(T element) {
+                if (element == null) {
+                    size++;
+                    return;
+                }
+                map.Put(size++, element);
+            }
+
+            // In worth scenario O(n^2) but it is mostly impossible because keys shouldn't have
+            // collisions at all (they are integers). So in average should be O(n).
+            public void Add(int index, T element) {
+                if (index < 0 || index > size) {
+                    return;
+                }
+                size++;
+                // Shifts the element currently at that position (if any) and any
+                // subsequent elements to the right (adds one to their indices).
+                T previous = map.Get(index);
+                for (int i = index + 1; i < size; i++) {
+                    T currentToAdd = previous;
+                    previous = map.Get(i);
+                    this.Set(i, currentToAdd);
+                }
+                this.Set(index, element);
+            }
+
+            // average O(1), worth O(n) (mostly impossible in case when keys are integers)
+            public T Get(int index) {
+                return map.Get(index);
+            }
+
+            // average O(1), worth O(n) (mostly impossible in case when keys are integers)
+            public void Set(int index, T element) {
+                if (element == null) {
+                    map.JRemove(index);
+                }
+                else {
+                    map.Put(index, element);
+                }
+            }
+
+            // O(n)
+            public int IndexOf(T element) {
+                if (element == null) {
+                    for (int i = 0; i < size; i++) {
+                        if (!map.ContainsKey(i)) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                }
+                foreach (KeyValuePair<int, T> entry in map) {
+                    if (element.Equals(entry.Value)) {
+                        return entry.Key;
+                    }
+                }
+                return -1;
+            }
+
+            // In worth scenario O(n^2) but it is mostly impossible because keys shouldn't have
+            // collisions at all (they are integers). So in average should be O(n).
+            public void Remove(int index) {
+                if (index < 0 || index >= size) {
+                    return;
+                }
+                map.JRemove(index);
+                // Shifts any subsequent elements to the left (subtracts one from their indices).
+                T previous = map.Get(size - 1);
+                for (int i = size - 2; i >= index; i--) {
+                    T current = previous;
+                    previous = map.Get(i);
+                    this.Set(i, current);
+                }
+                map.JRemove(--size);
+            }
+
+            // O(1)
+            public int Size() {
+                return size;
             }
         }
     }

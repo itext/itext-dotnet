@@ -6,9 +6,9 @@ using Versions.Attributes;
 [assembly: AssemblyTitle("iText.Layout")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iText Group NV")]
+[assembly: AssemblyCompany("Apryse Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2022 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2023 Apryse Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.layout.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -22,8 +22,8 @@ using Versions.Attributes;
 
 [assembly: Guid("fd0a08a8-0f82-4d6f-a3db-7b8f3f9302b4")]
 
-[assembly: TypographyVersion("2.0.10.0")]
+[assembly: TypographyVersion("2.0.9.0")]
 
-[assembly: AssemblyVersion("7.1.18.0")]
-[assembly: AssemblyFileVersion("7.1.18.0")]
-[assembly: AssemblyInformationalVersion("7.1.18")]
+[assembly: AssemblyVersion("7.1.19.0")]
+[assembly: AssemblyFileVersion("7.1.19.0")]
+[assembly: AssemblyInformationalVersion("7.1.19")]
