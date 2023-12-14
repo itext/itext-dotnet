@@ -7,9 +7,9 @@
 ![Nuget](https://img.shields.io/nuget/dt/itext7)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/itext/itext7-dotnet)
 
-iText Core/Community is a high-performance, battle-tested library that allows you to create, adapt,
+iText Core/Community **(previously known as iTextSharp)** is a high-performance, battle-tested library that allows you to create, adapt,
 inspect and maintain PDF documents, allowing you to add PDF
-functionality to your software projects with ease. It is also available for [Java](https://github.com/itext/itext7) .
+functionality to your software projects with ease. It is also available for [Java](https://github.com/itext/itext7).
 
 ### The key features of iText Core/Community are:
 
@@ -111,7 +111,7 @@ results.
 | Redact based on regex                      | [C#](https://itextpdf.com/products/pdf-redaction-pdfsweep)                                                                                                                                                                                                                      |
 | <br>                                       |                                                                                                                                                                                                                                                                                 |
 | **Support complex writing systems**        | [Link to docs](https://itextpdf.com/products/pdfcalligraph)                                                                                                                                                                                                                     |
-| Add Arabic text                            | [C#](https://github.com/itext/i7ns-samples/blob/master/itext/itext.samples/itext/samples/sandbox/typography/arabic/ArabicWordSpacing.cs) , [PDF](https://github.com/itext/i7ns-samples/blob/master/itext/itext.samples/cmpfiles/sandbox/typography/cmp_ArabicWordSpacing.pdf) |
+| Add Arabic text                            | [C#](https://github.com/itext/i7ns-samples/blob/master/itext/itext.samples/itext/samples/sandbox/typography/arabic/ArabicWordSpacing.cs), [PDF](https://github.com/itext/i7ns-samples/blob/master/itext/itext.samples/cmpfiles/sandbox/typography/cmp_ArabicWordSpacing.pdf) |
 | <br>                                       |                                                                                                                                                                                                                                                                                 |
 | **Optimizing PDFs**                        | [Link to docs](https://itextpdf.com/products/compress-pdf-pdfoptimizer)                                                                                                                                                                                                         |
 | Reduce size of PDF                         | [C#](https://itextpdf.com/products/compress-pdf-pdfoptimizer)                                                                                                                                                                                                                   |
