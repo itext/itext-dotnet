@@ -66,14 +66,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             * This is to ensure that tests that use this functionality (for instance to generate pdf with
             * areas of interest highlighted) will not break when compared.
             */
-            JavaCollectionsUtil.Sort(retval, new _IComparer_103());
+            JavaCollectionsUtil.Sort(retval, new _IComparer_83());
             // ligatures can produces same rectangle
             RemoveDuplicates(retval);
             return retval;
         }
 
-        private sealed class _IComparer_103 : IComparer<IPdfTextLocation> {
-            public _IComparer_103() {
+        private sealed class _IComparer_83 : IComparer<IPdfTextLocation> {
+            public _IComparer_83() {
             }
 
             public int Compare(IPdfTextLocation l1, IPdfTextLocation l2) {

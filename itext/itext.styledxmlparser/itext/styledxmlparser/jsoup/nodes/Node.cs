@@ -159,11 +159,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <param name="baseUri">base URI to set</param>
         public virtual void SetBaseUri(String baseUri) {
             Validate.NotNull(baseUri);
-            Traverse(new _NodeVisitor_188(baseUri));
+            Traverse(new _NodeVisitor_168(baseUri));
         }
 
-        private sealed class _NodeVisitor_188 : NodeVisitor {
-            public _NodeVisitor_188(String baseUri) {
+        private sealed class _NodeVisitor_168 : NodeVisitor {
+            public _NodeVisitor_168(String baseUri) {
                 this.baseUri = baseUri;
             }
 

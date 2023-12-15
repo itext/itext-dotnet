@@ -29,8 +29,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <remarks>The Tree Builder's current state. Each state embodies the processing for the state, and transitions to other states.
     ///     </remarks>
     internal abstract class HtmlTreeBuilderState {
-        private sealed class _HtmlTreeBuilderState_60 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_60() {
+        private sealed class _HtmlTreeBuilderState_40 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_40() {
             }
 
             internal override String GetName() {
@@ -71,10 +71,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState Initial = new _HtmlTreeBuilderState_60();
+        internal static HtmlTreeBuilderState Initial = new _HtmlTreeBuilderState_40();
 
-        private sealed class _HtmlTreeBuilderState_90 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_90() {
+        private sealed class _HtmlTreeBuilderState_70 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_70() {
             }
 
             internal override String GetName() {
@@ -128,10 +128,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState BeforeHtml = new _HtmlTreeBuilderState_90();
+        internal static HtmlTreeBuilderState BeforeHtml = new _HtmlTreeBuilderState_70();
 
-        private sealed class _HtmlTreeBuilderState_126 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_126() {
+        private sealed class _HtmlTreeBuilderState_106 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_106() {
             }
 
             internal override String GetName() {
@@ -187,10 +187,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState BeforeHead = new _HtmlTreeBuilderState_126();
+        internal static HtmlTreeBuilderState BeforeHead = new _HtmlTreeBuilderState_106();
 
-        private sealed class _HtmlTreeBuilderState_161 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_161() {
+        private sealed class _HtmlTreeBuilderState_141 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_141() {
             }
 
             internal override String GetName() {
@@ -305,10 +305,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InHead = new _HtmlTreeBuilderState_161();
+        internal static HtmlTreeBuilderState InHead = new _HtmlTreeBuilderState_141();
 
-        private sealed class _HtmlTreeBuilderState_240 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_240() {
+        private sealed class _HtmlTreeBuilderState_220 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_220() {
             }
 
             internal override String GetName() {
@@ -361,10 +361,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InHeadNoscript = new _HtmlTreeBuilderState_240();
+        internal static HtmlTreeBuilderState InHeadNoscript = new _HtmlTreeBuilderState_220();
 
-        private sealed class _HtmlTreeBuilderState_276 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_276() {
+        private sealed class _HtmlTreeBuilderState_256 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_256() {
             }
 
             internal override String GetName() {
@@ -451,10 +451,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState AfterHead = new _HtmlTreeBuilderState_276();
+        internal static HtmlTreeBuilderState AfterHead = new _HtmlTreeBuilderState_256();
 
-        private sealed class _HtmlTreeBuilderState_335 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_335() {
+        private sealed class _HtmlTreeBuilderState_315 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_315() {
             }
 
             internal override String GetName() {
@@ -1226,10 +1226,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InBody = new _HtmlTreeBuilderState_335();
+        internal static HtmlTreeBuilderState InBody = new _HtmlTreeBuilderState_315();
 
-        private sealed class _HtmlTreeBuilderState_881 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_881() {
+        private sealed class _HtmlTreeBuilderState_861 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_861() {
             }
 
             internal override String GetName() {
@@ -1261,10 +1261,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState Text = new _HtmlTreeBuilderState_881();
+        internal static HtmlTreeBuilderState Text = new _HtmlTreeBuilderState_861();
 
-        private sealed class _HtmlTreeBuilderState_907 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_907() {
+        private sealed class _HtmlTreeBuilderState_887 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_887() {
             }
 
             internal override String GetName() {
@@ -1426,10 +1426,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InTable = new _HtmlTreeBuilderState_907();
+        internal static HtmlTreeBuilderState InTable = new _HtmlTreeBuilderState_887();
 
-        private sealed class _HtmlTreeBuilderState_1015 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1015() {
+        private sealed class _HtmlTreeBuilderState_995 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_995() {
             }
 
             internal override String GetName() {
@@ -1481,10 +1481,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InTableText = new _HtmlTreeBuilderState_1015();
+        internal static HtmlTreeBuilderState InTableText = new _HtmlTreeBuilderState_995();
 
-        private sealed class _HtmlTreeBuilderState_1059 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1059() {
+        private sealed class _HtmlTreeBuilderState_1039 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1039() {
             }
 
             internal override String GetName() {
@@ -1534,10 +1534,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InCaption = new _HtmlTreeBuilderState_1059();
+        internal static HtmlTreeBuilderState InCaption = new _HtmlTreeBuilderState_1039();
 
-        private sealed class _HtmlTreeBuilderState_1101 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1101() {
+        private sealed class _HtmlTreeBuilderState_1081 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1081() {
             }
 
             internal override String GetName() {
@@ -1626,10 +1626,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InColumnGroup = new _HtmlTreeBuilderState_1101();
+        internal static HtmlTreeBuilderState InColumnGroup = new _HtmlTreeBuilderState_1081();
 
-        private sealed class _HtmlTreeBuilderState_1164 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1164() {
+        private sealed class _HtmlTreeBuilderState_1144 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1144() {
             }
 
             internal override String GetName() {
@@ -1722,10 +1722,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InTableBody = new _HtmlTreeBuilderState_1164();
+        internal static HtmlTreeBuilderState InTableBody = new _HtmlTreeBuilderState_1144();
 
-        private sealed class _HtmlTreeBuilderState_1232 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1232() {
+        private sealed class _HtmlTreeBuilderState_1212 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1212() {
             }
 
             internal override String GetName() {
@@ -1815,10 +1815,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InRow = new _HtmlTreeBuilderState_1232();
+        internal static HtmlTreeBuilderState InRow = new _HtmlTreeBuilderState_1212();
 
-        private sealed class _HtmlTreeBuilderState_1300 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1300() {
+        private sealed class _HtmlTreeBuilderState_1280 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1280() {
             }
 
             internal override String GetName() {
@@ -1895,10 +1895,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InCell = new _HtmlTreeBuilderState_1300();
+        internal static HtmlTreeBuilderState InCell = new _HtmlTreeBuilderState_1280();
 
-        private sealed class _HtmlTreeBuilderState_1364 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1364() {
+        private sealed class _HtmlTreeBuilderState_1344 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1344() {
             }
 
             // only here if th or td in scope
@@ -2047,10 +2047,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InSelect = new _HtmlTreeBuilderState_1364();
+        internal static HtmlTreeBuilderState InSelect = new _HtmlTreeBuilderState_1344();
 
-        private sealed class _HtmlTreeBuilderState_1460 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1460() {
+        private sealed class _HtmlTreeBuilderState_1440 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1440() {
             }
 
             internal override String GetName() {
@@ -2083,10 +2083,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InSelectInTable = new _HtmlTreeBuilderState_1460();
+        internal static HtmlTreeBuilderState InSelectInTable = new _HtmlTreeBuilderState_1440();
 
-        private sealed class _HtmlTreeBuilderState_1485 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1485() {
+        private sealed class _HtmlTreeBuilderState_1465 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1465() {
             }
 
             internal override String GetName() {
@@ -2139,10 +2139,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState AfterBody = new _HtmlTreeBuilderState_1485();
+        internal static HtmlTreeBuilderState AfterBody = new _HtmlTreeBuilderState_1465();
 
-        private sealed class _HtmlTreeBuilderState_1520 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1520() {
+        private sealed class _HtmlTreeBuilderState_1500 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1500() {
             }
 
             internal override String GetName() {
@@ -2224,10 +2224,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState InFrameset = new _HtmlTreeBuilderState_1520();
+        internal static HtmlTreeBuilderState InFrameset = new _HtmlTreeBuilderState_1500();
 
-        private sealed class _HtmlTreeBuilderState_1574 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1574() {
+        private sealed class _HtmlTreeBuilderState_1554 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1554() {
             }
 
             internal override String GetName() {
@@ -2277,10 +2277,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState AfterFrameset = new _HtmlTreeBuilderState_1574();
+        internal static HtmlTreeBuilderState AfterFrameset = new _HtmlTreeBuilderState_1554();
 
-        private sealed class _HtmlTreeBuilderState_1605 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1605() {
+        private sealed class _HtmlTreeBuilderState_1585 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1585() {
             }
 
             internal override String GetName() {
@@ -2311,10 +2311,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState AfterAfterBody = new _HtmlTreeBuilderState_1605();
+        internal static HtmlTreeBuilderState AfterAfterBody = new _HtmlTreeBuilderState_1585();
 
-        private sealed class _HtmlTreeBuilderState_1628 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1628() {
+        private sealed class _HtmlTreeBuilderState_1608 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1608() {
             }
 
             internal override String GetName() {
@@ -2349,10 +2349,10 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState AfterAfterFrameset = new _HtmlTreeBuilderState_1628();
+        internal static HtmlTreeBuilderState AfterAfterFrameset = new _HtmlTreeBuilderState_1608();
 
-        private sealed class _HtmlTreeBuilderState_1652 : HtmlTreeBuilderState {
-            public _HtmlTreeBuilderState_1652() {
+        private sealed class _HtmlTreeBuilderState_1632 : HtmlTreeBuilderState {
+            public _HtmlTreeBuilderState_1632() {
             }
 
             internal override String GetName() {
@@ -2364,7 +2364,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
-        internal static HtmlTreeBuilderState ForeignContent = new _HtmlTreeBuilderState_1652();
+        internal static HtmlTreeBuilderState ForeignContent = new _HtmlTreeBuilderState_1632();
 
         // todo: implement. Also; how do we get here?
         public override String ToString() {

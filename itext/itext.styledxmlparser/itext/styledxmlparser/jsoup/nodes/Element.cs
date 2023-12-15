@@ -1005,12 +1005,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         /// <seealso cref="TextNodes()"/>
         public virtual String Text() {
             StringBuilder accum = new StringBuilder();
-            new NodeTraversor(new _NodeVisitor_955(accum)).Traverse(this);
+            new NodeTraversor(new _NodeVisitor_935(accum)).Traverse(this);
             return accum.ToString().Trim();
         }
 
-        private sealed class _NodeVisitor_955 : NodeVisitor {
-            public _NodeVisitor_955(StringBuilder accum) {
+        private sealed class _NodeVisitor_935 : NodeVisitor {
+            public _NodeVisitor_935(StringBuilder accum) {
                 this.accum = accum;
             }
 

@@ -47,11 +47,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_85()) {
+            : this(new _ITextChunkLocationStrategy_64()) {
         }
 
-        private sealed class _ITextChunkLocationStrategy_85 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_85() {
+        private sealed class _ITextChunkLocationStrategy_64 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public _ITextChunkLocationStrategy_64() {
             }
 
             public ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline) {

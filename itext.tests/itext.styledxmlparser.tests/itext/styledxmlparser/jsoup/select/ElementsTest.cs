@@ -296,13 +296,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void Traverse() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            doc.Select("div").Traverse(new _NodeVisitor_303(accum));
+            doc.Select("div").Traverse(new _NodeVisitor_283(accum));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div><div><#text></#text></div>", accum.ToString
                 ());
         }
 
-        private sealed class _NodeVisitor_303 : NodeVisitor {
-            public _NodeVisitor_303(StringBuilder accum) {
+        private sealed class _NodeVisitor_283 : NodeVisitor {
+            public _NodeVisitor_283(StringBuilder accum) {
                 this.accum = accum;
             }
 
