@@ -565,10 +565,10 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        public virtual void PdfASignatureFieldTestWithAndFontText() {
+        public virtual void PdfASignatureFieldWithTextAndFontTest() {
             String name = "pdfASignatureFieldTestWithText";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
-            String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfASignatureFieldTestWithText.pdf";
+            String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_" + name + ".pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(fileName, cmp, (pdfDoc) => {

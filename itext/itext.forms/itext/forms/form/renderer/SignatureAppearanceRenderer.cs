@@ -146,15 +146,18 @@ namespace iText.Forms.Form.Renderer {
 
                 case SignatureAppearanceRenderer.RenderingMode.DESCRIPTION: {
                     // Default one, it just shows whatever description was defined for the signature.
+                    float additionalHeight = CalculateAdditionalHeight();
                     if (RetrieveHeight() == null) {
                         // Adjust calculated occupied area height to keep the same font size.
                         float calculatedHeight = GetOccupiedArea().GetBBox().GetHeight();
-                        GetOccupiedArea().GetBBox().MoveDown(calculatedHeight * TOP_SECTION).SetHeight(calculatedHeight * (1 + TOP_SECTION
-                            ));
-                        bBox.MoveDown(calculatedHeight * TOP_SECTION);
+                        // (calcHeight + addHeight + topSect) * (1 - TOP_SECTION) - addHeight = calcHeight, =>
+                        float topSection = (calculatedHeight + additionalHeight) * TOP_SECTION / (1 - TOP_SECTION);
+                        GetOccupiedArea().GetBBox().MoveDown(topSection + additionalHeight).SetHeight(calculatedHeight + topSection
+                             + additionalHeight);
+                        bBox.MoveDown(bBox.GetBottom() - GetOccupiedArea().GetBBox().GetBottom() - additionalHeight / 2);
                     }
-                    descriptionRect = bBox.SetHeight(GetOccupiedArea().GetBBox().GetHeight() * (1 - TOP_SECTION) - CalculateAdditionalHeight
-                        ());
+                    descriptionRect = bBox.SetHeight(GetOccupiedArea().GetBBox().GetHeight() * (1 - TOP_SECTION) - additionalHeight
+                        );
                     break;
                 }
 
