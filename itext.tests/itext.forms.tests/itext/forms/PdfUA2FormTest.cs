@@ -35,6 +35,7 @@ using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Layout;
 using iText.Layout.Borders;
+using iText.Layout.Element;
 using iText.Test;
 using iText.Test.Pdfa;
 
@@ -77,7 +78,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckTextAreaTest() {
+        public virtual void CheckTextAreaWithLabelTest() {
             String outFile = DESTINATION_FOLDER + "textAreaTest.pdf";
             String cmpFile = SOURCE_FOLDER + "cmp_textAreaTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
@@ -87,12 +88,16 @@ namespace iText.Forms {
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
-                TextArea formTextArea = new TextArea("form text area");
+                Paragraph paragraph = new Paragraph("Widget label").SetFont(font);
+                paragraph.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
+                TextArea formTextArea = new TextArea("form text1");
                 formTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "form\ntext\narea");
-                document.Add(formTextArea);
-                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDocument, true);
-                form.GetField("form text area").GetPdfObject().Put(PdfName.Contents, new PdfString("Description"));
+                Div div = new Div();
+                div.GetAccessibilityProperties().SetRole(StandardRoles.FORM);
+                div.Add(paragraph);
+                div.Add(formTextArea);
+                document.Add(div);
             }
             CompareAndValidate(outFile, cmpFile);
         }
