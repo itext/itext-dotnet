@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Datastructures;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -54,7 +55,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -311,6 +312,58 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IntraForwardLinkTest() {
+            String outFileName = destinationFolder + "intraForwardLink.pdf";
+            String cmpFileName = sourceFolder + "cmp_intraForwardLink.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)));
+            pdfDoc.SetTagged();
+            Document doc = new Document(pdfDoc);
+            PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(PdfAction.CreateGoTo
+                ("custom"));
+            Paragraph text = new Paragraph("Link to custom text");
+            text.SetProperty(Property.LINK_ANNOTATION, linkAnnotation);
+            doc.Add(text);
+            doc.Add(new AreaBreak());
+            pdfDoc.GetPage(1).Flush();
+            doc.Add(text);
+            Paragraph customText = new Paragraph("Custom text");
+            customText.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("custom", linkAnnotation.GetAction
+                ()));
+            doc.Add(customText);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IntraBackwardLinkTest() {
+            String outFileName = destinationFolder + "intraBackwardLink.pdf";
+            String cmpFileName = sourceFolder + "cmp_intraBackwardLink.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)));
+            pdfDoc.SetTagged();
+            Document doc = new Document(pdfDoc);
+            PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(PdfAction.CreateGoTo
+                ("custom"));
+            Paragraph customText = new Paragraph("Custom text");
+            customText.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("custom", linkAnnotation.GetAction
+                ()));
+            doc.Add(customText);
+            doc.Add(new AreaBreak());
+            pdfDoc.GetPage(1).Flush();
+            Paragraph text = new Paragraph("Link to custom text");
+            text.SetProperty(Property.LINK_ANNOTATION, linkAnnotation);
+            doc.Add(text);
+            doc.Add(new AreaBreak());
+            pdfDoc.GetPage(2).Flush();
+            doc.Add(text);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
         }
     }
 }

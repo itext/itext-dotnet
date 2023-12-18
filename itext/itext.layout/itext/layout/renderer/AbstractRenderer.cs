@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -36,6 +37,9 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -104,6 +108,10 @@ namespace iText.Layout.Renderer {
         private const int ARC_BOTTOM_DEGREE = 270;
 
         private const int ARC_QUARTER_CLOCKWISE_EXTENT = -90;
+
+        // For autoport
+        private static readonly Tuple2<String, PdfDictionary> CHECK_TUPLE2_TYPE = new Tuple2<String, PdfDictionary
+            >("", new PdfDictionary());
 
         protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
 
@@ -1877,8 +1885,24 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyDestination(PdfDocument document) {
-            String destination = this.GetProperty<String>(Property.DESTINATION);
-            if (destination != null) {
+            Object destination = this.GetProperty<Object>(Property.DESTINATION);
+            if (destination == null) {
+                return;
+            }
+            String destinationName = null;
+            PdfDictionary linkActionDict = null;
+            if (destination is String) {
+                destinationName = (String)destination;
+            }
+            else {
+                if (CHECK_TUPLE2_TYPE.GetType().Equals(destination.GetType())) {
+                    // 'If' above is the only autoportable way it seems
+                    Tuple2<String, PdfDictionary> destTuple = (Tuple2<String, PdfDictionary>)destination;
+                    destinationName = destTuple.GetFirst();
+                    linkActionDict = destTuple.GetSecond();
+                }
+            }
+            if (destinationName != null) {
                 int pageNumber = occupiedArea.GetPageNumber();
                 if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
@@ -1893,9 +1917,17 @@ namespace iText.Layout.Renderer {
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
                 array.Add(new PdfNumber(0));
-                document.AddNamedDestination(destination, array.MakeIndirect(document));
-                DeleteProperty(Property.DESTINATION);
+                document.AddNamedDestination(destinationName, array.MakeIndirect(document));
             }
+            bool isPdf20 = document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
+            if (linkActionDict != null && isPdf20 && document.IsTagged()) {
+                TagStructureContext context = document.GetTagStructureContext();
+                TagTreePointer tagPointer = context.GetAutoTaggingPointer();
+                PdfStructElem structElem = context.GetPointerStructElem(tagPointer);
+                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
+                linkActionDict.Put(PdfName.SD, dest.GetPdfObject());
+            }
+            DeleteProperty(Property.DESTINATION);
         }
 
         protected internal virtual void ApplyAction(PdfDocument document) {
@@ -1920,31 +1952,32 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
             ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
             PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
-            if (linkAnnotation != null) {
-                int pageNumber = occupiedArea.GetPageNumber();
-                if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
-                    String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
-                        , logMessageArg));
-                    return;
-                }
-                // If an element with a link annotation occupies more than two pages,
-                // then a NPE might occur, because of the annotation being partially flushed.
-                // That's why we create and use an annotation's copy.
-                PdfDictionary oldAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
-                linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(oldAnnotation);
-                Rectangle pdfBBox = CalculateAbsolutePdfBBox();
-                linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
-                PdfPage page = document.GetPage(pageNumber);
-                // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
-                //  a renderer from the different page that was already flushed
-                if (page.IsFlushed()) {
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
-                        , "link annotation applying"));
-                }
-                else {
-                    page.AddAnnotation(linkAnnotation);
-                }
+            if (linkAnnotation == null) {
+                return;
+            }
+            int pageNumber = occupiedArea.GetPageNumber();
+            if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
+                String logMessageArg = "Property.LINK_ANNOTATION, which specifies a link associated with this element content area, see com.itextpdf.layout.element.Link.";
+                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                    , logMessageArg));
+                return;
+            }
+            // If an element with a link annotation occupies more than two pages,
+            // then a NPE might occur, because of the annotation being partially flushed.
+            // That's why we create and use an annotation's copy.
+            PdfDictionary newAnnotation = (PdfDictionary)linkAnnotation.GetPdfObject().Clone();
+            linkAnnotation = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(newAnnotation);
+            Rectangle pdfBBox = CalculateAbsolutePdfBBox();
+            linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
+            PdfPage page = document.GetPage(pageNumber);
+            // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
+            //  a renderer from the different page that was already flushed
+            if (page.IsFlushed()) {
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                    , "link annotation applying"));
+            }
+            else {
+                page.AddAnnotation(linkAnnotation);
             }
         }
 

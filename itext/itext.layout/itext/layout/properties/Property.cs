@@ -109,6 +109,16 @@ namespace iText.Layout.Properties {
 
         public const int COLUMN_GAP_BORDER = 144;
 
+        /// <summary>
+        /// Can be either destination name (id) as String or
+        /// a Tuple2(String, PdfDictionary) where String is destination name (id) and PdfDictionary is a dictionary of
+        /// goto PdfAction.
+        /// </summary>
+        /// <remarks>
+        /// Can be either destination name (id) as String or
+        /// a Tuple2(String, PdfDictionary) where String is destination name (id) and PdfDictionary is a dictionary of
+        /// goto PdfAction. This second variant allow to create structure destination in tagged pdf.
+        /// </remarks>
         public const int DESTINATION = 17;
 
         public const int FILL_AVAILABLE_AREA = 86;

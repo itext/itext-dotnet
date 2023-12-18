@@ -31,6 +31,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
@@ -644,6 +645,37 @@ namespace iText.Layout {
                 document.Add(paragraph);
                 pdfPage.GetPdfObject().GetAsStream(PdfName.Contents).Put(PdfName.PageNum, new PdfNumber(5));
                 pdfPage.SetPageLabel(PageLabelNumberingStyle.DECIMAL_ARABIC_NUMERALS, null, 5);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckStructureDestinationTest() {
+            String outFile = DESTINATION_FOLDER + "structureDestination01Test.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_structureDestination01Test.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                Paragraph paragraph = new Paragraph("Some text");
+                document.Add(paragraph);
+                // Now add a link to the paragraph
+                TagStructureContext context = pdfDocument.GetTagStructureContext();
+                TagTreePointer tagPointer = context.GetAutoTaggingPointer();
+                PdfStructElem structElem = context.GetPointerStructElem(tagPointer);
+                PdfLinkAnnotation linkExplicitDest = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
+                PdfAction gotoStructAction = PdfAction.CreateGoTo(dest);
+                gotoStructAction.Put(PdfName.SD, dest.GetPdfObject());
+                linkExplicitDest.SetAction(gotoStructAction);
+                document.Add(new AreaBreak());
+                Link linkElem = new Link("Link to paragraph", linkExplicitDest);
+                linkElem.GetAccessibilityProperties().SetRole(StandardRoles.LINK);
+                linkElem.GetAccessibilityProperties().SetAlternateDescription("Some text");
+                document.Add(new Paragraph(linkElem));
             }
             CompareAndValidate(outFile, cmpFile);
         }
