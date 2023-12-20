@@ -244,6 +244,13 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>.
         /// </param>
         public virtual void AddAction(PdfAction action) {
+            PdfName actionType = action.GetPdfObject().GetAsName(PdfName.S);
+            if (PdfName.GoTo.Equals(actionType)) {
+                PdfObject destObject = action.GetPdfObject().Get(PdfName.D);
+                if (destObject != null) {
+                    SetDestination(PdfDestination.MakeDestination(destObject));
+                }
+            }
             content.Put(PdfName.A, action.GetPdfObject());
         }
 

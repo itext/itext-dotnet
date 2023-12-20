@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -678,6 +679,43 @@ namespace iText.Layout {
                 document.Add(new Paragraph(linkElem));
             }
             CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckOutlinesAsStructureDestinationsTest() {
+            String outFile = DESTINATION_FOLDER + "checkOutlinesAsStructureDestinations.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_checkOutlinesAsStructureDestinations.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                PdfOutline topOutline = pdfDocument.GetOutlines(false);
+                PdfOutline header1Outline = topOutline.AddOutline("header1 title");
+                PdfAction action1 = PdfAction.CreateGoTo("header1");
+                header1Outline.AddAction(action1);
+                PdfOutline header11Outline = header1Outline.AddOutline("header1.1 title");
+                PdfAction action11 = PdfAction.CreateGoTo("header1.1");
+                header11Outline.AddAction(action11);
+                Paragraph header1 = new Paragraph("header1 text");
+                header1.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("header1", action1.GetPdfObject
+                    ()));
+                Paragraph header11 = new Paragraph("header1.1 text");
+                header11.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("header1.1", action11.GetPdfObject
+                    ()));
+                document.Add(header1);
+                document.Add(header11);
+            }
+            CompareAndValidate(outFile, cmpFile);
+            using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(outFile))) {
+                PdfOutline outline = pdfDocument_1.GetOutlines(false);
+                NUnit.Framework.Assert.AreEqual("header1", outline.GetAllChildren()[0].GetDestination().GetPdfObject().ToString
+                    ());
+                NUnit.Framework.Assert.AreEqual("header1.1", outline.GetAllChildren()[0].GetAllChildren()[0].GetDestination
+                    ().GetPdfObject().ToString());
+            }
         }
 
         private void CreateSimplePdfUA2Document(PdfDocument pdfDocument) {

@@ -28,6 +28,7 @@ using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
+using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -696,6 +697,46 @@ namespace iText.Kernel.Pdf {
                     NUnit.Framework.Assert.IsTrue(resultedF.GetAllChildren()[1].GetAllChildren().IsEmpty());
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateOutlinesWithActionsTest() {
+            String filename = "createOutlinesWithActions.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename)
+                )) {
+                pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
+                PdfPage firstPage = pdfDoc.AddNewPage();
+                PdfPage secondPage = pdfDoc.AddNewPage();
+                PdfOutline rootOutline = pdfDoc.GetOutlines(false);
+                PdfOutline firstOutline = rootOutline.AddOutline("First Page");
+                PdfOutline secondOutline = rootOutline.AddOutline("Second Page");
+                PdfDestination page1Dest = PdfExplicitDestination.CreateFit(firstPage);
+                PdfAction page1Action = PdfAction.CreateGoTo(page1Dest);
+                firstOutline.AddAction(page1Action);
+                NUnit.Framework.Assert.AreEqual(page1Dest.GetPdfObject(), firstOutline.GetDestination().GetPdfObject());
+                PdfAction page2Action = PdfAction.CreateGoTo(PdfExplicitDestination.CreateFit(secondPage));
+                secondOutline.AddAction(page2Action);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateOutlinesWithURIActionTest() {
+            String filename = "createOutlinesWithURIAction.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename)
+                )) {
+                pdfDoc.GetCatalog().SetPageMode(PdfName.UseOutlines);
+                PdfOutline rootOutline = pdfDoc.GetOutlines(false);
+                PdfOutline firstOutline = rootOutline.AddOutline("First Page");
+                // The test was created to improve the coverage but
+                // Apparently it works!
+                PdfAction action1 = PdfAction.CreateURI("https://example.com");
+                firstOutline.AddAction(action1);
+                NUnit.Framework.Assert.IsNull(firstOutline.GetDestination());
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         private sealed class EmptyNameTree : IPdfNameTreeAccess {

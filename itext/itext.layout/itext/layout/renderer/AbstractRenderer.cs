@@ -1921,9 +1921,8 @@ namespace iText.Layout.Renderer {
             }
             bool isPdf20 = document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
             if (linkActionDict != null && isPdf20 && document.IsTagged()) {
-                TagStructureContext context = document.GetTagStructureContext();
-                TagTreePointer tagPointer = context.GetAutoTaggingPointer();
-                PdfStructElem structElem = context.GetPointerStructElem(tagPointer);
+                // Add structure destination for the action for tagged pdf 2.0
+                PdfStructElem structElem = GetCurrentStructElem(document);
                 PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
                 linkActionDict.Put(PdfName.SD, dest.GetPdfObject());
             }
@@ -2935,6 +2934,12 @@ namespace iText.Layout.Renderer {
         private static bool HasOwnOrModelProperty(IRenderer renderer, int property) {
             return renderer.HasOwnProperty(property) || (null != renderer.GetModelElement() && renderer.GetModelElement
                 ().HasProperty(property));
+        }
+
+        private static PdfStructElem GetCurrentStructElem(PdfDocument document) {
+            TagStructureContext context = document.GetTagStructureContext();
+            TagTreePointer tagPointer = context.GetAutoTaggingPointer();
+            return context.GetPointerStructElem(tagPointer);
         }
 
         public abstract IRenderer GetNextRenderer();
