@@ -520,6 +520,25 @@ namespace iText.Signatures {
             return this;
         }
 
+        /// <summary>
+        /// Set certificate list to be used by the
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// to retrieve missing certificates.
+        /// </summary>
+        /// <param name="certificateList">
+        /// certificate list for getting missing certificates in chain
+        /// or CRL response issuer certificates.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>.
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetTrustedCertificates(IList<IX509Certificate> certificateList
+            ) {
+            this.issuingCertificateRetriever.SetTrustedCertificates(certificateList);
+            return this;
+        }
+
         private void PerformTimestamping(PdfDocument document, Stream outputStream, ITSAClient tsaClient) {
             PdfSigner timestampSigner = new PdfSigner(document, outputStream, tempOutputStream, tempFile);
             timestampSigner.Timestamp(tsaClient, timestampSignatureName);

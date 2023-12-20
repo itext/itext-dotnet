@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
@@ -45,5 +46,13 @@ namespace iText.Signatures {
         /// <returns>certificates retrieved from CRL AIA extension or an empty list in case certificates cannot be retrieved.
         ///     </returns>
         IX509Certificate[] GetCrlIssuerCertificates(IX509Crl crl);
+
+        /// <summary>Sets trusted certificate list to be used for the missing certificates retrieving by the issuer name.
+        ///     </summary>
+        /// <param name="certificates">
+        /// certificate list for getting missing certificates in chain
+        /// or CRL response issuer certificates.
+        /// </param>
+        void SetTrustedCertificates(ICollection<IX509Certificate> certificates);
     }
 }

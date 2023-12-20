@@ -37,6 +37,9 @@ namespace iText.Signatures {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.IssuingCertificateRetriever
             ));
 
+        private readonly IDictionary<String, IX509Certificate> certificateMap = new Dictionary<String, IX509Certificate
+            >();
+
         /// <summary>
         /// Creates
         /// <see cref="IssuingCertificateRetriever"/>
@@ -61,28 +64,34 @@ namespace iText.Signatures {
             fullChain.Add(signingCertificate);
             int i = 1;
             IX509Certificate lastAddedCert = signingCertificate;
-            while (!CertificateUtil.IsSelfSigned((IX509Certificate)lastAddedCert)) {
+            while (!CertificateUtil.IsSelfSigned(lastAddedCert)) {
                 //  Check if there are any missing certificates with isSignedByNext
-                if (i < chain.Length && CertificateUtil.IsIssuerCertificate((IX509Certificate)lastAddedCert, (IX509Certificate
-                    )chain[i])) {
+                if (i < chain.Length && CertificateUtil.IsIssuerCertificate(lastAddedCert, (IX509Certificate)chain[i])) {
                     fullChain.Add(chain[i]);
                     i++;
                 }
                 else {
                     // Get missing certificates using AIA Extensions
-                    String url = CertificateUtil.GetIssuerCertURL((IX509Certificate)lastAddedCert);
+                    String url = CertificateUtil.GetIssuerCertURL(lastAddedCert);
                     ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
                     if (certificatesFromAIA == null || certificatesFromAIA.IsEmpty()) {
-                        // Unable to retrieve missing certificates
-                        while (i < chain.Length) {
-                            fullChain.Add(chain[i]);
-                            i++;
+                        // Retrieve Issuer from the certificate store
+                        IX509Certificate issuer = certificateMap.Get(lastAddedCert.GetIssuerDN().ToString());
+                        if (issuer == null) {
+                            // Unable to retrieve missing certificates
+                            while (i < chain.Length) {
+                                fullChain.Add(chain[i]);
+                                i++;
+                            }
+                            return fullChain.ToArray(new IX509Certificate[0]);
                         }
-                        return fullChain.ToArray(new IX509Certificate[0]);
+                        fullChain.Add(issuer);
                     }
-                    fullChain.AddAll(certificatesFromAIA);
+                    else {
+                        fullChain.AddAll(certificatesFromAIA);
+                    }
                 }
-                lastAddedCert = fullChain[fullChain.Count - 1];
+                lastAddedCert = (IX509Certificate)fullChain[fullChain.Count - 1];
             }
             return fullChain.ToArray(new IX509Certificate[0]);
         }
@@ -104,8 +113,27 @@ namespace iText.Signatures {
             // AIA Extension
             String url = CertificateUtil.GetIssuerCertURL(crl);
             IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
-            return certificatesFromAIA == null ? new IX509Certificate[0] : RetrieveMissingCertificates(certificatesFromAIA
-                .ToArray(new IX509Certificate[0]));
+            if (certificatesFromAIA == null) {
+                // Retrieve Issuer from the certificate store
+                IX509Certificate issuer = certificateMap.Get(((IX509Crl)crl).GetIssuerDN().ToString());
+                if (issuer == null) {
+                    // Unable to retrieve CRL issuer
+                    return new IX509Certificate[0];
+                }
+                return RetrieveMissingCertificates(new IX509Certificate[] { issuer });
+            }
+            return RetrieveMissingCertificates(certificatesFromAIA.ToArray(new IX509Certificate[0]));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <param name="certificates">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        public virtual void SetTrustedCertificates(ICollection<IX509Certificate> certificates) {
+            foreach (IX509Certificate certificate in certificates) {
+                certificateMap.Put(((IX509Certificate)certificate).GetSubjectDN().ToString(), certificate);
+            }
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
@@ -63,5 +64,14 @@ namespace iText.Signatures {
         public virtual IX509Certificate[] GetCrlIssuerCertificates(IX509Crl crl) {
             return new IX509Certificate[0];
         }
+
+        /// <summary><inheritDoc/></summary>
+        /// <param name="certificates">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        public virtual void SetTrustedCertificates(ICollection<IX509Certificate> certificates) {
+        }
+        // Do nothing.
     }
 }

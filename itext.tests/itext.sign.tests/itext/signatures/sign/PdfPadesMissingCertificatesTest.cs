@@ -213,6 +213,68 @@ namespace iText.Signatures.Sign {
             private readonly String rootCertFileName;
         }
 
+        [NUnit.Framework.Test]
+        public virtual void RetrieveMissingCertificatesUsingTrustedStoreTest() {
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String rootCertFileName = sourceFolder + "root.pem";
+            String signCertFileName = sourceFolder + "sign.pem";
+            String rootCrlFileName = sourceFolder + "crlRoot.pem";
+            String crlCertFileName = sourceFolder + "crlCert.pem";
+            String tsaCertFileName = sourceFolder + "tsCert.pem";
+            String crlSignedByCA = sourceFolder + "crlWithRootIssuer.crl";
+            String crlSignedByCrlCert = sourceFolder + "crlWithCrlIssuer.crl";
+            IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signCertFileName)[0];
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            IX509Certificate crlCert = (IX509Certificate)PemFileHelper.ReadFirstChain(crlCertFileName)[0];
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(tsaCertFileName)[0];
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
+            SignerProperties signerProperties = CreateSignerProperties();
+            TestTsaClient testTsa = new TestTsaClient(JavaCollectionsUtil.SingletonList(tsaCert), tsaPrivateKey);
+            CrlClientOnline testCrlClient = new _CrlClientOnline_222(crlSignedByCrlCert, crlSignedByCA);
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
+            IX509Certificate crlRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCrlFileName)[0];
+            MemoryStream outputStream = new MemoryStream();
+            PdfPadesSigner padesSigner = new PdfPadesSigner(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName))
+                , outputStream);
+            padesSigner.SetCrlClient(testCrlClient);
+            IList<IX509Certificate> trustedCertificates = new List<IX509Certificate>();
+            trustedCertificates.Add(rootCert);
+            trustedCertificates.Add(crlRootCert);
+            trustedCertificates.Add(crlCert);
+            padesSigner.SetTrustedCertificates(trustedCertificates);
+            IX509Certificate[] signChain = new IX509Certificate[] { signCert };
+            padesSigner.SignWithBaselineLTProfile(signerProperties, signChain, signPrivateKey, testTsa);
+            outputStream.Dispose();
+            TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
+            IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
+            IDictionary<String, int?> expectedNumberOfOcsps = new Dictionary<String, int?>();
+            // It is expected to have two CRL responses, one for signing cert and another for CRL response.
+            expectedNumberOfCrls.Put(crlCert.GetSubjectDN().ToString(), 1);
+            expectedNumberOfCrls.Put(rootCert.GetSubjectDN().ToString(), 1);
+            IList<String> certs = JavaUtil.ArraysAsList(GetCertName(rootCert), GetCertName(crlRootCert), GetCertName(crlCert
+                ), GetCertName(signCert), GetCertName(tsaCert));
+            TestSignUtils.AssertDssDict(new MemoryStream(outputStream.ToArray()), expectedNumberOfCrls, expectedNumberOfOcsps
+                , certs);
+        }
+
+        private sealed class _CrlClientOnline_222 : CrlClientOnline {
+            public _CrlClientOnline_222(String crlSignedByCrlCert, String crlSignedByCA) {
+                this.crlSignedByCrlCert = crlSignedByCrlCert;
+                this.crlSignedByCA = crlSignedByCA;
+            }
+
+            protected internal override Stream GetCrlResponse(IX509Certificate cert, Uri urlt) {
+                if (urlt.ToString().Contains("cert-crl")) {
+                    return FileUtil.GetInputStreamForFile(crlSignedByCrlCert);
+                }
+                return FileUtil.GetInputStreamForFile(crlSignedByCA);
+            }
+
+            private readonly String crlSignedByCrlCert;
+
+            private readonly String crlSignedByCA;
+        }
+
         private String GetCertName(IX509Certificate certificate) {
             return certificate.GetSubjectDN().ToString();
         }
