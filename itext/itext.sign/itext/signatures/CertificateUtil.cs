@@ -156,6 +156,14 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Generates a certificate object and initializes it with the data read from the input stream inStream.
+        ///     </summary>
+        /// <param name="data">the input stream with the certificates.</param>
+        /// <returns>a certificate object initialized with the data from the input stream.</returns>
+        public static IX509Certificate GenerateCertificate(Stream data) {
+            return SignUtils.GenerateCertificate(data);
+        }
+
         /// <summary>Checks if the certificate is signed by provided issuer certificate.</summary>
         /// <param name="subjectCertificate">a certificate to check</param>
         /// <param name="issuerCertificate">an issuer certificate to check</param>
@@ -180,7 +188,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
         /// object.
         /// </returns>
-        private static IAsn1Object GetExtensionValue(IX509Certificate certificate, String oid) {
+        public static IAsn1Object GetExtensionValue(IX509Certificate certificate, String oid) {
             return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(certificate, oid));
         }
 

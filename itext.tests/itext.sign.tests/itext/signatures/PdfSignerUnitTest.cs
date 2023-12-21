@@ -116,8 +116,7 @@ namespace iText.Signatures {
                 , new ByteArrayOutputStream(), new StampingProperties());
             signer.cryptoDictionary = new PdfSignature();
             signer.SetPageRect(new Rectangle(100, 100, 10, 10));
-            PdfSigFieldLock fieldLock = new PdfSigFieldLock();
-            signer.fieldLock = fieldLock;
+            signer.fieldLock = new PdfSigFieldLock();
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsTrue(signer.closed);
@@ -259,7 +258,7 @@ namespace iText.Signatures {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
             NUnit.Framework.Assert.IsNull(signer.GetSignatureEvent());
-            PdfSigner.ISignatureEvent testEvent = new PdfSignerUnitTest.DummySignatureEvent(this);
+            PdfSigner.ISignatureEvent testEvent = new PdfSignerUnitTest.DummySignatureEvent();
             signer.SetSignatureEvent(testEvent);
             NUnit.Framework.Assert.AreEqual(testEvent, signer.GetSignatureEvent());
         }
@@ -496,13 +495,7 @@ namespace iText.Signatures {
         internal class DummySignatureEvent : PdfSigner.ISignatureEvent {
             public virtual void GetSignatureDictionary(PdfSignature sig) {
             }
-
-            internal DummySignatureEvent(PdfSignerUnitTest _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfSignerUnitTest _enclosing;
-            // Do nothing
+            // Do nothing.
         }
     }
 }

@@ -37,6 +37,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Pdfa;
+using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
@@ -791,23 +792,8 @@ namespace iText.Signatures {
         /// <returns>the message digest of the prepared document.</returns>
         public virtual byte[] PrepareDocumentForSignature(String digestAlgorithm, PdfName filter, PdfName subFilter
             , int estimatedSize, bool includeDate) {
-            if (closed) {
-                throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
-            }
-            cryptoDictionary = CreateSignatureDictionary(includeDate);
-            cryptoDictionary.Put(PdfName.Filter, filter);
-            cryptoDictionary.Put(PdfName.SubFilter, subFilter);
-            IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
-            PreClose(exc);
-            Stream data = GetRangeStream();
-            byte[] digest = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(digestAlgorithm));
-            byte[] paddedSig = new byte[estimatedSize];
-            PdfDictionary dic2 = new PdfDictionary();
-            dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
-            Close(dic2);
-            closed = true;
-            return digest;
+            return PrepareDocumentForSignature(SignUtils.GetMessageDigest(digestAlgorithm), filter, subFilter, estimatedSize
+                , includeDate);
         }
 
         /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
@@ -819,6 +805,17 @@ namespace iText.Signatures {
             [] signedContent) {
             PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
             applier.Apply((a) => signedContent);
+        }
+
+        /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
+        /// <param name="document">the original PDF</param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="cmsContainer">the finalized CMS container</param>
+        public static void AddSignatureToPreparedDocument(PdfDocument document, String fieldName, Stream outs, CMSContainer
+             cmsContainer) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => cmsContainer.Serialize());
         }
 
         /// <summary>Signs a PDF where space was already reserved.</summary>
@@ -880,7 +877,8 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="exclusionSizes">
         /// Map with names and sizes to be excluded in the signature
-        /// calculation. The key is a PdfName and the value an Integer. At least the /Contents must be present
+        /// calculation. The key is a PdfName and the value an Integer.
+        /// At least the /Contents must be present
         /// </param>
         protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes) {
             if (preClosed) {
@@ -1291,6 +1289,27 @@ namespace iText.Signatures {
                 }
             }
             return pageNumber;
+        }
+
+        private byte[] PrepareDocumentForSignature(IDigest messageDigest, PdfName filter, PdfName subFilter, int estimatedSize
+            , bool includeDate) {
+            if (closed) {
+                throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
+            }
+            cryptoDictionary = CreateSignatureDictionary(includeDate);
+            cryptoDictionary.Put(PdfName.Filter, filter);
+            cryptoDictionary.Put(PdfName.SubFilter, subFilter);
+            IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
+            PreClose(exc);
+            Stream data = GetRangeStream();
+            byte[] digest = DigestAlgorithms.Digest(data, messageDigest);
+            byte[] paddedSig = new byte[estimatedSize];
+            PdfDictionary dic2 = new PdfDictionary();
+            dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
+            Close(dic2);
+            closed = true;
+            return digest;
         }
 
         private bool IsDocumentPdf2() {

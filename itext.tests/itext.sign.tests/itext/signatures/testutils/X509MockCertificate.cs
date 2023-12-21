@@ -64,6 +64,16 @@ namespace iText.Signatures.Testutils
             throw new NotImplementedException();
         }
 
+        public string GetSigAlgOID()
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] GetSigAlgParams()
+        {
+            throw new NotImplementedException();
+        }
+
         public byte[] GetEncoded()
         {
             throw new NotImplementedException();

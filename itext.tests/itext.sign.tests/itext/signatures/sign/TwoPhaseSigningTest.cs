@@ -22,6 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Xml.Serialization;
+using Org.BouncyCastle.Asn1;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -30,10 +33,12 @@ using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
-using iText.Signatures;
+using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
+using AlgorithmIdentifier = Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier;
+using SignerInfo = iText.Signatures.Cms.SignerInfo;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -52,10 +57,14 @@ namespace iText.Signatures.Sign {
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         private static readonly String SIMPLE_DOC_PATH = SOURCE_FOLDER + "SimpleDoc.pdf";
+        
+        private static readonly String RSA_PRIVATE_KEY_FILE = CERTS_SRC + "signCertRsa01.xml"; 
 
         private const String DIGEST_ALGORITHM = DigestAlgorithms.SHA384;
 
-        public const String FIELD_NAME = "Signature1";
+        private const string DIGEST_ALGORITHM_OID = "2.16.840.1.101.3.4.2.2";
+
+        private const String FIELD_NAME = "Signature1";
 
         private IPrivateKey pk;
 
@@ -225,6 +234,46 @@ namespace iText.Signatures.Sign {
                 , SOURCE_FOLDER + "cmp_2PhaseCompleteCycle.pdf"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TestWithCMS() {
+            String signatureName = "Signature1";
+            using (ByteArrayOutputStream phaseOneOS = new ByteArrayOutputStream()) {
+                // Phase 1 prepare the document, add the partial CMS  and get the documents digest of signed attributes
+                byte[] dataToEncrypt = PrepareDocumentAndCMS(new FileInfo(SIMPLE_DOC_PATH), phaseOneOS, signatureName);
+                // Phase 2 sign the document digest
+                //simulating server side
+                byte[] signaturedata = ServerSideSigning(dataToEncrypt);
+
+                String signedDocumentName = DESTINATION_FOLDER + "2PhaseCompleteCycleCMS.pdf";
+                // phase 2.1 extract CMS from the prepared document
+                using (Stream outputStreamPhase2 = FileUtil.GetFileOutputStream(signedDocumentName)) {
+                    using (PdfDocument doc = new PdfDocument(new PdfReader(new MemoryStream(phaseOneOS.ToArray())))) {
+                        SignatureUtil su = new SignatureUtil(doc);
+                        PdfSignature sig = su.GetSignature(signatureName);
+                        PdfString encodedCMS = sig.GetContents();
+                        byte[] encodedCMSdata = encodedCMS.GetValueBytes();
+                        CMSContainer cmsToUpdate = new CMSContainer(encodedCMSdata);
+                        //phase 2.2 add the signatureValue to the CMS
+                        cmsToUpdate.GetSignerInfo().SetSignature(signaturedata);
+                        //if needed a time stamp could be added here
+                        //Phase 2.3 add the updated CMS to the document
+                        PdfSigner.AddSignatureToPreparedDocument(doc, signatureName, outputStreamPhase2, cmsToUpdate);
+                    }
+                }
+                // validate signature
+                using (PdfReader reader = new PdfReader(signedDocumentName)) {
+                    using (PdfDocument finalDoc = new PdfDocument(reader)) {
+                        SignatureUtil su = new SignatureUtil(finalDoc);
+                        PdfPKCS7 cms = su.ReadSignatureData(signatureName);
+                        NUnit.Framework.Assert.IsTrue(cms.VerifySignatureIntegrityAndAuthenticity(), "Signature should be valid");
+                    }
+                }
+                // compare result
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(signedDocumentName, SOURCE_FOLDER + 
+                    "cmp_2PhaseCompleteCycleCMS.pdf"));
+            }
+        }
+
         private byte[] SignDigest(byte[] data, String hashAlgorithm) {
             PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, false);
             byte[] sh = sgn.GetAuthenticatedAttributeBytes(data, PdfSigner.CryptoStandard.CMS, null, null);
@@ -233,6 +282,62 @@ namespace iText.Signatures.Sign {
             sgn.SetExternalSignatureValue(signData, null, pkSign.GetSignatureAlgorithmName(), pkSign.GetSignatureMechanismParameters
                 ());
             return sgn.GetEncodedPKCS7(data, PdfSigner.CryptoStandard.CMS, null, null, null);
+        }
+
+        private byte[] PrepareDocumentAndCMS(FileInfo document, ByteArrayOutputStream preparedOS, String signatureName
+            ) {
+            using (PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(document))) {
+                using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                    PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+                    signer.SetFieldName(signatureName);
+                    byte[] digest = signer.PrepareDocumentForSignature(DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
+                        , 5000, false);
+                    System.Console.Out.WriteLine("Document digest from prepare call: " + digest.Length + "bytes");
+                    System.Console.Out.WriteLine(Convert.ToBase64String(digest));
+                    String fieldName = signer.GetFieldName();
+                    // Phase 1.1 prepare the CMS
+                    CMSContainer cms = new CMSContainer();
+                    SignerInfo signerInfo = new SignerInfo();
+                    //signerInfo.setSigningCertificateAndAddToSignedAttributes(chain[0], SecurityIDs.ID_SHA384);
+                    signerInfo.SetSigningCertificate(chain[0]);
+                    // in the two phase scenario,; we don't have the private key! So we start from the signing certificate
+                    
+                    signerInfo.SetSignatureAlgorithm(new Cms.AlgorithmIdentifier(chain[0].GetSigAlgOID()));
+                    signerInfo.SetDigestAlgorithm(new Cms.AlgorithmIdentifier(DIGEST_ALGORITHM_OID));
+                    signerInfo.SetMessageDigest(digest);
+                    cms.SetSignerInfo(signerInfo);
+                    cms.AddCertificates(chain);
+                    byte[] signedAttributesToSign = cms.GetSerializedSignedAttributes();
+
+                    IDigest sha = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(DIGEST_ALGORITHM
+                        );
+                    byte[] dataToSign = sha.Digest(signedAttributesToSign);
+
+                    // now we store signedAttributesToSign together with the prepared document and send
+                    // dataToSign to the signing instance
+                    using (PdfDocument doc = new PdfDocument(new PdfReader(new MemoryStream(outputStream.ToArray())))) {
+                        PdfSigner.AddSignatureToPreparedDocument(doc, fieldName, preparedOS, cms);
+                    }
+                    return dataToSign;
+                }
+            }
+        }
+
+        private byte[] ServerSideSigning(byte[] dataToEncrypt) {
+            String signingAlgoritmName = pk.GetAlgorithm();
+            if ("EC".Equals(signingAlgoritmName)) {
+                signingAlgoritmName = "ECDSA";
+            }
+
+            using (var fs = new StreamReader(RSA_PRIVATE_KEY_FILE)) {
+                RSA rsa = RSA.Create();
+                XmlSerializer serializer =
+                    new XmlSerializer(typeof(RSAParameters));
+                var rsaParams = (RSAParameters)serializer.Deserialize(fs);
+                rsa.ImportParameters(rsaParams);
+                byte[] signaturedata = rsa.SignHash(dataToEncrypt, HashAlgorithmName.SHA384, RSASignaturePadding.Pkcs1);
+                return signaturedata;
+            }
         }
     }
 }

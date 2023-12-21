@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace iText.Signatures {
     internal static class SignExtensions {
@@ -32,6 +34,10 @@ namespace iText.Signatures {
 
         public static byte[] GetBytes(this String str) {
             return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+        
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
         }
 
         public static void AddAll<T>(this ICollection<T> t, IEnumerable<T> newItems) {
@@ -55,6 +61,17 @@ namespace iText.Signatures {
             }
 
             return r;
+        }
+        
+        public static void RemoveIf<T>(this ICollection<T> collection, Func<T, bool> predicate) {
+            T element;
+            for (int i = 0; i < collection.Count; i++) {
+                element = collection.ElementAt(i);
+                if (predicate(element)) {
+                    collection.Remove(element);
+                    i--;
+                }
+            }
         }
 
         public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd) {
@@ -84,6 +101,10 @@ namespace iText.Signatures {
 
         public static int Read(this Stream stream, byte[] buffer) {
             return stream.Read(buffer, 0, buffer.Length);
+        }
+
+        public static ICollection<T> SubList<T>(this ICollection<T> collection, int fromIndex, int toIndex) {
+            return collection.ToList().GetRange(fromIndex, toIndex - fromIndex);
         }
 
         public static void Write(this Stream stream, byte[] buffer) {

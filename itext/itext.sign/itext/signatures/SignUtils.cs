@@ -272,5 +272,9 @@ namespace iText.Signatures {
             IDerObjectIdentifier hashAlgOid) {
             return GenerateCertificateId(issuerCert, serialNumber, hashAlgOid.GetId());
         }
+
+        public static IX509Certificate GenerateCertificate(Stream data) {
+            return FACTORY.CreateX509Certificate(data);
+        }
     }
 }

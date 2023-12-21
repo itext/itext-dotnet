@@ -57,6 +57,18 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>Public key wrapper.</returns>
         IPublicKey GetPublicKey();
+
+        /// <summary>
+        /// Get the Signature Algorithms Object ID.
+        /// </summary>
+        /// <returns>A string containg a '.' separated object id.</returns>
+        string GetSigAlgOID();
+
+        /// <summary>
+        /// Get the signature algorithms parameters. (EG DSA Parameters)
+        /// </summary>
+        /// <returns>A byte array containing the Der encoded version of the parameters or null if there are none.</returns>
+        byte[] GetSigAlgParams();
         
         /// <summary>
         /// Calls actual

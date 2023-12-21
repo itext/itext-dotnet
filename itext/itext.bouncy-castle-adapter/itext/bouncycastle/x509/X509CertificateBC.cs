@@ -83,6 +83,12 @@ namespace iText.Bouncycastle.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
+        public string GetSigAlgOID() => this.certificate.SigAlgOid;
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetSigAlgParams() => this.certificate.GetSigAlgParams();
+
+        /// <summary><inheritDoc/></summary>
         public byte[] GetEncoded() {
             return certificate.GetEncoded();
         }

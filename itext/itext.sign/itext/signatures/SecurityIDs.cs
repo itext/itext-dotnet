@@ -47,6 +47,8 @@ namespace iText.Signatures {
 
         public const String ID_SHA256 = "2.16.840.1.101.3.4.2.1";
 
+        public const String ID_SHA384 = "2.16.840.1.101.3.4.2.2";
+
         public const String ID_SHA512 = "2.16.840.1.101.3.4.2.3";
 
         public const String ID_SHAKE256 = "2.16.840.1.101.3.4.2.12";

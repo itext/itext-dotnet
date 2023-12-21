@@ -133,6 +133,19 @@ namespace iText.Signatures.Exceptions {
 
         public const String INVALID_ARGUMENTS = "Invalid parameters provided.";
 
+        public const String CMS_SIGNERINFO_READONLY = "Updating the signed attributes of this SignerInfo instance is"
+             + " not possible because it has been serialized or been initiated from a serialized version.";
+
+        public const String CMS_SIGNERINFO_NOT_INITIALIZED = "Signer info is not yet initialized";
+
+        public const String CMS_INVALID_CONTAINER_STRUCTURE = "Provided data is not a CMS container";
+
+        public const String CMS_ONLY_ONE_SIGNER_ALLOWED = "Only one signer per CMS container is allowed";
+
+        public const String CMS_CERTIFICATE_NOT_FOUND = "Signer certificate not found in list of certificates";
+
+        public const String CMS_MISSING_CERTIFICATES = "The certificate set must at least contains the signer certificate";
+
         private SignExceptionMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

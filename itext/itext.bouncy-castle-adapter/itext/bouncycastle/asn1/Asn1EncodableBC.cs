@@ -71,7 +71,7 @@ namespace iText.Bouncycastle.Asn1 {
             if (this == o) {
                 return true;
             }
-            if (o == null || GetType() != o.GetType()) {
+            if (o == null || !this.GetType().IsAssignableFrom(o.GetType())) {
                 return false;
             }
             Asn1EncodableBC that = (Asn1EncodableBC)o;

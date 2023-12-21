@@ -80,7 +80,13 @@ namespace iText.Bouncycastlefips.Cert {
         public IPublicKey GetPublicKey() {
             return new PublicKeyBCFips(certificate.GetPublicKey());
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public string GetSigAlgOID() => certificate.SigAlgOid.Id;
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetSigAlgParams() => certificate.GetSigAlgParams();
+
         /// <summary><inheritDoc/></summary>
         public byte[] GetEncoded() {
             return certificate.GetEncoded();
