@@ -427,14 +427,7 @@ namespace iText.Signatures {
             PdfSignature sig = sgnUtil.GetSignature(signatureName);
             PdfString contents = sig.GetContents();
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
-            byte[] bt = null;
-            if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
-                using (IAsn1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc))) {
-                    IAsn1Object pkcs = din.ReadObject();
-                    bc = pkcs.GetEncoded();
-                }
-            }
-            bt = HashBytesSha1(bc);
+            byte[] bt = HashBytesSha1(bc);
             return new PdfName(ConvertToHex(bt));
         }
 
