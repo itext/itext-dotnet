@@ -937,6 +937,44 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ImageJpeg20002ColorChannelsTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // This should suppress transparency and device RGB
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "jpeg2000/bee2colorchannels.jp2"
+                ), new Rectangle(0, 0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.RestoreState();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOUR_CHANNELS_IN_THE_JPEG2000_DATA_SHALL_BE_1_3_OR_4
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageJpeg2000Test() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_jpeg2000.pdf";
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // This should suppress transparency and device RGB
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "jpeg2000/bee.jp2"), new Rectangle
+                (0, 0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.RestoreState();
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PdfA4AnnotationsNoOutputIntentTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsNoOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsNoOutputIntent.pdf";
