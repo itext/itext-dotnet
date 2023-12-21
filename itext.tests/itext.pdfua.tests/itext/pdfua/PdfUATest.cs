@@ -35,6 +35,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUATest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -95,7 +96,7 @@ namespace iText.Pdfua {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_emptyPageDocument.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -148,7 +149,7 @@ namespace iText.Pdfua {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_manualPdfUaCreation.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     }

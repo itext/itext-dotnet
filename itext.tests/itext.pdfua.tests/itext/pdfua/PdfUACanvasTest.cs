@@ -39,6 +39,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("UnitTest")]
     public class PdfUACanvasTest : ExtendedITextTest {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -84,7 +85,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_TextContentIsCorrectlyTaggedAsContent.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -121,7 +122,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_TextArtifactIsNotInTagTree.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -177,7 +178,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_TextGlyphLineContentIsArtifact.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -197,7 +198,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_TextGlyphLineContentIsContentCorrect.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -216,7 +217,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_allowPureBmcInArtifact.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -235,7 +236,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_allowNestedPureBmcInArtifact.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -280,7 +281,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_LineContentThatIsMarkedAsArtifact.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -309,7 +310,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_RectangleMarkedArtifact.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -341,7 +342,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_RectangleMarkedContent.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -357,7 +358,7 @@ namespace iText.Pdfua {
                 ).SetStrokeColor(ColorConstants.RED).Arc(400, 400, 500, 500, 30, 50).Stroke().CloseTag().RestoreState(
                 );
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_004_bezierCurveShouldBeTagged.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -373,7 +374,7 @@ namespace iText.Pdfua {
                 (5).SetStrokeColor(ColorConstants.RED).Arc(400, 400, 500, 500, 30, 50).Stroke().CloseTag().RestoreState
                 ();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_004_bezierMarkedAsArtifact.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -405,7 +406,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_01_005_RandomOperationsWithoutActuallyAddingContent.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -448,7 +449,7 @@ namespace iText.Pdfua {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validRoleAddedInsideMarkedContent.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -469,7 +470,7 @@ namespace iText.Pdfua {
                 , 12).MoveText(200, 200).ShowText("Hello World!").EndText().EndMarkedContent().BeginMarkedContent(PdfName
                 .H1).BeginText().ShowText("Hello but nested").EndText().EndMarkedContent().RestoreState().CloseTag();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validRoleAddedInsideMarkedContentMultiple.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -494,7 +495,7 @@ namespace iText.Pdfua {
                 )).BeginMarkedContent(PdfName.H1).BeginText().ShowText("Hello but nested").EndText().EndMarkedContent(
                 ).CloseTag().RestoreState().CloseTag();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new UAVeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validRoleAddedInsideMarkedContentMCR_IN_MCR.pdf"
                 , DESTINATION_FOLDER, "diff_"));
