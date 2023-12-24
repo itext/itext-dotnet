@@ -29,16 +29,19 @@ using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Kernel.Crypto {
+namespace iText.Kernel.Crypto.Pdfencryption {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class UnicodeBasedPasswordEncryptionTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/crypto/UnicodeBasedPasswordEncryptionTest/";
+             + "/test/itext/kernel/crypto/pdfencryption/UnicodeBasedPasswordEncryptionTest/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/UnicodeBasedPasswordEncryptionTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/pdfencryption/UnicodeBasedPasswordEncryptionTest/";
 
         private static IDictionary<String, UnicodeBasedPasswordEncryptionTest.SaslPreparedString> nameToSaslPrepared;
+
+        internal PdfEncryptionTestUtils encryptionUtil = new PdfEncryptionTestUtils(destinationFolder, sourceFolder
+            );
 
         static UnicodeBasedPasswordEncryptionTest() {
             // values are calculated with com.ibm.icu.text.StringPrep class in icu4j v58.2 lib
@@ -160,19 +163,20 @@ namespace iText.Kernel.Crypto {
         // 3.  Try open encrypted document with password that contains unassigned code points and ensure error is due to wrong password instead of the invalid input string.
         private void EncryptAes256AndCheck(String filename, byte[] ownerPassword) {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
-            WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(PdfEncryptionTest.USER, ownerPassword
-                , permissions, EncryptionConstants.ENCRYPTION_AES_256).SetPdfVersion(PdfVersion.PDF_2_0);
+            WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(PdfEncryptionTestUtils.USER
+                , ownerPassword, permissions, EncryptionConstants.ENCRYPTION_AES_256).SetPdfVersion(PdfVersion.PDF_2_0
+                );
             PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename, writerProperties.AddXmpMetadata
                 ());
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTest.customInfoEntryKey, PdfEncryptionTest.customInfoEntryValue
-                );
+            document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTestUtils.CUSTOM_INFO_ENTRY_KEY, PdfEncryptionTestUtils
+                .CUSTOM_INFO_ENTRY_VALUE);
             PdfPage page = document.AddNewPage();
-            PdfEncryptionTest.WriteTextBytesOnPageContent(page, PdfEncryptionTest.pageTextContent);
+            PdfEncryptionTestUtils.WriteTextBytesOnPageContent(page, PdfEncryptionTestUtils.PAGE_TEXT_CONTENT);
             page.Flush();
             document.Close();
-            PdfEncryptionTest.CheckDecryptedWithPasswordContent(destinationFolder + filename, ownerPassword, PdfEncryptionTest
-                .pageTextContent);
+            encryptionUtil.CheckDecryptedWithPasswordContent(destinationFolder + filename, ownerPassword, PdfEncryptionTestUtils
+                .PAGE_TEXT_CONTENT);
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + 
                 filename, destinationFolder, "diff_", ownerPassword, ownerPassword);

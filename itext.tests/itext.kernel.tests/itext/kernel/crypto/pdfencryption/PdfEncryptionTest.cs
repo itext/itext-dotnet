@@ -27,10 +27,9 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
-using iText.IO.Font.Constants;
+using iText.Kernel.Crypto;
 using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Font;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -41,7 +40,7 @@ using iText.Kernel.XMP.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Kernel.Crypto {
+namespace iText.Kernel.Crypto.Pdfencryption {
     /// <summary>
     /// Due to import control restrictions by the governments of a few countries,
     /// the encryption libraries shipped by default with the Java SDK restrict the
@@ -66,10 +65,10 @@ namespace iText.Kernel.Crypto {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/crypto/PdfEncryptionTest/";
+             + "/test/itext/kernel/crypto/pdfencryption/PdfEncryptionTest/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/PdfEncryptionTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/pdfencryption/PdfEncryptionTest/";
 
         public static readonly char[] PRIVATE_KEY_PASS = "testpassphrase".ToCharArray();
 
@@ -77,20 +76,10 @@ namespace iText.Kernel.Crypto {
 
         public static readonly String PRIVATE_KEY = sourceFolder + "test.pem";
 
-        internal const String pageTextContent = "Hello world!";
-
-        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
-        internal const String customInfoEntryKey = "Custom";
-
-        internal const String customInfoEntryValue = "String";
-
-        /// <summary>User password.</summary>
-        public static byte[] USER = "Hello".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
-
-        /// <summary>Owner password.</summary>
-        public static byte[] OWNER = "World".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
-
         private IPrivateKey privateKey;
+
+        internal PdfEncryptionTestUtils encryptionUtil = new PdfEncryptionTestUtils(destinationFolder, sourceFolder
+            );
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -229,7 +218,7 @@ namespace iText.Kernel.Crypto {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void MetadataReadingInEncryptedDoc() {
             PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPlainMetadata.pdf", new ReaderProperties().SetPassword
-                (OWNER));
+                (PdfEncryptionTestUtils.OWNER));
             PdfDocument doc = new PdfDocument(reader);
             XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(doc.GetXmpMetadata());
             XMPProperty creatorToolXmp = xmpMeta.GetProperty(XMPConst.NS_XMP, "CreatorTool");
@@ -270,7 +259,8 @@ namespace iText.Kernel.Crypto {
             String fileName = "noUserPassword.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName));
             document.Close();
-            CheckDecryptedWithPasswordContent(sourceFolder + fileName, null, pageTextContent);
+            encryptionUtil.CheckDecryptedWithPasswordContent(sourceFolder + fileName, null, PdfEncryptionTestUtils.PAGE_TEXT_CONTENT
+                );
         }
 
         [NUnit.Framework.Test]
@@ -294,12 +284,14 @@ namespace iText.Kernel.Crypto {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetStandardEncryption
-                (USER, OWNER, permissions, encryptionType).AddXmpMetadata());
+                (PdfEncryptionTestUtils.USER, PdfEncryptionTestUtils.OWNER, permissions, encryptionType).AddXmpMetadata
+                ());
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
+            document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTestUtils.CUSTOM_INFO_ENTRY_KEY, PdfEncryptionTestUtils
+                .CUSTOM_INFO_ENTRY_VALUE);
             PdfPage page = document.AddNewPage();
             String textContent = "Hello world!";
-            WriteTextBytesOnPageContent(page, textContent);
+            PdfEncryptionTestUtils.WriteTextBytesOnPageContent(page, textContent);
             String descripton = "encryptedFile";
             String path = sourceFolder + "pageWithContent.pdf";
             document.AddFileAttachment(descripton, PdfFileSpec.CreateEmbeddedFileSpec(document, path, descripton, path
@@ -309,8 +301,10 @@ namespace iText.Kernel.Crypto {
             //TODO DEVSIX-5355 Specific crypto filters for EFF StmF and StrF are not supported at the moment.
             // However we can read embedded files only mode.
             bool ERROR_IS_EXPECTED = false;
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, textContent, ERROR_IS_EXPECTED);
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, textContent, ERROR_IS_EXPECTED);
+            encryptionUtil.CheckDecryptedWithPasswordContent(destinationFolder + filename, PdfEncryptionTestUtils.OWNER
+                , textContent, ERROR_IS_EXPECTED);
+            encryptionUtil.CheckDecryptedWithPasswordContent(destinationFolder + filename, PdfEncryptionTestUtils.USER
+                , textContent, ERROR_IS_EXPECTED);
         }
 
         [NUnit.Framework.Test]
@@ -331,34 +325,18 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void EncryptAes256EncryptedStampingPreserve() {
-            String filename = "encryptAes256EncryptedStampingPreserve.pdf";
-            String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
-            String @out = destinationFolder + filename;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), CompareTool
-                .CreateTestPdfWriter(@out, new WriterProperties()), new StampingProperties().PreserveEncryption());
-            pdfDoc.Close();
-            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
-            String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff_", USER, USER);
-            if (compareResult != null) {
-                NUnit.Framework.Assert.Fail(compareResult);
-            }
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256EncryptedStampingUpdate() {
             String filename = "encryptAes256EncryptedStampingUpdate.pdf";
             String src = sourceFolder + "encryptedWithPlainMetadata.pdf";
             String @out = destinationFolder + filename;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(OWNER)), CompareTool
-                .CreateTestPdfWriter(@out, new WriterProperties().SetStandardEncryption(USER, OWNER, EncryptionConstants
-                .ALLOW_PRINTING, EncryptionConstants.STANDARD_ENCRYPTION_40)), new StampingProperties());
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src, new ReaderProperties().SetPassword(PdfEncryptionTestUtils
+                .OWNER)), CompareTool.CreateTestPdfWriter(@out, new WriterProperties().SetStandardEncryption(PdfEncryptionTestUtils
+                .USER, PdfEncryptionTestUtils.OWNER, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.STANDARD_ENCRYPTION_40
+                )), new StampingProperties());
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(@out, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff_", USER, USER);
+                , "diff_", PdfEncryptionTestUtils.USER, PdfEncryptionTestUtils.USER);
             if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
@@ -391,39 +369,14 @@ namespace iText.Kernel.Crypto {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
-        public virtual void StampAndUpdateVersionPreserveStandard40() {
-            String filename = "stampAndUpdateVersionPreserveStandard40.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new 
-                ReaderProperties().SetPassword(OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename, 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption
-                ());
-            doc.Close();
-            CompareEncryptedPdf(filename);
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        [LogMessage(VersionConforming.DEPRECATED_AES256_REVISION)]
-        public virtual void StampAndUpdateVersionPreserveAes256() {
-            String filename = "stampAndUpdateVersionPreserveAes256.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties
-                ().SetPassword(OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption());
-            doc.Close();
-            CompareEncryptedPdf(filename);
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StampAndUpdateVersionNewAes256() {
             String filename = "stampAndUpdateVersionNewAes256.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties
-                ().SetPassword(OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, 0, EncryptionConstants.ENCRYPTION_AES_256
-                )));
+                ().SetPassword(PdfEncryptionTestUtils.OWNER)), CompareTool.CreateTestPdfWriter(destinationFolder + filename
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(PdfEncryptionTestUtils
+                .USER, PdfEncryptionTestUtils.OWNER, 0, EncryptionConstants.ENCRYPTION_AES_256)));
             doc.Close();
-            CompareEncryptedPdf(filename);
+            encryptionUtil.CompareEncryptedPdf(filename);
         }
 
         [NUnit.Framework.Test]
@@ -433,12 +386,14 @@ namespace iText.Kernel.Crypto {
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
                 .ALLOW_DEGRADED_PRINTING;
             PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants
-                .ENCRYPTION_AES_256)));
-            doc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
-            WriteTextBytesOnPageContent(doc.AddNewPage(), pageTextContent);
+                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(PdfEncryptionTestUtils.USER, PdfEncryptionTestUtils
+                .OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256)));
+            doc.GetDocumentInfo().SetMoreInfo(PdfEncryptionTestUtils.CUSTOM_INFO_ENTRY_KEY, PdfEncryptionTestUtils.CUSTOM_INFO_ENTRY_VALUE
+                );
+            PdfEncryptionTestUtils.WriteTextBytesOnPageContent(doc.AddNewPage(), PdfEncryptionTestUtils.PAGE_TEXT_CONTENT
+                );
             doc.Close();
-            CompareEncryptedPdf(filename);
+            encryptionUtil.CompareEncryptedPdf(filename);
         }
 
         [NUnit.Framework.Test]
@@ -513,8 +468,8 @@ namespace iText.Kernel.Crypto {
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression, bool isPdf2
             ) {
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
-            WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(USER, OWNER, permissions, 
-                encryptionType);
+            WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(PdfEncryptionTestUtils.USER
+                , PdfEncryptionTestUtils.OWNER, permissions, encryptionType);
             if (isPdf2) {
                 writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
             }
@@ -522,14 +477,15 @@ namespace iText.Kernel.Crypto {
                 ());
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
+            document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTestUtils.CUSTOM_INFO_ENTRY_KEY, PdfEncryptionTestUtils
+                .CUSTOM_INFO_ENTRY_VALUE);
             PdfPage page = document.AddNewPage();
-            WriteTextBytesOnPageContent(page, pageTextContent);
+            PdfEncryptionTestUtils.WriteTextBytesOnPageContent(page, PdfEncryptionTestUtils.PAGE_TEXT_CONTENT);
             page.Flush();
             document.Close();
-            CompareEncryptedPdf(filename);
-            CheckEncryptedWithPasswordDocumentStamping(filename, OWNER);
-            CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
+            encryptionUtil.CompareEncryptedPdf(filename);
+            CheckEncryptedWithPasswordDocumentStamping(filename, PdfEncryptionTestUtils.OWNER);
+            CheckEncryptedWithPasswordDocumentAppending(filename, PdfEncryptionTestUtils.OWNER);
         }
 
         public virtual void EncryptWithPassword(String filename, int encryptionType, int compression, bool fullCompression
@@ -537,17 +493,19 @@ namespace iText.Kernel.Crypto {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetStandardEncryption
-                (USER, OWNER, permissions, encryptionType).AddXmpMetadata().SetFullCompressionMode(fullCompression));
+                (PdfEncryptionTestUtils.USER, PdfEncryptionTestUtils.OWNER, permissions, encryptionType).AddXmpMetadata
+                ().SetFullCompressionMode(fullCompression));
             writer.SetCompressionLevel(compression);
             PdfDocument document = new PdfDocument(writer);
-            document.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
+            document.GetDocumentInfo().SetMoreInfo(PdfEncryptionTestUtils.CUSTOM_INFO_ENTRY_KEY, PdfEncryptionTestUtils
+                .CUSTOM_INFO_ENTRY_VALUE);
             PdfPage page = document.AddNewPage();
-            WriteTextBytesOnPageContent(page, pageTextContent);
+            PdfEncryptionTestUtils.WriteTextBytesOnPageContent(page, PdfEncryptionTestUtils.PAGE_TEXT_CONTENT);
             page.Flush();
             document.Close();
-            CompareEncryptedPdf(filename);
-            CheckEncryptedWithPasswordDocumentStamping(filename, OWNER);
-            CheckEncryptedWithPasswordDocumentAppending(filename, OWNER);
+            encryptionUtil.CompareEncryptedPdf(filename);
+            CheckEncryptedWithPasswordDocumentStamping(filename, PdfEncryptionTestUtils.OWNER);
+            CheckEncryptedWithPasswordDocumentAppending(filename, PdfEncryptionTestUtils.OWNER);
         }
 
         public virtual IX509Certificate GetPublicCertificate(String path) {
@@ -563,30 +521,6 @@ namespace iText.Kernel.Crypto {
             return privateKey;
         }
 
-        public static void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent) {
-            CheckDecryptedWithPasswordContent(src, password, pageContent, false);
-        }
-
-        private static void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent, bool
-             expectError) {
-            PdfReader reader = CompareTool.CreateOutputReader(src, new ReaderProperties().SetPassword(password));
-            PdfDocument document = new PdfDocument(reader);
-            PdfPage page = document.GetPage(1);
-            bool expectedContentFound = iText.Commons.Utils.JavaUtil.GetStringForBytes(page.GetStreamBytes(0)).Contains
-                (pageContent);
-            String actualCustomInfoEntry = document.GetTrailer().GetAsDictionary(PdfName.Info).GetAsString(new PdfName
-                (customInfoEntryKey)).ToUnicodeString();
-            if (!expectError) {
-                NUnit.Framework.Assert.IsTrue(expectedContentFound, "Expected content: \n" + pageContent);
-                NUnit.Framework.Assert.AreEqual(customInfoEntryValue, actualCustomInfoEntry, "Encrypted custom");
-            }
-            else {
-                NUnit.Framework.Assert.IsFalse(expectedContentFound, "Expected content: \n" + pageContent);
-                NUnit.Framework.Assert.AreNotEqual(customInfoEntryValue, actualCustomInfoEntry, "Encrypted custom");
-            }
-            document.Close();
-        }
-
         // basically this is comparing content of decrypted by itext document with content of encrypted document
         public virtual void CheckEncryptedWithPasswordDocumentStamping(String filename, byte[] password) {
             String srcFileName = destinationFolder + filename;
@@ -597,7 +531,7 @@ namespace iText.Kernel.Crypto {
             document.Close();
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
-                , "diff_", USER, USER);
+                , "diff_", PdfEncryptionTestUtils.USER, PdfEncryptionTestUtils.USER);
             if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
@@ -612,29 +546,11 @@ namespace iText.Kernel.Crypto {
                 ().UseAppendMode());
             PdfPage newPage = document.AddNewPage();
             newPage.Put(PdfName.Default, new PdfString("Hello world string"));
-            WriteTextBytesOnPageContent(newPage, "Hello world page_2!");
+            PdfEncryptionTestUtils.WriteTextBytesOnPageContent(newPage, "Hello world page_2!");
             document.Close();
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_appended_" + filename
-                , destinationFolder, "diff_", USER, USER);
-            if (compareResult != null) {
-                NUnit.Framework.Assert.Fail(compareResult);
-            }
-        }
-
-        internal static void WriteTextBytesOnPageContent(PdfPage page, String text) {
-            page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
-                 + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
-                ));
-            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
-        }
-
-        internal static void CompareEncryptedPdf(String filename) {
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, pageTextContent);
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, pageTextContent);
-            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
-            String compareResult = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + 
-                filename, destinationFolder, "diff_", USER, USER);
+                , destinationFolder, "diff_", PdfEncryptionTestUtils.USER, PdfEncryptionTestUtils.USER);
             if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }

@@ -368,12 +368,29 @@ namespace iText.Kernel.Pdf {
         /// <param name="firstId">the first id</param>
         /// <param name="secondId">the second id</param>
         /// <returns>PdfObject containing the two entries.</returns>
+        [System.ObsoleteAttribute(@"Use CreateInfoId(byte[], byte[], bool) instead")]
         public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId) {
-            if (firstId.Length < 16) {
-                firstId = PadByteArrayTo16(firstId);
-            }
-            if (secondId.Length < 16) {
-                secondId = PadByteArrayTo16(secondId);
+            return CreateInfoId(firstId, secondId, false);
+        }
+
+        /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
+        /// <remarks>
+        /// Creates a PdfLiteral that contains an array of two id entries. These entries are both hexadecimal
+        /// strings containing up to 16 hex characters. The first entry is the original id, the second entry
+        /// should be different from the first one if the document has changed.
+        /// </remarks>
+        /// <param name="firstId">the first id</param>
+        /// <param name="secondId">the second id</param>
+        /// <param name="preserveEncryption">the encryption preserve</param>
+        /// <returns>PdfObject containing the two entries.</returns>
+        public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId, bool preserveEncryption) {
+            if (!preserveEncryption) {
+                if (firstId.Length < 16) {
+                    firstId = PadByteArrayTo16(firstId);
+                }
+                if (secondId.Length < 16) {
+                    secondId = PadByteArrayTo16(secondId);
+                }
             }
             ByteBuffer buf = new ByteBuffer(90);
             buf.Append('[').Append('<');

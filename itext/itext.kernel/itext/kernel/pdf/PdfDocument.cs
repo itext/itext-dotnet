@@ -883,7 +883,7 @@ namespace iText.Kernel.Pdf {
                     // either writer properties, or in the writer init section on document open or from pdfreader. So we
                     // shouldn't worry about it being null next
                     PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
-                        .GetIsoBytes(modifiedDocumentId.GetValue()));
+                        .GetIsoBytes(modifiedDocumentId.GetValue()), this.properties.preserveEncryption);
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
                     if (writer.GetOutputStream() is CountOutputStream) {
