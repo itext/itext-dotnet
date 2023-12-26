@@ -23,6 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Layout.Tagging {
+    /// <summary>
+    /// TaggingHintKey instances are created in the scope of
+    /// <see cref="iText.Layout.Renderer.RootRenderer.AddChild(iText.Layout.Renderer.IRenderer)"/>
+    /// to preserve logical order of layout elements from model elements.
+    /// </summary>
     public sealed class TaggingHintKey {
         private IAccessibleElement elem;
 
@@ -34,39 +39,85 @@ namespace iText.Layout.Tagging {
 
         private bool elementBasedFinishingOnly;
 
+        /// <summary>
+        /// Instantiate a new
+        /// <see cref="TaggingHintKey"/>
+        /// instance.
+        /// </summary>
+        /// <param name="elem">element this hint key will be created for.</param>
+        /// <param name="createdElementBased">
+        /// 
+        /// <see langword="true"/>
+        /// if element implements
+        /// <see cref="iText.Layout.Element.IElement"/>.
+        /// </param>
         internal TaggingHintKey(IAccessibleElement elem, bool createdElementBased) {
             this.elem = elem;
             this.elementBasedFinishingOnly = createdElementBased;
         }
 
+        /// <summary>Get accessible element.</summary>
+        /// <returns>the accessible element.</returns>
         public IAccessibleElement GetAccessibleElement() {
             return elem;
         }
 
+        /// <summary>Retrieve hint key finished flag.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if hint key is finished,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         internal bool IsFinished() {
             return isFinished;
         }
 
+        /// <summary>Set finished flag for hint key instance.</summary>
         internal void SetFinished() {
             this.isFinished = true;
         }
 
+        /// <summary>Retrieve information whether this hint key is artifact or not.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if hint key corresponds to artifact,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         internal bool IsArtifact() {
             return isArtifact;
         }
 
+        /// <summary>Specify that hint key instance corresponds to artifact.</summary>
         internal void SetArtifact() {
             this.isArtifact = true;
         }
 
+        /// <summary>Get overridden role.</summary>
+        /// <returns>the overridden role.</returns>
         internal String GetOverriddenRole() {
             return overriddenRole;
         }
 
+        /// <summary>Set the overridden role.</summary>
+        /// <param name="overriddenRole">overridden role.</param>
         internal void SetOverriddenRole(String overriddenRole) {
             this.overriddenRole = overriddenRole;
         }
 
+        /// <summary>
+        /// Retrieve information whether the element backed by this hint key implements
+        /// <see cref="iText.Layout.Element.IElement"/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <c/>
+        /// true if element implements
+        /// <see cref="iText.Layout.Element.IElement"/>.
+        /// </returns>
         internal bool IsElementBasedFinishingOnly() {
             return elementBasedFinishingOnly;
         }

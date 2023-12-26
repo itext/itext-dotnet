@@ -34,6 +34,10 @@ using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Tagging {
+    /// <summary>
+    /// The class is a helper which is used to correctly create structure
+    /// tree for layout element (with keeping right order for tags).
+    /// </summary>
     public class LayoutTaggingHelper {
         private TagStructureContext context;
 
@@ -41,6 +45,8 @@ namespace iText.Layout.Tagging {
 
         private bool immediateFlush;
 
+        // kidsHints and parentHints fields represent tree of TaggingHintKey, where parentHints
+        // stores a parent for the key, and kidsHints stores kids for key.
         private IDictionary<TaggingHintKey, IList<TaggingHintKey>> kidsHints;
 
         private IDictionary<TaggingHintKey, TaggingHintKey> parentHints;
@@ -49,7 +55,8 @@ namespace iText.Layout.Tagging {
 
         private IDictionary<String, IList<ITaggingRule>> taggingRules;
 
-        private IDictionary<PdfObject, TaggingDummyElement> existingTagsDummies;
+        // dummiesForPreExistingTags is used to process TaggingDummyElement
+        private IDictionary<PdfObject, TaggingDummyElement> dummiesForPreExistingTags;
 
         private readonly int RETVAL_NO_PARENT = -1;
 
@@ -64,7 +71,7 @@ namespace iText.Layout.Tagging {
             this.autoTaggingPointerSavedPosition = new Dictionary<IRenderer, TagTreePointer>();
             this.taggingRules = new Dictionary<String, IList<ITaggingRule>>();
             RegisterRules(context.GetTagStructureTargetVersion());
-            existingTagsDummies = new LinkedDictionary<PdfObject, TaggingDummyElement>();
+            dummiesForPreExistingTags = new LinkedDictionary<PdfObject, TaggingDummyElement>();
         }
 
         public static void AddTreeHints(iText.Layout.Tagging.LayoutTaggingHelper taggingHelper, IRenderer rootRenderer
@@ -90,10 +97,10 @@ namespace iText.Layout.Tagging {
         public virtual void AddKidsHint<_T0>(TagTreePointer parentPointer, IEnumerable<_T0> newKids)
             where _T0 : IPropertyContainer {
             PdfDictionary pointerStructElem = context.GetPointerStructElem(parentPointer).GetPdfObject();
-            TaggingDummyElement dummy = existingTagsDummies.Get(pointerStructElem);
+            TaggingDummyElement dummy = dummiesForPreExistingTags.Get(pointerStructElem);
             if (dummy == null) {
                 dummy = new TaggingDummyElement(parentPointer.GetRole());
-                existingTagsDummies.Put(pointerStructElem, dummy);
+                dummiesForPreExistingTags.Put(pointerStructElem, dummy);
             }
             context.GetWaitingTagsManager().AssignWaitingState(parentPointer, GetOrCreateHintKey(dummy));
             AddKidsHint(dummy, newKids);
@@ -285,11 +292,11 @@ namespace iText.Layout.Tagging {
         }
 
         public virtual void ReleaseAllHints() {
-            foreach (TaggingDummyElement dummy in existingTagsDummies.Values) {
+            foreach (TaggingDummyElement dummy in dummiesForPreExistingTags.Values) {
                 FinishTaggingHint(dummy);
                 FinishDummyKids(GetKidsHint(GetHintKey(dummy)));
             }
-            existingTagsDummies.Clear();
+            dummiesForPreExistingTags.Clear();
             ReleaseFinishedHints();
             ICollection<TaggingHintKey> hangingHints = new HashSet<TaggingHintKey>();
             foreach (KeyValuePair<TaggingHintKey, TaggingHintKey> entry in parentHints) {
@@ -499,6 +506,7 @@ namespace iText.Layout.Tagging {
                 else {
                     kidsHint.Add(kidKey);
                 }
+                kidsHints.Put(parentKey, kidsHint);
                 parentHints.Put(kidKey, parentKey);
                 if (parentTagAlreadyCreated) {
                     if (kidKey.GetAccessibleElement() is TaggingDummyElement) {
@@ -516,9 +524,6 @@ namespace iText.Layout.Tagging {
                         MoveKidTagIfCreated(parentTagHint, kidKey);
                     }
                 }
-            }
-            if (!kidsHint.IsEmpty()) {
-                kidsHints.Put(parentKey, kidsHint);
             }
         }
 

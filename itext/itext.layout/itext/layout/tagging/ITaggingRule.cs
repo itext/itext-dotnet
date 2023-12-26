@@ -21,7 +21,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Layout.Tagging {
+    /// <summary>
+    /// Implementation of the interface is used to create required children
+    /// structure for the specified role.
+    /// </summary>
+    /// <remarks>
+    /// Implementation of the interface is used to create required children
+    /// structure for the specified role. E.g. table must have TRs as children.
+    /// </remarks>
     internal interface ITaggingRule {
+        /// <summary>Action which creates required children structure for the role.</summary>
+        /// <param name="taggingHelper">tagging helper.</param>
+        /// <param name="taggingHintKey">element for which children structure will be created.</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the structure was created successfully,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         bool OnTagFinish(LayoutTaggingHelper taggingHelper, TaggingHintKey taggingHintKey);
     }
 }

@@ -455,9 +455,51 @@ namespace iText.Layout {
                 document.Add(table);
                 PdfStructTreeRoot structTreeRoot = pdfDocument.GetStructTreeRoot();
                 IStructureNode tableNode = structTreeRoot.GetKids()[0].GetKids()[0];
-                // TODO DEVSIX-7951 Table caption is added as the 2nd child of the table into struct tree
-                String tableChildRole = tableNode.GetKids()[1].GetRole().ToString();
+                String tableChildRole = tableNode.GetKids()[0].GetRole().ToString();
                 NUnit.Framework.Assert.AreEqual("/Caption", tableChildRole);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCaptionPlacementInTreeStructure() {
+            String outFile = DESTINATION_FOLDER + "checkCaptionPlacementInTreeStructure.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_checkCaptionPlacementInTreeStructure.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                Table tableCaptionBottom = new Table(new float[] { 1, 2, 2 });
+                Paragraph caption = new Paragraph("This is Caption to the bottom").SetBackgroundColor(ColorConstants.GREEN
+                    );
+                tableCaptionBottom.SetCaption(new Div().Add(caption), CaptionSide.BOTTOM);
+                tableCaptionBottom.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+                tableCaptionBottom.SetWidth(200);
+                tableCaptionBottom.AddHeaderCell("ID");
+                tableCaptionBottom.AddHeaderCell("Name");
+                tableCaptionBottom.AddHeaderCell("Age");
+                for (int i = 1; i <= 5; i++) {
+                    tableCaptionBottom.AddCell("ID: " + i);
+                    tableCaptionBottom.AddCell("Name " + i);
+                    tableCaptionBottom.AddCell("Age: " + (20 + i));
+                }
+                document.Add(tableCaptionBottom);
+                Table captionTopTable = new Table(new float[] { 1, 2, 3 });
+                captionTopTable.SetCaption(new Div().Add(new Paragraph("Caption on top")));
+                captionTopTable.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+                captionTopTable.SetWidth(200);
+                captionTopTable.AddHeaderCell("ID");
+                captionTopTable.AddHeaderCell("Name");
+                captionTopTable.AddHeaderCell("Age");
+                for (int i = 1; i <= 5; i++) {
+                    captionTopTable.AddCell("ID: " + i);
+                    captionTopTable.AddCell("Name " + i);
+                    captionTopTable.AddCell("Age: " + (20 + i));
+                }
+                document.Add(captionTopTable);
             }
             CompareAndValidate(outFile, cmpFile);
         }

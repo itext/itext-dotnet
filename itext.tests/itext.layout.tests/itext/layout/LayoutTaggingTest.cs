@@ -865,6 +865,25 @@ namespace iText.Layout {
             CompareResult(outFile, "cmp_" + outFile);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void UnexpectedTableHintChildTest() {
+            String outFile = "unexpectedTableHintChildTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetTagged();
+                Div div = new Div();
+                div.GetAccessibilityProperties().SetRole(StandardRoles.TABLE);
+                Paragraph c1 = new Paragraph("c1");
+                c1.GetAccessibilityProperties().SetRole(StandardRoles.LINK);
+                div.Add(c1);
+                Paragraph p1 = new Paragraph("c");
+                p1.GetAccessibilityProperties().SetRole(StandardRoles.TD);
+                div.Add(p1);
+                document.Add(div);
+            }
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");

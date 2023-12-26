@@ -26,19 +26,41 @@ using iText.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Tagging {
+    /// <summary>
+    /// Instances of the class are used for
+    /// <see cref="TaggingHintKey"/>
+    /// which don't have model element
+    /// e.g. TR or THEAD in the table.
+    /// </summary>
+    /// <remarks>
+    /// Instances of the class are used for
+    /// <see cref="TaggingHintKey"/>
+    /// which don't have model element
+    /// e.g. TR or THEAD in the table. Nobody will call
+    /// <see cref="LayoutTaggingHelper.FinishTaggingHint(iText.Layout.IPropertyContainer)"/>
+    /// for them, it is why they should be handled separately.
+    /// </remarks>
     public class TaggingDummyElement : IAccessibleElement, IPropertyContainer {
         private DefaultAccessibilityProperties properties;
 
         private Object id;
 
+        /// <summary>
+        /// Instantiate a new
+        /// <see cref="TaggingDummyElement"/>
+        /// instance.
+        /// </summary>
+        /// <param name="role">the role.</param>
         public TaggingDummyElement(String role) {
             this.properties = new DefaultAccessibilityProperties(role);
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual AccessibilityProperties GetAccessibilityProperties() {
             return properties;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual T1 GetProperty<T1>(int property) {
             if (property == Property.TAGGING_HINT_KEY) {
                 return (T1)id;
@@ -46,28 +68,34 @@ namespace iText.Layout.Tagging {
             return (T1)(Object)null;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void SetProperty(int property, Object value) {
             if (property == Property.TAGGING_HINT_KEY) {
                 this.id = value;
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual bool HasProperty(int property) {
             throw new NotSupportedException();
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual bool HasOwnProperty(int property) {
             throw new NotSupportedException();
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual T1 GetOwnProperty<T1>(int property) {
             throw new NotSupportedException();
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual T1 GetDefaultProperty<T1>(int property) {
             throw new NotSupportedException();
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void DeleteOwnProperty(int property) {
             throw new NotSupportedException();
         }
