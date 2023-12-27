@@ -221,5 +221,20 @@ namespace iText.Kernel.Pdf {
             doc.Close();
             NUnit.Framework.Assert.AreEqual(1, xrefTableCounter);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void HybridReferenceIncrementTwiceTest() {
+            String inFileName = sourceFolder + "hybridReferenceDocument.pdf";
+            String outFileName = destinationFolder + "hybridReferenceDocumentUpdateTwice.pdf";
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(inFileName), new PdfWriter(destinationFolder + "hybridReferenceDocumentUpdate.pdf"
+                ), new StampingProperties().UseAppendMode());
+            pdfDoc1.Close();
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(destinationFolder + "hybridReferenceDocumentUpdate.pdf"
+                ), CompareTool.CreateTestPdfWriter(outFileName), new StampingProperties().UseAppendMode());
+            pdfDoc2.Close();
+            //if document processed correctly, no errors should occur
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
+                ));
+        }
     }
 }
