@@ -133,9 +133,14 @@ namespace iText.Signatures.Cms {
         /// <remarks>
         /// The digest algorithm OID and parameters used by the signer.
         /// This class only supports one signer for use in pdf signatures, so only one digest algorithm is supported.
-        /// </p>
+        /// <para />
         /// This field is set when adding the signerInfo.
         /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="AlgorithmIdentifier"/>
+        /// digest algorithm.
+        /// </returns>
         public virtual AlgorithmIdentifier GetDigestAlgorithm() {
             if (signerInfo == null) {
                 return null;

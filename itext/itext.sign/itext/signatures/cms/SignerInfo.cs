@@ -237,18 +237,20 @@ namespace iText.Signatures.Cms {
             this.signingAlgorithm = algorithm;
         }
 
-        /// <summary>
-        /// Value 0 when no signerIdentifier is available
-        /// Value 1 when signerIdentifier is of type issuerAndSerialNumber
-        /// Value 3 when signerIdentifier is of type subjectKeyIdentifier
-        /// </summary>
+        /// <summary>Value 0 when no signerIdentifier is available.</summary>
+        /// <remarks>
+        /// Value 0 when no signerIdentifier is available.
+        /// Value 1 when signerIdentifier is of type issuerAndSerialNumber.
+        /// Value 3 when signerIdentifier is of type subjectKeyIdentifier.
+        /// </remarks>
+        /// <returns>CMS version.</returns>
         public virtual int GetCmsVersion() {
             return 1;
         }
 
-        /// <summary>Optional</summary>
+        /// <summary>Optional.</summary>
         /// <remarks>
-        /// Optional
+        /// Optional.
         /// <para />
         /// Attributes that should be part of the signed content
         /// optional, but it MUST be present if the content type of
@@ -265,6 +267,7 @@ namespace iText.Signatures.Cms {
         /// digest of the content.  Section 11.2 defines the message-digest
         /// attribute.
         /// </remarks>
+        /// <returns>collection of the signed attributes.</returns>
         public virtual ICollection<Attribute> GetSignedAttributes() {
             return JavaCollectionsUtil.UnmodifiableCollection(signedAttributes);
         }
