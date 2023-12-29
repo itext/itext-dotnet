@@ -26,7 +26,6 @@ using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
     /// <summary>Represents the signature dictionary.</summary>
-    /// <author>Paulo Soares</author>
     public class PdfSignature : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Creates new PdfSignature.</summary>
         public PdfSignature()

@@ -43,10 +43,15 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(outputFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(outputFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SurrogatePairTest() {
             String fileName = "surrogatePairTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "DejaVuSans.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -61,7 +66,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CustomSimpleEncodingTimesRomanTest() {
             String fileName = "customSimpleEncodingTimesRomanTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "# simple 1 0020 041c 0456 0440 044a 0050 0065 0061 0063"
                 , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
@@ -77,7 +82,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CustomFullEncodingTimesRomanTest() {
             String fileName = "customFullEncodingTimesRomanTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN, "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
                 );
@@ -92,7 +97,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void NotdefInStandardFontTest() {
             String fileName = "notdefInStandardFontTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA, "# full 'A' Aring 0041 'E' abc11 0045 32 space 0020"
                 );
@@ -110,7 +115,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void NotdefInTrueTypeFontTest() {
             String fileName = "notdefInTrueTypeFontTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "# simple 32 0020 00C5 1987", PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
@@ -129,7 +134,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void NotdefInType0Test() {
             String fileName = "notdefInType0Test.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -143,7 +148,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SymbolDefaultFontTest() {
             String fileName = "symbolDefaultFontTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.SYMBOL);
             FillSymbolDefaultPage(font, doc.AddNewPage());
@@ -179,7 +184,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontWinAnsiTest() {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
@@ -210,7 +215,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontIdentityTest() {
             String fileName = "symbolTrueTypeFontIdentityTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -241,7 +246,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontSameCharsIdentityTest() {
             String fileName = "symbolTrueTypeFontSameCharsIdentityTest.pdf";
-            PdfWriter writer = new PdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());

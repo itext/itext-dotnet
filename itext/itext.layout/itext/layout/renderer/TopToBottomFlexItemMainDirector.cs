@@ -24,20 +24,17 @@ using System.Collections.Generic;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    internal class TopToBottomFlexItemMainDirector : IFlexItemMainDirector {
+    internal class TopToBottomFlexItemMainDirector : FlexColumnItemMainDirector {
         internal TopToBottomFlexItemMainDirector() {
         }
 
-        public virtual IList<IRenderer> ApplyDirection(IList<IList<FlexItemInfo>> lines) {
-            // TODO DEVSIX-7595 Shall be implemented in the scope of this ticket
-            return null;
+        /// <summary><inheritDoc/></summary>
+        public override void ApplyDirectionForLine<T>(IList<T> renderers) {
         }
 
-        public virtual void ApplyDirectionForLine<T>(IList<T> renderers) {
-        }
-
-        // TODO DEVSIX-7595 Shall be implemented in the scope of this ticket
-        public virtual void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent
+        // Do nothing
+        /// <summary><inheritDoc/></summary>
+        public override void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent
             , float freeSpace) {
             switch (justifyContent) {
                 case JustifyContent.END:

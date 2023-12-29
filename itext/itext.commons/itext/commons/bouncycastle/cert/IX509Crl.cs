@@ -21,6 +21,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Crypto;
 
@@ -70,5 +71,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>encoded array</returns>
         byte[] GetEncoded();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetExtensionValue</c>
+        /// method for the wrapped X509Crl object.
+        /// </summary>
+        /// <returns>the DER-encoded octet string of the extension value.</returns>
+        IAsn1OctetString GetExtensionValue(string oid);
     }
 }

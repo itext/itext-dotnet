@@ -328,10 +328,11 @@ namespace iText.Signatures {
                         IAttributeTable attble = BOUNCY_CASTLE_FACTORY.CreateAttributeTable(unat);
                         IPkcsObjectIdentifiers ipkcsObjectIdentifiers = BOUNCY_CASTLE_FACTORY.CreatePKCSObjectIdentifiers();
                         IAttribute ts = attble.Get(ipkcsObjectIdentifiers.GetIdAaSignatureTimeStampToken());
-                        if (ts != null && ts.GetAttrValues().Size() > 0) {
+                        if (!BOUNCY_CASTLE_FACTORY.IsNull(ts) && ts.GetAttrValues().Size() > 0) {
                             IAsn1Set attributeValues = ts.GetAttrValues();
                             IAsn1Sequence tokenSequence = BOUNCY_CASTLE_FACTORY.CreateASN1SequenceInstance(attributeValues.GetObjectAt
                                 (0));
+                            this.timestampCerts = SignUtils.ReadAllCerts(tokenSequence.GetEncoded());
                             IContentInfo contentInfo = BOUNCY_CASTLE_FACTORY.CreateContentInfo(tokenSequence);
                             this.timeStampTokenInfo = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(contentInfo);
                         }
@@ -340,6 +341,7 @@ namespace iText.Signatures {
                 if (isTsp) {
                     IContentInfo contentInfoTsp = BOUNCY_CASTLE_FACTORY.CreateContentInfo(signedData);
                     this.timeStampTokenInfo = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(contentInfoTsp);
+                    this.timestampCerts = this.certs;
                     String algOID = timeStampTokenInfo.GetMessageImprint().GetHashAlgorithm().GetAlgorithm().GetId();
                     messageDigest = DigestAlgorithms.GetMessageDigestFromOid(algOID);
                 }
@@ -533,7 +535,7 @@ namespace iText.Signatures {
                 }
 
                 default: {
-                    return GetDigestAlgorithmName() + "with" + GetSignatureAlgorithmName();
+                    return SignatureMechanisms.GetMechanism(signatureMechanismOid, GetDigestAlgorithmName());
                 }
             }
         }
@@ -887,13 +889,9 @@ namespace iText.Signatures {
             if (timeStampToken == null) {
                 return null;
             }
-            // @todo: move this together with the rest of the defintions
-            String ID_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
-            // RFC 3161 id-aa-timeStampToken
             IAsn1EncodableVector unauthAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             IAsn1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-            v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(ID_TIME_STAMP_TOKEN));
-            // id-aa-timeStampToken
+            v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_AA_TIME_STAMP_TOKEN));
             using (IAsn1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken
                 ))) {
                 IAsn1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());
@@ -1029,9 +1027,11 @@ namespace iText.Signatures {
                     v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2));
                     IAsn1EncodableVector aaV2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-                    IAlgorithmIdentifier algoId = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
-                        (digestAlgorithmOid));
-                    aaV2.Add(algoId);
+                    if (!digestAlgorithmOid.Equals(SecurityIDs.ID_SHA256)) {
+                        IAlgorithmIdentifier algoId = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
+                            (digestAlgorithmOid));
+                        aaV2.Add(algoId);
+                    }
                     IDigest md = SignUtils.GetMessageDigest(GetDigestAlgorithmName());
                     byte[] dig = md.Digest(signCert.GetEncoded());
                     aaV2.Add(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(dig));
@@ -1153,6 +1153,8 @@ namespace iText.Signatures {
         /// <summary>All the X.509 certificates in no particular order.</summary>
         private ICollection<IX509Certificate> certs;
 
+        private ICollection<IX509Certificate> timestampCerts;
+
         /// <summary>All the X.509 certificates used for the main signature.</summary>
         internal ICollection<IX509Certificate> signCerts;
 
@@ -1167,6 +1169,16 @@ namespace iText.Signatures {
         /// <returns>the X.509 certificates associated with this PKCS#7 object</returns>
         public virtual IX509Certificate[] GetCertificates() {
             return certs.ToArray(new IX509Certificate[certs.Count]);
+        }
+
+        /// <summary>Get all X.509 certificates associated with this PKCS#7 object timestamp in no particular order.</summary>
+        /// <returns>
+        /// 
+        /// <see>Certificate[]</see>
+        /// array
+        /// </returns>
+        public virtual IX509Certificate[] GetTimestampCertificates() {
+            return timestampCerts.ToArray(new IX509Certificate[0]);
         }
 
         /// <summary>Get the X.509 sign certificate chain associated with this PKCS#7 object.</summary>

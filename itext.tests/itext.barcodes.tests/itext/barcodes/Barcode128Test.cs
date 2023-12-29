@@ -41,10 +41,15 @@ namespace iText.Barcodes {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcode128_01.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -61,7 +66,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcode128_02.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfReader reader = new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             PdfCanvas canvas = new PdfCanvas(document.GetLastPage());

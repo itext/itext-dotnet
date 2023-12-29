@@ -52,6 +52,7 @@ namespace iText.Kernel.Font {
             }
             if (toUnicode != null) {
                 iText.Kernel.Font.DocFontEncoding fontEncoding = new iText.Kernel.Font.DocFontEncoding();
+                FontEncoding.FillFontEncoding(fontEncoding);
                 fontEncoding.differences = new String[256];
                 FillDifferences(fontEncoding, toUnicode);
                 return fontEncoding;

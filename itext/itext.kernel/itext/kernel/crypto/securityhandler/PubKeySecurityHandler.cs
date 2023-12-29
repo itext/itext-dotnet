@@ -37,12 +37,13 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
-    /// <author>Aiken Sam (aikensam@ieee.org)</author>
     public abstract class PubKeySecurityHandler : SecurityHandler {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
         private const int SEED_LENGTH = 20;
+
+        private const int DEFAULT_KEY_LENGTH = 40;
 
         private IList<PublicKeyRecipient> recipients = null;
 
@@ -134,8 +135,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, IX509Certificate
             [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             AddAllRecipients(certs, permissions);
-            int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
-            int keyLength = keyLen != null ? (int)keyLen : 40;
+            int keyLength = GetKeyLength(encryptionDictionary);
             String digestAlgorithm = GetDigestAlgorithm();
             byte[] digest = ComputeGlobalKey(digestAlgorithm, encryptMetadata);
             InitKey(digest, keyLength);
@@ -147,8 +147,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             String digestAlgorithm = GetDigestAlgorithm();
             byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (IPrivateKey)certificateKey, certificate
                 , encryptMetadata, digestAlgorithm);
-            int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
-            int keyLength = keyLen != null ? (int)keyLen : 40;
+            int keyLength = GetKeyLength(encryptionDictionary);
             InitKey(encryptionKey, keyLength);
         }
 
@@ -177,7 +176,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             //constants permissions: PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders |
             // PdfWriter.AllowAssembly;
             int permission = recipient.GetPermission();
-            // NOTE! Added while porting to itext7
+            // NOTE! Added while porting to itext
             // Previous strange code was:
             // int revision = 3;
             // permission |= revision == 3 ? 0xfffff0c0 : 0xffffffc0;
@@ -256,6 +255,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             IDerOctetString derOctetString = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(cipheredBytes);
             IRecipientIdentifier recipId = BOUNCY_CASTLE_FACTORY.CreateRecipientIdentifier(issuerAndSerialNumber);
             return BOUNCY_CASTLE_FACTORY.CreateKeyTransRecipientInfo(recipId, algorithmIdentifier, derOctetString);
+        }
+
+        private int GetKeyLength(PdfDictionary encryptionDict) {
+            int? keyLength = encryptionDict.GetAsInt(PdfName.Length);
+            return keyLength != null ? (int)keyLength : DEFAULT_KEY_LENGTH;
         }
     }
 }

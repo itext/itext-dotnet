@@ -38,12 +38,17 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void DocumentInfoCreatePdf20() {
             String outFile = destinationFolder + "test01.pdf";
             String cmpFile = sourceFolder + "cmp_test01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)));
             document.AddNewPage();
             document.GetDocumentInfo().SetAuthor("Alexey");
             document.Close();
@@ -58,8 +63,8 @@ namespace iText.Kernel.Pdf {
             String inputFile = sourceFolder + "metadata_pdf.pdf";
             String outFile = destinationFolder + "metadata_pdf_20.pdf";
             String cmpFile = sourceFolder + "cmp_metadata_pdf_20.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outFile, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument document = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outFile, 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             document.Close();
             CompareTool ct = new CompareTool();
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
@@ -72,8 +77,8 @@ namespace iText.Kernel.Pdf {
             String inputFile = sourceFolder + "metadata_pdf.pdf";
             String outFile = destinationFolder + "metadata_pdf_20_append.pdf";
             String cmpFile = sourceFolder + "cmp_metadata_pdf_20_append.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outFile, new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().UseAppendMode());
+            PdfDocument document = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outFile, 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().UseAppendMode());
             document.GetDocumentInfo().SetAuthor("Alexey Subach");
             document.Close();
             CompareTool ct = new CompareTool();
@@ -100,8 +105,8 @@ namespace iText.Kernel.Pdf {
             String inputFile = sourceFolder + "cmp_metadata_pdf_20.pdf";
             String outFile = destinationFolder + "metadata_pdf_20_changed_append.pdf";
             String cmpFile = sourceFolder + "cmp_metadata_pdf_20_changed_append.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outFile), new StampingProperties
-                ().UseAppendMode());
+            PdfDocument document = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outFile), 
+                new StampingProperties().UseAppendMode());
             document.GetDocumentInfo().SetAuthor("Alexey Subach");
             document.Close();
             CompareTool ct = new CompareTool();
@@ -115,8 +120,8 @@ namespace iText.Kernel.Pdf {
             String inputFile = sourceFolder + "cmp_metadata_pdf_20_changed_append.pdf";
             String outFile = destinationFolder + "metadata_pdf_20_unchanged_stamper.pdf";
             String cmpFile = sourceFolder + "cmp_metadata_pdf_20_unchanged_append.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outFile), new StampingProperties
-                ());
+            PdfDocument document = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(outFile), 
+                new StampingProperties());
             String author = document.GetDocumentInfo().GetAuthor();
             document.Close();
             NUnit.Framework.Assert.AreEqual("Bruno Lowagie; Alexey Subach", author, "Author");

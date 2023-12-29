@@ -27,7 +27,6 @@ namespace iText.Kernel.Crypto {
     /// <summary>An initialization vector generator for a CBC block encryption.</summary>
     /// <remarks>An initialization vector generator for a CBC block encryption. It's a random generator based on ARCFOUR.
     ///     </remarks>
-    /// <author>Paulo Soares</author>
     public sealed class IVGenerator {
         private static readonly ARCFOUREncryption arcfour;
 

@@ -25,8 +25,6 @@ using System.Collections.Generic;
 
 namespace iText.Barcodes.Qrcode {
     /// <summary>Implements Reed-Solomon encoding, as the name implies.</summary>
-    /// <author>Sean Owen</author>
-    /// <author>William Rucklidge</author>
     internal sealed class ReedSolomonEncoder {
         private readonly GF256 field;
 

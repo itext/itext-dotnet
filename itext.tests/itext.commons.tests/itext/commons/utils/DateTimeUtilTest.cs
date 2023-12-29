@@ -54,6 +54,15 @@ namespace iText.Commons.Utils {
         }
 
         [Test]
+        public void AddMillisToDateTest() {
+            DateTime almostCurrentTime = DateTime.Now.AddMilliseconds(-2000);
+            long twoSeconds = 2000;
+            Assert.AreEqual(DateTimeUtil.GetRelativeTime(DateTime.Now),
+                DateTimeUtil.GetRelativeTime(DateTimeUtil.AddMillisToDate(almostCurrentTime, twoSeconds)),
+                ONE_SECOND_DELTA);
+        }
+
+        [Test]
         public void CompareUtcMillisFromEpochWithNullParamAndCurrentTimeTest() {
             double getUtcMillisFromEpochWithNullParam = DateTimeUtil.GetUtcMillisFromEpoch(null);
             double millisFromEpochToCurrentTime = DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCurrentUtcTime());

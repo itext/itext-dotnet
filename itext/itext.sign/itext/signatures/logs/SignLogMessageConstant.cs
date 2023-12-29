@@ -25,7 +25,14 @@ using System;
 namespace iText.Signatures.Logs {
     /// <summary>Class which contains constants to be used in logging inside sign module.</summary>
     public sealed class SignLogMessageConstant {
+        public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
+
         public const String EXCEPTION_WITHOUT_MESSAGE = "Unexpected exception without message was thrown during keystore processing";
+
+        public const String UNABLE_TO_PARSE_AIA_CERT = "Unable to parse certificates coming from authority info " 
+            + "access extension. Those won't be included into the certificate chain.";
+
+        public const String REVOCATION_DATA_NOT_ADDED_VALIDITY_ASSURED = "Revocation data for certificate: \"{0}\" is not added due to validity assured - short term extension.";
 
         private SignLogMessageConstant() {
         }

@@ -315,6 +315,35 @@ namespace iText.StyledXmlParser.Css.Util {
             return null;
         }
 
+        /// <summary>Parse length attributes.</summary>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// for parsing
+        /// </param>
+        /// <param name="percentBaseValue">the value on which percent length is based on</param>
+        /// <param name="defaultValue">default value if length is not recognized</param>
+        /// <param name="fontSize">font size of the current element</param>
+        /// <param name="rootFontSize">root element font size</param>
+        /// <returns>absolute value in points</returns>
+        public static float ParseLength(String length, float percentBaseValue, float defaultValue, float fontSize, 
+            float rootFontSize) {
+            if (CssTypesValidationUtils.IsPercentageValue(length)) {
+                return iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils.ParseRelativeValue(length, percentBaseValue
+                    );
+            }
+            else {
+                UnitValue unitValue = iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils.ParseLengthValueToPt(length, 
+                    fontSize, rootFontSize);
+                if (unitValue != null && unitValue.IsPointValue()) {
+                    return unitValue.GetValue();
+                }
+                else {
+                    return defaultValue;
+                }
+            }
+        }
+
         /// <summary>Parses the absolute font size.</summary>
         /// <remarks>
         /// Parses the absolute font size.

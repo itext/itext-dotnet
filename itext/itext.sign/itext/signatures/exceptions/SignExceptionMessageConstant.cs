@@ -25,10 +25,16 @@ using System;
 namespace iText.Signatures.Exceptions {
     /// <summary>Class that bundles all the error message templates as constants.</summary>
     public sealed class SignExceptionMessageConstant {
+        public const String ALGORITHMS_NOT_SUPPORTED = "Signing algorithms {0} and {1} are not supported.";
+
         public const String AUTHENTICATED_ATTRIBUTE_IS_MISSING_THE_DIGEST = "Authenticated attribute is missing " 
             + "the digest.";
 
         public const String AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE = "Available space is not enough for " + "signature.";
+
+        public const String TOKEN_ESTIMATION_SIZE_IS_NOT_LARGE_ENOUGH = "Timestamp token estimation size is not " 
+            + "large enough to accommodate the entire timestamp token. Timestamp token estimation size is: {0} bytes, "
+             + "however real timestamp token size is: {1} bytes.";
 
         public const String CANNOT_DECODE_PKCS7_SIGNED_DATA_OBJECT = "Cannot decode PKCS#7 SignedData object.";
 
@@ -43,6 +49,9 @@ namespace iText.Signatures.Exceptions {
              + "signing with certification signature.";
 
         public const String CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE = "Certificate {0} failed: {1}";
+
+        public const String DEFAULT_CLIENTS_CANNOT_BE_CREATED = "Default implementation of OCSP and CRL clients " 
+            + "cannot be created, because signing certificate doesn't contain revocation data sources. " + "Please try to explicitly add OCSP or CRL client.";
 
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
@@ -68,12 +77,21 @@ namespace iText.Signatures.Exceptions {
 
         public const String NO_CRYPTO_DICTIONARY_DEFINED = "No crypto dictionary defined.";
 
+        public const String NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE = "Neither ocsp nor crl data are available "
+             + "for the signing certificate or certificate is revoked.";
+
+        public const String NO_SIGNATURES_TO_PROLONG = "Document doesn't contain any signatures to prolong.";
+
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_A_SEQUENCE = "Not a valid PKCS#7 object - not a sequence";
 
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed " +
              "data.";
 
         public const String NOT_ENOUGH_SPACE = "Not enough space.";
+
+        public const String PATH_IS_NOT_DIRECTORY = "Provided path: {0} is not a directory. " + "Please provide a directory path to store temporary pdf files which are required for signing.";
+
+        public const String PROVIDED_TSA_CLIENT_IS_NULL = "Provided TSA client is null. TSA client is required for timestamp signing.";
 
         public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
              + "with name {0} is not the last. It doesn't cover the whole document.";
@@ -114,6 +132,19 @@ namespace iText.Signatures.Exceptions {
         public const String DISGEST_ALGORITM_MGF_MISMATCH = "Digest algorithm in MGF1 parameters is {0} while" + " ambient digest algorithm is {1}";
 
         public const String INVALID_ARGUMENTS = "Invalid parameters provided.";
+
+        public const String CMS_SIGNERINFO_READONLY = "Updating the signed attributes of this SignerInfo instance is"
+             + " not possible because it has been serialized or been initiated from a serialized version.";
+
+        public const String CMS_SIGNERINFO_NOT_INITIALIZED = "Signer info is not yet initialized";
+
+        public const String CMS_INVALID_CONTAINER_STRUCTURE = "Provided data is not a CMS container";
+
+        public const String CMS_ONLY_ONE_SIGNER_ALLOWED = "Only one signer per CMS container is allowed";
+
+        public const String CMS_CERTIFICATE_NOT_FOUND = "Signer certificate not found in list of certificates";
+
+        public const String CMS_MISSING_CERTIFICATES = "The certificate set must at least contains the signer certificate";
 
         private SignExceptionMessageConstant() {
         }

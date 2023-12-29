@@ -106,6 +106,30 @@ namespace iText.IO.Font {
         /// not parsed again.
         /// <para />
         /// </remarks>
+        /// <param name="fontProgram">the name of the font or its location on file</param>
+        /// <param name="cmap">CMap to convert Unicode value to CID if CJK font is used</param>
+        /// <param name="cached">whether to cache this font program after it has been loaded</param>
+        /// <returns>
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// . This font program may come from the cache
+        /// </returns>
+        public static FontProgram CreateFont(String fontProgram, String cmap, bool cached) {
+            return CreateFont(fontProgram, cmap, null, cached);
+        }
+
+        /// <summary>Creates a new font program.</summary>
+        /// <remarks>
+        /// Creates a new font program. This font program can be one of the 14 built in fonts,
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
+        /// a CJK font from the Adobe Asian Font Pack.
+        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
+        /// This would get the second font (indexes start at 0), in this case "MS PGothic".
+        /// <para />
+        /// The fonts are cached and if they already exist they are extracted from the cache,
+        /// not parsed again.
+        /// <para />
+        /// </remarks>
         /// <param name="fontProgram">the byte contents of the font program</param>
         /// <returns>
         /// returns a new
@@ -113,7 +137,7 @@ namespace iText.IO.Font {
         /// . This font program may come from the cache
         /// </returns>
         public static FontProgram CreateFont(byte[] fontProgram) {
-            return CreateFont(null, fontProgram, DEFAULT_CACHED);
+            return CreateFont(null, null, fontProgram, DEFAULT_CACHED);
         }
 
         /// <summary>Creates a new font program.</summary>
@@ -136,18 +160,23 @@ namespace iText.IO.Font {
         /// . This font program may come from the cache
         /// </returns>
         public static FontProgram CreateFont(byte[] fontProgram, bool cached) {
-            return CreateFont(null, fontProgram, cached);
+            return CreateFont(null, null, fontProgram, cached);
         }
 
-        private static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
+        private static FontProgram CreateFont(String name, String cmap, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.TrimFontStyle(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
             bool isBuiltinFonts14 = StandardFonts.IsStandardFont(name);
-            bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
+            bool isCidFont = !isBuiltinFonts14 && CjkResourceLoader.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
             FontCacheKey fontKey = null;
             if (cached) {
-                fontKey = CreateFontCacheKey(name, fontProgram);
+                if (isCidFont && cmap != null) {
+                    fontKey = CreateFontCacheKey(name + cmap, fontProgram);
+                }
+                else {
+                    fontKey = CreateFontCacheKey(name, fontProgram);
+                }
                 fontFound = FontCache.GetFont(fontKey);
                 if (fontFound != null) {
                     return fontFound;
@@ -189,7 +218,7 @@ namespace iText.IO.Font {
                 }
                 else {
                     if (isCidFont) {
-                        fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
+                        fontBuilt = new CidFont(name, cmap, CjkResourceLoader.GetCompatibleCmaps(baseName));
                     }
                     else {
                         if (".ttf".Equals(fontFileExtension) || ".otf".Equals(fontFileExtension)) {

@@ -41,10 +41,15 @@ namespace iText.Barcodes {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcodeEAN_01.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -61,7 +66,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcodeEAN_02.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfReader reader = new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf");
             PdfDocument document = new PdfDocument(reader, writer);
             PdfCanvas canvas = new PdfCanvas(document.GetLastPage());
@@ -78,7 +83,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode03Test() {
             String filename = "barcodeEANSUP.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -99,7 +104,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void PlaceBarcodeUPCATest() {
             String filename = "placeBarcodeUPCATest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -115,7 +120,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void PlaceBarcodeUPCETest() {
             String filename = "placeBarcodeUPCETest.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -131,7 +136,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void PlaceBarcodeSUPP2Test() {
             String filename = "placeBarcodeSUPP2Test.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -147,7 +152,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void PlaceBarcodeSUPP5Test() {
             String filename = "placeBarcodeSUPP5Test.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

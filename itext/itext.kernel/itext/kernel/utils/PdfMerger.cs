@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
@@ -27,11 +28,7 @@ namespace iText.Kernel.Utils {
     public class PdfMerger {
         private PdfDocument pdfDocument;
 
-        private bool closeSrcDocuments;
-
-        private bool mergeTags;
-
-        private bool mergeOutlines;
+        private PdfMergerProperties properties;
 
         /// <summary>This class is used to merge a number of existing documents into one.</summary>
         /// <remarks>
@@ -57,10 +54,19 @@ namespace iText.Kernel.Utils {
         /// destination document outlines were explicitly initialized with
         /// <see cref="iText.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>
         /// </param>
+        [System.ObsoleteAttribute(@"use <code>PdfMerger(PdfDocument, PdfMergerProperties)</code> constructor")]
         public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines) {
             this.pdfDocument = pdfDocument;
-            this.mergeTags = mergeTags;
-            this.mergeOutlines = mergeOutlines;
+            this.properties = new PdfMergerProperties();
+            this.properties.SetMergeTags(mergeTags).SetMergeOutlines(mergeOutlines);
+        }
+
+        /// <summary>This class is used to merge a number of existing documents into one.</summary>
+        /// <param name="pdfDocument">the document into which source documents will be merged</param>
+        /// <param name="properties">properties for the created <c>PdfMerger</c></param>
+        public PdfMerger(PdfDocument pdfDocument, PdfMergerProperties properties) {
+            this.pdfDocument = pdfDocument;
+            this.properties = properties != null ? properties : new PdfMergerProperties();
         }
 
         /// <summary>
@@ -83,7 +89,7 @@ namespace iText.Kernel.Utils {
         /// instance
         /// </returns>
         public virtual iText.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments) {
-            this.closeSrcDocuments = closeSourceDocuments;
+            this.properties.SetCloseSrcDocuments(closeSourceDocuments);
             return this;
         }
 
@@ -141,14 +147,50 @@ namespace iText.Kernel.Utils {
         /// instance
         /// </returns>
         public virtual iText.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int> pages) {
-            if (mergeTags && from.IsTagged()) {
+            return Merge(from, pages, null);
+        }
+
+        /// <summary>This method merges pages from the source document to the current one.</summary>
+        /// <remarks>
+        /// This method merges pages from the source document to the current one.
+        /// <para />
+        /// If <i>closeSourceDocuments</i> flag is set to <i>true</i> (see
+        /// <see cref="SetCloseSourceDocuments(bool)"/>
+        /// ),
+        /// passed
+        /// <c>PdfDocument</c>
+        /// will be closed after pages are merged.
+        /// <para />
+        /// See also
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.CopyPagesTo(System.Collections.Generic.IList{E}, iText.Kernel.Pdf.PdfDocument)
+        ///     "/>.
+        /// </remarks>
+        /// <param name="from">- document, from which pages will be copied</param>
+        /// <param name="pages">- List of numbers of pages which will be copied</param>
+        /// <param name="copier">
+        /// - a copier which bears a special copy logic. May be null.
+        /// It is recommended to use the same instance of
+        /// <see cref="iText.Kernel.Pdf.IPdfPageExtraCopier"/>
+        /// for the same output document.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <c>PdfMerger</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int> pages, IPdfPageExtraCopier 
+            copier) {
+            if (properties.IsMergeTags() && from.IsTagged()) {
                 pdfDocument.SetTagged();
             }
-            if (mergeOutlines && from.HasOutlines()) {
+            if (properties.IsMergeOutlines() && from.HasOutlines()) {
                 pdfDocument.InitializeOutlines();
             }
-            from.CopyPagesTo(pages, pdfDocument);
-            if (closeSrcDocuments) {
+            if (properties.IsMergeScripts()) {
+                PdfScriptMerger.MergeScripts(from, this.pdfDocument);
+            }
+            from.CopyPagesTo(pages, pdfDocument, copier);
+            if (properties.IsCloseSrcDocuments()) {
                 from.Close();
             }
             return this;

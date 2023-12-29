@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -47,6 +46,11 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -248,7 +252,7 @@ namespace iText.Kernel.Colors.Gradients {
         private void GenerateAndComparePdfs(String fileName, AffineTransform transform, AbstractLinearGradientBuilder
              gradientBuilder) {
             String outPdfPath = destinationFolder + fileName;
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileInfo(outPdfPath)))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdfPath))) {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 if (transform != null) {
                     canvas.ConcatMatrix(transform);

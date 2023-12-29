@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -34,6 +35,8 @@ namespace iText.Forms.Fields {
 
         /// <summary>Page number to place widget at.</summary>
         private int page = 0;
+
+        private PdfFont font;
 
         /// <summary>Creates builder for terminal form field creation.</summary>
         /// <param name="document">document to be used for form field creation</param>
@@ -101,6 +104,26 @@ namespace iText.Forms.Fields {
             if (page != 0) {
                 field.SetPage(page);
             }
+        }
+
+        /// <summary>Set font to be used for form field creation.</summary>
+        /// <param name="font">
+        /// instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </param>
+        /// <returns>this builder</returns>
+        public virtual T SetFont(PdfFont font) {
+            this.font = font;
+            return GetThis();
+        }
+
+        /// <summary>Get font to be used for form field creation.</summary>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>.
+        /// </returns>
+        public virtual PdfFont GetFont() {
+            return font;
         }
     }
 }

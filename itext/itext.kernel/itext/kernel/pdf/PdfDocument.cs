@@ -47,6 +47,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Statistics;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -153,6 +154,8 @@ namespace iText.Kernel.Pdf {
         private PdfFont defaultFont = null;
 
         private EncryptedEmbeddedStreamsHandler encryptedEmbeddedStreamsHandler;
+
+        private readonly DIContainer diContainer = new DIContainer();
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
@@ -355,6 +358,16 @@ namespace iText.Kernel.Pdf {
             return GetPage(GetNumberOfPages());
         }
 
+        /// <summary>Gets current memory limits handler</summary>
+        /// <returns>
+        /// 
+        /// <c>MemoryLimitsAwareHandler</c>
+        /// instance
+        /// </returns>
+        public virtual MemoryLimitsAwareHandler GetMemoryLimitsAwareHandler() {
+            return memoryLimitsAwareHandler;
+        }
+
         /// <summary>
         /// Marks
         /// <see cref="PdfStream"/>
@@ -545,6 +558,12 @@ namespace iText.Kernel.Pdf {
                 DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.REMOVE_PAGE, removedPage));
             }
             catalog.GetPageTree().RemovePage(pageNum);
+        }
+
+        /// <summary>Gets the container containing all available dependencies.</summary>
+        /// <returns>the container containing all available dependencies.</returns>
+        public virtual DIContainer GetDiContainer() {
+            return diContainer;
         }
 
         /// <summary>Gets document information dictionary.</summary>
@@ -748,6 +767,9 @@ namespace iText.Kernel.Pdf {
                             xmp.Put(PdfName.Filter, ar);
                         }
                     }
+                    if (!properties.appendMode && catalog.IsOCPropertiesMayHaveChanged()) {
+                        catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
+                    }
                     CheckIsoConformance();
                     if (GetNumberOfPages() == 0) {
                         // Add new page here, not in PdfPagesTree#generateTree method, so that any page
@@ -773,12 +795,10 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
+                        FlushInfoDictionary(properties.appendMode);
                         if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
                             catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
-                        }
-                        if (GetDocumentInfo().GetPdfObject().IsModified()) {
-                            GetDocumentInfo().GetPdfObject().Flush(false);
                         }
                         FlushFonts();
                         if (writer.crypto != null) {
@@ -802,7 +822,6 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (catalog.IsOCPropertiesMayHaveChanged()) {
-                            catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
                             catalog.GetOCProperties(false).Flush();
                         }
                         if (catalog.pageLabels != null) {
@@ -824,8 +843,8 @@ namespace iText.Kernel.Pdf {
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(false);
                         }
+                        FlushInfoDictionary(properties.appendMode);
                         catalog.GetPdfObject().Flush(false);
-                        GetDocumentInfo().GetPdfObject().Flush(false);
                         FlushFonts();
                         if (writer.crypto != null) {
                             crypto = writer.crypto.GetPdfObject();
@@ -851,20 +870,20 @@ namespace iText.Kernel.Pdf {
                     // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
                     // NOTE. No need in reverting, because it is the last operation with the document.
                     writer.crypto = null;
+                    CheckIsoConformance(crypto, IsoKey.CRYPTO);
                     if (!properties.appendMode && crypto != null) {
                         // no need to flush crypto in append mode, it shall not have changed in this case
                         crypto.Flush(false);
                     }
-                    // The following two operators prevents the possible inconsistency between root and info
+                    // The following operator prevents the possible inconsistency between root and info
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
-                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject());
                     //By this time original and modified document ids should always be not null due to initializing in
                     // either writer properties, or in the writer init section on document open or from pdfreader. So we
                     // shouldn't worry about it being null next
                     PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
-                        .GetIsoBytes(modifiedDocumentId.GetValue()));
+                        .GetIsoBytes(modifiedDocumentId.GetValue()), this.properties.preserveEncryption);
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
                     if (writer.GetOutputStream() is CountOutputStream) {
@@ -1005,6 +1024,19 @@ namespace iText.Kernel.Pdf {
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , int insertBeforePage) {
             return CopyPagesTo(pageFrom, pageTo, toDocument, insertBeforePage, null);
+        }
+
+        /// <summary>
+        /// Get the
+        /// <see cref="IConformanceLevel"/>
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="IConformanceLevel"/>
+        /// will be null if the document does not have a conformance level specified
+        /// </returns>
+        public virtual IConformanceLevel GetConformanceLevel() {
+            return null;
         }
 
         /// <summary>
@@ -1514,20 +1546,13 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
-        /// </remarks>
         /// <param name="obj">An object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key) {
+            CheckIsoConformance(obj, key, null, null);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
-        /// </remarks>
         /// <param name="obj">an object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         /// <param name="resources">
@@ -1538,12 +1563,35 @@ namespace iText.Kernel.Pdf {
         /// <param name="contentStream">current content stream</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
+            CheckIsoConformance(obj, key, resources, contentStream, null);
+        }
+
+        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
+        /// <param name="obj">an object to conform.</param>
+        /// <param name="key">type of object to conform.</param>
+        /// <param name="resources">
+        /// 
+        /// <see cref="PdfResources"/>
+        /// associated with an object to check.
+        /// </param>
+        /// <param name="contentStream">current content stream.</param>
+        /// <param name="extra">extra data required for the check.</param>
+        public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
+            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
+            if (container == null) {
+                return;
+            }
+            container.Validate(obj, key, resources, contentStream, extra);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
         /// <remarks>
         /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
+        /// Shall be overridden.
         /// </remarks>
         /// <param name="gState">
         /// a
@@ -1963,12 +2011,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be override.
-        /// </remarks>
+        /// <summary>Checks whether PDF document conforms to a specific standard.</summary>
         protected internal virtual void CheckIsoConformance() {
+            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
+            if (container == null) {
+                return;
+            }
+            ValidationContext context = new ValidationContext().WithPdfDocument(this).WithFonts(GetDocumentFonts());
+            container.Validate(context);
         }
 
         /// <summary>
@@ -2076,7 +2129,6 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
-                    trailer.Put(PdfName.Info, GetDocumentInfo().GetPdfObject().GetIndirectReference());
                     if (reader != null) {
                         // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
                         if (reader.trailer.ContainsKey(PdfName.ID)) {
@@ -2189,10 +2241,23 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
         }
 
+        /// <summary>Flush info dictionary if needed.</summary>
+        /// <param name="appendMode"><c>true</c> if the document is edited in append mode.</param>
+        protected internal virtual void FlushInfoDictionary(bool appendMode) {
+            PdfObject infoDictObj = GetDocumentInfo().GetPdfObject();
+            if (!appendMode || infoDictObj.IsModified()) {
+                infoDictObj.Flush(false);
+            }
+            // The following operator prevents the possible inconsistency between root and info
+            // entries existing in the trailer object and corresponding fields. This inconsistency
+            // may appear when user gets trailer and explicitly sets new root or info dictionaries.
+            trailer.Put(PdfName.Info, infoDictObj);
+        }
+
         /// <summary>Updates XMP metadata.</summary>
         /// <remarks>
         /// Updates XMP metadata.
-        /// Shall be override.
+        /// Shall be overridden.
         /// </remarks>
         protected internal virtual void UpdateXmpMetadata() {
             try {

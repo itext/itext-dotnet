@@ -40,9 +40,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/parser/HighlightItemsTest/";
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
             CreateDestinationFolder(outputPath);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(outputPath);
         }
 
         [NUnit.Framework.Test]
@@ -50,7 +55,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "page229.pdf";
             String output = outputPath + "page229.pdf";
             String cmp = sourceFolder + "cmp_page229.pdf";
-            ParseAndHighlight(input, output, false);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, false);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -59,7 +65,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "page229.pdf";
             String output = outputPath + "page229_characters.pdf";
             String cmp = sourceFolder + "cmp_page229_characters.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -68,7 +75,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
             String output = outputPath + "SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
             String cmp = sourceFolder + "cmp_ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
-            ParseAndHighlight(input, output, false);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, false);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -77,7 +85,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda.pdf";
             String output = outputPath + "ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda_characters.pdf";
             String cmp = sourceFolder + "cmp_ISO-TC171-SC2_N0896_SC2WG5_Edinburgh_Agenda_characters.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -86,7 +95,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "HeaderFooter.pdf";
             String output = outputPath + "HeaderFooter.pdf";
             String cmp = sourceFolder + "cmp_HeaderFooter.pdf";
-            ParseAndHighlight(input, output, false);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, false);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -95,7 +105,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "HeaderFooter.pdf";
             String output = outputPath + "HeaderFooter_characters.pdf";
             String cmp = sourceFolder + "cmp_HeaderFooter_characters.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -104,7 +115,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "reference_page2.pdf";
             String output = outputPath + "reference_page2_characters.pdf";
             String cmp = sourceFolder + "cmp_reference_page2_characters.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -113,7 +125,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "reference_page832.pdf";
             String output = outputPath + "reference_page832_characters.pdf";
             String cmp = sourceFolder + "cmp_reference_page832_characters.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -122,7 +135,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "reference_page604.pdf";
             String output = outputPath + "reference_page604_characters.pdf";
             String cmp = sourceFolder + "cmp_reference_page604_characters.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -131,7 +145,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "notdefWidth.pdf";
             String output = outputPath + "notdefWidth_highlighted.pdf";
             String cmp = sourceFolder + "cmp_notdefWidth.pdf";
-            ParseAndHighlight(input, output, false);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, false);
             NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
         }
 
@@ -140,7 +155,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "fillStandardEncodingType1NoDescriptorTest.pdf";
             String output = outputPath + "fillStandardEncodingType1NoDescriptorTest.pdf";
             String cmp = sourceFolder + "cmp_fillStandardEncodingType1NoDescriptorTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -149,7 +165,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "fillStandardEncodingTrueTypeFontDescriptorTest.pdf";
             String output = outputPath + "fillStandardEncodingTrueTypeFontDescriptorTest.pdf";
             String cmp = sourceFolder + "cmp_fillStandardEncodingTrueTypeFontDescriptorTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -158,7 +175,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "fillStandardEncodingType1FontDescriptorTest.pdf";
             String output = outputPath + "fillStandardEncodingType1FontDescriptorTest.pdf";
             String cmp = sourceFolder + "cmp_fillStandardEncodingType1FontDescriptorTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -169,7 +187,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "incorrectAscentFontDescriptorTest.pdf";
             String output = outputPath + "incorrectAscentFontDescriptorTest.pdf";
             String cmp = sourceFolder + "cmp_incorrectAscentFontDescriptorTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -178,7 +197,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "incorrectDescentFontDescriptorTest.pdf";
             String output = outputPath + "incorrectDescentFontDescriptorTest.pdf";
             String cmp = sourceFolder + "cmp_incorrectDescentFontDescriptorTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -187,7 +207,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "fontDictWidthArrayMissingWidthTest.pdf";
             String output = outputPath + "fontDictWidthArrayMissingWidthTest.pdf";
             String cmp = sourceFolder + "cmp_fontDictWidthArrayMissingWidthTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -196,7 +217,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "trueTypeCIDFontWithDWWithoutProperWidthGlyphTest.pdf";
             String output = outputPath + "trueTypeCIDFontWithDWWithoutProperWidthGlyphTest.pdf";
             String cmp = sourceFolder + "cmp_trueTypeCIDFontWithDWWithoutProperWidthGlyphTest.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
@@ -206,12 +228,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String input = sourceFolder + "invalidHighlight.pdf";
             String output = outputPath + "invalidHighlightOutput.pdf";
             String cmp = sourceFolder + "cmp_invalidHighlight.pdf";
-            ParseAndHighlight(input, output, true);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
         }
 
-        private void ParseAndHighlight(String input, String output, bool singleCharacters) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(output));
+        private void ParseAndHighlight(String input, PdfWriter writer, bool singleCharacters) {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), writer);
             HighlightItemsTest.MyEventListener myEventListener = singleCharacters ? new HighlightItemsTest.MyCharacterEventListener
                 () : new HighlightItemsTest.MyEventListener();
             PdfDocumentContentParser parser = new PdfDocumentContentParser(pdfDocument);

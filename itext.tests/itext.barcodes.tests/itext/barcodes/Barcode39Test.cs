@@ -42,10 +42,15 @@ namespace iText.Barcodes {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcode39_01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             Barcode1D barcode = new Barcode39(document);
@@ -60,8 +65,8 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcode39_02.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf"), new 
-                PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + filename));
             PdfCanvas canvas = new PdfCanvas(document.GetLastPage());
             Barcode1D barcode = new Barcode39(document);
             barcode.SetCode("9781935182610");

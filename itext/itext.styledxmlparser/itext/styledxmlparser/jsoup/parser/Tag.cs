@@ -27,7 +27,6 @@ using iText.StyledXmlParser.Jsoup.Internal;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <summary>HTML Tag capabilities.</summary>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Tag
 #if !NETSTANDARD2_0
  : ICloneable

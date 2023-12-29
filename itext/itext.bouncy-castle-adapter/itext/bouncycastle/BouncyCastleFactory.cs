@@ -100,6 +100,8 @@ namespace iText.Bouncycastle {
         private static readonly BouncyCastleTestConstantsFactory BOUNCY_CASTLE_TEST_CONSTANTS =
             new BouncyCastleTestConstantsFactory();
 
+        private static readonly IBouncyCastleUtil BOUNCY_CASTLE_UTIL = new BouncyCastleUtil();
+
         /// <summary>
         /// Creates
         /// <see cref="iText.Commons.Bouncycastle.IBouncyCastleFactory"/>
@@ -107,6 +109,37 @@ namespace iText.Bouncycastle {
         /// </summary>
         public BouncyCastleFactory() {
             // Empty constructor.
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmOid(String name) {
+            try {
+                return new DefaultSignatureAlgorithmIdentifierFinder().Find(name).Algorithm.Id;
+            } catch (ArgumentException) {
+                return null;
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetDigestAlgorithmOid(String name) {
+            try {
+                DerObjectIdentifier algorithmIdentifier = DigestUtilities.GetObjectIdentifier(name);
+                if (algorithmIdentifier != null) {
+                    return algorithmIdentifier.Id;
+                }
+            } catch (ArgumentException) {
+                // Do nothing.
+            }
+            return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmName(String oid) {
+            try {
+                return SignerUtilities.GetEncodingName(new DerObjectIdentifier(oid));
+            } catch (FormatException) {
+                return oid;
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -267,10 +300,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public virtual IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
-            if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
-                return new DerOutputStreamBC(new BerOutputStream(outputStream));
-            }
-            return new DerOutputStreamBC(new DerOutputStream(outputStream));
+            return new DerOutputStreamBC(Asn1OutputStream.Create(outputStream));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -391,6 +421,12 @@ namespace iText.Bouncycastle {
             Asn1ObjectBC primitiveBC = (Asn1ObjectBC)primitive;
             return new BasicOcspResponseBC(BasicOcspResponse.GetInstance(primitiveBC.GetPrimitive()));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
+            return new BasicOcspResponseBC(BasicOcspResponse.GetInstance(
+                (Asn1Sequence)Asn1Sequence.FromByteArray(bytes)));
+        }
 
         /// <summary><inheritDoc/></summary>
         public IBasicOcspResponse CreateBasicOCSPResponse(object response) {
@@ -398,7 +434,6 @@ namespace iText.Bouncycastle {
                 return new BasicOcspResponseBC((BasicOcspResponse) response);
             }
             return null;
-            
         }
 
         /// <summary><inheritDoc/></summary>
@@ -453,7 +488,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public IX509Extensions CreateExtensions(IDictionary objectIdentifier) {
-            IDictionary dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
+            IDictionary<DerObjectIdentifier, X509Extension> dictionary = new Dictionary<DerObjectIdentifier, X509Extension>();
             foreach (IDerObjectIdentifier key in objectIdentifier.Keys) {
                 dictionary.Add(((DerObjectIdentifierBC)key).GetDerObjectIdentifier(), 
                     ((X509ExtensionBC)objectIdentifier[key]).GetX509Extension());
@@ -1001,6 +1036,11 @@ namespace iText.Bouncycastle {
         public bool IsNullExtension(IX509Extension ext) {
             return ((X509ExtensionBC)ext).GetX509Extension() == null;
         }
+
+        /// <summary><inheritDoc/></summary>
+        public bool IsNull(IAsn1Encodable encodable) {
+            return ((Asn1EncodableBC)encodable).GetEncodable() == null;
+        }
         
         /// <summary><inheritDoc/></summary>
         public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
@@ -1024,8 +1064,8 @@ namespace iText.Bouncycastle {
             return false;
         }
         
-        /// <inheritdoc/>
-        public void  IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
+        /// <summary><inheritDoc/></summary>
+        public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
             // all features supported
         }
         
@@ -1034,7 +1074,12 @@ namespace iText.Bouncycastle {
             return new PEMParserBC(new PemReader(reader, new BouncyCastlePasswordFinder(password)));
         }
 
-        private class BouncyCastlePasswordFinder : IPasswordFinder {
+        /// <summary><inheritDoc/></summary>
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
+            return BOUNCY_CASTLE_UTIL;
+        } 
+
+        internal class BouncyCastlePasswordFinder : IPasswordFinder {
             private readonly char[] password;
 
             public BouncyCastlePasswordFinder(char[] password) {

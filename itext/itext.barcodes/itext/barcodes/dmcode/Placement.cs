@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 
 namespace iText.Barcodes.Dmcode {
+    /// <summary>Utility class that helps to place the data in the barcode.</summary>
     public class Placement {
         private readonly int nrow;
 

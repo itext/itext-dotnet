@@ -91,8 +91,9 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedAreaBBox();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
-                (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            PdfFont font = GetResolvedFont(doc);
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
+                ).SetConformanceLevel(GetConformanceLevel(doc));
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
@@ -104,10 +105,6 @@ namespace iText.Forms.Form.Renderer {
                 comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
             AbstractFormFieldRenderer.ApplyBorderProperty(this, comboBoxField.GetFirstFormAnnotation());
-            PdfFont font = GetRetrievedFont();
-            if (font != null) {
-                comboBoxField.SetFont(font);
-            }
             UnitValue fontSize = GetFontSize();
             if (fontSize != null) {
                 comboBoxField.SetFontSize(fontSize.GetValue());
@@ -134,11 +131,6 @@ namespace iText.Forms.Form.Renderer {
             comboBoxField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(comboBoxField, page);
             WriteAcroFormFieldLangAttribute(doc);
-        }
-
-        private PdfFont GetRetrievedFont() {
-            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
-            return retrievedFont is PdfFont ? (PdfFont)retrievedFont : null;
         }
 
         private UnitValue GetFontSize() {
@@ -284,7 +276,7 @@ namespace iText.Forms.Form.Renderer {
             if (fontSize != null) {
                 paragraph.SetFontSize(fontSize.GetValue());
             }
-            PdfFont font = GetRetrievedFont();
+            PdfFont font = GetResolvedFont(null);
             if (font != null) {
                 paragraph.SetFont(font);
             }

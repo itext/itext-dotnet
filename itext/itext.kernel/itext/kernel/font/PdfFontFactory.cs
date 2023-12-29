@@ -336,7 +336,7 @@ namespace iText.Kernel.Font {
         /// </returns>
         public static PdfFont CreateFont(String fontProgram, String encoding, PdfFontFactory.EmbeddingStrategy embeddingStrategy
             , bool cached) {
-            FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
+            FontProgram fp = FontProgramFactory.CreateFont(fontProgram, encoding, cached);
             return CreateFont(fp, encoding, embeddingStrategy);
         }
 

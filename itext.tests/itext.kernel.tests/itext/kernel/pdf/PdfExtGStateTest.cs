@@ -42,10 +42,15 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void EgsTest1() {
             String destinationDocument = destinationFolder + "egsTest1.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationDocument));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationDocument));
             //Create page and canvas
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

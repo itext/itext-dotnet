@@ -136,7 +136,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (defaultListSymbol is Image) {
-                    return new ImageRenderer((Image)defaultListSymbol);
+                    return ((Image)defaultListSymbol).GetRenderer();
                 }
                 else {
                     if (defaultListSymbol is ListNumberingType) {

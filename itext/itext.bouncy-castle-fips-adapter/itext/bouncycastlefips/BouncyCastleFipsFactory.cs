@@ -82,8 +82,10 @@ using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
+using Org.BouncyCastle.Operators.Utilities;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
@@ -100,6 +102,7 @@ namespace iText.Bouncycastlefips {
     public class BouncyCastleFipsFactory : IBouncyCastleFactory {
         private static readonly String PROVIDER_NAME = "BCFIPS";
         private static readonly BouncyCastleFipsTestConstantsFactory BOUNCY_CASTLE_FIPS_TEST_CONSTANTS = new BouncyCastleFipsTestConstantsFactory();
+        private static readonly IBouncyCastleUtil BOUNCY_CASTLE_UTIL = new BouncyCastleFipsUtil();
         private static readonly String FIPS_MODE_ENVIRONMENT_VARIABLE_NAME = "ITEXT_DOTNET_BOUNCY_CASTLE_FIPS_MODE";
         private static readonly String APPROVED_MODE_VALUE = "approved_mode";
 
@@ -114,6 +117,30 @@ namespace iText.Bouncycastlefips {
             if (fipsMode != null && APPROVED_MODE_VALUE.Equals(fipsMode.ToLowerInvariant())) {
                 CryptoServicesRegistrar.SetApprovedOnlyMode(true);
             }
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmOid(String name) {
+            return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetDigestAlgorithmOid(String name) {
+            try {
+                DerObjectIdentifier algorithmIdentifier = 
+                    new DefaultDigestAlgorithmIdentifierFinder().Find(name).Algorithm;
+                if (algorithmIdentifier != null) {
+                    return algorithmIdentifier.Id;
+                }
+            } catch (KeyNotFoundException) {
+                // Do nothing.
+            }
+            return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual String GetAlgorithmName(String oid) {
+            return oid;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -402,6 +429,12 @@ namespace iText.Bouncycastlefips {
         public virtual IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
             Asn1ObjectBCFips primitiveBCFips = (Asn1ObjectBCFips)primitive;
             return new BasicOcspResponseBCFips(BasicOcspResponse.GetInstance(primitiveBCFips.GetPrimitive()));
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
+            return new BasicOcspResponseBCFips(BasicOcspResponse.GetInstance(
+                (Asn1Sequence)Asn1Sequence.FromByteArray(bytes)));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1067,6 +1100,11 @@ namespace iText.Bouncycastlefips {
         public bool IsNullExtension(IX509Extension ext) {
             return ((X509ExtensionBCFips)ext).GetX509Extension() == null;
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public bool IsNull(IAsn1Encodable encodable) {
+            return ((Asn1EncodableBCFips)encodable).GetEncodable() == null;
+        }
 
         /// <summary><inheritDoc/></summary>
         public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
@@ -1088,7 +1126,7 @@ namespace iText.Bouncycastlefips {
             return CryptoServicesRegistrar.IsInApprovedOnlyMode();
         }
         
-        /// <inheritdoc/>
+        /// <summary><inheritDoc/></summary>
         public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
             if (withCertificate) {
                 throw new UnsupportedEncryptionFeatureException(
@@ -1105,6 +1143,11 @@ namespace iText.Bouncycastlefips {
                 .SetPersonalizationString(personalizationString).Build(
                     entropySource.GenerateSeed(256 / (2 * 8)), true, 
                     Strings.ToByteArray("number only used once"));
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
+            return BOUNCY_CASTLE_UTIL;
         }
         
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {

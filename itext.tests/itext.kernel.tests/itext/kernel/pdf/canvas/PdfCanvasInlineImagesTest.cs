@@ -45,6 +45,11 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
@@ -52,7 +57,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void InlineImagesTest01() {
             String filename = "inlineImages01.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "Desert.jpg"), new Rectangle(36, 
@@ -65,8 +70,8 @@ namespace iText.Kernel.Pdf.Canvas {
                 460, 100, 14.16f), true);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "0047478.jpg"), new Rectangle(36
                 , 300, 100, 141.41f), true);
-            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "map.jp2"), new Rectangle(36, 200
-                , 100, 76.34f), true);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "bee.jp2"), new Rectangle(36, 200
+                , 60, 76.34f), true);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "amb.jb2"), new Rectangle(36, 30
                 , 100, 150), true);
             document.Close();
@@ -81,7 +86,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void InlineImagesTest02() {
             String filename = "inlineImages02.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             Stream stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "Desert.jpg"));
@@ -109,10 +114,10 @@ namespace iText.Kernel.Pdf.Canvas {
             StreamUtil.TransferBytes(stream, baos);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 300, 100, 141.41f
                 ), true);
-            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "map.jp2"));
+            stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "bee.jp2"));
             baos = new ByteArrayOutputStream();
             StreamUtil.TransferBytes(stream, baos);
-            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 200, 100, 76.34f
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(baos.ToArray()), new Rectangle(36, 200, 60, 76.34f
                 ), true);
             stream = UrlUtil.OpenStream(UrlUtil.ToURL(sourceFolder + "amb.jb2"));
             baos = new ByteArrayOutputStream();
@@ -127,8 +132,8 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void InlineImagesTest03() {
             String filename = "inlineImages03.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().
-                SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "bulb.gif"), new Rectangle(36, 600
@@ -142,7 +147,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void InlineImagesPngTest() {
             //TODO update cmp-files after DEVSIX-3564 will be fixed
             String filename = "inlineImagePng.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "5.png"), new Rectangle(36, 700, 
@@ -156,7 +161,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void InlineImagesPngErrorWhileOpenTest() {
             //TODO update cmp-files after DEVSIX-3564 will be fixed
             String filename = "inlineImagePngErrorWhileOpen.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "3.png"), new Rectangle(36, 700, 

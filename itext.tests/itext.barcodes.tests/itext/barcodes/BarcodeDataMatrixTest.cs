@@ -41,10 +41,15 @@ namespace iText.Barcodes {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcodeDataMatrix.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -60,7 +65,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcodeDataMatrix2.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -74,7 +79,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode03Test() {
             String filename = "barcodeDataMatrix3.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -91,7 +96,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode04Test() {
             String filename = "barcodeDataMatrix4.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -108,7 +113,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode05Test() {
             String filename = "barcodeDataMatrix5.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -125,7 +130,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode06Test() {
             String filename = "barcodeDataMatrix6.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -230,7 +235,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode16Test() {
             String filename = "barcode16Test.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
             BarcodeDataMatrix barcode = new BarcodeDataMatrix();
             barcode.SetCode("999999DILLERT XANG LIMITON 18               000");

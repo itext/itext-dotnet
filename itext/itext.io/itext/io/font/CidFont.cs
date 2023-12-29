@@ -35,9 +35,9 @@ namespace iText.IO.Font {
 
         private ICollection<String> compatibleCmaps;
 
-        internal CidFont(String fontName, ICollection<String> cmaps) {
+        internal CidFont(String fontName, String cmap, ICollection<String> compatibleCmaps) {
             this.fontName = fontName;
-            compatibleCmaps = cmaps;
+            this.compatibleCmaps = compatibleCmaps;
             fontNames = new FontNames();
             InitializeCidFontNameAndStyle(fontName);
             IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames.GetFontName());
@@ -45,13 +45,7 @@ namespace iText.IO.Font {
                 throw new iText.IO.Exceptions.IOException("There is no such predefined font: {0}").SetMessageParams(fontName
                     );
             }
-            InitializeCidFontProperties(fontDesc);
-        }
-
-        internal CidFont(String fontName, ICollection<String> cmaps, IDictionary<String, Object> fontDescription) {
-            InitializeCidFontNameAndStyle(fontName);
-            InitializeCidFontProperties(fontDescription);
-            compatibleCmaps = cmaps;
+            InitializeCidFontProperties(fontDesc, cmap);
         }
 
         public virtual bool CompatibleWith(String cmap) {
@@ -91,7 +85,7 @@ namespace iText.IO.Font {
             fontNames.SetFullName(new String[][] { new String[] { "", "", "", fontNames.GetFontName() } });
         }
 
-        private void InitializeCidFontProperties(IDictionary<String, Object> fontDesc) {
+        private void InitializeCidFontProperties(IDictionary<String, Object> fontDesc, String cmap) {
             fontIdentification.SetPanose((String)fontDesc.Get("Panose"));
             fontMetrics.SetItalicAngle(Convert.ToInt32((String)fontDesc.Get("ItalicAngle"), System.Globalization.CultureInfo.InvariantCulture
                 ));
@@ -113,10 +107,10 @@ namespace iText.IO.Font {
             int ury = Convert.ToInt32(tk.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
             fontMetrics.UpdateBbox(llx, lly, urx, ury);
             registry = (String)fontDesc.Get("Registry");
-            String uniMap = GetCompatibleUniMap(registry);
+            String uniMap = GetCompatibleUniMap(registry, cmap);
             if (uniMap != null) {
                 IntHashtable metrics = (IntHashtable)fontDesc.Get("W");
-                CMapUniCid uni2cid = FontCache.GetUni2CidCmap(uniMap);
+                CMapUniCid uni2cid = CjkResourceLoader.GetUni2CidCmap(uniMap);
                 avgWidth = 0;
                 foreach (int cp in uni2cid.GetCodePoints()) {
                     int cid = uni2cid.Lookup(cp);
@@ -133,11 +127,17 @@ namespace iText.IO.Font {
             }
         }
 
-        private static String GetCompatibleUniMap(String registry) {
+        private static String GetCompatibleUniMap(String registry, String cmap) {
+            ICollection<String> compatibleUniMaps = CidFontProperties.GetRegistryNames().Get(registry + "_Uni");
+            // 'cmap != null &&' part here is for autoport
+            if (cmap != null && compatibleUniMaps.Contains(cmap)) {
+                return cmap;
+            }
             String uniMap = "";
-            foreach (String name in CidFontProperties.GetRegistryNames().Get(registry + "_Uni")) {
+            foreach (String name in compatibleUniMaps) {
                 uniMap = name;
                 if (name.EndsWith("H")) {
+                    uniMap = name;
                     break;
                 }
             }

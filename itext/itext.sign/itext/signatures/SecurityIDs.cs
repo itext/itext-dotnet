@@ -45,6 +45,10 @@ namespace iText.Signatures {
 
         public const String ID_ED448 = "1.3.101.113";
 
+        public const String ID_SHA256 = "2.16.840.1.101.3.4.2.1";
+
+        public const String ID_SHA384 = "2.16.840.1.101.3.4.2.2";
+
         public const String ID_SHA512 = "2.16.840.1.101.3.4.2.3";
 
         public const String ID_SHAKE256 = "2.16.840.1.101.3.4.2.12";
@@ -61,10 +65,14 @@ namespace iText.Signatures {
 
         public const String ID_OCSP = "1.3.6.1.5.5.7.48.1";
 
+        public const String ID_CA_ISSUERS = "1.3.6.1.5.5.7.48.2";
+
         public const String ID_AA_SIGNING_CERTIFICATE_V1 = "1.2.840.113549.1.9.16.2.12";
 
         public const String ID_AA_SIGNING_CERTIFICATE_V2 = "1.2.840.113549.1.9.16.2.47";
 
         public const String ID_MGF1 = "1.2.840.113549.1.1.8";
+
+        public const String ID_AA_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
     }
 }

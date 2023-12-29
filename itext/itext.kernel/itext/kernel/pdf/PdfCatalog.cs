@@ -329,6 +329,13 @@ namespace iText.Kernel.Pdf {
             return tree;
         }
 
+        /// <summary>This method checks Names tree for specified tree type.</summary>
+        /// <param name="treeType">type of tree which existence should be checked</param>
+        /// <returns>true if such tree exists, false otherwise</returns>
+        public virtual bool NameTreeContainsKey(PdfName treeType) {
+            return nameTrees.ContainsKey(treeType);
+        }
+
         /// <summary>This method returns the NumberTree of Page Labels</summary>
         /// <param name="createIfNotExists">
         /// defines whether the NumberTree of Page Labels should be created

@@ -67,16 +67,9 @@ namespace iText.IO.Image {
                 image.SetWidth(p.pageBitmapWidth);
                 image.SetBpc(1);
                 image.SetColorEncodingComponentsNumber(1);
-                //TODO JBIG2 globals caching
                 byte[] globals = sr.GetGlobal(true);
-                //TODO due to the fact, that streams now may be transformed to indirect objects only on writing,
-                //pdfStream.getDocument() cannot longer be the sign of inline/indirect images
-                // in case inline image pdfStream.getDocument() will be null
                 if (globals != null) {
-                    /*&& stream.getDocument() != null*/
                     IDictionary<String, Object> decodeParms = new Dictionary<String, Object>();
-                    //                PdfStream globalsStream = new PdfStream().makeIndirect(pdfStream.getDocument());
-                    //                globalsStream.getOutputStream().write(globals);
                     decodeParms.Put("JBIG2Globals", globals);
                     image.decodeParms = decodeParms;
                 }

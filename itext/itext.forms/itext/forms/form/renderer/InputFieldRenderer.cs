@@ -32,6 +32,7 @@ using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -128,16 +129,23 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = this.GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            DeleteMargins();
+            IDictionary<int, Object> margins = DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
+            // Some properties are set to the HtmlDocumentRenderer, which is root renderer for this ButtonRenderer, but
+            // in forms logic root renderer is CanvasRenderer, and these properties will have default values. So
+            // we get them from renderer and set these properties to model element, which will be passed to forms logic.
+            modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
+            modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
+                ));
             // Default html2pdf input field appearance differs from the default one for form fields.
             // That's why we got rid of several properties we set by default during InputField instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateText();
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font).SetConformanceLevel
+                (GetConformanceLevel(doc)).CreateText();
             inputField.DisableFieldRegeneration();
             inputField.SetValue(value);
-            inputField.SetFont(font).SetFontSize(fontSizeValue);
+            inputField.SetFontSize(fontSizeValue);
             if (password) {
                 inputField.SetFieldFlag(PdfFormField.FF_PASSWORD, true);
             }
@@ -153,6 +161,7 @@ namespace iText.Forms.Form.Renderer {
             inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
+            ApplyProperties(margins);
         }
 
         /// <summary><inheritDoc/></summary>

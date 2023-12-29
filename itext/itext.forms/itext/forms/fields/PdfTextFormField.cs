@@ -26,24 +26,63 @@ using iText.Kernel.Pdf.Annot;
 namespace iText.Forms.Fields {
     /// <summary>An AcroForm field containing textual data.</summary>
     public class PdfTextFormField : PdfFormField {
+        /// <summary>constant which determines whether field currently represents a path.</summary>
         public static readonly int FF_FILE_SELECT = MakeFieldFlag(21);
 
+        /// <summary>constant which determines whether spell-checking is currently enabled</summary>
         public static readonly int FF_DO_NOT_SPELL_CHECK = MakeFieldFlag(23);
 
+        /// <summary>constant which determines whether longer texts are currently allowed.</summary>
         public static readonly int FF_DO_NOT_SCROLL = MakeFieldFlag(24);
 
+        /// <summary>constant which determines maximum length of the field's text.</summary>
         public static readonly int FF_COMB = MakeFieldFlag(25);
 
+        /// <summary>constant which determines whether text is currently represented as rich text.</summary>
         public static readonly int FF_RICH_TEXT = MakeFieldFlag(26);
 
+        /// <summary>
+        /// Creates a minimal
+        /// <see cref="PdfTextFormField"/>.
+        /// </summary>
+        /// <param name="pdfDocument">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance.
+        /// </param>
         protected internal PdfTextFormField(PdfDocument pdfDocument)
             : base(pdfDocument) {
         }
 
+        /// <summary>
+        /// Creates a text form field as a parent of a
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
+        /// </summary>
+        /// <param name="widget">
+        /// The widget which will be a kid of the
+        /// <see cref="PdfTextFormField"/>.
+        /// </param>
+        /// <param name="pdfDocument">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance.
+        /// </param>
         protected internal PdfTextFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : base(widget, pdfDocument) {
         }
 
+        /// <summary>
+        /// Creates a text form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a text form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// This
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// must be an indirect object.
+        /// </remarks>
+        /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
         protected internal PdfTextFormField(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

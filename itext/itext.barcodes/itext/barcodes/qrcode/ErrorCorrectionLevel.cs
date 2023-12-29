@@ -28,7 +28,6 @@ namespace iText.Barcodes.Qrcode {
     /// See ISO 18004:2006, 6.5.1. This enum encapsulates the four error correction levels
     /// defined by the QR code standard.
     /// </remarks>
-    /// <author>Sean Owen</author>
     public sealed class ErrorCorrectionLevel {
         /// <summary>L = ~7% correction</summary>
         public static readonly iText.Barcodes.Qrcode.ErrorCorrectionLevel L = new iText.Barcodes.Qrcode.ErrorCorrectionLevel
@@ -67,10 +66,14 @@ namespace iText.Barcodes.Qrcode {
             return ordinal;
         }
 
+        /// <summary>Gets the bits.</summary>
+        /// <returns>the bits</returns>
         public int GetBits() {
             return bits;
         }
 
+        /// <summary>Gets the name.</summary>
+        /// <returns>the name</returns>
         public String GetName() {
             return name;
         }

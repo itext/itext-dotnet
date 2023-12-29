@@ -416,7 +416,7 @@ namespace iText.Kernel.Pdf {
             // ensure zero object is free
             xref[0].SetState(PdfObject.FREE);
             SortedSet<int> freeReferences = new SortedSet<int>();
-            for (int i = 1; i < Size(); ++i) {
+            for (int i = 1; i < Size() && i < xref.Length; ++i) {
                 PdfIndirectReference @ref = xref[i];
                 if (@ref == null || @ref.IsFree()) {
                     freeReferences.Add(i);

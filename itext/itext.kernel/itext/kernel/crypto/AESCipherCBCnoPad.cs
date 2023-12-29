@@ -25,7 +25,6 @@ using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
-    /// <author>Paulo Soares</author>
     public class AESCipherCBCnoPad {
         private static ICipherCBCnoPad cipher;
 

@@ -133,16 +133,16 @@ namespace iText.Signatures.Sign {
             }
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
             signer.SetCertificationLevel(certificationLevel);
+            signer.SetFieldName(name);
             // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetReuseAppearance(setReuseAppearance);
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+            appearance.SetReason(reason).SetLocation(location).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
-                appearance.SetPageRect(rectangleForNewField);
+                signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
                 appearance.SetLayer2FontSize((float)fontSize);
             }
-            signer.SetFieldName(name);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);

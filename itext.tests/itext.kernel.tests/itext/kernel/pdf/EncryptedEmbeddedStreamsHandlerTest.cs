@@ -43,6 +43,11 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void NoReaderStandardEncryptionAddFileAttachment() {
@@ -83,7 +88,8 @@ namespace iText.Kernel.Pdf {
                 ("password".GetBytes()));
             // Setting compression level to zero doesn't affect the encryption at any level.
             // We do it to simplify observation of the resultant PDF.
-            PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(outFileName).SetCompressionLevel(0));
+            PdfDocument pdfDocument = new PdfDocument(reader, CompareTool.CreateTestPdfWriter(outFileName).SetCompressionLevel
+                (0));
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(), "description", "file.txt"
                 , null, null, null);
             pdfDocument.AddFileAttachment("file.txt", fs);
@@ -118,7 +124,8 @@ namespace iText.Kernel.Pdf {
                 ().SetPassword("password".GetBytes()));
             // Setting compression level to zero doesn't affect the encryption at any level.
             // We do it to simplify observation of the resultant PDF.
-            PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(outFileName).SetCompressionLevel(0));
+            PdfDocument pdfDocument = new PdfDocument(reader, CompareTool.CreateTestPdfWriter(outFileName).SetCompressionLevel
+                (0));
             pdfDocument.AddNewPage();
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(), "description", "file.txt"
                 , null, null, null);
@@ -145,8 +152,9 @@ namespace iText.Kernel.Pdf {
         }
 
         private PdfDocument CreateEncryptedDocument(int encryptionAlgorithm, String outFileName) {
-            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption("password".GetBytes
-                (), "password".GetBytes(), 0, encryptionAlgorithm | EncryptionConstants.EMBEDDED_FILES_ONLY));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetStandardEncryption
+                ("password".GetBytes(), "password".GetBytes(), 0, encryptionAlgorithm | EncryptionConstants.EMBEDDED_FILES_ONLY
+                ));
             // Setting compression level to zero doesn't affect the encryption at any level.
             // We do it to simplify observation of the resultant PDF.
             writer.SetCompressionLevel(0);
@@ -154,8 +162,9 @@ namespace iText.Kernel.Pdf {
         }
 
         private PdfDocument CreateEncryptedDocument(PdfReader reader, int encryptionAlgorithm, String outFileName) {
-            PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetStandardEncryption("password".GetBytes
-                (), "password".GetBytes(), 0, encryptionAlgorithm | EncryptionConstants.EMBEDDED_FILES_ONLY));
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetStandardEncryption
+                ("password".GetBytes(), "password".GetBytes(), 0, encryptionAlgorithm | EncryptionConstants.EMBEDDED_FILES_ONLY
+                ));
             // Setting compression level to zero doesn't affect the encryption at any level.
             // We do it to simplify observation of the resultant PDF.
             writer.SetCompressionLevel(0);

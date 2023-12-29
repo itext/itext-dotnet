@@ -31,6 +31,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
+using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -208,7 +209,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_247(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_251(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -218,15 +219,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_247 : PdfDocument {
-            public _PdfDocument_247(PdfReader baseArg1)
+        private sealed class _PdfDocument_251 : PdfDocument {
+            public _PdfDocument_251(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_264(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_268(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -237,8 +238,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_264 : PdfDocument {
-            public _PdfDocument_264(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_268 : PdfDocument {
+            public _PdfDocument_268(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }
@@ -404,6 +405,41 @@ namespace iText.Kernel.Pdf {
                 fs));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT
                 , exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckEmptyIsoConformanceTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                NUnit.Framework.Assert.DoesNotThrow(() => doc.CheckIsoConformance());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckIsoConformanceTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                ValidationContainer container = new ValidationContainer();
+                PdfDocumentUnitTest.CustomValidationChecker checker = new PdfDocumentUnitTest.CustomValidationChecker();
+                container.AddChecker(checker);
+                doc.GetDiContainer().Register(typeof(ValidationContainer), container);
+                NUnit.Framework.Assert.IsFalse(checker.documentValidationPerformed);
+                doc.CheckIsoConformance();
+                NUnit.Framework.Assert.IsTrue(checker.documentValidationPerformed);
+            }
+        }
+
+        private class CustomValidationChecker : IValidationChecker {
+            public bool documentValidationPerformed = false;
+
+            public bool objectValidationPerformed = false;
+
+            public virtual void ValidateDocument(ValidationContext validationContext) {
+                documentValidationPerformed = true;
+            }
+
+            public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+                , Object extra) {
+                objectValidationPerformed = true;
+            }
         }
     }
 }

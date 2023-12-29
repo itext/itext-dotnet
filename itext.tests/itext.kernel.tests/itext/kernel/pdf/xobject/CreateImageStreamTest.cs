@@ -43,13 +43,18 @@ namespace iText.Kernel.Pdf.Xobject {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CompareColorspacesTest() {
             String[] imgFiles = new String[] { "adobe.png", "anon.gif", "anon.jpg", "anon.png", "gamma.png", "odd.png"
                 , "rec709.jpg", "srgb.jpg", "srgb.png" };
             String @out = destinationFolder + "compareColorspacesTest.pdf";
             String cmp = sourceFolder + "cmp_compareColorspacesTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
             canvas.BeginText().MoveText(40, 730).SetFontAndSize(PdfFontFactory.CreateFont(), 12).ShowText("The images below are in row and expected to form four continuous lines of constant colors."
                 ).EndText();
@@ -107,7 +112,7 @@ namespace iText.Kernel.Pdf.Xobject {
             String @out = destinationFolder + imgName.JSubstring(0, imgName.Length - 4) + ".pdf";
             String cmp = sourceFolder + "cmp_" + imgName.JSubstring(0, imgName.Length - 4) + ".pdf";
             ImageData img = ImageDataFactory.Create(sourceFolder + imgName);
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfImageXObject imageXObject = new PdfImageXObject(img);
             new PdfCanvas(pdfDocument.AddNewPage(new PageSize(img.GetWidth(), img.GetHeight()))).AddXObjectFittedIntoRectangle
                 (imageXObject, new Rectangle(0, 0, img.GetWidth(), img.GetHeight()));

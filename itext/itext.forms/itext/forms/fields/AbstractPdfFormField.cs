@@ -447,6 +447,8 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Determines whether current form field is terminal or not.</summary>
+        /// <returns>true if this form field is a terminal one, false otherwise.</returns>
         public virtual bool IsTerminalFormField() {
             if (GetPdfObject() == null || GetPdfObject().Get(PdfName.FT) == null) {
                 return false;

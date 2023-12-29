@@ -33,8 +33,6 @@ namespace iText.Barcodes.Qrcode {
     /// dynamically resizeable. This implementation is reasonable but there is a lot of function calling
     /// in loops I'd like to get rid of.
     /// </remarks>
-    /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
-    /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
     internal sealed class BitVector {
         private int sizeInBits;
 

@@ -46,16 +46,21 @@ namespace iText.Kernel.Pdf {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfStringTest/";
 
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestPdfDocumentInfoStringEncoding01() {
             String fileName = "testPdfDocumentInfoStringEncoding01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties
-                ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName, new 
+                WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.AddNewPage();
             String author = "Алексей";
             String title = "Заголовок";
@@ -68,7 +73,7 @@ namespace iText.Kernel.Pdf {
             pdfDocument.GetDocumentInfo().SetKeywords(keywords);
             pdfDocument.GetDocumentInfo().SetCreator(creator);
             pdfDocument.Close();
-            PdfDocument readDoc = new PdfDocument(new PdfReader(destinationFolder + fileName));
+            PdfDocument readDoc = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + fileName));
             NUnit.Framework.Assert.AreEqual(author, readDoc.GetDocumentInfo().GetAuthor());
             NUnit.Framework.Assert.AreEqual(title, readDoc.GetDocumentInfo().GetTitle());
             NUnit.Framework.Assert.AreEqual(subject, readDoc.GetDocumentInfo().GetSubject());
@@ -101,8 +106,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD)]
         public virtual void ReadUtf8AltText() {
             String filename = sourceFolder + "utf-8-alt-text.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename), new PdfWriter(destinationFolder + "whatever"
-                ));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename), CompareTool.CreateTestPdfWriter(destinationFolder
+                 + "whatever"));
             TagTreePointer tagTreePointer = new TagTreePointer(pdfDoc);
             String alternateDescription = tagTreePointer.MoveToKid(0).MoveToKid(0).MoveToKid(0).GetProperties().GetAlternateDescription
                 ();
@@ -155,7 +160,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void WriteUtf8AltText() {
             String RESOURCE = sourceFolder + "Space Odyssey.jpg";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8AltText.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "writeUtf8AltText.pdf"
+                ));
             pdfDoc.SetTagged();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -178,7 +184,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void WriteUtf8Bookmarks() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8Bookmarks.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "writeUtf8Bookmarks.pdf"
+                ));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.MAGENTA);
@@ -209,7 +216,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void WriteUtf8PageLabelPrefix() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8PageLabelPrefix.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "writeUtf8PageLabelPrefix.pdf"
+                ));
             PdfPage page = pdfDoc.AddNewPage();
             PdfDictionary pageLabel = new PdfDictionary();
             pageLabel.Put(PdfName.S, PdfName.D);
@@ -231,7 +239,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void WriteUtf8ActualText() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8ActualText.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "writeUtf8ActualText.pdf"
+                ));
             pdfDoc.SetTagged();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

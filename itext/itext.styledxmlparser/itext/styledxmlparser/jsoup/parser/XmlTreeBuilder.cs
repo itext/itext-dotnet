@@ -42,7 +42,6 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// Usage example:
     /// <c>Document xmlDoc = Jsoup.parse(html, baseUrl, Parser.xmlParser());</c>
     /// </remarks>
-    /// <author>Jonathan Hedley</author>
     public class XmlTreeBuilder : TreeBuilder {
         internal override ParseSettings DefaultSettings() {
             return ParseSettings.preserveCase;

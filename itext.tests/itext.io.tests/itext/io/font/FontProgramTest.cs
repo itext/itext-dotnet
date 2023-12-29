@@ -24,6 +24,7 @@ using System;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.Test;
 
 namespace iText.IO.Font {
@@ -69,6 +70,23 @@ namespace iText.IO.Font {
             FontProgram cmr10 = FontProgramFactory.CreateRegisteredFont("cmr10");
             NUnit.Framework.Assert.IsNotNull(computerModern);
             NUnit.Framework.Assert.IsNotNull(cmr10);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CidFontWithCmapTest() {
+            char space = ' ';
+            FontProgram fp = FontProgramFactory.CreateFont("KozMinPro-Regular", "UniJIS-UCS2-HW-H", true);
+            Glyph glyph = fp.GetGlyph(space);
+            NUnit.Framework.Assert.AreEqual(new char[] { space }, glyph.GetUnicodeChars());
+            NUnit.Framework.Assert.AreEqual(32, glyph.GetUnicode());
+            NUnit.Framework.Assert.AreEqual(231, glyph.GetCode());
+            NUnit.Framework.Assert.AreEqual(500, glyph.GetWidth());
+            fp = FontProgramFactory.CreateFont("KozMinPro-Regular", null, true);
+            glyph = fp.GetGlyph(space);
+            NUnit.Framework.Assert.AreEqual(new char[] { space }, glyph.GetUnicodeChars());
+            NUnit.Framework.Assert.AreEqual(32, glyph.GetUnicode());
+            NUnit.Framework.Assert.AreEqual(1, glyph.GetCode());
+            NUnit.Framework.Assert.AreEqual(278, glyph.GetWidth());
         }
     }
 }

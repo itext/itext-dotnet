@@ -30,6 +30,18 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Barcodes {
+    /// <summary>
+    /// A Data Matrix is a two-dimensional bar code consisting of black and white "cells" or dots arranged in either a square
+    /// or
+    /// rectangular pattern, also known as a matrix.
+    /// </summary>
+    /// <remarks>
+    /// A Data Matrix is a two-dimensional bar code consisting of black and white "cells" or dots arranged in either a square
+    /// or
+    /// rectangular pattern, also known as a matrix. The information to be encoded can be text or numeric data. Usual data
+    /// size is from a few bytes up to 1556 bytes. The length of the encoded data depends on the number of cells in the
+    /// matrix.
+    /// </remarks>
     public class BarcodeDataMatrix : Barcode2D {
         /// <summary>No error.</summary>
         public const int DM_NO_ERROR = 0;
@@ -136,24 +148,41 @@ namespace iText.Barcodes {
             encoding = DEFAULT_DATA_MATRIX_ENCODING;
         }
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="BarcodeDataMatrix"/>
+        /// </summary>
+        /// <param name="code">
+        /// the code to generate. It should be noted that all characters will be encoded using the default
+        /// encoding, ISO-8859-1
+        /// </param>
         public BarcodeDataMatrix(String code) {
             encoding = DEFAULT_DATA_MATRIX_ENCODING;
             SetCode(code);
         }
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="BarcodeDataMatrix"/>
+        /// </summary>
+        /// <param name="code">the code to generate.</param>
+        /// <param name="encoding">the encoding to use when generating the barcode</param>
         public BarcodeDataMatrix(String code, String encoding) {
             this.encoding = encoding;
             SetCode(code);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override Rectangle GetBarcodeSize() {
             return new Rectangle(0, 0, width + 2 * ws, height + 2 * ws);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
         }
@@ -170,6 +199,11 @@ namespace iText.Barcodes {
             return xObject;
         }
 
+        /// <summary>Places the barcode in a PdfCanvas</summary>
+        /// <param name="canvas">the canvas to place the barcode on</param>
+        /// <param name="foreground">The foreground color of the barcode</param>
+        /// <param name="moduleSide">The side (width and height) of the pixels.</param>
+        /// <returns>the dimensions the barcode occupies</returns>
         public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleSide) {
             if (image == null) {
                 return null;
@@ -465,6 +499,8 @@ namespace iText.Barcodes {
             this.encoding = encoding;
         }
 
+        /// <summary>getting encoding for data matrix code</summary>
+        /// <returns>encoding for data matrix code</returns>
         public virtual String GetEncoding() {
             return encoding;
         }

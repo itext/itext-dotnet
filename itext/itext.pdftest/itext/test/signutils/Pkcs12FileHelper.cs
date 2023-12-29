@@ -39,8 +39,10 @@ namespace iText.Test.Signutils {
         public static X509Certificate[] ReadFirstChain(String p12FileName, char[] ksPass) {
             X509Certificate[] chain;
             string alias = null;
-            Pkcs12Store pk12 = new Pkcs12Store(new FileStream(p12FileName, FileMode.Open, FileAccess.Read), ksPass);
-
+     
+            Pkcs12Store pk12 = new Pkcs12StoreBuilder().Build();
+            pk12.Load(new FileStream(p12FileName, FileMode.Open, FileAccess.Read), ksPass);
+            
             foreach (var a in pk12.Aliases) {
                 alias = ((string)a);
                 if (pk12.IsKeyEntry(alias))
@@ -57,8 +59,9 @@ namespace iText.Test.Signutils {
 
         public static ICipherParameters ReadFirstKey(String p12FileName, char[] ksPass, char[] keyPass) {
             string alias = null;
-            Pkcs12Store pk12 = new Pkcs12Store(new FileStream(p12FileName, FileMode.Open, FileAccess.Read), ksPass);
-
+            Pkcs12Store pk12 = new Pkcs12StoreBuilder().Build();
+            pk12.Load(new FileStream(p12FileName, FileMode.Open, FileAccess.Read), ksPass);
+            
             foreach (var a in pk12.Aliases) {
                 alias = ((string)a);
                 if (pk12.IsKeyEntry(alias))
@@ -69,13 +72,16 @@ namespace iText.Test.Signutils {
         }
 
         public static ICipherParameters ReadPrivateKeyFromPkcs12KeyStore(Stream keyStore, String pkAlias, char[] pkPassword) {
-            return new Pkcs12Store(keyStore, pkPassword).GetKey(pkAlias).Key;
+            Pkcs12Store pk12 = new Pkcs12StoreBuilder().Build();
+            pk12.Load(keyStore, pkPassword);
+            return pk12.GetKey(pkAlias).Key;
         }
 
         public static List<X509Certificate> InitStore(String p12FileName, char[] ksPass) {
             List<X509Certificate> certStore = new List<X509Certificate>();
             string alias = null;
-            Pkcs12Store pk12 = new Pkcs12Store(new FileStream(p12FileName, FileMode.Open, FileAccess.Read), ksPass);
+            Pkcs12Store pk12 = new Pkcs12StoreBuilder().Build();
+            pk12.Load(new FileStream(p12FileName, FileMode.Open, FileAccess.Read), ksPass);
 
             foreach (var a in pk12.Aliases) {
                 alias = ((string)a);

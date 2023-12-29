@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Form.Element;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
@@ -36,6 +37,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Pdfa;
+using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
@@ -108,10 +110,13 @@ namespace iText.Signatures {
         protected internal PdfSignatureAppearance appearance;
 
         /// <summary>Holds value of property signDate.</summary>
-        protected internal DateTime signDate;
+        protected internal DateTime signDate = DateTimeUtil.GetCurrentTime();
 
         /// <summary>Boolean to check if this PdfSigner instance has been closed already or not.</summary>
-        protected internal bool closed;
+        protected internal bool closed = false;
+
+        /// <summary>AcroForm for the PdfDocument.</summary>
+        private readonly PdfAcroForm acroForm;
 
         /// <summary>Creates a PdfSigner instance.</summary>
         /// <remarks>
@@ -156,12 +161,26 @@ namespace iText.Signatures {
                 this.tempFile = FileUtil.CreateTempFile(path);
                 document = InitDocument(reader, new PdfWriter(FileUtil.GetFileOutputStream(tempFile)), localProps);
             }
+            acroForm = PdfFormCreator.GetAcroForm(document, true);
             originalOS = outputStream;
-            signDate = DateTimeUtil.GetCurrentTime();
             fieldName = GetNewSigFieldName();
             appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
             appearance.SetSignDate(signDate);
-            closed = false;
+        }
+
+        internal PdfSigner(PdfDocument document, Stream outputStream, MemoryStream temporaryOS, FileInfo tempFile) {
+            if (tempFile == null) {
+                this.temporaryOS = temporaryOS;
+            }
+            else {
+                this.tempFile = tempFile;
+            }
+            this.document = document;
+            this.acroForm = PdfFormCreator.GetAcroForm(document, true);
+            this.originalOS = outputStream;
+            this.fieldName = GetNewSigFieldName();
+            this.appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
+            this.appearance.SetSignDate(this.signDate);
         }
 
         protected internal virtual PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
@@ -210,8 +229,23 @@ namespace iText.Signatures {
         /// <see cref="PdfSignatureAppearance"/>
         /// object.
         /// </returns>
+        [Obsolete]
         public virtual PdfSignatureAppearance GetSignatureAppearance() {
             return appearance;
+        }
+
+        /// <summary>Sets the signature field layout element to customize the appearance of the signature.</summary>
+        /// <remarks>
+        /// Sets the signature field layout element to customize the appearance of the signature. Signer's sign date will
+        /// be set.
+        /// </remarks>
+        /// <param name="appearance">
+        /// the
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// layout element.
+        /// </param>
+        public virtual void SetSignatureAppearance(SignatureFieldAppearance appearance) {
+            this.appearance.SetSignatureAppearance(appearance);
         }
 
         /// <summary>Returns the document's certification level.</summary>
@@ -278,7 +312,6 @@ namespace iText.Signatures {
         /// <summary>Gets a new signature field name that doesn't clash with any existing name.</summary>
         /// <returns>A new signature field name.</returns>
         public virtual String GetNewSigFieldName() {
-            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
             String name = "Signature";
             int step = 1;
             while (acroForm.GetField(name + step) != null) {
@@ -295,7 +328,6 @@ namespace iText.Signatures {
         /// <param name="fieldName">The name indicating the field to be signed.</param>
         public virtual void SetFieldName(String fieldName) {
             if (fieldName != null) {
-                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 PdfFormField field = acroForm.GetField(fieldName);
                 if (field != null) {
                     if (!PdfName.Sig.Equals(field.GetFormType())) {
@@ -304,12 +336,11 @@ namespace iText.Signatures {
                     if (field.GetValue() != null) {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_ALREADY_SIGNED);
                     }
-                    appearance.SetFieldName(fieldName);
                     IList<PdfWidgetAnnotation> widgets = field.GetWidgets();
                     if (widgets.Count > 0) {
                         PdfWidgetAnnotation widget = widgets[0];
-                        appearance.SetPageRect(GetWidgetRectangle(widget));
-                        appearance.SetPageNumber(GetWidgetPageNumber(widget));
+                        SetPageRect(GetWidgetRectangle(widget));
+                        SetPageNumber(GetWidgetPageNumber(widget));
                     }
                 }
                 else {
@@ -319,6 +350,7 @@ namespace iText.Signatures {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_NAMES_CANNOT_CONTAIN_A_DOT);
                     }
                 }
+                this.appearance.SetFieldName(fieldName);
                 this.fieldName = fieldName;
             }
         }
@@ -336,6 +368,64 @@ namespace iText.Signatures {
                 throw new ArgumentException(SignExceptionMessageConstant.DOCUMENT_MUST_HAVE_READER);
             }
             this.document = document;
+        }
+
+        /// <summary>
+        /// Provides the page number of the signature field which this signature
+        /// appearance is associated with.
+        /// </summary>
+        /// <returns>
+        /// The page number of the signature field which this signature
+        /// appearance is associated with.
+        /// </returns>
+        public virtual int GetPageNumber() {
+            return appearance.GetPageNumber();
+        }
+
+        /// <summary>
+        /// Sets the page number of the signature field which this signature
+        /// appearance is associated with.
+        /// </summary>
+        /// <remarks>
+        /// Sets the page number of the signature field which this signature
+        /// appearance is associated with. Implicitly calls
+        /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
+        /// which considers page number to process the rectangle correctly.
+        /// </remarks>
+        /// <param name="pageNumber">
+        /// The page number of the signature field which
+        /// this signature appearance is associated with.
+        /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetPageNumber(int pageNumber) {
+            appearance.SetPageNumber(pageNumber);
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the rectangle that represent the position and dimension
+        /// of the signature field in the page.
+        /// </summary>
+        /// <returns>
+        /// the rectangle that represent the position and dimension
+        /// of the signature field in the page
+        /// </returns>
+        public virtual Rectangle GetPageRect() {
+            return appearance.GetPageRect();
+        }
+
+        /// <summary>
+        /// Sets the rectangle that represent the position and dimension of
+        /// the signature field in the page.
+        /// </summary>
+        /// <param name="pageRect">
+        /// The rectangle that represents the position and
+        /// dimension of the signature field in the page.
+        /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetPageRect(Rectangle pageRect) {
+            appearance.SetPageRect(pageRect);
+            return this;
         }
 
         /// <summary>Setter for the OutputStream.</summary>
@@ -360,6 +450,95 @@ namespace iText.Signatures {
         /// <param name="fieldLock">Field lock dictionary</param>
         public virtual void SetFieldLockDict(PdfSigFieldLock fieldLock) {
             this.fieldLock = fieldLock;
+        }
+
+        /// <summary>Returns the signature creator.</summary>
+        /// <returns>The signature creator.</returns>
+        public virtual String GetSignatureCreator() {
+            return appearance.GetSignatureCreator();
+        }
+
+        /// <summary>Sets the name of the application used to create the signature.</summary>
+        /// <param name="signatureCreator">A new name of the application signing a document.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetSignatureCreator(String signatureCreator) {
+            appearance.SetSignatureCreator(signatureCreator);
+            return this;
+        }
+
+        /// <summary>Returns the signing contact.</summary>
+        /// <returns>The signing contact.</returns>
+        public virtual String GetContact() {
+            return appearance.GetContact();
+        }
+
+        /// <summary>Sets the signing contact.</summary>
+        /// <param name="contact">A new signing contact.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetContact(String contact) {
+            appearance.SetContact(contact);
+            return this;
+        }
+
+        /// <summary>Returns the signing reason.</summary>
+        /// <returns>The signing reason.</returns>
+        public virtual String GetReason() {
+            return appearance.GetReason();
+        }
+
+        /// <summary>Sets the signing reason.</summary>
+        /// <param name="reason">A new signing reason.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetReason(String reason) {
+            appearance.SetReason(reason);
+            return this;
+        }
+
+        /// <summary>Returns the signing location.</summary>
+        /// <returns>The signing location.</returns>
+        public virtual String GetLocation() {
+            return appearance.GetLocation();
+        }
+
+        /// <summary>Sets the signing location.</summary>
+        /// <param name="location">A new signing location.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual PdfSigner SetLocation(String location) {
+            appearance.SetLocation(location);
+            return this;
+        }
+
+        /// <summary>Gets the signature field to be signed.</summary>
+        /// <remarks>
+        /// Gets the signature field to be signed. The field can already be presented in the document. If the field is
+        /// not presented in the document, it will be created.
+        /// <para />
+        /// This field instance is expected to be used for setting appearance related properties such as
+        /// <see cref="iText.Forms.Fields.PdfSignatureFormField.SetReuseAppearance(bool)"/>
+        /// ,
+        /// <see cref="iText.Forms.Fields.PdfSignatureFormField.SetBackgroundLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject)
+        ///     "/>
+        /// and
+        /// <see cref="iText.Forms.Fields.PdfSignatureFormField.SetSignatureAppearanceLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject)
+        ///     "/>.
+        /// </remarks>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Forms.Fields.PdfSignatureFormField"/>
+        /// instance.
+        /// </returns>
+        public virtual PdfSignatureFormField GetSignatureField() {
+            PdfFormField field = acroForm.GetField(fieldName);
+            if (field == null) {
+                PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, fieldName).SetWidgetRectangle(GetPageRect
+                    ()).CreateSignature();
+                acroForm.AddField(sigField);
+                return sigField;
+            }
+            if (field is PdfSignatureFormField) {
+                return (PdfSignatureFormField)field;
+            }
+            return null;
         }
 
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
@@ -432,6 +611,7 @@ namespace iText.Signatures {
                         );
                 }
             }
+            document.CheckIsoConformance(sigtype == PdfSigner.CryptoStandard.CADES, IsoKey.SIGNATURE_TYPE);
             ICollection<byte[]> crlBytes = null;
             int i = 0;
             while (crlBytes == null && i < chain.Length) {
@@ -448,10 +628,9 @@ namespace iText.Signatures {
                     estimatedSize += 4192;
                 }
                 if (tsaClient != null) {
-                    estimatedSize += 4192;
+                    estimatedSize += tsaClient.GetTokenSizeEstimate() + 96;
                 }
             }
-            PdfSignatureAppearance appearance = GetSignatureAppearance();
             appearance.SetCertificate(chain[0]);
             if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
@@ -468,10 +647,10 @@ namespace iText.Signatures {
             }
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
-            dic.SetReason(appearance.GetReason());
-            dic.SetLocation(appearance.GetLocation());
-            dic.SetSignatureCreator(appearance.GetSignatureCreator());
-            dic.SetContact(appearance.GetContact());
+            dic.SetReason(GetReason());
+            dic.SetLocation(GetLocation());
+            dic.SetSignatureCreator(GetSignatureCreator());
+            dic.SetContact(GetContact());
             dic.SetDate(new PdfDate(GetSignDate()));
             // time-stamp will over-rule this
             cryptoDictionary = dic;
@@ -524,14 +703,7 @@ namespace iText.Signatures {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
-            PdfSignature dic = new PdfSignature();
-            PdfSignatureAppearance appearance = GetSignatureAppearance();
-            dic.SetReason(appearance.GetReason());
-            dic.SetLocation(appearance.GetLocation());
-            dic.SetSignatureCreator(appearance.GetSignatureCreator());
-            dic.SetContact(appearance.GetContact());
-            dic.SetDate(new PdfDate(GetSignDate()));
-            // time-stamp will over-rule this
+            PdfSignature dic = CreateSignatureDictionary(true);
             externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
@@ -566,6 +738,9 @@ namespace iText.Signatures {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
+            if (tsa == null) {
+                throw new PdfException(SignExceptionMessageConstant.PROVIDED_TSA_CLIENT_IS_NULL);
+            }
             int contentEstimated = tsa.GetTokenSizeEstimate();
             if (!IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
@@ -594,7 +769,8 @@ namespace iText.Signatures {
                     .Message, e);
             }
             if (contentEstimated + 2 < tsToken.Length) {
-                throw new System.IO.IOException("Not enough space");
+                throw new System.IO.IOException(MessageFormatUtil.Format(SignExceptionMessageConstant.TOKEN_ESTIMATION_SIZE_IS_NOT_LARGE_ENOUGH
+                    , contentEstimated, tsToken.Length));
             }
             byte[] paddedSig = new byte[contentEstimated];
             Array.Copy(tsToken, 0, paddedSig, 0, tsToken.Length);
@@ -602,6 +778,44 @@ namespace iText.Signatures {
             dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
             Close(dic2);
             closed = true;
+        }
+
+        /// <summary>Prepares document for signing, calculates the document digest to sign and closes the document.</summary>
+        /// <param name="digestAlgorithm">the algorithm to generate the digest with</param>
+        /// <param name="filter">PdfName of the signature handler to use when validating this signature</param>
+        /// <param name="subFilter">PdfName that describes the encoding of the signature</param>
+        /// <param name="estimatedSize">
+        /// the estimated size of the signature, this is the size of the space reserved for
+        /// the Cryptographic Message Container
+        /// </param>
+        /// <param name="includeDate">specifies if the signing date should be set to the signature dictionary</param>
+        /// <returns>the message digest of the prepared document.</returns>
+        public virtual byte[] PrepareDocumentForSignature(String digestAlgorithm, PdfName filter, PdfName subFilter
+            , int estimatedSize, bool includeDate) {
+            return PrepareDocumentForSignature(SignUtils.GetMessageDigest(digestAlgorithm), filter, subFilter, estimatedSize
+                , includeDate);
+        }
+
+        /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
+        /// <param name="document">the original PDF</param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="signedContent">the bytes for the signed data</param>
+        public static void AddSignatureToPreparedDocument(PdfDocument document, String fieldName, Stream outs, byte
+            [] signedContent) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => signedContent);
+        }
+
+        /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
+        /// <param name="document">the original PDF</param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="cmsContainer">the finalized CMS container</param>
+        public static void AddSignatureToPreparedDocument(PdfDocument document, String fieldName, Stream outs, CMSContainer
+             cmsContainer) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => cmsContainer.Serialize());
         }
 
         /// <summary>Signs a PDF where space was already reserved.</summary>
@@ -614,44 +828,8 @@ namespace iText.Signatures {
         /// </param>
         public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
              externalSignatureContainer) {
-            SignatureUtil signatureUtil = new SignatureUtil(document);
-            PdfSignature signature = signatureUtil.GetSignature(fieldName);
-            if (signature == null) {
-                throw new PdfException(SignExceptionMessageConstant.THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME).SetMessageParams
-                    (fieldName);
-            }
-            if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
-                throw new PdfException(SignExceptionMessageConstant.SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT
-                    ).SetMessageParams(fieldName);
-            }
-            PdfArray b = signature.GetByteRange();
-            long[] gaps = b.ToLongArray();
-            if (b.Size() != 4 || gaps[0] != 0) {
-                throw new ArgumentException("Single exclusion space supported");
-            }
-            IRandomAccessSource readerSource = document.GetReader().GetSafeFile().CreateSourceView();
-            Stream rg = new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
-            byte[] signedContent = externalSignatureContainer.Sign(rg);
-            int spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
-            if ((spaceAvailable & 1) != 0) {
-                throw new ArgumentException("Gap is not a multiple of 2");
-            }
-            spaceAvailable /= 2;
-            if (spaceAvailable < signedContent.Length) {
-                throw new PdfException(SignExceptionMessageConstant.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE);
-            }
-            StreamUtil.CopyBytes(readerSource, 0, gaps[1] + 1, outs);
-            ByteBuffer bb = new ByteBuffer(spaceAvailable * 2);
-            foreach (byte bi in signedContent) {
-                bb.AppendHex(bi);
-            }
-            int remain = (spaceAvailable - signedContent.Length) * 2;
-            for (int k = 0; k < remain; ++k) {
-                bb.Append((byte)48);
-            }
-            byte[] bbArr = bb.ToByteArray();
-            outs.Write(bbArr);
-            StreamUtil.CopyBytes(readerSource, gaps[2] - 1, gaps[3] + 1, outs);
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => externalSignatureContainer.Sign(a.GetDataToSign()));
         }
 
         /// <summary>Processes a CRL list.</summary>
@@ -699,14 +877,14 @@ namespace iText.Signatures {
         /// </remarks>
         /// <param name="exclusionSizes">
         /// Map with names and sizes to be excluded in the signature
-        /// calculation. The key is a PdfName and the value an Integer. At least the /Contents must be present
+        /// calculation. The key is a PdfName and the value an Integer.
+        /// At least the /Contents must be present
         /// </param>
         protected internal virtual void PreClose(IDictionary<PdfName, int?> exclusionSizes) {
             if (preClosed) {
                 throw new PdfException(SignExceptionMessageConstant.DOCUMENT_ALREADY_PRE_CLOSED);
             }
             preClosed = true;
-            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
             SignatureUtil sgnUtil = new SignatureUtil(document);
             String name = GetFieldName();
             bool fieldExist = sgnUtil.DoesSignatureFieldExist(name);
@@ -822,14 +1000,13 @@ namespace iText.Signatures {
         /// <returns>signature field lock dictionary</returns>
         protected internal virtual PdfSigFieldLock PopulateExistingSignatureFormField(PdfAcroForm acroForm) {
             PdfSignatureFormField sigField = (PdfSignatureFormField)acroForm.GetField(fieldName);
-            sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
             PdfSigFieldLock sigFieldLock = sigField.GetSigFieldLockDictionary();
             if (sigFieldLock == null && this.fieldLock != null) {
                 this.fieldLock.GetPdfObject().MakeIndirect(document);
                 sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
                 sigFieldLock = this.fieldLock;
             }
-            sigField.Put(PdfName.P, document.GetPage(appearance.GetPageNumber()).GetPdfObject());
+            sigField.Put(PdfName.P, document.GetPage(GetPageNumber()).GetPdfObject());
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
             PdfObject obj = sigField.GetPdfObject().Get(PdfName.F);
             int flags = 0;
@@ -838,15 +1015,18 @@ namespace iText.Signatures {
             }
             flags |= PdfAnnotation.LOCKED;
             sigField.Put(PdfName.F, new PdfNumber(flags));
-            if (appearance.IsInvisible()) {
-                // According to the spec, appearance stream is not required if the width and height of the rectangle are 0
-                sigField.Remove(PdfName.AP);
+            sigField.DisableFieldRegeneration();
+            if (appearance.IsReuseAppearanceSet()) {
+                sigField.SetReuseAppearance(appearance.IsReuseAppearance());
             }
-            else {
-                PdfDictionary ap = new PdfDictionary();
-                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
-                sigField.Put(PdfName.AP, ap);
+            if (appearance.GetSignatureAppearanceLayer() != null) {
+                sigField.SetSignatureAppearanceLayer(appearance.GetSignatureAppearanceLayer());
             }
+            if (appearance.GetBackgroundLayer() != null) {
+                sigField.SetBackgroundLayer(appearance.GetBackgroundLayer());
+            }
+            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
+            sigField.EnableFieldRegeneration();
             sigField.SetModified();
             return sigFieldLock;
         }
@@ -866,7 +1046,7 @@ namespace iText.Signatures {
         /// <param name="name">the name of the field</param>
         /// <returns>signature field lock dictionary</returns>
         protected internal virtual PdfSigFieldLock CreateNewSignatureFormField(PdfAcroForm acroForm, String name) {
-            PdfWidgetAnnotation widget = new PdfWidgetAnnotation(appearance.GetPageRect());
+            PdfWidgetAnnotation widget = new PdfWidgetAnnotation(GetPageRect());
             widget.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.LOCKED);
             PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, name).CreateSignature();
             sigField.Put(PdfName.V, cryptoDictionary.GetPdfObject());
@@ -877,20 +1057,13 @@ namespace iText.Signatures {
                 sigField.Put(PdfName.Lock, this.fieldLock.GetPdfObject());
                 sigFieldLock = this.fieldLock;
             }
-            int pagen = appearance.GetPageNumber();
+            int pagen = GetPageNumber();
             widget.SetPage(document.GetPage(pagen));
-            if (appearance.IsInvisible()) {
-                // According to the spec, appearance stream is not required if the width and height of the rectangle are 0
-                widget.Remove(PdfName.AP);
-            }
-            else {
-                PdfDictionary ap = widget.GetAppearanceDictionary();
-                if (ap == null) {
-                    ap = new PdfDictionary();
-                    widget.Put(PdfName.AP, ap);
-                }
-                ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
-            }
+            sigField.DisableFieldRegeneration();
+            sigField.SetReuseAppearance(appearance.IsReuseAppearance()).SetSignatureAppearanceLayer(appearance.GetSignatureAppearanceLayer
+                ()).SetBackgroundLayer(appearance.GetBackgroundLayer());
+            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
+            sigField.EnableFieldRegeneration();
             acroForm.AddField(sigField, document.GetPage(pagen));
             if (acroForm.GetPdfObject().IsIndirect()) {
                 acroForm.SetModified();
@@ -1067,25 +1240,22 @@ namespace iText.Signatures {
             if (catalogPerms != null) {
                 urSignature = catalogPerms.GetAsDictionary(PdfName.UR3);
             }
-            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, false);
-            if (acroForm != null) {
-                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
-                    PdfDictionary fieldDict = entry.Value.GetPdfObject();
-                    if (!PdfName.Sig.Equals(fieldDict.Get(PdfName.FT))) {
-                        continue;
-                    }
-                    PdfDictionary sigDict = fieldDict.GetAsDictionary(PdfName.V);
-                    if (sigDict == null) {
-                        continue;
-                    }
-                    PdfSignature pdfSignature = new PdfSignature(sigDict);
-                    if (pdfSignature.GetContents() == null || pdfSignature.GetByteRange() == null) {
-                        continue;
-                    }
-                    if (!pdfSignature.GetType().Equals(PdfName.DocTimeStamp) && sigDict != urSignature) {
-                        containsCertificationOrApprovalSignature = true;
-                        break;
-                    }
+            foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
+                PdfDictionary fieldDict = entry.Value.GetPdfObject();
+                if (!PdfName.Sig.Equals(fieldDict.Get(PdfName.FT))) {
+                    continue;
+                }
+                PdfDictionary sigDict = fieldDict.GetAsDictionary(PdfName.V);
+                if (sigDict == null) {
+                    continue;
+                }
+                PdfSignature pdfSignature = new PdfSignature(sigDict);
+                if (pdfSignature.GetContents() == null || pdfSignature.GetByteRange() == null) {
+                    continue;
+                }
+                if (!pdfSignature.GetType().Equals(PdfName.DocTimeStamp) && sigDict != urSignature) {
+                    containsCertificationOrApprovalSignature = true;
+                    break;
                 }
             }
             return containsCertificationOrApprovalSignature;
@@ -1121,8 +1291,43 @@ namespace iText.Signatures {
             return pageNumber;
         }
 
+        private byte[] PrepareDocumentForSignature(IDigest messageDigest, PdfName filter, PdfName subFilter, int estimatedSize
+            , bool includeDate) {
+            if (closed) {
+                throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
+            }
+            cryptoDictionary = CreateSignatureDictionary(includeDate);
+            cryptoDictionary.Put(PdfName.Filter, filter);
+            cryptoDictionary.Put(PdfName.SubFilter, subFilter);
+            IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
+            PreClose(exc);
+            Stream data = GetRangeStream();
+            byte[] digest = DigestAlgorithms.Digest(data, messageDigest);
+            byte[] paddedSig = new byte[estimatedSize];
+            PdfDictionary dic2 = new PdfDictionary();
+            dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
+            Close(dic2);
+            closed = true;
+            return digest;
+        }
+
         private bool IsDocumentPdf2() {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
+        }
+
+        private PdfSignature CreateSignatureDictionary(bool includeDate) {
+            PdfSignature dic = new PdfSignature();
+            PdfSignatureAppearance appearance = GetSignatureAppearance();
+            dic.SetReason(GetReason());
+            dic.SetLocation(GetLocation());
+            dic.SetSignatureCreator(GetSignatureCreator());
+            dic.SetContact(GetContact());
+            if (includeDate) {
+                dic.SetDate(new PdfDate(GetSignDate()));
+            }
+            // time-stamp will over-rule this
+            return dic;
         }
 
         /// <summary>An interface to retrieve the signature dictionary for modification.</summary>
@@ -1131,5 +1336,67 @@ namespace iText.Signatures {
             /// <param name="sig">The signature dictionary</param>
             void GetSignatureDictionary(PdfSignature sig);
         }
+
+        private class SignatureApplier {
+            private readonly PdfDocument document;
+
+            private readonly String fieldName;
+
+            private readonly Stream outs;
+
+            private IRandomAccessSource readerSource;
+
+            private long[] gaps;
+
+            public SignatureApplier(PdfDocument document, String fieldName, Stream outs) {
+                this.document = document;
+                this.fieldName = fieldName;
+                this.outs = outs;
+            }
+
+            public virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
+                SignatureUtil signatureUtil = new SignatureUtil(document);
+                PdfSignature signature = signatureUtil.GetSignature(fieldName);
+                if (signature == null) {
+                    throw new PdfException(SignExceptionMessageConstant.THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME).SetMessageParams
+                        (fieldName);
+                }
+                if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
+                    throw new PdfException(SignExceptionMessageConstant.SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT
+                        ).SetMessageParams(fieldName);
+                }
+                PdfArray b = signature.GetByteRange();
+                gaps = b.ToLongArray();
+                readerSource = document.GetReader().GetSafeFile().CreateSourceView();
+                int spaceAvailable = (int)(gaps[2] - gaps[1]) - 2;
+                if ((spaceAvailable & 1) != 0) {
+                    throw new ArgumentException("Gap is not a multiple of 2");
+                }
+                byte[] signedContent = signatureDataProvider(this);
+                spaceAvailable /= 2;
+                if (spaceAvailable < signedContent.Length) {
+                    throw new PdfException(SignExceptionMessageConstant.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE);
+                }
+                StreamUtil.CopyBytes(readerSource, 0, gaps[1] + 1, outs);
+                ByteBuffer bb = new ByteBuffer(spaceAvailable * 2);
+                foreach (byte bi in signedContent) {
+                    bb.AppendHex(bi);
+                }
+                int remain = (spaceAvailable - signedContent.Length) * 2;
+                for (int k = 0; k < remain; ++k) {
+                    bb.Append((byte)48);
+                }
+                byte[] bbArr = bb.ToByteArray();
+                outs.Write(bbArr);
+                StreamUtil.CopyBytes(readerSource, gaps[2] - 1, gaps[3] + 1, outs);
+                document.Close();
+            }
+
+            public virtual Stream GetDataToSign() {
+                return new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
+            }
+        }
+
+        private delegate byte[] ISignatureDataProvider(PdfSigner.SignatureApplier applier);
     }
 }

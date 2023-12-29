@@ -62,7 +62,9 @@ namespace iText.Forms {
             String dest = destinationFolder + filename + "_flattened.pdf";
             String cmp = sourceFolder + "cmp_" + filename + "_flattened.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
-            PdfFormCreator.GetAcroForm(doc, false).FlattenFields();
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, false);
+            acroForm.SetGenerateAppearance(false);
+            acroForm.FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }

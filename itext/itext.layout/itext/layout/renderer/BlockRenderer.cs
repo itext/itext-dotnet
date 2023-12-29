@@ -25,12 +25,14 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
 using iText.Layout.Margincollapse;
@@ -75,7 +77,8 @@ namespace iText.Layout.Renderer {
             if (rotation != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
-            if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
+            if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue) && !(this is FlexContainerRenderer
+                )) {
                 blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
             }
             bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
@@ -329,8 +332,8 @@ namespace iText.Layout.Renderer {
             }
             // in this case layout result need to be changed
             if (overflowRenderer_1 != null || processOverflowedFloats) {
-                layoutResult_1 = !anythingPlaced && !waitingOverflowFloatRenderers.IsEmpty() ? LayoutResult.NOTHING : LayoutResult
-                    .PARTIAL;
+                layoutResult_1 = !anythingPlaced && (!waitingOverflowFloatRenderers.IsEmpty() || !IsAnythingOccupied()) ? 
+                    LayoutResult.NOTHING : LayoutResult.PARTIAL;
             }
             // nothing was placed and there are some overflowed floats
             // either something was placed or (since there are no overflowed floats) there is overflow renderer
@@ -774,6 +777,45 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// Get the font set in properties, if it is not set, then resolves the first
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// from
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// </summary>
+        /// <remarks>
+        /// Get the font set in properties, if it is not set, then resolves the first
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// from
+        /// <see cref="iText.Layout.Font.FontProvider"/>.
+        /// If
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// is not set, then returns null.
+        /// </remarks>
+        /// <param name="pdfDocument">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to get default font from.
+        /// </param>
+        /// <returns>
+        /// the font or null if it is not set and
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// is not set.
+        /// </returns>
+        protected internal virtual PdfFont GetResolvedFont(PdfDocument pdfDocument) {
+            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
+            if (retrievedFont is PdfFont) {
+                return (PdfFont)retrievedFont;
+            }
+            if (this.GetProperty<FontProvider>(Property.FONT_PROVIDER) != null && retrievedFont != null) {
+                return ResolveFirstPdfFont();
+            }
+            if (pdfDocument != null) {
+                return pdfDocument.GetDefaultFont();
+            }
+            return null;
+        }
+
         internal virtual bool StopLayoutingChildrenIfChildResultNotFull(LayoutResult returnResult) {
             return true;
         }
@@ -1024,6 +1066,10 @@ namespace iText.Layout.Renderer {
             if (anythingPlaced && HasOwnProperty(Property.FORCED_PLACEMENT)) {
                 DeleteOwnProperty(Property.FORCED_PLACEMENT);
             }
+        }
+
+        private bool IsAnythingOccupied() {
+            return !(occupiedArea.GetBBox().GetHeight() < EPS);
         }
 
         private void ReplaceSplitRendererKidFloats(IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IRenderer

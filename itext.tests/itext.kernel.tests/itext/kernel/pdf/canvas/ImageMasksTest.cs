@@ -44,11 +44,16 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ImageResizedParentWithHardMaskTest() {
             String outFileName = destinationFolder + "imageResizedParentWithHardMask.pdf";
             String cmpFileName = sourceFolder + "cmp_imageResizedParentWithHardMask.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             ImageData mask = ImageDataFactory.Create(sourceFolder + "hardMask.png");
             mask.MakeMask();
             ImageData img1 = ImageDataFactory.Create(sourceFolder + "sRGBImageBig.png");
@@ -68,7 +73,7 @@ namespace iText.Kernel.Pdf.Canvas {
             // TODO: DEVSIX-4992
             String outFileName = destinationFolder + "diffMasksOnSameImageXObject.pdf";
             String cmpFileName = sourceFolder + "cmp_diffMasksOnSameImageXObject.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             ImageData sMask = ImageDataFactory.Create(sourceFolder + "SMask3px.jpg");
             sMask.MakeMask();
             ImageData hardMask = ImageDataFactory.Create(sourceFolder + "hardMask.png");
@@ -88,7 +93,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void ImageResizedParentWithSoftMaskTest() {
             String outFileName = destinationFolder + "imageResizedParentWithSoftMask.pdf";
             String cmpFileName = sourceFolder + "cmp_imageResizedParentWithSoftMask.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             ImageData mask = ImageDataFactory.Create(sourceFolder + "SMask3px.jpg");
             mask.MakeMask();
             ImageData img1 = ImageDataFactory.Create(sourceFolder + "sRGBImageBig.png");
@@ -107,7 +112,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void ImageWithSoftMaskMatteTest() {
             String outFileName = destinationFolder + "imageWithSoftMaskMatte.pdf";
             String cmpFileName = sourceFolder + "cmp_imageWithSoftMaskMatte.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             ImageData mask = ImageDataFactory.Create(sourceFolder + "matteMask.jpg");
             mask.MakeMask();
             PdfImageXObject maskXObject = new PdfImageXObject(mask);
@@ -126,7 +131,7 @@ namespace iText.Kernel.Pdf.Canvas {
             // TODO: DEVSIX-4991
             String outFileName = destinationFolder + "sMaskMatteDifferentSizeOfImg.pdf";
             String cmpFileName = sourceFolder + "cmp_sMaskMatteDifferentSizeOfImg.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             ImageData mask = ImageDataFactory.Create(sourceFolder + "matteMask.jpg");
             mask.MakeMask();
             PdfImageXObject maskXObject = new PdfImageXObject(mask);

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Tagging {
     internal class TableTaggingRule : ITaggingRule {
@@ -66,7 +67,10 @@ namespace iText.Layout.Tagging {
             tbodyTag = new TaggingDummyElement(createTBody ? StandardRoles.TBODY : null);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
                 String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
-                if (!StandardRoles.THEAD.Equals(kidRole) && !StandardRoles.TFOOT.Equals(kidRole)) {
+                if (!StandardRoles.THEAD.Equals(kidRole) && !StandardRoles.TFOOT.Equals(kidRole) && !StandardRoles.CAPTION
+                    .Equals(kidRole)) {
+                    // In usual cases it isn't expected that this for loop will work, but it is possible to
+                    // create custom tag hierarchy by specifying role, and put any child to tableHintKey
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
@@ -98,7 +102,38 @@ namespace iText.Layout.Tagging {
                 }
                 taggingHelper.AddKidsHint(tbodyTag, JavaCollectionsUtil.SingletonList<TaggingDummyElement>(row), -1);
             }
+            foreach (TaggingHintKey nonCellKid in nonCellKids) {
+                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                if (StandardRoles.CAPTION.Equals(kidRole)) {
+                    MoveCaption(taggingHelper, nonCellKid, tableHintKey);
+                }
+            }
             return true;
+        }
+
+        private static void MoveCaption(LayoutTaggingHelper taggingHelper, TaggingHintKey caption, TaggingHintKey 
+            tableHintKey) {
+            if (!(tableHintKey.GetAccessibleElement() is Table)) {
+                return;
+            }
+            Table tableElem = (Table)tableHintKey.GetAccessibleElement();
+            Div captionDiv = tableElem.GetCaption();
+            if (captionDiv == null) {
+                return;
+            }
+            CaptionSide captionSide;
+            if (captionDiv.GetProperty<CaptionSide?>(Property.CAPTION_SIDE) == null) {
+                captionSide = CaptionSide.TOP;
+            }
+            else {
+                captionSide = (CaptionSide)captionDiv.GetProperty<CaptionSide?>(Property.CAPTION_SIDE);
+            }
+            if (CaptionSide.TOP.Equals(captionSide)) {
+                taggingHelper.MoveKidHint(caption, tableHintKey, 0);
+            }
+            else {
+                taggingHelper.MoveKidHint(caption, tableHintKey);
+            }
         }
     }
 }

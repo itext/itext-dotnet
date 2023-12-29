@@ -223,6 +223,12 @@ namespace iText.Svg.Renderers.Impl {
                 String parentValue = this.GetParent().GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
                 if (parentValue != null) {
                     // If stroke width is a percentage value is always computed as a percentage of the normalized viewBox diagonal length.
+                    // TODO DEVSIX-3432 - the code below looks wrong. Issues:
+                    // 1. Why root view port but not current?
+                    // 2. Why do we convert to Pts. Viewport is already in points.
+                    // 3. Diagonal length should be divided by sqrt(2) to be passed to parseAbsoluteLength and used as
+                    // percentBaseValue.
+                    // 4. Conversion to pixels at the end is in question either.
                     double rootViewPortHeight = context.GetRootViewPort().GetHeight();
                     double rootViewPortWidth = context.GetRootViewPort().GetWidth();
                     double viewBoxDiagonalLength = CssUtils.ConvertPxToPts(Math.Sqrt(rootViewPortHeight * rootViewPortHeight +

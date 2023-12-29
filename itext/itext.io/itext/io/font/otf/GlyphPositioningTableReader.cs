@@ -31,7 +31,6 @@ namespace iText.IO.Font.Otf {
     /// <para />
     /// This has been written according to the OPenTypeFont specifications. This may be found <a href="http://www.microsoft.com/typography/otspec/gsub.htm">here</a>.
     /// </remarks>
-    /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
     public class GlyphPositioningTableReader : OpenTypeFontTableReader {
         public GlyphPositioningTableReader(RandomAccessFileOrArray rf, int gposTableLocation, OpenTypeGdefTableReader
              gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)

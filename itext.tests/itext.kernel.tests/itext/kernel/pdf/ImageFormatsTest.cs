@@ -44,12 +44,17 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ImagesWithDifferentDepth() {
             String outFileName = destinationFolder + "transparencyTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_transparencyTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             PdfPage page = pdfDocument.AddNewPage(PageSize.A3);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.LIGHT_GRAY).Fill();
@@ -87,8 +92,8 @@ namespace iText.Kernel.Pdf {
         public virtual void Png_imageTransparency_8bitDepthImage() {
             String outFileName = destinationFolder + "png_imageTransparancy_8bitDepthImage.pdf";
             String cmpFileName = sourceFolder + "cmp_png_imageTransparancy_8bitDepthImage.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             PdfPage page = pdfDocument.AddNewPage(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.LIGHT_GRAY).Fill();
@@ -108,8 +113,8 @@ namespace iText.Kernel.Pdf {
         public virtual void Png_imageTransparency_24bitDepthImage() {
             String outFileName = destinationFolder + "png_imageTransparancy_24bitDepthImage.pdf";
             String cmpFileName = sourceFolder + "cmp_png_imageTransparancy_24bitDepthImage.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetCompressionLevel
-                (CompressionConstants.NO_COMPRESSION)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             PdfPage page = pdfDocument.AddNewPage(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.LIGHT_GRAY).Fill();

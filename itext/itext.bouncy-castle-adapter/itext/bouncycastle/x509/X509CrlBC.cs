@@ -21,28 +21,30 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
-using System.Security.Cryptography.X509Certificates;
+using iText.Bouncycastle.Asn1;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle.X509 {
     public class X509CrlBC : IX509Crl {
         /// <summary>
         /// Wrapper class for
-        /// <see cref="Org.BouncyCastle.Cert.X509Crl"/>.
+        /// <see cref="X509Crl"/>.
         /// </summary>
         private readonly X509Crl x509Crl;
 
         /// <summary>
-        /// Creates new wrapper instance for <see cref="Org.BouncyCastle.Cert.X509Crl"/>.
+        /// Creates new wrapper instance for <see cref="X509Crl"/>.
         /// </summary>
         /// <param name="x509Crl">
-        /// <see cref="Org.BouncyCastle.Cert.X509Crl"/>
+        /// <see cref="X509Crl"/>
         /// to be wrapped
         /// </param>
         public X509CrlBC(X509Crl x509Crl) {
@@ -51,7 +53,7 @@ namespace iText.Bouncycastle.X509 {
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
-        /// wrapped <see cref="Org.BouncyCastle.Cert.X509Crl"/>.
+        /// wrapped <see cref="X509Crl"/>.
         /// </returns>
         public virtual X509Crl GetX509Crl() {
             return x509Crl;
@@ -80,6 +82,11 @@ namespace iText.Bouncycastle.X509 {
         /// <summary><inheritDoc/></summary>
         public byte[] GetEncoded() {
             return x509Crl.GetEncoded();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IAsn1OctetString GetExtensionValue(string oid) {
+            return new Asn1OctetStringBC(x509Crl.GetExtensionValue(new DerObjectIdentifier(oid)));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

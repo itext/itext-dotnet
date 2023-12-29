@@ -66,7 +66,7 @@ namespace iText.Signatures.Verify {
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem")[0
                 ];
             IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
-            DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
             NUnit.Framework.Assert.IsTrue(ocspVerifier.Verify(caCert, rootCert, checkDate).IsEmpty());
         }
@@ -76,7 +76,7 @@ namespace iText.Signatures.Verify {
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            builder.SetCertificateStatus(FACTORY.CreateRevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays(-20), FACTORY
+            builder.SetCertificateStatus(FACTORY.CreateRevokedStatus(TimeTestUtil.TEST_DATE_TIME.AddDays(-20), FACTORY
                 .CreateCRLReason().GetKeyCompromise()));
             NUnit.Framework.Assert.IsFalse(VerifyTest(builder));
         }
@@ -95,8 +95,8 @@ namespace iText.Signatures.Verify {
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            DateTime thisUpdate = DateTimeUtil.GetCurrentTime().AddDays(-30);
-            DateTime nextUpdate = DateTimeUtil.GetCurrentTime().AddDays(-15);
+            DateTime thisUpdate = DateTimeUtil.GetCalendar(TimeTestUtil.TEST_DATE_TIME).AddDays(-30);
+            DateTime nextUpdate = DateTimeUtil.GetCalendar(TimeTestUtil.TEST_DATE_TIME).AddDays(-15);
             builder.SetThisUpdate(thisUpdate);
             builder.SetNextUpdate(nextUpdate);
             NUnit.Framework.Assert.IsFalse(VerifyTest(builder));
@@ -108,15 +108,19 @@ namespace iText.Signatures.Verify {
                 )[0];
             IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(certsSrc + "intermediateExpiredCert.pem", password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
+            DateTime thisUpdate = DateTimeUtil.GetCurrentTime().AddDays(30);
+            DateTime nextUpdate = DateTimeUtil.GetCurrentTime();
+            builder.SetThisUpdate(thisUpdate);
+            builder.SetNextUpdate(nextUpdate);
             NUnit.Framework.Assert.IsTrue(VerifyTest(builder, certsSrc + "signCertRsaWithExpiredChain.pem", caCert.GetNotBefore
                 ()));
         }
 
         [NUnit.Framework.Test]
         public virtual void AuthorizedOCSPResponderTest() {
-            DateTime ocspResponderCertStartDate = DateTimeUtil.GetCurrentUtcTime();
+            DateTime ocspResponderCertStartDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime ocspResponderCertEndDate = ocspResponderCertStartDate.AddDays(365 * 100);
-            DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             bool verifyRes = VerifyAuthorizedOCSPResponderTest(ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate
                 );
             NUnit.Framework.Assert.IsTrue(verifyRes);
@@ -124,9 +128,9 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredAuthorizedOCSPResponderTest_atValidPeriod() {
-            DateTime ocspResponderCertStartDate = DateTimeUtil.Parse("15/10/2005", "dd/MM/yyyy");
-            DateTime ocspResponderCertEndDate = DateTimeUtil.Parse("15/10/2010", "dd/MM/yyyy");
-            DateTime checkDate = DateTimeUtil.Parse("15/10/2008", "dd/MM/yyyy");
+            DateTime ocspResponderCertStartDate = TimeTestUtil.TEST_DATE_TIME.AddYears(-4);
+            DateTime ocspResponderCertEndDate = TimeTestUtil.TEST_DATE_TIME.AddYears(1);
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             bool verifyRes = VerifyAuthorizedOCSPResponderTest(ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate
                 );
             NUnit.Framework.Assert.IsTrue(verifyRes);
@@ -134,9 +138,9 @@ namespace iText.Signatures.Verify {
 
         [NUnit.Framework.Test]
         public virtual void ExpiredAuthorizedOCSPResponderTest_now() {
-            DateTime ocspResponderCertStartDate = DateTimeUtil.Parse("15/10/2005", "dd/MM/yyyy");
-            DateTime ocspResponderCertEndDate = DateTimeUtil.Parse("15/10/2010", "dd/MM/yyyy");
-            DateTime checkDate = DateTimeUtil.GetCurrentUtcTime();
+            DateTime ocspResponderCertStartDate = TimeTestUtil.TEST_DATE_TIME.AddYears(-5);
+            DateTime ocspResponderCertEndDate = TimeTestUtil.TEST_DATE_TIME.AddYears(-1);
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             NUnit.Framework.Assert.Catch(typeof(AbstractCertificateExpiredException), () => VerifyAuthorizedOCSPResponderTest
                 (ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate));
         }
@@ -150,7 +154,7 @@ namespace iText.Signatures.Verify {
         }
 
         private bool VerifyTest(TestOcspResponseBuilder rootRsaOcspBuilder) {
-            return VerifyTest(rootRsaOcspBuilder, certsSrc + "signCertRsa01.pem", DateTimeUtil.GetCurrentUtcTime());
+            return VerifyTest(rootRsaOcspBuilder, certsSrc + "signCertRsa01.pem", TimeTestUtil.TEST_DATE_TIME);
         }
 
         private bool VerifyTest(TestOcspResponseBuilder rootRsaOcspBuilder, String checkCertFileName, DateTime checkDate

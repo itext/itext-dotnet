@@ -43,13 +43,18 @@ namespace iText.Kernel.Pdf.Layer {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void EnabledVisibilityPolicyAllOnTest() {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAllOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -68,8 +73,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAllOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -88,8 +93,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAllOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -109,8 +114,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAllOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -130,8 +135,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAnyOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -150,8 +155,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAnyOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -170,8 +175,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAnyOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -190,8 +195,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAnyOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -210,8 +215,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisualExpressionTest01.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -240,8 +245,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisualExpressionTest01.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), new PdfWriter(destinationFolder
-                 + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
+                (destinationFolder + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();

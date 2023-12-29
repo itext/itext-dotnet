@@ -79,7 +79,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// Stack is needed in case if some "inner" content stream with it's own resources
         /// is encountered (like Form XObject).
         /// </remarks>
-        private Stack<PdfResources> resourcesStack;
+        private IList<PdfResources> resourcesStack;
 
         /// <summary>Stack keeping track of the graphics state.</summary>
         private readonly Stack<ParserGraphicsState> gsStack = new Stack<ParserGraphicsState>();
@@ -96,6 +96,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>A stack containing marked content info.</summary>
         private Stack<CanvasTag> markedContentStack = new Stack<CanvasTag>();
+
+        /// <summary>A memory limits handler.</summary>
+        private MemoryLimitsAwareHandler memoryLimitsHandler = null;
+
+        /// <summary>Page size in bytes.</summary>
+        private long pageSize = 0;
 
         /// <summary>
         /// Creates a new PDF Content Stream Processor that will send its output to the
@@ -193,11 +199,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>Resets the graphics state stack, matrices and resources.</summary>
         public virtual void Reset() {
+            memoryLimitsHandler = null;
+            pageSize = 0;
             gsStack.Clear();
             gsStack.Push(new ParserGraphicsState());
             textMatrix = null;
             textLineMatrix = null;
-            resourcesStack = new Stack<PdfResources>();
+            resourcesStack = new List<PdfResources>();
             isClip = false;
             currentPath = new Path();
         }
@@ -228,7 +236,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             if (resources == null) {
                 throw new PdfException(KernelExceptionMessageConstant.RESOURCES_CANNOT_BE_NULL);
             }
-            this.resourcesStack.Push(resources);
+            if (memoryLimitsHandler != null) {
+                pageSize += (long)contentBytes.Length;
+                memoryLimitsHandler.CheckIfPageSizeExceedsTheLimit(this.pageSize);
+            }
+            this.resourcesStack.Add(resources);
             PdfTokenizer tokeniser = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
                 (contentBytes)));
             PdfCanvasParser ps = new PdfCanvasParser(tokeniser, resources);
@@ -242,7 +254,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             catch (System.IO.IOException e) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
             }
-            this.resourcesStack.Pop();
+            this.resourcesStack.JRemoveAt(resourcesStack.Count - 1);
         }
 
         /// <summary>Processes PDF syntax.</summary>
@@ -255,6 +267,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// </remarks>
         /// <param name="page">the page to process</param>
         public virtual void ProcessPageContent(PdfPage page) {
+            this.memoryLimitsHandler = page.GetDocument().GetMemoryLimitsAwareHandler();
             InitClippingPath(page);
             ParserGraphicsState gs = GetGraphicsState();
             EventOccurred(new ClippingPathInfo(gs, gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED);
@@ -427,7 +440,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         protected internal virtual PdfResources GetResources() {
-            return resourcesStack.Peek();
+            return resourcesStack[resourcesStack.Count - 1];
         }
 
         protected internal virtual void PopulateXObjectDoHandlers() {

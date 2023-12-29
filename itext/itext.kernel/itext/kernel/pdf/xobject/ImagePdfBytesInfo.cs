@@ -146,8 +146,8 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfSpecialCs.Separation scs = new PdfSpecialCs.Separation(colorSpaceArray);
             byte[] newImageBytes = scs.GetTintTransformation().CalculateFromByteArray(imageBytes, 0, imageBytes.Length
                 , 8, 8);
-            // TODO switch top tiff for CMYK
-            // TODO verify RGBA is working
+            // TODO DEVSIX-6757 switch top tiff for CMYK
+            // TODO DEVSIX-6757 verify RGBA is working
             if (scs.GetBaseCs().GetNumberOfComponents() > 3) {
                 throw new NotSupportedException(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
                     );

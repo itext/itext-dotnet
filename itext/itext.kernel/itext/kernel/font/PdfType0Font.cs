@@ -240,7 +240,7 @@ namespace iText.Kernel.Font {
         }
 
         public override Glyph GetGlyph(int unicode) {
-            // TODO handle unicode value with cmap and use only glyphByCode
+            // TODO DEVSIX-7568 handle unicode value with cmap and use only glyphByCode
             Glyph glyph = GetFontProgram().GetGlyph(unicode);
             if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                 // Handle special layout characters like sfthyphen (00AD).
@@ -596,7 +596,6 @@ namespace iText.Kernel.Font {
             return process;
         }
 
-        //TODO what if Glyphs contains only whitespaces and ignorable identifiers?
         private bool IsAppendableGlyph(Glyph glyph) {
             // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
             // Character.isIdentifierIgnorable(0) gets true.

@@ -37,8 +37,6 @@ namespace iText.Barcodes.Qrcode {
     /// The ordering of bits is row-major. Within each int, the least significant bits are used first,
     /// meaning they represent lower x values. This is compatible with BitArray's implementation.
     /// </remarks>
-    /// <author>Sean Owen</author>
-    /// <author>dswitkin@google.com (Daniel Switkin)</author>
     internal sealed class BitMatrix {
         private readonly int width;
 

@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Bouncycastle.Asn1;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Crypto;
@@ -34,6 +35,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
@@ -81,6 +83,12 @@ namespace iText.Bouncycastle.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
+        public string GetSigAlgOID() => this.certificate.SigAlgOid;
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetSigAlgParams() => this.certificate.GetSigAlgParams();
+
+        /// <summary><inheritDoc/></summary>
         public byte[] GetEncoded() {
             return certificate.GetEncoded();
         }
@@ -92,7 +100,7 @@ namespace iText.Bouncycastle.X509 {
 
         /// <summary><inheritDoc/></summary>
         public IAsn1OctetString GetExtensionValue(string oid) {
-            return new Asn1OctetStringBC(certificate.GetExtensionValue(oid));
+            return new Asn1OctetStringBC(certificate.GetExtensionValue(new DerObjectIdentifier(oid)));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -133,7 +141,7 @@ namespace iText.Bouncycastle.X509 {
 
         /// <summary><inheritDoc/></summary>
         public string GetEndDateTime() {
-            return certificate.CertificateStructure.EndDate.GetTime();
+            return certificate.CertificateStructure.EndDate.ToString();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -143,7 +151,7 @@ namespace iText.Bouncycastle.X509 {
 
         /// <summary><inheritDoc/></summary>
         public IList GetExtendedKeyUsage() {
-            return certificate.GetExtendedKeyUsage();
+            return certificate.GetExtendedKeyUsage()?.Select(ku=> ku.Id).ToList();
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

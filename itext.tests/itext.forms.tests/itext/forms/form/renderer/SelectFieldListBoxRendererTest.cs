@@ -20,7 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
 using iText.Layout.Renderer;
 using iText.Test;
 
@@ -41,6 +44,27 @@ namespace iText.Forms.Form.Renderer {
                 (new ListBoxField("", 0, false));
             bool lastY = listBoxRenderer.CallAllowLastYLineRecursiveExtraction();
             NUnit.Framework.Assert.IsFalse(lastY);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfAConformanceLevelTest() {
+            SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
+            NUnit.Framework.Assert.IsNull(renderer.GetConformanceLevel(null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfAConformanceLevelWithDocumentTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
+            NUnit.Framework.Assert.IsNull(renderer.GetConformanceLevel(pdfDocument));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfAConformanceLevelWithConformanceLevelTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
+            renderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfAConformanceLevel.PDF_A_1B);
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, renderer.GetConformanceLevel(pdfDocument));
         }
 
         private class CustomSelectFieldListBoxRenderer : SelectFieldListBoxRenderer {

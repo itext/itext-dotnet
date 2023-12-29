@@ -65,7 +65,7 @@ namespace iText.Signatures.Sign {
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
                 // Signer RSASSA-PSS not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(GeneralSecurityExceptionBCFips), () =>
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName, 
                         RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
@@ -91,7 +91,7 @@ namespace iText.Signatures.Sign {
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
                 // Signer RSASSA-PSS not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(GeneralSecurityExceptionBCFips), () =>
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName,
                         //we should accept the "<digest>withRSA/PSS" convention as well
@@ -116,7 +116,7 @@ namespace iText.Signatures.Sign {
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
                 // Signer RSASSA-PSS not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(GeneralSecurityExceptionBCFips), () =>
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName,
                         RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
@@ -137,7 +137,7 @@ namespace iText.Signatures.Sign {
             
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
                 // Signer RSASSA-PSS not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(GeneralSecurityExceptionBCFips), () =>
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName, new RSASSAPSSMechanismParams(
                         BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier

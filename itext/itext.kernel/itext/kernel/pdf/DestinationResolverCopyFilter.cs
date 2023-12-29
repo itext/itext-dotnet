@@ -78,8 +78,9 @@ namespace iText.Kernel.Pdf {
         }
 
         private bool ProcessLinkAnnotion(PdfObject newParent, PdfObject value, PdfDictionary dict) {
-            if (dict.Get(PdfName.Dest) != null) {
-                fromDocument.StoreDestinationToReaddress(PdfDestination.MakeDestination(dict.Get(PdfName.Dest)), (nd) => {
+            PdfObject destination = dict.Get(PdfName.Dest);
+            if (destination != null && !destination.Equals(PdfNull.PDF_NULL)) {
+                fromDocument.StoreDestinationToReaddress(PdfDestination.MakeDestination(destination), (nd) => {
                     PdfObject newVal = value.CopyTo(targetDocument, this);
                     (new PdfPage((PdfDictionary)newParent)).AddAnnotation(-1, PdfAnnotation.MakeAnnotation(newVal), false);
                 }
@@ -90,7 +91,8 @@ namespace iText.Kernel.Pdf {
                 return false;
             }
             if (dict.GetAsDictionary(PdfName.A) != null && dict.GetAsDictionary(PdfName.A).Get(PdfName.D) != null && !
-                PdfName.GoToR.Equals(dict.GetAsDictionary(PdfName.A).Get(PdfName.S))) {
+                PdfNull.PDF_NULL.Equals(dict.GetAsDictionary(PdfName.A).Get(PdfName.D)) && !PdfName.GoToR.Equals(dict.
+                GetAsDictionary(PdfName.A).Get(PdfName.S))) {
                 fromDocument.StoreDestinationToReaddress(PdfDestination.MakeDestination(dict.GetAsDictionary(PdfName.A).Get
                     (PdfName.D)), (nd) => {
                     PdfObject newAnnot = value.CopyTo(targetDocument);
@@ -107,7 +109,11 @@ namespace iText.Kernel.Pdf {
         }
 
         private void ProcessAction(PdfObject newParent, PdfName name, PdfDictionary dict) {
-            fromDocument.StoreDestinationToReaddress(PdfDestination.MakeDestination(dict.Get(PdfName.D)), (nd) => {
+            PdfObject destination = dict.Get(PdfName.D);
+            if (destination == null || PdfNull.PDF_NULL.Equals(destination)) {
+                return;
+            }
+            fromDocument.StoreDestinationToReaddress(PdfDestination.MakeDestination(destination), (nd) => {
                 //Add action with new destination
                 PdfObject newVal = dict.CopyTo(targetDocument, EXCLUDE_KEYS_ACTIONCOPY, false);
                 ((PdfDictionary)newVal).Put(PdfName.D, nd.GetPdfObject());

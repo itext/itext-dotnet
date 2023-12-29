@@ -29,6 +29,17 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Barcodes {
+    /// <summary>This class represents the barcode Code 39.</summary>
+    /// <remarks>
+    /// This class represents the barcode Code 39.
+    /// <para />
+    /// Code 39 is a variable length, discrete
+    /// barcode symbology defined in ISO/IEC 16388:2007.
+    /// <para />
+    /// The Code 39 specification defines 43 characters, consisting of uppercase letters (A through Z), numeric digits (0
+    /// through 9) and a number of special characters (-, ., $, /, +, %, and space). An additional character (denoted '*') is
+    /// used for both start and stop delimiters. Each character is composed of nine elements: five bars and four spaces.
+    /// </remarks>
     public class Barcode39 : Barcode1D {
         /// <summary>The bars to generate the code.</summary>
         private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 1, 1, 0, 1, 0, 0 }, new byte[

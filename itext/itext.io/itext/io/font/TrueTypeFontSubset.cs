@@ -28,7 +28,6 @@ using iText.IO.Source;
 
 namespace iText.IO.Font {
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
-    /// <author>Paulo Soares</author>
     internal class TrueTypeFontSubset {
         // If it's a regular font subset, we should not add `name` and `post`,
         // because information in these tables maybe irrelevant for a subset.

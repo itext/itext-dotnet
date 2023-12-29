@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Font.Otf {
-    /// <author>psoares</author>
     public class FeatureRecord {
         public String tag;
 

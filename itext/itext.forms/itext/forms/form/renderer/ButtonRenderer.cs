@@ -226,14 +226,14 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            DeleteMargins();
+            IDictionary<int, Object> margins = DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             // Background is light gray by default, but can be set to null by user.
             Color backgroundColor = background == null ? null : background.GetColor();
             float fontSizeValue = fontSize.GetValue();
             if (font == null) {
-                font = doc.GetDefaultFont();
+                font = GetResolvedFont(doc);
             }
             // Some properties are set to the HtmlDocumentRenderer, which is root renderer for this ButtonRenderer, but
             // in forms logic root renderer is CanvasRenderer, and these properties will have default values. So
@@ -241,10 +241,10 @@ namespace iText.Forms.Form.Renderer {
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
-            PdfButtonFormField button = new PushButtonFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreatePushButton
-                ();
+            PdfButtonFormField button = new PushButtonFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
+                ).SetConformanceLevel(GetConformanceLevel(doc)).CreatePushButton();
             button.DisableFieldRegeneration();
-            button.SetFont(font).SetFontSize(fontSizeValue);
+            button.SetFontSize(fontSizeValue);
             button.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(button);
             button.GetFirstFormAnnotation().SetFormFieldElement((Button)modelElement);
@@ -254,6 +254,7 @@ namespace iText.Forms.Form.Renderer {
             // with the same names (and add all the widgets as kids to that merged field), so we can add it anyway.
             forms.AddField(button, page);
             WriteAcroFormFieldLangAttribute(doc);
+            ApplyProperties(margins);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -282,19 +283,6 @@ namespace iText.Forms.Form.Renderer {
             bBox.MoveDown(dy);
             bBox.SetHeight(height);
             flatRenderer.Move(0, -dy);
-        }
-
-        /// <summary>Gets the value of the lowest bottom coordinate for all button children recursively.</summary>
-        /// <returns>the lowest child bottom.</returns>
-        private float GetLowestChildBottom(IRenderer renderer, float value) {
-            float lowestChildBottom = value;
-            foreach (IRenderer child in renderer.GetChildRenderers()) {
-                lowestChildBottom = GetLowestChildBottom(child, lowestChildBottom);
-                if (child.GetOccupiedArea() != null && child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
-                    lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
-                }
-            }
-            return lowestChildBottom;
         }
     }
 }

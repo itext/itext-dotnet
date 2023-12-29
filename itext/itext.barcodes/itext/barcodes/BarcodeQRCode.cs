@@ -58,9 +58,15 @@ namespace iText.Barcodes {
             : this(content, null) {
         }
 
+        /// <summary>
+        /// Creates an instance of the
+        /// <see cref="BarcodeQRCode"/>
+        /// class.
+        /// </summary>
         public BarcodeQRCode() {
         }
 
+        // empty constructor
         /// <summary>Gets the current data.</summary>
         /// <returns>the encoded data</returns>
         public virtual String GetCode() {

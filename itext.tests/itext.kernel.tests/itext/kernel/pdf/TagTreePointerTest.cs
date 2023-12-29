@@ -48,10 +48,15 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest01() {
-            FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest01.pdf", FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest01.pdf").SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
             PdfPage page1 = document.AddNewPage();
@@ -83,8 +88,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest02() {
-            FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest02.pdf", FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -110,7 +114,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest03.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
@@ -154,8 +158,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest04.pdf").SetCompressionLevel(CompressionConstants
-                .NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest04.pdf").SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.MoveToKid(StandardRoles.TABLE).MoveToKid(2, StandardRoles.TR);
@@ -170,7 +174,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest05() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest05.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest05.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer1 = new TagTreePointer(document);
@@ -190,7 +194,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest06() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest06.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest06.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
@@ -216,8 +220,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest07() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest07.pdf").SetCompressionLevel(CompressionConstants
-                .NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest07.pdf").SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
             PdfPage page = document.AddNewPage();
@@ -237,8 +241,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TagTreePointerTest08() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest08.pdf").SetCompressionLevel(CompressionConstants
-                .NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagTreePointerTest08.pdf").SetCompressionLevel
+                (CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
             TagTreePointer pointer = new TagTreePointer(document);
             AccessibilityProperties properties = pointer.MoveToKid(StandardRoles.DIV).GetProperties();
@@ -254,8 +258,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ChangeExistedBackedAccessibilityPropertiesTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "changeExistedBackedAccessibilityPropertiesTest.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "changeExistedBackedAccessibilityPropertiesTest.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
             TagTreePointer pointer = new TagTreePointer(document);
@@ -281,8 +285,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void RemoveExistedBackedAccessibilityPropertiesTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "removeExistedBackedAccessibilityPropertiesTest.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "removeExistedBackedAccessibilityPropertiesTest.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
             TagTreePointer pointer = new TagTreePointer(document);
@@ -302,8 +306,9 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void SetDefaultAccessibilityPropertiesTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "setDefaultAccessibilityPropertiesTest.pdf", new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "setDefaultAccessibilityPropertiesTest.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
             TagTreePointer pointer = new TagTreePointer(document);
             AccessibilityProperties properties = new DefaultAccessibilityProperties(StandardRoles.DIV);
@@ -339,8 +344,9 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void RemoveDefaultAccessibilityPropertiesTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "removeDefaultAccessibilityPropertiesTest.pdf", new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "removeDefaultAccessibilityPropertiesTest.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "taggedDocument2.pdf"), writer);
             TagTreePointer pointer = new TagTreePointer(document);
             AccessibilityProperties properties = new DefaultAccessibilityProperties(StandardRoles.DIV);
@@ -364,7 +370,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest01.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureFlushingTest01.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
@@ -387,7 +393,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest02.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureFlushingTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagStructureContext tagStructure = document.GetTagStructureContext();
@@ -404,7 +410,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest03.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureFlushingTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             document.GetPage(2).Flush();
@@ -419,7 +425,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest04.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureFlushingTest04.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
@@ -438,7 +444,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest05() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest05.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureFlushingTest05.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -488,7 +494,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TagStructureFlushingTest06() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest06.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureFlushingTest06.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -522,7 +528,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest01.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureRemovingTest01.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             document.RemovePage(1);
@@ -533,7 +539,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest02.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureRemovingTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             PdfPage firstPage = document.GetPage(1);
@@ -557,7 +563,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest03() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest03.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureRemovingTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
@@ -591,7 +597,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TagStructureRemovingTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAnnots.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest04.pdf").SetCompressionLevel
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tagStructureRemovingTest04.pdf").SetCompressionLevel
                 (CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(reader, writer);
             document.RemovePage(1);
@@ -602,8 +608,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void StructureElementWithIdTest() {
             String outfName = "structureElementWithIdTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + outfName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + outfName).SetCompressionLevel(CompressionConstants
+                .NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             document.SetTagged();
             AddContentWithIds(document);
@@ -902,7 +908,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest01.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "accessibleAttributesInsertionTest01.pdf"
+                );
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             // 2 attributes
@@ -934,7 +941,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest02.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "accessibleAttributesInsertionTest02.pdf"
+                );
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfStructureAttributes testAttrDict = new PdfStructureAttributes("test");
@@ -958,7 +966,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest03.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "accessibleAttributesInsertionTest03.pdf"
+                );
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
@@ -982,7 +991,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest04.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "accessibleAttributesInsertionTest04.pdf"
+                );
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();
@@ -1003,7 +1013,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AccessibleAttributesInsertionTest05() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
-            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest05.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "accessibleAttributesInsertionTest05.pdf"
+                );
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer pointer = new TagTreePointer(document);
             PdfDictionary testAttrDict = new PdfDictionary();

@@ -33,6 +33,11 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Barcodes {
+    /// <summary>BarCode 128 is a high-density linear barcode symbology defined in ISO/IEC 15417:2007.</summary>
+    /// <remarks>
+    /// BarCode 128 is a high-density linear barcode symbology defined in ISO/IEC 15417:2007.
+    /// It is used for alphanumeric or numeric-only barcodes. It can encode all 128 characters of ASCII
+    /// </remarks>
     public class Barcode128 : Barcode1D {
         /// <summary>A type of barcode</summary>
         public const int CODE128 = 1;
@@ -156,6 +161,7 @@ namespace iText.Barcodes {
             this.codeType = CODE128;
         }
 
+        /// <summary>The code set to be used to start encoding.</summary>
         public enum Barcode128CodeSet {
             A,
             B,
@@ -163,10 +169,14 @@ namespace iText.Barcodes {
             AUTO
         }
 
+        /// <summary>Sets the code set to use.</summary>
+        /// <param name="codeSet">the code set to use.</param>
         public virtual void SetCodeSet(Barcode128.Barcode128CodeSet codeSet) {
             this.codeSet = codeSet;
         }
 
+        /// <summary>Get the code set that is used.</summary>
+        /// <returns>the code set.</returns>
         public virtual Barcode128.Barcode128CodeSet GetCodeSet() {
             return this.codeSet;
         }

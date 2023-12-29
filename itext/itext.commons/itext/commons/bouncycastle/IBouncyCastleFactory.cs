@@ -57,6 +57,28 @@ namespace iText.Commons.Bouncycastle {
     /// selected depending on a bouncy-castle dependency specified by the user.
     /// </remarks>
     public interface IBouncyCastleFactory {
+
+        /// <summary>
+        /// Get signing algorithm oid from its name.
+        /// </summary>
+        /// <param name="name">name of the algorithm</param>
+        /// <returns>algorithm oid</returns>
+        String GetAlgorithmOid(String name);
+        
+        /// <summary>
+        /// Get hash algorithm oid from its name.
+        /// </summary>
+        /// <param name="name">name of the algorithm</param>
+        /// <returns>algorithm oid</returns>
+        String GetDigestAlgorithmOid(String name);
+
+        /// <summary>
+        /// Get signing algorithm name from its oid.
+        /// </summary>
+        /// <param name="oid">oid of the algorithm</param>
+        /// <returns>algorithm name</returns>
+        String GetAlgorithmName(String oid);
+        
         /// <summary>Cast ASN1 encodable wrapper to the ASN1 object identifier wrapper.</summary>
         /// <param name="encodable">wrapper to be cast</param>
         /// <returns>casted wrapper</returns>
@@ -444,6 +466,11 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="primitive">ASN1 Primitive wrapper to create basic OCSP response wrapper from</param>
         /// <returns>created basic OCSP response wrapper</returns>
         IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive);
+        
+        /// <summary>Create basic OCSP Response wrapper from bytes array.</summary>
+        /// <param name="bytes">bytes array to create basic OCSP response wrapper from</param>
+        /// <returns>created basic OCSP response wrapper</returns>
+        IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes);
 
         /// <summary>
         /// Create basic OCSP Resp wrapper from
@@ -1443,6 +1470,8 @@ namespace iText.Commons.Bouncycastle {
         /// otherwise
         /// </returns>
         bool IsNullExtension(IX509Extension extNonce);
+
+        bool IsNull(IAsn1Encodable encodable);
         
         /// <summary>
         /// Create
@@ -1484,5 +1513,11 @@ namespace iText.Commons.Bouncycastle {
         ///             AES_256 = 5</param>
         /// <param name="withCertificate"> true when used with a certificate, false otherwise</param>        
         void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate);
+
+        /// <summary>
+        /// Get Bouncy-Castle Util instance implementation related to this <see cref="IBouncyCastleFactory"/>
+        /// </summary>
+        /// <returns><see cref="IBouncyCastleUtil"/> instance implementation</returns>
+        IBouncyCastleUtil GetBouncyCastleUtil();
     }
 }

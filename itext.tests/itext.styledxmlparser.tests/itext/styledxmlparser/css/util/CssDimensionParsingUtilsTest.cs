@@ -274,5 +274,35 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(expected.GetColor(), actual.GetColor());
             NUnit.Framework.Assert.AreEqual(expected.GetOpacity(), actual.GetOpacity(), 0.0001f);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseLengthAbsoluteTest() {
+            float result = CssDimensionParsingUtils.ParseLength("10pt", 1, 2, 1, 1);
+            NUnit.Framework.Assert.AreEqual(10, result, 0.0001f);
+            result = CssDimensionParsingUtils.ParseLength("10px", 1, 1, 2, 1);
+            NUnit.Framework.Assert.AreEqual(7.5, result, 0.0001f);
+            result = CssDimensionParsingUtils.ParseLength("10in", 1, 1, 2, 1);
+            NUnit.Framework.Assert.AreEqual(720, result, 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseLengthPercentTest() {
+            float result = CssDimensionParsingUtils.ParseLength("10%", 10, 2, 1, 1);
+            NUnit.Framework.Assert.AreEqual(1, result, 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseLengthFontTest() {
+            float result = CssDimensionParsingUtils.ParseLength("10em", 10, 2, 8, 9);
+            NUnit.Framework.Assert.AreEqual(80, result, 0.0001f);
+            result = CssDimensionParsingUtils.ParseLength("10rem", 10, 2, 8, 9);
+            NUnit.Framework.Assert.AreEqual(90, result, 0.0001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseLengthInvalidTest() {
+            float result = CssDimensionParsingUtils.ParseLength("10cmm", 10, 2, 8, 9);
+            NUnit.Framework.Assert.AreEqual(2, result, 0.0001f);
+        }
     }
 }

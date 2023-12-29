@@ -40,14 +40,19 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY)]
         public virtual void TestAppendModeWithFullCompressionRequestedWhenOriginalDocumentHasXrefTable() {
             String inFile = SOURCE_FOLDER + "documentWithXrefTable.pdf";
             String outFile = DESTINATION_FOLDER + "documentWithXrefTableAfterAppending.pdf";
             String cmpFile = SOURCE_FOLDER + "cmp_documentWithXrefTableAfterAppending.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile), new PdfWriter(outFile, new WriterProperties
-                ().SetFullCompressionMode(true)), new StampingProperties().UseAppendMode());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile), CompareTool.CreateTestPdfWriter(outFile, 
+                new WriterProperties().SetFullCompressionMode(true)), new StampingProperties().UseAppendMode());
             pdfDocument.AddNewPage();
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, DESTINATION_FOLDER));
@@ -59,8 +64,8 @@ namespace iText.Kernel.Pdf {
             String inFile = SOURCE_FOLDER + "documentWithXrefStream.pdf";
             String outFile = DESTINATION_FOLDER + "documentWithXrefStreamAfterAppending.pdf";
             String cmpFile = SOURCE_FOLDER + "cmp_documentWithXrefStreamAfterAppending.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile), new PdfWriter(outFile, new WriterProperties
-                ().SetFullCompressionMode(false)), new StampingProperties().UseAppendMode());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile), CompareTool.CreateTestPdfWriter(outFile, 
+                new WriterProperties().SetFullCompressionMode(false)), new StampingProperties().UseAppendMode());
             pdfDocument.AddNewPage();
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, DESTINATION_FOLDER));

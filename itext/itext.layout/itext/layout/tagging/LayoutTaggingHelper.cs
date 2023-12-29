@@ -34,6 +34,10 @@ using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Tagging {
+    /// <summary>
+    /// The class is a helper which is used to correctly create structure
+    /// tree for layout element (with keeping right order for tags).
+    /// </summary>
     public class LayoutTaggingHelper {
         private TagStructureContext context;
 
@@ -41,6 +45,8 @@ namespace iText.Layout.Tagging {
 
         private bool immediateFlush;
 
+        // kidsHints and parentHints fields represent tree of TaggingHintKey, where parentHints
+        // stores a parent for the key, and kidsHints stores kids for key.
         private IDictionary<TaggingHintKey, IList<TaggingHintKey>> kidsHints;
 
         private IDictionary<TaggingHintKey, TaggingHintKey> parentHints;
@@ -49,7 +55,8 @@ namespace iText.Layout.Tagging {
 
         private IDictionary<String, IList<ITaggingRule>> taggingRules;
 
-        private IDictionary<PdfObject, TaggingDummyElement> existingTagsDummies;
+        // dummiesForPreExistingTags is used to process TaggingDummyElement
+        private IDictionary<PdfObject, TaggingDummyElement> dummiesForPreExistingTags;
 
         private readonly int RETVAL_NO_PARENT = -1;
 
@@ -64,7 +71,7 @@ namespace iText.Layout.Tagging {
             this.autoTaggingPointerSavedPosition = new Dictionary<IRenderer, TagTreePointer>();
             this.taggingRules = new Dictionary<String, IList<ITaggingRule>>();
             RegisterRules(context.GetTagStructureTargetVersion());
-            existingTagsDummies = new LinkedDictionary<PdfObject, TaggingDummyElement>();
+            dummiesForPreExistingTags = new LinkedDictionary<PdfObject, TaggingDummyElement>();
         }
 
         public static void AddTreeHints(iText.Layout.Tagging.LayoutTaggingHelper taggingHelper, IRenderer rootRenderer
@@ -90,10 +97,10 @@ namespace iText.Layout.Tagging {
         public virtual void AddKidsHint<_T0>(TagTreePointer parentPointer, IEnumerable<_T0> newKids)
             where _T0 : IPropertyContainer {
             PdfDictionary pointerStructElem = context.GetPointerStructElem(parentPointer).GetPdfObject();
-            TaggingDummyElement dummy = existingTagsDummies.Get(pointerStructElem);
+            TaggingDummyElement dummy = dummiesForPreExistingTags.Get(pointerStructElem);
             if (dummy == null) {
                 dummy = new TaggingDummyElement(parentPointer.GetRole());
-                existingTagsDummies.Put(pointerStructElem, dummy);
+                dummiesForPreExistingTags.Put(pointerStructElem, dummy);
             }
             context.GetWaitingTagsManager().AssignWaitingState(parentPointer, GetOrCreateHintKey(dummy));
             AddKidsHint(dummy, newKids);
@@ -130,14 +137,13 @@ namespace iText.Layout.Tagging {
         }
 
         public virtual void SetRoleHint(IPropertyContainer hintOwner, String role) {
-            // TODO
             // It's unclear whether a role of already created tag should be changed
             // in this case. Also concerning rules, they won't be called for the new role
             // if this overriding role is set after some rule applying event. Already applied
             // rules won't be cancelled either.
             // Restricting this call on whether the finished state is set doesn't really
             // solve anything.
-            // TODO probably this also should affect whether the hint is considered non-accessible
+            // Probably this also should affect whether the hint is considered non-accessible
             GetOrCreateHintKey(hintOwner).SetOverriddenRole(role);
         }
 
@@ -286,11 +292,11 @@ namespace iText.Layout.Tagging {
         }
 
         public virtual void ReleaseAllHints() {
-            foreach (TaggingDummyElement dummy in existingTagsDummies.Values) {
+            foreach (TaggingDummyElement dummy in dummiesForPreExistingTags.Values) {
                 FinishTaggingHint(dummy);
                 FinishDummyKids(GetKidsHint(GetHintKey(dummy)));
             }
-            existingTagsDummies.Clear();
+            dummiesForPreExistingTags.Clear();
             ReleaseFinishedHints();
             ICollection<TaggingHintKey> hangingHints = new HashSet<TaggingHintKey>();
             foreach (KeyValuePair<TaggingHintKey, TaggingHintKey> entry in parentHints) {
@@ -298,14 +304,14 @@ namespace iText.Layout.Tagging {
                 hangingHints.Add(entry.Value);
             }
             foreach (TaggingHintKey hint in hangingHints) {
-                // TODO in some situations we need to remove tagging hints of renderers that are thrown away for reasons like:
+                // In some situations we need to remove tagging hints of renderers that are thrown away for reasons like:
                 // - fixed height clipping
                 // - forced placement
                 // - some other cases?
-                //            if (!hint.isFinished()) {
-                //                Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
-                //                logger.warn(LogMessageConstant.TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE);
-                //            }
+                // if (!hint.isFinished()) {
+                //      Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
+                //      logger.warn(LogMessageConstant.TAGGING_HINT_NOT_FINISHED_BEFORE_CLOSE);
+                // }
                 ReleaseHint(hint, null, false);
             }
             System.Diagnostics.Debug.Assert(parentHints.IsEmpty());
@@ -484,9 +490,9 @@ namespace iText.Layout.Tagging {
                 }
                 TaggingHintKey prevParent = GetParentHint(kidKey);
                 if (prevParent != null) {
-                    // TODO seems to be a legit use case to re-add hints to just ensure that hints are added
-                    //                Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
-                    //                logger.error(LogMessageConstant.CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT);
+                    // Seems to be a legit use case to re-add hints to just ensure that hints are added
+                    // Logger logger = LoggerFactory.getLogger(LayoutTaggingHelper.class);
+                    // logger.error(LogMessageConstant.CANNOT_ADD_KID_HINT_WHICH_IS_ALREADY_ADDED_TO_ANOTHER_PARENT);
                     continue;
                 }
                 if (!skipFinishedChecks && kidKey.IsFinished()) {
@@ -500,6 +506,7 @@ namespace iText.Layout.Tagging {
                 else {
                     kidsHint.Add(kidKey);
                 }
+                kidsHints.Put(parentKey, kidsHint);
                 parentHints.Put(kidKey, parentKey);
                 if (parentTagAlreadyCreated) {
                     if (kidKey.GetAccessibleElement() is TaggingDummyElement) {
@@ -517,9 +524,6 @@ namespace iText.Layout.Tagging {
                         MoveKidTagIfCreated(parentTagHint, kidKey);
                     }
                 }
-            }
-            if (!kidsHint.IsEmpty()) {
-                kidsHints.Put(parentKey, kidsHint);
             }
         }
 

@@ -29,43 +29,43 @@ using iText.Commons.Utils;
 namespace iText.Bouncycastlefips.Asn1 {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Asn1.DerOutputStream"/>.
+    /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
     /// </summary>
     public class DerOutputStreamBCFips : IDerOutputStream {
-        private readonly DerOutputStream stream;
+        private readonly Asn1OutputStream stream;
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.DerOutputStream"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
         /// </summary>
         /// <param name="stream">
         /// OutputStream to create
-        /// <see cref="Org.BouncyCastle.Asn1.DerOutputStream"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>
         /// to be wrapped
         /// </param>
         public DerOutputStreamBCFips(Stream stream) {
-            this.stream = new DerOutputStream(stream);
+            this.stream = new Asn1OutputStream(stream);
         }
 
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.DerOutputStream"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
         /// </summary>
         /// <param name="stream">
         /// 
-        /// <see cref="Org.BouncyCastle.Asn1.DerOutputStream"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>
         /// to be wrapped
         /// </param>
-        public DerOutputStreamBCFips(DerOutputStream stream) {
+        public DerOutputStreamBCFips(Asn1OutputStream stream) {
             this.stream = stream;
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.DerOutputStream"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
         /// </returns>
-        public virtual DerOutputStream GetDerOutputStream() {
+        public virtual Asn1OutputStream GetDerOutputStream() {
             return stream;
         }
 

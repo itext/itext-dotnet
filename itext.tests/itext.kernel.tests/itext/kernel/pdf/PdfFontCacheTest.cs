@@ -48,6 +48,11 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         private static readonly String[] TextSetHelloWorld = new String[] { "Hello World" };
 
         private static readonly String[] TextSetWithABC = new String[] { "Hello World", "ABC", "XYZ" };
@@ -393,7 +398,8 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             String font = StandardFonts.HELVETICA;
             String encoding = "WinAnsiEncoding";
@@ -425,7 +431,8 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             String font = StandardFonts.HELVETICA;
             String encoding = "WinAnsiEncoding";
@@ -456,7 +463,8 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             String font = "AboriginalSerif";
             String encoding = "WinAnsiEncoding";
@@ -486,7 +494,8 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             String font = "NotoSansCJKjp-Bold";
             String encoding = "WinAnsiEncoding";
@@ -517,7 +526,8 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             String font = "AboriginalSerif";
             String encoding = "Identity-H";
@@ -547,7 +557,8 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             String encoding = "Identity-H";
             String font = "NotoSansCJKjp-Bold-" + encoding;
@@ -623,7 +634,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private int CountPdfFonts(String filename) {
-            PdfReader reader = new PdfReader(filename);
+            PdfReader reader = CompareTool.CreateOutputReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
             ICollection<PdfIndirectReference> fonts = new HashSet<PdfIndirectReference>();
             for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++) {
@@ -636,7 +647,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private PdfDocument CreateDocument(String filename) {
-            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                );
             return new PdfDocument(writer);
         }
     }

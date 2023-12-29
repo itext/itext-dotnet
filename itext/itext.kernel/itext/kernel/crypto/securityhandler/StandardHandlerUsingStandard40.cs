@@ -44,6 +44,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal ARCFOUREncryption arcfour = new ARCFOUREncryption();
 
+        private const int DEFAULT_KEY_LENGTH = 40;
+
         public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId) {
             InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, 
@@ -203,7 +205,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private int GetKeyLength(PdfDictionary encryptionDict) {
             int? keyLength = encryptionDict.GetAsInt(PdfName.Length);
-            return keyLength != null ? (int)keyLength : 40;
+            return keyLength != null ? (int)keyLength : DEFAULT_KEY_LENGTH;
         }
     }
 }

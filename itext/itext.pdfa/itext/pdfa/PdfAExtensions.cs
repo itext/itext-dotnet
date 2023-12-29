@@ -64,6 +64,20 @@ namespace iText.Pdfa {
             set.IntersectWith(c);
         }
 
+
+        public static bool IsEmpty<T>(this ICollection<T> collection) {
+            return collection.Count == 0;
+        }
+
+        public static String JSubstring(this String str, int beginIndex, int endIndex) {
+            return str.Substring(beginIndex, endIndex - beginIndex);
+        }
+
+        public static String JSubstring(this StringBuilder sb, int beginIndex, int endIndex) {
+            return sb.ToString(beginIndex, endIndex - beginIndex);
+        }
+
+
         public static Assembly GetAssembly(this Type type) {
 #if !NETSTANDARD2_0
             return type.Assembly;

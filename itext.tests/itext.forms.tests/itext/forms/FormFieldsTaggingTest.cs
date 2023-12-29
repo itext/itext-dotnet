@@ -197,6 +197,30 @@ namespace iText.Forms {
             CompareOutput(outFileName, cmpFileName);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void FormFieldTaggingTest11() {
+            String outFileName = destinationFolder + "taggedPdfWithForms11.pdf";
+            String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms11.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfReader reader = new PdfReader(sourceFolder + "taggedDocWithFields.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            pdfDoc.SetTagged();
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
+            PdfButtonFormField pushButton = new PushButtonFormFieldBuilder(pdfDoc, "push").SetWidgetRectangle(new Rectangle
+                (36, 650, 40, 20)).SetCaption("Button 1").CreatePushButton();
+            pushButton.SetFontSize(12f);
+            PdfButtonFormField pushButton2 = new PushButtonFormFieldBuilder(pdfDoc, "push 2").SetWidgetRectangle(new Rectangle
+                (36, 600, 40, 20)).SetCaption("Button 2").CreatePushButton();
+            pushButton.SetFontSize(12f);
+            TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+            tagPointer.MoveToKid(StandardRoles.DIV);
+            acroForm.AddField(pushButton);
+            tagPointer.MoveToKid(StandardRoles.FORM);
+            acroForm.AddField(pushButton2);
+            pdfDoc.Close();
+            CompareOutput(outFileName, cmpFileName);
+        }
+
         private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);

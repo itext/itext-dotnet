@@ -48,6 +48,13 @@ namespace iText.Pdfa.Checker {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckPdfWithHugeAmountOfOutlinesTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlineStackOverflowTest01.pdf"))) {
+                NUnit.Framework.Assert.DoesNotThrow(() => pdfAChecker.CheckDocument(pdf.GetCatalog()));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckAppearanceStreamsWithCycle() {
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
@@ -93,8 +100,8 @@ namespace iText.Pdfa.Checker {
                 ) {
             }
 
-            public override void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
-                , bool? fill) {
+            public override void CheckColorSpace(PdfColorSpace colorSpace, PdfObject @object, PdfDictionary currentColorSpaces
+                , bool checkAlternate, bool? fill) {
             }
 
             public override void CheckRenderingIntent(PdfName intent) {
@@ -194,6 +201,9 @@ namespace iText.Pdfa.Checker {
             }
 
             protected internal override void CheckTrailer(PdfDictionary trailer) {
+            }
+
+            protected internal override void CheckCatalog(PdfCatalog catalog) {
             }
 
             protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources

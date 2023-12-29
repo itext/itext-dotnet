@@ -52,6 +52,19 @@ namespace iText.Bouncycastleconnector {
     /// Default bouncy-castle factory which is expected to be used when no other factories can be created.
     /// </summary>
     public class BouncyCastleDefaultFactory : IBouncyCastleFactory {
+        
+        public virtual String GetAlgorithmOid(String name) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
+        public virtual String GetDigestAlgorithmOid(String name) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public virtual String GetAlgorithmName(String oid) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
         public IDerObjectIdentifier CreateASN1ObjectIdentifier(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -233,6 +246,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
+        public IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -636,6 +653,11 @@ namespace iText.Bouncycastleconnector {
         public bool IsNullExtension(IX509Extension extNonce) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        
+        public bool IsNull(IAsn1Encodable encodable) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public byte[] CreateCipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
@@ -646,6 +668,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
     }

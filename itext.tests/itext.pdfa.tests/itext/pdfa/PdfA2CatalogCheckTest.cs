@@ -94,7 +94,7 @@ namespace iText.Pdfa {
             ocProperties.Put(PdfName.Configs, configs);
             doc.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY_SHALL_CONTAIN_NAME_ENTRY
                 , e.Message);
         }
 

@@ -153,8 +153,7 @@ namespace iText.Forms.Form.Renderer {
 
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             // Retrieve font properties
-            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
-            PdfFont font = retrievedFont is PdfFont ? (PdfFont)retrievedFont : null;
+            PdfFont font = GetResolvedFont(drawContext.GetDocument());
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SelectFieldListBoxRenderer));
@@ -172,13 +171,11 @@ namespace iText.Forms.Form.Renderer {
                 ));
             ListBoxField lbModelElement = (ListBoxField)modelElement;
             IList<String> selectedOptions = lbModelElement.GetSelectedStrings();
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetWidgetRectangle(area);
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetConformanceLevel(GetConformanceLevel
+                (doc)).SetFont(font).SetWidgetRectangle(area);
             SetupBuilderValues(builder, lbModelElement);
             PdfChoiceFormField choiceField = builder.CreateList();
             choiceField.DisableFieldRegeneration();
-            if (font != null) {
-                choiceField.SetFont(font);
-            }
             choiceField.SetFontSize(fontSize.GetValue());
             choiceField.SetMultiSelect(IsMultiple());
             choiceField.SetListSelected(selectedOptions.ToArray(new String[selectedOptions.Count]));

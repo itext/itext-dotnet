@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Forms;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
@@ -158,19 +159,18 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
-            DeleteMargins();
+            IDictionary<int, Object> margins = DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             String groupName = this.GetProperty<String>(FormProperty.FORM_FIELD_RADIO_GROUP_NAME);
             if (groupName == null || String.IsNullOrEmpty(groupName)) {
                 throw new PdfException(FormsExceptionMessageConstant.EMPTY_RADIO_GROUP_NAME);
             }
             PdfButtonFormField radioGroup = (PdfButtonFormField)form.GetField(groupName);
-            bool addNew = false;
             if (null == radioGroup) {
-                radioGroup = new RadioFormFieldBuilder(doc, groupName).CreateRadioGroup();
+                radioGroup = new RadioFormFieldBuilder(doc, groupName).SetConformanceLevel(GetConformanceLevel(doc)).CreateRadioGroup
+                    ();
                 radioGroup.DisableFieldRegeneration();
                 radioGroup.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
-                addNew = true;
             }
             else {
                 radioGroup.DisableFieldRegeneration();
@@ -178,7 +178,8 @@ namespace iText.Forms.Form.Renderer {
             if (IsBoxChecked()) {
                 radioGroup.SetValue(GetModelId());
             }
-            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).CreateRadioButton(GetModelId(), area);
+            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).SetConformanceLevel(GetConformanceLevel(doc
+                )).CreateRadioButton(GetModelId(), area);
             radio.DisableFieldRegeneration();
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
@@ -188,13 +189,9 @@ namespace iText.Forms.Form.Renderer {
             radio.SetFormFieldElement((Radio)modelElement);
             radioGroup.AddKid(radio);
             radioGroup.EnableFieldRegeneration();
-            if (addNew) {
-                form.AddField(radioGroup, page);
-            }
-            else {
-                form.ReplaceField(groupName, radioGroup);
-            }
+            form.AddField(radioGroup, page);
             WriteAcroFormFieldLangAttribute(doc);
+            ApplyProperties(margins);
         }
 
         /// <summary><inheritDoc/></summary>

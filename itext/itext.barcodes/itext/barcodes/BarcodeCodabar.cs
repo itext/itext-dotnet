@@ -29,6 +29,14 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Barcodes {
+    /// <summary>Implementation of the Codabar barcode.</summary>
+    /// <remarks>
+    /// Implementation of the Codabar barcode.
+    /// <para />
+    /// Codabar was designed to be accurately read even when printed on dot-matrix printers for multi-part forms such as
+    /// FedEx airbills and blood bank forms, where variants are still in use as of 2007. Although newer symbologies hold more
+    /// information in a smaller space.
+    /// </remarks>
     public class BarcodeCodabar : Barcode1D {
         /// <summary>The index chars to <c>BARS</c>.</summary>
         private const String CHARS = "0123456789-$:/.+ABCD";
@@ -138,6 +146,9 @@ namespace iText.Barcodes {
             return bars;
         }
 
+        /// <summary>Calculates the checksum.</summary>
+        /// <param name="code">the value to calculate the checksum for</param>
+        /// <returns>the checksum for the given value</returns>
         public static String CalculateChecksum(String code) {
             if (code.Length < 2) {
                 return code;

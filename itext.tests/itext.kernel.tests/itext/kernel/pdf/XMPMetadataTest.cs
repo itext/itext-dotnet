@@ -42,10 +42,16 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocumentWithXmp() {
             String filename = "emptyDocumentWithXmp.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename, new WriterProperties().AddXmpMetadata());
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties().AddXmpMetadata
+                ());
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText").SetTitle("Empty iText Document"
                 );
@@ -54,7 +60,7 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.Close();
-            PdfReader reader = new PdfReader(destinationFolder + filename);
+            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] outBytes = pdfDocument.GetXmpMetadata();
@@ -70,18 +76,18 @@ namespace iText.Kernel.Pdf {
             String created = destinationFolder + "emptyDocumentWithXmpAppendMode01.pdf";
             String updated = destinationFolder + "emptyDocumentWithXmpAppendMode01_updated.pdf";
             String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode01_updatedAgain.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
             pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated), new StampingProperties().UseAppendMode
-                ());
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(created), CompareTool.CreateTestPdfWriter(updated
+                ), new StampingProperties().UseAppendMode());
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain), new StampingProperties(
-                ).UseAppendMode());
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(updated), CompareTool.CreateTestPdfWriter(updatedAgain
+                ), new StampingProperties().UseAppendMode());
             pdfDocument.Close();
-            PdfReader reader = new PdfReader(updatedAgain);
+            PdfReader reader = CompareTool.CreateOutputReader(updatedAgain);
             pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetCatalog().GetPdfObject().GetAsStream(PdfName.Metadata));
@@ -102,18 +108,18 @@ namespace iText.Kernel.Pdf {
             String created = destinationFolder + "emptyDocumentWithXmpAppendMode02.pdf";
             String updated = destinationFolder + "emptyDocumentWithXmpAppendMode02_updated.pdf";
             String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode02_updatedAgain.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated), new StampingProperties().UseAppendMode
-                ());
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(created), CompareTool.CreateTestPdfWriter(updated
+                ), new StampingProperties().UseAppendMode());
             // create XMP metadata
             pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain), new StampingProperties(
-                ).UseAppendMode());
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(updated), CompareTool.CreateTestPdfWriter(updatedAgain
+                ), new StampingProperties().UseAppendMode());
             pdfDocument.Close();
-            PdfReader reader = new PdfReader(updatedAgain);
+            PdfReader reader = CompareTool.CreateOutputReader(updatedAgain);
             pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetCatalog().GetPdfObject().GetAsStream(PdfName.Metadata));
@@ -177,7 +183,7 @@ namespace iText.Kernel.Pdf {
         private void RunCustomXmpTest(String name, String xmp) {
             String outPath = destinationFolder + name + ".pdf";
             String cmpPath = sourceFolder + "cmp_" + name + ".pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPath));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPath));
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.SetXmpMetadata(xmp.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));

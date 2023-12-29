@@ -29,7 +29,6 @@ namespace iText.Signatures {
     /// Interface that needs to be implemented if you want to embed
     /// Certificate Revocation Lists (CRL) into your PDF.
     /// </summary>
-    /// <author>Paulo Soares</author>
     public interface ICrlClient {
         /// <summary>Gets an encoded byte array.</summary>
         /// <param name="checkCert">The certificate which a CRL URL can be obtained from.</param>

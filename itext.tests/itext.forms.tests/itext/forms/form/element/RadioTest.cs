@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Forms;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
 using iText.Forms.Fields.Properties;
@@ -415,6 +416,29 @@ namespace iText.Forms.Form.Element {
             return btnGroup;
         }
 
+
+        [NUnit.Framework.Test]
+        public virtual void MultiPageRadioFieldTest() {
+            String outPdf = DESTINATION_FOLDER + "multiPageCheckboxField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_multiPageCheckBoxField.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                for (int i = 0; i < 10; i++) {
+                    document.AddNewPage();
+                    Rectangle rect = new Rectangle(210, 490, 150, 22);
+                    PdfFormField group = new RadioFormFieldBuilder(document, "fing").CreateRadioGroup();
+                    PdfFormAnnotation radio = new RadioFormFieldBuilder(document, "fing").SetWidgetRectangle(rect).CreateRadioButton
+                        ("bing bong", rect);
+                    PdfPage page = document.GetPage(i + 1);
+                    group.AddKid(radio);
+                    form.AddField(group, page);
+                    if (i > 2) {
+                        page.Flush();
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
 
         private static Radio CreateRadioButton(String name, String groupName, Border border, Color backgroundColor
             , bool @checked, bool flatten) {

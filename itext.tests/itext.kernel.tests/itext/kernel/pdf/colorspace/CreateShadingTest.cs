@@ -43,12 +43,17 @@ namespace iText.Kernel.Pdf.Colorspace {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateAxialShadingWithStitchingFunctionTest() {
             String testName = "createAxialShadingWithStitchingFunctionTest";
             String outName = destinationFolder + testName + ".pdf";
             String cmpName = sourceFolder + "cmp_" + testName + ".pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outName));
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
             int x0 = 40;
             int y0 = 500;
@@ -69,8 +74,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             String outName = destinationFolder + testName + ".pdf";
             String cmpName = sourceFolder + "cmp_" + testName + ".pdf";
             String input = sourceFolder + "axialShading.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(outName), new StampingProperties
-                ().UseAppendMode());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(outName), 
+                new StampingProperties().UseAppendMode());
             PdfResources resources = pdfDocument.GetPage(1).GetResources();
             foreach (PdfName resName in resources.GetResourceNames()) {
                 PdfShading shading = resources.GetShading(resName);
@@ -90,7 +95,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             String testName = "createSimpleRadialShadingTest";
             String outName = destinationFolder + testName + ".pdf";
             String cmpName = sourceFolder + "cmp_" + testName + ".pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outName));
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
             int x0 = 100;
             int y0 = 500;
@@ -110,7 +115,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             String testName = "createRadialShadingWithStitchingFunctionTest";
             String outName = destinationFolder + testName + ".pdf";
             String cmpName = sourceFolder + "cmp_" + testName + ".pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outName));
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
             int x0 = 40;
             int y0 = 500;
@@ -133,8 +138,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             String outName = destinationFolder + testName + ".pdf";
             String cmpName = sourceFolder + "cmp_" + testName + ".pdf";
             String input = sourceFolder + "radialShading.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(outName), new StampingProperties
-                ().UseAppendMode());
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(outName), 
+                new StampingProperties().UseAppendMode());
             PdfResources resources = pdfDocument.GetPage(1).GetResources();
             foreach (PdfName resName in resources.GetResourceNames()) {
                 PdfShading shading = resources.GetShading(resName);
@@ -165,8 +170,8 @@ namespace iText.Kernel.Pdf.Colorspace {
         private static void AssertShadingDictionaryResult(String outName, String cmpName, String shadingResourceName
             ) {
             PrintOutCmpPdfNameAndDir(outName, cmpName);
-            PdfDocument outPdf = new PdfDocument(new PdfReader(outName));
-            PdfDocument cmpPdf = new PdfDocument(new PdfReader(cmpName));
+            PdfDocument outPdf = new PdfDocument(CompareTool.CreateOutputReader(outName));
+            PdfDocument cmpPdf = new PdfDocument(CompareTool.CreateOutputReader(cmpName));
             PdfName resName = new PdfName(shadingResourceName);
             PdfObject outShDictionary = outPdf.GetPage(1).GetResources().GetResourceObject(PdfName.Shading, resName);
             PdfObject cmpShDictionary = cmpPdf.GetPage(1).GetResources().GetResourceObject(PdfName.Shading, resName);

@@ -69,7 +69,7 @@ namespace iText.Layout.Properties {
 
         /// <summary>Sets up the needed values in the model element of the renderer.</summary>
         /// <param name="blockRenderer">the renderer that is used to set up continuous container.</param>
-        public static void SetupContinuousContainerIfNeeded(BlockRenderer blockRenderer) {
+        public static void SetupContinuousContainerIfNeeded(AbstractRenderer blockRenderer) {
             if (true.Equals(blockRenderer.GetProperty<bool?>(Property.TREAT_AS_CONTINUOUS_CONTAINER))) {
                 if (!blockRenderer.HasProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT)) {
                     iText.Layout.Properties.ContinuousContainer continuousContainer = new iText.Layout.Properties.ContinuousContainer
@@ -91,7 +91,7 @@ namespace iText.Layout.Properties {
 
         /// <summary>Re adds the properties that were removed from the overflow renderer.</summary>
         /// <param name="blockRenderer">the renderer that is used to reapply properties.</param>
-        public void ReApplyProperties(BlockRenderer blockRenderer) {
+        public void ReApplyProperties(AbstractRenderer blockRenderer) {
             foreach (int property in PROPERTIES_NEEDED_FOR_CONTINUOUS_CONTAINER) {
                 blockRenderer.SetProperty(property, properties.Get(property));
             }

@@ -114,6 +114,13 @@ namespace iText.Kernel.Pdf {
             return Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
         }
 
+        /// <summary>Remove creation date from the document info dictionary.</summary>
+        /// <returns>this instance.</returns>
+        public virtual iText.Kernel.Pdf.PdfDocumentInfo RemoveCreationDate() {
+            infoDictionary.Remove(PdfName.CreationDate);
+            return this;
+        }
+
         public virtual iText.Kernel.Pdf.PdfDocumentInfo AddModDate() {
             return Put(PdfName.ModDate, new PdfDate().GetPdfObject());
         }

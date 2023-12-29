@@ -26,7 +26,6 @@ using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// <summary>Tests for Attributes.</summary>
-    /// <author>Jonathan Hedley</author>
     public class AttributesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void Html() {

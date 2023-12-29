@@ -198,6 +198,37 @@ namespace iText.Kernel.Colors {
             return new DeviceCmyk(c, m, y, k);
         }
 
+        /// <summary>Creates a color object based on the passed through values.</summary>
+        /// <remarks>
+        /// Creates a color object based on the passed through values.
+        /// <para />
+        /// </remarks>
+        /// <param name="colorValue">
+        /// the float array with the values
+        /// <para />
+        /// The number of array elements determines the colour space in which the colour shall be defined:
+        /// 0 - No colour; transparent
+        /// 1 - DeviceGray
+        /// 3 - DeviceRGB
+        /// 4 - DeviceCMYK
+        /// </param>
+        /// <returns>Color the color or null if it's invalid</returns>
+        public static iText.Kernel.Colors.Color CreateColorWithColorSpace(float[] colorValue) {
+            if (colorValue == null || colorValue.Length == 0) {
+                return null;
+            }
+            if (colorValue.Length == 1) {
+                return MakeColor(new PdfDeviceCs.Gray(), colorValue);
+            }
+            if (colorValue.Length == 3) {
+                return MakeColor(new PdfDeviceCs.Rgb(), colorValue);
+            }
+            if (colorValue.Length == 4) {
+                return MakeColor(new PdfDeviceCs.Cmyk(), colorValue);
+            }
+            return null;
+        }
+
         /// <summary>Returns the number of color value components</summary>
         /// <returns>the number of color value components</returns>
         public virtual int GetNumberOfComponents() {
@@ -229,6 +260,13 @@ namespace iText.Kernel.Colors {
             colorValue = value;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override int GetHashCode() {
+            int result = colorSpace == null ? 0 : colorSpace.GetPdfObject().GetHashCode();
+            result = 31 * result + (colorValue != null ? JavaUtil.ArraysHashCode(colorValue) : 0);
+            return result;
+        }
+
         /// <summary>Indicates whether the color is equal to the given color.</summary>
         /// <remarks>
         /// Indicates whether the color is equal to the given color.
@@ -236,7 +274,8 @@ namespace iText.Kernel.Colors {
         /// <see cref="colorSpace">color space</see>
         /// and
         /// <see cref="colorValue">color value</see>
-        /// are considered during the comparison.
+        /// are considered during the
+        /// comparison.
         /// </remarks>
         public override bool Equals(Object o) {
             if (this == o) {
@@ -248,13 +287,6 @@ namespace iText.Kernel.Colors {
             iText.Kernel.Colors.Color color = (iText.Kernel.Colors.Color)o;
             return (colorSpace != null ? colorSpace.GetPdfObject().Equals(color.colorSpace.GetPdfObject()) : color.colorSpace
                  == null) && JavaUtil.ArraysEquals(colorValue, color.colorValue);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override int GetHashCode() {
-            int result = colorSpace == null ? 0 : colorSpace.GetPdfObject().GetHashCode();
-            result = 31 * result + (colorValue != null ? JavaUtil.ArraysHashCode(colorValue) : 0);
-            return result;
         }
     }
 }

@@ -21,12 +21,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.X500;
 using iText.Bouncycastlefips.Crypto;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Operators;
 
@@ -80,6 +83,15 @@ namespace iText.Bouncycastlefips.Cert {
         /// <summary><inheritDoc/></summary>
         public byte[] GetEncoded() {
             return x509Crl.GetEncoded();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IAsn1OctetString GetExtensionValue(string oid) {
+            byte[] extensionValue = x509Crl.GetExtensionValue(new DerObjectIdentifier(oid));
+            if (extensionValue == null) {
+                return new Asn1OctetStringBCFips(null);
+            }
+            return new Asn1OctetStringBCFips(new DerOctetString(extensionValue));
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

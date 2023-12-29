@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Barcodes.Dmcode {
+    /// <summary>This class holds the error correction code for a data block.</summary>
     public sealed class ReedSolomon {
         private static readonly int[] log = new int[] { 0, 255, 1, 240, 2, 225, 241, 53, 3, 38, 226, 133, 242, 43, 
             54, 210, 4, 195, 39, 114, 227, 106, 134, 28, 243, 140, 44, 23, 55, 118, 211, 234, 5, 219, 196, 96, 40, 

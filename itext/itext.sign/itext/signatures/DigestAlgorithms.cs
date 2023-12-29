@@ -23,8 +23,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using iText.Bouncycastleconnector;
+using iText.Commons;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>Class that contains a map with the different message digest algorithms.</summary>
@@ -85,6 +90,11 @@ namespace iText.Signatures {
 
         /// <summary>Maps algorithm names to output lengths in bits.</summary>
         private static readonly IDictionary<String, int?> bitLengths = new Dictionary<String, int?>();
+
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(DigestAlgorithms));
 
         static DigestAlgorithms() {
             digestNames.Put("1.2.840.113549.2.5", "MD5");
@@ -212,13 +222,20 @@ namespace iText.Signatures {
             return messageDigest.Digest();
         }
 
-        /// <summary>Gets the digest name for a certain id</summary>
+        /// <summary>Gets the digest name for a certain id.</summary>
         /// <param name="oid">an id (for instance "1.2.840.113549.2.5")</param>
         /// <returns>a digest name (for instance "MD5")</returns>
         public static String GetDigest(String oid) {
             String ret = digestNames.Get(oid);
             if (ret == null) {
-                return oid;
+                try {
+                    String digest = GetMessageDigest(oid).GetAlgorithmName();
+                    LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+                    return digest;
+                }
+                catch (Exception) {
+                    return oid;
+                }
             }
             else {
                 return ret;
@@ -235,7 +252,15 @@ namespace iText.Signatures {
             if (name == null) {
                 throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
             }
-            return allowedDigests.Get(name.ToUpperInvariant());
+            String allowedDigest = allowedDigests.Get(name.ToUpperInvariant());
+            if (allowedDigest != null) {
+                return allowedDigest;
+            }
+            allowedDigest = BOUNCY_CASTLE_FACTORY.GetDigestAlgorithmOid(name.ToUpperInvariant());
+            if (allowedDigest != null) {
+                LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+            }
+            return allowedDigest;
         }
 
         /// <summary>Retrieve the output length in bits of the given digest algorithm.</summary>

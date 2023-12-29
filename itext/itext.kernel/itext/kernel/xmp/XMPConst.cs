@@ -231,8 +231,14 @@ namespace iText.Kernel.XMP {
         /// <summary>Part, 1, 2, or 3</summary>
         public const String PART = "part";
 
+        /// <summary>ISO 19005 revision</summary>
+        public const String REV = "rev";
+
         /// <summary>Conformance, A, B, or U.</summary>
         public const String CONFORMANCE = "conformance";
+
+        /// <summary>History</summary>
+        public const String HISTORY = "History";
     }
 
     public static class XMPConstConstants {

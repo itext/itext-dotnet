@@ -33,21 +33,17 @@ namespace iText.Bouncycastle.Asn1.Util {
     /// <see cref="Org.BouncyCastle.Asn1.Utilities.Asn1Dump"/>.
     /// </summary>
     public class Asn1DumpBC : IAsn1Dump {
-        private static readonly Asn1DumpBC INSTANCE = new Asn1DumpBC(null);
-
-        private readonly Asn1Dump asn1Dump;
-
+        private static readonly Asn1DumpBC INSTANCE = new Asn1DumpBC();
+        
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.Utilities.Asn1Dump"/>.
         /// </summary>
-        /// <param name="asn1Dump">
         /// 
         /// <see cref="Org.BouncyCastle.Asn1.Utilities.Asn1Dump"/>
         /// to be wrapped
         /// </param>
-        public Asn1DumpBC(Asn1Dump asn1Dump) {
-            this.asn1Dump = asn1Dump;
+        public Asn1DumpBC() {
         }
 
         /// <summary>Gets wrapper instance.</summary>
@@ -59,16 +55,7 @@ namespace iText.Bouncycastle.Asn1.Util {
         public static Asn1DumpBC GetInstance() {
             return INSTANCE;
         }
-
-        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-        /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.Utilities.Asn1Dump"/>.
-        /// </returns>
-        public virtual Asn1Dump GetAsn1Dump() {
-            return asn1Dump;
-        }
-
+        
         /// <summary><inheritDoc/></summary>
         public virtual String DumpAsString(Object obj, bool b) {
             if (obj is Asn1EncodableBC) {
@@ -83,33 +70,6 @@ namespace iText.Bouncycastle.Asn1.Util {
                 return Asn1Dump.DumpAsString(((Asn1EncodableBC)obj).GetEncodable());
             }
             return Asn1Dump.DumpAsString((Asn1Encodable)obj);
-        }
-
-        /// <summary>Indicates whether some other object is "equal to" this one.</summary>
-        /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
-        public override bool Equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || GetType() != o.GetType()) {
-                return false;
-            }
-            Asn1DumpBC that = (Asn1DumpBC)o;
-            return Object.Equals(asn1Dump, that.asn1Dump);
-        }
-
-        /// <summary>Returns a hash code value based on the wrapped object.</summary>
-        public override int GetHashCode() {
-            return JavaUtil.ArraysHashCode(asn1Dump);
-        }
-
-        /// <summary>
-        /// Delegates
-        /// <c>toString</c>
-        /// method call to the wrapped object.
-        /// </summary>
-        public override String ToString() {
-            return asn1Dump.ToString();
         }
     }
 }

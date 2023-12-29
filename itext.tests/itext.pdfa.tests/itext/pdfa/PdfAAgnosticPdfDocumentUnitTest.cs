@@ -60,6 +60,13 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetDefaultFont() {
+            PdfAAgnosticPdfDocumentUnitTest.TestAgnosticPdfDocument pdfDoc = new PdfAAgnosticPdfDocumentUnitTest.TestAgnosticPdfDocument
+                (this, new PdfReader(sourceFolder + "pdfs/simpleDoc.pdf"), new PdfWriter(new ByteArrayOutputStream()));
+            NUnit.Framework.Assert.IsNotNull(pdfDoc.GetDefaultFont());
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED)]
         public virtual void LoadPdfADocumentTest() {
             PdfAAgnosticPdfDocumentUnitTest.TestAgnosticPdfDocument pdfADoc = new PdfAAgnosticPdfDocumentUnitTest.TestAgnosticPdfDocument

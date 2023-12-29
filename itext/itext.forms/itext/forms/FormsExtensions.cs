@@ -142,5 +142,9 @@ namespace iText.Forms {
         public static bool IsEmpty<T>(this ICollection<T> c) {
             return c.Count == 0;
         }
+
+        public static void Add<T>(this IList<T> list, int index, T elem) {
+            list.Insert(index, elem);
+        }
     }
 }

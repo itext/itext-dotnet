@@ -79,6 +79,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SimpleFontWithPartialToUnicodeTest() {
+            String inFile = sourceFolder + "simpleFontWithPartialToUnicode.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("Registered", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Type0FontToUnicodeTest() {
             String inFile = sourceFolder + "type0FontToUnicode.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
@@ -104,6 +112,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String expected = "\u0943\n\u0938\u0902\u0938\u094d\u0915\u0943\u0924 \u092e\u094d";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
                 NUnit.Framework.Assert.AreEqual(expected, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortOctalDataAsTextTest() {
+            String inFile = sourceFolder + "shortOctalDataAsText.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("EC", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
             }
         }
     }

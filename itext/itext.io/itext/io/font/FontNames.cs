@@ -31,8 +31,11 @@ namespace iText.IO.Font {
         // name, ID = 4
         private String[][] fullName;
 
-        // name, ID = 1 or 16
+        // name, ID = 16 or 1
         private String[][] familyName;
+
+        // name, ID = 1
+        private String[][] familyName2;
 
         // name, ID = 2 or 17
         private String[][] subfamily;
@@ -85,6 +88,16 @@ namespace iText.IO.Font {
 
         public virtual String[][] GetFamilyName() {
             return familyName;
+        }
+
+        /// <summary>Get extra family name if exists.</summary>
+        /// <returns>
+        /// extra family name if exists in the font,
+        /// <see langword="null"/>
+        /// otherwise.
+        /// </returns>
+        public virtual String[][] GetFamilyName2() {
+            return familyName2;
         }
 
         public virtual String GetStyle() {
@@ -181,6 +194,12 @@ namespace iText.IO.Font {
 
         protected internal virtual void SetFamilyName(String[][] familyName) {
             this.familyName = familyName;
+        }
+
+        /// <summary>Set extra family name used for better fonts match.</summary>
+        /// <param name="familyName2">family name to set.</param>
+        protected internal virtual void SetFamilyName2(String[][] familyName2) {
+            this.familyName2 = familyName2;
         }
 
         protected internal virtual void SetFamilyName(String familyName) {

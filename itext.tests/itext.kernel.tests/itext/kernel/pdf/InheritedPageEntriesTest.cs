@@ -42,13 +42,19 @@ namespace iText.Kernel.Pdf {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void AddNewPageToDocumentWithInheritedPageRotationTest() {
             //TODO: update cmp-files when DEVSIX-3635 will be fixed
             String inputFileName = sourceFolder + "srcFileTestRotationInheritance.pdf";
             String outputFileName = destinationFolder + "addNewPageToDocumentWithInheritedPageRotation.pdf";
             String cmpFileName = sourceFolder + "cmp_addNewPageToDocumentWithInheritedPageRotation.pdf";
-            PdfDocument outFile = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(outputFileName));
+            PdfDocument outFile = new PdfDocument(new PdfReader(inputFileName), CompareTool.CreateTestPdfWriter(outputFileName
+                ));
             PdfPage page = outFile.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 16
@@ -62,8 +68,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SetRotationToPageTest() {
             String outputFileName = destinationFolder + "setRotationToPage.pdf";
             String cmpFileName = sourceFolder + "cmp_setRotationToPage.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "srcFileTestRotationInheritance.pdf"), new 
-                PdfWriter(outputFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "srcFileTestRotationInheritance.pdf"), CompareTool
+                .CreateTestPdfWriter(outputFileName));
             PdfPage page = pdfDoc.GetPage(1);
             page.SetRotation(90);
             pdfDoc.Close();
@@ -78,7 +84,7 @@ namespace iText.Kernel.Pdf {
             String cmpFileName = sourceFolder + "cmp_copySeveralPagesToDocumentWithInheritedPageRotation.pdf";
             PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(sourceFolder + "noPagesRotation.pdf"));
             PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(sourceFolder + "addSeveralPagesToDocumentWithInheritedPageRotation.pdf"
-                ), new PdfWriter(outputFileName));
+                ), CompareTool.CreateTestPdfWriter(outputFileName));
             pdfDoc1.CopyPagesTo(1, 2, pdfDoc2);
             pdfDoc1.Close();
             pdfDoc2.Close();

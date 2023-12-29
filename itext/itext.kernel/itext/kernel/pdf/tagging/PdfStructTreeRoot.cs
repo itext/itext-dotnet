@@ -368,6 +368,18 @@ namespace iText.Kernel.Pdf.Tagging {
             return GetParentTreeHandler().FindMcrByMcid(pageDict, mcid);
         }
 
+        public virtual PdfMcr FindMcrByMcid(PdfDocument document, int mcid) {
+            int amountOfPages = document.GetNumberOfPages();
+            for (int i = 1; i <= amountOfPages; ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfMcr mcr = FindMcrByMcid(page.GetPdfObject(), mcid);
+                if (mcr != null) {
+                    return mcr;
+                }
+            }
+            return null;
+        }
+
         public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex) {
             return GetParentTreeHandler().FindObjRefByStructParentIndex(pageDict, structParentIndex);
         }

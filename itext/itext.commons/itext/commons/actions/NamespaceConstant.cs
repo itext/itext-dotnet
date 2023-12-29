@@ -36,6 +36,7 @@ namespace iText.Commons.Actions {
         public const String CORE_LAYOUT = ITEXT + ".Layout";
         public const String CORE_BARCODES = ITEXT + ".Barcodes";
         public const String CORE_PDFA = ITEXT + ".Pdfa";
+        public const String CORE_PDFUA = ITEXT + ".Pdfua";
         public const String CORE_SIGN = ITEXT + ".Signatures";
         public const String CORE_FORMS = ITEXT + ".Forms";
         public const String CORE_SXP = ITEXT + ".StyledXmlParser";
@@ -54,6 +55,7 @@ namespace iText.Commons.Actions {
             NamespaceConstant.CORE_LAYOUT,
             NamespaceConstant.CORE_BARCODES, 
             NamespaceConstant.CORE_PDFA, 
+            NamespaceConstant.CORE_PDFUA, 
             NamespaceConstant.CORE_SIGN, 
             NamespaceConstant.CORE_FORMS, 
             NamespaceConstant.CORE_SXP, 

@@ -104,7 +104,7 @@ namespace iText.Pdfa {
             acroForm.Put(PdfName.XFA, new PdfArray());
             doc.GetCatalog().Put(PdfName.AcroForm, acroForm);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_INTERACTIVE_FORM_DICTIONARY_SHALL_NOT_CONTAIN_THE_XFA_KEY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_INTERACTIVE_FORM_DICTIONARY_SHALL_NOT_CONTAIN_THE_XFA_KEY
                 , e.Message);
         }
 

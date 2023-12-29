@@ -106,6 +106,35 @@ namespace iText.Signatures.Sign {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
+        public virtual void SignPdf2CmsTest() {
+            String srcFile = sourceFolder + "simplePdfA4Document.pdf";
+            String outPdf = destinationFolder + "signPdfCms.pdf";
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => Sign(srcFile, fieldName
+                , outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CMS, "Test 1", "TestCity", rect
+                , false, true, PdfSigner.NOT_CERTIFIED, 12f));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.SIGNATURE_SHALL_CONFORM_TO_ONE_OF_THE_PADES_PROFILE
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2CadesTest() {
+            String srcFile = sourceFolder + "simplePdfA4Document.pdf";
+            String cmpPdf = sourceFolder + "cmp_signPdfCades.pdf";
+            String outPdf = destinationFolder + "signPdfCades.pdf";
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
+                , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_"
+                , GetTestMap(rect)));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";
             String @out = destinationFolder + "signedPdfADocument2.pdf";
@@ -120,12 +149,12 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(x, y, w, h);
             PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity"
-                ).SetLayer2Font(font).SetReuseAppearance(false).SetPageRect(rect);
+            signer.SetPageRect(rect).GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity").SetLayer2Font
+                (font).SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(pks
                 , chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), e.Message);
         }
 
@@ -149,16 +178,16 @@ namespace iText.Signatures.Sign {
             signer.SetCertificationLevel(certificationLevel);
             PdfFont font = PdfFontFactory.CreateFont(FONT, "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
+            signer.SetFieldName(name);
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
                 ).SetLayer2Font(font).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
-                appearance.SetPageRect(rectangleForNewField);
+                signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
                 appearance.SetLayer2FontSize((float)fontSize);
             }
-            signer.SetFieldName(name);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);

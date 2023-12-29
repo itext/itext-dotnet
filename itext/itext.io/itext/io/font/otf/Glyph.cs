@@ -294,7 +294,7 @@ namespace iText.IO.Font.Otf {
         /// </remarks>
         /// <returns>the Unicode char sequence that corresponds to this glyph</returns>
         public virtual char[] GetUnicodeChars() {
-            if (chars != null) {
+            if (chars != null && chars.Length > 0) {
                 return chars;
             }
             else {

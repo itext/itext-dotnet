@@ -27,6 +27,12 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Barcodes {
+    /// <summary>This is a class that is used to implement the logic common to all 2D barcodes.</summary>
+    /// <remarks>
+    /// This is a class that is used to implement the logic common to all 2D barcodes.
+    /// A 2D barcode is a barcode with two dimensions; this means that
+    /// data can be encoded vertically and horizontally.
+    /// </remarks>
     public abstract class Barcode2D {
         protected internal const float DEFAULT_MODULE_SIZE = 1;
 

@@ -157,24 +157,25 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            DeleteMargins();
+            IDictionary<int, Object> margins = DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             PdfString defaultValue = new PdfString(GetDefaultValue());
             // Default html2pdf text area appearance differs from the default one for form fields.
             // That's why we got rid of several properties we set by default during TextArea instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateMultilineText
-                ();
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
+                (GetConformanceLevel(doc)).SetFont(font).CreateMultilineText();
             inputField.DisableFieldRegeneration();
             inputField.SetValue(value);
-            inputField.SetFont(font).SetFontSize(fontSizeValue);
+            inputField.SetFontSize(fontSizeValue);
             inputField.SetDefaultValue(defaultValue);
             ApplyDefaultFieldProperties(inputField);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((TextArea)modelElement);
             inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
             WriteAcroFormFieldLangAttribute(doc);
+            ApplyProperties(margins);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -230,40 +231,9 @@ namespace iText.Forms.Form.Renderer {
         }
 
         private void ApproximateFontSizeToFitMultiLine(LayoutContext layoutContext) {
-            IRenderer flatRenderer = CreateFlatRenderer();
-            flatRenderer.SetParent(this);
-            TextArea modelElement = (TextArea)this.GetModelElement();
-            float lFontSize = AbstractPdfFormField.MIN_FONT_SIZE;
-            float rFontSize = AbstractPdfFormField.DEFAULT_FONT_SIZE;
-            flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(AbstractPdfFormField.DEFAULT_FONT_SIZE
-                ));
-            float? areaWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
-            float? areaHeight = RetrieveHeight();
-            LayoutContext newLayoutContext;
-            if (areaWidth == null || areaHeight == null) {
-                modelElement.SetFontSize(AbstractPdfFormField.DEFAULT_FONT_SIZE);
-                return;
-            }
-            newLayoutContext = new LayoutContext(new LayoutArea(1, new Rectangle((float)areaWidth, (float)areaHeight))
-                );
-            if (flatRenderer.Layout(newLayoutContext).GetStatus() == LayoutResult.FULL) {
-                lFontSize = AbstractPdfFormField.DEFAULT_FONT_SIZE;
-            }
-            else {
-                int numberOfIterations = 6;
-                for (int i = 0; i < numberOfIterations; i++) {
-                    float mFontSize = (lFontSize + rFontSize) / 2;
-                    flatRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(mFontSize));
-                    LayoutResult result = flatRenderer.Layout(newLayoutContext);
-                    if (result.GetStatus() == LayoutResult.FULL) {
-                        lFontSize = mFontSize;
-                    }
-                    else {
-                        rFontSize = mFontSize;
-                    }
-                }
-            }
-            modelElement.SetFontSize(lFontSize);
+            float fontSize = ApproximateFontSize(layoutContext, AbstractPdfFormField.MIN_FONT_SIZE, AbstractPdfFormField
+                .DEFAULT_FONT_SIZE);
+            ((TextArea)modelElement).SetFontSize(fontSize < 0 ? AbstractPdfFormField.DEFAULT_FONT_SIZE : fontSize);
         }
     }
 }

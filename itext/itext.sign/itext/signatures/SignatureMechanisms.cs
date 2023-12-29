@@ -22,6 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Bouncycastleconnector;
+using iText.Commons;
+using iText.Commons.Bouncycastle;
+using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>
@@ -30,6 +35,11 @@ namespace iText.Signatures {
     /// signature mechanism OID given a signature algorithm and a digest function.
     /// </summary>
     public class SignatureMechanisms {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(SignatureMechanisms));
+
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         /// <summary>Maps IDs of signature algorithms with its human-readable name.</summary>
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
@@ -136,36 +146,56 @@ namespace iText.Signatures {
         /// if none was found.
         /// </returns>
         public static String GetSignatureMechanismOid(String signatureAlgorithmName, String digestAlgorithmName) {
+            String resultingOId;
             switch (signatureAlgorithmName) {
                 case "RSA": {
                     String oId = rsaOidsByDigest.Get(digestAlgorithmName);
-                    return oId == null ? SecurityIDs.ID_RSA : oId;
+                    resultingOId = oId == null ? SecurityIDs.ID_RSA : oId;
+                    break;
                 }
 
                 case "DSA": {
-                    return dsaOidsByDigest.Get(digestAlgorithmName);
+                    resultingOId = dsaOidsByDigest.Get(digestAlgorithmName);
+                    break;
                 }
 
                 case "ECDSA": {
-                    return ecdsaOidsByDigest.Get(digestAlgorithmName);
+                    resultingOId = ecdsaOidsByDigest.Get(digestAlgorithmName);
+                    break;
                 }
 
                 case "Ed25519": {
-                    return SecurityIDs.ID_ED25519;
+                    resultingOId = SecurityIDs.ID_ED25519;
+                    break;
                 }
 
                 case "Ed448": {
-                    return SecurityIDs.ID_ED448;
+                    resultingOId = SecurityIDs.ID_ED448;
+                    break;
                 }
 
                 case "RSASSA-PSS":
                 case "RSA/PSS": {
-                    return SecurityIDs.ID_RSASSA_PSS;
+                    resultingOId = SecurityIDs.ID_RSASSA_PSS;
+                    break;
                 }
 
                 default: {
-                    return null;
+                    resultingOId = null;
+                    break;
                 }
+            }
+            if (resultingOId != null) {
+                return resultingOId;
+            }
+            LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+            resultingOId = BOUNCY_CASTLE_FACTORY.GetAlgorithmOid(digestAlgorithmName + "with" + signatureAlgorithmName
+                );
+            if (resultingOId == null) {
+                return BOUNCY_CASTLE_FACTORY.GetAlgorithmOid(signatureAlgorithmName);
+            }
+            else {
+                return resultingOId;
             }
         }
 
@@ -180,6 +210,19 @@ namespace iText.Signatures {
             else {
                 return ret;
             }
+        }
+
+        /// <summary>Get the signing mechanism name for a certain id and digest.</summary>
+        /// <param name="oid">an id of an algorithm</param>
+        /// <param name="digest">digest of an algorithm</param>
+        /// <returns>name of the mechanism</returns>
+        public static String GetMechanism(String oid, String digest) {
+            String algorithm = GetAlgorithm(oid);
+            if (!algorithm.Equals(oid)) {
+                return digest + "with" + algorithm;
+            }
+            LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+            return BOUNCY_CASTLE_FACTORY.GetAlgorithmName(oid);
         }
     }
 }

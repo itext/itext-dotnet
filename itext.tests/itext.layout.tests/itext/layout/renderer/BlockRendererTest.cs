@@ -21,12 +21,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.IO.Font.Constants;
+using iText.IO.Source;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Test;
@@ -89,6 +93,58 @@ namespace iText.Layout.Renderer {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Div div = new Div();
+            div.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN));
+            DivRenderer renderer = (DivRenderer)div.GetRenderer();
+            PdfFont font = renderer.GetResolvedFont(pdfDocument);
+            NUnit.Framework.Assert.AreEqual("Times-Roman", font.GetFontProgram().GetFontNames().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontWithPdfDocumentNullTest() {
+            Div div = new Div();
+            DivRenderer renderer = (DivRenderer)div.GetRenderer();
+            PdfFont font = renderer.GetResolvedFont(null);
+            NUnit.Framework.Assert.IsNull(font);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontFromFontProviderTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Div div = new Div();
+            FontProvider provider = new FontProvider();
+            provider.GetFontSet().AddFont(StandardFonts.COURIER, null, "courier");
+            div.SetProperty(Property.FONT_PROVIDER, provider);
+            div.SetProperty(Property.FONT, new String[] { "courier" });
+            DivRenderer renderer = (DivRenderer)div.GetRenderer();
+            PdfFont font = renderer.GetResolvedFont(pdfDocument);
+            NUnit.Framework.Assert.AreEqual("Courier", font.GetFontProgram().GetFontNames().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontFromFontProviderNullTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Div div = new Div();
+            div.SetProperty(Property.FONT_PROVIDER, null);
+            div.SetProperty(Property.FONT, new String[] { "courier" });
+            DivRenderer renderer = (DivRenderer)div.GetRenderer();
+            PdfFont font = renderer.GetResolvedFont(pdfDocument);
+            NUnit.Framework.Assert.AreEqual("Helvetica", font.GetFontProgram().GetFontNames().GetFontName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFontFromFontProviderNullAndDocNullTest() {
+            Div div = new Div();
+            div.SetProperty(Property.FONT_PROVIDER, null);
+            div.SetProperty(Property.FONT, new String[] { "courier" });
+            DivRenderer renderer = (DivRenderer)div.GetRenderer();
+            PdfFont font = renderer.GetResolvedFont(null);
+            NUnit.Framework.Assert.IsNull(font);
         }
     }
 }

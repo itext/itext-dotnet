@@ -31,6 +31,7 @@ using iText.Forms.Form.Renderer.Checkboximpl;
 using iText.Forms.Logs;
 using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -50,12 +51,12 @@ namespace iText.Forms.Form.Element {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/form/element/CheckBoxTest/";
 
+        private int counter = 0;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
-
-        private int counter = 0;
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
@@ -478,6 +479,28 @@ namespace iText.Forms.Form.Element {
                 checkBox2.SetBorder(new SolidBorder(ColorConstants.YELLOW, 10));
                 checkBox2.SetChecked(true);
                 document.Add(checkBox2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultiPageCheckboxFieldTest() {
+            String outPdf = DESTINATION_FOLDER + "multiPageCheckboxField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_multiPageCheckBoxField.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
+                for (int i = 0; i < 10; i++) {
+                    document.AddNewPage();
+                    Rectangle rect = new Rectangle(210, 490, 150, 22);
+                    PdfFormField inputField = new CheckBoxFormFieldBuilder(document, "fing").SetWidgetRectangle(rect).CreateCheckBox
+                        ();
+                    inputField.SetValue("1");
+                    PdfPage page = document.GetPage(i + 1);
+                    form.AddField(inputField, page);
+                    if (i > 2) {
+                        page.Flush();
+                    }
+                }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

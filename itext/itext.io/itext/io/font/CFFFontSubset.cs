@@ -38,7 +38,6 @@ namespace iText.IO.Font {
     /// A font which was not of CID type is transformed into CID as a part of the subset process.
     /// The CID synthetic creation was written by Sivan Toledo (sivan@math.tau.ac.il)
     /// </remarks>
-    /// <author>Oren Manor (manorore@post.tau.ac.il) and Ygal Blum (blumygal@post.tau.ac.il)</author>
     public class CFFFontSubset : CFFFont {
         /// <summary>The Strings in this array represent Type1/Type2 operator names</summary>
         internal static readonly String[] SubrsFunctions = new String[] { "RESERVED_0", "hstem", "RESERVED_2", "vstem"

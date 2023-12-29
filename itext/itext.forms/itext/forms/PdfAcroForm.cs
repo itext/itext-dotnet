@@ -27,6 +27,7 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Merging;
 using iText.Forms.Logs;
 using iText.Forms.Xfa;
 using iText.Kernel.Exceptions;
@@ -159,15 +160,50 @@ namespace iText.Forms {
         /// <param name="createIfNotExist">
         /// when <c>true</c>, this method will create a
         /// <see cref="PdfAcroForm"/>
-        /// if none exists for this document
+        /// if none exists
+        /// for this document
         /// </param>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDocument">document</see>
         /// 's AcroForm,
-        /// or a new one provided that <c>createIfNotExist</c> parameter is <c>true</c>, otherwise <c>null</c>.
+        /// or a new one provided that <c>createIfNotExist</c> parameter is <c>true</c>, otherwise
+        /// <c>null</c>.
         /// </returns>
         public static iText.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {
+            return GetAcroForm(document, createIfNotExist, new MergeFieldsStrategy());
+        }
+
+        /// <summary>Retrieves AcroForm from the document.</summary>
+        /// <remarks>
+        /// Retrieves AcroForm from the document. If there is no AcroForm in the
+        /// document Catalog and createIfNotExist flag is true then the AcroForm
+        /// dictionary will be created and added to the document.
+        /// </remarks>
+        /// <param name="document">
+        /// the document to retrieve the
+        /// <see cref="PdfAcroForm"/>
+        /// from
+        /// </param>
+        /// <param name="createIfNotExist">
+        /// when <c>true</c>, this method will create a
+        /// <see cref="PdfAcroForm"/>
+        /// if none
+        /// exists for
+        /// this document
+        /// </param>
+        /// <param name="onDuplicateFieldNameStrategy">the strategy to be used when a field with the same name already exists
+        ///     </param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument">document</see>
+        /// 's AcroForm,
+        /// or a new one provided that <c>createIfNotExist</c> parameter is <c>true</c>, otherwise
+        /// <c>null</c>.
+        /// </returns>
+        public static iText.Forms.PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist, OnDuplicateFormFieldNameStrategy
+             onDuplicateFieldNameStrategy) {
+            document.GetDiContainer().Register(typeof(OnDuplicateFormFieldNameStrategy), onDuplicateFieldNameStrategy);
             PdfDictionary acroFormDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
             iText.Forms.PdfAcroForm acroForm = null;
             if (acroFormDictionary == null) {
@@ -252,17 +288,15 @@ namespace iText.Forms {
                 }
             }
             PdfFormFieldMergeUtil.MergeKidsWithSameNames(field, throwExceptionOnError);
-            PdfDictionary fieldDict = field.GetPdfObject();
             // PdfPageFormCopier expects that we replace existed field by a new one in case they have the same names.
-            String fieldName = field.GetFieldName().ToUnicodeString();
-            if (!fields.ContainsKey(fieldName) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames(fields.Get(fieldName
-                ), field, throwExceptionOnError)) {
+            if (NeedToAddToAcroform(field, throwExceptionOnError)) {
                 PdfArray fieldsArray = GetFields();
-                fieldsArray.Add(fieldDict);
+                fieldsArray.Add(field.GetPdfObject());
                 fieldsArray.SetModified();
-                fields.Put(fieldName, field);
+                fields.Put(field.GetFieldName().ToUnicodeString(), field);
             }
-            ProcessKids(fields.Get(fieldName), page);
+            PdfDictionary fieldDict = field.GetPdfObject();
+            ProcessKids(fields.Get(field.GetFieldName().ToUnicodeString()), page);
             if (fieldDict.ContainsKey(PdfName.Subtype) && page != null) {
                 DefineWidgetPageAndAddToIt(page, fieldDict, false);
             }
@@ -1144,7 +1178,7 @@ namespace iText.Forms {
                     String name = formField.GetFieldName().ToUnicodeString();
                     if (formField.IsInReadingMode() || !fields.ContainsKey(name) || !PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames
                         (fields.Get(name), formField, true)) {
-                        fields.Put(name, formField);
+                        fields.Put(formField.GetFieldName().ToUnicodeString(), formField);
                     }
                     else {
                         shouldBeRemoved.Add(field);
@@ -1379,6 +1413,19 @@ namespace iText.Forms {
                 allFields.AddAll(kids);
             }
             return allFields;
+        }
+
+        private bool NeedToAddToAcroform(PdfFormField field, bool throwExceptionOnError) {
+            String fieldNameBeforeMergeCall = field.GetFieldName().ToUnicodeString();
+            if (!fields.ContainsKey(fieldNameBeforeMergeCall)) {
+                return true;
+            }
+            if (!PdfFormFieldMergeUtil.MergeTwoFieldsWithTheSameNames(fields.Get(fieldNameBeforeMergeCall), field, throwExceptionOnError
+                )) {
+                return true;
+            }
+            bool isFieldNameChanged = !fieldNameBeforeMergeCall.Equals(field.GetFieldName().ToUnicodeString());
+            return isFieldNameChanged;
         }
     }
 }

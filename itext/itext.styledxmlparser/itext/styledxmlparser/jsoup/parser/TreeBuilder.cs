@@ -27,7 +27,6 @@ using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
-    /// <author>Jonathan Hedley</author>
     public abstract class TreeBuilder {
         protected internal iText.StyledXmlParser.Jsoup.Parser.Parser parser;
 

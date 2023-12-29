@@ -99,7 +99,7 @@ namespace iText.IO.Font {
             foreach (Object key in p.Keys) {
                 String value = p.GetProperty((String)key);
                 String[] sp = iText.Commons.Utils.StringUtil.Split(value, " ");
-                ICollection<String> hs = new HashSet<String>();
+                ICollection<String> hs = new LinkedHashSet<String>();
                 foreach (String s in sp) {
                     if (s.Length > 0) {
                         hs.Add(s);

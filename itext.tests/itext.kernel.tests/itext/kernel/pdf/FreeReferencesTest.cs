@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -38,6 +39,11 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -491,7 +497,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + src), new PdfWriter(destinationFolder
                  + @out));
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(destinationFolder + @out));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + @out));
             PdfObject contentsObj = pdfDocument.GetPage(1).GetPdfObject().Get(PdfName.Contents);
             NUnit.Framework.Assert.AreEqual(PdfNull.PDF_NULL, contentsObj);
             pdfDocument.Close();
@@ -684,11 +690,11 @@ namespace iText.Kernel.Pdf {
             String src = "freeRefsGapsAndListSpecificOrder.pdf";
             String out1 = "freeRefsXrefStream01_xrefStream.pdf";
             String out2 = "freeRefsXrefStream01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + src), new PdfWriter(destinationFolder
-                 + out1, new WriterProperties().SetFullCompressionMode(true)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + src), CompareTool.CreateTestPdfWriter
+                (destinationFolder + out1, new WriterProperties().SetFullCompressionMode(true)));
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(destinationFolder + out1), new PdfWriter(destinationFolder + out2
-                , new WriterProperties().SetFullCompressionMode(false)));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + out1), new PdfWriter(destinationFolder
+                 + out2, new WriterProperties().SetFullCompressionMode(false)));
             pdfDocument.Close();
             String[] xrefString = ExtractXrefTableAsStrings(out2);
             String[] expected = new String[] { "xref\n" + "0 15\n" + "0000000011 65535 f \n" + "0000000269 00000 n \n"
@@ -842,7 +848,7 @@ namespace iText.Kernel.Pdf {
             String input = sourceFolder + "readingXrefWithLotsOfFreeObj.pdf";
             String output = destinationFolder + "result_readingXrefWithLotsOfFreeObj.pdf";
             //Test for array out of bounds when a pdf contains multiple free references
-            PdfDocument doc = new PdfDocument(new PdfReader(input), new PdfWriter(output));
+            PdfDocument doc = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
             int actualNumberOfObj = doc.GetNumberOfPdfObjects();
             NUnit.Framework.Assert.AreEqual(68, actualNumberOfObj);
             NUnit.Framework.Assert.IsNull(doc.GetPdfObject(7));

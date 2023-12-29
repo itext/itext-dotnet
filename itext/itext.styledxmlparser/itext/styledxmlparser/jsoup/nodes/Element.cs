@@ -39,7 +39,6 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
     /// other elements).
     /// From an Element, you can extract data, traverse the node graph, and manipulate the HTML.
     /// </remarks>
-    /// <author>Jonathan Hedley, jonathan@hedley.net</author>
     public class Element : iText.StyledXmlParser.Jsoup.Nodes.Node {
         private static readonly IList<iText.StyledXmlParser.Jsoup.Nodes.Element> EmptyChildren = JavaCollectionsUtil
             .EmptyList<iText.StyledXmlParser.Jsoup.Nodes.Element>();

@@ -41,10 +41,15 @@ namespace iText.Barcodes {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcodeInter25.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

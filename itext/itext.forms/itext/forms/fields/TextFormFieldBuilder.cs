@@ -63,6 +63,9 @@ namespace iText.Forms.Fields {
                 field = PdfFormCreator.CreateTextFormField(annotation, GetDocument());
                 SetPageToField(field);
             }
+            if (null != GetFont()) {
+                field.SetFont(GetFont());
+            }
             field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();
             field.SetMultiline(multiline);
