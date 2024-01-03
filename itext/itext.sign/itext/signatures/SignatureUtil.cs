@@ -35,9 +35,9 @@ using iText.Signatures.Exceptions;
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil {
-        private PdfDocument document;
+        private readonly PdfDocument document;
 
-        private PdfAcroForm acroForm;
+        private readonly PdfAcroForm acroForm;
 
         private IDictionary<String, int[]> sigNames;
 

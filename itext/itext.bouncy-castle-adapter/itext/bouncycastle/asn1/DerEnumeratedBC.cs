@@ -63,5 +63,14 @@ namespace iText.Bouncycastle.Asn1 {
         public virtual DerEnumerated GetDerEnumerated() {
             return (DerEnumerated)GetEncodable();
         }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual int IntValueExact() {
+            return GetDerEnumerated().IntValueExact;
+        }
     }
 }

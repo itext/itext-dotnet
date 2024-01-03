@@ -22,6 +22,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
@@ -416,6 +417,19 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <returns>created ASN1 Enumerated wrapper</returns>
         IDerEnumerated CreateASN1Enumerated(int i);
+
+        /// <summary>
+        /// Create ASN1 Enumerated wrapper from
+        /// <c>IASN1Encodable</c>
+        /// value.
+        /// </summary>
+        /// <param name="object">
+        /// 
+        /// <c>IASN1Encodable</c>
+        /// to create ASN1 Enumerated wrapper from
+        /// </param>
+        /// <returns>created ASN1 Enumerated wrapper.</returns>
+        IDerEnumerated CreateASN1Enumerated(IAsn1Encodable i);
 
         /// <summary>Create ASN1 Encoding without parameters.</summary>
         /// <returns>created ASN1 Encoding</returns>
@@ -1140,6 +1154,18 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <returns>created X509 Crl wrapper</returns>
         IX509Crl CreateX509Crl(Stream input);
+
+        /// <summary>
+        /// Create collection of the X509 Crl wrappers from
+        /// <see cref="System.IO.Stream"/>.
+        /// </summary>
+        /// <param name="input">
+        ///
+        /// <see cref="System.IO.Stream"/>
+        /// to create X509 Crl wrapper from
+        /// </param>
+        /// <returns>created collection of the X509 Crl wrappers</returns>
+        ICollection<IX509Crl> CreateX509Crls(Stream input);
         
         /// <summary>
         /// Create digest wrapper from

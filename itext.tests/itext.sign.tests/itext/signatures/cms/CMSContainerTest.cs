@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
@@ -30,24 +31,27 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Logs;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Cms {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class CMSContainerTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/cms/CMSContainerTest/";
+
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
-
-        private static readonly byte[] EXPECTEDRESULT_1 = Convert.FromBase64String(CMSTestHelper.EXPECTED_RESULT_CMS_CONTAINER_TEST
-            );
 
         private IX509Certificate[] chain;
 
@@ -87,7 +91,29 @@ namespace iText.Signatures.Cms {
             si.SetSignature(new byte[256]);
             sut.SetSignerInfo(si);
             byte[] serRes = sut.Serialize();
-            NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_1), SerializedAsString(serRes));
+            NUnit.Framework.Assert.AreEqual(SerializedAsString(Convert.FromBase64String(CMSTestHelper.EXPECTED_RESULT_CMS_CONTAINER_TEST
+                )), SerializedAsString(serRes));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSerializationWithRevocationData() {
+            CMSContainer sut = new CMSContainer();
+            sut.AddCertificates((IX509Certificate[])chain);
+            sut.AddCrl(SignTestPortUtil.ParseCrlFromStream(new MemoryStream(testCrlResponse)));
+            sut.AddOcsp(FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1InputStream(File.ReadAllBytes(System.IO.Path.Combine
+                (SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
+            SignerInfo si = new SignerInfo();
+            si.SetSigningCertificate(signCert);
+            si.SetMessageDigest(new byte[256]);
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetSigningCertificateAndAddToSignedAttributes(signCert, SecurityIDs.ID_SHA512);
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SignatureMechanisms.GetSignatureMechanismOid("RSA", DigestAlgorithms
+                .SHA512)));
+            si.SetSignature(new byte[256]);
+            sut.SetSignerInfo(si);
+            byte[] serRes = sut.Serialize();
+            NUnit.Framework.Assert.AreEqual(SerializedAsString(Convert.FromBase64String(CMSTestHelper.CMS_CONTAINER_WITH_OCSP_AND_CRL
+                )), SerializedAsString(serRes));
         }
 
         [NUnit.Framework.Test]
@@ -112,36 +138,55 @@ namespace iText.Signatures.Cms {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestDeserialisation() {
-            byte[] rawData = Convert.FromBase64String(CMSTestHelper.SERIALIZED_B64_CASE1);
+        public virtual void TestDeserialization() {
+            byte[] rawData = Convert.FromBase64String(CMSTestHelper.EXPECTED_RESULT_CMS_CONTAINER_TEST);
             CMSContainer sd = new CMSContainer(rawData);
-            NUnit.Framework.Assert.AreEqual("2.16.840.1.101.3.4.2.1", sd.GetDigestAlgorithm().GetAlgorithmOid());
+            NUnit.Framework.Assert.AreEqual("2.16.840.1.101.3.4.2.3", sd.GetDigestAlgorithm().GetAlgorithmOid());
             NUnit.Framework.Assert.AreEqual("1.2.840.113549.1.7.1", sd.GetEncapContentInfo().GetContentType());
             NUnit.Framework.Assert.AreEqual(3, sd.GetCertificates().Count);
-            NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => "140282000747862710817410059465802198354".Equals
-                (c.GetSerialNumber().ToString())));
-            NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => "151118660848720701053205649823964411794".Equals
-                (c.GetSerialNumber().ToString())));
-            NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => "8380897714609953925".Equals(c.GetSerialNumber
-                ().ToString())));
-            NUnit.Framework.Assert.AreEqual("8380897714609953925", sd.GetSignerInfo().GetSigningCertificate().GetSerialNumber
-                ().ToString());
+            NUnit.Framework.Assert.AreEqual(0, sd.GetCrls().Count);
+            NUnit.Framework.Assert.AreEqual(0, sd.GetOcsps().Count);
+            foreach (IX509Certificate certificate in chain) {
+                NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => certificate.GetSerialNumber().ToString().Equals
+                    (c.GetSerialNumber().ToString())));
+            }
+            NUnit.Framework.Assert.AreEqual(chain[0].GetSerialNumber().ToString(), sd.GetSignerInfo().GetSigningCertificate
+                ().GetSerialNumber().ToString());
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestDeserialisationWithRevocationData() {
-            byte[] rawData = Convert.FromBase64String(CMSTestHelper.SERIALIZED_B64_CASE2);
+        public virtual void TestDeserializationWithRevocationData() {
+            byte[] rawData = Convert.FromBase64String(CMSTestHelper.CMS_CONTAINER_WITH_OCSP_AND_CRL);
             CMSContainer sd = new CMSContainer(rawData);
-            NUnit.Framework.Assert.AreEqual("2.16.840.1.101.3.4.2.1", sd.GetDigestAlgorithm().GetAlgorithmOid());
+            NUnit.Framework.Assert.AreEqual("2.16.840.1.101.3.4.2.3", sd.GetDigestAlgorithm().GetAlgorithmOid());
             NUnit.Framework.Assert.AreEqual("1.2.840.113549.1.7.1", sd.GetEncapContentInfo().GetContentType());
             NUnit.Framework.Assert.AreEqual(3, sd.GetCertificates().Count);
-            NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => "3081".Equals(c.GetSerialNumber().ToString()
-                )));
-            NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => "2776".Equals(c.GetSerialNumber().ToString()
-                )));
-            NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => "1".Equals(c.GetSerialNumber().ToString())));
-            NUnit.Framework.Assert.AreEqual("3081", sd.GetSignerInfo().GetSigningCertificate().GetSerialNumber().ToString
-                ());
+            NUnit.Framework.Assert.AreEqual(1, sd.GetCrls().Count);
+            NUnit.Framework.Assert.AreEqual(1, sd.GetOcsps().Count);
+            foreach (IX509Certificate certificate in chain) {
+                NUnit.Framework.Assert.IsTrue(sd.GetCertificates().Any((c) => certificate.GetSerialNumber().ToString().Equals
+                    (c.GetSerialNumber().ToString())));
+            }
+            NUnit.Framework.Assert.AreEqual(chain[0].GetSerialNumber().ToString(), sd.GetSignerInfo().GetSigningCertificate
+                ().GetSerialNumber().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SignLogMessageConstant.UNABLE_TO_PARSE_REV_INFO)]
+        public virtual void TestDeserializationWithIncorrectRevocationData() {
+            byte[] rawData = Convert.FromBase64String(CMSTestHelper.CMS_CONTAINER_WITH_INCORRECT_REV_INFO);
+            CMSContainer sd = new CMSContainer(rawData);
+            NUnit.Framework.Assert.AreEqual(1, sd.GetCrls().Count);
+            NUnit.Framework.Assert.AreEqual(1, sd.GetOcsps().Count);
+            NUnit.Framework.Assert.AreEqual(1, sd.otherRevocationInfo.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreatePkcs7WithRevocationInfoTest() {
+            PdfPKCS7 pkcs7 = new PdfPKCS7(Convert.FromBase64String(CMSTestHelper.CMS_CONTAINER_WITH_OCSP_AND_CRL), PdfName
+                .Adbe_pkcs7_detached);
+            NUnit.Framework.Assert.AreEqual(1, pkcs7.GetSignedDataCRLs().Count);
+            NUnit.Framework.Assert.AreEqual(1, pkcs7.GetSignedDataOcsps().Count);
         }
 
         [NUnit.Framework.Test]

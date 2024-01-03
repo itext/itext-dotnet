@@ -68,6 +68,10 @@ namespace iText.Signatures {
             Stream url = WebRequest.Create(crlurl).GetResponse().GetResponseStream();
             return ParseCrlFromStream(url);
         }
+        
+        internal static ICollection<IX509Crl> ReadAllCRLs(byte[] crlBytes) {
+            return FACTORY.CreateX509Crls(new MemoryStream(crlBytes));
+        }
 
         internal static byte[] GetExtensionValueByOid(IX509Certificate certificate, String oid) {
             IAsn1OctetString extensionValue = certificate.GetExtensionValue(oid);

@@ -26,5 +26,12 @@ namespace iText.Commons.Bouncycastle.Asn1 {
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
     public interface IDerEnumerated : IAsn1Object {
+        /// <summary>
+        /// Calls actual
+        /// <c>intValueExact()</c>
+        /// method for the wrapped ASN1Enumerated object.
+        /// </summary>
+        /// <returns>integer value of the wrapped ASN1Enumerated object.</returns>
+        int IntValueExact();
     }
 }

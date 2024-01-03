@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using iText.Bouncycastle.Security;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
@@ -375,6 +376,15 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public virtual IDerEnumerated CreateASN1Enumerated(int i) {
             return new DerEnumeratedBCFips(i);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerEnumerated CreateASN1Enumerated(IAsn1Encodable i) {
+            Asn1EncodableBCFips encodable = (Asn1EncodableBCFips) i;
+            if (encodable.GetEncodable() is DerEnumerated) {
+                return new DerEnumeratedBCFips((DerEnumerated) encodable.GetEncodable());
+            }
+            return null;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -947,12 +957,30 @@ namespace iText.Bouncycastlefips {
 
             if (seq.Count > 1 && seq[0] is DerObjectIdentifier) {
                 if (seq[0].Equals(PkcsObjectIdentifiers.SignedData)) {
-                    Asn1Set sCrlData = SignedData.GetInstance(
-                        Asn1Sequence.GetInstance((Asn1TaggedObject) seq[1], true)).CRLs;
-                    return new X509CrlBCFips(new X509Crl(CertificateList.GetInstance(sCrlData[0])));
+                    try {
+                        Asn1Set sCrlData = SignedData.GetInstance(
+                            Asn1Sequence.GetInstance((Asn1TaggedObject)seq[1], true)).CRLs;
+                        return new X509CrlBCFips(new X509Crl(CertificateList.GetInstance(sCrlData[0])));
+                    } catch (Exception e) {
+                        throw new CrlException(e.Message);
+                    }
                 }
             }
             return new X509CrlBCFips(new X509Crl(CertificateList.GetInstance(seq)));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ICollection<IX509Crl> CreateX509Crls(Stream input) {
+            try {
+                ICollection<IX509Crl> crls = new List<IX509Crl>();
+                X509CrlBCFips crl;
+                while ((crl = (X509CrlBCFips)CreateX509Crl(input)).GetX509Crl() != null) {
+                    crls.Add(crl);
+                }
+                return crls;
+            } catch (CrlException e) {
+                throw new CrlExceptionBCFips(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>

@@ -26,6 +26,7 @@ using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
@@ -39,6 +40,26 @@ namespace iText.Signatures.Cms {
     /// </summary>
     public class CMSContainer {
         private static readonly IBouncyCastleFactory BC_FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        /// <summary>Collection to store revocation info other than OCSP and CRL responses, e.g. SCVP Request and Response.
+        ///     </summary>
+        internal readonly ICollection<IAsn1Sequence> otherRevocationInfo = new List<IAsn1Sequence>();
+
+        /// <summary>Optional.</summary>
+        /// <remarks>
+        /// Optional.
+        /// <para />
+        /// It is a collection of CRL revocation status information.
+        /// </remarks>
+        private readonly ICollection<IX509Crl> crls = new List<IX509Crl>();
+
+        /// <summary>Optional.</summary>
+        /// <remarks>
+        /// Optional.
+        /// <para />
+        /// It is a collection of CRL revocation status information.
+        /// </remarks>
+        private readonly ICollection<IBasicOcspResponse> ocsps = new List<IBasicOcspResponse>();
 
         /// <summary>This represents the signed content.</summary>
         /// <remarks>
@@ -80,11 +101,14 @@ namespace iText.Signatures.Cms {
                     IAsn1Sequence lencapContentInfo = BC_FACTORY.CreateASN1Sequence(signedData.GetObjectAt(2));
                     encapContentInfo = new EncapsulatedContentInfo(lencapContentInfo);
                     ProcessCertificates(signedData);
-                    IAsn1Set signerInfosS = BC_FACTORY.CreateASN1Set(signedData.GetObjectAt(4));
-                    if (signerInfosS == null) {
-                        // Most probably revocation data is in place, so read next item.
-                        signerInfosS = BC_FACTORY.CreateASN1Set(signedData.GetObjectAt(5));
+                    int next = 4;
+                    IAsn1TaggedObject taggedObj = BC_FACTORY.CreateASN1TaggedObject(signedData.GetObjectAt(next));
+                    if (taggedObj != null) {
+                        ++next;
+                        CertificateUtil.RetrieveRevocationInfoFromSignedData(taggedObj, this.crls, this.ocsps, this.otherRevocationInfo
+                            );
                     }
+                    IAsn1Set signerInfosS = BC_FACTORY.CreateASN1Set(signedData.GetObjectAt(next));
                     if (signerInfosS.Size() != 1) {
                         throw new PdfException(SignExceptionMessageConstant.CMS_ONLY_ONE_SIGNER_ALLOWED);
                     }
@@ -187,6 +211,30 @@ namespace iText.Signatures.Cms {
             return JavaCollectionsUtil.UnmodifiableCollection(certificates);
         }
 
+        /// <summary>Retrieves a copy of the list of CRLs.</summary>
+        /// <returns>the list of CRL revocation info.</returns>
+        public virtual ICollection<IX509Crl> GetCrls() {
+            return JavaCollectionsUtil.UnmodifiableCollection(crls);
+        }
+
+        /// <summary>Adds a CRL response to the CMS container.</summary>
+        /// <param name="crl">the CRL response to be added.</param>
+        public virtual void AddCrl(IX509Crl crl) {
+            crls.Add(crl);
+        }
+
+        /// <summary>Retrieves a copy of the list of OCSPs.</summary>
+        /// <returns>the list of OCSP revocation info.</returns>
+        public virtual ICollection<IBasicOcspResponse> GetOcsps() {
+            return JavaCollectionsUtil.UnmodifiableCollection(ocsps);
+        }
+
+        /// <summary>Adds an OCSP response to the CMS container.</summary>
+        /// <param name="ocspResponse">the OCSP response to be added.</param>
+        public virtual void AddOcsp(IBasicOcspResponse ocspResponse) {
+            ocsps.Add(ocspResponse);
+        }
+
         /// <summary>Sets the  Signed Attributes of the signer info to this serialized version.</summary>
         /// <remarks>
         /// Sets the  Signed Attributes of the signer info to this serialized version.
@@ -228,9 +276,16 @@ namespace iText.Signatures.Cms {
             parameters ANY
             encapContentInfo EncapsulatedContentInfo SEQUENCE
             eContentType ContentType OBJECT IDENTIFIER (1.2.840.113549.1.7.1 data)
-            CertificateSet [0] (set?)
+            certificates CertificateSet [0] SET
             CertificateChoices SEQUENCE
             tbsCertificate TBSCertificate SEQUENCE
+            crls RevocationInfoChoices [1] SET
+            RevocationInfoChoice CHOICE {
+            crl CertificateList SEQUENCE,
+            other OtherRevocationInfoFormat SEQUENCE
+            otherRevInfoFormat OBJECT IDENTIFIER,
+            otherRevInfo ANY DEFINED BY otherRevInfoFormat (SEQUENCE for OCSP)
+            }
             signerInfos SignerInfos SET
             */
             IAsn1EncodableVector contentInfoV = BC_FACTORY.CreateASN1EncodableVector();
@@ -252,6 +307,11 @@ namespace iText.Signatures.Cms {
                 certificateSetV.Add(BC_FACTORY.CreateASN1Primitive(cert.GetEncoded()));
             }
             singedDataV.Add(BC_FACTORY.CreateDERTaggedObject(false, 0, BC_FACTORY.CreateDERSet(certificateSetV)));
+            IDerSet revInfoChoices = CertificateUtil.CreateRevocationInfoChoices(this.crls, this.ocsps, this.otherRevocationInfo
+                );
+            if (revInfoChoices != null) {
+                singedDataV.Add(BC_FACTORY.CreateDERTaggedObject(false, 1, revInfoChoices));
+            }
             IAsn1EncodableVector signerInfosV = BC_FACTORY.CreateASN1EncodableVector();
             signerInfosV.Add(signerInfo.GetAsDerSequence(forEstimation));
             singedDataV.Add(BC_FACTORY.CreateDERSet(signerInfosV));

@@ -82,6 +82,7 @@ using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Security.Certificates;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using IDigest = iText.Commons.Bouncycastle.Crypto.IDigest;
@@ -366,6 +367,15 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public virtual IDerEnumerated CreateASN1Enumerated(int i) {
             return new DerEnumeratedBC(i);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerEnumerated CreateASN1Enumerated(IAsn1Encodable i) {
+            Asn1EncodableBC encodable = (Asn1EncodableBC) i;
+            if (encodable.GetEncodable() is DerEnumerated) {
+                return new DerEnumeratedBC((DerEnumerated) encodable.GetEncodable());
+            }
+            return null;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -916,6 +926,19 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public IX509Crl CreateX509Crl(Stream input) {
             return new X509CrlBC(new X509CrlParser().ReadCrl(input));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ICollection<IX509Crl> CreateX509Crls(Stream input) {
+            try {
+                ICollection<IX509Crl> crls = new List<IX509Crl>();
+                foreach (X509Crl crl in new X509CrlParser().ReadCrls(input)) {
+                    crls.Add(new X509CrlBC(crl));
+                }
+                return crls;
+            } catch (CrlException e) {
+                throw new CrlExceptionBC(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
