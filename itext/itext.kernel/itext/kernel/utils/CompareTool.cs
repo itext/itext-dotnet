@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -97,9 +97,9 @@ namespace iText.Kernel.Utils {
 
         private const String VERSION_REPLACEMENT = "<version>";
 
-        private const String COPYRIGHT_REGEXP = "\u00a9\\d+-\\d+ iText Group NV";
+        private const String COPYRIGHT_REGEXP = "\u00a9\\d+-\\d+ (?:iText Group NV|Apryse Group NV)";
 
-        private const String COPYRIGHT_REPLACEMENT = "\u00a9<copyright years> iText Group NV";
+        private const String COPYRIGHT_REPLACEMENT = "\u00a9<copyright years> Apryse Group NV";
 
         private const String NEW_LINES = "\\r|\\n";
 

@@ -46,4 +46,10 @@
   <ItemGroup>
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="java" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="java\AppNet.cs" />
+  </ItemGroup>
 </Project>

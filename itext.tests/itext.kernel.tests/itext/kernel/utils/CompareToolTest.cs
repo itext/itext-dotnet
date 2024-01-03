@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -136,7 +136,7 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void DifferentProducerTest() {
-            String expectedMessage = "Document info fail. Expected: \"iText\u00ae <version> \u00a9<copyright years> iText Group NV (iText Software; licensed version)\", actual: \"iText\u00ae <version> \u00a9<copyright years> iText Group NV (AGPL-version)\"";
+            String expectedMessage = "Document info fail. Expected: \"iText\u00ae <version> \u00a9<copyright years> Apryse Group NV (iText Software; licensed version)\", actual: \"iText\u00ae <version> \u00a9<copyright years> Apryse Group NV (AGPL-version)\"";
             String licensed = sourceFolder + "producerLicensed.pdf";
             String agpl = sourceFolder + "producerAGPL.pdf";
             NUnit.Framework.Assert.AreEqual(expectedMessage, new CompareTool().CompareDocumentInfo(agpl, licensed));
@@ -144,8 +144,8 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void VersionReplaceTest() {
-            String initial = "iText® 1.10.10-SNAPSHOT (licensed to iText) ©2000-2018 iText Group NV";
-            String replacedExpected = "iText® <version> (licensed to iText) ©<copyright years> iText Group NV";
+            String initial = "iText® 1.10.10-SNAPSHOT (licensed to iText) ©2000-2018 Apryse Group NV";
+            String replacedExpected = "iText® <version> (licensed to iText) ©<copyright years> Apryse Group NV";
             NUnit.Framework.Assert.AreEqual(replacedExpected, new CompareTool().ConvertProducerLine(initial));
         }
 
@@ -263,7 +263,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T945289912(this);
+            CompareTool compareTool = new _T742176910(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -276,12 +276,12 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        internal class _T945289912 : CompareTool {
+        internal class _T742176910 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T945289912(CompareToolTest _enclosing) {
+            internal _T742176910(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
