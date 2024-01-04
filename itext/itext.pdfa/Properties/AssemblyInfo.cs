@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("iText.Pdfa")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iText Group NV")]
+[assembly: AssemblyCompany("Apryse Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2023 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2024 Apryse Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.pdfa.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -21,6 +21,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("9fc2f0b3-a8d2-46da-8724-72e00e67a8fa")]
 
-[assembly: AssemblyVersion("7.2.5.0")]
-[assembly: AssemblyFileVersion("7.2.5.0")]
-[assembly: AssemblyInformationalVersion("7.2.5")]
+[assembly: AssemblyVersion("7.2.6.0")]
+[assembly: AssemblyFileVersion("7.2.6.0")]
+[assembly: AssemblyInformationalVersion("7.2.6")]

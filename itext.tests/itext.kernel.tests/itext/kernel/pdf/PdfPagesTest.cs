@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -71,6 +71,24 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
             CreateDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HugeNumberOfPagesWithOnePageTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hugeNumberOfPagesWithOnePage.pdf"), new 
+                PdfWriter(new MemoryStream()));
+            PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.AddPage(1, page));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CountDontCorrespondToRealTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "countDontCorrespondToReal.pdf"), new PdfWriter
+                (new MemoryStream()));
+            PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.AddPage(1, page));
+            // we don't expect that Count will be different from real number of pages
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDoc.Close());
         }
 
         [NUnit.Framework.Test]

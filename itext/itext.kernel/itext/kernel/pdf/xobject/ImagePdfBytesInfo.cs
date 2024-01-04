@@ -1,7 +1,7 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 iText Group NV
-Authors: iText Software.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf.Xobject {
     internal class ImagePdfBytesInfo {
         private static readonly String TIFFTAG_SOFTWARE_VALUE = "iText\u00ae " + ITextCoreProductData.GetInstance(
             ).GetVersion() + " \u00a9" + ITextCoreProductData.GetInstance().GetSinceCopyrightYear() + "-" + ITextCoreProductData
-            .GetInstance().GetToCopyrightYear() + " iText Group NV";
+            .GetInstance().GetToCopyrightYear() + " Apryse Group NV";
 
         private readonly int bpc;
 

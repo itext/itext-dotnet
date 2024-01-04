@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("iText.Barcodes.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iText Group NV")]
+[assembly: AssemblyCompany("Apryse Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2023 iText Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2024 Apryse Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -14,9 +14,9 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("d015a3aa-613c-45d9-b908-7d47c4b613af")]
 
-[assembly: AssemblyVersion("7.2.5.0")]
-[assembly: AssemblyFileVersion("7.2.5.0")]
-[assembly: AssemblyInformationalVersion("7.2.5")]
+[assembly: AssemblyVersion("7.2.6.0")]
+[assembly: AssemblyFileVersion("7.2.6.0")]
+[assembly: AssemblyInformationalVersion("7.2.6")]
 
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(300000)]
