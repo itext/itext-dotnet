@@ -55,6 +55,9 @@ namespace iText.Signatures.Exceptions {
 
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
+        public const String DIGEST_ALGORITHMS_ARE_NOT_SAME = "Digest algorithm used in the provided " + "IExternalSignature shall be the same as digest algorithm in the provided CMSContainer. "
+             + "Digest algorithm in CMS container: \"{0}\". Digest algorithm in IExternalSignature: \"{1}\"";
+
         public const String DOCUMENT_ALREADY_PRE_CLOSED = "Document has been already pre closed.";
 
         public const String DOCUMENT_MUST_BE_PRE_CLOSED = "Document must be preClosed.";
@@ -111,6 +114,8 @@ namespace iText.Signatures.Exceptions {
             "token: {1}.";
 
         public const String TOO_BIG_KEY = "The key is too big.";
+
+        public const String TSA_CLIENT_IS_MISSING = "ITSAClient must be present to rich this PAdES level. " + "Please use setTSAClient method to provide it.";
 
         public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
 

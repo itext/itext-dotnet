@@ -141,13 +141,6 @@ namespace iText.Signatures.Cms {
         /// <param name="certificate">the certificate that is used to sign</param>
         public virtual void SetSigningCertificate(IX509Certificate certificate) {
             this.signerCertificate = certificate;
-            if (certificate.GetSigAlgParams() != null) {
-                this.signingAlgorithm = new AlgorithmIdentifier(certificate.GetSigAlgOID(), BC_FACTORY.CreateASN1Primitive
-                    (certificate.GetSigAlgParams()));
-            }
-            else {
-                this.signingAlgorithm = new AlgorithmIdentifier(certificate.GetSigAlgOID());
-            }
         }
 
         /// <summary>Gets the certificate that is used to sign.</summary>
@@ -185,7 +178,7 @@ namespace iText.Signatures.Cms {
             SetRevocationInfo();
         }
 
-        /// <summary>Adds the signer certificate to the signed attributes as a issuerAndSerialNumber structure.</summary>
+        /// <summary>Adds the signer certificate to the signed attributes as a SigningCertificateV2 structure.</summary>
         /// <param name="cert">the certificate to add</param>
         /// <param name="digestAlgorithmOid">the digest algorithm oid that will be used</param>
         public virtual void AddSignerCertificateToSignedAttributes(IX509Certificate cert, String digestAlgorithmOid
@@ -203,11 +196,13 @@ namespace iText.Signatures.Cms {
             }
             byte[] dig = md.Digest(cert.GetEncoded());
             certContents.Add(BC_FACTORY.CreateDEROctetString(dig));
-            IAsn1Sequence issuer = BC_FACTORY.CreateASN1Sequence(CertificateInfo.GetIssuer(cert.GetTbsCertificate()));
-            IDerTaggedObject issuerTagged = BC_FACTORY.CreateDERTaggedObject(true, 4, issuer);
+            IAsn1Sequence issuerName = BC_FACTORY.CreateASN1Sequence(CertificateInfo.GetIssuer(cert.GetTbsCertificate(
+                )));
+            IDerTaggedObject issuerTagged = BC_FACTORY.CreateDERTaggedObject(true, 4, issuerName);
+            IDerSequence issuer = BC_FACTORY.CreateDERSequence(issuerTagged);
             IDerInteger serial = BC_FACTORY.CreateASN1Integer(cert.GetSerialNumber());
             IAsn1EncodableVector v = BC_FACTORY.CreateASN1EncodableVector();
-            v.Add(issuerTagged);
+            v.Add(issuer);
             v.Add(serial);
             IDerSequence issuerS = BC_FACTORY.CreateDERSequence(v);
             certContents.Add(issuerS);
@@ -255,7 +250,7 @@ namespace iText.Signatures.Cms {
         /// Attributes that should be part of the signed content
         /// optional, but it MUST be present if the content type of
         /// the EncapsulatedContentInfo value being signed is not id-data.
-        /// In that case it must at least contain it MUSTthe following two attributes:
+        /// In that case it must at least contain the following two attributes:
         /// <para />
         /// A content-type attribute having as its value the content type
         /// of the EncapsulatedContentInfo value being signed.  Section
@@ -376,12 +371,12 @@ namespace iText.Signatures.Cms {
             issuerAndSerialNumberV.Add(CertificateInfo.GetIssuer(signerCertificate.GetTbsCertificate()));
             issuerAndSerialNumberV.Add(BC_FACTORY.CreateASN1Integer(signerCertificate.GetSerialNumber()));
             signerInfoV.Add(BC_FACTORY.CreateDERSequence(issuerAndSerialNumberV));
-            // digestalgorithm
+            // digest algorithm
             IAsn1EncodableVector digestalgorithmV = BC_FACTORY.CreateASN1EncodableVector();
             digestalgorithmV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(this.digestAlgorithm.GetAlgorithmOid()));
             digestalgorithmV.Add(digestAlgorithm.GetParameters());
             signerInfoV.Add(BC_FACTORY.CreateDERSequence(digestalgorithmV));
-            // signedattributes
+            // signed attributes
             if (!signedAttributes.IsEmpty() || signedAttributesReadOnly) {
                 if (estimationRun || !signedAttributesReadOnly) {
                     signerInfoV.Add(BC_FACTORY.CreateDERTaggedObject(false, 0, GetAttributesAsDERSet(signedAttributes)));
@@ -398,10 +393,12 @@ namespace iText.Signatures.Cms {
                 }
             }
             // signatureAlgorithm
-            IAsn1EncodableVector signatureAlgorithmV = BC_FACTORY.CreateASN1EncodableVector();
-            signatureAlgorithmV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(signingAlgorithm.GetAlgorithmOid()));
-            signatureAlgorithmV.Add(signingAlgorithm.GetParameters());
-            signerInfoV.Add(BC_FACTORY.CreateDERSequence(signatureAlgorithmV));
+            if (signingAlgorithm != null) {
+                IAsn1EncodableVector signatureAlgorithmV = BC_FACTORY.CreateASN1EncodableVector();
+                signatureAlgorithmV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(signingAlgorithm.GetAlgorithmOid()));
+                signatureAlgorithmV.Add(signingAlgorithm.GetParameters());
+                signerInfoV.Add(BC_FACTORY.CreateDERSequence(signatureAlgorithmV));
+            }
             // signatureValue
             byte[] workingSignatureData;
             if (signatureData == null) {

@@ -38,6 +38,7 @@ namespace iText.Bouncycastlefips.Crypto {
         private readonly System.Security.Cryptography.MD5 md5 = null;
         private MemoryStream stream = new MemoryStream();
         private string algorithmName;
+        private int digestLength;
         private long pos = 0;
 
         /// <summary>
@@ -62,10 +63,12 @@ namespace iText.Bouncycastlefips.Crypto {
             if ("MD5".Equals(hashAlgorithm)) {
                 md5 = System.Security.Cryptography.MD5.Create();
                 algorithmName = "MD5";
+                digestLength = 16;
             } else {
                 FipsShs.Parameters parameters = GetMessageDigestParams(hashAlgorithm);
                 IDigestFactory<FipsShs.Parameters> factory = CryptoServicesRegistrar.CreateService(parameters);
                 algorithmName = factory.AlgorithmDetails.Algorithm.Name;
+                digestLength = factory.DigestLength;
                 iDigest = factory.CreateCalculator();
             }
         }
@@ -105,6 +108,11 @@ namespace iText.Bouncycastlefips.Crypto {
                 return md5.ComputeHash(stream);
             }
             return iDigest.GetResult().Collect();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetDigestLength() {
+            return digestLength;
         }
 
         /// <summary><inheritDoc/></summary>

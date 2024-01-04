@@ -82,6 +82,8 @@ namespace iText.Signatures.Cms {
             si.SetCrlResponses(JavaCollectionsUtil.SingletonList(testCrlResponse));
             si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, SecurityIDs.ID_SHA512);
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SignatureMechanisms.GetSignatureMechanismOid("RSA", DigestAlgorithms
+                .SHA512)));
             si.SetSignature(new byte[256]);
             sut.SetSignerInfo(si);
             byte[] serRes = sut.Serialize();
@@ -101,10 +103,12 @@ namespace iText.Signatures.Cms {
             si.SetCrlResponses(JavaCollectionsUtil.SingletonList(testCrlResponse));
             si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, SecurityIDs.ID_SHA512);
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SignatureMechanisms.GetSignatureMechanismOid("RSA", DigestAlgorithms
+                .SHA512)));
             si.SetSignature(new byte[256]);
             sut.SetSignerInfo(si);
             long size = sut.GetSizeEstimation();
-            NUnit.Framework.Assert.AreEqual(4825, size);
+            NUnit.Framework.Assert.AreEqual(4827, size);
         }
 
         [NUnit.Framework.Test]

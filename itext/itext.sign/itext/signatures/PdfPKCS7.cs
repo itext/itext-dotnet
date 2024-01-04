@@ -1027,7 +1027,7 @@ namespace iText.Signatures {
                     v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2));
                     IAsn1EncodableVector aaV2 = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
-                    if (!digestAlgorithmOid.Equals(SecurityIDs.ID_SHA256)) {
+                    if (!SecurityIDs.ID_SHA256.Equals(digestAlgorithmOid)) {
                         IAlgorithmIdentifier algoId = BOUNCY_CASTLE_FACTORY.CreateAlgorithmIdentifier(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
                             (digestAlgorithmOid));
                         aaV2.Add(algoId);

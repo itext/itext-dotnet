@@ -47,6 +47,12 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// byte array.
         /// </returns>
         byte[] Digest();
+
+        /// <summary>
+        /// Gets byte length of wrapped digest algorithm.
+        /// </summary>
+        /// <returns>digest length</returns>
+        int GetDigestLength();
         
         /// <summary>
         /// Calls actual

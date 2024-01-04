@@ -226,7 +226,7 @@ namespace iText.Signatures.Cms {
             si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
             si.SetSignature(new byte[512]);
             long res = si.GetEstimatedSize();
-            NUnit.Framework.Assert.AreEqual(1975, res);
+            NUnit.Framework.Assert.AreEqual(1977, res);
         }
 
         [NUnit.Framework.Test]
@@ -259,7 +259,7 @@ namespace iText.Signatures.Cms {
             si.SetMessageDigest(new byte[1024]);
             si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
             long res = si.GetEstimatedSize();
-            NUnit.Framework.Assert.AreEqual(2487, res);
+            NUnit.Framework.Assert.AreEqual(2489, res);
         }
 
         [NUnit.Framework.Test]

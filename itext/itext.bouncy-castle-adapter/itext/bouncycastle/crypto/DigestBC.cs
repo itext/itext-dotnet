@@ -74,6 +74,11 @@ namespace iText.Bouncycastle.Crypto {
         }
 
         /// <summary><inheritDoc/></summary>
+        public int GetDigestLength() {
+            return iDigest.GetByteLength();
+        }
+
+        /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf) {
             Update(buf, 0, buf.Length);
         }
