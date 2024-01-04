@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -112,7 +112,7 @@ namespace iText.Signatures.Cms {
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.SetOcspResponses(fakeOcspREsponses
                 ));
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.SetMessageDigest(new byte[1024]));
-            Attribute attribute = new Attribute("", FACTORY.CreateASN1Integer(1));
+            CmsAttribute attribute = new CmsAttribute("", FACTORY.CreateASN1Integer(1));
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.AddSignedAttribute(attribute));
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.AddSignerCertificateToSignedAttributes
                 (signCert, SecurityIDs.ID_SHA512));
@@ -161,7 +161,7 @@ namespace iText.Signatures.Cms {
             SignerInfo si = new SignerInfo();
             NUnit.Framework.Assert.IsFalse(si.GetSignedAttributes().Any((a) => Object.Equals(a.GetType(), SecurityIDs.
                 ID_SIGNING_TIME)));
-            Attribute attrib = new Attribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateNullASN1Set());
+            CmsAttribute attrib = new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateNullASN1Set());
             si.AddSignedAttribute(attrib);
             NUnit.Framework.Assert.IsTrue(si.GetSignedAttributes().Any((a) => Object.Equals(a.GetType(), SecurityIDs.ID_SIGNING_TIME
                 )));
@@ -170,10 +170,10 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestAddUnsignedAttribute() {
             SignerInfo si = new SignerInfo();
-            Attribute attrib = new Attribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateNullASN1Set());
+            CmsAttribute attrib = new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateNullASN1Set());
             si.AddUnSignedAttribute(attrib);
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_SIGNING_TIME, SignTestPortUtil.GetFirstElement<Attribute>(si
-                .GetUnSignedAttributes()).GetType());
+            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_SIGNING_TIME, SignTestPortUtil.GetFirstElement<CmsAttribute
+                >(si.GetUnSignedAttributes()).GetType());
         }
 
         [NUnit.Framework.Test]
@@ -202,7 +202,7 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestGetAsDerSequence() {
             SignerInfo si = new SignerInfo();
-            si.AddUnSignedAttribute(new Attribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
+            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
                 (123456))));
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
@@ -218,7 +218,7 @@ namespace iText.Signatures.Cms {
         public virtual void TestEstimatedSizeWithSignature() {
             SignerInfo si = new SignerInfo();
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSA_WITH_SHA256));
-            si.AddUnSignedAttribute(new Attribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
+            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
                 (123456))));
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
@@ -241,7 +241,7 @@ namespace iText.Signatures.Cms {
             SignerInfo si2 = new SignerInfo();
             si2.SetSerializedSignedAttributes(serialized);
             NUnit.Framework.Assert.AreEqual(si.GetSignedAttributes().Count, si2.GetSignedAttributes().Count);
-            foreach (Attribute attribute in si.GetSignedAttributes()) {
+            foreach (CmsAttribute attribute in si.GetSignedAttributes()) {
                 NUnit.Framework.Assert.IsTrue(si2.GetSignedAttributes().Any((a) => a.GetType().Equals(attribute.GetType())
                      && a.GetValue().Equals(attribute.GetValue())), MessageFormatUtil.Format("Expected to find an attribute with id {0} and value {1}"
                     , attribute.GetType(), attribute.GetValue().ToString()));
@@ -252,7 +252,7 @@ namespace iText.Signatures.Cms {
         public virtual void TestEstimatedSizeEstimatedSignature() {
             SignerInfo si = new SignerInfo();
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSA_WITH_SHA256));
-            si.AddUnSignedAttribute(new Attribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
+            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
                 (123456))));
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
@@ -266,7 +266,7 @@ namespace iText.Signatures.Cms {
         public virtual void TestSerializeAndDeserializeSignerInfo() {
             SignerInfo si = new SignerInfo();
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSA_WITH_SHA256));
-            si.AddUnSignedAttribute(new Attribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
+            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
                 (123456))));
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");

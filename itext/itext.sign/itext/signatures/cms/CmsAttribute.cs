@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,7 +25,7 @@ using iText.Commons.Bouncycastle.Asn1;
 
 namespace iText.Signatures.Cms {
     /// <summary>This class represents Attribute structure.</summary>
-    public class Attribute {
+    public class CmsAttribute {
         private readonly String type;
 
         private readonly IAsn1Object value;
@@ -33,7 +33,7 @@ namespace iText.Signatures.Cms {
         /// <summary>Creates an attribute.</summary>
         /// <param name="type">the type of the attribute</param>
         /// <param name="value">the value</param>
-        public Attribute(String type, IAsn1Object value) {
+        public CmsAttribute(String type, IAsn1Object value) {
             this.type = type;
             this.value = value;
         }
