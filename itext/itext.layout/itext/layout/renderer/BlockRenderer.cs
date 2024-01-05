@@ -589,7 +589,7 @@ namespace iText.Layout.Renderer {
             AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutStatus);
             overflowRenderer.childRenderers.AddAll(waitingOverflowFloatRenderers);
             if (childResult.GetOverflowRenderer() != null) {
-                overflowRenderer.childRenderers.Add(childResult.GetOverflowRenderer());
+                overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
             }
             overflowRenderer.childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
             ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
@@ -868,7 +868,7 @@ namespace iText.Layout.Renderer {
                     if (keepTogether) {
                         splitRenderer = null;
                         overflowRenderer.childRenderers.Clear();
-                        overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
+                        overflowRenderer.AddAllChildRenderers(childRenderers);
                     }
                     CorrectFixedLayout(layoutBox);
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);

@@ -2854,7 +2854,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void BigRowSpanTooFarNothingTest() {
             String filename = "bigRowSpanTooFarNothingTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));

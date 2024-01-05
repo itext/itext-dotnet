@@ -232,13 +232,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void KeepTogetherLargeParagraphOrphans() {
             RunKeepTogether("keepTogetherLargeParagraphOrphans", true, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void KeepTogetherLargeParagraphWidows() {
             RunKeepTogether("keepTogetherLargeParagraphWidows", false, true);
         }

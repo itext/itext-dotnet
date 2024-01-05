@@ -42,10 +42,10 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class KeepTogetherTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/KeepTogetherTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/KeepTogetherTest/";
 
         private const String BIG_TEXT = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n" + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,\n"
@@ -61,13 +61,13 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherParagraphTest01() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest01.pdf";
-            String outFile = destinationFolder + "keepTogetherParagraphTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherParagraphTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherParagraphTest01.pdf";
             PdfWriter writer = new PdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
@@ -79,7 +79,7 @@ namespace iText.Layout {
             p1.SetKeepTogether(true);
             doc.Add(p1);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -100,8 +100,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherParagraphTest02() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest02.pdf";
-            String outFile = destinationFolder + "keepTogetherParagraphTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherParagraphTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherParagraphTest02.pdf";
             PdfWriter writer = new PdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
@@ -116,14 +116,14 @@ namespace iText.Layout {
             p1.SetKeepTogether(true);
             doc.Add(p1);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherListTest01() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherListTest01.pdf";
-            String outFile = destinationFolder + "keepTogetherListTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherListTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherListTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             for (int i = 0; i < 28; i++) {
@@ -134,14 +134,14 @@ namespace iText.Layout {
                 .DECIMAL);
             doc.Add(list);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherDivTest01() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest01.pdf";
-            String outFile = destinationFolder + "keepTogetherDivTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDivTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherDivTest01.pdf";
             PdfWriter writer = new PdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
@@ -156,14 +156,14 @@ namespace iText.Layout {
             div.SetKeepTogether(true);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherMinHeightTest() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherMinHeightTest.pdf";
-            String outFile = destinationFolder + "keepTogetherMinHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherMinHeightTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherMinHeightTest.pdf";
             PdfWriter writer = new PdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
@@ -178,15 +178,15 @@ namespace iText.Layout {
             div.Add(new Paragraph("Hello"));
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherDivTest02() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest02.pdf";
-            String outFile = destinationFolder + "keepTogetherDivTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDivTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherDivTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             Rectangle[] columns = new Rectangle[] { new Rectangle(100, 100, 100, 500), new Rectangle(400, 100, 100, 500
@@ -200,14 +200,14 @@ namespace iText.Layout {
             div.SetKeepTogether(true);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherDivWithInnerClearDiv() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherDivWithInnerClearDiv.pdf";
-            String outFile = destinationFolder + "keepTogetherDivWithInnerClearDiv.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDivWithInnerClearDiv.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherDivWithInnerClearDiv.pdf";
             using (PdfWriter pdfWriter = new PdfWriter(outFile)) {
                 using (PdfDocument pdfDoc = new PdfDocument(pdfWriter)) {
                     using (Document doc = new Document(pdfDoc)) {
@@ -250,15 +250,15 @@ namespace iText.Layout {
                     }
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherDefaultTest01() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherDefaultTest01.pdf";
-            String outFile = destinationFolder + "keepTogetherDefaultTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDefaultTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherDefaultTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             Div div = new KeepTogetherTest.KeepTogetherDiv();
@@ -268,15 +268,15 @@ namespace iText.Layout {
             }
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1837: NPE")]
         public virtual void KeepTogetherInlineDiv01() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherInlineDiv01.pdf";
-            String outFile = destinationFolder + "keepTogetherInlineDiv01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherInlineDiv01.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherInlineDiv01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
@@ -287,15 +287,15 @@ namespace iText.Layout {
             div.SetKeepTogether(true);
             doc.Add(new Paragraph().Add(div));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherInlineDiv02() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherInlineDiv02.pdf";
-            String outFile = destinationFolder + "keepTogetherInlineDiv02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherInlineDiv02.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherInlineDiv02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
@@ -308,7 +308,7 @@ namespace iText.Layout {
             div.SetKeepTogether(true);
             doc.Add(new Paragraph().Add(div));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -316,8 +316,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 8)]
         public virtual void NarrowPageTest01() {
             String testName = "narrowPageTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table tbl = new Table(UnitValue.CreatePointArray(new float[] { 30.0F, 30.0F, 30.0F, 30.0F }));
@@ -336,7 +336,7 @@ namespace iText.Layout {
             }
             doc.Add(tbl);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -344,8 +344,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void NarrowPageTest02() {
             String testName = "narrowPageTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new KeepTogetherTest.SpecialOddPagesDocumentRenderer(doc, new PageSize(102.0F, 132.0F)));
@@ -368,15 +368,15 @@ namespace iText.Layout {
             div.SetHeight(30);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NarrowPageTest02A() {
             String testName = "narrowPageTest02A.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new KeepTogetherTest.SpecialOddPagesDocumentRenderer(doc, new PageSize(102.0F, 102.0F)));
@@ -397,16 +397,16 @@ namespace iText.Layout {
             p.SetHeight(30);
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void UpdateHeightTest01() {
             String testName = "updateHeightTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetDefaultPageSize(new PageSize(102.0F, 102.0F));
             Document doc = new Document(pdfDoc);
@@ -419,7 +419,7 @@ namespace iText.Layout {
             doc.Add(new Paragraph("a"));
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -429,8 +429,8 @@ namespace iText.Layout {
         public virtual void PartialTest01() {
             //TODO DEVSIX-1977
             String testName = "partialTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetDefaultPageSize(PageSize.A7);
             Document doc = new Document(pdfDoc);
@@ -443,15 +443,15 @@ namespace iText.Layout {
             }
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FixedHeightOverflowTest01() {
-            String cmpFileName = sourceFolder + "cmp_fixedHeightOverflowTest01.pdf";
-            String outFile = destinationFolder + "fixedHeightOverflowTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_fixedHeightOverflowTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "fixedHeightOverflowTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
@@ -462,15 +462,15 @@ namespace iText.Layout {
             div.SetKeepTogether(true);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void MarginCollapseKeptTogetherDivGoesBackTest01() {
-            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherDivGoesBackTest01.pdf";
-            String outFile = destinationFolder + "marginCollapseKeptTogetherDivGoesBackTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherDivGoesBackTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherDivGoesBackTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -482,7 +482,7 @@ namespace iText.Layout {
             div2.SetKeepTogether(true);
             doc.Add(div2);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -490,8 +490,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void MarginCollapseKeptTogetherDivGoesBackTest02() {
             // TODO DEVSIX-3995 The margin between the divs occupies 100 points instead of 300. After a fix the cmp should be updated
-            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherDivGoesBackTest02.pdf";
-            String outFile = destinationFolder + "marginCollapseKeptTogetherDivGoesBackTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherDivGoesBackTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherDivGoesBackTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -503,15 +503,15 @@ namespace iText.Layout {
             div2.SetKeepTogether(true);
             doc.Add(div2);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherNotEmptyPageTest() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherNotEmptyPageTest.pdf";
-            String outFile = destinationFolder + "keepTogetherNotEmptyPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherNotEmptyPageTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherNotEmptyPageTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -526,15 +526,15 @@ namespace iText.Layout {
             innerDiv.SetKeepTogether(true);
             doc.Add(innerDiv);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherOnFirstInnerElementNotEmptyPageTest() {
-            String cmpFileName = sourceFolder + "cmp_keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
-            String outFile = destinationFolder + "keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // Make page not empty to trigger KEEP_TOGETHER actual processing
@@ -551,14 +551,14 @@ namespace iText.Layout {
             outerDiv.Add(new Div().SetHeight(200).SetBackgroundColor(ColorConstants.BLUE));
             doc.Add(outerDiv);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest01() {
-            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
-            String outFile = destinationFolder + "marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -570,14 +570,14 @@ namespace iText.Layout {
             div2.SetKeepTogether(true);
             doc.Add(div2);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest02() {
-            String cmpFileName = sourceFolder + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
-            String outFile = destinationFolder + "marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -589,7 +589,7 @@ namespace iText.Layout {
             div2.SetKeepTogether(true);
             doc.Add(div2);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -597,8 +597,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherOnSecondInnerElementNotEmptyPageTest() {
             // TODO DEVSIX-4023 cmp should be updated
-            String cmpFileName = sourceFolder + "cmp_keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
-            String outFile = destinationFolder + "keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // Make page not empty to trigger KEEP_TOGETHER actual processing
@@ -615,30 +615,30 @@ namespace iText.Layout {
             outerDiv.Add(innerDiv);
             doc.Add(outerDiv);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherDivTest01() {
-            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherDivTest01.pdf";
-            String outFile = destinationFolder + "smallFloatInsideKeptTogetherDivTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherDivTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherDivTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // specifying height definitely bigger than page height
             int divHeight = 1000;
             doc.Add(CreateKeptTogetherDivWithSmallFloat(divHeight));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherDivTest02() {
-            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherDivTest02.pdf";
-            String outFile = destinationFolder + "smallFloatInsideKeptTogetherDivTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherDivTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherDivTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
@@ -647,30 +647,30 @@ namespace iText.Layout {
             int divHeight = 1000;
             doc.Add(CreateKeptTogetherDivWithSmallFloat(divHeight));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherParagraphTest01() {
-            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherParagraphTest01.pdf";
-            String outFile = destinationFolder + "smallFloatInsideKeptTogetherParagraphTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherParagraphTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherParagraphTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // specifying height definitely bigger than page height
             int paragraphHeight = 1000;
             doc.Add(CreateKeptTogetherParagraphWithSmallFloat(paragraphHeight));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherParagraphTest02() {
-            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherParagraphTest02.pdf";
-            String outFile = destinationFolder + "smallFloatInsideKeptTogetherParagraphTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherParagraphTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherParagraphTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
@@ -679,7 +679,7 @@ namespace iText.Layout {
             int paragraphHeight = 1000;
             doc.Add(CreateKeptTogetherParagraphWithSmallFloat(paragraphHeight));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -687,8 +687,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherOnInnerElementTestEmptyPageTest() {
             // TODO DEVSIX-4023 cmp should be updated
-            String cmpFileName = sourceFolder + "cmp_keepTogetherOnInnerElementTestEmptyPageTest.pdf";
-            String outFile = destinationFolder + "keepTogetherOnInnerElementTestEmptyPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnInnerElementTestEmptyPageTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherOnInnerElementTestEmptyPageTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -698,7 +698,7 @@ namespace iText.Layout {
             float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
             AddDivs(doc, innerDivHeight, new Style(), new Style(), first);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -706,8 +706,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherOnInnerElementMargin01EmptyPageTest() {
             // TODO DEVSIX-4023 cmp should be updated
-            String cmpFileName = sourceFolder + "cmp_keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
-            String outFile = destinationFolder + "keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -719,7 +719,7 @@ namespace iText.Layout {
             float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
             AddDivs(doc, innerDivHeight, inner, predefined, first);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -727,8 +727,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherOnInnerElementMargin02EmptyPageTest() {
             // TODO DEVSIX-4023 cmp should be updated
-            String cmpFileName = sourceFolder + "cmp_keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
-            String outFile = destinationFolder + "keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
+            String outFile = DESTINATION_FOLDER + "keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -740,30 +740,30 @@ namespace iText.Layout {
             float innerDivHeight = pdfDoc.GetDefaultPageSize().GetHeight() + 200;
             AddDivs(doc, innerDivHeight, inner, predefined, first);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherTableTest01() {
-            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherTableTest01.pdf";
-            String outFile = destinationFolder + "smallFloatInsideKeptTogetherTableTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherTableTest01.pdf";
+            String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherTableTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // specifying num of rows which will definitely occupy more space than page height
             int numOfRows = 20;
             doc.Add(CreateKeptTogetherTableWithSmallFloat(numOfRows));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SmallFloatInsideKeptTogetherTableTest02() {
-            String cmpFileName = sourceFolder + "cmp_smallFloatInsideKeptTogetherTableTest02.pdf";
-            String outFile = destinationFolder + "smallFloatInsideKeptTogetherTableTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherTableTest02.pdf";
+            String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherTableTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
@@ -772,7 +772,7 @@ namespace iText.Layout {
             int numOfRows = 20;
             doc.Add(CreateKeptTogetherTableWithSmallFloat(numOfRows));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
                 "diff"));
         }
 
@@ -780,8 +780,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherTreeWithParentNotFitOnDocumentTest() {
             String filename = "keepTogetherTreeWithParentNotFitOnDocument.pdf";
-            String outFile = destinationFolder + filename;
-            String cmpFileName = sourceFolder + "cmp_" + filename;
+            String outFile = DESTINATION_FOLDER + filename;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
             using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div();
@@ -796,15 +796,16 @@ namespace iText.Layout {
                 CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
                 doc.Add(main);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherSubTreeWithParentNotFitOnDocumentTest() {
             String filename = "keepTogetherSubTreeWithParentNotFitOnDocument.pdf";
-            String outFile = destinationFolder + filename;
-            String cmpFileName = sourceFolder + "cmp_" + filename;
+            String outFile = DESTINATION_FOLDER + filename;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
             using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div();
@@ -820,15 +821,16 @@ namespace iText.Layout {
                 CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
                 doc.Add(main);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherSubTreeWithChildKeepTogetherFalseAndParentNotFitOnDocumentTest() {
             String filename = "keepTogetherSubTreeWithChildKeepTogetherFalseAndParentNotFitOnDocument.pdf";
-            String outFile = destinationFolder + filename;
-            String cmpFileName = sourceFolder + "cmp_" + filename;
+            String outFile = DESTINATION_FOLDER + filename;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
             using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div();
@@ -844,15 +846,16 @@ namespace iText.Layout {
                 CreateChildDivWithText(child2, "Lorem ipsum dolor sit amet!");
                 doc.Add(main);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherTreeWithParentNotFitOnPageCanvasTest() {
             String filename = "keepTogetherTreeWithParentNotFitOnPageCanvas.pdf";
-            String outFile = destinationFolder + filename;
-            String cmpFileName = sourceFolder + "cmp_" + filename;
+            String outFile = DESTINATION_FOLDER + filename;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile))) {
                 PdfPage page = pdfDoc.AddNewPage(PageSize.A5.Rotate());
                 Rectangle rectangle = new Rectangle(10, 10, 500, 350);
@@ -870,15 +873,16 @@ namespace iText.Layout {
                     canvas.Add(main);
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void KeepTogetherInDivWithKidsFloatTest() {
             //TODO: DEVSIX-4720 (invalid positioning of child element)
             String filename = "keepTogetherInDivWithKidsFloat.pdf";
-            String outFile = destinationFolder + filename;
-            String cmpFileName = sourceFolder + "cmp_" + filename;
+            String outFile = DESTINATION_FOLDER + filename;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
             using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div().SetKeepTogether(true);
@@ -895,24 +899,25 @@ namespace iText.Layout {
                 child4.SetBackgroundColor(ColorConstants.ORANGE);
                 doc.Add(main);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatingElementsInDivAndKeepTogetherElemTest() {
             //TODO: update cmp file when DEVSIX-4681 will be fixed
-            String cmpFileName = sourceFolder + "cmp_floatingElementsInDivAndKeepTogetherElem.pdf";
-            String outFile = destinationFolder + "floatingElementsInDivAndKeepTogetherElem.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_floatingElementsInDivAndKeepTogetherElem.pdf";
+            String outFile = DESTINATION_FOLDER + "floatingElementsInDivAndKeepTogetherElem.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             pdfDoc.AddNewPage();
             Document doc = new Document(pdfDoc);
             Div mainDiv = new Div();
-            iText.Layout.Element.Image first = new Image(ImageDataFactory.Create(sourceFolder + "1.png"));
+            iText.Layout.Element.Image first = new Image(ImageDataFactory.Create(SOURCE_FOLDER + "1.png"));
             first.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             first.SetHeight(350);
-            iText.Layout.Element.Image second = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
-                "2.png"));
+            iText.Layout.Element.Image second = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER +
+                 "2.png"));
             second.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             second.SetHeight(350);
             mainDiv.Add(first);
@@ -923,15 +928,16 @@ namespace iText.Layout {
                  + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
                 ).SetKeepTogether(true).SetFontSize(24));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FloatingEmptyElementsInDivAndKeepTogetherElemTest() {
             //TODO: update cmp file when DEVSIX-4681 will be fixed
-            String cmpFileName = sourceFolder + "cmp_floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
-            String outFile = destinationFolder + "floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
+            String outFile = DESTINATION_FOLDER + "floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             pdfDoc.AddNewPage(PageSize.A5.Rotate());
             Document doc = new Document(pdfDoc);
@@ -951,13 +957,14 @@ namespace iText.Layout {
             doc.Add(mainDiv);
             doc.Add(ktp);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatingEmptyElementsAndKeepTogetherElemTest() {
-            String cmpFileName = sourceFolder + "cmp_floatingEmptyElementsAndKeepTogetherElem.pdf";
-            String outFile = destinationFolder + "floatingEmptyElementsAndKeepTogetherElem.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_floatingEmptyElementsAndKeepTogetherElem.pdf";
+            String outFile = DESTINATION_FOLDER + "floatingEmptyElementsAndKeepTogetherElem.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
             pdfDoc.AddNewPage(PageSize.A5.Rotate());
             Document doc = new Document(pdfDoc);
@@ -975,7 +982,61 @@ namespace iText.Layout {
             doc.Add(p2);
             doc.Add(ktp);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2, LogLevel = LogLevelConstants.WARN
+            )]
+        public virtual void PWithKeepTogetherPlusHugeImgChildTest() {
+            String outFile = DESTINATION_FOLDER + "pWithKeepTogetherPlusHugeImgChild.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_pWithKeepTogetherPlusHugeImgChild.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
+                Document doc = new Document(pdfDoc);
+                Paragraph p = new Paragraph();
+                p.SetKeepTogether(true);
+                p.Add(new Paragraph("Short text, after will be huge image"));
+                p.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "huge.png")));
+                doc.Add(p);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
+                "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3, LogLevel = LogLevelConstants.WARN
+            )]
+        public virtual void VerifyThatDisablingKeepTogetherDoesntChangeRelayoutTest() {
+            GenerateCmpWithKeepTogetherAndCheckResult(true);
+            GenerateCmpWithKeepTogetherAndCheckResult(false);
+        }
+
+        private void GenerateCmpWithKeepTogetherAndCheckResult(bool doRelayout) {
+            String fileName = doRelayout ? "keepTogetherWithRelayout.pdf" : "keepTogetherWithoutRelayout.pdf";
+            String outFile = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherNotDependingOnLayout.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
+                Document doc = new Document(pdfDoc, pdfDoc.GetDefaultPageSize(), false);
+                doc.Add(new Paragraph(BIG_TEXT));
+                Div divParent = new Div();
+                divParent.Add(new Paragraph(SMALL_TEXT));
+                Div div = new Div();
+                div.SetBorder(new SolidBorder(3));
+                div.SetKeepTogether(true);
+                div.Add(new Paragraph(BIG_TEXT));
+                div.Add(new Paragraph(BIG_TEXT));
+                div.Add(new Paragraph(BIG_TEXT));
+                divParent.Add(div);
+                doc.Add(divParent);
+                doc.Flush();
+                if (doRelayout) {
+                    doc.Relayout();
+                }
+                doc.Close();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER, 
+                "diff"));
         }
 
         private Div CreateChildDivWithText(Div parent, String text) {

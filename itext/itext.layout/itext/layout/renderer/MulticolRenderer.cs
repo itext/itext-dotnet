@@ -90,6 +90,9 @@ namespace iText.Layout.Renderer {
             elementRenderer.SetParent(this);
             MulticolRenderer.MulticolLayoutResult layoutResult = LayoutInColumns(layoutContext, actualBBox);
             if (layoutResult.GetSplitRenderers().IsEmpty()) {
+                foreach (IRenderer child in elementRenderer.GetChildRenderers()) {
+                    child.SetParent(elementRenderer);
+                }
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, layoutResult.GetCauseOfNothing());
             }
             else {
