@@ -742,25 +742,29 @@ namespace iText.Kernel.Font {
         }
 
         private static bool ContainsCodeInCodeSpaceRange(IList<byte[]> codeSpaceRanges, int code, int length) {
+            long unsignedCode = code & unchecked((int)(0xffffffff));
             for (int i = 0; i < codeSpaceRanges.Count; i += 2) {
                 if (length == codeSpaceRanges[i].Length) {
-                    int mask = 0xff;
-                    int totalShift = 0;
                     byte[] low = codeSpaceRanges[i];
                     byte[] high = codeSpaceRanges[i + 1];
-                    bool fitsIntoRange = true;
-                    for (int ind = length - 1; ind >= 0; ind--, totalShift += 8, mask <<= 8) {
-                        int actualByteValue = (code & mask) >> totalShift;
-                        if (!(actualByteValue >= (0xff & low[ind]) && actualByteValue <= (0xff & high[ind]))) {
-                            fitsIntoRange = false;
-                        }
-                    }
-                    if (fitsIntoRange) {
+                    long lowValue = BytesToLong(low);
+                    long highValue = BytesToLong(high);
+                    if (unsignedCode >= lowValue && unsignedCode <= highValue) {
                         return true;
                     }
                 }
             }
             return false;
+        }
+
+        private static long BytesToLong(byte[] bytes) {
+            long res = 0;
+            int shift = 0;
+            for (int i = bytes.Length - 1; i >= 0; --i) {
+                res += (bytes[i] & 0xff) << shift;
+                shift += 8;
+            }
+            return res;
         }
 
         private void FlushFontData() {
