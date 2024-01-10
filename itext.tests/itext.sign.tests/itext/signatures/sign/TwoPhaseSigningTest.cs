@@ -82,15 +82,17 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestPreparationWithClosedPdfSigner() {
+        public virtual void TestPreparationWithClosedPdfTwoPhaseSigner() {
             // prepare the file
             using (PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(SIMPLE_DOC_PATH))) {
                 using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
-                    signer.PrepareDocumentForSignature(DigestAlgorithms.SHA384, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
+                    PdfTwoPhaseSigner signer = new PdfTwoPhaseSigner(reader, outputStream);
+                    signer.PrepareDocumentForSignature(new SignerProperties(), DigestAlgorithms.SHA384, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
                         , 5000, false);
-                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                        byte[] digest = signer.PrepareDocumentForSignature(DigestAlgorithms.SHA384, PdfName.Adobe_PPKLite, PdfName
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
+                        {
+                            SignerProperties signerProperties = new SignerProperties();
+                            byte[] digest = signer.PrepareDocumentForSignature(signerProperties, DigestAlgorithms.SHA384, PdfName.Adobe_PPKLite, PdfName
                             .Adbe_pkcs7_detached, 5000, false);
                     }
                     );
@@ -109,7 +111,7 @@ namespace iText.Signatures.Sign {
                 using (Stream signedDoc = new ByteArrayOutputStream()) {
                     // add signature
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                        PdfSigner.AddSignatureToPreparedDocument(preparedDoc, "wrong" + FIELD_NAME, signedDoc, signData);
+                        PdfTwoPhaseSigner.AddSignatureToPreparedDocument(preparedDoc, "wrong" + FIELD_NAME, signedDoc, signData);
                     }
                     );
                     NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME
@@ -127,7 +129,7 @@ namespace iText.Signatures.Sign {
                 using (Stream signedDoc = new ByteArrayOutputStream()) {
                     // add signature
                     Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                        PdfSigner.AddSignatureToPreparedDocument(preparedDoc, FIELD_NAME, signedDoc, signData);
+                        PdfTwoPhaseSigner.AddSignatureToPreparedDocument(preparedDoc, FIELD_NAME, signedDoc, signData);
                     }
                     );
                     NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE, 
@@ -141,16 +143,17 @@ namespace iText.Signatures.Sign {
             using (PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2PhasePreparedSignature.pdf"
                 ))) {
                 using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
+                    PdfTwoPhaseSigner signer = new PdfTwoPhaseSigner(reader, outputStream);
                     // Add second signature field
-                    byte[] digest = signer.PrepareDocumentForSignature(DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
+                    SignerProperties signerProperties = new SignerProperties();
+                    byte[] digest = signer.PrepareDocumentForSignature(signerProperties,DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
                         , 5000, false);
                     byte[] signData = new byte[1024];
                     using (Stream outputStreamPhase2 = FileUtil.GetFileOutputStream(DESTINATION_FOLDER + "2PhaseCompleteCycle.pdf"
                         )) {
                         using (PdfDocument doc = new PdfDocument(new PdfReader(new MemoryStream(outputStream.ToArray())))) {
                             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                                PdfSigner.AddSignatureToPreparedDocument(doc, FIELD_NAME, outputStreamPhase2, signData);
+                                PdfTwoPhaseSigner.AddSignatureToPreparedDocument(doc, FIELD_NAME, outputStreamPhase2, signData);
                             }
                             );
                             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT
@@ -166,10 +169,11 @@ namespace iText.Signatures.Sign {
             // prepare the file
             using (PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(SIMPLE_DOC_PATH))) {
                 using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
-                    String fieldName = signer.GetFieldName();
-                    byte[] digest = signer.PrepareDocumentForSignature(DigestAlgorithms.SHA384, PdfName.Adobe_PPKLite, PdfName
+                    PdfTwoPhaseSigner signer = new PdfTwoPhaseSigner(reader, outputStream);
+                    SignerProperties signerProperties = new SignerProperties();
+                    byte[] digest = signer.PrepareDocumentForSignature(signerProperties,DigestAlgorithms.SHA384, PdfName.Adobe_PPKLite, PdfName
                         .Adbe_pkcs7_detached, 5000, false);
+                    String fieldName = signerProperties.GetFieldName();
                     using (PdfDocument cmp_document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "cmp_prepared.pdf"))) {
                         using (PdfDocument outDocument = new PdfDocument(new PdfReader(new MemoryStream(outputStream.ToArray())))) {
                             SignatureUtil signatureUtil = new SignatureUtil(cmp_document);
@@ -197,16 +201,17 @@ namespace iText.Signatures.Sign {
             // Phase 1 prepare the document and get the documents digest and the fieldname of the created signature
             using (PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(SIMPLE_DOC_PATH))) {
                 using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
-                    byte[] digest = signer.PrepareDocumentForSignature(DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
+                    PdfTwoPhaseSigner signer = new PdfTwoPhaseSigner(reader, outputStream);
+                    SignerProperties signerProperties = new SignerProperties();
+                    byte[] digest = signer.PrepareDocumentForSignature(signerProperties,DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
                         , 5000, false);
-                    String fieldName = signer.GetFieldName();
+                    String fieldName = signerProperties.GetFieldName();
                     // Phase 2 sign the document digest
                     byte[] signData = SignDigest(digest, DIGEST_ALGORITHM);
                     using (Stream outputStreamPhase2 = FileUtil.GetFileOutputStream(DESTINATION_FOLDER + "2PhaseCompleteCycle.pdf"
                         )) {
                         using (PdfDocument doc = new PdfDocument(new PdfReader(new MemoryStream(outputStream.ToArray())))) {
-                            PdfSigner.AddSignatureToPreparedDocument(doc, fieldName, outputStreamPhase2, signData);
+                            PdfTwoPhaseSigner.AddSignatureToPreparedDocument(doc, fieldName, outputStreamPhase2, signData);
                         }
                     }
                     NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(DESTINATION_FOLDER + "2PhaseCompleteCycle.pdf"
@@ -227,7 +232,7 @@ namespace iText.Signatures.Sign {
                 )))) {
                 using (Stream signedDoc = FileUtil.GetFileOutputStream(DESTINATION_FOLDER + "2PhaseCompletion.pdf")) {
                     // add signature
-                    PdfSigner.AddSignatureToPreparedDocument(preparedDoc, FIELD_NAME, signedDoc, signData);
+                    PdfTwoPhaseSigner.AddSignatureToPreparedDocument(preparedDoc, FIELD_NAME, signedDoc, signData);
                 }
             }
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(DESTINATION_FOLDER + "2PhaseCompletion.pdf"
@@ -257,7 +262,7 @@ namespace iText.Signatures.Sign {
                         cmsToUpdate.GetSignerInfo().SetSignature(signaturedata);
                         //if needed a time stamp could be added here
                         //Phase 2.3 add the updated CMS to the document
-                        PdfSigner.AddSignatureToPreparedDocument(doc, signatureName, outputStreamPhase2, cmsToUpdate);
+                        PdfTwoPhaseSigner.AddSignatureToPreparedDocument(doc, signatureName, outputStreamPhase2, cmsToUpdate);
                     }
                 }
                 // validate signature
@@ -288,13 +293,13 @@ namespace iText.Signatures.Sign {
             ) {
             using (PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(document))) {
                 using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    PdfSigner signer = new PdfSigner(reader, outputStream, new StampingProperties());
-                    signer.SetFieldName(signatureName);
-                    byte[] digest = signer.PrepareDocumentForSignature(DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
+                    PdfTwoPhaseSigner signer = new PdfTwoPhaseSigner(reader, outputStream);
+                    SignerProperties signerProperties = new SignerProperties().SetFieldName(signatureName);
+                    byte[] digest = signer.PrepareDocumentForSignature(signerProperties,DIGEST_ALGORITHM, PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
                         , 5000, false);
                     System.Console.Out.WriteLine("Document digest from prepare call: " + digest.Length + "bytes");
                     System.Console.Out.WriteLine(Convert.ToBase64String(digest));
-                    String fieldName = signer.GetFieldName();
+                    String fieldName = signerProperties.GetFieldName();
                     // Phase 1.1 prepare the CMS
                     CMSContainer cms = new CMSContainer();
                     SignerInfo signerInfo = new SignerInfo();
@@ -316,7 +321,7 @@ namespace iText.Signatures.Sign {
                     // now we store signedAttributesToSign together with the prepared document and send
                     // dataToSign to the signing instance
                     using (PdfDocument doc = new PdfDocument(new PdfReader(new MemoryStream(outputStream.ToArray())))) {
-                        PdfSigner.AddSignatureToPreparedDocument(doc, fieldName, preparedOS, cms);
+                        PdfTwoPhaseSigner.AddSignatureToPreparedDocument(doc, fieldName, preparedOS, cms);
                     }
                     return dataToSign;
                 }

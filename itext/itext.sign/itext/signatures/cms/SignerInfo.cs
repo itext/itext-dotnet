@@ -141,6 +141,22 @@ namespace iText.Signatures.Cms {
         /// <param name="certificate">the certificate that is used to sign</param>
         public virtual void SetSigningCertificate(IX509Certificate certificate) {
             this.signerCertificate = certificate;
+            ITbsCertificateStructure tbsCert = BC_FACTORY.CreateTBSCertificate(certificate.GetTbsCertificate());
+            if (signingAlgorithm != null) {
+                return;
+            }
+            if (tbsCert.GetSubjectPublicKeyInfo().GetAlgorithm().GetParameters() != null) {
+                if (tbsCert.GetSubjectPublicKeyInfo().GetAlgorithm().GetParameters().IsNull()) {
+                    this.signingAlgorithm = new AlgorithmIdentifier(tbsCert.GetSubjectPublicKeyInfo().GetAlgorithm().GetAlgorithm
+                        ().GetId(), BC_FACTORY.CreateDERNull());
+                    return;
+                }
+                this.signingAlgorithm = new AlgorithmIdentifier(tbsCert.GetSubjectPublicKeyInfo().GetAlgorithm().GetAlgorithm
+                    ().GetId(), tbsCert.GetSubjectPublicKeyInfo().GetAlgorithm().GetParameters().ToASN1Primitive());
+                return;
+            }
+            this.signingAlgorithm = new AlgorithmIdentifier(tbsCert.GetSubjectPublicKeyInfo().GetAlgorithm().GetAlgorithm
+                ().GetId());
         }
 
         /// <summary>Gets the certificate that is used to sign.</summary>
@@ -375,7 +391,7 @@ namespace iText.Signatures.Cms {
             // digest algorithm
             IAsn1EncodableVector digestalgorithmV = BC_FACTORY.CreateASN1EncodableVector();
             digestalgorithmV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(this.digestAlgorithm.GetAlgorithmOid()));
-            digestalgorithmV.Add(digestAlgorithm.GetParameters());
+            digestalgorithmV.AddOptional(digestAlgorithm.GetParameters());
             signerInfoV.Add(BC_FACTORY.CreateDERSequence(digestalgorithmV));
             // signed attributes
             if (!signedAttributes.IsEmpty() || signedAttributesReadOnly) {
@@ -397,7 +413,7 @@ namespace iText.Signatures.Cms {
             if (signingAlgorithm != null) {
                 IAsn1EncodableVector signatureAlgorithmV = BC_FACTORY.CreateASN1EncodableVector();
                 signatureAlgorithmV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(signingAlgorithm.GetAlgorithmOid()));
-                signatureAlgorithmV.Add(signingAlgorithm.GetParameters());
+                signatureAlgorithmV.AddOptional(signingAlgorithm.GetParameters());
                 signerInfoV.Add(BC_FACTORY.CreateDERSequence(signatureAlgorithmV));
             }
             // signatureValue

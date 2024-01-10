@@ -708,6 +708,11 @@ namespace iText.Bouncycastle {
             return new TbsCertificateStructureBC(TbsCertificateStructure.GetInstance(((Asn1EncodableBC)encodable).GetEncodable(
                 )));
         }
+        
+        public virtual ITbsCertificateStructure CreateTBSCertificate(byte[] bytes) {
+            return new TbsCertificateStructureBC(TbsCertificateStructure.GetInstance(bytes));
+        }
+
 
         /// <summary><inheritDoc/></summary>
         public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {

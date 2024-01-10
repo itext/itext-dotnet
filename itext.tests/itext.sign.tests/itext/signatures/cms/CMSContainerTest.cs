@@ -128,13 +128,13 @@ namespace iText.Signatures.Cms {
             si.SetOcspResponses(fakeOcspREsponses);
             si.SetCrlResponses(JavaCollectionsUtil.SingletonList(testCrlResponse));
             si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
-            si.SetSigningCertificateAndAddToSignedAttributes(signCert, SecurityIDs.ID_SHA512);
             si.SetSignatureAlgorithm(new AlgorithmIdentifier(SignatureMechanisms.GetSignatureMechanismOid("RSA", DigestAlgorithms
                 .SHA512)));
+            si.SetSigningCertificateAndAddToSignedAttributes(signCert, SecurityIDs.ID_SHA512);
             si.SetSignature(new byte[256]);
             sut.SetSignerInfo(si);
             long size = sut.GetSizeEstimation();
-            NUnit.Framework.Assert.AreEqual(4827, size);
+            NUnit.Framework.Assert.AreEqual(4821, size);
         }
 
         [NUnit.Framework.Test]

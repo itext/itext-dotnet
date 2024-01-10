@@ -549,22 +549,8 @@ namespace iText.Signatures {
             if (temporaryDirectoryPath != null) {
                 tempFilePath = GetNextTempFile().FullName;
             }
-            PdfSigner signer = new PdfSigner(reader, isFinal ? outputStream : CreateOutputStream(), tempFilePath, stampingProperties
-                );
-            signer.SetFieldLockDict(signerProperties.GetFieldLockDict());
-            signer.SetFieldName(signerProperties.GetFieldName());
-            // We need to update field name because signer could change it
-            signerProperties.SetFieldName(signer.GetFieldName());
-            signer.SetCertificationLevel(signerProperties.GetCertificationLevel());
-            signer.SetPageRect(signerProperties.GetPageRect());
-            signer.SetPageNumber(signerProperties.GetPageNumber());
-            signer.SetSignDate(signerProperties.GetSignDate());
-            signer.SetSignatureCreator(signerProperties.GetSignatureCreator());
-            signer.SetContact(signerProperties.GetContact());
-            signer.SetReason(signerProperties.GetReason());
-            signer.SetLocation(signerProperties.GetLocation());
-            signer.SetSignatureAppearance(signerProperties.GetSignatureAppearance());
-            return signer;
+            return new PdfSigner(reader, isFinal ? outputStream : CreateOutputStream(), tempFilePath, stampingProperties
+                , signerProperties);
         }
 
         internal virtual void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames, LtvVerification.RevocationDataNecessity

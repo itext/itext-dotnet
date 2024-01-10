@@ -60,6 +60,9 @@ namespace iText.Bouncycastle.Asn1.X509 {
 
         /// <summary><inheritDoc/></summary>
         public virtual IAsn1Encodable GetParameters() {
+            if (GetAlgorithmIdentifier().Parameters == null) {
+                return null;
+            }
             return new Asn1EncodableBC(GetAlgorithmIdentifier().Parameters);
         }
     }

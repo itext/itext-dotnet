@@ -38,7 +38,7 @@ namespace iText.Signatures.Cms {
         /// <param name="algorithmId">the Object id of the algorithm</param>
         public AlgorithmIdentifier(String algorithmId) {
             this.algorithm = algorithmId;
-            parameters = BouncyCastleFactoryCreator.GetFactory().CreateDERNull();
+            parameters = null;
         }
 
         /// <summary>Creates an Algorithm identifier structure with parameters.</summary>

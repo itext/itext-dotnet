@@ -809,6 +809,12 @@ namespace iText.Commons.Bouncycastle {
         /// <returns>created TBS Certificate wrapper</returns>
         ITbsCertificateStructure CreateTBSCertificate(IAsn1Encodable encodable);
 
+        
+        /// <summary>Create TBS Certificate wrapper from ASN1 Encoded data.</summary>
+        /// <param name="bytes">encoded TBS Certificate</param>
+        /// <returns>created TBS Certificate wrapper</returns>
+        ITbsCertificateStructure CreateTBSCertificate(byte[] bytes);
+
         /// <summary>
         /// Create issuer and serial number wrapper from X500 Name wrapper and
         /// <see cref="iText.Commons.Bouncycastle.Math.IBigInteger"/>.

@@ -86,6 +86,27 @@ namespace iText.Bouncycastlefips.Asn1 {
             encodableVector.Add(elementBCFips.GetAlgorithmIdentifier());
         }
 
+        /// <summary><inheritDoc/></summary>
+        public virtual void AddOptional(IAsn1Object primitive) {
+            if (primitive != null) {
+                Add(primitive);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void AddOptional(IAttribute attribute) {
+            if (attribute != null) {
+                Add(attribute);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void AddOptional(IAlgorithmIdentifier element) {
+            if (element != null) {
+                Add(element);
+            }
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
         /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {

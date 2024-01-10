@@ -307,9 +307,7 @@ namespace iText.Signatures {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(certificates);
             IX509Certificate[] x509FullChain = JavaUtil.ArraysAsList(fullChain).ToArray(new IX509Certificate[0]);
             PdfPadesSigner padesSigner = CreatePadesSigner(inputDocument, outputStream);
-            PdfSigner pdfSigner = padesSigner.CreatePdfSigner(signerProperties, true);
-            PdfDocument document = pdfSigner.GetDocument();
-            SetPadesExtensions(document, x509FullChain[0], digestAlgorithm);
+            PdfTwoPhaseSigner pdfTwoPhaseSigner = new PdfTwoPhaseSigner(inputDocument, outputStream);
             CMSContainer cms = new CMSContainer();
             SignerInfo signerInfo = new SignerInfo();
             String digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(digestAlgorithm);
@@ -317,7 +315,6 @@ namespace iText.Signatures {
             signerInfo.SetDigestAlgorithm(new AlgorithmIdentifier(digestAlgorithmOid));
             cms.AddCertificates(x509FullChain);
             cms.SetSignerInfo(signerInfo);
-            pdfSigner.SetFieldName(signerProperties.GetFieldName());
             IDigest messageDigest = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(
                 DigestAlgorithms.GetDigest(digestAlgorithmOid));
             int realSignatureSize = messageDigest.GetDigestLength() + (int)cms.GetSizeEstimation();
@@ -325,8 +322,8 @@ namespace iText.Signatures {
                 realSignatureSize += tsaClient.GetTokenSizeEstimate();
             }
             int expectedSignatureSize = estimatedSize < 0 ? realSignatureSize : estimatedSize;
-            byte[] digestedDocumentBytes = pdfSigner.PrepareDocumentForSignature(digestAlgorithm, PdfName.Adobe_PPKLite
-                , PdfName.ETSI_CAdES_DETACHED, expectedSignatureSize, true);
+            byte[] digestedDocumentBytes = pdfTwoPhaseSigner.PrepareDocumentForSignature(signerProperties, digestAlgorithm
+                , PdfName.Adobe_PPKLite, PdfName.ETSI_CAdES_DETACHED, expectedSignatureSize, true);
             signerInfo.SetMessageDigest(digestedDocumentBytes);
             return cms;
         }
@@ -336,7 +333,7 @@ namespace iText.Signatures {
             SetSignatureAlgorithmAndSignature(externalSignature, cmsContainer);
             try {
                 using (PdfDocument document = new PdfDocument(inputDocument)) {
-                    PdfSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
+                    PdfTwoPhaseSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
                 }
             }
             finally {
@@ -360,7 +357,7 @@ namespace iText.Signatures {
             }
             try {
                 using (PdfDocument document = new PdfDocument(inputDocument)) {
-                    PdfSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
+                    PdfTwoPhaseSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
                 }
             }
             finally {
@@ -448,20 +445,6 @@ namespace iText.Signatures {
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
             padesSigner.SetEstimatedSize(estimatedSize);
             return padesSigner;
-        }
-
-        private static void SetPadesExtensions(PdfDocument document, IX509Certificate signingCert, String digestAlgorithm
-            ) {
-            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
-                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
-            }
-            String algorithmOid = signingCert.GetSigAlgOID();
-            if (SignatureMechanisms.GetAlgorithm(algorithmOid).StartsWith("Ed")) {
-                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
-            }
-            if (digestAlgorithm.StartsWith("SHA3-") || digestAlgorithm.Equals(DigestAlgorithms.SHAKE256)) {
-                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
-            }
         }
     }
 }

@@ -722,6 +722,10 @@ namespace iText.Bouncycastlefips {
             return new TbsCertificateStructureBCFips(TbsCertificateStructure.GetInstance(((Asn1EncodableBCFips)encodable).GetEncodable
                 ()));
         }
+        
+        public virtual ITbsCertificateStructure CreateTBSCertificate(byte[] bytes) {
+            return new TbsCertificateStructureBCFips(TbsCertificateStructure.GetInstance(bytes));
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {

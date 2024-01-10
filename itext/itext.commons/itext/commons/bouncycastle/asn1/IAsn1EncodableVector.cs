@@ -52,5 +52,29 @@ namespace iText.Commons.Bouncycastle.Asn1 {
         /// </summary>
         /// <param name="element">AlgorithmIdentifier wrapper.</param>
         void Add(IAlgorithmIdentifier element);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>add</c>
+        /// method for the wrapped ASN1EncodableVector object if the primitive is not null.
+        /// </summary>
+        /// <param name="primitive">ASN1Primitive wrapper.</param>
+        void AddOptional(IAsn1Object primitive);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>add</c>
+        /// method for the wrapped ASN1EncodableVector object if the attribute is not null.
+        /// </summary>
+        /// <param name="attribute">Attribute wrapper.</param>
+        void AddOptional(IAttribute attribute);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>add</c>
+        /// method for the wrapped ASN1EncodableVector object if the element is not null.
+        /// </summary>
+        /// <param name="element">AlgorithmIdentifier wrapper.</param>
+        void AddOptional(IAlgorithmIdentifier element);
     }
 }
