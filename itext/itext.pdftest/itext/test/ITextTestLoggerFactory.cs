@@ -107,18 +107,28 @@ namespace iText.Test
         {
             private readonly string categoryName;
             private readonly ITextTestLoggerFactory factory;
+            private  bool runInSilentMode = false;
+
+            private static readonly string TOKEN_ITEXT_SILENT_MODE = "ITEXT_SILENT_MODE";
+            private static readonly string ITEXT_LICENCING_PACKAGE = "iText.Licensing";
+            private static readonly string ITEXT_ACTIONS_PACKAGE = "iText.Commons.Actions.Processors";
 
             public ITextTestLogger(string categoryName, ITextTestLoggerFactory factory)
             {
                 this.categoryName = categoryName;
                 this.factory = factory;
+                SetupRunInSilentMode(); 
             }
+            
             
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
                 if (!factory.IsExpectedMessageQuiet(state.ToString()))
                 {
-                    Console.WriteLine(categoryName + ": " + state);
+                    if (ShouldPrintMessage(categoryName)) 
+                    {
+                        Console.WriteLine( categoryName + ": " + state);
+                    }
                 }
                 if (logLevel >= LogLevel.Warning || factory.IsExpectedMessage(state.ToString()))
                 {
@@ -136,6 +146,27 @@ namespace iText.Test
             {
                 // We dont expect using of scope logic for this test logger
                 throw new NotImplementedException();
+            }
+
+            private bool ShouldPrintMessage(string category) {
+                if (category.StartsWith(ITEXT_LICENCING_PACKAGE))
+                {
+                    return true;
+                }
+                if (category.StartsWith(ITEXT_ACTIONS_PACKAGE))
+                {
+                    return true;
+                }
+                return !runInSilentMode;
+            }
+            
+            private void SetupRunInSilentMode() {
+                string envIsSilentModeEnabled = Environment.GetEnvironmentVariable(TOKEN_ITEXT_SILENT_MODE);
+                if (string.IsNullOrEmpty(envIsSilentModeEnabled)) {
+                    runInSilentMode = false;
+                    return;
+                }
+                runInSilentMode = envIsSilentModeEnabled.ToUpper().Equals("TRUE");
             }
         }
     }
