@@ -13,7 +13,7 @@
     <description>iText represents the next level of SDKs for developers that want to take advantage of the benefits PDF can bring. Equipped with a better document engine, high- and low-level programming capabilities and the ability to create, edit and enhance PDF documents, iText can be a boon to nearly every workflow. iText allows you to build custom PDF scenarios for web, mobile, desktop or cloud apps in .NET.</description>
     <summary>iText for .NET is a library for PDF generation written entirely in C# for the .NET platform.</summary>
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2023 Apryse Group NV</copyright>
+    <copyright>Copyright (c) 1998-2024 Apryse Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp pdf itextcore core fdf xfa acroform forms svg digital-signatures signing security accessibility opensource open source</tags>
 	<repository type="git" url="https://github.com/itext/itext7-dotnet.git" />

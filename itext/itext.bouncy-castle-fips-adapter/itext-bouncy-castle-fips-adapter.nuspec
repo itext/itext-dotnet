@@ -13,7 +13,7 @@
     <description>Bouncy-castle FIPS adapter module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2023 Apryse Group NV</copyright>
+    <copyright>Copyright (c) 1998-2024 Apryse Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
