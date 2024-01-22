@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -104,7 +105,7 @@ namespace iText.Forms.Form.Renderer {
             if (background != null) {
                 comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
-            AbstractFormFieldRenderer.ApplyBorderProperty(this, comboBoxField.GetFirstFormAnnotation());
+            BorderStyleUtil.ApplyBorderProperty(this, comboBoxField.GetFirstFormAnnotation());
             UnitValue fontSize = GetFontSize();
             if (fontSize != null) {
                 comboBoxField.SetFontSize(fontSize.GetValue());

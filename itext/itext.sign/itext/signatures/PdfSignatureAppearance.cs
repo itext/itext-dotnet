@@ -215,7 +215,7 @@ namespace iText.Signatures {
         /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
         /// </remarks>
         /// <returns>layer 0.</returns>
-        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetBackgroundLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) ."
+        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetBackgroundLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) . Note that it should be called for the field retrieved with PdfSigner.GetSignatureField() method."
             )]
         public virtual PdfFormXObject GetLayer0() {
             if (n0 == null) {
@@ -233,7 +233,7 @@ namespace iText.Signatures {
         /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
         /// </remarks>
         /// <returns>layer 2.</returns>
-        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetSignatureAppearanceLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) ."
+        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetSignatureAppearanceLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) . Note that it should be called for the field retrieved with PdfSigner.GetSignatureField() method."
             )]
         public virtual PdfFormXObject GetLayer2() {
             if (n2 == null) {
@@ -393,7 +393,7 @@ namespace iText.Signatures {
         /// <summary>Indicates that the existing appearances needs to be reused as a background layer.</summary>
         /// <param name="reuseAppearance">is an appearances reusing flag value to set.</param>
         /// <returns>this instance to support fluent interface.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.PdfSignatureFormField.SetReuseAppearance(bool) ."
+        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.PdfSignatureFormField.SetReuseAppearance(bool) . Note that it should be called for the field retrieved with PdfSigner.GetSignatureField() method."
             )]
         public virtual iText.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
             this.reuseAppearance = reuseAppearance;

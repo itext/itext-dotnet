@@ -24,17 +24,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
-using iText.Layout.Borders;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -298,64 +295,6 @@ namespace iText.Forms.Form.Renderer {
                     modelElement.DeleteOwnProperty(integerObjectEntry.Key);
                 }
             }
-        }
-
-        /// <summary>Applies the border property.</summary>
-        /// <param name="annotation">the annotation to set border characteristics to.</param>
-        internal virtual void ApplyBorderProperty(PdfFormAnnotation annotation) {
-            ApplyBorderProperty(this, annotation);
-        }
-
-        /// <summary>Applies the border property to the renderer.</summary>
-        /// <param name="renderer">renderer to apply border properties to.</param>
-        /// <param name="annotation">the annotation to set border characteristics to.</param>
-        internal static void ApplyBorderProperty(IRenderer renderer, PdfFormAnnotation annotation) {
-            Border border = renderer.GetProperty<Border>(Property.BORDER);
-            if (border == null) {
-                // For now, we set left border to an annotation, but appropriate borders for an element will be drawn.
-                border = renderer.GetProperty<Border>(Property.BORDER_LEFT);
-            }
-            if (border != null) {
-                annotation.SetBorderStyle(TransformBorderTypeToBorderStyleDictionary(border.GetBorderType()));
-                annotation.SetBorderColor(border.GetColor());
-                annotation.SetBorderWidth(border.GetWidth());
-            }
-        }
-
-        private static PdfDictionary TransformBorderTypeToBorderStyleDictionary(int borderType) {
-            PdfDictionary bs = new PdfDictionary();
-            PdfName style;
-            switch (borderType) {
-                case 1001: {
-                    style = PdfAnnotation.STYLE_UNDERLINE;
-                    break;
-                }
-
-                case 1002: {
-                    style = PdfAnnotation.STYLE_BEVELED;
-                    break;
-                }
-
-                case 1003: {
-                    style = PdfAnnotation.STYLE_INSET;
-                    break;
-                }
-
-                case Border.DASHED_FIXED:
-                case Border.DASHED:
-                case Border.DOTTED: {
-                    // Default dash array will be used.
-                    style = PdfAnnotation.STYLE_DASHED;
-                    break;
-                }
-
-                default: {
-                    style = PdfAnnotation.STYLE_SOLID;
-                    break;
-                }
-            }
-            bs.Put(PdfName.S, style);
-            return bs;
         }
 
         private void ProcessLangAttribute() {

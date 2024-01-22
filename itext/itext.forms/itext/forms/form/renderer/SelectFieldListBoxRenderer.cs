@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -184,7 +185,7 @@ namespace iText.Forms.Form.Renderer {
                 choiceField.SetColor(color.GetColor());
             }
             choiceField.SetJustification(this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT));
-            AbstractFormFieldRenderer.ApplyBorderProperty(this, choiceField.GetFirstFormAnnotation());
+            BorderStyleUtil.ApplyBorderProperty(this, choiceField.GetFirstFormAnnotation());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 choiceField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());

@@ -172,7 +172,7 @@ namespace iText.Forms.Form.Renderer {
             if (background != null) {
                 radio.SetBackgroundColor(background.GetColor());
             }
-            ApplyBorderProperty(radio);
+            BorderStyleUtil.ApplyBorderProperty(this, radio);
             radio.SetFormFieldElement((Radio)modelElement);
             radioGroup.AddKid(radio);
             radioGroup.EnableFieldRegeneration();

@@ -30,12 +30,15 @@ using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Layout.Properties;
 using iText.Pdfa;
 using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
@@ -1062,7 +1065,7 @@ namespace iText.Signatures {
             sigField.DisableFieldRegeneration();
             sigField.SetReuseAppearance(appearance.IsReuseAppearance()).SetSignatureAppearanceLayer(appearance.GetSignatureAppearanceLayer
                 ()).SetBackgroundLayer(appearance.GetBackgroundLayer());
-            sigField.GetFirstFormAnnotation().SetFormFieldElement(appearance.GetSignatureAppearance());
+            ApplyDefaultPropertiesForTheNewField(sigField);
             sigField.EnableFieldRegeneration();
             acroForm.AddField(sigField, document.GetPage(pagen));
             if (acroForm.GetPdfObject().IsIndirect()) {
@@ -1318,7 +1321,6 @@ namespace iText.Signatures {
 
         private PdfSignature CreateSignatureDictionary(bool includeDate) {
             PdfSignature dic = new PdfSignature();
-            PdfSignatureAppearance appearance = GetSignatureAppearance();
             dic.SetReason(GetReason());
             dic.SetLocation(GetLocation());
             dic.SetSignatureCreator(GetSignatureCreator());
@@ -1328,6 +1330,32 @@ namespace iText.Signatures {
             }
             // time-stamp will over-rule this
             return dic;
+        }
+
+        private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {
+            SignatureFieldAppearance formFieldElement = appearance.GetSignatureAppearance();
+            PdfFormAnnotation annotation = sigField.GetFirstFormAnnotation();
+            annotation.SetFormFieldElement(formFieldElement);
+            // Apply default field properties:
+            sigField.GetWidgets()[0].SetHighlightMode(PdfAnnotation.HIGHLIGHT_NONE);
+            sigField.SetJustification(formFieldElement.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT));
+            Object retrievedFont = formFieldElement.GetProperty<Object>(Property.FONT);
+            if (retrievedFont is PdfFont) {
+                sigField.SetFont((PdfFont)retrievedFont);
+            }
+            UnitValue fontSize = formFieldElement.GetProperty<UnitValue>(Property.FONT_SIZE);
+            if (fontSize != null && fontSize.IsPointValue()) {
+                sigField.SetFontSize(fontSize.GetValue());
+            }
+            TransparentColor color = formFieldElement.GetProperty<TransparentColor>(Property.FONT_COLOR);
+            if (color != null) {
+                sigField.SetColor(color.GetColor());
+            }
+            BorderStyleUtil.ApplyBorderProperty(formFieldElement, annotation);
+            Background background = formFieldElement.GetProperty<Background>(Property.BACKGROUND);
+            if (background != null) {
+                sigField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
+            }
         }
 
         /// <summary>An interface to retrieve the signature dictionary for modification.</summary>

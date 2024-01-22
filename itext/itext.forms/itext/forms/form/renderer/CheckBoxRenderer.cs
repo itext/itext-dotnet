@@ -27,6 +27,7 @@ using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Form.Renderer.Checkboximpl;
+using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Borders;
@@ -182,7 +183,7 @@ namespace iText.Forms.Form.Renderer {
             }
             PdfButtonFormField checkBox = builder.CreateCheckBox();
             checkBox.DisableFieldRegeneration();
-            ApplyBorderProperty(checkBox.GetFirstFormAnnotation());
+            BorderStyleUtil.ApplyBorderProperty(this, checkBox.GetFirstFormAnnotation());
             Background background = this.modelElement.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 checkBox.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
