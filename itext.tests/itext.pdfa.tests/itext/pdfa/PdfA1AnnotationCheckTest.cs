@@ -175,7 +175,7 @@ namespace iText.Pdfa {
         public virtual void AnnotationCheckTest08() {
             String outPdf = destinationFolder + "pdfA1a_annotationCheckTest08.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1a_annotationCheckTest08.pdf";
-            PdfWriter writer = new PdfWriter(outPdf);
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_4));
             Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));

@@ -32,7 +32,6 @@ using iText.Kernel.Pdf.Annot.DA;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
-using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -101,8 +100,6 @@ namespace iText.Layout {
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
                 CreateSimplePdfUA2Document(pdfDocument);
-                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
-                tagPointer.AddTag(StandardRoles.ANNOT);
                 PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(System.Text.Encoding.UTF8
                     ), "description", "file.txt", null, null, null);
                 PdfFileAttachmentAnnotation annot = new PdfFileAttachmentAnnotation(rect, fs);
@@ -142,8 +139,6 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);
-                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
-                tagPointer.AddTag(StandardRoles.ANNOT);
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
                 stamp.SetStampName(PdfName.Approved);
@@ -209,8 +204,6 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);
-                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
-                tagPointer.AddTag(StandardRoles.ANNOT);
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfInkAnnotation ink = CreateInkAnnotation();
                 pdfPage.AddAnnotation(ink);
@@ -242,8 +235,6 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);
-                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
-                tagPointer.AddTag(StandardRoles.ANNOT);
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfRedactAnnotation redact = CreateRedactionAnnotation();
                 pdfPage.AddAnnotation(redact);
