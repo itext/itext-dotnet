@@ -115,7 +115,7 @@ namespace iText.Signatures.Exceptions {
 
         public const String TOO_BIG_KEY = "The key is too big.";
 
-        public const String TSA_CLIENT_IS_MISSING = "ITSAClient must be present to rich this PAdES level. " + "Please use setTSAClient method to provide it.";
+        public const String TSA_CLIENT_IS_MISSING = "ITSAClient must be present to reach this PAdES level. " + "Please use setTSAClient method to provide it.";
 
         public const String UNEXPECTED_CLOSE_BRACKET = "Unexpected close bracket.";
 

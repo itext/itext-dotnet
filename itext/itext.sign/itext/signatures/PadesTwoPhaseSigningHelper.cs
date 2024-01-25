@@ -302,6 +302,25 @@ namespace iText.Signatures {
             return this;
         }
 
+        /// <summary>Creates CMS container compliant with PAdES level.</summary>
+        /// <remarks>
+        /// Creates CMS container compliant with PAdES level. Prepares document and placeholder for the future signature
+        /// without actual signing process.
+        /// </remarks>
+        /// <param name="certificates">certificates to be added to the CMS container</param>
+        /// <param name="digestAlgorithm">the algorithm to generate the digest with</param>
+        /// <param name="inputDocument">
+        /// reader
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read original PDF file
+        /// </param>
+        /// <param name="outputStream">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// output stream to write the resulting PDF file into
+        /// </param>
+        /// <param name="signerProperties">properties to be used in the signing operations</param>
+        /// <returns>prepared CMS container without signature.</returns>
         public virtual CMSContainer CreateCMSContainerWithoutSignature(IX509Certificate[] certificates, String digestAlgorithm
             , PdfReader inputDocument, Stream outputStream, SignerProperties signerProperties) {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(certificates);
@@ -328,6 +347,16 @@ namespace iText.Signatures {
             return cms;
         }
 
+        /// <summary>Follow-up step that signs prepared document with PAdES Baseline-B profile.</summary>
+        /// <param name="externalSignature">external signature to do the actual signing</param>
+        /// <param name="inputDocument">
+        /// reader
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read prepared document
+        /// </param>
+        /// <param name="outputStream">the output PDF</param>
+        /// <param name="signatureFieldName">the field to sign</param>
+        /// <param name="cmsContainer">the finalized CMS container (e.g. created in the first step)</param>
         public virtual void SignCMSContainerWithBaselineBProfile(IExternalSignature externalSignature, PdfReader inputDocument
             , Stream outputStream, String signatureFieldName, CMSContainer cmsContainer) {
             SetSignatureAlgorithmAndSignature(externalSignature, cmsContainer);
@@ -341,6 +370,16 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Follow-up step that signs prepared document with PAdES Baseline-T profile.</summary>
+        /// <param name="externalSignature">external signature to do the actual signing</param>
+        /// <param name="inputDocument">
+        /// reader
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read prepared document
+        /// </param>
+        /// <param name="outputStream">the output PDF</param>
+        /// <param name="signatureFieldName">the field to sign</param>
+        /// <param name="cmsContainer">the finalized CMS container (e.g. created in the first step)</param>
         public virtual void SignCMSContainerWithBaselineTProfile(IExternalSignature externalSignature, PdfReader inputDocument
             , Stream outputStream, String signatureFieldName, CMSContainer cmsContainer) {
             byte[] signature = SetSignatureAlgorithmAndSignature(externalSignature, cmsContainer);
@@ -365,6 +404,16 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Follow-up step that signs prepared document with PAdES Baseline-LT profile.</summary>
+        /// <param name="externalSignature">external signature to do the actual signing</param>
+        /// <param name="inputDocument">
+        /// reader
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read prepared document
+        /// </param>
+        /// <param name="outputStream">the output PDF</param>
+        /// <param name="signatureFieldName">the field to sign</param>
+        /// <param name="cmsContainer">the finalized CMS container (e.g. created in the first step)</param>
         public virtual void SignCMSContainerWithBaselineLTProfile(IExternalSignature externalSignature, PdfReader 
             inputDocument, Stream outputStream, String signatureFieldName, CMSContainer cmsContainer) {
             PdfPadesSigner padesSigner = CreatePadesSigner(inputDocument, outputStream);
@@ -387,6 +436,16 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Follow-up step that signs prepared document with PAdES Baseline-LTA profile.</summary>
+        /// <param name="externalSignature">external signature to do the actual signing</param>
+        /// <param name="inputDocument">
+        /// reader
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read prepared document
+        /// </param>
+        /// <param name="outputStream">the output PDF</param>
+        /// <param name="signatureFieldName">the field to sign</param>
+        /// <param name="cmsContainer">the finalized CMS container (e.g. created in the first step)</param>
         public virtual void SignCMSContainerWithBaselineLTAProfile(IExternalSignature externalSignature, PdfReader
              inputDocument, Stream outputStream, String signatureFieldName, CMSContainer cmsContainer) {
             PdfPadesSigner padesSigner = CreatePadesSigner(inputDocument, outputStream);

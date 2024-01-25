@@ -206,7 +206,7 @@ namespace iText.Signatures.Cms {
         }
 
         /// <summary>Retrieves a copy of the list of certificates.</summary>
-        /// <returns>the list of certificates to be used  for signing and certificate validation</returns>
+        /// <returns>the list of certificates to be used for signing and certificate validation</returns>
         public virtual ICollection<IX509Certificate> GetCertificates() {
             return JavaCollectionsUtil.UnmodifiableCollection(certificates);
         }
