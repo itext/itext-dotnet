@@ -26,7 +26,7 @@ using iText.Commons.Digest;
 namespace iText.Signatures {
     /// <summary>
     /// ExternalDigest allows the use of implementations of
-    /// <see cref="IMessageDigest"/>
+    /// <see cref="iText.Commons.Digest.IMessageDigest"/>
     /// other than
     /// <see cref="BouncyCastleDigest"/>.
     /// </summary>

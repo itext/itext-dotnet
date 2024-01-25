@@ -119,6 +119,17 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
+        /// <param name="privKey">the private key</param>
+        /// <param name="certChain">the certificate chain</param>
+        /// <param name="hashAlgorithm">the hash algorithm</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
+        /// <param name="hasEncapContent"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
+        public PdfPKCS7(IPrivateKey privKey, IX509Certificate[] certChain, String hashAlgorithm, bool hasEncapContent
+            )
+            : this(privKey, certChain, hashAlgorithm, new BouncyCastleDigest(), hasEncapContent) {
+        }
+
         // Constructors for validating existing signatures
         /// <summary>Use this constructor if you want to verify a signature using the sub-filter adbe.x509.rsa_sha1.</summary>
         /// <param name="contentsKey">the /Contents key</param>

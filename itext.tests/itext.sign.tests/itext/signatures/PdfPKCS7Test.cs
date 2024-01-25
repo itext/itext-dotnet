@@ -53,7 +53,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void SimpleCreationTest() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, hashAlgorithm, new BouncyCastleDigest(), false);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, hashAlgorithm, false);
             String expectedOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
