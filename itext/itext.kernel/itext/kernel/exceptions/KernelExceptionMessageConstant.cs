@@ -606,6 +606,9 @@ namespace iText.Kernel.Exceptions {
 
         public const String ARG_SHOULD_NOT_BE_NULL = "{0} should not be null.";
 
+        public const String XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET = "Pdf document is to large to " + "use normal cross reference table. Use cross reference streams instead. To enable feature use com.itextpdf"
+             + ".kernel.pdf.WriterProperties#setFullCompressionMode(true). ";
+
         private KernelExceptionMessageConstant() {
         }
     }

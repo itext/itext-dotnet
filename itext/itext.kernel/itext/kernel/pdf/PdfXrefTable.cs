@@ -29,6 +29,7 @@ using iText.Commons.Actions.Data;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Actions.Data;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
@@ -36,6 +37,16 @@ namespace iText.Kernel.Pdf {
         private const int INITIAL_CAPACITY = 32;
 
         private const int MAX_GENERATION = 65535;
+
+        /// <summary>The maximum offset in a cross-reference stream.</summary>
+        /// <remarks>
+        /// The maximum offset in a cross-reference stream. This is a limitation of the PDF specification.
+        /// SPEC1.7: 7.5.4 Cross reference trailer
+        /// <para />
+        /// It states that the offset should be a 10-digit byte, so the maximum value is 9999999999.
+        /// This is the max value that can be represented in 10 bytes.
+        /// </remarks>
+        private const long MAX_OFFSET_IN_CROSS_REFERENCE_STREAM = 9_999_999_999L;
 
         private static readonly byte[] freeXRefEntry = ByteUtils.GetIsoBytes("f \n");
 
@@ -352,6 +363,9 @@ namespace iText.Kernel.Pdf {
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
                     for (int i = first; i < first + len; i++) {
                         PdfIndirectReference reference = xrefTable.Get(i);
+                        if (reference.GetOffset() > MAX_OFFSET_IN_CROSS_REFERENCE_STREAM) {
+                            throw new PdfException(KernelExceptionMessageConstant.XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET);
+                        }
                         StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
                         StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
                         writer.WriteString(off.JSubstring(off.Length - 10, off.Length)).WriteSpace().WriteString(gen.JSubstring(gen

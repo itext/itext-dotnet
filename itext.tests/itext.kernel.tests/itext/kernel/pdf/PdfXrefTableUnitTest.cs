@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Test;
 
@@ -107,6 +108,72 @@ namespace iText.Kernel.Pdf {
             memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(20);
             PdfXrefTable xrefTable = new PdfXrefTable(0, memoryLimitsAwareHandler);
             NUnit.Framework.Assert.AreEqual(20, xrefTable.GetCapacity());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XRefMaxValueLong() {
+            PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            document.xref.Add(new PdfIndirectReferenceProxy(document, 11, long.MaxValue));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                document.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET, e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaxCrossReferenceOffSetReached() {
+            long justOver10gbLogical = 10_000_000_001L;
+            PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            document.xref.Add(new PdfIndirectReferenceProxy(document, 11, justOver10gbLogical));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                document.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET, e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaxCrossReference() {
+            long justOver10gbLogical = 10_000_000_000L;
+            PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            document.xref.Add(new PdfIndirectReferenceProxy(document, 11, justOver10gbLogical));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                document.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET, e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void JustBelowXrefThreshold() {
+            long maxAllowedOffset = 10_000_000_000L - 1L;
+            PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            document.xref.Add(new PdfIndirectReferenceProxy(document, 11, maxAllowedOffset));
+            NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XRefIntMax() {
+            PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            document.xref.Add(new PdfIndirectReferenceProxy(document, 11, int.MaxValue));
+            NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
+        }
+    }
+
+    internal class PdfIndirectReferenceProxy : PdfIndirectReference {
+        private readonly long offset;
+
+        public PdfIndirectReferenceProxy(PdfDocument document, int objNumber, long offset)
+            : base(document, objNumber) {
+            this.offset = offset;
+        }
+
+        public override long GetOffset() {
+            return offset;
         }
     }
 }
