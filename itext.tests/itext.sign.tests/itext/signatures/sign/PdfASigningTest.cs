@@ -100,7 +100,8 @@ namespace iText.Signatures.Sign {
             signer.SetFieldLockDict(new PdfSigFieldLock());
             signer.SetCertificationLevel(PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
         }
 
@@ -152,8 +153,8 @@ namespace iText.Signatures.Sign {
             signer.SetPageRect(rect).GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity").SetLayer2Font
                 (font).SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(pks
-                , chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(new 
+                BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.ALL_THE_FONTS_MUST_BE_EMBEDDED_THIS_ONE_IS_NOT_0
                 , "Helvetica"), e.Message);
         }
@@ -190,7 +191,7 @@ namespace iText.Signatures.Sign {
             }
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
-            signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
         }
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {

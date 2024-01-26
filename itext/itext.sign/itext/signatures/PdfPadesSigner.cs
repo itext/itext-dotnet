@@ -57,6 +57,8 @@ namespace iText.Signatures {
 
         private String temporaryDirectoryPath = null;
 
+        private IExternalDigest externalDigest = new BouncyCastleDigest();
+
         private StampingProperties stampingProperties = new StampingProperties().UseAppendMode();
 
         private MemoryStream tempOutputStream;
@@ -492,6 +494,34 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Set
+        /// <see cref="IExternalDigest"/>
+        /// to be used for main signing operation.
+        /// </summary>
+        /// <remarks>
+        /// Set
+        /// <see cref="IExternalDigest"/>
+        /// to be used for main signing operation.
+        /// <para />
+        /// If none is set,
+        /// <see cref="BouncyCastleDigest"/>
+        /// instance will be used instead.
+        /// </remarks>
+        /// <param name="externalDigest">
+        /// 
+        /// <see cref="IExternalDigest"/>
+        /// to be used for main signing operation.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetExternalDigest(IExternalDigest externalDigest) {
+            this.externalDigest = externalDigest;
+            return this;
+        }
+
+        /// <summary>
+        /// Set
         /// <see cref="IIssuingCertificateRetriever"/>
         /// to be used before main signing operation.
         /// </summary>
@@ -606,7 +636,7 @@ namespace iText.Signatures {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(chain);
             PdfSigner signer = CreatePdfSigner(signerProperties, isFinal);
             try {
-                signer.SignDetached(externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
+                signer.SignDetached(externalDigest, externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
                     .CADES);
             }
             finally {

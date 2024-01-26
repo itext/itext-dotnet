@@ -78,7 +78,8 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName(fieldName);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             //Password to open out and cmp files are the same
             ReaderProperties properties = new ReaderProperties().SetPassword(ownerPass);
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties
@@ -97,7 +98,8 @@ namespace iText.Signatures.Sign {
                     .UseAppendMode());
                 // Creating the signature
                 IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-                signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+                signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                    );
                 ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk);
                 //Public key to open out and cmp files are the same
                 NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf, properties, properties

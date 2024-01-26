@@ -26,7 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -60,7 +60,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        protected internal IDigest md5;
+        protected internal IMessageDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];

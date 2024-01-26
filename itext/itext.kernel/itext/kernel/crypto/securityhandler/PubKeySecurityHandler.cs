@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Digest;
 using iText.IO.Util;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -55,7 +56,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, bool encryptMetadata) {
-            IDigest md;
+            IMessageDigest md;
             byte[] encodedRecipient;
             try {
                 md = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(messageDigestAlgorithm
@@ -87,7 +88,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
             byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate, recipients);
             byte[] encryptionKey;
-            IDigest md;
+            IMessageDigest md;
             try {
                 md = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(digestAlgorithm);
                 md.Update(envelopedData, 0, 20);

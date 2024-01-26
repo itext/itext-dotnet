@@ -216,7 +216,7 @@ namespace iText.Signatures.Sign {
             }
             byte[] signatureContent = null;
             try {
-                PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, HASH_ALGORITHM, false);
+                PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, HASH_ALGORITHM, new BouncyCastleDigest(), false);
                 byte[] attributes = pkcs7.GetAuthenticatedAttributeBytes(docBytesHash, PdfSigner.CryptoStandard.CMS, null, 
                     null);
                 PrivateKeySignature signature = new PrivateKeySignature(pk, HASH_ALGORITHM);

@@ -27,7 +27,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -334,8 +334,8 @@ namespace iText.Signatures {
             signerInfo.SetDigestAlgorithm(new AlgorithmIdentifier(digestAlgorithmOid));
             cms.AddCertificates(x509FullChain);
             cms.SetSignerInfo(signerInfo);
-            IDigest messageDigest = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(
-                DigestAlgorithms.GetDigest(digestAlgorithmOid));
+            IMessageDigest messageDigest = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest
+                (DigestAlgorithms.GetDigest(digestAlgorithmOid));
             int realSignatureSize = messageDigest.GetDigestLength() + (int)cms.GetSizeEstimation();
             if (tsaClient != null) {
                 realSignatureSize += tsaClient.GetTokenSizeEstimate();

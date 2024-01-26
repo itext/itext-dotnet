@@ -26,6 +26,7 @@ using System.IO;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -568,13 +569,14 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
+        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
-            <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
-             sigtype) {
-            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, (ISignaturePolicyIdentifier
-                )null);
+        public virtual void SignDetached(IExternalDigest externalDigest, IExternalSignature externalSignature, IX509Certificate
+            [] chain, ICollection<ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize
+            , PdfSigner.CryptoStandard sigtype) {
+            SignDetached(externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype
+                , (ISignaturePolicyIdentifier)null);
         }
 
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
@@ -589,14 +591,15 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
+        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
-            <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
-             sigtype, SignaturePolicyInfo signaturePolicy) {
-            SignDetached(externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype, signaturePolicy
-                .ToSignaturePolicyIdentifier());
+        public virtual void SignDetached(IExternalDigest externalDigest, IExternalSignature externalSignature, IX509Certificate
+            [] chain, ICollection<ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize
+            , PdfSigner.CryptoStandard sigtype, SignaturePolicyInfo signaturePolicy) {
+            SignDetached(externalDigest, externalSignature, chain, crlList, ocspClient, tsaClient, estimatedSize, sigtype
+                , signaturePolicy.ToSignaturePolicyIdentifier());
         }
 
         /// <summary>Signs the document using the detached mode, CMS or CAdES equivalent.</summary>
@@ -611,12 +614,13 @@ namespace iText.Signatures {
         /// <param name="crlList">the CRL list</param>
         /// <param name="ocspClient">the OCSP client</param>
         /// <param name="tsaClient">the Timestamp client</param>
+        /// <param name="externalDigest">an implementation that provides the digest</param>
         /// <param name="estimatedSize">the reserved size for the signature. It will be estimated if 0</param>
         /// <param name="sigtype">Either Signature.CMS or Signature.CADES</param>
         /// <param name="signaturePolicy">the signature policy (for EPES signatures)</param>
-        public virtual void SignDetached(IExternalSignature externalSignature, IX509Certificate[] chain, ICollection
-            <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
-             sigtype, ISignaturePolicyIdentifier signaturePolicy) {
+        public virtual void SignDetached(IExternalDigest externalDigest, IExternalSignature externalSignature, IX509Certificate
+            [] chain, ICollection<ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize
+            , PdfSigner.CryptoStandard sigtype, ISignaturePolicyIdentifier signaturePolicy) {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
@@ -672,12 +676,12 @@ namespace iText.Signatures {
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
-            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, false);
+            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, externalDigest, false);
             if (signaturePolicy != null) {
                 sgn.SetSignaturePolicy(signaturePolicy);
             }
             Stream data = GetRangeStream();
-            byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm));
+            byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm, externalDigest));
             IList<byte[]> ocspList = new List<byte[]>();
             if (chain.Length > 1 && ocspClient != null) {
                 for (int j = 0; j < chain.Length - 1; ++j) {
@@ -768,7 +772,7 @@ namespace iText.Signatures {
             exc.Put(PdfName.Contents, contentEstimated * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
-            IDigest messageDigest = tsa.GetMessageDigest();
+            IMessageDigest messageDigest = tsa.GetMessageDigest();
             byte[] buf = new byte[4096];
             int n;
             while ((n = data.Read(buf)) > 0) {

@@ -20,74 +20,53 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-using iText.Commons.Digest;
-
-namespace iText.Commons.Bouncycastle.Crypto {
+namespace iText.Commons.Digest {
     /// <summary>
-    /// This interface represents the wrapper for IDigest that provides the ability
-    /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
+    /// This interface should be implemented to provide applications the functionality of a message digest algorithm.
     /// </summary>
-    public interface IDigest : IMessageDigest {
+    public interface IMessageDigest {
         /// <summary>
-        /// Calls actual
-        /// <c>Digest</c>
-        /// method for the wrapped IDigest object.
+        /// Performs a final update on the digest using the specified array of bytes,
+        /// then completes the digest computation.
         /// </summary>
-        /// <param name="enc2">byte array</param>
-        /// <returns>
-        /// byte array.
-        /// </returns>
-        byte[] Digest(byte[] enc2);
+        /// <param name="enc">the input to be updated before the digest is completed</param>
+        /// <returns>The array of bytes for the resulting hash value</returns>
+        byte[] Digest(byte[] enc);
         
         /// <summary>
-        /// Calls actual
-        /// <c>Digest</c>
-        /// method for the wrapped IDigest object.
+        /// Completes the hash computation by performing final operations such as padding.
         /// Leaves the digest reset.
         /// </summary>
-        /// <returns>
-        /// byte array.
-        /// </returns>
+        /// <returns>The array of bytes for the resulting hash value</returns>
         byte[] Digest();
 
         /// <summary>
         /// Gets byte length of wrapped digest algorithm.
         /// </summary>
-        /// <returns>digest length</returns>
+        /// <returns>The length of the digest in bytes.</returns>
         int GetDigestLength();
         
         /// <summary>
-        /// Calls actual
-        /// <c>Update</c>
-        /// method for the wrapped IDigest object.
+        /// Updates the digest using the specified array of bytes, starting at the specified offset.
         /// </summary>
         /// <param name="buf">byte array buffer</param>
-        /// <param name="off">offset</param>
-        /// <param name="len">buffer length</param>
+        /// <param name="off">the offset to start from in the array of bytes</param>
+        /// <param name="len">the number of bytes to use, starting at offset</param>
         void Update(byte[] buf, int off, int len);
         
         /// <summary>
-        /// Calls actual
-        /// <c>Update</c>
-        /// method for the wrapped IDigest object.
+        /// Updates the digest using the specified array of bytes.
         /// </summary>
         /// <param name="buf">byte array buffer</param>
         void Update(byte[] buf);
 
-        /// <summary>
-        /// Calls actual
-        /// <c>Reset</c>
-        /// method for the wrapped IDigest object.
-        /// </summary>
+        /// <summary>Resets the digest for further use.</summary>
         void Reset();
 
         /// <summary>
-        /// Gets actual
-        /// <c>AlgorithmName</c>
-        /// for the wrapped IDigest object.
+        /// Returns a string that identifies the algorithm, independent of implementation details.
         /// </summary>
-        /// <returns>algorithm name.</returns>
+        /// <returns>The name of the algorithm.</returns>
         string GetAlgorithmName();
     }
 }

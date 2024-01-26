@@ -104,7 +104,7 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
-            signer.SignDetached(pks, signChain, crlNotAvailableList, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard
+            signer.SignDetached(new BouncyCastleDigest(), pks, signChain, crlNotAvailableList, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard
                 .CADES);
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, compareFile));
         }
@@ -138,7 +138,7 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
-            signer.SignDetached(pks, signChain, JavaCollectionsUtil.SingletonList<ICrlClient>(testCrlClient), null, testTsa
+            signer.SignDetached(new BouncyCastleDigest(), pks, signChain, JavaCollectionsUtil.SingletonList<ICrlClient>(testCrlClient), null, testTsa
                 , 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvFileName, compareFile));
         }

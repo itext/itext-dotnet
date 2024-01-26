@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
@@ -124,7 +125,7 @@ namespace iText.Signatures {
             int tokenSizeEstimate = 4096;
             TSAClientBouncyCastle tsaClientBouncyCastle = new TSAClientBouncyCastle(url, userName, password, tokenSizeEstimate
                 , digestAlgorithm);
-            IDigest digest = tsaClientBouncyCastle.GetMessageDigest();
+            IMessageDigest digest = tsaClientBouncyCastle.GetMessageDigest();
             NUnit.Framework.Assert.IsNotNull(digest);
             NUnit.Framework.Assert.AreEqual(digestAlgorithm, digest.GetAlgorithmName());
         }

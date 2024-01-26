@@ -58,7 +58,7 @@ namespace iText.Signatures {
         }
 
         public virtual byte[] Sign(Stream data) {
-            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, false);
+            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, new BouncyCastleDigest(), false);
             if (signaturePolicy != null) {
                 sgn.SetSignaturePolicy(signaturePolicy);
             }

@@ -1,30 +1,29 @@
 /*
-    This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
-    Authors: Apryse Software.
+This file is part of the iText (R) project.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
 
-    This program is offered under a commercial and under the AGPL license.
-    For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-    AGPL licensing:
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-﻿using System;
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;
@@ -35,6 +34,8 @@ namespace iText.Signatures {
         private readonly PdfReader reader;
 
         private readonly Stream outputStream;
+
+        private IExternalDigest externalDigest;
 
         private StampingProperties stampingProperties = new StampingProperties().UseAppendMode();
 
@@ -62,8 +63,13 @@ namespace iText.Signatures {
         /// <returns>the message digest of the prepared document.</returns>
         public virtual byte[] PrepareDocumentForSignature(SignerProperties signerProperties, String digestAlgorithm
             , PdfName filter, PdfName subFilter, int estimatedSize, bool includeDate) {
-            IDigest digest;
-            digest = SignUtils.GetMessageDigest(digestAlgorithm);
+            IMessageDigest digest;
+            if (externalDigest != null) {
+                digest = externalDigest.GetMessageDigest(digestAlgorithm);
+            }
+            else {
+                digest = SignUtils.GetMessageDigest(digestAlgorithm);
+            }
             return PrepareDocumentForSignature(signerProperties, digest, filter, subFilter, estimatedSize, includeDate
                 );
         }
@@ -90,6 +96,17 @@ namespace iText.Signatures {
             applier.Apply((a) => signedContent);
         }
 
+        /// <summary>Use the external digest to inject specific digest implementations</summary>
+        /// <param name="externalDigest">the IExternalDigest instance to use to generate Digests</param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfTwoPhaseSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfTwoPhaseSigner SetExternalDigest(IExternalDigest externalDigest) {
+            this.externalDigest = externalDigest;
+            return this;
+        }
+
         /// <summary>Set stamping properties to be used during main signing operation.</summary>
         /// <remarks>
         /// Set stamping properties to be used during main signing operation.
@@ -112,37 +129,21 @@ namespace iText.Signatures {
         }
 
         internal virtual PdfSigner CreatePdfSigner(SignerProperties signerProperties) {
-            PdfSigner signer = new PdfSigner(reader, outputStream, null, stampingProperties);
-            signer.SetFieldLockDict(signerProperties.GetFieldLockDict());
-            signer.SetFieldName(signerProperties.GetFieldName());
-            // We need to update field name because signer could change it
-            signerProperties.SetFieldName(signer.GetFieldName());
-            signer.SetCertificationLevel(signerProperties.GetCertificationLevel());
-            signer.SetPageRect(signerProperties.GetPageRect());
-            signer.SetPageNumber(signerProperties.GetPageNumber());
-            signer.SetSignDate(signerProperties.GetSignDate());
-            signer.SetSignatureCreator(signerProperties.GetSignatureCreator());
-            signer.SetContact(signerProperties.GetContact());
-            signer.SetReason(signerProperties.GetReason());
-            signer.SetLocation(signerProperties.GetLocation());
-            signer.SetSignatureAppearance(signerProperties.GetSignatureAppearance());
-            return signer;
+            return new PdfSigner(reader, outputStream, null, stampingProperties, signerProperties);
         }
 
-        private byte[] PrepareDocumentForSignature(SignerProperties signerProperties, IDigest messageDigest, PdfName
-             filter, PdfName subFilter, int estimatedSize, bool includeDate) {
+        private byte[] PrepareDocumentForSignature(SignerProperties signerProperties, IMessageDigest messageDigest, 
+            PdfName filter, PdfName subFilter, int estimatedSize, bool includeDate) {
             if (closed) {
                 throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
             }
             PdfSigner pdfSigner = CreatePdfSigner(signerProperties);
-            
             PdfDocument document = pdfSigner.GetDocument();
             if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
                 document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
             document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
             document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
-        
             PdfSignature cryptoDictionary = pdfSigner.CreateSignatureDictionary(includeDate);
             cryptoDictionary.Put(PdfName.Filter, filter);
             cryptoDictionary.Put(PdfName.SubFilter, subFilter);

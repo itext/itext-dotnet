@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -53,7 +54,7 @@ namespace iText.Signatures.Testutils.Client {
             return 4096;
         }
 
-        public virtual IDigest GetMessageDigest() {
+        public virtual IMessageDigest GetMessageDigest() {
             return SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
         }
 

@@ -32,6 +32,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
 using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Digest;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures.Testutils {
@@ -56,7 +57,7 @@ namespace iText.Signatures.Testutils {
             return gen.Build();
         }
 
-        public static IDigest GetMessageDigest(String hashAlgorithm) {
+        public static IMessageDigest GetMessageDigest(String hashAlgorithm) {
             return FACTORY.CreateIDigest(hashAlgorithm);
         }
 

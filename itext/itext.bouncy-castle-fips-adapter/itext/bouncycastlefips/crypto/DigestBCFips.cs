@@ -60,6 +60,8 @@ namespace iText.Bouncycastlefips.Crypto {
         /// hash algorithm to create IStreamCalculator<IBlockResult>
         /// </param>
         public DigestBCFips(string hashAlgorithm) {
+            if (hashAlgorithm == null)
+                throw new ArgumentNullException(nameof(hashAlgorithm));
             if ("MD5".Equals(hashAlgorithm)) {
                 md5 = System.Security.Cryptography.MD5.Create();
                 algorithmName = "MD5";

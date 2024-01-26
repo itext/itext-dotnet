@@ -24,11 +24,11 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
-using Org.BouncyCastle.Asn1;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
@@ -37,7 +37,6 @@ using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
-using AlgorithmIdentifier = Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier;
 using SignerInfo = iText.Signatures.Cms.SignerInfo;
 
 namespace iText.Signatures.Sign {
@@ -280,7 +279,7 @@ namespace iText.Signatures.Sign {
         }
 
         private byte[] SignDigest(byte[] data, String hashAlgorithm) {
-            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, false);
+            PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, new BouncyCastleDigest(), false);
             byte[] sh = sgn.GetAuthenticatedAttributeBytes(data, PdfSigner.CryptoStandard.CMS, null, null);
             PrivateKeySignature pkSign = new PrivateKeySignature(pk, hashAlgorithm);
             byte[] signData = pkSign.Sign(sh);
@@ -314,7 +313,7 @@ namespace iText.Signatures.Sign {
                     cms.AddCertificates(chain);
                     byte[] signedAttributesToSign = cms.GetSerializedSignedAttributes();
 
-                    IDigest sha = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(DIGEST_ALGORITHM
+                    IMessageDigest sha = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(DIGEST_ALGORITHM
                         );
                     byte[] dataToSign = sha.Digest(signedAttributesToSign);
 

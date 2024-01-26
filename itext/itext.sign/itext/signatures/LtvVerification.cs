@@ -31,8 +31,8 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
-using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Operator;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
@@ -432,7 +432,8 @@ namespace iText.Signatures {
         }
 
         private static byte[] HashBytesSha1(byte[] b) {
-            IDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1");
+            IMessageDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1"
+                );
             return sh.Digest(b);
         }
 

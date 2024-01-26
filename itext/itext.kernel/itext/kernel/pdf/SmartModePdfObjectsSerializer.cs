@@ -22,13 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     internal class SmartModePdfObjectsSerializer {
-        private IDigest sha512;
+        private IMessageDigest sha512;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<
             SerializedObjectContent, PdfIndirectReference>();

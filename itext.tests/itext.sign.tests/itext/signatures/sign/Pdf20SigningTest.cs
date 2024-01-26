@@ -160,7 +160,7 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName(name);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
-            signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
         }
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
@@ -186,7 +186,7 @@ namespace iText.Signatures.Sign {
             }
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
-            signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
         }
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey

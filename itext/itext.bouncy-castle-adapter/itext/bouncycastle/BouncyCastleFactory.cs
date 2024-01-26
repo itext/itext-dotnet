@@ -948,7 +948,11 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public IDigest CreateIDigest(string hashAlgorithm) {
-            return new DigestBC(DigestUtilities.GetDigest(hashAlgorithm));
+            try {
+                return new DigestBC(DigestUtilities.GetDigest(hashAlgorithm));
+            } catch (SecurityUtilityException e) {
+                throw new SecurityUtilityExceptionBC(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
