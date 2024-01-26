@@ -141,5 +141,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 NUnit.Framework.Assert.IsTrue(extractedText.Contains("L3B 廠： 新竹科學工業園區新竹市東區力行二路 1 號"));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MixedCharacterCodes() {
+            String inFile = sourceFolder + "SameCidForDifferentCodes.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+                NUnit.Framework.Assert.IsTrue(extractedText.Contains("18个月"));
+                NUnit.Framework.Assert.IsFalse(extractedText.Contains("18个⽉"));
+            }
+        }
     }
 }

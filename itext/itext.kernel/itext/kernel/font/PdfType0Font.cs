@@ -131,8 +131,8 @@ namespace iText.Kernel.Font {
                 toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
                 embeddedToUnicode = toUnicodeCMap;
             }
-            if (cmap.IsName() && (PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()) || PdfEncodings.IDENTITY_V
-                .Equals(((PdfName)cmap).GetValue()))) {
+            if (cmap.IsName() && ((toUnicodeCMap != null) || PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()
+                ) || PdfEncodings.IDENTITY_V.Equals(((PdfName)cmap).GetValue()))) {
                 if (toUnicodeCMap == null) {
                     String uniMap = GetUniMapFromOrdering(ordering, PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue())
                         );
