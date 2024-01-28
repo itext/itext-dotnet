@@ -39,6 +39,7 @@ namespace iText.Kernel.Pdf {
         CRYPTO,
         FONT,
         CANVAS_BEGIN_MARKED_CONTENT,
-        CANVAS_WRITING_CONTENT
+        CANVAS_WRITING_CONTENT,
+        LAYOUT
     }
 }

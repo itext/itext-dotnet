@@ -29,6 +29,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
+using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers {
@@ -62,6 +63,11 @@ namespace iText.Pdfua.Checkers {
         public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             , Object extra) {
             switch (key) {
+                case IsoKey.LAYOUT: {
+                    LayoutCheckUtil.CheckLayoutElements(obj);
+                    break;
+                }
+
                 case IsoKey.CANVAS_WRITING_CONTENT: {
                     CheckOnWritingCanvasToContent(obj);
                     break;
@@ -186,6 +192,9 @@ namespace iText.Pdfua.Checkers {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ONE_OR_MORE_STANDARD_ROLE_REMAPPED);
                 }
             }
+            TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
+            tagTreeIterator.AddHandler(GraphicsCheckUtil.CreateFigureTagHandler());
+            tagTreeIterator.Traverse();
         }
 
         private void CheckFonts(ICollection<PdfFont> fontsInDocument) {

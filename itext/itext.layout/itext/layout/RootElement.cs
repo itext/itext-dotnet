@@ -346,6 +346,7 @@ namespace iText.Layout {
                     .SingletonList<IRenderer>(rendererSubTreeRoot));
             }
             EnsureRootRendererNotNull().AddChild(rendererSubTreeRoot);
+            TraverseAndCallIso(pdfDocument, rendererSubTreeRoot);
         }
 
         private LayoutTaggingHelper InitTaggingHelperIfNeeded() {
@@ -360,6 +361,20 @@ namespace iText.Layout {
                 childElements.JRemoveAt(childElements.Count - 1);
             }
             return (T)(Object)this;
+        }
+
+        private static void TraverseAndCallIso(PdfDocument pdfDocument, IRenderer renderer) {
+            if (renderer == null) {
+                return;
+            }
+            pdfDocument.CheckIsoConformance(renderer.GetModelElement(), IsoKey.LAYOUT);
+            IList<IRenderer> renderers = renderer.GetChildRenderers();
+            if (renderers == null) {
+                return;
+            }
+            foreach (IRenderer childRenderer in renderers) {
+                TraverseAndCallIso(pdfDocument, childRenderer);
+            }
         }
 
         public abstract void Close();
