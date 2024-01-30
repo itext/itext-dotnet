@@ -23,4 +23,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("8.0.3.0")]
 [assembly: AssemblyFileVersion("8.0.3.0")]
-[assembly: AssemblyInformationalVersion("8.0.3-SNAPSHOT")]
+[assembly: AssemblyInformationalVersion("8.0.3")]
