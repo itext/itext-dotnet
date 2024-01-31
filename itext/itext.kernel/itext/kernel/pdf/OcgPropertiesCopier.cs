@@ -26,7 +26,9 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Font;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Layer;
 
 namespace iText.Kernel.Pdf {
     internal sealed class OcgPropertiesCopier {
@@ -251,19 +253,20 @@ namespace iText.Kernel.Pdf {
                 toOcProperties.Put(PdfName.D, new PdfDictionary());
             }
             PdfDictionary toDDict = toOcProperties.GetAsDictionary(PdfName.D);
-            // The Name field is not copied because it will be given when flushing the PdfOCProperties
+            iText.Kernel.Pdf.OcgPropertiesCopier.CopyDStringField(PdfName.Name, fromDDict, toDDict);
             // Delete the Creator field because the D dictionary are changing
             toDDict.Remove(PdfName.Creator);
-            // The BaseState field is not copied because for dictionary D BaseState should have the value ON, which is the default
+            iText.Kernel.Pdf.OcgPropertiesCopier.CopyDNameField(PdfName.BaseState, fromDDict, toDDict);
             iText.Kernel.Pdf.OcgPropertiesCopier.CopyDArrayField(PdfName.ON, fromOcgsToCopy, fromDDict, toDDict, toDocument
                 );
             iText.Kernel.Pdf.OcgPropertiesCopier.CopyDArrayField(PdfName.OFF, fromOcgsToCopy, fromDDict, toDDict, toDocument
                 );
-            // The Intent field is not copied because for dictionary D Intent should have the value View, which is the default
+            iText.Kernel.Pdf.OcgPropertiesCopier.CopyDNameField(PdfName.Intent, fromDDict, toDDict);
             // The AS field is not copied because it will be given when flushing the PdfOCProperties
             iText.Kernel.Pdf.OcgPropertiesCopier.CopyDArrayField(PdfName.Order, fromOcgsToCopy, fromDDict, toDDict, toDocument
                 );
-            // The ListModel field is not copied because it only affects the visual presentation of the layers
+            // The ListMode field is copied, but it only affects the visual presentation of the layers
+            iText.Kernel.Pdf.OcgPropertiesCopier.CopyDNameField(PdfName.ListMode, fromDDict, toDDict);
             iText.Kernel.Pdf.OcgPropertiesCopier.CopyDArrayField(PdfName.RBGroups, fromOcgsToCopy, fromDDict, toDDict, 
                 toDocument);
             iText.Kernel.Pdf.OcgPropertiesCopier.CopyDArrayField(PdfName.Locked, fromOcgsToCopy, fromDDict, toDDict, toDocument
@@ -275,6 +278,38 @@ namespace iText.Kernel.Pdf {
             PdfIndirectReference fromObjRef = fromObj.GetIndirectReference();
             if (fromObjRef != null && fromOcgsToCopy.Contains(fromObjRef)) {
                 toArray.Add(fromObj.CopyTo(toDocument, false));
+            }
+        }
+
+        private static void CopyDNameField(PdfName fieldToCopy, PdfDictionary fromDict, PdfDictionary toDict) {
+            PdfName fromName = fromDict.GetAsName(fieldToCopy);
+            if (fromName == null || toDict.GetAsName(fieldToCopy) != null) {
+                return;
+            }
+            if (PdfOCProperties.CheckDDictonaryFieldValue(fieldToCopy, fromName)) {
+                toDict.Put(fieldToCopy, fromName);
+            }
+            else {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier));
+                String warnText = MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToCopy
+                    , fromName);
+                logger.LogWarning(warnText);
+            }
+        }
+
+        private static void CopyDStringField(PdfName fieldToCopy, PdfDictionary fromDict, PdfDictionary toDict) {
+            PdfString fromString = fromDict.GetAsString(fieldToCopy);
+            if (fromString == null || toDict.GetAsString(fieldToCopy) != null) {
+                return;
+            }
+            if (PdfOCProperties.CheckDDictonaryFieldValue(fieldToCopy, fromString)) {
+                toDict.Put(fieldToCopy, fromString);
+            }
+            else {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier));
+                String warnText = MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToCopy
+                    , fromString);
+                logger.LogWarning(warnText);
             }
         }
 

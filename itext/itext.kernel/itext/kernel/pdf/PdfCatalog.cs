@@ -80,6 +80,8 @@ namespace iText.Kernel.Pdf {
         // If this flag is false all outline operations will be ignored
         private bool outlineMode;
 
+        private bool ocgCopied = false;
+
         /// <summary>
         /// Create
         /// <see cref="PdfCatalog"/>
@@ -494,7 +496,11 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <returns>boolean indicating if the dictionary needs to be reconstructed</returns>
         protected internal virtual bool IsOCPropertiesMayHaveChanged() {
-            return ocProperties != null;
+            return ocProperties != null || ocgCopied;
+        }
+
+        internal virtual void SetOcgCopied(bool ocgCopied) {
+            this.ocgCopied = ocgCopied;
         }
 
         internal virtual PdfPagesTree GetPageTree() {

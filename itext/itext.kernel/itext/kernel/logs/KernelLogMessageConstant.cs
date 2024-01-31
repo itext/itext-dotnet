@@ -84,6 +84,8 @@ namespace iText.Kernel.Logs {
         public const String FORMFIELD_ANNOTATION_WILL_NOT_BE_FLATTENED = "Form field annotation flattening is not "
              + "supported. Use the PdfAcroForm#flattenFields() method instead.";
 
+        public const String INVALID_DDICTIONARY_FIELD_VALUE = "The default configuration dictionary field {0}" + " has a value of {1}, which is not the required value for this field. The field will not be processed.";
+
         private KernelLogMessageConstant() {
         }
         //Private constructor will prevent the instantiation of this class directly

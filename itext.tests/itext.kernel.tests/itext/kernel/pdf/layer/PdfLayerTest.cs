@@ -330,7 +330,7 @@ namespace iText.Kernel.Pdf.Layer {
                 (destinationFolder + "output_copy_layered.pdf"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "output_copy_layered.pdf"
-                , sourceFolder + "input_layered.pdf", destinationFolder, "diff"));
+                , sourceFolder + "cmp_output_copy_layered.pdf", destinationFolder, "diff"));
         }
 
         [NUnit.Framework.Test]
