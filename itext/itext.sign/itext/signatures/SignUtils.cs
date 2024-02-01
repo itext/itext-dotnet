@@ -84,8 +84,8 @@ namespace iText.Signatures {
             return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
-        internal static IMessageDigest GetMessageDigest(String hashAlgorithm) {
-            return new BouncyCastleDigest().GetMessageDigest(hashAlgorithm);
+        internal static IDigest GetMessageDigest(String hashAlgorithm) {
+            return (IDigest)new BouncyCastleDigest().GetMessageDigest(hashAlgorithm);
         }
         
         internal static IMessageDigest GetMessageDigest(String hashAlgorithm, IExternalDigest externalDigest) {

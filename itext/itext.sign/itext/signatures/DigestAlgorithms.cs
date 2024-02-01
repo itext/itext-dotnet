@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Digest;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Logs;
@@ -189,15 +190,15 @@ namespace iText.Signatures {
         /// <summary>Get a digest algorithm.</summary>
         /// <param name="digestOid">oid of the digest algorithm</param>
         /// <returns>MessageDigest object</returns>
-        public static IMessageDigest GetMessageDigestFromOid(String digestOid) {
+        public static IDigest GetMessageDigestFromOid(String digestOid) {
             return GetMessageDigest(GetDigest(digestOid));
         }
 
         /// <summary>Creates a MessageDigest object that can be used to create a hash.</summary>
         /// <param name="hashAlgorithm">the algorithm you want to use to create a hash</param>
         /// <returns>a MessageDigest object</returns>
-        public static IMessageDigest GetMessageDigest(String hashAlgorithm) {
-            return SignUtils.GetMessageDigest(hashAlgorithm);
+        public static IDigest GetMessageDigest(String hashAlgorithm) {
+            return (IDigest)SignUtils.GetMessageDigest(hashAlgorithm);
         }
 
         /// <summary>Creates a hash using a specific digest algorithm and a provider.</summary>
@@ -205,7 +206,7 @@ namespace iText.Signatures {
         /// <param name="hashAlgorithm">the algorithm used to create the hash</param>
         /// <returns>the hash</returns>
         public static byte[] Digest(Stream data, String hashAlgorithm) {
-            IMessageDigest messageDigest = GetMessageDigest(hashAlgorithm);
+            IDigest messageDigest = GetMessageDigest(hashAlgorithm);
             return Digest(data, messageDigest);
         }
 
@@ -213,9 +214,24 @@ namespace iText.Signatures {
         /// <param name="data">data to be digested</param>
         /// <param name="messageDigest">algorithm to be used</param>
         /// <returns>digest of the data</returns>
-        public static byte[] Digest(Stream data, IMessageDigest messageDigest) {
+        public static byte[] Digest(Stream data, IDigest messageDigest) {
             byte[] buf = new byte[8192];
             int n;
+            while ((n = data.Read(buf)) > 0) {
+                messageDigest.Update(buf, 0, n);
+            }
+            return messageDigest.Digest();
+        }
+
+        /// <summary>Create a digest based on the inputstream.</summary>
+        /// <param name="data">data to be digested</param>
+        /// <param name="hashAlgorithm">algorithm to be used</param>
+        /// <param name="externalDigest">external digest to be used</param>
+        /// <returns>digest of the data</returns>
+        public static byte[] Digest(Stream data, String hashAlgorithm, IExternalDigest externalDigest) {
+            byte[] buf = new byte[8192];
+            int n;
+            IMessageDigest messageDigest = SignUtils.GetMessageDigest(hashAlgorithm, externalDigest);
             while ((n = data.Read(buf)) > 0) {
                 messageDigest.Update(buf, 0, n);
             }

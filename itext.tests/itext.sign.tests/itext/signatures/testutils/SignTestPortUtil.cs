@@ -57,7 +57,7 @@ namespace iText.Signatures.Testutils {
             return gen.Build();
         }
 
-        public static IMessageDigest GetMessageDigest(String hashAlgorithm) {
+        public static IDigest GetMessageDigest(String hashAlgorithm) {
             return FACTORY.CreateIDigest(hashAlgorithm);
         }
 
