@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,32 +21,63 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.IO.Source;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfXrefTableTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfXrefTableTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfXrefTableTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
+            LogLevelConstants.ERROR)]
+        public virtual void OpenInvalidDocWithHugeRefTest() {
+            String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
+            NUnit.Framework.Assert.DoesNotThrow(() => new PdfDocument(new PdfReader(inputFile)));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
+            LogLevelConstants.ERROR)]
+        public virtual void OpenWithWriterInvalidDocWithHugeRefTest() {
+            String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
+            MemoryStream outputStream = new ByteArrayOutputStream();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(new PdfReader(inputFile
+                ), new PdfWriter(outputStream)));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateXMP() {
-            String created = destinationFolder + "testCreateAndUpdateXMP_create.pdf";
-            String updated = destinationFolder + "testCreateAndUpdateXMP_update.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            String created = DESTINATION_FOLDER + "testCreateAndUpdateXMP_create.pdf";
+            String updated = DESTINATION_FOLDER + "testCreateAndUpdateXMP_update.pdf";
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
             pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(created), CompareTool.CreateTestPdfWriter(updated
+                ));
             PdfXrefTable xref = pdfDocument.GetXref();
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
             ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
@@ -73,19 +104,21 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestCreateAndUpdateTwiceXMP() {
-            String created = destinationFolder + "testCreateAndUpdateTwiceXMP_create.pdf";
-            String updated = destinationFolder + "testCreateAndUpdateTwiceXMP_update.pdf";
-            String updatedAgain = destinationFolder + "testCreateAndUpdateTwiceXMP_updatedAgain.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(created));
+            String created = DESTINATION_FOLDER + "testCreateAndUpdateTwiceXMP_create.pdf";
+            String updated = DESTINATION_FOLDER + "testCreateAndUpdateTwiceXMP_update.pdf";
+            String updatedAgain = DESTINATION_FOLDER + "testCreateAndUpdateTwiceXMP_updatedAgain.pdf";
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
             pdfDocument.GetXmpMetadata(true);
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(created), new PdfWriter(updated));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(created), CompareTool.CreateTestPdfWriter(updated
+                ));
             PdfDictionary catalog = pdfDocument.GetCatalog().GetPdfObject();
             ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             pdfDocument.Close();
-            pdfDocument = new PdfDocument(new PdfReader(updated), new PdfWriter(updatedAgain));
+            pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(updated), CompareTool.CreateTestPdfWriter(updatedAgain
+                ));
             catalog = pdfDocument.GetCatalog().GetPdfObject();
             ((PdfIndirectReference)catalog.Remove(PdfName.Metadata)).SetFree();
             PdfXrefTable xref = pdfDocument.GetXref();

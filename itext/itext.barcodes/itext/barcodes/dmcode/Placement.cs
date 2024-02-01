@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 
 namespace iText.Barcodes.Dmcode {
+    /// <summary>Utility class that helps to place the data in the barcode.</summary>
     public class Placement {
         private readonly int nrow;
 

@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -47,6 +47,12 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// byte array.
         /// </returns>
         byte[] Digest();
+
+        /// <summary>
+        /// Gets byte length of wrapped digest algorithm.
+        /// </summary>
+        /// <returns>digest length</returns>
+        int GetDigestLength();
         
         /// <summary>
         /// Calls actual

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
@@ -74,7 +75,7 @@ namespace iText.Forms.Form.Renderer {
                 inputField.SetColor(color.GetColor());
             }
             inputField.SetJustification(this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT));
-            ApplyBorderProperty(inputField.GetFirstFormAnnotation());
+            BorderStyleUtil.ApplyBorderProperty(this, inputField.GetFirstFormAnnotation());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 inputField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());

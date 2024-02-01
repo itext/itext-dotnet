@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -37,8 +37,6 @@ namespace iText.Forms.Fields {
         private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
 
         private const String DUMMY_NAME = "dummy name";
-
-        private const int DUMMY_FLAG = 4;
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
 
@@ -231,14 +229,14 @@ namespace iText.Forms.Fields {
                 PdfWidgetAnnotation annotation = widgets[0];
                 NUnit.Framework.Assert.IsTrue(DUMMY_RECTANGLE.EqualsWithEpsilon(annotation.GetRectangle().ToRectangle()));
                 PutIfAbsent(expectedDictionary, PdfName.Rect, new PdfArray(DUMMY_RECTANGLE));
-                if (radioButtonFormField.GetPdfAConformanceLevel() != null) {
-                    PutIfAbsent(expectedDictionary, PdfName.F, new PdfNumber(DUMMY_FLAG));
-                }
                 // if the radiobutton has been added to the radiogroup we expect the AP to be generated
                 if (isAddedToRadioGroup) {
                     PutIfAbsent(expectedDictionary, PdfName.AP, radioButtonFormField.GetPdfObject().GetAsDictionary(PdfName.AP
                         ));
                 }
+            }
+            if (radioButtonFormField.pdfAConformanceLevel != null) {
+                PutIfAbsent(expectedDictionary, PdfName.F, new PdfNumber(PdfAnnotation.PRINT));
             }
             // for the AS key if it's added to the group we expect it to be off or the value if the radiogroup was selected
             // if its was not added we expect it to be the value

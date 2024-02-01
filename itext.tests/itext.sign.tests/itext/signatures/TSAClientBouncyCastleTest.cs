@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -58,8 +58,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(url, tsaClientBouncyCastle.tsaURL);
             NUnit.Framework.Assert.AreEqual(userName, tsaClientBouncyCastle.tsaUsername);
             NUnit.Framework.Assert.AreEqual(password, tsaClientBouncyCastle.tsaPassword);
-            NUnit.Framework.Assert.AreEqual(TSAClientBouncyCastle.DEFAULTTOKENSIZE, tsaClientBouncyCastle.tokenSizeEstimate
-                );
+            NUnit.Framework.Assert.AreEqual(TSAClientBouncyCastle.DEFAULTTOKENSIZE, tsaClientBouncyCastle.GetTokenSizeEstimate
+                ());
             NUnit.Framework.Assert.AreEqual(TSAClientBouncyCastle.DEFAULTHASHALGORITHM, tsaClientBouncyCastle.digestAlgorithm
                 );
         }
@@ -76,7 +76,9 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(url, tsaClientBouncyCastle.tsaURL);
             NUnit.Framework.Assert.AreEqual(userName, tsaClientBouncyCastle.tsaUsername);
             NUnit.Framework.Assert.AreEqual(password, tsaClientBouncyCastle.tsaPassword);
-            NUnit.Framework.Assert.AreEqual(tokenSize, tsaClientBouncyCastle.tokenSizeEstimate);
+            NUnit.Framework.Assert.AreEqual(TSAClientBouncyCastle.DEFAULTTOKENSIZE, tsaClientBouncyCastle.tokenSizeEstimate
+                );
+            NUnit.Framework.Assert.AreEqual(tokenSize, tsaClientBouncyCastle.GetTokenSizeEstimate());
             NUnit.Framework.Assert.AreEqual(digestAlgorithm, tsaClientBouncyCastle.digestAlgorithm);
         }
 
@@ -162,7 +164,7 @@ namespace iText.Signatures {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tsaClientBouncyCastle.GetTimeStampToken
                 (digest));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.INVALID_TSA_RESPONSE
-                , url, "128"), e.Message);
+                , url, "128: request contains unknown algorithm"), e.Message);
         }
 
         private sealed class CustomTsaClientBouncyCastle : TSAClientBouncyCastle {

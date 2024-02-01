@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -68,9 +68,18 @@ namespace iText.Signatures {
             Stream url = WebRequest.Create(crlurl).GetResponse().GetResponseStream();
             return ParseCrlFromStream(url);
         }
+        
+        internal static ICollection<IX509Crl> ReadAllCRLs(byte[] crlBytes) {
+            return FACTORY.CreateX509Crls(new MemoryStream(crlBytes));
+        }
 
         internal static byte[] GetExtensionValueByOid(IX509Certificate certificate, String oid) {
             IAsn1OctetString extensionValue = certificate.GetExtensionValue(oid);
+            return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
+        }
+
+        internal static byte[] GetExtensionValueByOid(IX509Crl crl, String oid) {
+            IAsn1OctetString extensionValue = crl.GetExtensionValue(oid);;
             return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
@@ -133,7 +142,29 @@ namespace iText.Signatures {
         }
 
         internal static List<IX509Certificate> ReadAllCerts(byte[] contentsKey) {
-            return FACTORY.CreateX509CertificateParser().ReadAllCerts(contentsKey);
+            List<IX509Certificate> certificates = FACTORY.CreateX509CertificateParser().ReadAllCerts(contentsKey);
+            if (certificates.IsEmpty()) {
+                using (MemoryStream data = new MemoryStream(contentsKey)) {
+                    certificates = FACTORY.GetBouncyCastleUtil().ReadPkcs7Certs(data);
+                }
+            }
+
+            return certificates;
+        }
+        
+        internal static List<IX509Certificate> ReadAllCerts(Stream data) {
+            using (MemoryStream bout = new MemoryStream()) {
+                byte[] buf = new byte[1024];
+                while (true) {
+                    int n = data.JRead(buf, 0, buf.Length);
+                    if (n <= 0) {
+                        break;
+                    }
+                    bout.Write(buf, 0, n);
+                }
+                byte[] certsData = bout.ToArray();
+                return ReadAllCerts(certsData);
+            }
         }
 
         internal static T GetFirstElement<T>(IEnumerable<T> enumerable) {
@@ -244,6 +275,10 @@ namespace iText.Signatures {
         public static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, 
             IDerObjectIdentifier hashAlgOid) {
             return GenerateCertificateId(issuerCert, serialNumber, hashAlgOid.GetId());
+        }
+
+        public static IX509Certificate GenerateCertificate(Stream data) {
+            return FACTORY.CreateX509Certificate(data);
         }
     }
 }

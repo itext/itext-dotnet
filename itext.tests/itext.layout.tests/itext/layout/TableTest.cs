@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -2854,7 +2854,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void BigRowSpanTooFarNothingTest() {
             String filename = "bigRowSpanTooFarNothingTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
@@ -2973,6 +2973,22 @@ namespace iText.Layout {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
                  + "cmp_" + fileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, LogLevel = LogLevelConstants.WARN
+            )]
+        public virtual void NegativeLayoutAreaTest() {
+            String testName = "negativeLayoutAreaTable.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(595.0f, 50.0f));
+            doc.Add(new Table(new float[] { 1, 1 }).AddCell(new Cell().SetHeight(10.0f)));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         private class RotatedDocumentRenderer : DocumentRenderer {

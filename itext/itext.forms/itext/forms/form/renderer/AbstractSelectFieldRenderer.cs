@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -204,6 +204,26 @@ namespace iText.Forms.Form.Renderer {
                 return -1;
             }
             return actualHeight;
+        }
+
+        /// <summary>Gets the conformance level.</summary>
+        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+        ///     </remarks>
+        /// <param name="document">the document</param>
+        /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
+            PdfAConformanceLevel conformanceLevel = this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                );
+            if (conformanceLevel != null) {
+                return conformanceLevel;
+            }
+            if (document == null) {
+                return null;
+            }
+            if (document.GetConformanceLevel() is PdfAConformanceLevel) {
+                return (PdfAConformanceLevel)document.GetConformanceLevel();
+            }
+            return null;
         }
 
         protected internal virtual IList<IRenderer> GetOptionsMarkedSelected(IRenderer optionsSubTree) {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -505,7 +505,6 @@ namespace iText.IO.Image {
                             }
                             byte[] tables = new byte[tablelength];
                             Array.Copy(temp, tableoffset, tables, 0, tablelength);
-                            // TODO insert after JFIF header, instead of at the start
                             byte[] jpegwithtables = new byte[jpeg.Length + tables.Length];
                             Array.Copy(jpeg, 0, jpegwithtables, 0, 2);
                             Array.Copy(tables, 0, jpegwithtables, 2, tables.Length);

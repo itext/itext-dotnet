@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -71,6 +71,11 @@ namespace iText.Bouncycastle.Crypto {
         /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
             iDigest.BlockUpdate(buf, off, len);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetDigestLength() {
+            return iDigest.GetByteLength();
         }
 
         /// <summary><inheritDoc/></summary>

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -79,6 +79,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SimpleFontWithPartialToUnicodeTest() {
+            String inFile = sourceFolder + "simpleFontWithPartialToUnicode.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("Registered", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Type0FontToUnicodeTest() {
             String inFile = sourceFolder + "type0FontToUnicode.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
@@ -104,6 +112,43 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             String expected = "\u0943\n\u0938\u0902\u0938\u094d\u0915\u0943\u0924 \u092e\u094d";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
                 NUnit.Framework.Assert.AreEqual(expected, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortOctalDataAsTextTest() {
+            String inFile = sourceFolder + "shortOctalDataAsText.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                NUnit.Framework.Assert.AreEqual("EC", PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotDefaultCodespacesCyrillicTest() {
+            String inFile = sourceFolder + "notDefaultCodespacesCyrillic.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+                NUnit.Framework.Assert.IsTrue(extractedText.Contains("бронирование"));
+                NUnit.Framework.Assert.IsTrue(extractedText.Contains("From"));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotDefaultCodespacesChineseTest() {
+            String inFile = sourceFolder + "notDefaultCodespacesChinese.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+                NUnit.Framework.Assert.IsTrue(extractedText.Contains("L3B 廠： 新竹科學工業園區新竹市東區力行二路 1 號"));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MixedCharacterCodes() {
+            String inFile = sourceFolder + "SameCidForDifferentCodes.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
+                String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
+                NUnit.Framework.Assert.IsTrue(extractedText.Contains("18个月"));
+                NUnit.Framework.Assert.IsFalse(extractedText.Contains("18个⽉"));
             }
         }
     }

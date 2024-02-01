@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -51,6 +51,11 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void NoLineStrokeWidthTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noLineStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeWithDashesTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashes");
         }
 
         [NUnit.Framework.Test]

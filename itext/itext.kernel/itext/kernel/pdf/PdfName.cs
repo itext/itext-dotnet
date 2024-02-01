@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -1553,6 +1553,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Subtype2 = CreateDirectName("Subtype2");
 
         public static readonly iText.Kernel.Pdf.PdfName Supplement = CreateDirectName("Supplement");
+
+        public static readonly iText.Kernel.Pdf.PdfName Suspects = CreateDirectName("Suspects");
 
         public static readonly iText.Kernel.Pdf.PdfName SV = CreateDirectName("SV");
 

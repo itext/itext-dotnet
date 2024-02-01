@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -43,6 +43,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         protected internal int keyLength;
 
         protected internal ARCFOUREncryption arcfour = new ARCFOUREncryption();
+
+        private const int DEFAULT_KEY_LENGTH = 40;
 
         public StandardHandlerUsingStandard40(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId) {
@@ -203,7 +205,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private int GetKeyLength(PdfDictionary encryptionDict) {
             int? keyLength = encryptionDict.GetAsInt(PdfName.Length);
-            return keyLength != null ? (int)keyLength : 40;
+            return keyLength != null ? (int)keyLength : DEFAULT_KEY_LENGTH;
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -70,12 +70,17 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
 
         /// <summary><inheritDoc/></summary>
         public bool Verify(IX509Certificate cert) {
-            ISigner signature = SignerUtilities.GetSigner(GetBasicOcspResponse().SignatureAlgorithm.Algorithm);
-            signature.Init(false, ((PublicKeyBC) cert.GetPublicKey()).GetPublicKey());
-            byte[] bs = GetBasicOcspResponse().TbsResponseData.GetDerEncoded();
-            signature.BlockUpdate(bs, 0, bs.Length);
+            try {
+                ISigner signature = SignerUtilities.GetSigner(GetBasicOcspResponse().SignatureAlgorithm.Algorithm);
+                signature.Init(false, ((PublicKeyBC)cert.GetPublicKey()).GetPublicKey());
+                byte[] bs = GetBasicOcspResponse().TbsResponseData.GetDerEncoded();
+                signature.BlockUpdate(bs, 0, bs.Length);
 
-            return signature.VerifySignature(GetBasicOcspResponse().GetSignatureOctets());
+                return signature.VerifySignature(GetBasicOcspResponse().GetSignatureOctets());
+            }
+            catch (InvalidKeyException) {
+                return false;
+            }
         }
 
         /// <summary><inheritDoc/></summary>

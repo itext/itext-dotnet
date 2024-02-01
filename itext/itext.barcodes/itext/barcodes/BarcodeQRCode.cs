@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -58,9 +58,15 @@ namespace iText.Barcodes {
             : this(content, null) {
         }
 
+        /// <summary>
+        /// Creates an instance of the
+        /// <see cref="BarcodeQRCode"/>
+        /// class.
+        /// </summary>
         public BarcodeQRCode() {
         }
 
+        // empty constructor
         /// <summary>Gets the current data.</summary>
         /// <returns>the encoded data</returns>
         public virtual String GetCode() {

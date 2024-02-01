@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -26,7 +26,7 @@ using iText.Kernel.XMP.Properties;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Enumeration of all the PDF/A conformance levels.</summary>
-    public class PdfAConformanceLevel {
+    public class PdfAConformanceLevel : IConformanceLevel {
         public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_1A = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("1", "A");
 

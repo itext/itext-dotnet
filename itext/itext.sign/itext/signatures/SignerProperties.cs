@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,6 +47,10 @@ namespace iText.Signatures {
 
         private String contact = "";
 
+        private String reason = "";
+
+        private String location = "";
+
         /// <summary>
         /// Create instance of
         /// <see cref="SignerProperties"/>.
@@ -56,13 +60,14 @@ namespace iText.Signatures {
 
         // Empty constructor.
         /// <summary>Gets the signature date.</summary>
-        /// <returns>Calendar set to the signature date</returns>
+        /// <returns>Calendar set to the signature date.</returns>
         public virtual DateTime GetSignDate() {
             return signDate;
         }
 
         /// <summary>Sets the signature date.</summary>
-        /// <param name="signDate">the signature date</param>
+        /// <param name="signDate">the signature date.</param>
+        /// <returns>this instance to support fluent interface.</returns>
         public virtual iText.Signatures.SignerProperties SetSignDate(DateTime signDate) {
             this.signDate = signDate;
             return this;
@@ -78,6 +83,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
         /// layout element.
         /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
         public virtual iText.Signatures.SignerProperties SetSignatureAppearance(SignatureFieldAppearance appearance
             ) {
             this.appearance = appearance;
@@ -88,7 +94,7 @@ namespace iText.Signatures {
         /// <returns>
         /// 
         /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
-        /// layout element
+        /// layout element.
         /// </returns>
         public virtual SignatureFieldAppearance GetSignatureAppearance() {
             return this.appearance;
@@ -123,13 +129,14 @@ namespace iText.Signatures {
         /// </description></item>
         /// </list>
         /// </param>
+        /// <returns>this instance to support fluent interface.</returns>
         public virtual iText.Signatures.SignerProperties SetCertificationLevel(int certificationLevel) {
             this.certificationLevel = certificationLevel;
             return this;
         }
 
         /// <summary>Gets the field name.</summary>
-        /// <returns>the field name</returns>
+        /// <returns>the field name.</returns>
         public virtual String GetFieldName() {
             return fieldName;
         }
@@ -140,6 +147,7 @@ namespace iText.Signatures {
         /// document but shall not be signed. If the field is not presented in the document, it will be created.
         /// </remarks>
         /// <param name="fieldName">The name indicating the field to be signed.</param>
+        /// <returns>this instance to support fluent interface.</returns>
         public virtual iText.Signatures.SignerProperties SetFieldName(String fieldName) {
             this.fieldName = fieldName;
             return this;
@@ -216,7 +224,8 @@ namespace iText.Signatures {
         /// <strong>Be aware:</strong> if a signature is created on an existing signature field,
         /// then its /Lock dictionary takes the precedence (if it exists).
         /// </remarks>
-        /// <param name="fieldLock">Field lock dictionary</param>
+        /// <param name="fieldLock">Field lock dictionary.</param>
+        /// <returns>this instance to support fluent interface.</returns>
         public virtual iText.Signatures.SignerProperties SetFieldLockDict(PdfSigFieldLock fieldLock) {
             this.fieldLock = fieldLock;
             return this;
@@ -247,6 +256,34 @@ namespace iText.Signatures {
         /// <returns>this instance to support fluent interface.</returns>
         public virtual iText.Signatures.SignerProperties SetContact(String contact) {
             this.contact = contact;
+            return this;
+        }
+
+        /// <summary>Returns the signing reason.</summary>
+        /// <returns>The signing reason.</returns>
+        public virtual String GetReason() {
+            return this.reason;
+        }
+
+        /// <summary>Sets the signing reason.</summary>
+        /// <param name="reason">A new signing reason.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual iText.Signatures.SignerProperties SetReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        /// <summary>Returns the signing location.</summary>
+        /// <returns>The signing location.</returns>
+        public virtual String GetLocation() {
+            return this.location;
+        }
+
+        /// <summary>Sets the signing location.</summary>
+        /// <param name="location">A new signing location.</param>
+        /// <returns>this instance to support fluent interface.</returns>
+        public virtual iText.Signatures.SignerProperties SetLocation(String location) {
+            this.location = location;
             return this;
         }
     }

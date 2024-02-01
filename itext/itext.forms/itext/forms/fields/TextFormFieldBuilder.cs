@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -62,6 +62,9 @@ namespace iText.Forms.Fields {
                 }
                 field = PdfFormCreator.CreateTextFormField(annotation, GetDocument());
                 SetPageToField(field);
+            }
+            if (null != GetFont()) {
+                field.SetFont(GetFont());
             }
             field.DisableFieldRegeneration();
             field.pdfAConformanceLevel = GetConformanceLevel();

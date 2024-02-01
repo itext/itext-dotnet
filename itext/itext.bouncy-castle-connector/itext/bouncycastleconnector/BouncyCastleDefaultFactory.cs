@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -22,6 +22,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastleconnector.Logs;
 using iText.Commons.Bouncycastle;
@@ -57,6 +58,10 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
         
+        public virtual String GetDigestAlgorithmOid(String name) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
         public virtual String GetAlgorithmName(String oid) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -204,6 +209,10 @@ namespace iText.Bouncycastleconnector {
         public IDerEnumerated CreateASN1Enumerated(int i) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        public IDerEnumerated CreateASN1Enumerated(IAsn1Encodable i) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public IAsn1Encoding CreateASN1Encoding() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
@@ -242,6 +251,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public IBasicOcspResponse CreateBasicOCSPResponse(IAsn1Object primitive) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
+        public IBasicOcspResponse CreateBasicOCSPResponse(byte[] bytes) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -406,6 +419,10 @@ namespace iText.Bouncycastleconnector {
         public ITbsCertificateStructure CreateTBSCertificate(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        public virtual ITbsCertificateStructure CreateTBSCertificate(byte[] bytes) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public IIssuerAndSerialNumber CreateIssuerAndSerialNumber(IX500Name issuer, IBigInteger value) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
@@ -546,6 +563,10 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
+        public ICollection<IX509Crl> CreateX509Crls(Stream input) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
         public IDigest CreateIDigest(string hashAlgorithm) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -645,6 +666,11 @@ namespace iText.Bouncycastleconnector {
         public bool IsNullExtension(IX509Extension extNonce) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        
+        public bool IsNull(IAsn1Encodable encodable) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public byte[] CreateCipherBytes(IX509Certificate x509Certificate, byte[] abyte0, IAlgorithmIdentifier algorithmidentifier) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
@@ -655,6 +681,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public void IsEncryptionFeatureSupported(int encryptionType, bool withCertificate) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
+        public IBouncyCastleUtil GetBouncyCastleUtil() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
     }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -69,14 +69,48 @@ namespace iText.Forms.Fields {
         /// </remarks>
         public static readonly int FF_RADIOS_IN_UNISON = MakeFieldFlag(26);
 
+        /// <summary>
+        /// Creates a minimal
+        /// <see cref="PdfButtonFormField"/>.
+        /// </summary>
+        /// <param name="pdfDocument">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance.
+        /// </param>
         protected internal PdfButtonFormField(PdfDocument pdfDocument)
             : base(pdfDocument) {
         }
 
+        /// <summary>
+        /// Creates a button form field as a parent of a
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>.
+        /// </summary>
+        /// <param name="widget">
+        /// The widget which will be a kid of the
+        /// <see cref="PdfButtonFormField"/>.
+        /// </param>
+        /// <param name="pdfDocument">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance.
+        /// </param>
         protected internal PdfButtonFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
             : base(widget, pdfDocument) {
         }
 
+        /// <summary>
+        /// Creates a button form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <remarks>
+        /// Creates a button form field as a wrapper object around a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// This
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// must be an indirect object.
+        /// </remarks>
+        /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
         protected internal PdfButtonFormField(PdfDictionary pdfObject)
             : base(pdfObject) {
         }

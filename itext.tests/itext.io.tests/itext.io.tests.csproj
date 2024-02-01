@@ -2,7 +2,7 @@
   <PropertyGroup Label="Configuration">
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
@@ -28,7 +28,6 @@
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.7.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.0" />
   </ItemGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>

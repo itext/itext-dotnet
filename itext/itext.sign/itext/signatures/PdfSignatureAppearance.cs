@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -125,6 +125,9 @@ namespace iText.Signatures {
         /// <summary>Indicates if we need to reuse the existing appearance as layer 0.</summary>
         private bool reuseAppearance = false;
 
+        // Option for backward compatibility.
+        private bool reuseAppearanceSet = false;
+
         /// <summary>Creates a PdfSignatureAppearance.</summary>
         /// <param name="document">PdfDocument</param>
         /// <param name="pageRect">Rectangle of the appearance</param>
@@ -212,7 +215,7 @@ namespace iText.Signatures {
         /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
         /// </remarks>
         /// <returns>layer 0.</returns>
-        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetBackgroundLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) ."
+        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetBackgroundLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) . Note that it should be called for the field retrieved with PdfSigner.GetSignatureField() method."
             )]
         public virtual PdfFormXObject GetLayer0() {
             if (n0 == null) {
@@ -230,7 +233,7 @@ namespace iText.Signatures {
         /// <see cref="SetPageRect(iText.Kernel.Geom.Rectangle)"/>
         /// </remarks>
         /// <returns>layer 2.</returns>
-        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetSignatureAppearanceLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) ."
+        [System.ObsoleteAttribute(@"will be deleted in the next major release. See iText.Forms.Fields.PdfSignatureFormField.SetSignatureAppearanceLayer(iText.Kernel.Pdf.Xobject.PdfFormXObject) . Note that it should be called for the field retrieved with PdfSigner.GetSignatureField() method."
             )]
         public virtual PdfFormXObject GetLayer2() {
             if (n2 == null) {
@@ -261,7 +264,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signing reason.</summary>
         /// <returns>reason for signing.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.Properties.SignedAppearanceText that should be used for iText.Forms.Form.Element.SignatureFieldAppearance ."
+        [System.ObsoleteAttribute(@"won't be public in the next major release. Use PdfSigner.GetReason() instead."
             )]
         public virtual String GetReason() {
             return reason;
@@ -270,7 +273,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signing reason.</summary>
         /// <param name="reason">signing reason.</param>
         /// <returns>this instance to support fluent interface.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.Properties.SignedAppearanceText that should be used for iText.Forms.Form.Element.SignatureFieldAppearance ."
+        [System.ObsoleteAttribute(@"won't be public in the next major release. Use PdfSigner.SetReason(System.String) instead."
             )]
         public virtual iText.Signatures.PdfSignatureAppearance SetReason(String reason) {
             this.reason = reason;
@@ -289,7 +292,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signing location.</summary>
         /// <returns>signing location.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.Properties.SignedAppearanceText that should be used for iText.Forms.Form.Element.SignatureFieldAppearance ."
+        [System.ObsoleteAttribute(@"won't be public in the next major release. Use PdfSigner.GetLocation() instead."
             )]
         public virtual String GetLocation() {
             return location;
@@ -298,7 +301,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signing location.</summary>
         /// <param name="location">A new signing location.</param>
         /// <returns>this instance to support fluent interface.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.Properties.SignedAppearanceText that should be used for iText.Forms.Form.Element.SignatureFieldAppearance ."
+        [System.ObsoleteAttribute(@"won't be public in the next major release. Use PdfSigner.SetLocation(System.String) instead."
             )]
         public virtual iText.Signatures.PdfSignatureAppearance SetLocation(String location) {
             this.location = location;
@@ -390,10 +393,11 @@ namespace iText.Signatures {
         /// <summary>Indicates that the existing appearances needs to be reused as a background layer.</summary>
         /// <param name="reuseAppearance">is an appearances reusing flag value to set.</param>
         /// <returns>this instance to support fluent interface.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.PdfSignatureFormField.SetReuseAppearance(bool) ."
+        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.PdfSignatureFormField.SetReuseAppearance(bool) . Note that it should be called for the field retrieved with PdfSigner.GetSignatureField() method."
             )]
         public virtual iText.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
             this.reuseAppearance = reuseAppearance;
+            this.reuseAppearanceSet = true;
             return this;
         }
 
@@ -518,6 +522,9 @@ namespace iText.Signatures {
                 SetFontRelatedProperties();
                 ApplyBackgroundImage();
             }
+            else {
+                PopulateExistingModelElement();
+            }
             return modelElement;
         }
 
@@ -600,8 +607,7 @@ namespace iText.Signatures {
 
         /// <summary>Returns the signature date.</summary>
         /// <returns>the signature date.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.Properties.SignedAppearanceText that should be used for iText.Forms.Form.Element.SignatureFieldAppearance ."
-            )]
+        [System.ObsoleteAttribute(@"use PdfSigner.GetSignDate() instead.")]
         protected internal virtual DateTime GetSignDate() {
             return signDate;
         }
@@ -609,8 +615,7 @@ namespace iText.Signatures {
         /// <summary>Sets the signature date.</summary>
         /// <param name="signDate">A new signature date.</param>
         /// <returns>this instance to support fluent interface.</returns>
-        [System.ObsoleteAttribute(@"in favour of iText.Forms.Fields.Properties.SignedAppearanceText that should be used for iText.Forms.Form.Element.SignatureFieldAppearance ."
-            )]
+        [System.ObsoleteAttribute(@"use PdfSigner.SetSignDate(System.DateTime) instead.")]
         protected internal virtual iText.Signatures.PdfSignatureAppearance SetSignDate(DateTime signDate) {
             this.signDate = signDate;
             return this;
@@ -635,6 +640,20 @@ namespace iText.Signatures {
         /// <returns>an appearances reusing flag value.</returns>
         internal virtual bool IsReuseAppearance() {
             return reuseAppearance;
+        }
+
+        /// <summary>
+        /// Checks if reuseAppearance value was set using
+        /// <see>this#setReuseAppearance(boolean)</see>.
+        /// </summary>
+        /// <remarks>
+        /// Checks if reuseAppearance value was set using
+        /// <see>this#setReuseAppearance(boolean)</see>.
+        /// Used for backward compatibility.
+        /// </remarks>
+        /// <returns>boolean value.</returns>
+        internal virtual bool IsReuseAppearanceSet() {
+            return reuseAppearanceSet;
         }
 
         /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
@@ -736,6 +755,20 @@ namespace iText.Signatures {
                         modelElement.SetContent(GenerateSignatureText());
                     }
                     break;
+                }
+            }
+        }
+
+        private void PopulateExistingModelElement() {
+            modelElement.SetSignerName(GetSignerName());
+            SignedAppearanceText signedAppearanceText = modelElement.GetSignedAppearanceText();
+            if (signedAppearanceText != null) {
+                signedAppearanceText.SetSignedBy(GetSignerName()).SetSignDate(signDate);
+                if (reasonCaption.Equals(signedAppearanceText.GetReasonLine())) {
+                    signedAppearanceText.SetReasonLine(reasonCaption + reason);
+                }
+                if (locationCaption.Equals(signedAppearanceText.GetLocationLine())) {
+                    signedAppearanceText.SetLocationLine(locationCaption + location);
                 }
             }
         }

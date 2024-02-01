@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -39,6 +39,8 @@ namespace iText.Kernel.Pdf {
         private const int AES_128 = 4;
 
         private const int AES_256 = 5;
+
+        private const int DEFAULT_KEY_LENGTH = 40;
 
         private static long seq = SystemUtil.GetTimeBasedSeed();
 
@@ -366,12 +368,29 @@ namespace iText.Kernel.Pdf {
         /// <param name="firstId">the first id</param>
         /// <param name="secondId">the second id</param>
         /// <returns>PdfObject containing the two entries.</returns>
+        [System.ObsoleteAttribute(@"Use CreateInfoId(byte[], byte[], bool) instead")]
         public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId) {
-            if (firstId.Length < 16) {
-                firstId = PadByteArrayTo16(firstId);
-            }
-            if (secondId.Length < 16) {
-                secondId = PadByteArrayTo16(secondId);
+            return CreateInfoId(firstId, secondId, false);
+        }
+
+        /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
+        /// <remarks>
+        /// Creates a PdfLiteral that contains an array of two id entries. These entries are both hexadecimal
+        /// strings containing up to 16 hex characters. The first entry is the original id, the second entry
+        /// should be different from the first one if the document has changed.
+        /// </remarks>
+        /// <param name="firstId">the first id</param>
+        /// <param name="secondId">the second id</param>
+        /// <param name="preserveEncryption">the encryption preserve</param>
+        /// <returns>PdfObject containing the two entries.</returns>
+        public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId, bool preserveEncryption) {
+            if (!preserveEncryption) {
+                if (firstId.Length < 16) {
+                    firstId = PadByteArrayTo16(firstId);
+                }
+                if (secondId.Length < 16) {
+                    secondId = PadByteArrayTo16(secondId);
+                }
             }
             ByteBuffer buf = new ByteBuffer(90);
             buf.Append('[').Append('<');
@@ -514,8 +533,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void SetKeyLength(int keyLength) {
-            // 40 - is default value;
-            if (keyLength != 40) {
+            if (keyLength != DEFAULT_KEY_LENGTH) {
                 GetPdfObject().Put(PdfName.Length, new PdfNumber(keyLength));
             }
         }
@@ -586,10 +604,7 @@ namespace iText.Kernel.Pdf {
 
                 case 3: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
-                    if (lengthValue == null) {
-                        throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
-                    }
-                    length = lengthValue.IntValue();
+                    length = lengthValue == null ? DEFAULT_KEY_LENGTH : lengthValue.IntValue();
                     if (length > 128 || length < 40 || length % 8 != 0) {
                         throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
                     }
@@ -666,10 +681,7 @@ namespace iText.Kernel.Pdf {
 
                 case 2: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
-                    if (lengthValue == null) {
-                        throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
-                    }
-                    length = lengthValue.IntValue();
+                    length = lengthValue == null ? DEFAULT_KEY_LENGTH : lengthValue.IntValue();
                     if (length > 128 || length < 40 || length % 8 != 0) {
                         throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_LENGTH_VALUE);
                     }

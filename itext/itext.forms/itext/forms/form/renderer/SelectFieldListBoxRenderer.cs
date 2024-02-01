@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -153,8 +154,7 @@ namespace iText.Forms.Form.Renderer {
 
         protected internal override void ApplyAcroField(DrawContext drawContext) {
             // Retrieve font properties
-            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
-            PdfFont font = retrievedFont is PdfFont ? (PdfFont)retrievedFont : null;
+            PdfFont font = GetResolvedFont(drawContext.GetDocument());
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SelectFieldListBoxRenderer));
@@ -172,13 +172,11 @@ namespace iText.Forms.Form.Renderer {
                 ));
             ListBoxField lbModelElement = (ListBoxField)modelElement;
             IList<String> selectedOptions = lbModelElement.GetSelectedStrings();
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetWidgetRectangle(area);
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetConformanceLevel(GetConformanceLevel
+                (doc)).SetFont(font).SetWidgetRectangle(area);
             SetupBuilderValues(builder, lbModelElement);
             PdfChoiceFormField choiceField = builder.CreateList();
             choiceField.DisableFieldRegeneration();
-            if (font != null) {
-                choiceField.SetFont(font);
-            }
             choiceField.SetFontSize(fontSize.GetValue());
             choiceField.SetMultiSelect(IsMultiple());
             choiceField.SetListSelected(selectedOptions.ToArray(new String[selectedOptions.Count]));
@@ -187,7 +185,7 @@ namespace iText.Forms.Form.Renderer {
                 choiceField.SetColor(color.GetColor());
             }
             choiceField.SetJustification(this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT));
-            AbstractFormFieldRenderer.ApplyBorderProperty(this, choiceField.GetFirstFormAnnotation());
+            BorderStyleUtil.ApplyBorderProperty(this, choiceField.GetFirstFormAnnotation());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 choiceField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());

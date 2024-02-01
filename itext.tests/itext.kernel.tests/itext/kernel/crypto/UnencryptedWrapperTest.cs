@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -46,6 +46,11 @@ namespace iText.Kernel.Crypto {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreateSimpleWrapperDocumentTest() {
             CreateWrapper("customEncryptedDocument.pdf", "simpleUnencryptedWrapper.pdf", "iText");
@@ -73,8 +78,8 @@ namespace iText.Kernel.Crypto {
             String cmpPath = sourceFolder + "cmp_" + wrapperName;
             String outPath = destinationFolder + wrapperName;
             String diff = "diff_" + wrapperName + "_";
-            PdfDocument document = new PdfDocument(new PdfWriter(outPath, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPath, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)));
             PdfFileSpec fs = PdfEncryptedPayloadFileSpecFactory.Create(document, inPath, new PdfEncryptedPayload(cryptoFilter
                 ));
             document.SetEncryptedPayload(fs);

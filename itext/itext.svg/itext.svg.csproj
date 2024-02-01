@@ -20,7 +20,7 @@
     <RootNamespace />
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+    <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658;0108</NoWarn>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -146,15 +146,18 @@ namespace iText.Forms.Form.Renderer {
 
                 case SignatureAppearanceRenderer.RenderingMode.DESCRIPTION: {
                     // Default one, it just shows whatever description was defined for the signature.
+                    float additionalHeight = CalculateAdditionalHeight();
                     if (RetrieveHeight() == null) {
                         // Adjust calculated occupied area height to keep the same font size.
                         float calculatedHeight = GetOccupiedArea().GetBBox().GetHeight();
-                        GetOccupiedArea().GetBBox().MoveDown(calculatedHeight * TOP_SECTION).SetHeight(calculatedHeight * (1 + TOP_SECTION
-                            ));
-                        bBox.MoveDown(calculatedHeight * TOP_SECTION);
+                        // (calcHeight + addHeight + topSect) * (1 - TOP_SECTION) - addHeight = calcHeight, =>
+                        float topSection = (calculatedHeight + additionalHeight) * TOP_SECTION / (1 - TOP_SECTION);
+                        GetOccupiedArea().GetBBox().MoveDown(topSection + additionalHeight).SetHeight(calculatedHeight + topSection
+                             + additionalHeight);
+                        bBox.MoveDown(bBox.GetBottom() - GetOccupiedArea().GetBBox().GetBottom() - additionalHeight / 2);
                     }
-                    descriptionRect = bBox.SetHeight(GetOccupiedArea().GetBBox().GetHeight() * (1 - TOP_SECTION) - CalculateAdditionalHeight
-                        ());
+                    descriptionRect = bBox.SetHeight(GetOccupiedArea().GetBBox().GetHeight() * (1 - TOP_SECTION) - additionalHeight
+                        );
                     break;
                 }
 
@@ -213,10 +216,10 @@ namespace iText.Forms.Form.Renderer {
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<SignatureAppearanceRenderer.RenderingMode?
                 >(Property.RENDERING_MODE));
-            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreateSignature
-                ();
+            PdfSignatureFormField sigField = new SignatureFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
+                (GetConformanceLevel(doc)).SetFont(font).CreateSignature();
             sigField.DisableFieldRegeneration();
-            sigField.SetFont(font).SetFontSize(fontSizeValue);
+            sigField.SetFontSize(fontSizeValue);
             sigField.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(sigField);
             sigField.GetFirstFormAnnotation().SetFormFieldElement((SignatureFieldAppearance)modelElement);

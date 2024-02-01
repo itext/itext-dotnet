@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -233,7 +233,7 @@ namespace iText.Forms.Form.Renderer {
             Color backgroundColor = background == null ? null : background.GetColor();
             float fontSizeValue = fontSize.GetValue();
             if (font == null) {
-                font = doc.GetDefaultFont();
+                font = GetResolvedFont(doc);
             }
             // Some properties are set to the HtmlDocumentRenderer, which is root renderer for this ButtonRenderer, but
             // in forms logic root renderer is CanvasRenderer, and these properties will have default values. So
@@ -241,10 +241,10 @@ namespace iText.Forms.Form.Renderer {
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
-            PdfButtonFormField button = new PushButtonFormFieldBuilder(doc, name).SetWidgetRectangle(area).CreatePushButton
-                ();
+            PdfButtonFormField button = new PushButtonFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
+                ).SetConformanceLevel(GetConformanceLevel(doc)).CreatePushButton();
             button.DisableFieldRegeneration();
-            button.SetFont(font).SetFontSize(fontSizeValue);
+            button.SetFontSize(fontSizeValue);
             button.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(button);
             button.GetFirstFormAnnotation().SetFormFieldElement((Button)modelElement);

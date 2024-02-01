@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 
 namespace iText.Pdfa {
     /// <summary>Utilities to construct an XMP for a PDF/A file.</summary>
@@ -42,5 +43,16 @@ namespace iText.Pdfa {
              + "                    </rdf:li>\n" + "                  </rdf:Seq>\n" + "                </pdfaSchema:property>\n"
              + "              </rdf:li>\n" + "            </rdf:Bag>\n" + "          </pdfaExtension:schemas>\n" +
              "        </rdf:Description>\n" + "      </rdf:RDF>\n" + "    </x:xmpmeta>";
+        
+        public static bool IsUtf8(byte[] array) {
+            UTF8Encoding encoding = new UTF8Encoding(false, true);
+            try {
+                encoding.GetCharCount(array);
+                return true;
+            }
+            catch (DecoderFallbackException e) {
+                return false;
+            }
+        }
     }
 }

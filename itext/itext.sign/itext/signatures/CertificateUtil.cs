@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,13 +21,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
+using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Security;
 using iText.IO.Util;
+using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>
@@ -36,6 +43,8 @@ namespace iText.Signatures {
     /// </summary>
     public class CertificateUtil {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateUtil));
 
         // Certificate Revocation Lists
         /// <summary>Gets a CRL from an X509 certificate.</summary>
@@ -90,6 +99,20 @@ namespace iText.Signatures {
             return SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(url)));
         }
 
+        /// <summary>Retrieves the URL for the issuer certificate for the given CRL.</summary>
+        /// <param name="crl">the CRL response</param>
+        /// <returns>the URL or null.</returns>
+        public static String GetIssuerCertURL(IX509Crl crl) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(crl, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
+                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+            }
+            catch (System.IO.IOException) {
+                return null;
+            }
+        }
+
         // Online Certificate Status Protocol
         /// <summary>Retrieves the OCSP URL from the given certificate.</summary>
         /// <param name="certificate">the certificate</param>
@@ -98,23 +121,26 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                if (obj == null) {
-                    return null;
-                }
-                IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(obj);
-                for (int i = 0; i < accessDescriptions.Size(); i++) {
-                    IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
-                    IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
-                    if (accessDescription.Size() == 2 && id != null && SecurityIDs.ID_OCSP.Equals(id.GetId())) {
-                        IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
-                        return GetStringFromGeneralName(description);
-                    }
-                }
+                return GetValueFromAIAExtension(obj, SecurityIDs.ID_OCSP);
             }
             catch (System.IO.IOException) {
                 return null;
             }
-            return null;
+        }
+
+        // Missing certificates in chain
+        /// <summary>Retrieves the URL for the issuer lists certificates for the given certificate.</summary>
+        /// <param name="certificate">the certificate</param>
+        /// <returns>the URL or null.</returns>
+        public static String GetIssuerCertURL(IX509Certificate certificate) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
+                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+            }
+            catch (System.IO.IOException) {
+                return null;
+            }
         }
 
         // Time Stamp Authority
@@ -139,21 +165,176 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Generates a certificate object and initializes it with the data read from the input stream inStream.
+        ///     </summary>
+        /// <param name="data">the input stream with the certificates.</param>
+        /// <returns>a certificate object initialized with the data from the input stream.</returns>
+        public static IX509Certificate GenerateCertificate(Stream data) {
+            return SignUtils.GenerateCertificate(data);
+        }
+
+        /// <summary>Try to retrieve CRL and OCSP responses from the signed data crls field.</summary>
+        /// <param name="taggedObj">
+        /// signed data crls field as
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1TaggedObject"/>.
+        /// </param>
+        /// <param name="crls">collection to store retrieved CRL responses.</param>
+        /// <param name="ocsps">
+        /// collection of
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
+        /// wrappers to store retrieved
+        /// OCSP responses.
+        /// </param>
+        /// <param name="otherRevocationInfoFormats">
+        /// collection of revocation info other than OCSP and CRL responses,
+        /// e.g. SCVP Request and Response, stored as
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Sequence"/>.
+        /// </param>
+        public static void RetrieveRevocationInfoFromSignedData(IAsn1TaggedObject taggedObj, ICollection<IX509Crl>
+             crls, ICollection<IBasicOcspResponse> ocsps, ICollection<IAsn1Sequence> otherRevocationInfoFormats) {
+            IEnumerator revInfo = FACTORY.CreateASN1Set(taggedObj, false).GetObjects();
+            while (revInfo.MoveNext()) {
+                IAsn1Sequence s = FACTORY.CreateASN1Sequence(revInfo.Current);
+                IDerObjectIdentifier o = FACTORY.CreateASN1ObjectIdentifier(s.GetObjectAt(0));
+                if (o != null && SecurityIDs.ID_RI_OCSP_RESPONSE.Equals(o.GetId())) {
+                    IAsn1Sequence ocspResp = FACTORY.CreateASN1Sequence(s.GetObjectAt(1));
+                    IDerEnumerated respStatus = FACTORY.CreateASN1Enumerated(ocspResp.GetObjectAt(0));
+                    if (respStatus.IntValueExact() == FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
+                        IAsn1Sequence responseBytes = FACTORY.CreateASN1Sequence(ocspResp.GetObjectAt(1));
+                        if (responseBytes != null) {
+                            ocsps.Add(CertificateUtil.CreateOcsp(responseBytes));
+                        }
+                    }
+                }
+                else {
+                    try {
+                        crls.AddAll(SignUtils.ReadAllCRLs(s.GetEncoded()));
+                    }
+                    catch (AbstractCrlException) {
+                        LOGGER.LogWarning(SignLogMessageConstant.UNABLE_TO_PARSE_REV_INFO);
+                        otherRevocationInfoFormats.Add(s);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates the revocation info (crls field) for SignedData structure:
+        /// RevocationInfoChoices ::= SET OF RevocationInfoChoice
+        /// RevocationInfoChoice ::= CHOICE {
+        /// crl CertificateList,
+        /// other [1] IMPLICIT OtherRevocationInfoFormat }
+        /// OtherRevocationInfoFormat ::= SEQUENCE {
+        /// otherRevInfoFormat OBJECT IDENTIFIER,
+        /// otherRevInfo ANY DEFINED BY otherRevInfoFormat }
+        /// CertificateList  ::=  SEQUENCE  {
+        /// tbsCertList          TBSCertList,
+        /// signatureAlgorithm   AlgorithmIdentifier,
+        /// signatureValue       BIT STRING  }
+        /// </summary>
+        /// <seealso><a href="https://datatracker.ietf.org/doc/html/rfc5652#section-10.2.1">RFC 5652 §10.2.1</a></seealso>
+        /// <param name="crls">collection of CRL revocation status information.</param>
+        /// <param name="ocsps">collection of OCSP revocation status information.</param>
+        /// <param name="otherRevocationInfoFormats">
+        /// collection of revocation info other than OCSP and CRL responses,
+        /// e.g. SCVP Request and Response, stored as
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Sequence"/>.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <c>crls [1] RevocationInfoChoices</c>
+        /// field of SignedData structure. Null if SignedData has
+        /// no revocation data.
+        /// </returns>
+        public static IDerSet CreateRevocationInfoChoices(ICollection<IX509Crl> crls, ICollection<IBasicOcspResponse
+            > ocsps, ICollection<IAsn1Sequence> otherRevocationInfoFormats) {
+            if (crls.Count == 0 && ocsps.Count == 0) {
+                return null;
+            }
+            IAsn1EncodableVector revocationInfoChoices = FACTORY.CreateASN1EncodableVector();
+            // Add CRLs
+            foreach (IX509Crl element in crls) {
+                // Add crl CertificateList (crl RevocationInfoChoice)
+                revocationInfoChoices.Add(FACTORY.CreateASN1Sequence(((IX509Crl)element).GetEncoded()));
+            }
+            // Add OCSPs
+            foreach (IBasicOcspResponse element in ocsps) {
+                IAsn1EncodableVector ocspResponseRevInfo = FACTORY.CreateASN1EncodableVector();
+                // Add otherRevInfoFormat (ID_RI_OCSP_RESPONSE)
+                ocspResponseRevInfo.Add(FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_RI_OCSP_RESPONSE));
+                IAsn1EncodableVector ocspResponse = FACTORY.CreateASN1EncodableVector();
+                ocspResponse.Add(FACTORY.CreateOCSPResponseStatus(FACTORY.CreateOCSPResponseStatus().GetSuccessful()).ToASN1Primitive
+                    ());
+                ocspResponse.Add(FACTORY.CreateResponseBytes(FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspBasic(), FACTORY
+                    .CreateDEROctetString(element.ToASN1Primitive().GetEncoded())).ToASN1Primitive());
+                // Add otherRevInfo (ocspResponse)
+                ocspResponseRevInfo.Add(FACTORY.CreateDERSequence(ocspResponse));
+                // Add other [1] IMPLICIT OtherRevocationInfoFormat (ocsp RevocationInfoChoice)
+                revocationInfoChoices.Add(FACTORY.CreateDERSequence(ocspResponseRevInfo));
+            }
+            // Add other RevocationInfo formats
+            foreach (IAsn1Sequence revInfo in otherRevocationInfoFormats) {
+                revocationInfoChoices.Add(revInfo);
+            }
+            return FACTORY.CreateDERSet(revocationInfoChoices);
+        }
+
+        /// <summary>Checks if the certificate is signed by provided issuer certificate.</summary>
+        /// <param name="subjectCertificate">a certificate to check</param>
+        /// <param name="issuerCertificate">an issuer certificate to check</param>
+        /// <returns>true if the first passed certificate is signed by next passed certificate.</returns>
+        internal static bool IsIssuerCertificate(IX509Certificate subjectCertificate, IX509Certificate issuerCertificate
+            ) {
+            return subjectCertificate.GetIssuerDN().Equals(issuerCertificate.GetSubjectDN());
+        }
+
+        /// <summary>Checks if the certificate is self-signed.</summary>
+        /// <param name="certificate">a certificate to check</param>
+        /// <returns>true if the certificate is self-signed.</returns>
+        internal static bool IsSelfSigned(IX509Certificate certificate) {
+            return certificate.GetIssuerDN().Equals(certificate.GetSubjectDN());
+        }
+
         // helper methods
         /// <param name="certificate">the certificate from which we need the ExtensionValue</param>
         /// <param name="oid">the Object Identifier value for the extension.</param>
         /// <returns>
         /// the extension value as an
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
-        /// object
+        /// object.
         /// </returns>
-        private static IAsn1Object GetExtensionValue(IX509Certificate certificate, String oid) {
-            byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
-            if (bytes == null) {
+        public static IAsn1Object GetExtensionValue(IX509Certificate certificate, String oid) {
+            return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(certificate, oid));
+        }
+
+        /// <param name="crl">the CRL from which we need the ExtensionValue</param>
+        /// <param name="oid">the Object Identifier value for the extension.</param>
+        /// <returns>
+        /// the extension value as an
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
+        /// object.
+        /// </returns>
+        private static IAsn1Object GetExtensionValue(IX509Crl crl, String oid) {
+            return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(crl, oid));
+        }
+
+        /// <summary>
+        /// Converts extension value represented as byte array to
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
+        /// object.
+        /// </summary>
+        /// <param name="extensionValue">the extension value as byte array</param>
+        /// <returns>
+        /// the extension value as an
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
+        /// object.
+        /// </returns>
+        private static IAsn1Object GetExtensionValueFromByteArray(byte[] extensionValue) {
+            if (extensionValue == null) {
                 return null;
             }
             IAsn1OctetString octs;
-            using (IAsn1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(bytes))) {
+            using (IAsn1InputStream aIn = FACTORY.CreateASN1InputStream(new MemoryStream(extensionValue))) {
                 octs = FACTORY.CreateASN1OctetString(aIn.ReadObject());
             }
             using (IAsn1InputStream aIn_1 = FACTORY.CreateASN1InputStream(new MemoryStream(octs.GetOctets()))) {
@@ -172,6 +353,51 @@ namespace iText.Signatures {
             IAsn1TaggedObject taggedObject = FACTORY.CreateASN1TaggedObject(names);
             return iText.Commons.Utils.JavaUtil.GetStringForBytes(FACTORY.CreateASN1OctetString(taggedObject, false).GetOctets
                 (), iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+        }
+
+        /// <summary>Retrieves accessLocation value for specified accessMethod from the Authority Information Access extension.
+        ///     </summary>
+        /// <param name="extensionValue">Authority Information Access extension value</param>
+        /// <param name="accessMethod">accessMethod OID; usually id-ad-caIssuers or id-ad-ocsp</param>
+        /// <returns>the location (URI) of the information.</returns>
+        private static String GetValueFromAIAExtension(IAsn1Object extensionValue, String accessMethod) {
+            if (extensionValue == null) {
+                return null;
+            }
+            IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(extensionValue);
+            for (int i = 0; i < accessDescriptions.Size(); i++) {
+                IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
+                IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
+                if (accessDescription.Size() == 2 && id != null && accessMethod.Equals(id.GetId())) {
+                    IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
+                    return GetStringFromGeneralName(description);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Helper method that creates the
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
+        /// object from the response bytes.
+        /// </summary>
+        /// <param name="seq">response bytes.</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
+        /// object.
+        /// </returns>
+        private static IBasicOcspResponse CreateOcsp(IAsn1Sequence seq) {
+            IDerObjectIdentifier objectIdentifier = FACTORY.CreateASN1ObjectIdentifier(seq.GetObjectAt(0));
+            IOcspObjectIdentifiers ocspObjectIdentifiers = FACTORY.CreateOCSPObjectIdentifiers();
+            if (objectIdentifier != null && objectIdentifier.GetId().Equals(ocspObjectIdentifiers.GetIdPkixOcspBasic()
+                .GetId())) {
+                IAsn1OctetString os = FACTORY.CreateASN1OctetString(seq.GetObjectAt(1));
+                using (IAsn1InputStream inp = FACTORY.CreateASN1InputStream(os.GetOctets())) {
+                    return FACTORY.CreateBasicOCSPResponse(inp.ReadObject());
+                }
+            }
+            return null;
         }
     }
 }

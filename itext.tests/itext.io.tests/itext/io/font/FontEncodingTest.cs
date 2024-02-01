@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -67,6 +67,12 @@ namespace iText.IO.Font {
             FontEncoding encoding = FontEncoding.CreateEmptyFontEncoding();
             encoding.SetDifference(0, "a");
             NUnit.Framework.Assert.AreEqual("a", encoding.GetDifference(0));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontSpecificEncodingTest() {
+            FontEncoding encoding = FontEncoding.CreateFontSpecificEncoding();
+            NUnit.Framework.Assert.IsTrue(encoding.IsFontSpecific());
         }
     }
 }

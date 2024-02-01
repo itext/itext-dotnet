@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -659,11 +659,14 @@ namespace iText.Forms.Fields {
             if (rectangle == null) {
                 return;
             }
+            int fieldRotation = GetRotation();
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+            rectangle = ApplyRotation(fieldRotation, rectangle);
             float width = rectangle.GetWidth();
             float height = rectangle.GetHeight();
             CreateInputButton();
+            SetModelElementProperties(rectangle);
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            PdfArray matrix = GetRotationMatrix(GetRotation(), height, width);
             if (matrix != null) {
                 xObject.Put(PdfName.Matrix, matrix);
             }
@@ -732,18 +735,22 @@ namespace iText.Forms.Fields {
                 Put(PdfName.AP, appearanceDictionary);
                 return;
             }
+            // Rotation
             PdfPage page = GetWidget().GetPage();
-            bool rotateRect = page != null && (page.GetRotation() / 90) % 2 == 1;
-            float width = rotateRect ? rectangle.GetHeight() : rectangle.GetWidth();
-            float height = rotateRect ? rectangle.GetWidth() : rectangle.GetHeight();
-            if (rotateRect) {
-                rectangle.SetWidth(width).SetHeight(height);
-            }
+            int pageRotation = page == null ? 0 : page.GetRotation();
+            int additionalFieldRotation = ((PdfSignatureFormField)parent).IsPageRotationIgnored() ? 0 : -pageRotation;
+            int fieldRotation = GetRotation() + additionalFieldRotation;
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+            rectangle = ApplyRotation(fieldRotation + pageRotation, rectangle);
             CreateSigField();
             SetModelElementProperties(rectangle);
-            PdfFormXObject normalAppearance_1 = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            PdfFormXObject normalAppearance_1 = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle
+                .GetHeight()));
             PdfCanvas normalAppearanceCanvas = new PdfCanvas(normalAppearance_1, GetDocument());
-            PdfFormXObject topLayerXObject = CreateTopLayer(width, height);
+            if (matrix != null) {
+                normalAppearance_1.Put(PdfName.Matrix, matrix);
+            }
+            PdfFormXObject topLayerXObject = CreateTopLayer(rectangle.GetWidth(), rectangle.GetHeight());
             normalAppearance_1.GetResources().AddForm(topLayerXObject, new PdfName("FRM"));
             normalAppearanceCanvas.AddXObjectAt(topLayerXObject, topLayerXObject.GetBBox().GetAsNumber(0).FloatValue()
                 , topLayerXObject.GetBBox().GetAsNumber(1).FloatValue());
@@ -826,7 +833,7 @@ namespace iText.Forms.Fields {
                 if (exportValue == null) {
                     continue;
                 }
-                bool selected = indices == null ? false : indices.Contains(new PdfNumber(index));
+                bool selected = indices != null && indices.Contains(new PdfNumber(index));
                 SelectFieldItem existingItem = ((ListBoxField)formFieldElement).GetOption(exportValue);
                 if (existingItem == null) {
                     existingItem = new SelectFieldItem(exportValue, displayValue);
@@ -885,12 +892,7 @@ namespace iText.Forms.Fields {
             // Rotation
             int fieldRotation = GetRotation();
             PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
-            if (fieldRotation == 90 || fieldRotation == 270) {
-                Rectangle invertedRectangle = rectangle.Clone();
-                invertedRectangle.SetWidth(rectangle.GetHeight());
-                invertedRectangle.SetHeight(rectangle.GetWidth());
-                rectangle = invertedRectangle;
-            }
+            rectangle = ApplyRotation(fieldRotation, rectangle);
             SetModelElementProperties(rectangle);
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
                 )));
@@ -1020,6 +1022,9 @@ namespace iText.Forms.Fields {
         }
 
         internal virtual bool RegenerateWidget() {
+            if (FontRequiredForRegeneration()) {
+                return false;
+            }
             if (!IsFieldRegenerationEnabled()) {
                 return false;
             }
@@ -1078,6 +1083,19 @@ namespace iText.Forms.Fields {
             return false;
         }
 
+        private bool FontRequiredForRegeneration() {
+            if (GetFont() != null) {
+                return false;
+            }
+            if (parent is PdfButtonFormField) {
+                return ((PdfButtonFormField)parent).IsPushButton();
+            }
+            if (parent is PdfSignatureFormField) {
+                return false;
+            }
+            return true;
+        }
+
         internal virtual void CreateInputButton() {
             if (!(formFieldElement is Button)) {
                 // Create it one time and re-set properties during each widget regeneration.
@@ -1089,7 +1107,6 @@ namespace iText.Forms.Fields {
             if (GetColor() != null) {
                 ((Button)formFieldElement).SetFontColor(color);
             }
-            SetModelElementProperties(GetRect(GetPdfObject()));
         }
 
         internal virtual void CreateSigField() {
@@ -1334,10 +1351,6 @@ namespace iText.Forms.Fields {
         /// * Digital Signature Appearances</a></seealso>
         private PdfFormXObject CreateTopLayer(float width, float height) {
             PdfFormXObject topLayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
-            PdfArray matrix = GetRotationMatrix(GetRotation(), height, width);
-            if (matrix != null) {
-                topLayerXObject.Put(PdfName.Matrix, matrix);
-            }
             PdfCanvas topLayerCanvas = new PdfCanvas(topLayerXObject, this.GetDocument());
             PdfFormXObject n0LayerXObject = CreateN0Layer(width, height);
             topLayerXObject.GetResources().AddForm(n0LayerXObject, new PdfName("n0"));
@@ -1429,6 +1442,16 @@ namespace iText.Forms.Fields {
             n2LayerCanvas.SetProperty(Property.TAGGING_HELPER, null);
             n2LayerCanvas.Close();
             return n2LayerXObject;
+        }
+
+        private Rectangle ApplyRotation(int fieldRotation, Rectangle rectangle) {
+            if ((fieldRotation / 90) % 2 != 0) {
+                Rectangle invertedRectangle = rectangle.Clone();
+                invertedRectangle.SetWidth(rectangle.GetHeight());
+                invertedRectangle.SetHeight(rectangle.GetWidth());
+                rectangle = invertedRectangle;
+            }
+            return rectangle;
         }
     }
 }

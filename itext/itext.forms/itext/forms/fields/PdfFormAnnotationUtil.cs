@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -82,7 +82,9 @@ namespace iText.Forms.Fields {
             if (tagged) {
                 tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
                 //TODO DEVSIX-4117 PrintField attributes
-                tagPointer.AddTag(StandardRoles.FORM);
+                if (!StandardRoles.FORM.Equals(tagPointer.GetRole())) {
+                    tagPointer.AddTag(StandardRoles.FORM);
+                }
             }
             page.AddAnnotation(index, annotation, true);
             if (tagged) {

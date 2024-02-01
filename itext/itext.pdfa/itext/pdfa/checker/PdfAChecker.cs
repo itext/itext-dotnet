@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,6 +28,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Utils;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -49,7 +50,7 @@ namespace iText.Pdfa.Checker {
     /// standard and its derivates will get their own implementation in the
     /// iText - pdfa project.
     /// </remarks>
-    public abstract class PdfAChecker {
+    public abstract class PdfAChecker : IValidationChecker {
         /// <summary>
         /// The Red-Green-Blue color profile as defined by the International Color
         /// Consortium.
@@ -162,6 +163,102 @@ namespace iText.Pdfa.Checker {
             CheckPages(catalog.GetDocument());
             CheckOpenAction(catalogDict.Get(PdfName.OpenAction));
             CheckColorsUsages();
+        }
+
+        public virtual void ValidateDocument(ValidationContext validationContext) {
+            foreach (PdfFont pdfFont in validationContext.GetFonts()) {
+                CheckFont(pdfFont);
+            }
+            PdfCatalog catalog = validationContext.GetPdfDocument().GetCatalog();
+            CheckDocument(catalog);
+        }
+
+        public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
+            , Object extra) {
+            CanvasGraphicsState gState;
+            PdfDictionary currentColorSpaces = null;
+            if (resources != null) {
+                currentColorSpaces = resources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
+            }
+            switch (key) {
+                case IsoKey.CANVAS_STACK: {
+                    CheckCanvasStack((char)obj);
+                    break;
+                }
+
+                case IsoKey.PDF_OBJECT: {
+                    CheckPdfObject((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.RENDERING_INTENT: {
+                    CheckRenderingIntent((PdfName)obj);
+                    break;
+                }
+
+                case IsoKey.INLINE_IMAGE: {
+                    CheckInlineImage((PdfStream)obj, currentColorSpaces);
+                    break;
+                }
+
+                case IsoKey.EXTENDED_GRAPHICS_STATE: {
+                    gState = (CanvasGraphicsState)obj;
+                    CheckExtGState(gState, contentStream);
+                    break;
+                }
+
+                case IsoKey.FILL_COLOR: {
+                    gState = (CanvasGraphicsState)obj;
+                    CheckColor(gState, gState.GetFillColor(), currentColorSpaces, true, contentStream);
+                    break;
+                }
+
+                case IsoKey.PAGE: {
+                    CheckSinglePage((PdfPage)obj);
+                    break;
+                }
+
+                case IsoKey.STROKE_COLOR: {
+                    gState = (CanvasGraphicsState)obj;
+                    CheckColor(gState, gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
+                    break;
+                }
+
+                case IsoKey.TAG_STRUCTURE_ELEMENT: {
+                    CheckTagStructureElement((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT_GLYPHS: {
+                    CheckFontGlyphs(((CanvasGraphicsState)obj).GetFont(), contentStream);
+                    break;
+                }
+
+                case IsoKey.XREF_TABLE: {
+                    CheckXrefTable((PdfXrefTable)obj);
+                    break;
+                }
+
+                case IsoKey.SIGNATURE: {
+                    CheckSignature((PdfDictionary)obj);
+                    break;
+                }
+
+                case IsoKey.SIGNATURE_TYPE: {
+                    CheckSignatureType(((bool?)obj).Value);
+                    break;
+                }
+
+                case IsoKey.CRYPTO: {
+                    CheckCrypto((PdfObject)obj);
+                    break;
+                }
+
+                case IsoKey.FONT: {
+                    CheckText((String)obj, (PdfFont)extra);
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -334,8 +431,28 @@ namespace iText.Pdfa.Checker {
         /// </param>
         /// <param name="fill">whether the color is used for fill or stroke operations</param>
         /// <param name="contentStream">current content stream</param>
+        [System.ObsoleteAttribute(@"in favor of checkColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, Boolean fill, PdfStream contentStream)"
+            )]
         public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
             );
+
+        /// <summary>
+        /// This method checks compliance with the color restrictions imposed by the
+        /// available color spaces in the document.
+        /// </summary>
+        /// <param name="gState">canvas graphics state</param>
+        /// <param name="color">the color to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="fill">whether the color is used for fill or stroke operations</param>
+        /// <param name="contentStream">current content stream</param>
+        [System.ObsoleteAttribute(@"This method will be abstract in next major release")]
+        public virtual void CheckColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, 
+            bool? fill, PdfStream contentStream) {
+        }
 
         /// <summary>
         /// This method performs a range of checks on the given color space, depending
@@ -628,12 +745,12 @@ namespace iText.Pdfa.Checker {
         protected internal abstract void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
 
         /// <summary>Verify the conformity of the output intents array in the catalog dictionary.</summary>
-        /// <param name="catalog">
+        /// <param name="catalogOrPageDict">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// to check
+        /// of a catalog or page to check
         /// </param>
-        protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
+        protected internal abstract void CheckOutputIntents(PdfDictionary catalogOrPageDict);
 
         /// <summary>Verify the conformity of the page dictionary.</summary>
         /// <param name="page">
@@ -948,6 +1065,9 @@ namespace iText.Pdfa.Checker {
             CheckPageSize(pageDict);
             CheckPageTransparency(pageDict, page.GetResources().GetPdfObject());
             CheckPageColorsUsages(pageDict, page.GetResources().GetPdfObject());
+            //This check is valid for pdf/a-4 only, but it's not a problem
+            //to add additional restrictions on earlier versions
+            CheckOutputIntents(pageDict);
             int contentStreamCount = page.GetContentStreamCount();
             for (int j = 0; j < contentStreamCount; ++j) {
                 PdfStream contentStream = page.GetContentStream(j);

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -27,11 +27,13 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 using iText.Pdfa;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4MetaDataTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -114,6 +116,38 @@ namespace iText.Pdfa.Checker {
                 checker.CheckMetaData(catalog);
             }
             );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentMetaDataRevPropertyHasCorrectPrefix() {
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithMultipleXmpHeaders.xmp"
+                ));
+            String xmpContent = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII).Replace
+                ("pdfaid:rev", "rev");
+            PdfA4Checker checker = new PdfA4Checker(PdfAConformanceLevel.PDF_A_4);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Metadata, new PdfStream(xmpContent.GetBytes(System.Text.Encoding.UTF8)));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                checker.CheckMetaData(catalog);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentMetaDataIdentificationSchemaUsesCorrectNamespaceURI() {
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithMultipleXmpHeaders.xmp"
+                ));
+            String xmpContent = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII).Replace
+                ("http://www.aiim.org/pdfa/ns/id/", "no_link");
+            PdfA4Checker checker = new PdfA4Checker(PdfAConformanceLevel.PDF_A_4);
+            PdfDictionary catalog = new PdfDictionary();
+            catalog.Put(PdfName.Metadata, new PdfStream(xmpContent.GetBytes(System.Text.Encoding.UTF8)));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                checker.CheckMetaData(catalog);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , "4"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -477,6 +511,43 @@ namespace iText.Pdfa.Checker {
             );
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_CONFORMANCE
                 , e_1.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentMetaDataIsNotUTF8Encoded() {
+            String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithEmpty.xmp"));
+            XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
+            MemoryStream os = new MemoryStream();
+            XMPMetaFactory.Serialize(xmpMeta, os);
+            doc.SetXmpMetadata(xmpMeta, new SerializeOptions().SetEncodeUTF16BE(true));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                doc.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INVALID_XMP_METADATA_ENCODING, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfA4DocumentPageMetaDataIsNotUTF8Encoded() {
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "encodedXmp.xmp"));
+            String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
+                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                , FileMode.Open, FileAccess.Read)));
+            doc.AddNewPage();
+            doc.GetPage(1).SetXmpMetadata(bytes);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
+                doc.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.INVALID_XMP_METADATA_ENCODING, e.Message);
         }
 
         private void GeneratePdfADocument(PdfAConformanceLevel conformanceLevel, String outPdf, Action<PdfDocument

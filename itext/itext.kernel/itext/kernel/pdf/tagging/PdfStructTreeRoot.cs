@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -366,6 +366,18 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid) {
             return GetParentTreeHandler().FindMcrByMcid(pageDict, mcid);
+        }
+
+        public virtual PdfMcr FindMcrByMcid(PdfDocument document, int mcid) {
+            int amountOfPages = document.GetNumberOfPages();
+            for (int i = 1; i <= amountOfPages; ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfMcr mcr = FindMcrByMcid(page.GetPdfObject(), mcid);
+                if (mcr != null) {
+                    return mcr;
+                }
+            }
+            return null;
         }
 
         public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex) {

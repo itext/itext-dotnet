@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,9 +25,16 @@ using System;
 namespace iText.Signatures.Logs {
     /// <summary>Class which contains constants to be used in logging inside sign module.</summary>
     public sealed class SignLogMessageConstant {
+        public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
+
         public const String EXCEPTION_WITHOUT_MESSAGE = "Unexpected exception without message was thrown during keystore processing";
 
-        public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
+        public const String UNABLE_TO_PARSE_AIA_CERT = "Unable to parse certificates coming from authority info " 
+            + "access extension. Those won't be included into the certificate chain.";
+
+        public const String REVOCATION_DATA_NOT_ADDED_VALIDITY_ASSURED = "Revocation data for certificate: \"{0}\" is not added due to validity assured - short term extension.";
+
+        public const String UNABLE_TO_PARSE_REV_INFO = "Unable to parse signed data revocation info item " + "since it is incorrect or unsupported (e.g. SCVP Request and Response).";
 
         private SignLogMessageConstant() {
         }

@@ -14,5 +14,5 @@ environment variables. Examples of paths on Windows:
 If you have a new version of ImageMagick, then there is no compare.exe utility there, wrap the path to magick.exe in quotes and call compare command:
 ITEXT_MAGICK_COMPARE_EXEC=`"C:\Program Files\ImageMagick-7.0.9-Q16\magick.exe" compare`
 
-[1]: http://www.ghostscript.com/
-[2]: http://www.imagemagick.org/
+[1]: https://www.ghostscript.com/
+[2]: https://www.imagemagick.org/

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -1564,6 +1564,25 @@ namespace iText.Forms {
             form.AddField(signField);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_pdfWithSignatureFieldTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfWithSignatureAndFontInBuilderFieldTest() {
+            String fileName = destinationFolder + "pdfWithSignatureAndFontInBuilderFieldTestFieldTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+            pdfDoc.AddNewPage();
+            PdfFormField signField = new SignatureFormFieldBuilder(pdfDoc, "signature").SetWidgetRectangle(new Rectangle
+                (100, 600, 400, 150)).SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER)).CreateSignature();
+            signField.GetPdfObject().Put(PdfName.Name, new PdfName("test name"));
+            signField.GetPdfObject().Put(PdfName.Reason, new PdfString("test reason"));
+            signField.GetPdfObject().Put(PdfName.Location, new PdfString("test location"));
+            signField.GetPdfObject().Put(PdfName.ContactInfo, new PdfString("test contact"));
+            signField.GetFirstFormAnnotation().SetBackgroundColor(ColorConstants.PINK).SetColor(ColorConstants.WHITE);
+            form.AddField(signField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_pdfWithSignatureAndFontInBuilderFieldTest.pdf"
                 , destinationFolder, "diff_"));
         }
 

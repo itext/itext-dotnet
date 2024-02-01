@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext.bouncy-castle-adapter</id>
-    <version>8.0.2</version>
+    <version>8.0.3</version>
     <title>iText bouncy-castle adapter module</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
@@ -13,16 +13,16 @@
     <description>Bouncy-castle adapter module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2023 Apryse Group NV</copyright>
+    <copyright>Copyright (c) 1998-2024 Apryse Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
       <group targetFramework="net461">
-		<dependency id="itext.commons" version="8.0.2" />
+		<dependency id="itext.commons" version="8.0.3" />
 		<dependency id="BouncyCastle.Cryptography" version="2.2.1" />
       </group>
       <group targetFramework="netstandard2.0">
-		<dependency id="itext.commons" version="8.0.2" />
+		<dependency id="itext.commons" version="8.0.3" />
 		<dependency id="BouncyCastle.Cryptography" version="2.2.1" />
       </group>
     </dependencies>

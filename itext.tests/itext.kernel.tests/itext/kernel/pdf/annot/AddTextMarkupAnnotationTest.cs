@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -43,10 +43,15 @@ namespace iText.Kernel.Pdf.Annot {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest01() {
             String filename = destinationFolder + "textMarkupAnnotation01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
@@ -72,7 +77,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest02() {
             String filename = destinationFolder + "textMarkupAnnotation02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
@@ -98,7 +103,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest03() {
             String filename = destinationFolder + "textMarkupAnnotation03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
@@ -124,7 +129,7 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest04() {
             String filename = destinationFolder + "textMarkupAnnotation04.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -311,6 +311,21 @@ namespace iText.Forms.Form.Element {
                 flattenInputField2.SetValue("content box");
                 flattenInputField2.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
                 document.Add(flattenInputField2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetFontInputFieldTest() {
+            String outPdf = DESTINATION_FOLDER + "setFontInputField.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_setFontInputField.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                InputField inputField = new InputField("inputField");
+                inputField.SetInteractive(true);
+                inputField.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
+                inputField.SetFontSize(10);
+                inputField.SetValue("Some value");
+                document.Add(inputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

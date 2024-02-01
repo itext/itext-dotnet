@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -22,7 +22,9 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -64,6 +66,10 @@ namespace iText.Signatures.Testutils {
         
         public static IRsaKeyPairGenerator BuildRSA2048KeyPairGenerator() {
             return FACTORY.CreateRsa2048KeyPairGenerator();
+        }
+
+        public static T GetFirstElement<T>(ICollection<T> collection) {
+            return collection.First();
         }
     }
 }

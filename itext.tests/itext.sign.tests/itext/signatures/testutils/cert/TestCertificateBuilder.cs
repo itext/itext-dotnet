@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -67,17 +67,14 @@ namespace iText.Signatures.Testutils.Cert {
         public virtual void SetEndDate(DateTime endDate) {
             this.endDate = endDate;
         }
-
-        // TODO generalize
+        
         public virtual IX509Certificate BuildAuthorizedOCSPResponderCert() {        
             IX500Name subjectDnName = FACTORY.CreateX500Name(subjectDN);
             IBigInteger certSerialNumber = FACTORY.CreateBigInteger(Convert.ToString(SystemUtil.GetTimeBasedSeed())); // Using the current timestamp as the certificate serial number
             IContentSigner contentSigner = FACTORY.CreateContentSigner(signatureAlgorithm, signingKey);
             IX509V3CertificateGenerator certBuilder = FACTORY.CreateJcaX509v3CertificateBuilder(signingCert,
                 certSerialNumber, startDate, endDate, subjectDnName, publicKey);
-
-            // TODO generalize extensions setting
-            // Extensions --------------------------
+            
             bool ca = true;
             AddExtension(FACTORY.CreateExtensions().GetBasicConstraints(), true, FACTORY.CreateBasicConstraints(ca), 
                 certBuilder);

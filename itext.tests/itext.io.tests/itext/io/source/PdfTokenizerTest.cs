@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -405,6 +405,38 @@ namespace iText.IO.Source {
             byte[] bytes = new byte[] { 92, 49, 50, 51 };
             byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
             NUnit.Framework.Assert.AreEqual(new byte[] { 83 }, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SlashAfterShortOctalTest() {
+            // \0\(
+            byte[] bytes = new byte[] { 92, 48, 92, 40 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 0, 40 }, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotOctalAfterShortOctalTest() {
+            // \0&
+            byte[] bytes = new byte[] { 92, 48, 26 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 0, 26 }, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotOctalAfterShortOctalTest2() {
+            // \12&
+            byte[] bytes = new byte[] { 92, 49, 50, 26 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 10, 26 }, result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TwoShortOctalsWithGarbageTest() {
+            // \0\23 + 4 which should not be taken into account
+            byte[] bytes = new byte[] { 92, 48, 92, 50, 51, 52 };
+            byte[] result = PdfTokenizer.DecodeStringContent(bytes, 0, 4, false);
+            NUnit.Framework.Assert.AreEqual(new byte[] { 0, 19 }, result);
         }
 
         private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {

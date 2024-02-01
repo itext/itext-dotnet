@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -292,6 +292,13 @@ namespace iText.Layout {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
+                case Property.FONT: {
+                    if (GetPdfDocument().GetConformanceLevel() != null) {
+                        return (T1)(Object)GetPdfDocument().GetDefaultFont();
+                    }
+                    return base.GetDefaultProperty<T1>(property);
+                }
+
                 case Property.MARGIN_BOTTOM:
                 case Property.MARGIN_LEFT:
                 case Property.MARGIN_RIGHT:

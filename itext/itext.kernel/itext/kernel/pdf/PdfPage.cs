@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -1089,6 +1089,10 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged()) {
                 if (tagAnnotation) {
                     TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                    if (annotation is PdfMarkupAnnotation && StandardRoles.DOCUMENT.Equals(tagPointer.GetRole()) && PdfVersion
+                        .PDF_1_4.CompareTo(GetDocument().GetPdfVersion()) < 0) {
+                        tagPointer.AddTag(StandardRoles.ANNOT);
+                    }
                     iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
                     tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
                     if (prevPage != null) {

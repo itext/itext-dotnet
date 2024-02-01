@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -42,10 +42,15 @@ namespace iText.Kernel.Pdf {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void EgsTest1() {
             String destinationDocument = destinationFolder + "egsTest1.pdf";
-            PdfDocument document = new PdfDocument(new PdfWriter(destinationDocument));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationDocument));
             //Create page and canvas
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

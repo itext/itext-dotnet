@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -90,6 +90,7 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.FT, PdfName.Btn);
             PutIfAbsent(expectedDictionary, PdfName.Ff, new PdfNumber(PdfButtonFormField.FF_PUSH_BUTTON));
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
+            PutIfAbsent(expectedDictionary, PdfName.DA, pushButtonFormField.GetPdfObject().Get(PdfName.DA));
             expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
             pushButtonFormField.MakeIndirect(DUMMY_DOCUMENT);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, pushButtonFormField

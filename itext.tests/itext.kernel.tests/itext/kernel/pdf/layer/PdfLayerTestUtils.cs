@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -60,8 +60,8 @@ namespace iText.Kernel.Pdf.Layer {
         internal static void CompareLayers(String outPdf, String cmpPdf) {
             ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
             System.Console.Out.WriteLine();
-            using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
-                using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpPdf))) {
+            using (PdfDocument outDoc = new PdfDocument(CompareTool.CreateOutputReader(outPdf))) {
+                using (PdfDocument cmpDoc = new PdfDocument(CompareTool.CreateOutputReader(cmpPdf))) {
                     PdfDictionary outOCP = outDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
                     PdfDictionary cmpOCP = cmpDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outOCP, cmpOCP));

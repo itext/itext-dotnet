@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,11 +33,11 @@ namespace iText.Kernel.Actions.Data {
     public sealed class ITextCoreProductData {
         private const String CORE_PUBLIC_PRODUCT_NAME = "Core";
 
-        private const String CORE_VERSION = "8.0.2";
+        private const String CORE_VERSION = "8.0.3";
 
         private const int CORE_COPYRIGHT_SINCE = 2000;
 
-        private const int CORE_COPYRIGHT_TO = 2023;
+        private const int CORE_COPYRIGHT_TO = 2024;
 
         private static readonly ProductData ITEXT_PRODUCT_DATA = new ProductData(CORE_PUBLIC_PRODUCT_NAME, ProductNameConstant
             .ITEXT_CORE, CORE_VERSION, CORE_COPYRIGHT_SINCE, CORE_COPYRIGHT_TO);

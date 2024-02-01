@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -163,7 +163,7 @@ namespace iText.Signatures {
                 return null;
             }
             Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
-            return BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
+            return @in == null ? null : BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
         }
 
         /// <summary>

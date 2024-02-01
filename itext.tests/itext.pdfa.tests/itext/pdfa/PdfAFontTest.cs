@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -602,6 +602,27 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-4").EndText().RestoreState();
+            doc.Close();
+            CompareResult(outPdf, cmpPdf, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPdfA4SurrogatePairTest() {
+            String outPdf = DESTINATION_FOLDER + "PdfA4SurrogatePairTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFontTest/cmp_PdfA4SurrogatePairTest.pdf";
+            WriterProperties writerProperties = new WriterProperties();
+            writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
+            PdfWriter writer = new PdfWriter(outPdf, writerProperties);
+            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                );
+            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoEmoji-Regular.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+                .FORCE_EMBEDDED);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
+                ).ShowText("\uD83D\uDC7B \uD83D\uDE09").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf, null);
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -154,7 +154,8 @@ namespace iText.Forms.Form.Renderer {
             }
             PdfButtonFormField radioGroup = (PdfButtonFormField)form.GetField(groupName);
             if (null == radioGroup) {
-                radioGroup = new RadioFormFieldBuilder(doc, groupName).CreateRadioGroup();
+                radioGroup = new RadioFormFieldBuilder(doc, groupName).SetConformanceLevel(GetConformanceLevel(doc)).CreateRadioGroup
+                    ();
                 radioGroup.DisableFieldRegeneration();
                 radioGroup.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
             }
@@ -164,13 +165,14 @@ namespace iText.Forms.Form.Renderer {
             if (IsBoxChecked()) {
                 radioGroup.SetValue(GetModelId());
             }
-            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).CreateRadioButton(GetModelId(), area);
+            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).SetConformanceLevel(GetConformanceLevel(doc
+                )).CreateRadioButton(GetModelId(), area);
             radio.DisableFieldRegeneration();
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 radio.SetBackgroundColor(background.GetColor());
             }
-            ApplyBorderProperty(radio);
+            BorderStyleUtil.ApplyBorderProperty(this, radio);
             radio.SetFormFieldElement((Radio)modelElement);
             radioGroup.AddKid(radio);
             radioGroup.EnableFieldRegeneration();

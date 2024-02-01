@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -244,6 +244,13 @@ namespace iText.Kernel.Pdf {
         /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>.
         /// </param>
         public virtual void AddAction(PdfAction action) {
+            PdfName actionType = action.GetPdfObject().GetAsName(PdfName.S);
+            if (PdfName.GoTo.Equals(actionType)) {
+                PdfObject destObject = action.GetPdfObject().Get(PdfName.D);
+                if (destObject != null) {
+                    SetDestination(PdfDestination.MakeDestination(destObject));
+                }
+            }
             content.Put(PdfName.A, action.GetPdfObject());
         }
 

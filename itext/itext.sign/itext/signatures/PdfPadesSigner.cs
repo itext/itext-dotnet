@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -48,6 +48,8 @@ namespace iText.Signatures {
         private IOcspClient ocspClient = null;
 
         private ICrlClient crlClient;
+
+        private IIssuingCertificateRetriever issuingCertificateRetriever = new IssuingCertificateRetriever();
 
         private int estimatedSize = 0;
 
@@ -124,7 +126,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineBProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IPrivateKey privateKey) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineBProfile(signerProperties, chain, externalSignature);
         }
 
@@ -177,7 +179,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IPrivateKey privateKey, ITSAClient tsaClient) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineTProfile(signerProperties, chain, externalSignature, tsaClient);
         }
 
@@ -204,13 +206,14 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IExternalSignature externalSignature, ITSAClient tsaClient) {
-            CreateRevocationClients(chain, true);
+            CreateRevocationClients(chain[0], true);
             try {
                 PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(outputStream), 
                         new StampingProperties().UseAppendMode())) {
-                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()));
+                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
+                            .REQUIRED_FOR_SIGNING_CERTIFICATE);
                     }
                 }
             }
@@ -242,7 +245,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTProfile(SignerProperties signerProperties, IX509Certificate[] chain, 
             IPrivateKey privateKey, ITSAClient tsaClient) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineLTProfile(signerProperties, chain, externalSignature, tsaClient);
         }
 
@@ -269,13 +272,14 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTAProfile(SignerProperties signerProperties, IX509Certificate[] chain
             , IExternalSignature externalSignature, ITSAClient tsaClient) {
-            CreateRevocationClients(chain, true);
+            CreateRevocationClients(chain[0], true);
             try {
                 PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(CreateOutputStream
                         ()), new StampingProperties().UseAppendMode())) {
-                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()));
+                        PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
+                            .REQUIRED_FOR_SIGNING_CERTIFICATE);
                         PerformTimestamping(pdfDocument, outputStream, tsaClient);
                     }
                 }
@@ -308,7 +312,7 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SignWithBaselineLTAProfile(SignerProperties signerProperties, IX509Certificate[] chain
             , IPrivateKey privateKey, ITSAClient tsaClient) {
-            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, DEFAULT_DIGEST_ALGORITHM);
+            IExternalSignature externalSignature = new PrivateKeySignature(privateKey, GetDigestAlgorithm(privateKey));
             SignWithBaselineLTAProfile(signerProperties, chain, externalSignature, tsaClient);
         }
 
@@ -331,8 +335,8 @@ namespace iText.Signatures {
                 if (signatureNames.IsEmpty()) {
                     throw new PdfException(SignExceptionMessageConstant.NO_SIGNATURES_TO_PROLONG);
                 }
-                CreateRevocationClients(new IX509Certificate[0], false);
-                PerformLtvVerification(pdfDocument, signatureNames);
+                CreateRevocationClients(null, false);
+                PerformLtvVerification(pdfDocument, signatureNames, LtvVerification.RevocationDataNecessity.OPTIONAL);
                 if (tsaClient != null) {
                     PerformTimestamping(pdfDocument, outputStream, tsaClient);
                 }
@@ -486,60 +490,87 @@ namespace iText.Signatures {
             return this;
         }
 
-        private void PerformTimestamping(PdfDocument document, Stream outputStream, ITSAClient tsaClient) {
+        /// <summary>
+        /// Set
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// to be used before main signing operation.
+        /// </summary>
+        /// <remarks>
+        /// Set
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// to be used before main signing operation.
+        /// <para />
+        /// If none is set,
+        /// <see cref="IssuingCertificateRetriever"/>
+        /// instance will be used instead.
+        /// </remarks>
+        /// <param name="issuingCertificateRetriever">
+        /// 
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance to be used for getting missing
+        /// certificates in chain or CRL response issuer certificates.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>.
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetIssuingCertificateRetriever(IIssuingCertificateRetriever
+             issuingCertificateRetriever) {
+            this.issuingCertificateRetriever = issuingCertificateRetriever;
+            return this;
+        }
+
+        /// <summary>
+        /// Set certificate list to be used by the
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// to retrieve missing certificates.
+        /// </summary>
+        /// <param name="certificateList">
+        /// certificate list for getting missing certificates in chain
+        /// or CRL response issuer certificates.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>.
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetTrustedCertificates(IList<IX509Certificate> certificateList
+            ) {
+            this.issuingCertificateRetriever.SetTrustedCertificates(certificateList);
+            return this;
+        }
+
+        internal virtual void PerformTimestamping(PdfDocument document, Stream outputStream, ITSAClient tsaClient) {
             PdfSigner timestampSigner = new PdfSigner(document, outputStream, tempOutputStream, tempFile);
             timestampSigner.Timestamp(tsaClient, timestampSignatureName);
         }
 
-        private void PerformSignDetached(SignerProperties signerProperties, bool isFinal, IExternalSignature externalSignature
-            , IX509Certificate[] chain, ITSAClient tsaClient) {
-            PdfSigner signer = CreatePdfSigner(signerProperties, isFinal);
-            try {
-                signer.SignDetached(externalSignature, chain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
-                    .CADES);
-            }
-            finally {
-                signer.originalOS.Dispose();
-            }
-        }
-
-        private PdfSigner CreatePdfSigner(SignerProperties signerProperties, bool isFinal) {
+        internal virtual PdfSigner CreatePdfSigner(SignerProperties signerProperties, bool isFinal) {
             String tempFilePath = null;
             if (temporaryDirectoryPath != null) {
                 tempFilePath = GetNextTempFile().FullName;
             }
-            PdfSigner signer = new PdfSigner(reader, isFinal ? outputStream : CreateOutputStream(), tempFilePath, stampingProperties
-                );
-            signer.SetFieldLockDict(signerProperties.GetFieldLockDict());
-            signer.SetFieldName(signerProperties.GetFieldName());
-            // We need to update field name because signer could change it
-            signerProperties.SetFieldName(signer.GetFieldName());
-            signer.SetCertificationLevel(signerProperties.GetCertificationLevel());
-            signer.SetPageRect(signerProperties.GetPageRect());
-            signer.SetPageNumber(signerProperties.GetPageNumber());
-            signer.SetSignDate(signerProperties.GetSignDate());
-            signer.SetSignatureCreator(signerProperties.GetSignatureCreator());
-            signer.SetContact(signerProperties.GetContact());
-            signer.SetSignatureAppearance(signerProperties.GetSignatureAppearance());
-            return signer;
+            return new PdfSigner(reader, isFinal ? outputStream : CreateOutputStream(), tempFilePath, stampingProperties
+                , signerProperties);
         }
 
-        private void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames) {
-            LtvVerification ltvVerification = new LtvVerification(pdfDocument);
+        internal virtual void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames, LtvVerification.RevocationDataNecessity
+             revocationDataNecessity) {
+            LtvVerification ltvVerification = new LtvVerification(pdfDocument).SetRevocationDataNecessity(revocationDataNecessity
+                ).SetIssuingCertificateRetriever(issuingCertificateRetriever);
             foreach (String signatureName in signatureNames) {
-                ltvVerification.AddVerification(signatureName, ocspClient, crlClient, LtvVerification.CertificateOption.WHOLE_CHAIN
+                ltvVerification.AddVerification(signatureName, ocspClient, crlClient, LtvVerification.CertificateOption.ALL_CERTIFICATES
                     , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES);
             }
             ltvVerification.Merge();
         }
 
-        private void DeleteTempFiles() {
+        internal virtual void DeleteTempFiles() {
             foreach (FileInfo tempFile in tempFiles) {
                 tempFile.Delete();
             }
         }
 
-        private Stream CreateOutputStream() {
+        internal virtual Stream CreateOutputStream() {
             if (temporaryDirectoryPath != null) {
                 return FileUtil.GetFileOutputStream(GetNextTempFile());
             }
@@ -547,11 +578,40 @@ namespace iText.Signatures {
             return tempOutputStream;
         }
 
-        private Stream CreateInputStream() {
+        internal virtual Stream CreateInputStream() {
             if (temporaryDirectoryPath != null) {
                 return FileUtil.GetInputStreamForFile(tempFile);
             }
             return new MemoryStream(tempOutputStream.ToArray());
+        }
+
+        internal virtual void CreateRevocationClients(IX509Certificate signingCert, bool clientsRequired) {
+            if (crlClient == null && ocspClient == null && clientsRequired) {
+                IX509Certificate signingCertificate = (IX509Certificate)signingCert;
+                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURL(signingCertificate
+                    ) == null) {
+                    throw new PdfException(SignExceptionMessageConstant.DEFAULT_CLIENTS_CANNOT_BE_CREATED);
+                }
+            }
+            if (crlClient == null) {
+                crlClient = new CrlClientOnline();
+            }
+            if (ocspClient == null) {
+                ocspClient = new OcspClientBouncyCastle(null);
+            }
+        }
+
+        private void PerformSignDetached(SignerProperties signerProperties, bool isFinal, IExternalSignature externalSignature
+            , IX509Certificate[] chain, ITSAClient tsaClient) {
+            IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(chain);
+            PdfSigner signer = CreatePdfSigner(signerProperties, isFinal);
+            try {
+                signer.SignDetached(externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
+                    .CADES);
+            }
+            finally {
+                signer.originalOS.Dispose();
+            }
         }
 
         private FileInfo GetNextTempFile() {
@@ -570,19 +630,20 @@ namespace iText.Signatures {
             return tempFile;
         }
 
-        private void CreateRevocationClients(IX509Certificate[] chain, bool clientsRequired) {
-            if (crlClient == null && ocspClient == null && clientsRequired) {
-                IX509Certificate signingCertificate = (IX509Certificate)chain[0];
-                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURL(signingCertificate
-                    ) == null) {
-                    throw new PdfException(SignExceptionMessageConstant.DEFAULT_CLIENTS_CANNOT_BE_CREATED);
+        private String GetDigestAlgorithm(IPrivateKey privateKey) {
+            String signatureAlgorithm = SignUtils.GetPrivateKeyAlgorithm(privateKey);
+            switch (signatureAlgorithm) {
+                case "Ed25519": {
+                    return DigestAlgorithms.SHA512;
                 }
-            }
-            if (crlClient == null) {
-                crlClient = new CrlClientOnline(chain);
-            }
-            if (ocspClient == null) {
-                ocspClient = new OcspClientBouncyCastle(null);
+
+                case "Ed448": {
+                    return DigestAlgorithms.SHAKE256;
+                }
+
+                default: {
+                    return DEFAULT_DIGEST_ALGORITHM;
+                }
             }
         }
     }

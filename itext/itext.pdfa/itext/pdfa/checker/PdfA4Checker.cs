@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -34,6 +34,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Properties;
+using iText.Pdfa;
 using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
@@ -173,6 +174,15 @@ namespace iText.Pdfa.Checker {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.NAME_DICTIONARY_SHALL_CONTAIN_EMBEDDED_FILES_KEY
                         );
                 }
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckPageObject(PdfDictionary pageDict, PdfDictionary pageResources) {
+            base.CheckPageObject(pageDict, pageResources);
+            PdfStream xmpMeta = pageDict.GetAsStream(PdfName.Metadata);
+            if (xmpMeta != null && !PdfAXMPUtil.IsUtf8(xmpMeta.GetBytes())) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.INVALID_XMP_METADATA_ENCODING);
             }
         }
 
@@ -368,6 +378,7 @@ namespace iText.Pdfa.Checker {
             try {
                 PdfStream xmpMetadata = catalog.GetAsStream(PdfName.Metadata);
                 byte[] bytes = xmpMetadata.GetBytes();
+                IsValidEncoding(bytes);
                 CheckPacketHeader(bytes);
                 XMPMeta meta = XMPMetaFactory.Parse(new MemoryStream(bytes));
                 CheckVersionIdentification(meta);
@@ -375,6 +386,22 @@ namespace iText.Pdfa.Checker {
             }
             catch (XMPException ex) {
                 throw new PdfException(ex);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckOutputIntents(PdfDictionary catalog) {
+            base.CheckOutputIntents(catalog);
+            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
+            if (outputIntents == null) {
+                return;
+            }
+            for (int i = 0; i < outputIntents.Size(); ++i) {
+                PdfDictionary outputIntent = outputIntents.GetAsDictionary(i);
+                if (outputIntent.ContainsKey(new PdfName("DestOutputProfileRef"))) {
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.OUTPUTINTENT_SHALL_NOT_CONTAIN_DESTOUTPUTPROFILEREF_KEY
+                        );
+                }
             }
         }
 
@@ -425,6 +452,12 @@ namespace iText.Pdfa.Checker {
         /// <summary><inheritDoc/></summary>
         protected internal override int GetMaxNameLength() {
             return int.MaxValue;
+        }
+
+        private static void IsValidEncoding(byte[] data) {
+            if (!PdfAXMPUtil.IsUtf8(data)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.INVALID_XMP_METADATA_ENCODING);
+            }
         }
 
         private static bool IsValidXmpConformance(String value) {

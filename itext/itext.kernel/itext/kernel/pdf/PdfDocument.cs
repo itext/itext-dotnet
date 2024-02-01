@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,6 +47,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Statistics;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -355,6 +356,16 @@ namespace iText.Kernel.Pdf {
         /// <returns>last page.</returns>
         public virtual PdfPage GetLastPage() {
             return GetPage(GetNumberOfPages());
+        }
+
+        /// <summary>Gets current memory limits handler</summary>
+        /// <returns>
+        /// 
+        /// <c>MemoryLimitsAwareHandler</c>
+        /// instance
+        /// </returns>
+        public virtual MemoryLimitsAwareHandler GetMemoryLimitsAwareHandler() {
+            return memoryLimitsAwareHandler;
         }
 
         /// <summary>
@@ -872,7 +883,7 @@ namespace iText.Kernel.Pdf {
                     // either writer properties, or in the writer init section on document open or from pdfreader. So we
                     // shouldn't worry about it being null next
                     PdfObject fileId = PdfEncryption.CreateInfoId(ByteUtils.GetIsoBytes(originalDocumentId.GetValue()), ByteUtils
-                        .GetIsoBytes(modifiedDocumentId.GetValue()));
+                        .GetIsoBytes(modifiedDocumentId.GetValue()), this.properties.preserveEncryption);
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
                     if (writer.GetOutputStream() is CountOutputStream) {
@@ -1013,6 +1024,19 @@ namespace iText.Kernel.Pdf {
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , int insertBeforePage) {
             return CopyPagesTo(pageFrom, pageTo, toDocument, insertBeforePage, null);
+        }
+
+        /// <summary>
+        /// Get the
+        /// <see cref="IConformanceLevel"/>
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="IConformanceLevel"/>
+        /// will be null if the document does not have a conformance level specified
+        /// </returns>
+        public virtual IConformanceLevel GetConformanceLevel() {
+            return null;
         }
 
         /// <summary>
@@ -1522,20 +1546,13 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
         /// <param name="obj">An object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key) {
+            CheckIsoConformance(obj, key, null, null);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
         /// <param name="obj">an object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         /// <param name="resources">
@@ -1546,13 +1563,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="contentStream">current content stream</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             ) {
+            CheckIsoConformance(obj, key, resources, contentStream, null);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
         /// <param name="obj">an object to conform.</param>
         /// <param name="key">type of object to conform.</param>
         /// <param name="resources">
@@ -1564,6 +1578,14 @@ namespace iText.Kernel.Pdf {
         /// <param name="extra">extra data required for the check.</param>
         public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
             , Object extra) {
+            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
+            if (container == null) {
+                return;
+            }
+            container.Validate(obj, key, resources, contentStream, extra);
         }
 
         /// <summary>Checks whether PDF document conforms a specific standard.</summary>
@@ -1989,12 +2011,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
+        /// <summary>Checks whether PDF document conforms to a specific standard.</summary>
         protected internal virtual void CheckIsoConformance() {
+            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
+                return;
+            }
+            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
+            if (container == null) {
+                return;
+            }
+            ValidationContext context = new ValidationContext().WithPdfDocument(this).WithFonts(GetDocumentFonts());
+            container.Validate(context);
         }
 
         /// <summary>

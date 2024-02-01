@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -37,6 +37,9 @@ namespace iText.Kernel.Pdf {
         SIGNATURE,
         SIGNATURE_TYPE,
         CRYPTO,
-        FONT
+        FONT,
+        CANVAS_BEGIN_MARKED_CONTENT,
+        CANVAS_WRITING_CONTENT,
+        LAYOUT
     }
 }

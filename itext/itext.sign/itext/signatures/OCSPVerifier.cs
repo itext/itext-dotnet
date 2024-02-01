@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -251,7 +251,7 @@ namespace iText.Signatures {
                     // validating ocsp signers certificate
                     // Check if responders certificate has id-pkix-ocsp-nocheck extension,
                     // in which case we do not validate (perform revocation check on) ocsp certs for lifetime of certificate
-                    if (responderCert.GetExtensionValue(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNoCheck
+                    if (SignUtils.GetExtensionValueByOid(responderCert, BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNoCheck
                         ().GetId()) == null) {
                         IX509Crl crl;
                         try {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Form.Element;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -36,6 +37,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Properties;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -131,10 +133,11 @@ namespace iText.Signatures.Sign {
             String cmp = SOURCE_FOLDER + "cmp_signed_hybrid.pdf";
             PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
                 ().UseAppendMode());
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
-            appearance.SetLayer2FontSize(13.8f).SetPageRect(new Rectangle(36, 748, 200, 100)).SetPageNumber(1).SetReason
-                ("Test").SetLocation("Nagpur");
-            signer.SetFieldName("Sign1");
+            String fieldName = "Sign1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFontSize(13.8f);
+            signer.SetFieldName(fieldName);
+            signer.SetReason("Test").SetLocation("Nagpur").SetPageRect(new Rectangle(36, 748, 200, 100)).SetPageNumber
+                (1).SetSignatureAppearance(appearance);
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
@@ -153,10 +156,10 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
                 ());
-            // Creating the appearance
-            signer.GetSignatureAppearance().SetLayer2FontColor(ColorConstants.RED).SetLayer2Text("Verified and signed by me."
-                ).SetPageRect(rect);
             signer.SetFieldName("Signature1");
+            // Creating the appearance
+            signer.SetPageRect(rect).SetSignatureAppearance(new SignatureFieldAppearance(signer.GetFieldName()).SetFontColor
+                (ColorConstants.RED).SetContent("Verified and signed by me."));
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
@@ -196,9 +199,10 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
-                ("TestCity").SetReuseAppearance(false);
             signer.SetFieldName("Signature1");
+            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(signer
+                .GetFieldName()).SetContent("Verified and signed by me."));
+            signer.GetSignatureField().SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
@@ -215,9 +219,11 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName("Signature1");
-            signer.GetSignatureAppearance().SetLayer2Text("SIGNED").SetLayer2FontColor(ColorConstants.GREEN).SetReason
-                ("Test 1").SetLocation("TestCity").SetReuseAppearance(true).GetSignatureAppearance().SetProperty(Property
-                .VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent("SIGNED"
+                ).SetFontColor(ColorConstants.GREEN);
+            appearance.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
+            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signer.GetSignatureField().SetReuseAppearance(true);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
@@ -233,9 +239,10 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.GetSignatureAppearance().SetLayer2Text("Verified and signed by me.").SetReason("Test 1").SetLocation
-                ("TestCity").SetReuseAppearance(true);
             signer.SetFieldName("Signature1");
+            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(signer
+                .GetFieldName()).SetContent("Verified and signed by me."));
+            signer.GetSignatureField().SetReuseAppearance(true);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
@@ -371,18 +378,20 @@ namespace iText.Signatures.Sign {
         public virtual void CreateAndSignSignatureFieldTest() {
             String src = SOURCE_FOLDER + "noSignatureField.pdf";
             String dest = DESTINATION_FOLDER + "createdAndSignedSignatureField.pdf";
+            String fieldName = "Signature1";
             String unsignedDoc = DESTINATION_FOLDER + "unsignedSignatureField.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(unsignedDoc));
-            PdfSignatureFormField field = new SignatureFormFieldBuilder(document, "Signature1").SetPage(1).SetWidgetRectangle
+            PdfSignatureFormField field = new SignatureFormFieldBuilder(document, fieldName).SetPage(1).SetWidgetRectangle
                 (new Rectangle(45, 509, 517, 179)).CreateSignature();
             PdfFormCreator.GetAcroForm(document, true).AddField(field);
             document.Close();
             PdfSigner signer = new PdfSigner(new PdfReader(unsignedDoc), new FileStream(dest, FileMode.Create), new StampingProperties
                 ());
+            signer.SetFieldName(fieldName);
             // Creating the appearance
-            signer.GetSignatureAppearance().SetReason("Appearance is tested").SetLocation("TestCity").SetLayer2Text("Test signature field appearance. Test signature field appearance. "
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent("Test signature field appearance. Test signature field appearance. "
                  + "Test signature field appearance. Test signature field appearance");
-            signer.SetFieldName("Signature1");
+            signer.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
@@ -396,15 +405,76 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
                 ());
-            // Creating the appearance
-            signer.GetSignatureAppearance().SetReason("Appearance is tested").SetLocation("TestCity").SetReuseAppearance
-                (true).SetLayer2Text("Test signature field appearance. Test signature field appearance. " + "Test signature field appearance. Test signature field appearance"
-                );
             signer.SetFieldName("Signature1");
+            // Creating the appearance
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent("Test signature field appearance. Test signature field appearance. "
+                 + "Test signature field appearance. Test signature field appearance");
+            signer.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signer.GetSignatureField().SetReuseAppearance(true);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReuseAppearanceTest() {
+            // Field is not merged with widget and has /P key
+            String src = SOURCE_FOLDER + "emptyFieldNotMerged.pdf";
+            String fileName = "reuseAppearance.pdf";
+            TestReuseAppearance(src, fileName, false, true, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReuseAppearanceDeprecatedTest() {
+            // Field is not merged with widget and has /P key
+            String src = SOURCE_FOLDER + "emptyFieldNotMerged.pdf";
+            String fileName = "reuseAppearanceDeprecated.pdf";
+            TestReuseAppearance(src, fileName, true, false, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReuseAppearanceCompatibilityTest() {
+            // Field is not merged with widget and has /P key
+            String src = SOURCE_FOLDER + "emptyFieldNotMerged.pdf";
+            String fileName = "reuseAppearanceCompatibility.pdf";
+            TestReuseAppearance(src, fileName, true, true, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLayersTest() {
+            String src = SOURCE_FOLDER + "noSignatureField.pdf";
+            String fileName = "fieldLayersTest.pdf";
+            TestLayers(src, fileName, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeprecatedLayersTest() {
+            String src = SOURCE_FOLDER + "noSignatureField.pdf";
+            String fileName = "deprecatedLayersTest.pdf";
+            TestLayers(src, fileName, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureFieldAppearanceTest() {
+            String fileName = "signatureFieldAppearanceTest.pdf";
+            String src = SOURCE_FOLDER + "noSignatureField.pdf";
+            String cmp = SOURCE_FOLDER + "cmp_" + fileName;
+            String dest = DESTINATION_FOLDER + fileName;
+            String fieldName = "Signature1";
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            signer.SetFieldName(fieldName);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent("Signature field"
+                ).SetBackgroundColor(ColorConstants.GREEN).SetBorder(new SolidBorder(ColorConstants.LIGHT_GRAY, 3)).SetFontColor
+                (ColorConstants.DARK_GRAY).SetFontSize(20).SetTextAlignment(TextAlignment.CENTER);
+            signer.SetPageRect(new Rectangle(250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance
+                (appearance);
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, cmp));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, cmp, DESTINATION_FOLDER, "diff_"));
         }
 
         private static void CompareSignatureAppearances(String outPdf, String cmpPdf) {
@@ -418,6 +488,60 @@ namespace iText.Signatures.Sign {
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outN, cmpN));
                 }
             }
+        }
+
+        private void TestReuseAppearance(String src, String fileName, bool useDeprecated, bool fieldReuseAp, bool 
+            deprecatedReuseAp) {
+            String cmp = SOURCE_FOLDER + "cmp_" + fileName;
+            String dest = DESTINATION_FOLDER + fileName;
+            String fieldName = "Signature1";
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            signer.SetFieldName(fieldName);
+            signer.GetSignatureField().SetReuseAppearance(fieldReuseAp);
+            if (useDeprecated) {
+                signer.GetSignatureAppearance().SetReuseAppearance(deprecatedReuseAp);
+            }
+            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(fieldName
+                ).SetContent("New appearance").SetFontColor(ColorConstants.GREEN));
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, cmp, DESTINATION_FOLDER, "diff_"));
+        }
+
+        private void TestLayers(String src, String fileName, bool useDeprecated) {
+            String dest = DESTINATION_FOLDER + fileName;
+            String fieldName = "Signature1";
+            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+                ());
+            signer.SetFieldName(fieldName);
+            signer.SetPageRect(new Rectangle(250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance
+                (new SignatureFieldAppearance(fieldName));
+            PdfFormXObject layer0 = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            // Draw pink rectangle with blue border
+            new PdfCanvas(layer0, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.PINK).SetStrokeColor(ColorConstants
+                .BLUE).Rectangle(0, 0, 100, 100).FillStroke().RestoreState();
+            PdfFormXObject layer2 = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
+            // Draw yellow circle with gray border
+            new PdfCanvas(layer2, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor
+                (ColorConstants.DARK_GRAY).Circle(50, 50, 50).FillStroke().RestoreState();
+            signer.GetSignatureField().SetBackgroundLayer(layer0).SetSignatureAppearanceLayer(layer2);
+            if (useDeprecated) {
+                // Creating the appearance
+                PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
+                PdfFormXObject deprecatedLayer0 = appearance.GetLayer0();
+                // Draw yellow rectangle with gray border
+                new PdfCanvas(deprecatedLayer0, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.YELLOW).SetStrokeColor
+                    (ColorConstants.DARK_GRAY).Rectangle(0, 0, 100, 100).FillStroke().RestoreState();
+                PdfFormXObject deprecatedLayer2 = appearance.GetLayer2();
+                // Draw pink circle with blue border
+                new PdfCanvas(deprecatedLayer2, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.PINK).SetStrokeColor
+                    (ColorConstants.BLUE).Circle(50, 50, 50).FillStroke().RestoreState();
+            }
+            // Signing
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
         private void TestSignatureOnRotatedPage(int pageNum, PdfSignatureAppearance.RenderingMode renderingMode, StringBuilder

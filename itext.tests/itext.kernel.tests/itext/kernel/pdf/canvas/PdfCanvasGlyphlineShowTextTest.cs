@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,11 +47,16 @@ namespace iText.Kernel.Pdf.Canvas {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void NotoSerifWithInvalidXYPlacementAnchorDeltaTest() {
             String outPdf = destinationFolder + "notoSerifWithInvalidXYPlacementAnchorDeltaTest.pdf";
             String cmpPdf = sourceFolder + "cmp_notoSerifWithInvalidXYPlacementAnchorDeltaTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage page = pdfDoc.AddNewPage();
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSerif-Regular_v1.7.ttf", PdfEncodings.IDENTITY_H
                 );

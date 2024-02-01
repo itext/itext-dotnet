@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -40,6 +40,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4GraphicsCheckTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -936,6 +937,44 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ImageJpeg20002ColorChannelsTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // This should suppress transparency and device RGB
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "jpeg2000/bee2colorchannels.jp2"
+                ), new Rectangle(0, 0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.RestoreState();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOUR_CHANNELS_IN_THE_JPEG2000_DATA_SHALL_BE_1_3_OR_4
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageJpeg2000Test() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_jpeg2000.pdf";
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            // This should suppress transparency and device RGB
+            page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read)));
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState();
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "jpeg2000/bee.jp2"), new Rectangle
+                (0, 0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.RestoreState();
+            pdfDoc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PdfA4AnnotationsNoOutputIntentTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsNoOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsNoOutputIntent.pdf";
@@ -1003,6 +1042,100 @@ namespace iText.Pdfa {
             page.AddAnnotation(annot);
             pdfDoc.Close();
             CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DestOutputIntentProfileNotAllowedTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowed.pdf";
+            String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
+            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
+                ).Replace("prtr", "not_def").GetBytes(System.Text.Encoding.ASCII);
+            PdfOutputIntent pdfOutputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream
+                (isoFilePath, FileMode.Open, FileAccess.Read));
+            pdfOutputIntent.GetPdfObject().Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
+            pdfDoc.AddOutputIntent(pdfOutputIntent);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DestOutputIntentProfileNotAllowedInPageTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowedInPage.pdf";
+            String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
+            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
+                ).Replace("prtr", "not_def").GetBytes(System.Text.Encoding.ASCII);
+            PdfOutputIntent pdfOutputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream
+                (isoFilePath, FileMode.Open, FileAccess.Read));
+            pdfOutputIntent.GetPdfObject().Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
+            page.AddOutputIntent(pdfOutputIntent);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.PROFILE_STREAM_OF_OUTPUTINTENT_SHALL_BE_OUTPUT_PROFILE_PRTR_OR_MONITOR_PROFILE_MNTR
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DestOutputIntentColorSpaceNotAllowedTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowed.pdf";
+            String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
+            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
+                ).Replace("CMYK", "not_def").GetBytes(System.Text.Encoding.ASCII);
+            PdfOutputIntent pdfOutputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream
+                (isoFilePath, FileMode.Open, FileAccess.Read));
+            pdfOutputIntent.GetPdfObject().Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
+            pdfDoc.AddOutputIntent(pdfOutputIntent);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUT_INTENT_COLOR_SPACE_SHALL_BE_EITHER_GRAY_RGB_OR_CMYK
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DestOutputIntentColorSpaceNotAllowedInPageTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowedInPage.pdf";
+            String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfPage page = pdfDoc.AddNewPage();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
+            byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
+                ).Replace("CMYK", "not_def").GetBytes(System.Text.Encoding.ASCII);
+            PdfOutputIntent pdfOutputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", new FileStream
+                (isoFilePath, FileMode.Open, FileAccess.Read));
+            pdfOutputIntent.GetPdfObject().Put(PdfName.DestOutputProfile, new PdfStream(manipulatedBytes));
+            page.AddOutputIntent(pdfOutputIntent);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUT_INTENT_COLOR_SPACE_SHALL_BE_EITHER_GRAY_RGB_OR_CMYK
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DestOutputIntentRefNotAllowedTest() {
+            String outPdf = DESTINATION_FOLDER + "PdfWithOutputIntentProfileRef.pdf";
+            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_4;
+            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfADocument pdfADocument = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                )));
+            PdfPage page = pdfADocument.AddNewPage();
+            PdfDictionary catalog = pdfADocument.GetCatalog().GetPdfObject();
+            PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
+            PdfDictionary outputIntent = outputIntents.GetAsDictionary(0);
+            outputIntent.Put(new PdfName("DestOutputProfileRef"), new PdfDictionary());
+            outputIntents.Add(outputIntent);
+            catalog.Put(PdfName.OutputIntents, outputIntents);
+            Exception exc = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfADocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.OUTPUTINTENT_SHALL_NOT_CONTAIN_DESTOUTPUTPROFILEREF_KEY
+                , exc.Message);
         }
 
         private void TestWithColourant(PdfName color) {

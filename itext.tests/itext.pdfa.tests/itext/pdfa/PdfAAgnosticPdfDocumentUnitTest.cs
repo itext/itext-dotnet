@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -57,6 +57,13 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART));
             NUnit.Framework.Assert.IsNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE));
             pdfDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetDefaultFont() {
+            PdfAAgnosticPdfDocumentUnitTest.TestAgnosticPdfDocument pdfDoc = new PdfAAgnosticPdfDocumentUnitTest.TestAgnosticPdfDocument
+                (this, new PdfReader(sourceFolder + "pdfs/simpleDoc.pdf"), new PdfWriter(new ByteArrayOutputStream()));
+            NUnit.Framework.Assert.IsNotNull(pdfDoc.GetDefaultFont());
         }
 
         [NUnit.Framework.Test]

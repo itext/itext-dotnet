@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -31,7 +31,6 @@ using iText.Commons.Utils;
 using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
@@ -110,7 +109,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineBProfile(signerProperties, signRsaChain, signRsaPrivateKey);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -143,7 +142,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -182,7 +181,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -221,7 +220,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
@@ -255,7 +254,7 @@ namespace iText.Signatures.Sign {
             else {
                 padesSigner.ProlongSignatures();
             }
-            PadesSigTest.BasicCheckSignedDoc(outFileName, "Signature1");
+            TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 

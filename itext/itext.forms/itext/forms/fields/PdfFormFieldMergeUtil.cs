@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -156,6 +156,13 @@ namespace iText.Forms.Fields {
             }
         }
 
+        /// <summary>This method combines two form fields.</summary>
+        /// <param name="firstField">first form field to be merged</param>
+        /// <param name="secondField">second form field to be merged</param>
+        /// <param name="throwExceptionOnError">
+        /// define whether exception (true) or log (false) is expected in case kid with
+        /// the same name exists and merge of two kids failed.
+        /// </param>
         public static void MergeFormFields(PdfFormField firstField, PdfFormField secondField, bool throwExceptionOnError
             ) {
             PdfFormAnnotationUtil.SeparateWidgetAndField(firstField);

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -53,8 +53,8 @@ namespace iText.Signatures {
         /// <summary>The default value for the hash algorithm</summary>
         public const String DEFAULTHASHALGORITHM = "SHA-256";
 
-        /// <summary>The default value for the hash algorithm</summary>
-        public const int DEFAULTTOKENSIZE = 4096;
+        /// <summary>The default value for token size estimation.</summary>
+        public const int DEFAULTTOKENSIZE = 10240;
 
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle
@@ -73,26 +73,30 @@ namespace iText.Signatures {
         protected internal ITSAInfoBouncyCastle tsaInfo;
 
         /// <summary>Estimate of the received time stamp token</summary>
-        protected internal int tokenSizeEstimate;
+        protected internal int tokenSizeEstimate = DEFAULTTOKENSIZE;
 
         /// <summary>Hash algorithm</summary>
-        protected internal String digestAlgorithm;
+        protected internal String digestAlgorithm = DEFAULTHASHALGORITHM;
 
         /// <summary>TSA request policy</summary>
         private String tsaReqPolicy;
 
+        private int customTokenSizeEstimate = -1;
+
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
         /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         public TSAClientBouncyCastle(String url)
-            : this(url, null, null, DEFAULTTOKENSIZE, DEFAULTHASHALGORITHM) {
+            : this(url, null, null) {
         }
 
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
         /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         /// <param name="username">String - user(account) name</param>
         /// <param name="password">String - password</param>
-        public TSAClientBouncyCastle(String url, String username, String password)
-            : this(url, username, password, 4096, DEFAULTHASHALGORITHM) {
+        public TSAClientBouncyCastle(String url, String username, String password) {
+            this.tsaURL = url;
+            this.tsaUsername = username;
+            this.tsaPassword = password;
         }
 
         /// <summary>Constructor.</summary>
@@ -115,7 +119,7 @@ namespace iText.Signatures {
             this.tsaURL = url;
             this.tsaUsername = username;
             this.tsaPassword = password;
-            this.tokenSizeEstimate = tokSzEstimate;
+            this.customTokenSizeEstimate = tokSzEstimate;
             this.digestAlgorithm = digestAlgorithm;
         }
 
@@ -131,7 +135,7 @@ namespace iText.Signatures {
         /// </remarks>
         /// <returns>an estimate of the token size</returns>
         public virtual int GetTokenSizeEstimate() {
-            return tokenSizeEstimate;
+            return customTokenSizeEstimate == -1 ? tokenSizeEstimate : customTokenSizeEstimate;
         }
 
         /// <summary>Gets the TSA request policy that will be used when retrieving timestamp token.</summary>
@@ -182,12 +186,9 @@ namespace iText.Signatures {
             IPkiFailureInfo failure = response.GetFailInfo();
             int value = failure.IsNull() ? 0 : failure.IntValue();
             if (value != 0) {
-                // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
-                throw new PdfException(SignExceptionMessageConstant.INVALID_TSA_RESPONSE).SetMessageParams(tsaURL, value.ToString
-                    ());
+                throw new PdfException(SignExceptionMessageConstant.INVALID_TSA_RESPONSE).SetMessageParams(tsaURL, value +
+                     ": " + response.GetStatusString());
             }
-            // @todo: validate the time stap certificate chain (if we want
-            //        assure we do not sign using an invalid timestamp).
             // extract just the time stamp token (removes communication status info)
             ITimeStampToken tsToken = response.GetTimeStampToken();
             if (tsToken == null) {

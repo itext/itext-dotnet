@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2023 Apryse Group NV
+    Copyright (c) 1998-2024 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -80,7 +80,13 @@ namespace iText.Bouncycastlefips.Cert {
         public IPublicKey GetPublicKey() {
             return new PublicKeyBCFips(certificate.GetPublicKey());
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public string GetSigAlgOID() => certificate.SigAlgOid.Id;
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetSigAlgParams() => certificate.GetSigAlgParams();
+
         /// <summary><inheritDoc/></summary>
         public byte[] GetEncoded() {
             return certificate.GetEncoded();

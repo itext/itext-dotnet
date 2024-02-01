@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -66,10 +66,14 @@ namespace iText.Barcodes.Qrcode {
             return ordinal;
         }
 
+        /// <summary>Gets the bits.</summary>
+        /// <returns>the bits</returns>
         public int GetBits() {
             return bits;
         }
 
+        /// <summary>Gets the name.</summary>
+        /// <returns>the name</returns>
         public String GetName() {
             return name;
         }

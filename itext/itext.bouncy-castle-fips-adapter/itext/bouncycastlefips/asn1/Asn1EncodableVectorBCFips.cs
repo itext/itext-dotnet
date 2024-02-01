@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -84,6 +84,27 @@ namespace iText.Bouncycastlefips.Asn1 {
         public virtual void Add(IAlgorithmIdentifier element) {
             AlgorithmIdentifierBCFips elementBCFips = (AlgorithmIdentifierBCFips)element;
             encodableVector.Add(elementBCFips.GetAlgorithmIdentifier());
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void AddOptional(IAsn1Object primitive) {
+            if (primitive != null) {
+                Add(primitive);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void AddOptional(IAttribute attribute) {
+            if (attribute != null) {
+                Add(attribute);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void AddOptional(IAlgorithmIdentifier element) {
+            if (element != null) {
+                Add(element);
+            }
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,7 +25,9 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Function;
 using iText.Pdfa.Exceptions;
 using iText.Test;
@@ -306,7 +308,38 @@ namespace iText.Pdfa.Checker {
             pattern.SetShading(dictionary);
             Color color = new PatternColor(pattern);
             NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfA2Checker.CheckColor(null, color, new PdfDictionary(), true, null);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeprecatedCheckColorShadingTest() {
+            PdfDictionary patternDict = new PdfDictionary();
+            patternDict.Put(PdfName.ExtGState, new PdfDictionary());
+            PdfPattern.Shading pattern = new PdfPattern.Shading(patternDict);
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.ColorSpace, PdfName.DeviceCMYK);
+            pattern.SetShading(dictionary);
+            Color color = new PatternColor(pattern);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
                 pdfA2Checker.CheckColor(color, new PdfDictionary(), true, null);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckColorShadingWithoutExtGStatePropertyInPatternDictTest() {
+            PdfDictionary patternDict = new PdfDictionary();
+            patternDict.Put(PdfName.PatternType, new PdfNumber(2));
+            PdfPattern.Shading pattern = new PdfPattern.Shading(patternDict);
+            PdfDictionary dictionary = new PdfDictionary();
+            dictionary.Put(PdfName.ColorSpace, PdfName.DeviceCMYK);
+            pattern.SetShading(dictionary);
+            Color color = new PatternColor(pattern);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfA2Checker.CheckColor(new PdfA2CheckerTest.UpdateCanvasGraphicsState(new PdfDictionary()), color, new PdfDictionary
+                    (), true, null);
             }
             );
         }
@@ -694,6 +727,12 @@ namespace iText.Pdfa.Checker {
             types.Add(reference);
             signatureDict.Put(PdfName.Reference, types);
             return signatureDict;
+        }
+
+        private sealed class UpdateCanvasGraphicsState : CanvasGraphicsState {
+            public UpdateCanvasGraphicsState(PdfDictionary extGStateDict) {
+                UpdateFromExtGState(new PdfExtGState(extGStateDict));
+            }
         }
     }
 }

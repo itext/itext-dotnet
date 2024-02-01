@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -655,12 +655,22 @@ namespace iText.IO.Source {
                                     break;
                                 }
                                 ch = content[i++];
+                                if (ch < '0' || ch > '7') {
+                                    i--;
+                                    ch = octal;
+                                    break;
+                                }
                                 octal = (octal << 3) + ch - '0';
-                                if (ch < '0' || ch > '7' || i > to) {
+                                if (i > to) {
                                     ch = octal;
                                     break;
                                 }
                                 ch = content[i++];
+                                if (ch < '0' || ch > '7') {
+                                    i--;
+                                    ch = octal;
+                                    break;
+                                }
                                 octal = (octal << 3) + ch - '0';
                                 ch = octal & 0xff;
                                 break;

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -121,8 +121,16 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
+        /// <summary><inheritDoc/></summary>
+        [Obsolete]
         public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
             ) {
+            CheckColor(null, color, currentColorSpaces, fill, stream);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void CheckColor(CanvasGraphicsState graphicsState, Color color, PdfDictionary currentColorSpaces
+            , bool? fill, PdfStream stream) {
             CheckColorSpace(color.GetColorSpace(), stream, currentColorSpaces, true, fill);
             if (color is PatternColor) {
                 PdfPattern pattern = ((PatternColor)color).GetPattern();
@@ -314,7 +322,15 @@ namespace iText.Pdfa.Checker {
         /// </param>
         public override void CheckText(String text, PdfFont font) {
             for (int i = 0; i < text.Length; ++i) {
-                if (!font.ContainsGlyph(text[i])) {
+                int ch;
+                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, i)) {
+                    ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, i);
+                    i++;
+                }
+                else {
+                    ch = text[i];
+                }
+                if (!font.ContainsGlyph(ch)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                         );
                 }

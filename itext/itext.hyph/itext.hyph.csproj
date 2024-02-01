@@ -4,7 +4,7 @@
     <DelaySign>False</DelaySign>
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.hyph.xml</DocumentationFile>
     <RootNamespace>iText.Hyph</RootNamespace>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>

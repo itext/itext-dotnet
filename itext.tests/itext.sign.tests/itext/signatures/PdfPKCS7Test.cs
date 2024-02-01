@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -271,6 +271,21 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetEncodedPkcs7WithRevocationInfoTest() {
+            String hashAlgorithm = DigestAlgorithms.SHA256;
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            pkcs7.GetSignedDataCRLs().Add(SignTestPortUtil.ParseCrlFromStream(new FileStream(SOURCE_FOLDER + "firstCrl.bin"
+                , FileMode.Open, FileAccess.Read)));
+            pkcs7.GetSignedDataOcsps().Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
+                (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
+            byte[] bytes = pkcs7.GetEncodedPKCS7();
+            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7WithRevInfo.txt")
+                );
+            NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetSignatureMechanismName());
+            NUnit.Framework.Assert.AreEqual(SerializedAsString(bytes), SerializedAsString(cmpBytes));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void VerifyEd448SignatureTest() {
             // SHAKE256 is not available in BCFIPS
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
@@ -295,6 +310,12 @@ namespace iText.Signatures {
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached
         private static PdfPKCS7 CreateSimplePdfPKCS7() {
             return new PdfPKCS7(null, chain, DigestAlgorithms.SHA256, false);
+        }
+
+        private String SerializedAsString(byte[] serialized) {
+            IAsn1InputStream @is = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(serialized);
+            IAsn1Object obj1 = @is.ReadObject();
+            return BOUNCY_CASTLE_FACTORY.CreateASN1Dump().DumpAsString(obj1, true).Replace("\r\n", "\n");
         }
     }
 }

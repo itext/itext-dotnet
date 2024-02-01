@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -77,6 +77,24 @@ namespace iText.Commons.Utils {
                 throw new Exception("No instance registered for class " + clazz.FullName);
             }
             return (T)supplier;
+        }
+
+        /// <summary>Checks if an instance is registered for a class.</summary>
+        /// <remarks>
+        /// Checks if an instance is registered for a class.
+        /// If the class is registered but the value is null, it will still return
+        /// <see langword="true"/>.
+        /// </remarks>
+        /// <param name="clazz">the class</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if an instance is registered,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsRegistered(Type clazz) {
+            return localInstances.ContainsKey(clazz) || instances.ContainsKey(clazz);
         }
     }
 }

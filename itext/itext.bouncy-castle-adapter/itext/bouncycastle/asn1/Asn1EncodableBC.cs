@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -71,7 +71,7 @@ namespace iText.Bouncycastle.Asn1 {
             if (this == o) {
                 return true;
             }
-            if (o == null || GetType() != o.GetType()) {
+            if (o == null || !this.GetType().IsAssignableFrom(o.GetType())) {
                 return false;
             }
             Asn1EncodableBC that = (Asn1EncodableBC)o;

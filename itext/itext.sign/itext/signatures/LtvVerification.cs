@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,14 +30,16 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Utils;
-using iText.Forms;
-using iText.Forms.Fields;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
@@ -45,18 +47,23 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification));
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification
+            ));
 
-        private PdfDocument document;
+        private readonly PdfDocument document;
 
-        private SignatureUtil sgnUtil;
+        private readonly SignatureUtil sgnUtil;
 
-        private PdfAcroForm acroForm;
-
-        private IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary<PdfName, LtvVerification.ValidationData
-            >();
+        private readonly IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary<PdfName, 
+            LtvVerification.ValidationData>();
 
         private bool used = false;
+
+        private LtvVerification.RevocationDataNecessity revocationDataNecessity = LtvVerification.RevocationDataNecessity
+            .OPTIONAL;
+
+        private IIssuingCertificateRetriever issuingCertificateRetriever = new DefaultIssuingCertificateRetriever(
+            );
 
         /// <summary>What type of verification to include.</summary>
         public enum Level {
@@ -75,7 +82,12 @@ namespace iText.Signatures {
             /// <summary>Include verification just for the signing certificate.</summary>
             SIGNING_CERTIFICATE,
             /// <summary>Include verification for the whole chain of certificates.</summary>
-            WHOLE_CHAIN
+            WHOLE_CHAIN,
+            /// <summary>
+            /// Include verification for the whole certificates chain, certificates used to create OCSP responses,
+            /// CRL response certificates and timestamp certificates included in the signatures.
+            /// </summary>
+            ALL_CERTIFICATES
         }
 
         /// <summary>
@@ -87,6 +99,14 @@ namespace iText.Signatures {
             YES,
             /// <summary>Do not include certificates in the DSS and VRI dictionaries.</summary>
             NO
+        }
+
+        /// <summary>Option to determine whether revocation information is required for the signing certificate.</summary>
+        public enum RevocationDataNecessity {
+            /// <summary>Require revocation information for the signing certificate.</summary>
+            REQUIRED_FOR_SIGNING_CERTIFICATE,
+            /// <summary>Revocation data for the signing certificate may be optional.</summary>
+            OPTIONAL
         }
 
         /// <summary>The verification constructor.</summary>
@@ -102,8 +122,65 @@ namespace iText.Signatures {
         /// </param>
         public LtvVerification(PdfDocument document) {
             this.document = document;
-            this.acroForm = PdfFormCreator.GetAcroForm(document, true);
             this.sgnUtil = new SignatureUtil(document);
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="RevocationDataNecessity"/>
+        /// option to specify the necessity of revocation data.
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="RevocationDataNecessity"/>
+        /// option to specify the necessity of revocation data.
+        /// <para />
+        /// Default value is
+        /// <see cref="RevocationDataNecessity.OPTIONAL"/>.
+        /// </remarks>
+        /// <param name="revocationDataNecessity">
+        /// 
+        /// <see cref="RevocationDataNecessity"/>
+        /// value to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="LtvVerification"/>
+        /// instance.
+        /// </returns>
+        public virtual LtvVerification SetRevocationDataNecessity(LtvVerification.RevocationDataNecessity revocationDataNecessity
+            ) {
+            this.revocationDataNecessity = revocationDataNecessity;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance needed to get CRL issuer certificates (using AIA extension).
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance needed to get CRL issuer certificates (using AIA extension).
+        /// <para />
+        /// Default value is
+        /// <see cref="DefaultIssuingCertificateRetriever"/>.
+        /// </remarks>
+        /// <param name="issuingCertificateRetriever">
+        /// 
+        /// <see cref="IIssuingCertificateRetriever"/>
+        /// instance to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="LtvVerification"/>
+        /// instance.
+        /// </returns>
+        public virtual LtvVerification SetIssuingCertificateRetriever(IIssuingCertificateRetriever issuingCertificateRetriever
+            ) {
+            this.issuingCertificateRetriever = issuingCertificateRetriever;
+            return this;
         }
 
         /// <summary>Add verification for a particular signature.</summary>
@@ -121,52 +198,26 @@ namespace iText.Signatures {
             }
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
             LOGGER.LogInformation("Adding verification for " + signatureName);
-            IX509Certificate[] xc = pk.GetCertificates();
-            IX509Certificate cert;
+            IX509Certificate[] certificateChain = pk.GetCertificates();
             IX509Certificate signingCert = pk.GetSigningCertificate();
-            LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
-            foreach (IX509Certificate certificate in xc) {
-                cert = (IX509Certificate)certificate;
-                LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
-                    )));
-                if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
-                    continue;
-                }
-                byte[] ocspEnc = null;
-                if (ocsp != null && level != LtvVerification.Level.CRL) {
-                    ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, xc), null);
-                    if (ocspEnc != null) {
-                        vd.ocsps.Add(BuildOCSPResponse(ocspEnc));
-                        LOGGER.LogInformation("OCSP added");
-                    }
-                }
-                if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level.OCSP_CRL || (level
-                     == LtvVerification.Level.OCSP_OPTIONAL_CRL && ocspEnc == null))) {
-                    ICollection<byte[]> cims = crl.GetEncoded(cert, null);
-                    if (cims != null) {
-                        foreach (byte[] cim in cims) {
-                            bool dup = false;
-                            foreach (byte[] b in vd.crls) {
-                                if (JavaUtil.ArraysEquals(b, cim)) {
-                                    dup = true;
-                                    break;
-                                }
-                            }
-                            if (!dup) {
-                                vd.crls.Add(cim);
-                                LOGGER.LogInformation("CRL added");
-                            }
-                        }
-                    }
-                }
-                if (certInclude == LtvVerification.CertificateInclusion.YES) {
-                    vd.certs.Add(cert.GetEncoded());
+            LtvVerification.ValidationData validationData = new LtvVerification.ValidationData();
+            ICollection<IX509Certificate> processedCerts = new HashSet<IX509Certificate>();
+            AddRevocationDataForChain(signingCert, certificateChain, ocsp, crl, level, certInclude, certOption, validationData
+                , processedCerts);
+            if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
+                IX509Certificate[] timestampCertsChain = pk.GetTimestampCertificates();
+                AddRevocationDataForChain(signingCert, timestampCertsChain, ocsp, crl, level, certInclude, certOption, validationData
+                    , processedCerts);
+            }
+            if (certInclude == LtvVerification.CertificateInclusion.YES) {
+                foreach (IX509Certificate processedCert in processedCerts) {
+                    validationData.certs.Add(processedCert.GetEncoded());
                 }
             }
-            if (vd.crls.Count == 0 && vd.ocsps.Count == 0) {
+            if (validationData.crls.Count == 0 && validationData.ocsps.Count == 0) {
                 return false;
             }
-            validated.Put(GetSignatureHashKey(signatureName), vd);
+            validated.Put(GetSignatureHashKey(signatureName), validationData);
             return true;
         }
 
@@ -197,6 +248,33 @@ namespace iText.Signatures {
             return true;
         }
 
+        /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
+        public virtual void Merge() {
+            if (used || validated.Count == 0) {
+                return;
+            }
+            used = true;
+            PdfDictionary catalog = document.GetCatalog().GetPdfObject();
+            PdfObject dss = catalog.Get(PdfName.DSS);
+            if (dss == null) {
+                CreateDss();
+            }
+            else {
+                UpdateDss();
+            }
+        }
+
+        /// <summary>Converts an array of bytes to a String of hexadecimal values</summary>
+        /// <param name="bytes">a byte array</param>
+        /// <returns>the same bytes expressed as hexadecimal values</returns>
+        public static String ConvertToHex(byte[] bytes) {
+            ByteBuffer buf = new ByteBuffer();
+            foreach (byte b in bytes) {
+                buf.AppendHex(b);
+            }
+            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpperInvariant();
+        }
+
         /// <summary>Get the issuing certificate for a child certificate.</summary>
         /// <param name="cert">the certificate for which we search the parent</param>
         /// <param name="certs">an array with certificates that contains the parent</param>
@@ -219,6 +297,122 @@ namespace iText.Signatures {
             return null;
         }
 
+        private void AddRevocationDataForChain(IX509Certificate signingCert, IX509Certificate[] certChain, IOcspClient
+             ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, 
+            LtvVerification.CertificateOption certOption, LtvVerification.ValidationData validationData, ICollection
+            <IX509Certificate> processedCerts) {
+            IX509Certificate[] fullChain = certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES ? RetrieveMissingCertificates
+                (certChain) : certChain;
+            foreach (IX509Certificate certificate in fullChain) {
+                IX509Certificate cert = (IX509Certificate)certificate;
+                LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
+                    )));
+                if ((certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) || 
+                    processedCerts.Contains(cert)) {
+                    continue;
+                }
+                AddRevocationDataForCertificate(signingCert, fullChain, cert, ocsp, crl, level, certInclude, certOption, validationData
+                    , processedCerts);
+            }
+        }
+
+        private void AddRevocationDataForCertificate(IX509Certificate signingCert, IX509Certificate[] certificateChain
+            , IX509Certificate cert, IOcspClient ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion
+             certInclude, LtvVerification.CertificateOption certOption, LtvVerification.ValidationData validationData
+            , ICollection<IX509Certificate> processedCerts) {
+            processedCerts.Add(cert);
+            byte[] validityAssured = SignUtils.GetExtensionValueByOid(cert, OID.X509Extensions.VALIDITY_ASSURED_SHORT_TERM
+                );
+            if (validityAssured != null) {
+                LOGGER.LogInformation(MessageFormatUtil.Format(SignLogMessageConstant.REVOCATION_DATA_NOT_ADDED_VALIDITY_ASSURED
+                    , cert.GetSubjectDN()));
+                return;
+            }
+            byte[] ocspEnc = null;
+            bool revocationDataAdded = false;
+            if (ocsp != null && level != LtvVerification.Level.CRL) {
+                ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, certificateChain), null);
+                if (ocspEnc != null) {
+                    validationData.ocsps.Add(BuildOCSPResponse(ocspEnc));
+                    revocationDataAdded = true;
+                    LOGGER.LogInformation("OCSP added");
+                    if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
+                        AddRevocationDataForOcspCert(ocspEnc, signingCert, ocsp, crl, level, certInclude, certOption, validationData
+                            , processedCerts);
+                    }
+                }
+            }
+            if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level.OCSP_CRL || (level
+                 == LtvVerification.Level.OCSP_OPTIONAL_CRL && ocspEnc == null))) {
+                ICollection<byte[]> cims = crl.GetEncoded(cert, null);
+                if (cims != null) {
+                    foreach (byte[] cim in cims) {
+                        bool dup = false;
+                        foreach (byte[] b in validationData.crls) {
+                            if (JavaUtil.ArraysEquals(b, cim)) {
+                                dup = true;
+                                break;
+                            }
+                        }
+                        if (!dup) {
+                            validationData.crls.Add(cim);
+                            revocationDataAdded = true;
+                            LOGGER.LogInformation("CRL added");
+                            if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
+                                IX509Certificate[] certsList = issuingCertificateRetriever.GetCrlIssuerCertificates(SignUtils.ParseCrlFromStream
+                                    (new MemoryStream(cim)));
+                                AddRevocationDataForChain(signingCert, certsList, ocsp, crl, level, certInclude, certOption, validationData
+                                    , processedCerts);
+                            }
+                        }
+                    }
+                }
+            }
+            if (revocationDataNecessity == LtvVerification.RevocationDataNecessity.REQUIRED_FOR_SIGNING_CERTIFICATE &&
+                 signingCert.Equals(cert) && !revocationDataAdded) {
+                throw new PdfException(SignExceptionMessageConstant.NO_REVOCATION_DATA_FOR_SIGNING_CERTIFICATE);
+            }
+        }
+
+        private void AddRevocationDataForOcspCert(byte[] ocspEnc, IX509Certificate signingCert, IOcspClient ocsp, 
+            ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, LtvVerification.CertificateOption
+             certOption, LtvVerification.ValidationData validationData, ICollection<IX509Certificate> processedCerts
+            ) {
+            IBasicOcspResponse ocspResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspEnc);
+            IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
+            IList<IX509Certificate> ocspCertsList = IterableToList(certs);
+            IX509Certificate ocspSigningCert = null;
+            foreach (IX509Certificate ocspCert in ocspCertsList) {
+                try {
+                    if (SignUtils.IsSignatureValid(ocspResp, ocspCert)) {
+                        ocspSigningCert = ocspCert;
+                        break;
+                    }
+                }
+                catch (AbstractOperatorCreationException) {
+                }
+                catch (AbstractOcspException) {
+                }
+            }
+            // Wasn't possible to check if this cert is signing one, skip.
+            if (ocspSigningCert != null && SignUtils.GetExtensionValueByOid(ocspSigningCert, OID.X509Extensions.ID_PKIX_OCSP_NOCHECK
+                ) != null) {
+                // If ocsp_no_check extension is set on OCSP signing cert we shan't collect revocation data for this cert.
+                ocspCertsList.Remove(ocspSigningCert);
+                processedCerts.Add(ocspSigningCert);
+            }
+            AddRevocationDataForChain(signingCert, ocspCertsList.ToArray(new IX509Certificate[0]), ocsp, crl, level, certInclude
+                , certOption, validationData, processedCerts);
+        }
+
+        private static IList<IX509Certificate> IterableToList(IEnumerable<IX509Certificate> iterable) {
+            IList<IX509Certificate> list = new List<IX509Certificate>();
+            foreach (IX509Certificate certificate in iterable) {
+                list.Add(certificate);
+            }
+            return list;
+        }
+
         private static byte[] BuildOCSPResponse(byte[] basicOcspResponse) {
             IDerOctetString doctet = BOUNCY_CASTLE_FACTORY.CreateDEROctetString(basicOcspResponse);
             IOcspResponseStatus respStatus = BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus(BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus
@@ -233,36 +427,13 @@ namespace iText.Signatures {
             PdfSignature sig = sgnUtil.GetSignature(signatureName);
             PdfString contents = sig.GetContents();
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
-            byte[] bt = null;
-            if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
-                using (IAsn1InputStream din = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(bc))) {
-                    IAsn1Object pkcs = din.ReadObject();
-                    bc = pkcs.GetEncoded();
-                }
-            }
-            bt = HashBytesSha1(bc);
+            byte[] bt = HashBytesSha1(bc);
             return new PdfName(ConvertToHex(bt));
         }
 
         private static byte[] HashBytesSha1(byte[] b) {
             IDigest sh = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA1");
             return sh.Digest(b);
-        }
-
-        /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
-        public virtual void Merge() {
-            if (used || validated.Count == 0) {
-                return;
-            }
-            used = true;
-            PdfDictionary catalog = document.GetCatalog().GetPdfObject();
-            PdfObject dss = catalog.Get(PdfName.DSS);
-            if (dss == null) {
-                CreateDss();
-            }
-            else {
-                UpdateDss();
-            }
         }
 
         private void UpdateDss() {
@@ -401,15 +572,16 @@ namespace iText.Signatures {
             public IList<byte[]> certs = new List<byte[]>();
         }
 
-        /// <summary>Converts an array of bytes to a String of hexadecimal values</summary>
-        /// <param name="bytes">a byte array</param>
-        /// <returns>the same bytes expressed as hexadecimal values</returns>
-        public static String ConvertToHex(byte[] bytes) {
-            ByteBuffer buf = new ByteBuffer();
-            foreach (byte b in bytes) {
-                buf.AppendHex(b);
+        private IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] certChain) {
+            IDictionary<String, IX509Certificate> restoredChain = new LinkedDictionary<String, IX509Certificate>();
+            IX509Certificate[] subChain;
+            foreach (IX509Certificate certificate in certChain) {
+                subChain = issuingCertificateRetriever.RetrieveMissingCertificates(new IX509Certificate[] { certificate });
+                foreach (IX509Certificate cert in subChain) {
+                    restoredChain.Put(((IX509Certificate)cert).GetSubjectDN().ToString(), cert);
+                }
             }
-            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpperInvariant();
+            return restoredChain.Values.ToArray(new IX509Certificate[0]);
         }
     }
 }

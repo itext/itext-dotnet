@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -35,9 +35,9 @@ using iText.Signatures.Exceptions;
 namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil {
-        private PdfDocument document;
+        private readonly PdfDocument document;
 
-        private PdfAcroForm acroForm;
+        private readonly PdfAcroForm acroForm;
 
         private IDictionary<String, int[]> sigNames;
 

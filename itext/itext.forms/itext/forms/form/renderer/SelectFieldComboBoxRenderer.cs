@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -91,8 +92,9 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedAreaBBox();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
-                (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            PdfFont font = GetResolvedFont(doc);
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
+                ).SetConformanceLevel(GetConformanceLevel(doc));
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
@@ -103,11 +105,7 @@ namespace iText.Forms.Form.Renderer {
             if (background != null) {
                 comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
-            AbstractFormFieldRenderer.ApplyBorderProperty(this, comboBoxField.GetFirstFormAnnotation());
-            PdfFont font = GetRetrievedFont();
-            if (font != null) {
-                comboBoxField.SetFont(font);
-            }
+            BorderStyleUtil.ApplyBorderProperty(this, comboBoxField.GetFirstFormAnnotation());
             UnitValue fontSize = GetFontSize();
             if (fontSize != null) {
                 comboBoxField.SetFontSize(fontSize.GetValue());
@@ -134,11 +132,6 @@ namespace iText.Forms.Form.Renderer {
             comboBoxField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(comboBoxField, page);
             WriteAcroFormFieldLangAttribute(doc);
-        }
-
-        private PdfFont GetRetrievedFont() {
-            Object retrievedFont = this.GetProperty<Object>(Property.FONT);
-            return retrievedFont is PdfFont ? (PdfFont)retrievedFont : null;
         }
 
         private UnitValue GetFontSize() {
@@ -284,7 +277,7 @@ namespace iText.Forms.Form.Renderer {
             if (fontSize != null) {
                 paragraph.SetFontSize(fontSize.GetValue());
             }
-            PdfFont font = GetRetrievedFont();
+            PdfFont font = GetResolvedFont(null);
             if (font != null) {
                 paragraph.SetFont(font);
             }

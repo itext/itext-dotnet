@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -862,6 +862,25 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(listGroup));
             document.Add(table);
             document.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnexpectedTableHintChildTest() {
+            String outFile = "unexpectedTableHintChildTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetTagged();
+                Div div = new Div();
+                div.GetAccessibilityProperties().SetRole(StandardRoles.TABLE);
+                Paragraph c1 = new Paragraph("c1");
+                c1.GetAccessibilityProperties().SetRole(StandardRoles.LINK);
+                div.Add(c1);
+                Paragraph p1 = new Paragraph("c");
+                p1.GetAccessibilityProperties().SetRole(StandardRoles.TD);
+                div.Add(p1);
+                document.Add(div);
+            }
             CompareResult(outFile, "cmp_" + outFile);
         }
 

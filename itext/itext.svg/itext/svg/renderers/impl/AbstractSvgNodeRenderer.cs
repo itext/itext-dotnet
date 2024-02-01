@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -32,6 +32,7 @@ using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Css.Validate;
 using iText.Svg;
+using iText.Svg.Css;
 using iText.Svg.Css.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -272,9 +273,9 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 PdfExtGState opacityGraphicsState = new PdfExtGState();
                 if (!partOfClipPath) {
-                    float generalOpacity = GetOpacity();
  {
                         // fill
+                        float generalOpacity = GetOpacity();
                         String fillRawValue = GetAttributeOrDefault(SvgConstants.Attributes.FILL, "black");
                         this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
                         if (doFill && CanElementFill()) {
@@ -295,36 +296,7 @@ namespace iText.Svg.Renderers.Impl {
                             currentCanvas.SetFillColor(fillColor);
                         }
                     }
- {
-                        // stroke
-                        String strokeRawValue = GetAttributeOrDefault(SvgConstants.Attributes.STROKE, SvgConstants.Values.NONE);
-                        if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
-                            String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                            // 1 px = 0,75 pt
-                            float strokeWidth = 0.75f;
-                            if (strokeWidthRawValue != null) {
-                                strokeWidth = CssDimensionParsingUtils.ParseAbsoluteLength(strokeWidthRawValue);
-                            }
-                            float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
-                            Color strokeColor = null;
-                            TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, (float)((double)strokeWidth
-                                 / 2.0), strokeOpacity);
-                            if (transparentColor != null) {
-                                strokeColor = transparentColor.GetColor();
-                                strokeOpacity = transparentColor.GetOpacity();
-                            }
-                            if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
-                                opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
-                            }
-                            // as default value for stroke is 'none' we should not set
-                            // it in case when value obtaining fails
-                            if (strokeColor != null) {
-                                currentCanvas.SetStrokeColor(strokeColor);
-                            }
-                            currentCanvas.SetLineWidth(strokeWidth);
-                            doStroke = true;
-                        }
-                    }
+                    ApplyStrokeProperties(context, currentCanvas, opacityGraphicsState);
  {
                         // opacity
                         if (!opacityGraphicsState.GetPdfObject().IsEmpty()) {
@@ -335,35 +307,24 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        /// <summary>Parse absolute length.</summary>
+        /// <summary>Parse length attributes.</summary>
         /// <param name="length">
         /// 
         /// <see cref="System.String"/>
         /// for parsing
         /// </param>
-        /// <param name="percentRelativeValue">the value on which percent length is based on</param>
+        /// <param name="percentBaseValue">the value on which percent length is based on</param>
         /// <param name="defaultValue">default value if length is not recognized</param>
         /// <param name="context">
         /// current
         /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
         /// </param>
         /// <returns>absolute value in points</returns>
-        protected internal virtual float ParseAbsoluteLength(String length, float percentRelativeValue, float defaultValue
+        protected internal virtual float ParseAbsoluteLength(String length, float percentBaseValue, float defaultValue
             , SvgDrawContext context) {
-            if (CssTypesValidationUtils.IsPercentageValue(length)) {
-                return CssDimensionParsingUtils.ParseRelativeValue(length, percentRelativeValue);
-            }
-            else {
-                float em = GetCurrentFontSize();
-                float rem = context.GetCssContext().GetRootFontSize();
-                UnitValue unitValue = CssDimensionParsingUtils.ParseLengthValueToPt(length, em, rem);
-                if (unitValue != null && unitValue.IsPointValue()) {
-                    return unitValue.GetValue();
-                }
-                else {
-                    return defaultValue;
-                }
-            }
+            float em = GetCurrentFontSize();
+            float rem = context.GetCssContext().GetRootFontSize();
+            return CssDimensionParsingUtils.ParseLength(length, percentBaseValue, defaultValue, em, rem);
         }
 
         private TransparentColor GetColorFromAttributeValue(SvgDrawContext context, String rawColorValue, float objectBoundingBoxMargin
@@ -445,6 +406,45 @@ namespace iText.Svg.Renderers.Impl {
                 result *= ((AbstractSvgNodeRenderer)parent).GetOpacity();
             }
             return result;
+        }
+
+        private void ApplyStrokeProperties(SvgDrawContext context, PdfCanvas currentCanvas, PdfExtGState opacityGraphicsState
+            ) {
+            String strokeRawValue = GetAttributeOrDefault(SvgConstants.Attributes.STROKE, SvgConstants.Values.NONE);
+            if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
+                String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
+                // 1 px = 0,75 pt
+                float strokeWidth = 0.75f;
+                if (strokeWidthRawValue != null) {
+                    strokeWidth = CssDimensionParsingUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                }
+                float generalOpacity = GetOpacity();
+                float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
+                Color strokeColor = null;
+                TransparentColor transparentColor = GetColorFromAttributeValue(context, strokeRawValue, (float)((double)strokeWidth
+                     / 2.0), strokeOpacity);
+                if (transparentColor != null) {
+                    strokeColor = transparentColor.GetColor();
+                    strokeOpacity = transparentColor.GetOpacity();
+                }
+                if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
+                    opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
+                }
+                String strokeDashArrayRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHARRAY);
+                String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
+                SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
+                    (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(), context);
+                if (lineDashParameters != null) {
+                    currentCanvas.SetLineDash(lineDashParameters.GetDashArray(), lineDashParameters.GetDashPhase());
+                }
+                // as default value for stroke is 'none' we should not set
+                // it in case when value obtaining fails
+                if (strokeColor != null) {
+                    currentCanvas.SetStrokeColor(strokeColor);
+                }
+                currentCanvas.SetLineWidth(strokeWidth);
+                doStroke = true;
+            }
         }
 
         public abstract ISvgNodeRenderer CreateDeepCopy();

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -36,6 +36,8 @@ namespace iText.Pdfa.Exceptions {
         public const String DOCUMENT_SHALL_NOT_CONTAIN_INFO_UNLESS_THERE_IS_PIECE_INFO = "The Info key shall not be present in the trailer dictionary of PDF/A-4 conforming files unless there exists a PieceInfo entry in the document catalog dictionary.";
 
         public const String NAME_DICTIONARY_SHALL_CONTAIN_EMBEDDED_FILES_KEY = "Conforming file shall contain an EmbeddedFiles key in the name dictionary of the document catalog dictionary.";
+
+        public const String INVALID_XMP_METADATA_ENCODING = "XMP metadata shall always be UTF-8 encoded.";
 
         public const String THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION = "The file header shall begin at byte zero and shall consist of “%PDF-{0}.n”";
 
@@ -337,6 +339,8 @@ namespace iText.Pdfa.Exceptions {
 
         public const String COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE = "For any spot color "
              + "used in a DeviceN or NChannel colorspace, an entry in the Colorants dictionary shall be present.";
+
+        public const String OUTPUTINTENT_SHALL_NOT_CONTAIN_DESTOUTPUTPROFILEREF_KEY = "DestOutputProfileRef " + "shall not be present in output intent";
 
         private PdfaExceptionMessageConstant() {
         }

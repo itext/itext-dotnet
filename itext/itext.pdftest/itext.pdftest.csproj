@@ -3,7 +3,7 @@
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.pdftest.xml</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
@@ -47,7 +47,7 @@
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="lib\verapdf\greenfield-apps-1.22.2.jar">
+	<Content Include="lib\verapdf\greenfield-apps-1.25.116.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 	<Content Include="lib\verapdf\VeraPDF_license.txt">
