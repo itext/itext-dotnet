@@ -224,7 +224,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         [NUnit.Framework.Test]
         public virtual void InvalidHighlightTest() {
-            //TODO: DEVSIX-4784 (incorrect displaying of highlights)
             String input = sourceFolder + "invalidHighlight.pdf";
             String output = outputPath + "invalidHighlightOutput.pdf";
             String cmp = sourceFolder + "cmp_invalidHighlight.pdf";

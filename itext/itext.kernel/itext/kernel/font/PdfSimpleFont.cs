@@ -272,14 +272,10 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
+                    glyph = GetFontProgram().GetGlyphByCode(code);
                     int uni = enc.GetUnicode(code);
-                    if (uni > -1) {
+                    if (uni > -1 && (glyph == null || glyph.GetUnicode() != uni)) {
                         glyph = GetGlyph(uni);
-                    }
-                    else {
-                        if (enc.GetBaseEncoding() == null) {
-                            glyph = GetFontProgram().GetGlyphByCode(code);
-                        }
                     }
                 }
                 if (glyph != null) {
