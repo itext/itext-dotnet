@@ -49,9 +49,6 @@ namespace iText.Kernel.Font {
         internal PdfType1Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            // if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
-            // unused variable.
-            // boolean fillStandardEncoding = !fontDictionary.containsKey(PdfName.FontDescriptor);
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
             fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUnicode);
             if (fontProgram is IDocFontProgram) {
