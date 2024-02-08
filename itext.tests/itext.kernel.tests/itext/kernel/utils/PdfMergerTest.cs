@@ -471,36 +471,41 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
         public virtual void MergePdfWithMissingStructElemBeginningOfTreeTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("structParentMissingFirstElement.pdf"
-                ));
+            String name = "structParentMissingFirstElement.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
         public virtual void MergePdfWithMissingStructElemEndOfTreeTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("structParentMissingLastElement.pdf"
-                ));
+            String name = "structParentMissingLastElement.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED, Count = 4)]
         public virtual void MergePdfAllObjectsMissingStructParentTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("allObjectsHaveStructParent.pdf"
-                ));
+            String name = "allObjectsHaveStructParent.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED, Count = 2)]
         public virtual void MergePdfChildObjectsOfSameStructElemMissingStructParentTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("SameStructElemNoParent.pdf"));
+            String name = "SameStructElemNoParent.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]

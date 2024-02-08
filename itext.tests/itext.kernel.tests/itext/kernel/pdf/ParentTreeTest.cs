@@ -24,11 +24,13 @@ using System;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -304,6 +306,30 @@ namespace iText.Kernel.Pdf {
             secondPage.AddAnnotation(linkExplicitDest);
             document.Close();
             NUnit.Framework.Assert.IsTrue(CheckParentTree(outFile, cmpFile));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED, Count = 4)]
+        public virtual void AllObjRefDontHaveStructParentTest() {
+            String pdf = sourceFolder + "allObjRefDontHaveStructParent.pdf";
+            String outPdf = destinationFolder + "allObjRefDontHaveStructParent.pdf";
+            String cmpPdf = sourceFolder + "cmp_allObjRefDontHaveStructParent.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
+        public virtual void XObjDoesntHaveStructParentTest() {
+            String pdf = sourceFolder + "xObjDoesntHaveStructParentTest.pdf";
+            String outPdf = destinationFolder + "xObjDoesntHaveStructParentTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_xObjDoesntHaveStructParentTest.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
         }
 
         private bool CheckParentTree(String outFileName, String cmpFileName) {

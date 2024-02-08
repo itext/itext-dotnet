@@ -29,6 +29,7 @@ using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
@@ -782,8 +783,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        //TODO update cmp-file after DEVSIX-3351 fixed
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS)]
+        [LogMessage(KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
         public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
             String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
