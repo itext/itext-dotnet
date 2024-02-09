@@ -67,7 +67,7 @@ namespace iText.Bouncycastle.X509 {
         public X509V3CertificateGeneratorBC(IX509Certificate signingCert, IBigInteger number, DateTime startDate, 
             DateTime endDate, IX500Name subjectDn, IPublicKey publicKey) {
             certificateBuilder = new X509V3CertificateGenerator();
-            certificateBuilder.SetIssuerDN(((X509NameBC) signingCert.GetIssuerDN()).GetX509Name());
+            certificateBuilder.SetIssuerDN(((X509NameBC) signingCert.GetSubjectDN()).GetX509Name());
             certificateBuilder.SetSerialNumber(((BigIntegerBC) number).GetBigInteger());
             certificateBuilder.SetNotBefore(startDate);
             certificateBuilder.SetNotAfter(endDate);

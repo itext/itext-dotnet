@@ -325,7 +325,6 @@ namespace iText.Signatures {
             , PdfReader inputDocument, Stream outputStream, SignerProperties signerProperties) {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(certificates);
             IX509Certificate[] x509FullChain = JavaUtil.ArraysAsList(fullChain).ToArray(new IX509Certificate[0]);
-            PdfPadesSigner padesSigner = CreatePadesSigner(inputDocument, outputStream);
             PdfTwoPhaseSigner pdfTwoPhaseSigner = new PdfTwoPhaseSigner(inputDocument, outputStream);
             CMSContainer cms = new CMSContainer();
             SignerInfo signerInfo = new SignerInfo();

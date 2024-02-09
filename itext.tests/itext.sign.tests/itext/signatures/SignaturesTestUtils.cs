@@ -21,11 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
     /// <summary>Class for internal usage in tests.</summary>
     public sealed class SignaturesTestUtils {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private const String EXPIRED_CERTIFICATE_DATE_PREFIX_MESSAGE = "certificate expired on ";
 
         private SignaturesTestUtils() {
@@ -36,7 +40,7 @@ namespace iText.Signatures {
         /// <param name="certificate">certificate for validation.</param>
         /// <returns>expected string.</returns>
         public static String GetExpiredMessage(IX509Certificate certificate) {
-            return EXPIRED_CERTIFICATE_DATE_PREFIX_MESSAGE + certificate.GetEndDateTime();
+            return EXPIRED_CERTIFICATE_DATE_PREFIX_MESSAGE + FACTORY.CreateEndDate(certificate);
         }
     }
 }

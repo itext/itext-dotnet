@@ -155,6 +155,11 @@ namespace iText.Bouncycastlefips.Cert {
         }
 
         /// <summary><inheritDoc/></summary>
+        public DateTime GetNotAfter() {
+            return certificate.NotAfter;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public IList GetExtendedKeyUsage() {
             IList list = new ArrayList();
             IList oids = certificate.GetExtendedKeyUsage();

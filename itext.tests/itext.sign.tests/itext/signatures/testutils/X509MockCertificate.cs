@@ -112,7 +112,12 @@ namespace iText.Signatures.Testutils
         {
             throw new NotImplementedException();
         }
-        
+
+        public DateTime GetNotAfter()
+        {
+            throw new NotImplementedException();
+        }
+
         public IX500Name GetSubjectDN()
         {
             return null;

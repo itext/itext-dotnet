@@ -49,6 +49,10 @@ namespace iText.Signatures.Testutils.Builder {
 
         private DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(30);
 
+        private IX509Certificate[] chain;
+
+        private bool chainSet = false;
+
         public TestOcspResponseBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey,
             ICertStatus certificateStatus)
         {
@@ -106,7 +110,16 @@ namespace iText.Signatures.Testutils.Builder {
             }
 
             DateTime time = TimeTestUtil.TEST_DATE_TIME;
-            return responseBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey), new IX509Certificate[] { issuerCert }, time);
+
+            if (!chainSet) {
+                chain = new IX509Certificate[] { issuerCert };
+            }
+            return responseBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey), chain, time);
+        }
+
+        public void SetOcspCertsChain(IX509Certificate[] ocspCertsChain) {
+            chain = ocspCertsChain;
+            chainSet = true;
         }
     }
 }

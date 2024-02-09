@@ -1551,5 +1551,12 @@ namespace iText.Commons.Bouncycastle {
         /// </summary>
         /// <returns><see cref="IBouncyCastleUtil"/> instance implementation</returns>
         IBouncyCastleUtil GetBouncyCastleUtil();
+
+        /// <summary>
+        /// Create string from the end date of the certificate.
+        /// </summary>
+        /// <param name="certificate">certificate to get end date</param>
+        /// <returns>The end date of the certificate</returns>
+        string CreateEndDate(IX509Certificate certificate);
     }
 }

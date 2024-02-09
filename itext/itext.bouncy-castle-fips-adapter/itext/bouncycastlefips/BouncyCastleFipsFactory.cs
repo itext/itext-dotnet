@@ -949,7 +949,7 @@ namespace iText.Bouncycastlefips {
             int tag = pushbackStream.ReadByte();
 
             if (tag < 0) {
-                return new X509CrlBCFips(null);
+                return null;
             }
             
             pushbackStream.Unread(tag);
@@ -977,7 +977,7 @@ namespace iText.Bouncycastlefips {
             try {
                 ICollection<IX509Crl> crls = new List<IX509Crl>();
                 X509CrlBCFips crl;
-                while ((crl = (X509CrlBCFips)CreateX509Crl(input)).GetX509Crl() != null) {
+                while ((crl = (X509CrlBCFips)CreateX509Crl(input)) != null && crl.GetX509Crl() != null) {
                     crls.Add(crl);
                 }
                 return crls;
@@ -1180,7 +1180,12 @@ namespace iText.Bouncycastlefips {
         public IBouncyCastleUtil GetBouncyCastleUtil() {
             return BOUNCY_CASTLE_UTIL;
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public string CreateEndDate(IX509Certificate certificate) {
+            return certificate.GetEndDateTime();
+        }
+
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {
             using (TextReader file = new StreamReader(pushbackStream)) {
                 PEMParserBCFips parser = new PEMParserBCFips(new OpenSslPemReader(file), null);

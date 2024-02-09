@@ -930,7 +930,11 @@ namespace iText.Bouncycastle {
         
         /// <summary><inheritDoc/></summary>
         public IX509Crl CreateX509Crl(Stream input) {
-            return new X509CrlBC(new X509CrlParser().ReadCrl(input));
+            X509Crl crl = new X509CrlParser().ReadCrl(input);
+            if (crl != null) {
+                return new X509CrlBC(crl);
+            }
+            return null;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1109,7 +1113,12 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public IBouncyCastleUtil GetBouncyCastleUtil() {
             return BOUNCY_CASTLE_UTIL;
-        } 
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public string CreateEndDate(IX509Certificate certificate) {
+            return certificate.GetEndDateTime();
+        }
 
         internal class BouncyCastlePasswordFinder : IPasswordFinder {
             private readonly char[] password;

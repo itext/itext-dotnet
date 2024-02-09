@@ -150,6 +150,11 @@ namespace iText.Bouncycastle.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
+        public DateTime GetNotAfter() {
+            return certificate.NotAfter;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public IList GetExtendedKeyUsage() {
             return certificate.GetExtendedKeyUsage()?.Select(ku=> ku.Id).ToList();
         }

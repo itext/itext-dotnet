@@ -68,7 +68,7 @@ namespace iText.Signatures.Testutils.Cert {
             this.endDate = endDate;
         }
         
-        public virtual IX509Certificate BuildAuthorizedOCSPResponderCert() {        
+        public virtual IX509Certificate BuildAuthorizedOCSPResponderCert(bool checkRevData) {        
             IX500Name subjectDnName = FACTORY.CreateX500Name(subjectDN);
             IBigInteger certSerialNumber = FACTORY.CreateBigInteger(Convert.ToString(SystemUtil.GetTimeBasedSeed())); // Using the current timestamp as the certificate serial number
             IContentSigner contentSigner = FACTORY.CreateContentSigner(signatureAlgorithm, signingKey);
@@ -78,10 +78,13 @@ namespace iText.Signatures.Testutils.Cert {
             bool ca = true;
             AddExtension(FACTORY.CreateExtensions().GetBasicConstraints(), true, FACTORY.CreateBasicConstraints(ca), 
                 certBuilder);
-            
-            AddExtension(FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNoCheck(), false, FACTORY.CreateDERNull(), 
-                certBuilder);
-            
+
+            if (!checkRevData) {
+                AddExtension(FACTORY.CreateOCSPObjectIdentifiers().GetIdPkixOcspNoCheck(), false,
+                    FACTORY.CreateDERNull(),
+                    certBuilder);
+            }
+
             AddExtension(FACTORY.CreateExtensions().GetKeyUsage(), false, FACTORY.CreateKeyUsage(
                     FACTORY.CreateKeyUsage().GetDigitalSignature() | FACTORY.CreateKeyUsage().GetNonRepudiation()),
                 certBuilder);

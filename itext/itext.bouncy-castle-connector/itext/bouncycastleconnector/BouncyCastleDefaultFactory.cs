@@ -687,5 +687,9 @@ namespace iText.Bouncycastleconnector {
         public IBouncyCastleUtil GetBouncyCastleUtil() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+
+        public string CreateEndDate(IX509Certificate certificate) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
     }
 }

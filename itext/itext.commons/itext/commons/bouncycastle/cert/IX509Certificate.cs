@@ -145,6 +145,14 @@ namespace iText.Commons.Bouncycastle.Cert {
         DateTime GetNotBefore();
 
         /// <summary>
+        /// Returns actual
+        /// <c>NotAfter</c>
+        /// property for the wrapped X509Certificate object.
+        /// </summary>
+        /// <returns>DateTime value.</returns>
+        DateTime GetNotAfter();
+
+        /// <summary>
         /// Calls actual
         /// <c>GetExtendedKeyUsage</c>
         /// method for the wrapped X509Certificate object.
