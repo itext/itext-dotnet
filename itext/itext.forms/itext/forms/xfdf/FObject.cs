@@ -36,12 +36,17 @@ namespace iText.Forms.Xfdf {
         /// <summary>The name of the source or target file.</summary>
         private String href;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="FObject"/>.
+        /// </summary>
+        /// <param name="href">the name of the source or target file</param>
         public FObject(String href) {
             this.href = href;
         }
 
         /// <summary>Gets the name of the source or target file.</summary>
-        /// <returns>the name of the source or target file</returns>
+        /// <returns>the name of the source or target file.</returns>
         public virtual String GetHref() {
             return href;
         }
@@ -50,7 +55,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="href">the name of the source or target file</param>
         /// <returns>
         /// current
-        /// <see cref="FObject">f object</see>
+        /// <see cref="FObject">f object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.FObject SetHref(String href) {
             this.href = href;

@@ -31,13 +31,19 @@ namespace iText.Forms.Form.Element {
     public abstract class AbstractSelectField : FormField<iText.Forms.Form.Element.AbstractSelectField> {
         protected internal IList<SelectFieldItem> options = new List<SelectFieldItem>();
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="AbstractSelectField"/>
+        /// instance.
+        /// </summary>
+        /// <param name="id">the id of the field</param>
         protected internal AbstractSelectField(String id)
             : base(id) {
         }
 
         /// <summary>Add a container with options.</summary>
         /// <remarks>Add a container with options. This might be a container for options group.</remarks>
-        /// <param name="optionElement">a container with options.</param>
+        /// <param name="optionElement">a container with options</param>
         [System.ObsoleteAttribute(@"starting from 8.0.1.")]
         public virtual void AddOption(IBlockElement optionElement) {
             String value = TryAndExtractText(optionElement);
@@ -47,7 +53,7 @@ namespace iText.Forms.Form.Element {
         /// <summary>Add an option to the element.</summary>
         /// <param name="option">
         /// a
-        /// <see cref="SelectFieldItem"/>.
+        /// <see cref="SelectFieldItem"/>
         /// </param>
         public virtual void AddOption(SelectFieldItem option) {
             options.Add(option);
@@ -56,14 +62,14 @@ namespace iText.Forms.Form.Element {
         /// <summary>Add an option to the element.</summary>
         /// <param name="option">
         /// a
-        /// <see cref="SelectFieldItem"/>.
+        /// <see cref="SelectFieldItem"/>
         /// </param>
         /// <param name="selected">
         /// 
         /// <see langword="true"/>
         /// is the option if selected,
         /// <see langword="false"/>
-        /// otherwise.
+        /// otherwise
         /// </param>
         public virtual void AddOption(SelectFieldItem option, bool selected) {
             option.GetElement().SetProperty(FormProperty.FORM_FIELD_SELECTED, selected);
@@ -96,7 +102,7 @@ namespace iText.Forms.Form.Element {
         /// <see cref="SelectFieldItem"/>
         /// by its string value.
         /// </summary>
-        /// <param name="value">string value to find an option by.</param>
+        /// <param name="value">string value to find an option by</param>
         /// <returns>
         /// a
         /// <see cref="SelectFieldItem"/>.

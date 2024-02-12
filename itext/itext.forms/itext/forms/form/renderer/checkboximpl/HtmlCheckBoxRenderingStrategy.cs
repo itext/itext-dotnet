@@ -30,6 +30,11 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Renderer.Checkboximpl {
     /// <summary>This class is used to draw a checkBox icon in HTML mode.</summary>
     public sealed class HtmlCheckBoxRenderingStrategy : ICheckBoxRenderingStrategy {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="HtmlCheckBoxRenderingStrategy"/>
+        /// instance.
+        /// </summary>
         public HtmlCheckBoxRenderingStrategy() {
         }
 

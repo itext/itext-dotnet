@@ -37,7 +37,7 @@ namespace iText.Forms.Xfdf {
         /// Represents the page displayed by current Fit element.
         /// Attribute of Fit, FitB, FitBH, FitBV, FitH, FitR, FitV, XYZ elements.
         /// </remarks>
-        private PdfObject page;
+        private readonly PdfObject page;
 
         /// <summary>Vertical coordinate positioned at the top edge of the window.</summary>
         private float top;
@@ -58,6 +58,11 @@ namespace iText.Forms.Xfdf {
         /// </remarks>
         private float zoom;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="FitObject"/>.
+        /// </summary>
+        /// <param name="page">the page displayed by current Fit element</param>
         public FitObject(PdfObject page) {
             if (page == null) {
                 throw new XfdfException(XfdfException.PAGE_IS_MISSING);
@@ -73,14 +78,14 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfObject">page</see>
-        /// of the current Fit element
+        /// of the current Fit element.
         /// </returns>
         public virtual PdfObject GetPage() {
             return page;
         }
 
         /// <summary>Gets a float vertical coordinate positioned at the top edge of the window.</summary>
-        /// <returns>top vertical coordinate</returns>
+        /// <returns>top vertical coordinate.</returns>
         public virtual float GetTop() {
             return top;
         }
@@ -89,7 +94,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="top">vertical coordinate value</param>
         /// <returns>
         /// current
-        /// <see cref="FitObject">fit object</see>
+        /// <see cref="FitObject">fit object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetTop(float top) {
             this.top = top;
@@ -97,7 +102,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets a float horizontal coordinate positioned at the left edge of the window.</summary>
-        /// <returns>left horizontal coordinate</returns>
+        /// <returns>left horizontal coordinate.</returns>
         public virtual float GetLeft() {
             return left;
         }
@@ -106,7 +111,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="left">horizontal coordinate value</param>
         /// <returns>
         /// current
-        /// <see cref="FitObject">fit object</see>
+        /// <see cref="FitObject">fit object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetLeft(float left) {
             this.left = left;
@@ -114,7 +119,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets a float vertical coordinate positioned at the bottom edge of the window.</summary>
-        /// <returns>bottom vertical coordinate</returns>
+        /// <returns>bottom vertical coordinate.</returns>
         public virtual float GetBottom() {
             return bottom;
         }
@@ -123,7 +128,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="bottom">vertical coordinate value</param>
         /// <returns>
         /// current
-        /// <see cref="FitObject">fit object</see>
+        /// <see cref="FitObject">fit object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetBottom(float bottom) {
             this.bottom = bottom;
@@ -131,7 +136,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets a float horizontal coordinate positioned at the right edge of the window.</summary>
-        /// <returns>right horizontal coordinate</returns>
+        /// <returns>right horizontal coordinate.</returns>
         public virtual float GetRight() {
             return right;
         }
@@ -140,7 +145,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="right">horizontal coordinate</param>
         /// <returns>
         /// current
-        /// <see cref="FitObject">fit object</see>
+        /// <see cref="FitObject">fit object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetRight(float right) {
             this.right = right;
@@ -152,7 +157,7 @@ namespace iText.Forms.Xfdf {
         /// Gets a float representing the zoom ratio.
         /// Attribute of XYZ object.
         /// </remarks>
-        /// <returns>zoom ratio value</returns>
+        /// <returns>zoom ratio value.</returns>
         public virtual float GetZoom() {
             return zoom;
         }
@@ -165,7 +170,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="zoom">ratio value</param>
         /// <returns>
         /// current
-        /// <see cref="FitObject">fit object</see>
+        /// <see cref="FitObject">fit object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.FitObject SetZoom(float zoom) {
             this.zoom = zoom;

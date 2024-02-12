@@ -28,8 +28,10 @@ using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {
     /// <summary>Represents annotation, a child element of annots tag in Xfdf document structure.</summary>
-    /// <remarks>Represents annotation, a child element of annots tag in Xfdf document structure. For more details see part 6.4 in Xfdf specification.
-    ///     </remarks>
+    /// <remarks>
+    /// Represents annotation, a child element of annots tag in Xfdf document structure.
+    /// For more details see part 6.4 in Xfdf specification.
+    /// </remarks>
     public class AnnotObject {
         /// <summary>Represents the type of annotation.</summary>
         /// <remarks>
@@ -168,6 +170,10 @@ namespace iText.Forms.Xfdf {
         /// </remarks>
         private PdfIndirectReference @ref;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="AnnotObject"/>.
+        /// </summary>
         public AnnotObject() {
             this.attributes = new List<AttributeObject>();
         }
@@ -210,7 +216,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of the type of annotation
+        /// value of the type of annotation.
         /// </returns>
         public virtual String GetName() {
             return name;
@@ -259,7 +265,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="AnnotObject">annotation object</see>
-        /// with set name
+        /// with set name.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetName(String name) {
             this.name = name;
@@ -272,14 +278,14 @@ namespace iText.Forms.Xfdf {
         /// <see cref="System.Collections.IList{E}">list</see>
         /// containing all
         /// <see cref="AttributeObject">attribute objects</see>
-        /// of the annotation
+        /// of the annotation.
         /// </returns>
         public virtual IList<AttributeObject> GetAttributes() {
             return attributes;
         }
 
         /// <summary>Finds the attribute by name in attributes list.</summary>
-        /// <param name="name">The name of the attribute to look for.</param>
+        /// <param name="name">the name of the attribute to look for</param>
         /// <returns>
         /// 
         /// <see cref="AttributeObject"/>
@@ -295,11 +301,12 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Finds the attribute by name in attributes list and return its string value.</summary>
-        /// <param name="name">The name of the attribute to look for.</param>
+        /// <param name="name">the name of the attribute to look for</param>
         /// <returns>
         /// the value of the
         /// <see cref="AttributeObject"/>
-        /// with the given name, or null, if no object with this name was found.
+        /// with the given name,
+        /// or null, if no object with this name was found.
         /// </returns>
         public virtual String GetAttributeValue(String name) {
             foreach (AttributeObject attr in attributes) {
@@ -314,7 +321,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="AnnotObject"/>
-        /// representing the inner popup annotation
+        /// representing the inner popup annotation.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject GetPopup() {
             return popup;
@@ -328,7 +335,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetPopup(iText.Forms.Xfdf.AnnotObject popup) {
             this.popup = popup;
@@ -336,7 +343,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets the boolean, indicating if annotation has an inner popup element.</summary>
-        /// <returns>true if annotation has an inner popup element, false otherwise</returns>
+        /// <returns>true if annotation has an inner popup element, false otherwise.</returns>
         public virtual bool IsHasPopup() {
             return hasPopup;
         }
@@ -345,7 +352,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="hasPopup">a boolean indicating if annotation has inner popup element</param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetHasPopup(bool hasPopup) {
             this.hasPopup = hasPopup;
@@ -364,7 +371,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// value of inner contents element of current annotation object
+        /// value of inner contents element of current annotation object.
         /// </returns>
         public virtual PdfString GetContents() {
             return contents;
@@ -378,7 +385,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetContents(PdfString contents) {
             this.contents = contents;
@@ -397,7 +404,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// value of inner contents-richtext element of current annotation object
+        /// value of inner contents-richtext element of current annotation object.
         /// </returns>
         public virtual PdfString GetContentsRichText() {
             return contentsRichText;
@@ -411,7 +418,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetContentsRichText(PdfString contentsRichRext) {
             this.contentsRichText = contentsRichRext;
@@ -426,7 +433,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// inner
         /// <see cref="ActionObject">action object</see>
-        /// of annotation object
+        /// of annotation object.
         /// </returns>
         public virtual ActionObject GetAction() {
             return action;
@@ -444,7 +451,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetAction(ActionObject action) {
             this.action = action;
@@ -554,7 +561,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetDestination(DestObject destination) {
             this.destination = destination;
@@ -571,7 +578,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of inner appearance element
+        /// value of inner appearance element.
         /// </returns>
         public virtual String GetAppearance() {
             return appearance;
@@ -590,7 +597,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetAppearance(String appearance) {
             this.appearance = appearance;
@@ -608,7 +615,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of inner deafultappearance element
+        /// value of inner default appearance element.
         /// </returns>
         public virtual String GetDefaultAppearance() {
             return defaultAppearance;
@@ -628,7 +635,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetDefaultAppearance(String defaultAppearance) {
             this.defaultAppearance = defaultAppearance;
@@ -645,7 +652,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of inner defaultstyle element
+        /// value of inner defaultstyle element.
         /// </returns>
         public virtual String GetDefaultStyle() {
             return defaultStyle;
@@ -664,7 +671,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetDefaultStyle(String defaultStyle) {
             this.defaultStyle = defaultStyle;
@@ -679,7 +686,7 @@ namespace iText.Forms.Xfdf {
         /// </remarks>
         /// <returns>
         /// inner
-        /// <see cref="BorderStyleAltObject">BorderStyleAlt object</see>
+        /// <see cref="BorderStyleAltObject">BorderStyleAlt object</see>.
         /// </returns>
         public virtual BorderStyleAltObject GetBorderStyleAlt() {
             return borderStyleAlt;
@@ -696,7 +703,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetBorderStyleAlt(BorderStyleAltObject borderStyleAlt) {
             this.borderStyleAlt = borderStyleAlt;
@@ -712,7 +719,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of inner vertices element
+        /// value of inner vertices element.
         /// </returns>
         public virtual String GetVertices() {
             return vertices;
@@ -730,7 +737,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="AnnotObject">annotation object</see>
+        /// <see cref="AnnotObject">annotation object</see>.
         /// </returns>
         public virtual iText.Forms.Xfdf.AnnotObject SetVertices(String vertices) {
             this.vertices = vertices;
@@ -767,7 +774,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="ref">
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
-        /// of the source annotation object.
+        /// of the source annotation object
         /// </param>
         /// <returns>
         /// this

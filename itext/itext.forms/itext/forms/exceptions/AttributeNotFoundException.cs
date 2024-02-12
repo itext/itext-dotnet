@@ -24,6 +24,10 @@ using System;
 using iText.Commons.Exceptions;
 
 namespace iText.Forms.Exceptions {
+    /// <summary>
+    /// This class represents iText exception that should be thrown when the attribute with given name
+    /// is not found in the object attributes list.
+    /// </summary>
     public class AttributeNotFoundException : ITextException {
         /// <summary>The exception thrown when the attribute with given name is not found in the object attributes list.
         ///     </summary>

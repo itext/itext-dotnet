@@ -59,7 +59,7 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>Checks if form fields need to be flattened.</summary>
-        /// <returns>true, if fields need to be flattened</returns>
+        /// <returns>true, if fields need to be flattened.</returns>
         public virtual bool IsFlatten() {
             if (parent != null) {
                 // First check parent. This is a workaround for the case when some fields are inside other fields
@@ -79,7 +79,7 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>Gets the default value of the form field.</summary>
-        /// <returns>the default value of the form field</returns>
+        /// <returns>the default value of the form field.</returns>
         public virtual String GetDefaultValue() {
             String defaultValue = this.GetProperty<String>(FormProperty.FORM_FIELD_VALUE);
             return defaultValue == null ? modelElement.GetDefaultProperty<String>(FormProperty.FORM_FIELD_VALUE) : defaultValue;
@@ -187,7 +187,7 @@ namespace iText.Forms.Form.Renderer {
         protected internal abstract void AdjustFieldLayout(LayoutContext layoutContext);
 
         /// <summary>Creates the flat renderer instance.</summary>
-        /// <returns>the renderer instance</returns>
+        /// <returns>the renderer instance.</returns>
         protected internal abstract IRenderer CreateFlatRenderer();
 
         /// <summary>Applies the AcroField widget.</summary>
@@ -195,7 +195,7 @@ namespace iText.Forms.Form.Renderer {
         protected internal abstract void ApplyAcroField(DrawContext drawContext);
 
         /// <summary>Gets the model id.</summary>
-        /// <returns>the model id</returns>
+        /// <returns>the model id.</returns>
         protected internal virtual String GetModelId() {
             return ((IFormField)GetModelElement()).GetId();
         }
@@ -203,7 +203,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Checks if the renderer fits a certain width and height.</summary>
         /// <param name="availableWidth">the available width</param>
         /// <param name="availableHeight">the available height</param>
-        /// <returns>true, if the renderer fits</returns>
+        /// <returns>true, if the renderer fits.</returns>
         protected internal virtual bool IsRendererFit(float availableWidth, float availableHeight) {
             if (occupiedArea == null) {
                 return false;
@@ -214,7 +214,7 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>Gets the accessibility language.</summary>
-        /// <returns>the accessibility language</returns>
+        /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
             return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
         }
@@ -243,12 +243,15 @@ namespace iText.Forms.Form.Renderer {
         /// <returns>
         /// 
         /// <see langword="true"/>
-        /// if layout is based on flat renderer, false otherwise
+        /// if layout is based on flat renderer, false otherwise.
         /// </returns>
         protected internal virtual bool IsLayoutBasedOnFlatRenderer() {
             return true;
         }
 
+        /// <summary>Sets the form accessibility language identifier of the form element in case the document is tagged.
+        ///     </summary>
+        /// <param name="pdfDoc">the document which contains form field</param>
         protected internal virtual void WriteAcroFormFieldLangAttribute(PdfDocument pdfDoc) {
             if (pdfDoc.IsTagged()) {
                 TagTreePointer formParentPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
@@ -270,7 +273,7 @@ namespace iText.Forms.Form.Renderer {
         /// with margins applied (margins shouldn't be an interactive part of the field, i.e. included into its occupied
         /// area).
         /// </remarks>
-        /// <returns>the map of deleted margins</returns>
+        /// <returns>the map of deleted margins.</returns>
         internal virtual IDictionary<int, Object> DeleteMargins() {
             IDictionary<int, Object> margins = new Dictionary<int, Object>();
             margins.Put(Property.MARGIN_TOP, this.modelElement.GetOwnProperty<UnitValue>(Property.MARGIN_TOP));

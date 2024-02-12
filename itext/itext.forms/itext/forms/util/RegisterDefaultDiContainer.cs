@@ -24,7 +24,12 @@ using iText.Commons.Utils;
 using iText.Forms.Fields.Merging;
 
 namespace iText.Forms.Util {
+    /// <summary>Registers a default instance for a dependency injection container.</summary>
     public class RegisterDefaultDiContainer {
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="RegisterDefaultDiContainer"/>.
+        /// </summary>
         public RegisterDefaultDiContainer() {
         }
 

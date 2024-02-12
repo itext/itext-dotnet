@@ -111,10 +111,14 @@ namespace iText.Forms.Xfdf {
         /// </remarks>
         private FitObject fitBV;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="DestObject"/>.
+        /// </summary>
         public DestObject() {
         }
 
-        //create empty DestObject
+        // Create an empty DestObject.
         /// <summary>Gets the Name attribute of Named element, a child of Dest element.</summary>
         /// <remarks>
         /// Gets the Name attribute of Named element, a child of Dest element.
@@ -131,7 +135,7 @@ namespace iText.Forms.Xfdf {
         /// Sets the Name attribute of Named element, a child of Dest element.
         /// Allows a destination to be referred to indirectly by means of a name object or a byte string.
         /// </remarks>
-        /// <param name="name">string value of the Name attribute.</param>
+        /// <param name="name">string value of the Name attribute</param>
         /// <returns>
         /// this
         /// <see cref="DestObject"/>
@@ -167,7 +171,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="xyz">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents XYZ of Dest element.
+        /// that represents XYZ of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -204,7 +208,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fit">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents Fit of Dest element.
+        /// that represents Fit of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -241,7 +245,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fitH">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents FitH of Dest element.
+        /// that represents FitH of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -278,7 +282,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fitV">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents FitV of Dest element.
+        /// that represents FitV of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -315,7 +319,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fitR">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents FitR of Dest element.
+        /// that represents FitR of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -353,7 +357,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fitB">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents FitB of Dest element.
+        /// that represents FitB of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -390,7 +394,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fitBH">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents FitBH of Dest element.
+        /// that represents FitBH of Dest element
         /// </param>
         /// <returns>
         /// this
@@ -427,7 +431,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="fitBV">
         /// a
         /// <see cref="FitObject"/>
-        /// that represents FitBV of Dest element.
+        /// that represents FitBV of Dest element
         /// </param>
         /// <returns>
         /// this
