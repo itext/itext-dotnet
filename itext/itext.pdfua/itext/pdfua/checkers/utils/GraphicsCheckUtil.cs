@@ -72,6 +72,9 @@ namespace iText.Pdfua.Checkers.Utils {
             }
 
             public void NextElement(IStructureNode elem) {
+                if (elem == null) {
+                    return;
+                }
                 if (!PdfName.Figure.Equals(elem.GetRole())) {
                     return;
                 }

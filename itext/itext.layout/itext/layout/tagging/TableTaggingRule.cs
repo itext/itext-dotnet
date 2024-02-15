@@ -117,7 +117,7 @@ namespace iText.Layout.Tagging {
         /// role if needed.
         /// Otherwise, returns a dummy element with a null role.
         /// </remarks>
-        /// <param name="tableHintKey">the hint key of the table</param>
+        /// <param name="tableHintKey">the hint key of the table.</param>
         /// <returns>
         /// a dummy element with
         /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>

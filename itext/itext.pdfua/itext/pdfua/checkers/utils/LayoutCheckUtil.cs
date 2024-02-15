@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Layout.Element;
+using iText.Pdfua.Checkers.Utils.Tables;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Utility class for delegating the layout checks to the correct checking logic.</summary>
@@ -40,6 +41,10 @@ namespace iText.Pdfua.Checkers.Utils {
         public static void CheckLayoutElements(Object layoutElement) {
             if (layoutElement is Image) {
                 GraphicsCheckUtil.CheckLayoutImage((Image)layoutElement);
+                return;
+            }
+            if (layoutElement is Table) {
+                TableCheckUtil.CheckLayoutTable((Table)layoutElement);
                 return;
             }
         }

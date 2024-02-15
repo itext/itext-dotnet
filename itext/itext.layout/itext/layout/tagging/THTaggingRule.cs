@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Exceptions;
 
 namespace iText.Layout.Tagging {
     /// <summary>Used to automatically add scope attribute to TH cells.</summary>
@@ -29,12 +30,14 @@ namespace iText.Layout.Tagging {
         /// <summary><inheritDoc/></summary>
         public virtual bool OnTagFinish(LayoutTaggingHelper taggingHelper, TaggingHintKey taggingHintKey) {
             if (taggingHintKey.GetAccessibilityProperties() == null) {
-                throw new ArgumentException("TaggingHintKey should have accessibility properties");
+                throw new ArgumentException(LayoutExceptionMessageConstant.TAGGING_HINTKEY_SHOULD_HAVE_ACCES);
             }
             IList<PdfStructureAttributes> attributesList = taggingHintKey.GetAccessibilityProperties().GetAttributesList
                 ();
             foreach (PdfStructureAttributes attributes in attributesList) {
                 PdfName scopeValue = attributes.GetPdfObject().GetAsName(PdfName.Scope);
+                // the scope None is used to build complicated tables where TD cells don't refer to
+                // the TH cell in the TD cells column or row
                 if (scopeValue != null && !PdfName.None.Equals(scopeValue)) {
                     return true;
                 }

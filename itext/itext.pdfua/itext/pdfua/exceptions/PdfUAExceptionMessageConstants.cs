@@ -51,6 +51,14 @@ namespace iText.Pdfua.Exceptions {
              "replacement text. call com.itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setActualText or com"
              + ".itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setAlternateDescription to be PDF/UA compliant.";
 
+        public const String CELL_HAS_INVALID_ROLE = "Cell: row {0} ({1}) col {2} has invalid role.";
+
+        public const String TABLE_CONTAINS_EMPTY_CELLS = "Cell: row {0} ({1}) col {2} is empty, each row should " 
+            + "have the same amount of columns when taking into account spanning.";
+
+        public const String CELL_CANT_BE_DETERMINED_ALGORITHMICALLY = "TD cell row:{0} col:{1} in table {2} does" 
+            + " not contain a valid Headers attribute, and Headers for this cell cannot be determined algorithmically.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor
