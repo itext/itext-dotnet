@@ -1015,6 +1015,16 @@ namespace iText.Kernel.Pdf.Tagutils {
             return currentStructElem;
         }
 
+        /// <summary>Applies properties to the current tag.</summary>
+        /// <remarks>
+        /// Applies properties to the current tag.
+        /// <para />
+        /// </remarks>
+        /// <param name="properties">the properties to be applied to the current tag.</param>
+        public virtual void ApplyProperties(AccessibilityProperties properties) {
+            AccessibilityPropertiesToStructElem.Apply(properties, GetCurrentStructElem());
+        }
+
         private int GetNextNewKidPosition() {
             int nextPos = nextNewKidIndex;
             nextNewKidIndex = -1;
