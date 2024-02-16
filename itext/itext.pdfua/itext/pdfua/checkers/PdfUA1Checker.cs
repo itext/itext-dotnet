@@ -29,6 +29,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
 
@@ -77,6 +78,18 @@ namespace iText.Pdfua.Checkers {
                     CheckOnOpeningBeginMarkedContent(obj, extra);
                     break;
                 }
+
+                case IsoKey.FONT: {
+                    CheckText((String)obj, (PdfFont)extra);
+                    break;
+                }
+            }
+        }
+
+        private void CheckText(String str, PdfFont font) {
+            if (!FontCheckUtil.DoesFontContainAllUsedGlyphs(str, font)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                    );
             }
         }
 
@@ -194,6 +207,7 @@ namespace iText.Pdfua.Checkers {
             }
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(GraphicsCheckUtil.CreateFigureTagHandler());
+            tagTreeIterator.AddHandler(FormulaCheckUtil.CreateFormulaTagHandler());
             tagTreeIterator.Traverse();
         }
 

@@ -64,25 +64,18 @@ namespace iText.Pdfua.Checkers.Utils {
         /// description or actual text
         /// </returns>
         public static ITagTreeIteratorHandler CreateFigureTagHandler() {
-            return new _ITagTreeIteratorHandler_79();
+            return new _ITagTreeIteratorHandler_80();
         }
 
-        private sealed class _ITagTreeIteratorHandler_79 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_79() {
+        private sealed class _ITagTreeIteratorHandler_80 : ITagTreeIteratorHandler {
+            public _ITagTreeIteratorHandler_80() {
             }
 
             public void NextElement(IStructureNode elem) {
-                if (elem == null) {
+                PdfStructElem structElem = TagTreeHandlerUtil.GetElementIfRoleMatches(PdfName.Figure, elem);
+                if (structElem == null) {
                     return;
                 }
-                if (!PdfName.Figure.Equals(elem.GetRole())) {
-                    return;
-                }
-                // we only need to check struct elems, not MCR numbers as they don't contain any useful info
-                if (!(elem is PdfStructElem)) {
-                    return;
-                }
-                PdfStructElem structElem = ((PdfStructElem)elem);
                 PdfDictionary pdfObject = structElem.GetPdfObject();
                 if (!iText.Pdfua.Checkers.Utils.GraphicsCheckUtil.HasAtleastOneValidValue(pdfObject.GetAsString(PdfName.Alt
                     ), pdfObject.GetAsString(PdfName.ActualText))) {

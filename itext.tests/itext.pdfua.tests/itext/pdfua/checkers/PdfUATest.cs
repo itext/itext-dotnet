@@ -30,11 +30,12 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Pdfua;
 using iText.Pdfua.Exceptions;
 using iText.Test;
 using iText.Test.Pdfa;
 
-namespace iText.Pdfua {
+namespace iText.Pdfua.Checkers {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUATest : ExtendedITextTest {

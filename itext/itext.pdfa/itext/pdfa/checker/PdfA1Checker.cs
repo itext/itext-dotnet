@@ -36,6 +36,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser.Util;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
@@ -321,19 +322,9 @@ namespace iText.Pdfa.Checker {
         /// <inheritDoc/>
         /// </param>
         public override void CheckText(String text, PdfFont font) {
-            for (int i = 0; i < text.Length; ++i) {
-                int ch;
-                if (iText.IO.Util.TextUtil.IsSurrogatePair(text, i)) {
-                    ch = iText.IO.Util.TextUtil.ConvertToUtf32(text, i);
-                    i++;
-                }
-                else {
-                    ch = text[i];
-                }
-                if (!font.ContainsGlyph(ch)) {
-                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                        );
-                }
+            if (!FontCheckUtil.DoesFontContainAllUsedGlyphs(text, font)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                    );
             }
         }
 

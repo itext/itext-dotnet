@@ -27,10 +27,11 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
+using iText.Pdfua;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Pdfua {
+namespace iText.Pdfua.Checkers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUATableTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -260,7 +261,7 @@ namespace iText.Pdfua {
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
-            tableBuilder.AddHeaderCell(new _Generator_300());
+            tableBuilder.AddHeaderCell(new _Generator_301());
             for (int i = 0; i < 9; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -269,8 +270,8 @@ namespace iText.Pdfua {
             framework.AssertBothFail("tableWithHeaderScopeColumn13");
         }
 
-        private sealed class _Generator_300 : TestFramework.Generator<Cell> {
-            public _Generator_300() {
+        private sealed class _Generator_301 : TestFramework.Generator<Cell> {
+            public _Generator_301() {
             }
 
             public Cell Generate() {
@@ -432,7 +433,7 @@ namespace iText.Pdfua {
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
-            tableBuilder.AddBodyCell(new _Generator_504());
+            tableBuilder.AddBodyCell(new _Generator_505());
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -440,8 +441,8 @@ namespace iText.Pdfua {
             framework.AssertBothFail("tableWithHeaderRowScope07");
         }
 
-        private sealed class _Generator_504 : TestFramework.Generator<Cell> {
-            public _Generator_504() {
+        private sealed class _Generator_505 : TestFramework.Generator<Cell> {
+            public _Generator_505() {
             }
 
             public Cell Generate() {

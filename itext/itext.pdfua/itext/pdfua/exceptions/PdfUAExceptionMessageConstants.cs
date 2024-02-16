@@ -59,6 +59,12 @@ namespace iText.Pdfua.Exceptions {
         public const String CELL_CANT_BE_DETERMINED_ALGORITHMICALLY = "TD cell row:{0} col:{1} in table {2} does" 
             + " not contain a valid Headers attribute, and Headers for this cell cannot be determined algorithmically.";
 
+        public const String FORMULA_SHALL_HAVE_ALT = "Formula tags shall include an alternative representation or "
+             + "replacement text.";
+
+        public const String EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS = "Embedded fonts shall define all "
+             + "glyphs referenced for rendering within the conforming file.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor
