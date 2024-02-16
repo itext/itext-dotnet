@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using System;
 using System.IO;
 using iText.Kernel.Font;
@@ -33,12 +55,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest01() {
-            framework.AddSuppliers(new _Generator_49());
+            framework.AddSuppliers(new _Generator_71());
             framework.AssertBothFail("layout01");
         }
 
-        private sealed class _Generator_49 : TestFramework.Generator<IBlockElement> {
-            public _Generator_49() {
+        private sealed class _Generator_71 : TestFramework.Generator<IBlockElement> {
+            public _Generator_71() {
             }
 
             public IBlockElement Generate() {
@@ -50,12 +72,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest02() {
-            framework.AddSuppliers(new _Generator_62());
+            framework.AddSuppliers(new _Generator_84());
             framework.AssertBothValid("layout02");
         }
 
-        private sealed class _Generator_62 : TestFramework.Generator<IBlockElement> {
-            public _Generator_62() {
+        private sealed class _Generator_84 : TestFramework.Generator<IBlockElement> {
+            public _Generator_84() {
             }
 
             public IBlockElement Generate() {
@@ -68,12 +90,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest03() {
-            framework.AddSuppliers(new _Generator_77());
+            framework.AddSuppliers(new _Generator_99());
             framework.AssertBothValid("layout03");
         }
 
-        private sealed class _Generator_77 : TestFramework.Generator<IBlockElement> {
-            public _Generator_77() {
+        private sealed class _Generator_99 : TestFramework.Generator<IBlockElement> {
+            public _Generator_99() {
             }
 
             public IBlockElement Generate() {
@@ -86,12 +108,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest04() {
-            framework.AddSuppliers(new _Generator_92());
+            framework.AddSuppliers(new _Generator_114());
             framework.AssertBothFail("layout04");
         }
 
-        private sealed class _Generator_92 : TestFramework.Generator<IBlockElement> {
-            public _Generator_92() {
+        private sealed class _Generator_114 : TestFramework.Generator<IBlockElement> {
+            public _Generator_114() {
             }
 
             public IBlockElement Generate() {
@@ -104,12 +126,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest05() {
-            framework.AddSuppliers(new _Generator_106());
+            framework.AddSuppliers(new _Generator_128());
             framework.AssertBothValid("layout05");
         }
 
-        private sealed class _Generator_106 : TestFramework.Generator<IBlockElement> {
-            public _Generator_106() {
+        private sealed class _Generator_128 : TestFramework.Generator<IBlockElement> {
+            public _Generator_128() {
             }
 
             public IBlockElement Generate() {
@@ -122,12 +144,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest06() {
-            framework.AddSuppliers(new _Generator_120());
+            framework.AddSuppliers(new _Generator_142());
             framework.AssertBothFail("layout06");
         }
 
-        private sealed class _Generator_120 : TestFramework.Generator<IBlockElement> {
-            public _Generator_120() {
+        private sealed class _Generator_142 : TestFramework.Generator<IBlockElement> {
+            public _Generator_142() {
             }
 
             public IBlockElement Generate() {
@@ -140,12 +162,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest07() {
-            framework.AddSuppliers(new _Generator_134());
+            framework.AddSuppliers(new _Generator_156());
             framework.AssertBothFail("layout07");
         }
 
-        private sealed class _Generator_134 : TestFramework.Generator<IBlockElement> {
-            public _Generator_134() {
+        private sealed class _Generator_156 : TestFramework.Generator<IBlockElement> {
+            public _Generator_156() {
             }
 
             public IBlockElement Generate() {
