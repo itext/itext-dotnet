@@ -235,7 +235,7 @@ namespace iText.Signatures {
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             if (ocsps != null) {
                 foreach (byte[] ocsp in ocsps) {
-                    vd.ocsps.Add(BuildOCSPResponse(ocsp));
+                    vd.ocsps.Add(LtvVerification.BuildOCSPResponse(ocsp));
                 }
             }
             if (crls != null) {
@@ -332,14 +332,18 @@ namespace iText.Signatures {
             bool revocationDataAdded = false;
             if (ocsp != null && level != LtvVerification.Level.CRL) {
                 ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, certificateChain), null);
-                if (ocspEnc != null) {
-                    validationData.ocsps.Add(BuildOCSPResponse(ocspEnc));
+                if (ocspEnc != null && BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(OcspClientBouncyCastle
+                    .GetCertificateStatus(ocspEnc))) {
+                    validationData.ocsps.Add(LtvVerification.BuildOCSPResponse(ocspEnc));
                     revocationDataAdded = true;
                     LOGGER.LogInformation("OCSP added");
                     if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                         AddRevocationDataForOcspCert(ocspEnc, signingCert, ocsp, crl, level, certInclude, certOption, validationData
                             , processedCerts);
                     }
+                }
+                else {
+                    ocspEnc = null;
                 }
             }
             if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level.OCSP_CRL || (level

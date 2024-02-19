@@ -62,5 +62,10 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         public virtual CertStatus GetRevokedStatus() {
             return base.GetCertStatus();
         }
+
+        /// <summary><inheritDoc/></summary>
+        public DateTime GetRevocationTime() {
+            return RevokedInfo.GetInstance(GetRevokedStatus().Status).RevocationTime.ToDateTime();
+        }
     }
 }

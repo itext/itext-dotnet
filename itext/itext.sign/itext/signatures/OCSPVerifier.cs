@@ -34,6 +34,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
+using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>
@@ -148,17 +149,18 @@ namespace iText.Signatures {
             }
             // Then check online if allowed.
             bool online = false;
-            if (onlineCheckingAllowed && validOCSPsFound == 0) {
-                if (Verify(GetOcspResponse(signCert, issuerCert), signCert, issuerCert, signDate)) {
-                    validOCSPsFound++;
-                    online = true;
-                }
+            int validOCSPsFoundOnline = 0;
+            if (onlineCheckingAllowed && Verify(GetOcspResponse(signCert, issuerCert), signCert, issuerCert, signDate)
+                ) {
+                validOCSPsFound++;
+                validOCSPsFoundOnline++;
+                online = true;
             }
             // Show how many valid OCSP responses were found.
             LOGGER.LogInformation("Valid OCSPs found: " + validOCSPsFound);
             if (validOCSPsFound > 0) {
                 result.Add(new VerificationOK(signCert, this.GetType(), "Valid OCSPs Found: " + validOCSPsFound + (online ? 
-                    " (online)" : "")));
+                    (" (" + validOCSPsFoundOnline + " online)") : "")));
             }
             // Verify using the previous verifier in the chain (if any).
             if (verifier != null) {
@@ -220,13 +222,7 @@ namespace iText.Signatures {
                 }
                 // So, since the issuer name and serial number identify a unique certificate, we found the single response
                 // for the signCert.
-                // Check if the OCSP response was valid at the time of signing:
-                DateTime thisUpdate = iSingleResp.GetThisUpdate();
-                if (signDate.Before(thisUpdate)) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format("OCSP is not valid yet: {0} before {1}", signDate, thisUpdate
-                        ));
-                    continue;
-                }
+                // OCSP response can be created after the signing, so we won't compare signDate with thisUpdate.
                 // If nextUpdate is not set, the responder is indicating that newer revocation information
                 // is available all the time.
                 if (iSingleResp.GetNextUpdate() != null && signDate.After(iSingleResp.GetNextUpdate())) {
@@ -235,10 +231,16 @@ namespace iText.Signatures {
                     continue;
                 }
                 // Check the status of the certificate:
-                Object status = iSingleResp.GetCertStatus();
-                if (Object.Equals(status, BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood())) {
+                ICertStatus status = iSingleResp.GetCertStatus();
+                IRevokedCertStatus revokedStatus = BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status);
+                bool isStatusGood = BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(status);
+                if (isStatusGood || (revokedStatus != null && signDate.Before(revokedStatus.GetRevocationTime()))) {
                     // Check if the OCSP response was genuine.
                     IsValidResponse(ocspResp, issuerCert, signDate);
+                    if (!isStatusGood) {
+                        LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.VALID_CERTIFICATE_IS_REVOKED, revokedStatus
+                            .GetRevocationTime()));
+                    }
                     return true;
                 }
             }
@@ -299,8 +301,11 @@ namespace iText.Signatures {
                     // certificate being checked for revocation were signed by the same key."
                     // and "This certificate MUST be issued directly by the CA that is identified in the request".
                     responderCert.Verify(issuerCert.GetPublicKey());
-                    // Check if the lifetime of the certificate is valid.
-                    responderCert.CheckValidity(signDate);
+                    // Check if the lifetime of the certificate is valid. Responder cert could be created after the signing.
+                    if (signDate.After(responderCert.GetNotAfter())) {
+                        throw new VerificationException(responderCert, "Authorized OCSP responder certificate expired on " + responderCert
+                            .GetNotAfter());
+                    }
                     // Validating ocsp signer's certificate (responderCert).
                     // See RFC6960 4.2.2.2.1. Revocation Checking of an Authorized Responder.
                     // 1. Check if responders certificate has id-pkix-ocsp-nocheck extension, in which case we do not
@@ -321,21 +326,22 @@ namespace iText.Signatures {
                             catch (System.IO.IOException) {
                             }
                         }
-                        if (VerifyOcsp(responderOcspResp, responderCert, issuerCert, signDate)) {
+                        if (VerifyOcsp(responderOcspResp, responderCert, issuerCert, ocspResp.GetProducedAt())) {
                             return;
                         }
                     }
-                    if (crlClient != null && CheckCrlResponses(crlClient, responderCert, issuerCert, signDate)) {
+                    if (crlClient != null && CheckCrlResponses(crlClient, responderCert, issuerCert, ocspResp.GetProducedAt())
+                        ) {
                         return;
                     }
                     // 2.2. Try to check responderCert for revocation using Authority Information Access for OCSP responses
                     // or CRL Distribution Points for CRL responses using default clients.
                     IBasicOcspResponse responderOcspResp_1 = new OcspClientBouncyCastle(null).GetBasicOCSPResp(responderCert, 
                         issuerCert, null);
-                    if (VerifyOcsp(responderOcspResp_1, responderCert, issuerCert, signDate)) {
+                    if (VerifyOcsp(responderOcspResp_1, responderCert, issuerCert, ocspResp.GetProducedAt())) {
                         return;
                     }
-                    if (CheckCrlResponses(new CrlClientOnline(), responderCert, issuerCert, signDate)) {
+                    if (CheckCrlResponses(new CrlClientOnline(), responderCert, issuerCert, ocspResp.GetProducedAt())) {
                         return;
                     }
                     // 3. "A CA may choose not to specify any method of revocation checking for the responder's
@@ -392,10 +398,7 @@ namespace iText.Signatures {
             }
         }
 
-        /// <summary>
-        /// Gets an OCSP response online and returns it if the status is GOOD
-        /// (without further checking!).
-        /// </summary>
+        /// <summary>Gets an OCSP response online and returns it without further checking.</summary>
         /// <param name="signCert">the signing certificate</param>
         /// <param name="issuerCert">the issuer certificate</param>
         /// <returns>
@@ -408,18 +411,7 @@ namespace iText.Signatures {
                 return null;
             }
             OcspClientBouncyCastle ocsp = new OcspClientBouncyCastle(null);
-            IBasicOcspResponse ocspResp = ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
-            if (ocspResp == null) {
-                return null;
-            }
-            ISingleResponse[] resps = ocspResp.GetResponses();
-            foreach (ISingleResponse resp in resps) {
-                Object status = resp.GetCertStatus();
-                if (Object.Equals(status, BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood())) {
-                    return ocspResp;
-                }
-            }
-            return null;
+            return ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
         }
 
         private bool VerifyOcsp(IBasicOcspResponse ocspResp, IX509Certificate certificate, IX509Certificate issuerCert

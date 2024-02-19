@@ -20,11 +20,19 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+using System;
+
 namespace iText.Commons.Bouncycastle.Cert.Ocsp {
     /// <summary>
     /// This interface represents the wrapper for RevokedStatus that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
     public interface IRevokedCertStatus : ICertStatus {
+        /// <summary>
+        /// Gets RevocationTime for the wrapped revoked CertStatus object.
+        /// </summary>
+        /// <returns>certificate revocation time.</returns>
+        DateTime GetRevocationTime();
     }
 }

@@ -77,5 +77,13 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>wrapped SingleResp list.</returns>
         ISingleResponse[] GetResponses();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetProducedAt</c>
+        /// method for the wrapped BasicOCSPResponse object.
+        /// </summary>
+        /// <returns>date BasicOCSPResponse was produced at.</returns>
+        DateTime GetProducedAt();
     }
 }

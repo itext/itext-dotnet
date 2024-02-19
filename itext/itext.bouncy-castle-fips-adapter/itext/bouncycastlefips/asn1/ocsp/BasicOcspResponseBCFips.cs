@@ -115,5 +115,10 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
             }
             return rs;
         }
+
+        /// <summary><inheritDoc/></summary>
+        public DateTime GetProducedAt() {
+            return GetBasicOcspResponse().TbsResponseData.ProducedAt.ToDateTime();
+        }
     }
 }

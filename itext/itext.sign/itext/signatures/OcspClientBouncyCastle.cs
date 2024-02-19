@@ -101,17 +101,15 @@ namespace iText.Signatures {
                     if (responses.Length == 1) {
                         ISingleResponse resp = responses[0];
                         ICertStatus status = resp.GetCertStatus();
-                        if (Object.Equals(status, BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood())) {
-                            return basicResponse.GetEncoded();
-                        }
-                        else {
+                        if (!BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(status)) {
                             if (BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status) == null) {
-                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
+                                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                             else {
-                                throw new System.IO.IOException(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
+                                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
                         }
+                        return basicResponse.GetEncoded();
                     }
                 }
             }
@@ -137,6 +135,27 @@ namespace iText.Signatures {
                 ().GetHashSha1());
             // basic request generation with nonce
             return SignUtils.GenerateOcspRequestWithNonce(id);
+        }
+
+        /// <summary>Retrieves certificate status from the OCSP response.</summary>
+        /// <param name="basicOcspRespBytes">encoded basic OCSP response</param>
+        /// <returns>good, revoked or unknown certificate status retrieved from the OCSP response, or null if an error occurs.
+        ///     </returns>
+        protected internal static ICertStatus GetCertificateStatus(byte[] basicOcspRespBytes) {
+            try {
+                IBasicOcspResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1Primitive
+                    (basicOcspRespBytes));
+                if (basicResponse != null) {
+                    ISingleResponse[] responses = basicResponse.GetResponses();
+                    if (responses.Length >= 1) {
+                        return responses[0].GetCertStatus();
+                    }
+                }
+            }
+            catch (Exception) {
+            }
+            // Ignore exception.
+            return null;
         }
 
         /// <summary>Gets an OCSP response object using BouncyCastle.</summary>

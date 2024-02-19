@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -751,7 +752,8 @@ namespace iText.Signatures {
             if (chain.Length > 1 && ocspClient != null) {
                 for (int j = 0; j < chain.Length - 1; ++j) {
                     byte[] ocsp = ocspClient.GetEncoded((IX509Certificate)chain[j], (IX509Certificate)chain[j + 1], null);
-                    if (ocsp != null) {
+                    if (ocsp != null && BouncyCastleFactoryCreator.GetFactory().CreateCertificateStatus().GetGood().Equals(OcspClientBouncyCastle
+                        .GetCertificateStatus(ocsp))) {
                         ocspList.Add(ocsp);
                     }
                 }
