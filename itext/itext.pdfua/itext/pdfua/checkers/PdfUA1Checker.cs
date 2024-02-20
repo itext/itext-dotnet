@@ -30,6 +30,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Kernel.Utils.Checkers;
+using iText.Kernel.XMP;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
 
@@ -90,6 +91,33 @@ namespace iText.Pdfua.Checkers {
             if (!FontCheckUtil.DoesFontContainAllUsedGlyphs(str, font)) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                     );
+            }
+        }
+
+        protected internal virtual void CheckMetadata(PdfCatalog catalog) {
+            if (catalog.GetDocument().GetPdfVersion().CompareTo(PdfVersion.PDF_1_7) > 0) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.INVALID_PDF_VERSION);
+            }
+            PdfObject pdfMetadata = catalog.GetPdfObject().Get(PdfName.Metadata);
+            if (pdfMetadata == null || !pdfMetadata.IsStream()) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM
+                    );
+            }
+            byte[] metaBytes = ((PdfStream)pdfMetadata).GetBytes();
+            try {
+                XMPMeta metadata = XMPMetaFactory.ParseFromBuffer(metaBytes);
+                int? part = metadata.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART);
+                if (!Convert.ToInt32(1).Equals(part)) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_UA_VERSION_IDENTIFIER
+                        );
+                }
+                if (metadata.GetProperty(XMPConst.NS_DC, XMPConst.TITLE) == null) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_DC_TITLE_ENTRY);
+                }
+            }
+            catch (XMPException e) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM
+                    , e);
             }
         }
 
@@ -193,6 +221,7 @@ namespace iText.Pdfua.Checkers {
                         );
                 }
             }
+            CheckMetadata(catalog);
         }
 
         private void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {

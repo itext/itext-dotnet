@@ -65,6 +65,14 @@ namespace iText.Pdfua.Exceptions {
         public const String EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS = "Embedded fonts shall define all "
              + "glyphs referenced for rendering within the conforming file.";
 
+        public const String DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM = "Document shall contain a XMP metadata stream.";
+
+        public const String METADATA_SHALL_CONTAIN_UA_VERSION_IDENTIFIER = "Metadata shall contain correct pdfuaid:part version identifier.";
+
+        public const String METADATA_SHALL_CONTAIN_DC_TITLE_ENTRY = "Metadata shall contain dc:title entry.";
+
+        public const String INVALID_PDF_VERSION = "Specified document pdf version isn't supported in pdf/ua.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor
