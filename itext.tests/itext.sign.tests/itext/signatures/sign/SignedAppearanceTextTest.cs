@@ -242,7 +242,7 @@ namespace iText.Signatures.Sign {
             String reason = "Test 4";
             String location = "TestCity 4";
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
-                ().SetSignedBy("wrong signer").SetReasonLine("Signing reason: " + reason).SetLocationLine("Signing location: "
+                ().SetSignedBy("   wrong signer   ").SetReasonLine("   Signing reason: " + reason).SetLocationLine("   Signing location: "
                  + location).SetSignDate(DateTimeUtil.GetCurrentTime()));
             Sign(srcFile, fieldName, outPdf, reason, location, rect, appearance);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"

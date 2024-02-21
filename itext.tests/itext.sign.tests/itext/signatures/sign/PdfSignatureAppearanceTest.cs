@@ -490,6 +490,29 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, cmp, DESTINATION_FOLDER, "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void EmptySignatureAppearanceTest() {
+            String srcFile = SOURCE_FOLDER + "simpleDocument.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_emptySignatureAppearance.pdf";
+            String outPdf = DESTINATION_FOLDER + "emptySignatureAppearance.pdf";
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName);
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFile), new FileStream(outPdf, FileMode.Create), new StampingProperties
+                ());
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            signer.SetFieldName(fieldName);
+            signer.SetReason("test reason").SetLocation("test location").SetSignatureAppearance(appearance);
+            signer.SetPageRect(rect);
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
         private static void CompareSignatureAppearances(String outPdf, String cmpPdf) {
             ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
             using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
