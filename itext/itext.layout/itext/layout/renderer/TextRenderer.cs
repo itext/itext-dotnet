@@ -911,23 +911,23 @@ namespace iText.Layout.Renderer {
                 }
                 canvas.EndText().RestoreState();
                 EndElementOpacityApplying(drawContext);
+                if (isTagged) {
+                    canvas.CloseTag();
+                }
                 Object underlines = this.GetProperty<Object>(Property.UNDERLINE);
                 if (underlines is IList) {
                     foreach (Object underline in (IList)underlines) {
                         if (underline is Underline) {
-                            DrawSingleUnderline((Underline)underline, fontColor, canvas, fontSize.GetValue(), italicSimulation ? ITALIC_ANGLE
-                                 : 0);
+                            DrawAndTagSingleUnderline(drawContext.IsTaggingEnabled(), (Underline)underline, fontColor, canvas, fontSize
+                                .GetValue(), italicSimulation ? ITALIC_ANGLE : 0);
                         }
                     }
                 }
                 else {
                     if (underlines is Underline) {
-                        DrawSingleUnderline((Underline)underlines, fontColor, canvas, fontSize.GetValue(), italicSimulation ? ITALIC_ANGLE
-                             : 0);
+                        DrawAndTagSingleUnderline(drawContext.IsTaggingEnabled(), (Underline)underlines, fontColor, canvas, fontSize
+                            .GetValue(), italicSimulation ? ITALIC_ANGLE : 0);
                     }
-                }
-                if (isTagged) {
-                    canvas.CloseTag();
                 }
             }
             if (isRelativePosition) {
@@ -1675,6 +1675,17 @@ namespace iText.Layout.Renderer {
                     endsWithBreak = specialScriptsWordBreakPoints.Contains(line.end);
                 }
                 return new bool[] { startsWithBreak, endsWithBreak };
+            }
+        }
+
+        private void DrawAndTagSingleUnderline(bool isTagged, Underline underline, TransparentColor fontStrokeColor
+            , PdfCanvas canvas, float fontSize, float italicAngleTan) {
+            if (isTagged) {
+                canvas.OpenTag(new CanvasArtifact());
+            }
+            DrawSingleUnderline(underline, fontStrokeColor, canvas, fontSize, italicAngleTan);
+            if (isTagged) {
+                canvas.CloseTag();
             }
         }
 

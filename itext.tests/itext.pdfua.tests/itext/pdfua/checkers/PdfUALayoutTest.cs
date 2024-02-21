@@ -71,6 +71,23 @@ namespace iText.Pdfua.Checkers {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
+        public virtual void SimpleParagraphWithUnderlineTest() {
+            String outPdf = DESTINATION_FOLDER + "simpleParagraphTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_simpleParagraphWithUnderlineTest.pdf";
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("Simple layout PDF/UA-1 with underline test").SetFont(font).SetUnderline());
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
         public virtual void SimpleBorderTest() {
             String outPdf = DESTINATION_FOLDER + "simpleBorderTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_simpleBorderTest.pdf";
