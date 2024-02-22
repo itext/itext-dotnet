@@ -77,8 +77,11 @@ namespace iText.Forms.Form.Renderer {
 
         /// <summary>Returns whether or not the checkbox is in PDF/A mode.</summary>
         /// <returns>true if the checkbox is in PDF/A mode, false otherwise</returns>
+        [System.ObsoleteAttribute(@"since 8.0.4 will be removed")]
         public virtual bool IsPdfA() {
-            return this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL) != null;
+            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                );
+            return conformanceLevel is PdfAConformanceLevel;
         }
 
         /// <summary>Gets the checkBoxType.</summary>
@@ -95,11 +98,13 @@ namespace iText.Forms.Form.Renderer {
         public virtual ICheckBoxRenderingStrategy CreateCheckBoxRenderStrategy() {
             // html rendering is PDFA compliant this means we don't have to check if its PDFA.
             ICheckBoxRenderingStrategy renderingStrategy;
+            bool isConformantPdfDocument = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL) !=
+                 null;
             if (GetRenderingMode() == RenderingMode.HTML_MODE) {
                 renderingStrategy = new HtmlCheckBoxRenderingStrategy();
             }
             else {
-                if (GetRenderingMode() == RenderingMode.DEFAULT_LAYOUT_MODE && IsPdfA()) {
+                if (GetRenderingMode() == RenderingMode.DEFAULT_LAYOUT_MODE && isConformantPdfDocument) {
                     renderingStrategy = new PdfACheckBoxRenderingStrategy();
                 }
                 else {
@@ -176,8 +181,8 @@ namespace iText.Forms.Form.Renderer {
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
             IDictionary<int, Object> margins = DeleteMargins();
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
-                (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetGenericConformanceLevel
+                (this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
             if (this.HasProperty(FormProperty.FORM_CHECKBOX_TYPE)) {
                 builder.SetCheckType((CheckBoxType)this.GetProperty<CheckBoxType?>(FormProperty.FORM_CHECKBOX_TYPE));
             }

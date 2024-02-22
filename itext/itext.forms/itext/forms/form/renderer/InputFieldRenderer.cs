@@ -141,8 +141,8 @@ namespace iText.Forms.Form.Renderer {
             // Default html2pdf input field appearance differs from the default one for form fields.
             // That's why we got rid of several properties we set by default during InputField instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font).SetConformanceLevel
-                (GetConformanceLevel(doc)).CreateText();
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font).SetGenericConformanceLevel
+                (GetGenericConformanceLevel(doc)).CreateText();
             inputField.DisableFieldRegeneration();
             inputField.SetValue(value);
             inputField.SetFontSize(fontSizeValue);

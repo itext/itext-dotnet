@@ -214,6 +214,8 @@ namespace iText.Kernel.Pdf.Canvas {
         private Stack<Tuple2<PdfName, PdfDictionary>> tagStructureStack = new Stack<Tuple2<PdfName, PdfDictionary>
             >();
 
+        protected internal bool drawingOnPage = false;
+
         /// <summary>Creates PdfCanvas from content stream of page, form XObject, pattern etc.</summary>
         /// <param name="contentStream">The content stream</param>
         /// <param name="resources">The resources, a specialized dictionary that can be used by PDF instructions in the content stream
@@ -251,6 +253,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 ApplyRotation(page);
                 page.SetPageRotationInverseMatrixWritten();
             }
+            this.drawingOnPage = true;
         }
 
         /// <summary>Creates a PdfCanvas from a PdfFormXObject.</summary>
@@ -634,7 +637,7 @@ namespace iText.Kernel.Pdf.Canvas {
             > iterator) {
             CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
@@ -743,6 +746,18 @@ namespace iText.Kernel.Pdf.Canvas {
             return this;
         }
 
+        /// <summary>Sets whether we are currently drawing on a page.</summary>
+        /// <param name="drawingOnPage">
+        /// 
+        /// <see langword="true"/>
+        /// if we are currently drawing on page
+        /// <see langword="false"/>
+        /// if not
+        /// </param>
+        public virtual void SetDrawingOnPage(bool drawingOnPage) {
+            this.drawingOnPage = drawingOnPage;
+        }
+
         /// <summary>Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.</summary>
         /// <remarks>
         /// Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.
@@ -795,7 +810,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(PdfArray textArray) {
             CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
             document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             if (currentGs.GetFont() == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
@@ -842,7 +857,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y">y coordinate.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas LineTo(double x, double y) {
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace().WriteBytes(l);
             return this;
         }
@@ -857,7 +872,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas CurveTo(double x1, double y1, double x2, double y2, double
              x3, double y3) {
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x1).WriteSpace().WriteDouble(y1).WriteSpace().WriteDouble(x2).
                 WriteSpace().WriteDouble(y2).WriteSpace().WriteDouble(x3).WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes
                 (c);
@@ -871,7 +886,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y3">y coordinate of the ending point.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas CurveTo(double x2, double y2, double x3, double y3) {
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x2).WriteSpace().WriteDouble(y2).WriteSpace().WriteDouble(x3).
                 WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes(v);
             return this;
@@ -884,7 +899,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y3">y coordinate of the ending point.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas CurveFromTo(double x1, double y1, double x3, double y3) {
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x1).WriteSpace().WriteDouble(y1).WriteSpace().WriteDouble(x3).
                 WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes(y);
             return this;
@@ -1026,7 +1041,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Rectangle(double x, double y, double width, double height
             ) {
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace().WriteDouble(width)
                 .WriteSpace().WriteDouble(height).WriteSpace().WriteBytes(re);
             return this;
@@ -1964,7 +1979,9 @@ namespace iText.Kernel.Pdf.Canvas {
                 }
             }
             Tuple2<PdfName, PdfDictionary> tuple2 = new Tuple2<PdfName, PdfDictionary>(tag, properties);
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_BEGIN_MARKED_CONTENT, null, null, tuple2);
+            if (this.drawingOnPage) {
+                document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_BEGIN_MARKED_CONTENT, null, null, tuple2);
+            }
             tagStructureStack.Push(tuple2);
             return this;
         }
@@ -2270,9 +2287,15 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             document.CheckIsoConformance(text, IsoKey.FONT, null, null, currentGs.GetFont());
             currentGs.GetFont().WriteText(text, contentStream.GetOutputStream());
+        }
+
+        private void CheckIsoConformanceWritingOnContent() {
+            if (this.drawingOnPage) {
+                document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            }
         }
 
         private void AddToPropertiesAndBeginLayer(IPdfOCG layer) {
@@ -2334,7 +2357,7 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private iText.Kernel.Pdf.Canvas.PdfCanvas DrawArc(double x1, double y1, double x2, double y2, double startAng
             , double extent, bool continuous) {
-            document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+            this.CheckIsoConformanceWritingOnContent();
             IList<double[]> ar = BezierArc(x1, y1, x2, y2, startAng, extent);
             if (ar.IsEmpty()) {
                 return this;

@@ -167,7 +167,7 @@ namespace iText.Forms.Fields {
             field.MakeIndirect(document);
             if (document != null && document.GetReader() != null && document.GetReader().GetPdfAConformanceLevel() != 
                 null) {
-                field.pdfAConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
+                field.pdfConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
             }
             return field;
         }
@@ -988,7 +988,7 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, GetDocument());
             SetMetaInfoToCanvas(canvasOff);
             canvasOff.Add(formFieldElement);
-            if (GetPdfAConformanceLevel() == null) {
+            if (GetPdfConformanceLevel() == null) {
                 xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             }
             normalAppearance.Put(new PdfName(OFF_STATE_VALUE), xObjectOff.GetPdfObject());
@@ -1216,7 +1216,7 @@ namespace iText.Forms.Fields {
             }
             formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
             SetModelElementProperties(GetRect(GetPdfObject()));
-            ((CheckBox)formFieldElement).SetPdfAConformanceLevel(GetPdfAConformanceLevel());
+            ((CheckBox)formFieldElement).SetPdfConformanceLevel(GetPdfConformanceLevel());
             ((CheckBox)formFieldElement).SetCheckBoxType(parent.checkType.GetValue());
         }
 

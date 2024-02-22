@@ -172,8 +172,8 @@ namespace iText.Forms.Form.Renderer {
                 ));
             ListBoxField lbModelElement = (ListBoxField)modelElement;
             IList<String> selectedOptions = lbModelElement.GetSelectedStrings();
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetConformanceLevel(GetConformanceLevel
-                (doc)).SetFont(font).SetWidgetRectangle(area);
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, GetModelId()).SetGenericConformanceLevel(
+                GetGenericConformanceLevel(doc)).SetFont(font).SetWidgetRectangle(area);
             SetupBuilderValues(builder, lbModelElement);
             PdfChoiceFormField choiceField = builder.CreateList();
             choiceField.DisableFieldRegeneration();

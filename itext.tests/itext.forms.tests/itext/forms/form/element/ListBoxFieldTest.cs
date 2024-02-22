@@ -408,6 +408,17 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-8158")]
+        public virtual void TestListBoxInfiniteLoop() {
+            Document document = new Document(new PdfDocument(new PdfWriter(new MemoryStream())));
+            ListBoxField list = (ListBoxField)new ListBoxField("name", 200, false).SetInteractive(true);
+            list.AddOption("value1");
+            list.AddOption("value2");
+            document.Add(list);
+            document.Close();
+        }
+
+        [NUnit.Framework.Test]
         public virtual void InvalidOptionsExceptionTest() {
             using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, "invalid").SetWidgetRectangle(new Rectangle

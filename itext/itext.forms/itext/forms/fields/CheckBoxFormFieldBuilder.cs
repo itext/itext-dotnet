@@ -74,13 +74,13 @@ namespace iText.Forms.Fields {
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
                 annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
-                if (GetConformanceLevel() != null) {
+                if (GetGenericConformanceLevel() != null) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 check = PdfFormCreator.CreateButtonFormField(annotation, GetDocument());
             }
             check.DisableFieldRegeneration();
-            check.pdfAConformanceLevel = GetConformanceLevel();
+            check.pdfConformanceLevel = GetGenericConformanceLevel();
             check.SetCheckType(checkType);
             check.SetFieldName(GetFormFieldName());
             // the default behavior is to automatically calculate the fontsize

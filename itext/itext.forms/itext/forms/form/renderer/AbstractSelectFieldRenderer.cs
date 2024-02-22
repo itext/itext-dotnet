@@ -229,8 +229,20 @@ namespace iText.Forms.Form.Renderer {
         ///     </remarks>
         /// <param name="document">the document</param>
         /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        [System.ObsoleteAttribute(@"since 8.0.4 will be return iText.Kernel.Pdf.IConformanceLevel")]
         protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
-            PdfAConformanceLevel conformanceLevel = this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+            return PdfAConformanceLevel.GetPDFAConformance(this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                ), document);
+        }
+
+        /// <summary>Gets the conformance level.</summary>
+        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+        ///     </remarks>
+        /// <param name="document">the document</param>
+        /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        [System.ObsoleteAttribute(@"since 8.0.4 will be renamed to getConformanceLevel()")]
+        protected internal virtual IConformanceLevel GetGenericConformanceLevel(PdfDocument document) {
+            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
                 );
             if (conformanceLevel != null) {
                 return conformanceLevel;
@@ -238,10 +250,7 @@ namespace iText.Forms.Form.Renderer {
             if (document == null) {
                 return null;
             }
-            if (document.GetConformanceLevel() is PdfAConformanceLevel) {
-                return (PdfAConformanceLevel)document.GetConformanceLevel();
-            }
-            return null;
+            return document.GetConformanceLevel();
         }
 
         /// <summary>Gets options that are marked as selected from the select field options subtree.</summary>

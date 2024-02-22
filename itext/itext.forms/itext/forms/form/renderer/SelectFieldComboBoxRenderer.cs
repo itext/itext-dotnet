@@ -94,7 +94,7 @@ namespace iText.Forms.Form.Renderer {
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             PdfFont font = GetResolvedFont(doc);
             ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
-                ).SetConformanceLevel(GetConformanceLevel(doc));
+                ).SetGenericConformanceLevel(GetGenericConformanceLevel(doc));
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));

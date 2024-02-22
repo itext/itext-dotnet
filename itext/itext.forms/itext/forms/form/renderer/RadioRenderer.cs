@@ -154,8 +154,8 @@ namespace iText.Forms.Form.Renderer {
             }
             PdfButtonFormField radioGroup = (PdfButtonFormField)form.GetField(groupName);
             if (null == radioGroup) {
-                radioGroup = new RadioFormFieldBuilder(doc, groupName).SetConformanceLevel(GetConformanceLevel(doc)).CreateRadioGroup
-                    ();
+                radioGroup = new RadioFormFieldBuilder(doc, groupName).SetGenericConformanceLevel(GetGenericConformanceLevel
+                    (doc)).CreateRadioGroup();
                 radioGroup.DisableFieldRegeneration();
                 radioGroup.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
             }
@@ -165,8 +165,8 @@ namespace iText.Forms.Form.Renderer {
             if (IsBoxChecked()) {
                 radioGroup.SetValue(GetModelId());
             }
-            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).SetConformanceLevel(GetConformanceLevel(doc
-                )).CreateRadioButton(GetModelId(), area);
+            PdfFormAnnotation radio = new RadioFormFieldBuilder(doc, null).SetGenericConformanceLevel(GetGenericConformanceLevel
+                (doc)).CreateRadioButton(GetModelId(), area);
             radio.DisableFieldRegeneration();
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {

@@ -68,7 +68,10 @@ namespace iText.Forms.Fields {
 
         protected internal Color color;
 
+        [System.ObsoleteAttribute(@"since 8.0.4, this is not used anymore! Use pdfConformanceLevel instead")]
         protected internal PdfAConformanceLevel pdfAConformanceLevel;
+
+        protected internal IConformanceLevel pdfConformanceLevel;
 
         /// <summary>Parent form field.</summary>
         protected internal PdfFormField parent;
@@ -200,13 +203,35 @@ namespace iText.Forms.Fields {
             return color == null && parent != null ? parent.GetColor() : color;
         }
 
-        /// <summary>Gets the declared PDF/A conformance level.</summary>
+        /// <summary>Gets the declared conformance level.</summary>
+        /// <remarks>
+        /// Gets the declared conformance level.
+        /// Deprecated  use
+        /// <see cref="AbstractPdfFormField"/>
+        /// getPdfConformanceLevel
+        /// </remarks>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// </returns>
+        [Obsolete]
         public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
-            return pdfAConformanceLevel == null && parent != null ? parent.GetPdfAConformanceLevel() : pdfAConformanceLevel;
+            if (pdfConformanceLevel == null && parent != null) {
+                return parent.GetPdfAConformanceLevel();
+            }
+            if (pdfConformanceLevel is PdfAConformanceLevel) {
+                return (PdfAConformanceLevel)pdfConformanceLevel;
+            }
+            return null;
+        }
+
+        /// <summary>Gets the declared conformance level.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
+        /// </returns>
+        public virtual IConformanceLevel GetPdfConformanceLevel() {
+            return pdfConformanceLevel == null && parent != null ? parent.GetPdfConformanceLevel() : pdfConformanceLevel;
         }
 
         /// <summary>This method regenerates appearance stream of the field.</summary>
