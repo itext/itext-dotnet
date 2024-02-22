@@ -73,6 +73,14 @@ namespace iText.Pdfua.Exceptions {
 
         public const String INVALID_PDF_VERSION = "Specified document pdf version isn't supported in pdf/ua.";
 
+        public const String H1_IS_SKIPPED = "Heading level 1 is skipped in a descending sequence of header levels.";
+
+        public const String HN_IS_SKIPPED = "Heading level {0} is skipped in a descending sequence of header levels.";
+
+        public const String MORE_THAN_ONE_H_TAG = "A node contains more than one H tag.";
+
+        public const String DOCUMENT_USES_BOTH_H_AND_HN = "Document uses both H and H# tags.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor

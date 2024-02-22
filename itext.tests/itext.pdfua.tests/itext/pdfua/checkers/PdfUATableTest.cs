@@ -45,11 +45,11 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        private TestFramework framework;
+        private UaValidationTestFramework framework;
 
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
-            framework = new TestFramework(DESTINATION_FOLDER);
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
         }
 
         [NUnit.Framework.Test]
@@ -270,7 +270,7 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("tableWithHeaderScopeColumn13");
         }
 
-        private sealed class _Generator_301 : TestFramework.Generator<Cell> {
+        private sealed class _Generator_301 : UaValidationTestFramework.Generator<Cell> {
             public _Generator_301() {
             }
 
@@ -441,7 +441,7 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("tableWithHeaderRowScope07");
         }
 
-        private sealed class _Generator_505 : TestFramework.Generator<Cell> {
+        private sealed class _Generator_505 : UaValidationTestFramework.Generator<Cell> {
             public _Generator_505() {
             }
 
@@ -879,53 +879,53 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothValid("combination09");
         }
 
-        internal class TableBuilder : TestFramework.Generator<IBlockElement> {
+        internal class TableBuilder : UaValidationTestFramework.Generator<IBlockElement> {
             private readonly int amountOfColumns;
 
-            private readonly IList<TestFramework.Generator<Cell>> headerCells = new List<TestFramework.Generator<Cell>
-                >();
+            private readonly IList<UaValidationTestFramework.Generator<Cell>> headerCells = new List<UaValidationTestFramework.Generator
+                <Cell>>();
 
-            private readonly IList<TestFramework.Generator<Cell>> bodyCells = new List<TestFramework.Generator<Cell>>(
-                );
+            private readonly IList<UaValidationTestFramework.Generator<Cell>> bodyCells = new List<UaValidationTestFramework.Generator
+                <Cell>>();
 
-            private readonly IList<TestFramework.Generator<Cell>> footerCells = new List<TestFramework.Generator<Cell>
-                >();
+            private readonly IList<UaValidationTestFramework.Generator<Cell>> footerCells = new List<UaValidationTestFramework.Generator
+                <Cell>>();
 
             internal TableBuilder(int amountOfColumns) {
                 this.amountOfColumns = amountOfColumns;
             }
 
-            public virtual PdfUATableTest.TableBuilder AddHeaderCell(TestFramework.Generator<Cell> sup) {
+            public virtual PdfUATableTest.TableBuilder AddHeaderCell(UaValidationTestFramework.Generator<Cell> sup) {
                 this.headerCells.Add(sup);
                 return this;
             }
 
-            public virtual PdfUATableTest.TableBuilder AddBodyCell(TestFramework.Generator<Cell> sup) {
+            public virtual PdfUATableTest.TableBuilder AddBodyCell(UaValidationTestFramework.Generator<Cell> sup) {
                 this.bodyCells.Add(sup);
                 return this;
             }
 
-            public virtual PdfUATableTest.TableBuilder AddFooterCell(TestFramework.Generator<Cell> sup) {
+            public virtual PdfUATableTest.TableBuilder AddFooterCell(UaValidationTestFramework.Generator<Cell> sup) {
                 this.footerCells.Add(sup);
                 return this;
             }
 
             public virtual IBlockElement Generate() {
                 Table table = new Table(amountOfColumns);
-                foreach (TestFramework.Generator<Cell> headerCell in headerCells) {
+                foreach (UaValidationTestFramework.Generator<Cell> headerCell in headerCells) {
                     table.AddHeaderCell(headerCell.Generate());
                 }
-                foreach (TestFramework.Generator<Cell> bodyCell in bodyCells) {
+                foreach (UaValidationTestFramework.Generator<Cell> bodyCell in bodyCells) {
                     table.AddCell(bodyCell.Generate());
                 }
-                foreach (TestFramework.Generator<Cell> supplier in footerCells) {
+                foreach (UaValidationTestFramework.Generator<Cell> supplier in footerCells) {
                     table.AddFooterCell(supplier.Generate());
                 }
                 return table;
             }
         }
 
-        internal class DataCellSupplier : TestFramework.Generator<Cell> {
+        internal class DataCellSupplier : UaValidationTestFramework.Generator<Cell> {
             private readonly String content;
 
             private readonly int colspan;
@@ -973,7 +973,7 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        internal class HeaderCellSupplier : TestFramework.Generator<Cell> {
+        internal class HeaderCellSupplier : UaValidationTestFramework.Generator<Cell> {
             private readonly String id;
 
             private readonly String content;

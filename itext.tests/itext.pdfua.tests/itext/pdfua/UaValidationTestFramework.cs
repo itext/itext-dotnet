@@ -40,31 +40,49 @@ namespace iText.Pdfua {
     /// one with our checkers enabled to check for exceptions.
     /// It then compares if our checkers and veraPDF produce the same result.
     /// </remarks>
-    public class TestFramework {
+    public class UaValidationTestFramework {
+        private readonly bool defaultCheckDocClosingByReopening;
+
         private readonly String destinationFolder;
 
-        private readonly IList<TestFramework.Generator<IBlockElement>> elementProducers = new List<TestFramework.Generator
+        private readonly IList<UaValidationTestFramework.Generator<IBlockElement>> elementProducers = new List<UaValidationTestFramework.Generator
             <IBlockElement>>();
 
-        public TestFramework(String destinationFolder) {
-            this.destinationFolder = destinationFolder;
+        public UaValidationTestFramework(String destinationFolder)
+            : this(destinationFolder, true) {
         }
 
-        public virtual void AddSuppliers(params TestFramework.Generator<IBlockElement>[] suppliers) {
+        public UaValidationTestFramework(String destinationFolder, bool defaultCheckDocClosingByReopening) {
+            this.destinationFolder = destinationFolder;
+            this.defaultCheckDocClosingByReopening = defaultCheckDocClosingByReopening;
+        }
+
+        public virtual void AddSuppliers(params UaValidationTestFramework.Generator<IBlockElement>[] suppliers) {
             elementProducers.AddAll(suppliers);
         }
 
         public virtual void AssertBothFail(String filename) {
-            Exception e = CheckErrorLayout("layout_" + filename + ".pdf");
-            String veraPdf = VerAPdfResult("vera_" + filename + ".pdf");
+            AssertBothFail(filename, null);
+        }
+
+        public virtual void AssertBothFail(String filename, bool checkDocClosing) {
+            AssertBothFail(filename, null, checkDocClosing);
+        }
+
+        public virtual void AssertBothFail(String filename, String expectedMsg) {
+            AssertBothFail(filename, expectedMsg, defaultCheckDocClosingByReopening);
+        }
+
+        public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing) {
+            CheckError(CheckErrorLayout("layout_" + filename + ".pdf"), expectedMsg);
+            String createdFileName = "vera_" + filename + ".pdf";
+            String veraPdf = VerAPdfResult(createdFileName);
             System.Console.Out.WriteLine(veraPdf);
-            if (!(e is PdfUAConformanceException) && e != null) {
-                System.Console.Out.WriteLine(PrintStackTrace(e));
-                NUnit.Framework.Assert.Fail();
-            }
-            NUnit.Framework.Assert.IsNotNull(e);
-            System.Console.Out.WriteLine(PrintStackTrace(e));
             NUnit.Framework.Assert.IsNotNull(veraPdf);
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+            if (checkDocClosing) {
+                CheckError(CheckErrorOnClosing(createdFileName), expectedMsg);
+            }
         }
 
         public virtual void AssertBothValid(String fileName) {
@@ -98,28 +116,56 @@ namespace iText.Pdfua {
             Document document = new Document(pdfDoc);
             document.GetPdfDocument().GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer()
                 );
-            foreach (TestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
+            foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
                 document.Add(blockElementSupplier.Generate());
             }
             document.Close();
             VeraPdfValidator validator = new VeraPdfValidator();
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377
-            // introduce pdf/ua validation on Android)
-            return validator.Validate(destinationFolder + filename);
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+            String validate = null;
+            validate = validator.Validate(destinationFolder + filename);
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+            return validate;
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        public virtual Exception CheckErrorLayout(String filename) {
+        private void CheckError(Exception e, String expectedMsg) {
+            NUnit.Framework.Assert.IsNotNull(e);
+            if (!(e is PdfUAConformanceException)) {
+                System.Console.Out.WriteLine(PrintStackTrace(e));
+                NUnit.Framework.Assert.Fail();
+            }
+            if (expectedMsg != null) {
+                NUnit.Framework.Assert.AreEqual(expectedMsg, e.Message);
+            }
+            System.Console.Out.WriteLine(PrintStackTrace(e));
+        }
+
+        private Exception CheckErrorLayout(String filename) {
             try {
-                String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
-                System.Console.Out.WriteLine(outfile);
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename, PdfUATestPdfDocument
-                    .CreateWriterProperties()));
+                String outPath = destinationFolder + filename;
+                System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
+                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath, PdfUATestPdfDocument.CreateWriterProperties
+                    ()));
                 Document document = new Document(pdfDoc);
-                foreach (TestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
+                foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
                     document.Add(blockElementSupplier.Generate());
                 }
                 document.Close();
+            }
+            catch (Exception e) {
+                return e;
+            }
+            return null;
+        }
+
+        private Exception CheckErrorOnClosing(String filename) {
+            try {
+                String outPath = destinationFolder + "reopen_" + filename;
+                String inPath = destinationFolder + filename;
+                System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(inPath));
+                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath, PdfUATestPdfDocument
+                    .CreateWriterProperties()));
+                pdfDoc.Close();
             }
             catch (Exception e) {
                 return e;

@@ -32,6 +32,7 @@ using iText.Kernel.Utils;
 using iText.Kernel.Utils.Checkers;
 using iText.Kernel.XMP;
 using iText.Pdfua.Checkers.Utils;
+using iText.Pdfua.Checkers.Utils.Headings;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers {
@@ -45,6 +46,8 @@ namespace iText.Pdfua.Checkers {
         private readonly PdfDocument pdfDocument;
 
         private readonly TagStructureContext tagStructureContext;
+
+        private readonly HeadingsChecker headingsChecker = new HeadingsChecker();
 
         /// <summary>Creates PdfUA1Checker instance with PDF document which will be validated against PDF/UA-1 standard.
         ///     </summary>
@@ -67,6 +70,7 @@ namespace iText.Pdfua.Checkers {
             switch (key) {
                 case IsoKey.LAYOUT: {
                     LayoutCheckUtil.CheckLayoutElements(obj);
+                    headingsChecker.CheckLayoutElement(obj);
                     break;
                 }
 
@@ -237,6 +241,7 @@ namespace iText.Pdfua.Checkers {
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(GraphicsCheckUtil.CreateFigureTagHandler());
             tagTreeIterator.AddHandler(FormulaCheckUtil.CreateFormulaTagHandler());
+            tagTreeIterator.AddHandler(CreateHeadingsTagHandler());
             tagTreeIterator.Traverse();
         }
 
@@ -250,6 +255,22 @@ namespace iText.Pdfua.Checkers {
             if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
                     , String.Join(", ", fontNamesThatAreNotEmbedded)));
+            }
+        }
+
+        private static ITagTreeIteratorHandler CreateHeadingsTagHandler() {
+            return new _ITagTreeIteratorHandler_296();
+        }
+
+        private sealed class _ITagTreeIteratorHandler_296 : ITagTreeIteratorHandler {
+            public _ITagTreeIteratorHandler_296() {
+                this.checker = new HeadingsChecker();
+            }
+
+            private readonly HeadingsChecker checker;
+
+            public void NextElement(IStructureNode elem) {
+                this.checker.CheckStructElement(elem);
             }
         }
     }

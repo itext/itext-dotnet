@@ -367,7 +367,7 @@ namespace iText.Layout {
             if (renderer == null) {
                 return;
             }
-            pdfDocument.CheckIsoConformance(renderer.GetModelElement(), IsoKey.LAYOUT);
+            pdfDocument.CheckIsoConformance(renderer, IsoKey.LAYOUT);
             IList<IRenderer> renderers = renderer.GetChildRenderers();
             if (renderers == null) {
                 return;

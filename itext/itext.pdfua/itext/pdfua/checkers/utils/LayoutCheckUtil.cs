@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Renderer;
 using iText.Pdfua.Checkers.Utils.Tables;
 
 namespace iText.Pdfua.Checkers.Utils {
@@ -37,8 +39,12 @@ namespace iText.Pdfua.Checkers.Utils {
 
         // Empty constructor
         /// <summary>Checks if a layout element is valid against the PDF/UA specification.</summary>
-        /// <param name="layoutElement">layout element to check</param>
-        public static void CheckLayoutElements(Object layoutElement) {
+        /// <param name="rendererObj">layout element to check</param>
+        public static void CheckLayoutElements(Object rendererObj) {
+            if (rendererObj == null) {
+                return;
+            }
+            IPropertyContainer layoutElement = ((IRenderer)rendererObj).GetModelElement();
             if (layoutElement is Image) {
                 GraphicsCheckUtil.CheckLayoutImage((Image)layoutElement);
                 return;
