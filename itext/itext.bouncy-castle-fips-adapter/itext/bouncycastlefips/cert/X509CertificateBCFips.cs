@@ -136,6 +136,8 @@ namespace iText.Bouncycastlefips.Cert {
                 certificate.CheckValidity(time);
             } catch (CertificateExpiredException e) {
                 throw new CertificateExpiredExceptionBCFips(e);
+            } catch (CertificateNotYetValidException e) {
+                throw new CertificateNotYetValidExceptionBCFips(e);
             }
         }
 
@@ -170,6 +172,16 @@ namespace iText.Bouncycastlefips.Cert {
                 list.Add(oid.Id);
             }
             return list;
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public bool[] GetKeyUsage() {
+            return certificate.GetKeyUsage();
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public int GetBasicConstraints() {
+            return certificate.GetBasicConstraints();
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

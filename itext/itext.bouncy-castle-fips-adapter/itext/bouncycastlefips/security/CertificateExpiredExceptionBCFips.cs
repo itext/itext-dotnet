@@ -26,7 +26,7 @@ using iText.Commons.Utils;
 using Org.BouncyCastle.Cert;
 
 namespace iText.Bouncycastlefips.Security {
-    /// <summary>Wrapper class for <see cref="ExpiredExceptionBCFips"/>.</summary>
+    /// <summary>Wrapper class for <see cref="CertificateExpiredException"/>.</summary>
     public class CertificateExpiredExceptionBCFips : AbstractCertificateExpiredException {
         private readonly CertificateExpiredException exception;
 

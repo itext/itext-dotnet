@@ -132,5 +132,13 @@ namespace iText.Signatures.Testutils
         {
             return this.extendedKeyUsage;
         }
+        
+        public bool[] GetKeyUsage() {
+            throw new NotImplementedException();
+        }
+        
+        public int GetBasicConstraints() {
+            throw new NotImplementedException();
+        }
     }
 }

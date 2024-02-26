@@ -1086,6 +1086,18 @@ namespace iText.Commons.Bouncycastle {
         /// <returns>created basic constraints wrapper</returns>
         IBasicConstraints CreateBasicConstraints(bool b);
 
+        /// <summary>
+        /// Create basic constraints wrapper from
+        /// <c>int</c>
+        /// value.
+        /// </summary>
+        /// <param name="pathLength"></param>
+        ///
+        /// <c>int</c>
+        /// flag to create basic constraints wrapper from
+        /// <returns>created basic constraints wrapper</returns>
+        IBasicConstraints CreateBasicConstraints(int pathLength);
+
         /// <summary>Create key usage wrapper without parameters.</summary>
         /// <returns>created key usage wrapper</returns>
         IKeyUsage CreateKeyUsage();
@@ -1111,6 +1123,13 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="purposeId">key purpose id wrapper to create extended key usage wrapper from</param>
         /// <returns>created extended key usage wrapper</returns>
         IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId);
+
+        /// <summary>
+        /// Create extended key usage wrapper from an array of object identifier wrappers.
+        /// </summary>
+        /// <param name="purposeId">an array of object identifier wrappers</param>
+        /// <returns>created extended key usage wrapper</returns>
+        IExtendedKeyUsage CreateExtendedKeyUsage(IDerObjectIdentifier[] purposeId);
 
         /// <summary>
         /// Create subject public key info wrapper from public key wrapper

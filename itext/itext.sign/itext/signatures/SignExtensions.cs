@@ -45,6 +45,15 @@ namespace iText.Signatures {
                 t.Add(item);
             }
         }
+        
+        public static bool ContainsAll<T>(this ICollection<T> thisC, ICollection<T> otherC) {
+            foreach (T e in otherC) {
+                if (!thisC.Contains(e)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
             T[] r;

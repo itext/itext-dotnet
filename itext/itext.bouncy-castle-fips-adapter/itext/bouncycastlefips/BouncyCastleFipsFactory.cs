@@ -868,6 +868,11 @@ namespace iText.Bouncycastlefips {
         public virtual IBasicConstraints CreateBasicConstraints(bool b) {
             return new BasicConstraintsBCFips(new BasicConstraints(b));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicConstraints CreateBasicConstraints(int pathLength) {
+            return new BasicConstraintsBCFips(new BasicConstraints(pathLength));
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual IKeyUsage CreateKeyUsage() {
@@ -887,6 +892,15 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId) {
             return new ExtendedKeyUsageBCFips(purposeId);
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IDerObjectIdentifier[] purposeId) {
+            DerObjectIdentifier[] unwrappedPurposeIds = new DerObjectIdentifier[purposeId.Length];
+            for (int i = 0; i < purposeId.Length; ++i) {
+                unwrappedPurposeIds[i] = ((DerObjectIdentifierBCFips)purposeId[i]).GetDerObjectIdentifier();
+            }
+            return new ExtendedKeyUsageBCFips(new ExtendedKeyUsage(unwrappedPurposeIds));
         }
 
         /// <summary><inheritDoc/></summary>

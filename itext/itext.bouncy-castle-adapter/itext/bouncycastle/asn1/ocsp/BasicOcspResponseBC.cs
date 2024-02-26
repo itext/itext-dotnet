@@ -86,10 +86,12 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
         /// <summary><inheritDoc/></summary>
         public IEnumerable<IX509Certificate> GetCerts() {
             List<IX509Certificate> certificates = new List<IX509Certificate>();
-            if (GetBasicOcspResponse().Certs != null) {
+            if (GetBasicOcspResponse() != null && GetBasicOcspResponse().Certs != null) {
                 foreach (Asn1Encodable asn1Encodable in GetBasicOcspResponse().Certs) {
-                    certificates.Add(new X509CertificateBC(new X509CertificateParser()
-                        .ReadCertificate(asn1Encodable.GetEncoded())));
+                    if (asn1Encodable != null) {
+                        certificates.Add(new X509CertificateBC(new X509CertificateParser()
+                            .ReadCertificate(asn1Encodable.GetEncoded())));
+                    }
                 }
             }
             return certificates;
