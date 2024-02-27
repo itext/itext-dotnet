@@ -158,6 +158,13 @@ namespace iText.Kernel.Pdf {
             : this(filename, new ReaderProperties()) {
         }
 
+        /// <summary>Reads and parses a PDF document.</summary>
+        /// <param name="file">the file of the document</param>
+        /// <param name="properties">properties of the created reader</param>
+        public PdfReader(FileInfo file, ReaderProperties properties)
+            : this(file.FullName, properties) {
+        }
+
         internal PdfReader(IRandomAccessSource byteSource, ReaderProperties properties, bool closeStream) {
             this.properties = properties;
             this.tokens = GetOffsetTokeniser(byteSource, closeStream);
