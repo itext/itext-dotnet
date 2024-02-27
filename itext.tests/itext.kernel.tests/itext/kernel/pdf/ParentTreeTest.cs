@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -330,6 +331,14 @@ namespace iText.Kernel.Pdf {
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
+        public virtual void CopyPageWithMultipleDocumentTagsTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMultipleDocumentTags.pdf"), new 
+                PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.GetTagStructureContext().NormalizeDocumentRootTag());
         }
 
         private bool CheckParentTree(String outFileName, String cmpFileName) {

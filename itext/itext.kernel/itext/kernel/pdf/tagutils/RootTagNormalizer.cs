@@ -144,8 +144,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private void RemoveOldRoot(PdfStructElem oldRoot) {
-            TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetCurrentStructElem(oldRoot).RemoveTag();
+            new TagTreePointer(oldRoot, document).RemoveTag();
         }
 
         private void LogCreatedRootTagHasMappingIssue(PdfNamespace rootTagOriginalNs, IRoleMappingResolver mapping
