@@ -50,12 +50,11 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="AbstractResultMatrix{T}"/>
         /// instance.
         /// </summary>
-        /// <param name="cols">The number of columns in the table.</param>
         /// <param name="iterator">The iterator that will be used to iterate over the cells.</param>
-        protected internal AbstractResultMatrix(int cols, ITableIterator<T> iterator) {
+        protected internal AbstractResultMatrix(ITableIterator<T> iterator) {
             this.rows = iterator.GetAmountOfRowsHeader() + iterator.GetAmountOfRowsBody() + iterator.GetAmountOfRowsFooter
                 ();
-            this.cols = cols;
+            this.cols = iterator.GetNumberOfColumns();
             this.iterator = iterator;
             cellMatrix = iText.Pdfua.Checkers.Utils.Tables.AbstractResultMatrix<T>.CreateFixedSizedList<T>(rows * cols
                 , null);
@@ -72,10 +71,10 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             while (iterator.HasNext()) {
                 T cell = iterator.Next();
                 String role = GetRole(cell);
-                int rowspan = GetRowspan(cell);
-                int colspan = GetColspan(cell);
-                int colIdx = GetCol(cell);
-                int rowIdx = GetRow(cell);
+                int rowspan = iterator.GetRowspan();
+                int colspan = iterator.GetColspan();
+                int colIdx = iterator.GetCol();
+                int rowIdx = iterator.GetRow();
                 this.SetCell(rowIdx, rowspan, colIdx, colspan, cellMatrix, cell);
                 if (StandardRoles.TH.Equals(role)) {
                     byte[] id = GetElementId(cell);
@@ -112,23 +111,9 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             ValidateTableCells(knownIds, scopeMatrix, hasUnknownHeaders);
         }
 
-        /// <summary>Gets the colum index of the cell.</summary>
-        /// <param name="cell">The cell from which the column index is needed.</param>
-        /// <returns>The column index.</returns>
-        internal abstract int GetCol(T cell);
-
-        /// <summary>Gets the absolute row index of the cell including header, footer, body offset.</summary>
-        /// <param name="cell">The cell from which the row index is needed.</param>
-        /// <returns>The absolute row index.</returns>
-        internal abstract int GetRow(T cell);
-
-        internal virtual void SetRowValue(int row, int rowSpan, IList<bool> arr, bool value) {
+        private void SetRowValue(int row, int rowSpan, IList<bool> arr, bool value) {
             SetCell(row, rowSpan, 0, this.cols, arr, value);
         }
-
-        internal abstract int GetRowspan(T data);
-
-        internal abstract int GetColspan(T data);
 
         internal abstract IList<byte[]> GetHeaders(T cell);
 

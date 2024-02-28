@@ -39,6 +39,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
 
         private PdfName location;
 
+        private Cell currentCell;
+
         /// <summary>
         /// Creates a new
         /// <see cref="TableCellIterator"/>
@@ -73,15 +75,18 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         public Cell Next() {
             if (headerIterator != null && headerIterator.HasNext()) {
                 location = PdfName.THead;
-                return headerIterator.Next();
+                currentCell = headerIterator.Next();
+                return currentCell;
             }
             if (children != null && index < children.Count) {
                 location = PdfName.TBody;
-                return (Cell)children[index++];
+                currentCell = (Cell)children[index++];
+                return currentCell;
             }
             if (footerIterator != null && footerIterator.HasNext()) {
                 location = PdfName.TFoot;
-                return footerIterator.Next();
+                currentCell = footerIterator.Next();
+                return currentCell;
             }
             return null;
         }
@@ -108,7 +113,40 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         }
 
         /// <summary><inheritDoc/></summary>
-        public PdfName GetLocation() {
+        public int GetNumberOfColumns() {
+            return this.table.GetNumberOfColumns();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetRow() {
+            PdfName location = GetLocation();
+            int row = currentCell.GetRow();
+            if (location == PdfName.TBody) {
+                row += this.GetAmountOfRowsHeader();
+            }
+            if (location == PdfName.TFoot) {
+                row += this.GetAmountOfRowsHeader();
+                row += this.GetAmountOfRowsBody();
+            }
+            return row;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetCol() {
+            return currentCell.GetCol();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetRowspan() {
+            return currentCell.GetRowspan();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetColspan() {
+            return currentCell.GetColspan();
+        }
+
+        private PdfName GetLocation() {
             return this.location;
         }
     }

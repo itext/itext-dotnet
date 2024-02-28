@@ -20,6 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
@@ -37,7 +40,32 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <summary>Checks if the table is pdf/ua compliant.</summary>
         /// <param name="table">the table to check.</param>
         public static void CheckLayoutTable(Table table) {
-            new CellResultMatrix(table.GetNumberOfColumns(), table).CheckValidTableTagging();
+            new CellResultMatrix(table).CheckValidTableTagging();
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="iText.Kernel.Pdf.Tagutils.ITagTreeIteratorHandler"/>
+        /// that handles the PDF/UA1 verification
+        /// of table elements on closing.
+        /// </summary>
+        /// <returns>The created handler.</returns>
+        public static ITagTreeIteratorHandler CreateTagTreeHandler() {
+            return new _ITagTreeIteratorHandler_59();
+        }
+
+        private sealed class _ITagTreeIteratorHandler_59 : ITagTreeIteratorHandler {
+            public _ITagTreeIteratorHandler_59() {
+            }
+
+            public void NextElement(IStructureNode elem) {
+                if (elem == null) {
+                    return;
+                }
+                if (elem is PdfStructElem && PdfName.Table.Equals(elem.GetRole())) {
+                    new StructTreeResultMatrix((PdfStructElem)elem).CheckValidTableTagging();
+                }
+            }
         }
     }
 }

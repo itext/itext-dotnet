@@ -20,8 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Kernel.Pdf;
-
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Interface that provides methods for iterating over the elements of a table.</summary>
     internal interface ITableIterator<T> {
@@ -51,8 +49,29 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <returns>The number of rows in the footer of the table.</returns>
         int GetAmountOfRowsFooter();
 
-        /// <summary>Gets the location of the current element in the table.</summary>
-        /// <returns>The location of the current element in the table.</returns>
-        PdfName GetLocation();
+        /// <summary>Returns the amount of columns the table has.</summary>
+        /// <remarks>
+        /// Returns the amount of columns the table has.
+        /// All rows in a table in UA specification must have the same column count.
+        /// So return the max column count for correctly generated error messages.
+        /// </remarks>
+        /// <returns>the amount of columns</returns>
+        int GetNumberOfColumns();
+
+        /// <summary>Gets the row index of the current position.</summary>
+        /// <returns>The row index.</returns>
+        int GetRow();
+
+        /// <summary>Gets the column index of current position.</summary>
+        /// <returns>The column index.</returns>
+        int GetCol();
+
+        /// <summary>Gets the rowspan of current position.</summary>
+        /// <returns>the rowspan</returns>
+        int GetRowspan();
+
+        /// <summary>Gets the colspan of the current position</summary>
+        /// <returns>the colspan of current position</returns>
+        int GetColspan();
     }
 }

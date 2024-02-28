@@ -35,39 +35,9 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="CellResultMatrix"/>
         /// instance.
         /// </summary>
-        /// <param name="cols">The number of columns in the table.</param>
         /// <param name="table">The table that needs to be checked.</param>
-        public CellResultMatrix(int cols, Table table)
-            : base(cols, new TableCellIterator(table)) {
-        }
-
-        /// <summary><inheritDoc/></summary>
-        internal override int GetCol(Cell cell) {
-            return cell.GetCol();
-        }
-
-        /// <summary><inheritDoc/></summary>
-        internal override int GetRow(Cell cell) {
-            PdfName location = this.iterator.GetLocation();
-            int row = cell.GetRow();
-            if (location == PdfName.TBody) {
-                row += this.iterator.GetAmountOfRowsHeader();
-            }
-            if (location == PdfName.TFoot) {
-                row += this.iterator.GetAmountOfRowsHeader();
-                row += this.iterator.GetAmountOfRowsBody();
-            }
-            return row;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        internal override int GetRowspan(Cell data) {
-            return data.GetRowspan();
-        }
-
-        /// <summary><inheritDoc/></summary>
-        internal override int GetColspan(Cell data) {
-            return data.GetColspan();
+        public CellResultMatrix(Table table)
+            : base(new TableCellIterator(table)) {
         }
 
         /// <summary><inheritDoc/></summary>

@@ -33,6 +33,7 @@ using iText.Kernel.Utils.Checkers;
 using iText.Kernel.XMP;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Checkers.Utils.Headings;
+using iText.Pdfua.Checkers.Utils.Tables;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers {
@@ -242,6 +243,7 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(GraphicsCheckUtil.CreateFigureTagHandler());
             tagTreeIterator.AddHandler(FormulaCheckUtil.CreateFormulaTagHandler());
             tagTreeIterator.AddHandler(CreateHeadingsTagHandler());
+            tagTreeIterator.AddHandler(TableCheckUtil.CreateTagTreeHandler());
             tagTreeIterator.Traverse();
         }
 
@@ -259,11 +261,11 @@ namespace iText.Pdfua.Checkers {
         }
 
         private static ITagTreeIteratorHandler CreateHeadingsTagHandler() {
-            return new _ITagTreeIteratorHandler_296();
+            return new _ITagTreeIteratorHandler_298();
         }
 
-        private sealed class _ITagTreeIteratorHandler_296 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_296() {
+        private sealed class _ITagTreeIteratorHandler_298 : ITagTreeIteratorHandler {
+            public _ITagTreeIteratorHandler_298() {
                 this.checker = new HeadingsChecker();
             }
 

@@ -49,7 +49,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
