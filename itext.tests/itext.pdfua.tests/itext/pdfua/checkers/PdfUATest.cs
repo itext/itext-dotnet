@@ -102,6 +102,56 @@ namespace iText.Pdfua.Checkers {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
+        public virtual void DocumentWithoutViewerPreferencesTest() {
+            String outPdf = DESTINATION_FOLDER + "documentWithoutViewerPreferencesTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
+                (PdfVersion.PDF_1_7)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithEmptyViewerPreferencesTest() {
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
+                (PdfVersion.PDF_1_7)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences());
+            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithInvalidViewerPreferencesTest() {
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
+                (PdfVersion.PDF_1_7)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(false));
+            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ManualPdfUaCreation() {
             String outPdf = DESTINATION_FOLDER + "manualPdfUaCreation.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion

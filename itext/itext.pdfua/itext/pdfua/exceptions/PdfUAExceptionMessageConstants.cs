@@ -81,6 +81,12 @@ namespace iText.Pdfua.Exceptions {
 
         public const String DOCUMENT_USES_BOTH_H_AND_HN = "Document uses both H and H# tags.";
 
+        public const String MISSING_VIEWER_PREFERENCES = "ViewerPreferences dictionary of the Catalog dictionary "
+             + "does not contain a DisplayDocTitle entry.";
+
+        public const String VIEWER_PREFERENCES_IS_FALSE = "ViewerPreferences dictionary of the Catalog dictionary "
+             + "contains a DisplayDocTitle entry with a value of false.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor

@@ -126,6 +126,20 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
+        private void CheckViewerPreferences(PdfCatalog catalog) {
+            PdfDictionary viewerPreferences = catalog.GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
+            if (viewerPreferences == null) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
+            }
+            PdfObject displayDocTitle = viewerPreferences.Get(PdfName.DisplayDocTitle);
+            if (!(displayDocTitle is PdfBoolean)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
+            }
+            if (PdfBoolean.FALSE.Equals(displayDocTitle)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE);
+            }
+        }
+
         private void CheckOnWritingCanvasToContent(Object data) {
             Stack<Tuple2<PdfName, PdfDictionary>> tagStack = GetTagStack(data);
             if (tagStack.IsEmpty()) {
@@ -226,6 +240,7 @@ namespace iText.Pdfua.Checkers {
                         );
                 }
             }
+            CheckViewerPreferences(catalog);
             CheckMetadata(catalog);
         }
 
@@ -261,11 +276,11 @@ namespace iText.Pdfua.Checkers {
         }
 
         private static ITagTreeIteratorHandler CreateHeadingsTagHandler() {
-            return new _ITagTreeIteratorHandler_298();
+            return new _ITagTreeIteratorHandler_314();
         }
 
-        private sealed class _ITagTreeIteratorHandler_298 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_298() {
+        private sealed class _ITagTreeIteratorHandler_314 : ITagTreeIteratorHandler {
+            public _ITagTreeIteratorHandler_314() {
                 this.checker = new HeadingsChecker();
             }
 
