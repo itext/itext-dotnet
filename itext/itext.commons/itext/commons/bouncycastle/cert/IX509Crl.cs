@@ -24,6 +24,7 @@ using System;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 
 namespace iText.Commons.Bouncycastle.Cert {
     /// <summary>
@@ -47,7 +48,16 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>X500Name wrapper.</returns>
         IX500Name GetIssuerDN();
-        
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetThisUpdate</c>
+        /// method for the wrapped X509Crl object.
+        /// </summary>
+        /// <returns>DateTime value of this update.</returns>
+        DateTime GetThisUpdate();
+
+
         /// <summary>
         /// Calls actual
         /// <c>GetNextUpdate</c>
@@ -79,5 +89,13 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>the DER-encoded octet string of the extension value.</returns>
         IAsn1OctetString GetExtensionValue(string oid);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetRevokedCertificate</c>
+        /// method for the wrapped X509Crl object.
+        /// </summary>
+        /// <returns></returns>
+        IX509CrlEntry GetRevokedCertificate(IBigInteger certificate);
     }
 }

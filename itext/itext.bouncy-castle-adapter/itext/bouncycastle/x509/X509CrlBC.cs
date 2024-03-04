@@ -24,10 +24,12 @@ using System;
 using iText.Bouncycastle.Asn1;
 using iText.Bouncycastle.Asn1.X509;
 using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
@@ -70,6 +72,12 @@ namespace iText.Bouncycastle.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
+        public DateTime GetThisUpdate()
+        {
+            return x509Crl.ThisUpdate;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public DateTime GetNextUpdate() {
             return x509Crl.NextUpdate.Value;
         }
@@ -88,6 +96,15 @@ namespace iText.Bouncycastle.X509 {
         public IAsn1OctetString GetExtensionValue(string oid) {
             return new Asn1OctetStringBC(x509Crl.GetExtensionValue(new DerObjectIdentifier(oid)));
         }
+
+        /// <summary><inheritDoc/></summary>
+        public IX509CrlEntry GetRevokedCertificate(IBigInteger serial)
+        {
+            var entry = x509Crl.GetRevokedCertificate(((BigIntegerBC) serial).GetBigInteger());
+            if (entry == null) return null;
+            return new X509CrlEntryBC(entry);
+        }
+
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
