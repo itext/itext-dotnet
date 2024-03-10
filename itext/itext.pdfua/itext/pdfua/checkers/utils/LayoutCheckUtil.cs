@@ -29,29 +29,42 @@ using iText.Pdfua.Checkers.Utils.Tables;
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Utility class for delegating the layout checks to the correct checking logic.</summary>
     public sealed class LayoutCheckUtil {
+        private readonly PdfUAValidationContext context;
+
         /// <summary>
         /// Creates a new
         /// <see cref="LayoutCheckUtil"/>
         /// instance.
         /// </summary>
-        private LayoutCheckUtil() {
+        /// <param name="context">The validation context.</param>
+        public LayoutCheckUtil(PdfUAValidationContext context) {
+            this.context = context;
         }
 
-        // Empty constructor
-        /// <summary>Checks if a layout element is valid against the PDF/UA specification.</summary>
+        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
+        /// <remarks>
+        /// WARNING! This method is an artifact and currently does nothing.
+        /// It is kept to ensure backward binary compatibility
+        /// </remarks>
         /// <param name="rendererObj">layout element to check</param>
+        [Obsolete]
         public static void CheckLayoutElements(Object rendererObj) {
+        }
+
+        /// <summary>Checks renderer for PDF UA compliance.</summary>
+        /// <param name="rendererObj">The renderer to check.</param>
+        public void CheckRenderer(Object rendererObj) {
             if (rendererObj == null) {
                 return;
             }
             IPropertyContainer layoutElement = ((IRenderer)rendererObj).GetModelElement();
             if (layoutElement is Image) {
-                GraphicsCheckUtil.CheckLayoutImage((Image)layoutElement);
-                return;
+                new GraphicsCheckUtil(context).CheckLayoutElement((Image)layoutElement);
             }
-            if (layoutElement is Table) {
-                TableCheckUtil.CheckLayoutTable((Table)layoutElement);
-                return;
+            else {
+                if (layoutElement is Table) {
+                    new TableCheckUtil(context).CheckTable((Table)layoutElement);
+                }
             }
         }
     }

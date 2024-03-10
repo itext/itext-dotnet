@@ -29,6 +29,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Layout;
 using iText.Layout.Renderer;
 using iText.Layout.Tagging;
+using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils.Headings {
@@ -36,13 +37,24 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
     public sealed class HeadingsChecker {
         private static readonly Regex Hn_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("^H([1-6])$");
 
-        private int previousHn = -1;
-
-        private bool wasAtLeastOneH = false;
+        private readonly PdfUAValidationContext context;
 
         private readonly ICollection<IRenderer> hRendererParents = new HashSet<IRenderer>();
 
         private readonly ICollection<PdfDictionary> hPdfDictParents = new HashSet<PdfDictionary>();
+
+        private int previousHn = -1;
+
+        private bool wasAtLeastOneH = false;
+
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="HeadingsChecker"/>.
+        /// </summary>
+        /// <param name="context">The validation context.</param>
+        public HeadingsChecker(PdfUAValidationContext context) {
+            this.context = context;
+        }
 
         /// <summary>Checks if layout element has correct heading.</summary>
         /// <param name="rendererObj">layout element to check</param>
@@ -51,7 +63,7 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
             IPropertyContainer element = renderer.GetModelElement();
             if (element is IAccessibleElement) {
                 IAccessibleElement accessibleElement = (IAccessibleElement)element;
-                String role = accessibleElement.GetAccessibilityProperties().GetRole();
+                String role = context.ResolveToStandardRole(accessibleElement.GetAccessibilityProperties().GetRole());
                 CheckHnSequence(role);
                 if (StandardRoles.H.Equals(role)) {
                     IRenderer parent = renderer.GetParent();
@@ -72,10 +84,10 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
         /// <summary>Checks if structure element has correct heading.</summary>
         /// <param name="structNode">structure element to check</param>
         public void CheckStructElement(IStructureNode structNode) {
-            if (structNode.GetRole() == null) {
+            String role = context.ResolveToStandardRole(structNode);
+            if (role == null) {
                 return;
             }
-            String role = structNode.GetRole().GetValue();
             CheckHnSequence(role);
             if (StandardRoles.H.Equals(role)) {
                 PdfDictionary parent = ExtractPdfDictFromNode(structNode.GetParent());
@@ -143,6 +155,26 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
                 }
             }
             return null;
+        }
+
+        /// <summary>Handler class that checks heading tags while traversing the tag tree.</summary>
+        public class HeadingHandler : ContextAwareTagTreeIteratorHandler {
+            private readonly HeadingsChecker checker;
+
+            /// <summary>
+            /// Creates a new instance of
+            /// <see cref="HeadingsChecker"/>.
+            /// </summary>
+            /// <param name="context">The validation context.</param>
+            public HeadingHandler(PdfUAValidationContext context)
+                : base(context) {
+                checker = new HeadingsChecker(context);
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override void NextElement(IStructureNode elem) {
+                checker.CheckStructElement(elem);
+            }
         }
     }
 }

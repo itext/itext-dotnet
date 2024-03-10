@@ -48,7 +48,9 @@ namespace iText.Pdfua.Checkers {
 
         private readonly TagStructureContext tagStructureContext;
 
-        private readonly HeadingsChecker headingsChecker = new HeadingsChecker();
+        private readonly HeadingsChecker headingsChecker;
+
+        private readonly PdfUAValidationContext context;
 
         /// <summary>Creates PdfUA1Checker instance with PDF document which will be validated against PDF/UA-1 standard.
         ///     </summary>
@@ -56,6 +58,8 @@ namespace iText.Pdfua.Checkers {
         public PdfUA1Checker(PdfDocument pdfDocument) {
             this.pdfDocument = pdfDocument;
             this.tagStructureContext = new TagStructureContext(pdfDocument);
+            this.context = new PdfUAValidationContext(pdfDocument);
+            this.headingsChecker = new HeadingsChecker(context);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -70,7 +74,7 @@ namespace iText.Pdfua.Checkers {
             , Object extra) {
             switch (key) {
                 case IsoKey.LAYOUT: {
-                    LayoutCheckUtil.CheckLayoutElements(obj);
+                    new LayoutCheckUtil(context).CheckRenderer(obj);
                     headingsChecker.CheckLayoutElement(obj);
                     break;
                 }
@@ -255,10 +259,10 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
-            tagTreeIterator.AddHandler(GraphicsCheckUtil.CreateFigureTagHandler());
-            tagTreeIterator.AddHandler(FormulaCheckUtil.CreateFormulaTagHandler());
-            tagTreeIterator.AddHandler(CreateHeadingsTagHandler());
-            tagTreeIterator.AddHandler(TableCheckUtil.CreateTagTreeHandler());
+            tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
+            tagTreeIterator.AddHandler(new FormulaCheckUtil.FormulaTagHandler(context));
+            tagTreeIterator.AddHandler(new HeadingsChecker.HeadingHandler(context));
+            tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             tagTreeIterator.Traverse();
         }
 
@@ -272,22 +276,6 @@ namespace iText.Pdfua.Checkers {
             if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
                     , String.Join(", ", fontNamesThatAreNotEmbedded)));
-            }
-        }
-
-        private static ITagTreeIteratorHandler CreateHeadingsTagHandler() {
-            return new _ITagTreeIteratorHandler_314();
-        }
-
-        private sealed class _ITagTreeIteratorHandler_314 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_314() {
-                this.checker = new HeadingsChecker();
-            }
-
-            private readonly HeadingsChecker checker;
-
-            public void NextElement(IStructureNode elem) {
-                this.checker.CheckStructElement(elem);
             }
         }
     }

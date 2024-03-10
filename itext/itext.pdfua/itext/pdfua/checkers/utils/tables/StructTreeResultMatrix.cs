@@ -24,17 +24,20 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
+using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
-    /// <summary>The result matrix to validate PDF UA1 tables with based on the TagTreeStructure of the document.</summary>
+    /// <summary>The result matrix to validate PDF UA1 tables based on the TagTreeStructure of the document.</summary>
     internal class StructTreeResultMatrix : AbstractResultMatrix<PdfStructElem> {
         /// <summary>
         /// Creates a new
         /// <see cref="StructTreeResultMatrix"/>
         /// instance.
         /// </summary>
-        public StructTreeResultMatrix(PdfStructElem elem)
-            : base(new TableStructElementIterator(elem)) {
+        /// <param name="elem">a table structure element.</param>
+        /// <param name="context">The validation context.</param>
+        public StructTreeResultMatrix(PdfStructElem elem, PdfUAValidationContext context)
+            : base(new TableStructElementIterator(elem, context)) {
         }
 
         /// <summary><inheritDoc/></summary>
@@ -103,11 +106,7 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
 
         /// <summary><inheritDoc/></summary>
         internal override String GetRole(PdfStructElem cell) {
-            PdfName role = cell.GetRole();
-            if (role != null) {
-                return role.GetValue();
-            }
-            return null;
+            return ((TableStructElementIterator)iterator).context.ResolveToStandardRole(cell);
         }
     }
 }

@@ -20,51 +20,62 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
-using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
+using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Class that provides methods for checking PDF/UA compliance of table elements.</summary>
     public sealed class TableCheckUtil {
+        private readonly PdfUAValidationContext context;
+
         /// <summary>
         /// Creates a new
         /// <see cref="TableCheckUtil"/>
         /// instance.
         /// </summary>
-        private TableCheckUtil() {
+        /// <param name="context">the validation context.</param>
+        public TableCheckUtil(PdfUAValidationContext context) {
+            this.context = context;
         }
 
-        // Empty constructor
+        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
+        /// <remarks>
+        /// WARNING! This method is an artifact and currently does nothing.
+        /// It is kept to ensure backward binary compatibility
+        /// </remarks>
+        /// <param name="table">the table to check.</param>
+        [System.ObsoleteAttribute(@"This method is an artifact and will be removed.")]
+        public static void CheckLayoutTable(Table table) {
+        }
+
+        //No impl
         /// <summary>Checks if the table is pdf/ua compliant.</summary>
         /// <param name="table">the table to check.</param>
-        public static void CheckLayoutTable(Table table) {
-            new CellResultMatrix(table).CheckValidTableTagging();
+        public void CheckTable(Table table) {
+            new CellResultMatrix(table, this.context);
         }
 
-        /// <summary>
-        /// Creates a
-        /// <see cref="iText.Kernel.Pdf.Tagutils.ITagTreeIteratorHandler"/>
-        /// that handles the PDF/UA1 verification
-        /// of table elements on closing.
-        /// </summary>
-        /// <returns>The created handler.</returns>
-        public static ITagTreeIteratorHandler CreateTagTreeHandler() {
-            return new _ITagTreeIteratorHandler_59();
-        }
-
-        private sealed class _ITagTreeIteratorHandler_59 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_59() {
+        /// <summary>Handler class that checks table tags.</summary>
+        public class TableHandler : ContextAwareTagTreeIteratorHandler {
+            /// <summary>
+            /// Creates a new instance of
+            /// <see cref="TableHandler"/>.
+            /// </summary>
+            /// <param name="context">the validationContext</param>
+            public TableHandler(PdfUAValidationContext context)
+                : base(context) {
             }
 
-            public void NextElement(IStructureNode elem) {
-                if (elem == null) {
+            /// <summary><inheritDoc/></summary>
+            public override void NextElement(IStructureNode elem) {
+                PdfStructElem table = context.GetElementIfRoleMatches(PdfName.Table, elem);
+                if (table == null) {
                     return;
                 }
-                if (elem is PdfStructElem && PdfName.Table.Equals(elem.GetRole())) {
-                    new StructTreeResultMatrix((PdfStructElem)elem).CheckValidTableTagging();
-                }
+                new StructTreeResultMatrix((PdfStructElem)elem, context).CheckValidTableTagging();
             }
         }
     }

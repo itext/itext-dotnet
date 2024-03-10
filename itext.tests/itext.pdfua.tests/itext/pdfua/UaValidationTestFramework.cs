@@ -48,6 +48,8 @@ namespace iText.Pdfua {
         private readonly IList<UaValidationTestFramework.Generator<IBlockElement>> elementProducers = new List<UaValidationTestFramework.Generator
             <IBlockElement>>();
 
+        private readonly IList<Action<PdfDocument>> beforeGeneratorHook = new List<Action<PdfDocument>>();
+
         public UaValidationTestFramework(String destinationFolder)
             : this(destinationFolder, true) {
         }
@@ -81,6 +83,7 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.IsNotNull(veraPdf);
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             if (checkDocClosing) {
+                System.Console.Out.WriteLine("Checking closing");
                 CheckError(CheckErrorOnClosing(createdFileName), expectedMsg);
             }
         }
@@ -88,7 +91,8 @@ namespace iText.Pdfua {
         public virtual void AssertBothValid(String fileName) {
             Exception e = CheckErrorLayout("layout_" + fileName + ".pdf");
             String veraPdf = VerAPdfResult("vera_" + fileName + ".pdf");
-            if (e == null && veraPdf == null) {
+            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + ".pdf");
+            if (e == null && veraPdf == null && eClosing == null) {
                 return;
             }
             int counter = 0;
@@ -102,7 +106,11 @@ namespace iText.Pdfua {
                 counter++;
                 sb.Append("Expected no vera pdf message but was: \n").Append(veraPdf).Append("\n");
             }
-            if (counter != 2) {
+            if (eClosing != null) {
+                counter++;
+                sb.Append("OnClosing no expection expected but was:\n").Append(eClosing);
+            }
+            if (counter != 3) {
                 NUnit.Framework.Assert.Fail("One of the checks did not throw\n\n" + sb.ToString());
             }
             NUnit.Framework.Assert.Fail(sb.ToString());
@@ -116,6 +124,9 @@ namespace iText.Pdfua {
             Document document = new Document(pdfDoc);
             document.GetPdfDocument().GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer()
                 );
+            foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
+                pdfDocumentConsumer(pdfDoc);
+            }
             foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
                 document.Add(blockElementSupplier.Generate());
             }
@@ -126,6 +137,10 @@ namespace iText.Pdfua {
             validate = validator.Validate(destinationFolder + filename);
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             return validate;
+        }
+
+        public virtual void AddBeforeGenerationHook(Action<PdfDocument> action) {
+            this.beforeGeneratorHook.Add(action);
         }
 
         private void CheckError(Exception e, String expectedMsg) {
@@ -146,6 +161,9 @@ namespace iText.Pdfua {
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
                 PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath, PdfUATestPdfDocument.CreateWriterProperties
                     ()));
+                foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
+                    pdfDocumentConsumer(pdfDoc);
+                }
                 Document document = new Document(pdfDoc);
                 foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
                     document.Add(blockElementSupplier.Generate());
@@ -162,7 +180,7 @@ namespace iText.Pdfua {
             try {
                 String outPath = destinationFolder + "reopen_" + filename;
                 String inPath = destinationFolder + filename;
-                System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(inPath));
+                System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
                 PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath, PdfUATestPdfDocument
                     .CreateWriterProperties()));
                 pdfDoc.Close();

@@ -54,9 +54,16 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
+        private UaValidationTestFramework framework;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.SetUp]
+        public virtual void InitializeFramework() {
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -74,7 +81,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutCheckUtilTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => LayoutCheckUtil.CheckLayoutElements(null));
+            NUnit.Framework.Assert.DoesNotThrow(() => new LayoutCheckUtil(null).CheckRenderer(null));
         }
 
         [NUnit.Framework.Test]
@@ -89,6 +96,122 @@ namespace iText.Pdfua.Checkers {
             }
             );
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageCustomRole_Ok() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
+                root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
+            }
+            );
+            framework.AddSuppliers(new _Generator_127());
+            framework.AssertBothValid("imageWithCustomRoleOk");
+        }
+
+        private sealed class _Generator_127 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_127() {
+            }
+
+            public IBlockElement Generate() {
+                iText.Layout.Element.Image img = null;
+                try {
+                    img = new iText.Layout.Element.Image(ImageDataFactory.Create(PdfUAGraphicsTest.DOG));
+                }
+                catch (UriFormatException) {
+                    throw new Exception();
+                }
+                img.GetAccessibilityProperties().SetRole("CustomImage");
+                img.GetAccessibilityProperties().SetAlternateDescription("ff");
+                return new Div().Add(img);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageCustomDoubleMapping_Ok() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
+                root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
+                root.AddRoleMapping("CustomImage2", "CustomImage");
+            }
+            );
+            framework.AddSuppliers(new _Generator_151());
+            framework.AssertBothValid("imageWithDoubleMapping");
+        }
+
+        private sealed class _Generator_151 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_151() {
+            }
+
+            public IBlockElement Generate() {
+                iText.Layout.Element.Image img = null;
+                try {
+                    img = new iText.Layout.Element.Image(ImageDataFactory.Create(PdfUAGraphicsTest.DOG));
+                }
+                catch (UriFormatException) {
+                    throw new Exception();
+                }
+                img.GetAccessibilityProperties().SetRole("CustomImage2");
+                img.GetAccessibilityProperties().SetAlternateDescription("ff");
+                return new Div().Add(img);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageCustomRoleNoAlternateDescription_Throws() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
+                root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
+            }
+            );
+            framework.AddSuppliers(new _Generator_174());
+            framework.AssertBothFail("imageWithCustomRoleAndNoDescription");
+        }
+
+        private sealed class _Generator_174 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_174() {
+            }
+
+            public IBlockElement Generate() {
+                iText.Layout.Element.Image img = null;
+                try {
+                    img = new iText.Layout.Element.Image(ImageDataFactory.Create(PdfUAGraphicsTest.DOG));
+                }
+                catch (UriFormatException) {
+                    throw new Exception();
+                }
+                img.GetAccessibilityProperties().SetRole("CustomImage");
+                return new Div().Add(img);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageCustomDoubleMapping_Throws() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
+                root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
+                root.AddRoleMapping("CustomImage2", "CustomImage");
+            }
+            );
+            framework.AddSuppliers(new _Generator_197());
+            framework.AssertBothFail("imageCustomDoubleMapping_Throws");
+        }
+
+        private sealed class _Generator_197 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_197() {
+            }
+
+            public IBlockElement Generate() {
+                iText.Layout.Element.Image img = null;
+                try {
+                    img = new iText.Layout.Element.Image(ImageDataFactory.Create(PdfUAGraphicsTest.DOG));
+                }
+                catch (UriFormatException) {
+                    throw new Exception();
+                }
+                img.GetAccessibilityProperties().SetRole("CustomImage2");
+                return new Div().Add(img);
+            }
         }
 
         [NUnit.Framework.Test]

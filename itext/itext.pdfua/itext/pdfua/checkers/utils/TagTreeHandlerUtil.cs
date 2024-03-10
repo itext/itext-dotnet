@@ -20,11 +20,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Utility class that contains utility methods used  when working with the TagTreeHandler</summary>
+    [Obsolete]
     public sealed class TagTreeHandlerUtil {
         private TagTreeHandlerUtil() {
         }
@@ -43,17 +45,9 @@ namespace iText.Pdfua.Checkers.Utils {
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
         /// if the structure matches the role.
         /// </returns>
+        [Obsolete]
         public static PdfStructElem GetElementIfRoleMatches(PdfName role, IStructureNode structureNode) {
-            if (structureNode == null) {
-                return null;
-            }
-            if (!(structureNode is PdfStructElem)) {
-                return null;
-            }
-            if (!role.Equals(structureNode.GetRole())) {
-                return null;
-            }
-            return (PdfStructElem)structureNode;
+            return null;
         }
     }
 }

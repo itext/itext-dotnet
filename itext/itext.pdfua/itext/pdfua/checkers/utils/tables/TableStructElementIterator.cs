@@ -26,10 +26,13 @@ using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
+using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Creates an iterator to iterate over the table structures.</summary>
     public class TableStructElementIterator : ITableIterator<PdfStructElem> {
+        internal readonly PdfUAValidationContext context;
+
         private readonly IList<PdfStructElem> all = new List<PdfStructElem>();
 
         private readonly Dictionary<PdfStructElem, Tuple2<int, int>> locationCache = new Dictionary<PdfStructElem, 
@@ -52,8 +55,10 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="TableStructElementIterator"/>
         /// instance.
         /// </summary>
-        /// <param name="tableStructElem">The root table struct element.</param>
-        public TableStructElementIterator(PdfStructElem tableStructElem) {
+        /// <param name="tableStructElem">the root table struct element.</param>
+        /// <param name="context">the validation context.</param>
+        public TableStructElementIterator(PdfStructElem tableStructElem, PdfUAValidationContext context) {
+            this.context = context;
             FlattenElements(tableStructElem);
         }
 
@@ -114,6 +119,14 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             Build2DRepresentationOfTagTreeStructures(rows);
         }
 
+        private PdfName GetRole(IStructureNode node) {
+            String roleStr = this.context.ResolveToStandardRole(node);
+            if (roleStr == null) {
+                return null;
+            }
+            return new PdfName(roleStr);
+        }
+
         private IList<PdfStructElem> ExtractTableRows(PdfStructElem table) {
             IList<IStructureNode> kids = table.GetKids();
             IList<PdfStructElem> rows = new List<PdfStructElem>();
@@ -121,25 +134,26 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
                 if (kid == null) {
                     continue;
                 }
-                if (PdfName.THead.Equals(kid.GetRole())) {
+                PdfName kidRole = GetRole(kid);
+                if (PdfName.THead.Equals(kidRole)) {
                     IList<PdfStructElem> headerRows = ExtractAllTrTags(kid.GetKids());
                     this.amountOfRowsHeader = headerRows.Count;
                     rows.AddAll(headerRows);
                 }
                 else {
-                    if (PdfName.TBody.Equals(kid.GetRole())) {
+                    if (PdfName.TBody.Equals(kidRole)) {
                         IList<PdfStructElem> bodyRows = ExtractAllTrTags(kid.GetKids());
                         this.amountOfRowsBody += bodyRows.Count;
                         rows.AddAll(bodyRows);
                     }
                     else {
-                        if (PdfName.TFoot.Equals(kid.GetRole())) {
+                        if (PdfName.TFoot.Equals(kidRole)) {
                             IList<PdfStructElem> footerRows = ExtractAllTrTags(kid.GetKids());
                             this.amountOfRowsFooter = footerRows.Count;
                             rows.AddAll(footerRows);
                         }
                         else {
-                            if (PdfName.TR.Equals(kid.GetRole())) {
+                            if (PdfName.TR.Equals(kidRole)) {
                                 IList<PdfStructElem> bodyRows = ExtractAllTrTags(JavaCollectionsUtil.SingletonList(kid));
                                 this.amountOfRowsBody += bodyRows.Count;
                                 rows.AddAll(bodyRows);
@@ -201,6 +215,19 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             }
         }
 
+        private IList<PdfStructElem> ExtractCells(PdfStructElem row) {
+            IList<PdfStructElem> elems = new List<PdfStructElem>();
+            foreach (IStructureNode kid in row.GetKids()) {
+                if (kid is PdfStructElem) {
+                    PdfName kidRole = this.GetRole(kid);
+                    if ((PdfName.TH.Equals(kidRole) || PdfName.TD.Equals(kidRole))) {
+                        elems.Add((PdfStructElem)kid);
+                    }
+                }
+            }
+            return elems;
+        }
+
         private static int GetColspan(PdfStructElem structElem) {
             return GetIntValueFromAttributes(structElem, PdfName.ColSpan);
         }
@@ -233,20 +260,11 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             return 1;
         }
 
-        private static IList<PdfStructElem> ExtractCells(PdfStructElem row) {
-            IList<PdfStructElem> elems = new List<PdfStructElem>();
-            foreach (IStructureNode kid in row.GetKids()) {
-                if (kid is PdfStructElem && (PdfName.TH.Equals(kid.GetRole()) || PdfName.TD.Equals(kid.GetRole()))) {
-                    elems.Add((PdfStructElem)kid);
-                }
-            }
-            return elems;
-        }
-
-        private static IList<PdfStructElem> ExtractAllTrTags(IList<IStructureNode> possibleTrs) {
+        private IList<PdfStructElem> ExtractAllTrTags(IList<IStructureNode> possibleTrs) {
             IList<PdfStructElem> elems = new List<PdfStructElem>();
             foreach (IStructureNode possibleTr in possibleTrs) {
-                if (possibleTr is PdfStructElem && PdfName.TR.Equals(possibleTr.GetRole())) {
+                String resolvedRole = context.ResolveToStandardRole(possibleTr);
+                if (possibleTr is PdfStructElem && PdfName.TR.GetValue().Equals(resolvedRole)) {
                     elems.Add((PdfStructElem)possibleTr);
                 }
             }

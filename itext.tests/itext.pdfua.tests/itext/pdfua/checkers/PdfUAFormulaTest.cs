@@ -55,12 +55,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest01() {
-            framework.AddSuppliers(new _Generator_71());
+            framework.AddSuppliers(new _Generator_72());
             framework.AssertBothFail("layout01");
         }
 
-        private sealed class _Generator_71 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_71() {
+        private sealed class _Generator_72 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_72() {
             }
 
             public IBlockElement Generate() {
@@ -72,12 +72,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest02() {
-            framework.AddSuppliers(new _Generator_84());
+            framework.AddSuppliers(new _Generator_85());
             framework.AssertBothValid("layout02");
         }
 
-        private sealed class _Generator_84 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_84() {
+        private sealed class _Generator_85 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_85() {
             }
 
             public IBlockElement Generate() {
@@ -90,12 +90,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest03() {
-            framework.AddSuppliers(new _Generator_99());
+            framework.AddSuppliers(new _Generator_100());
             framework.AssertBothValid("layout03");
         }
 
-        private sealed class _Generator_99 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_99() {
+        private sealed class _Generator_100 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_100() {
             }
 
             public IBlockElement Generate() {
@@ -108,12 +108,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest04() {
-            framework.AddSuppliers(new _Generator_114());
+            framework.AddSuppliers(new _Generator_115());
             framework.AssertBothFail("layout04");
         }
 
-        private sealed class _Generator_114 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_114() {
+        private sealed class _Generator_115 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_115() {
             }
 
             public IBlockElement Generate() {
@@ -126,12 +126,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest05() {
-            framework.AddSuppliers(new _Generator_128());
+            framework.AddSuppliers(new _Generator_129());
             framework.AssertBothValid("layout05");
         }
 
-        private sealed class _Generator_128 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_128() {
+        private sealed class _Generator_129 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_129() {
             }
 
             public IBlockElement Generate() {
@@ -144,12 +144,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest06() {
-            framework.AddSuppliers(new _Generator_142());
+            framework.AddSuppliers(new _Generator_143());
             framework.AssertBothFail("layout06", false);
         }
 
-        private sealed class _Generator_142 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_142() {
+        private sealed class _Generator_143 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_143() {
             }
 
             public IBlockElement Generate() {
@@ -162,18 +162,63 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest07() {
-            framework.AddSuppliers(new _Generator_156());
+            framework.AddSuppliers(new _Generator_157());
             framework.AssertBothFail("layout07", false);
         }
 
-        private sealed class _Generator_156 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_156() {
+        private sealed class _Generator_157 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_157() {
             }
 
             public IBlockElement Generate() {
                 Paragraph p = new Paragraph("⫊").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetAlternateDescription("Alternate " + "description");
+                return p;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LayoutWithValidRole() {
+            framework.AddSuppliers(new _Generator_171());
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfStructTreeRoot tagStructureContext = pdfDocument.GetStructTreeRoot();
+                tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
+            }
+            );
+            framework.AssertBothValid("layoutWithValidRole");
+        }
+
+        private sealed class _Generator_171 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_171() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph p = new Paragraph("e = mc^2").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+                p.GetAccessibilityProperties().SetRole("BING");
+                p.GetAccessibilityProperties().SetAlternateDescription("Alternate " + "description");
+                return p;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LayoutWithValidRoleButNoAlternateDescription() {
+            framework.AddSuppliers(new _Generator_190());
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfStructTreeRoot tagStructureContext = pdfDocument.GetStructTreeRoot();
+                tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
+            }
+            );
+            framework.AssertBothFail("layoutWithValidRoleButNoDescription");
+        }
+
+        private sealed class _Generator_190 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_190() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph p = new Paragraph("e = mc^2").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+                p.GetAccessibilityProperties().SetRole("BING");
                 return p;
             }
         }

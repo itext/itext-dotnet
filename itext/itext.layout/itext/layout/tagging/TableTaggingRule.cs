@@ -36,7 +36,7 @@ namespace iText.Layout.Tagging {
             IList<TaggingHintKey> tableCellTagsUnindexed = new List<TaggingHintKey>();
             IList<TaggingHintKey> nonCellKids = new List<TaggingHintKey>();
             foreach (TaggingHintKey kidKey in kidKeys) {
-                String kidRole = GetKidRole(kidKey);
+                String kidRole = GetKidRole(kidKey, taggingHelper);
                 bool isCell = StandardRoles.TD.Equals(kidRole) || StandardRoles.TH.Equals(kidRole);
                 if (isCell && kidKey.GetAccessibleElement() is Cell) {
                     Cell cell = (Cell)kidKey.GetAccessibleElement();
@@ -60,7 +60,7 @@ namespace iText.Layout.Tagging {
             }
             TaggingDummyElement tbodyTag = GetTbodyTag(tableHintKey);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                String kidRole = GetKidRole(nonCellKid);
+                String kidRole = GetKidRole(nonCellKid, taggingHelper);
                 if (!StandardRoles.THEAD.Equals(kidRole) && !StandardRoles.TFOOT.Equals(kidRole) && !StandardRoles.CAPTION
                     .Equals(kidRole)) {
                     // In usual cases it isn't expected that this for loop will work, but it is possible to
@@ -69,14 +69,14 @@ namespace iText.Layout.Tagging {
                 }
             }
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                if (StandardRoles.THEAD.Equals(GetKidRole(nonCellKid))) {
+                if (StandardRoles.THEAD.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
             taggingHelper.AddKidsHint(tableHintKey, JavaCollectionsUtil.SingletonList<TaggingHintKey>(LayoutTaggingHelper
                 .GetOrCreateHintKey(tbodyTag)), -1);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                if (StandardRoles.TFOOT.Equals(GetKidRole(nonCellKid))) {
+                if (StandardRoles.TFOOT.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
@@ -95,15 +95,16 @@ namespace iText.Layout.Tagging {
                 taggingHelper.AddKidsHint(tbodyTag, JavaCollectionsUtil.SingletonList<TaggingDummyElement>(row), -1);
             }
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                if (StandardRoles.CAPTION.Equals(GetKidRole(nonCellKid))) {
+                if (StandardRoles.CAPTION.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     MoveCaption(taggingHelper, nonCellKid, tableHintKey);
                 }
             }
             return true;
         }
 
-        private static String GetKidRole(TaggingHintKey kidKey) {
-            return kidKey.GetAccessibilityProperties().GetRole();
+        private static String GetKidRole(TaggingHintKey kidKey, LayoutTaggingHelper helper) {
+            return helper.GetPdfDocument().GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole(kidKey
+                .GetAccessibilityProperties().GetRole(), null).GetRole();
         }
 
         /// <summary>

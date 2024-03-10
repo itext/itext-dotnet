@@ -30,22 +30,52 @@ using iText.Pdfua.Exceptions;
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Class that provides methods for checking PDF/UA compliance of graphics elements.</summary>
     public sealed class GraphicsCheckUtil {
+        private readonly PdfUAValidationContext context;
+
         /// <summary>
         /// Creates a new
         /// <see cref="GraphicsCheckUtil"/>
         /// instance.
         /// </summary>
-        private GraphicsCheckUtil() {
+        /// <param name="context">The validation context.</param>
+        public GraphicsCheckUtil(PdfUAValidationContext context) {
+            this.context = context;
         }
 
-        // Empty constructor
-        /// <summary>Checks if image has alternative description or actual text.</summary>
+        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
+        /// <remarks>
+        /// WARNING! This method is an artifact and currently does nothing.
+        /// It is kept to ensure backward binary compatibility
+        /// </remarks>
         /// <param name="image">image to check</param>
+        [System.ObsoleteAttribute(@"This method is an artifact and will be removed.")]
         public static void CheckLayoutImage(Image image) {
+        }
+
+        //No impl
+        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
+        /// <remarks>
+        /// WARNING! This method is an artifact and currently does nothing.
+        /// It is kept to ensure backward binary compatibility
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagutils.ITagTreeIteratorHandler"/>
+        /// always null
+        /// </returns>
+        [System.ObsoleteAttribute(@"This method is an artifact and will be removed.")]
+        public static ITagTreeIteratorHandler CreateFigureTagHandler() {
+            return null;
+        }
+
+        /// <summary>Checks if image has alternative description or actual text.</summary>
+        /// <param name="image">The image to check</param>
+        public void CheckLayoutElement(Image image) {
             if (image.GetAccessibilityProperties() == null) {
                 throw new InvalidOperationException();
             }
-            if (!StandardRoles.FIGURE.Equals(image.GetAccessibilityProperties().GetRole())) {
+            if (!StandardRoles.FIGURE.Equals(context.ResolveToStandardRole(image.GetAccessibilityProperties().GetRole(
+                )))) {
                 // image is not a figure tag, so we don't need to check it
                 return;
             }
@@ -53,34 +83,6 @@ namespace iText.Pdfua.Checkers.Utils {
             bool hasSomeValue = HasAtleastOneValidValue(props.GetAlternateDescription(), props.GetActualText());
             if (!hasSomeValue) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
-            }
-        }
-
-        /// <summary>Checks if figure tag has alternative description or actual text.</summary>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Tagutils.ITagTreeIteratorHandler"/>
-        /// handler implementation that checks if figure tag has alternative
-        /// description or actual text
-        /// </returns>
-        public static ITagTreeIteratorHandler CreateFigureTagHandler() {
-            return new _ITagTreeIteratorHandler_80();
-        }
-
-        private sealed class _ITagTreeIteratorHandler_80 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_80() {
-            }
-
-            public void NextElement(IStructureNode elem) {
-                PdfStructElem structElem = TagTreeHandlerUtil.GetElementIfRoleMatches(PdfName.Figure, elem);
-                if (structElem == null) {
-                    return;
-                }
-                PdfDictionary pdfObject = structElem.GetPdfObject();
-                if (!iText.Pdfua.Checkers.Utils.GraphicsCheckUtil.HasAtleastOneValidValue(pdfObject.GetAsString(PdfName.Alt
-                    ), pdfObject.GetAsString(PdfName.ActualText))) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
-                }
             }
         }
 
@@ -101,6 +103,32 @@ namespace iText.Pdfua.Checkers.Utils {
             }
             // PDF spec is not super clear, but it seems actualText can be an empty string
             return !(altTextValue == null || String.IsNullOrEmpty(altTextValue)) || actualTextValue != null;
+        }
+
+        /// <summary>Helper class that checks the conformance of graphics tags while iterating the tag tree structure.
+        ///     </summary>
+        public class GraphicsHandler : ContextAwareTagTreeIteratorHandler {
+            /// <summary>
+            /// Creates a new instance of the
+            /// <see cref="GraphicsHandler"/>.
+            /// </summary>
+            /// <param name="context">The validation context.</param>
+            public GraphicsHandler(PdfUAValidationContext context)
+                : base(context) {
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override void NextElement(IStructureNode elem) {
+                PdfStructElem structElem = context.GetElementIfRoleMatches(PdfName.Figure, elem);
+                if (structElem == null) {
+                    return;
+                }
+                PdfDictionary pdfObject = structElem.GetPdfObject();
+                if (!HasAtleastOneValidValue(pdfObject.GetAsString(PdfName.Alt), pdfObject.GetAsString(PdfName.ActualText)
+                    )) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+                }
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
+using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Class that has the result of the algorithm that checks the table for PDF/UA compliance.</summary>
@@ -36,8 +37,9 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// instance.
         /// </summary>
         /// <param name="table">The table that needs to be checked.</param>
-        public CellResultMatrix(Table table)
-            : base(new TableCellIterator(table)) {
+        /// <param name="context">The validation context.</param>
+        public CellResultMatrix(Table table, PdfUAValidationContext context)
+            : base(new TableCellIterator(table, context)) {
         }
 
         /// <summary><inheritDoc/></summary>
@@ -71,7 +73,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
 
         /// <summary><inheritDoc/></summary>
         internal override String GetRole(Cell cell) {
-            return cell.GetAccessibilityProperties().GetRole();
+            return ((TableCellIterator)iterator).context.ResolveToStandardRole(cell.GetAccessibilityProperties().GetRole
+                ());
         }
 
         private static PdfObject GetAttribute(AccessibilityProperties props, PdfName name) {

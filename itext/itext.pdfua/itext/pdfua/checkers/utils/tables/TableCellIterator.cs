@@ -23,10 +23,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
+using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Class that iterates over the cells of a table.</summary>
     internal sealed class TableCellIterator : ITableIterator<Cell> {
+        internal readonly PdfUAValidationContext context;
+
         private IList<IElement> children;
 
         private int index;
@@ -47,14 +50,16 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// instance.
         /// </summary>
         /// <param name="table">the table that will be iterated.</param>
-        public TableCellIterator(Table table) {
+        /// <param name="context">the validation context.</param>
+        public TableCellIterator(Table table, PdfUAValidationContext context) {
+            this.context = context;
             if (table == null) {
                 return;
             }
             this.table = table;
             this.children = table.GetChildren();
-            headerIterator = new iText.Pdfua.Checkers.Utils.Tables.TableCellIterator(table.GetHeader());
-            footerIterator = new iText.Pdfua.Checkers.Utils.Tables.TableCellIterator(table.GetFooter());
+            headerIterator = new iText.Pdfua.Checkers.Utils.Tables.TableCellIterator(table.GetHeader(), context);
+            footerIterator = new iText.Pdfua.Checkers.Utils.Tables.TableCellIterator(table.GetFooter(), context);
         }
 
         /// <summary><inheritDoc/></summary>

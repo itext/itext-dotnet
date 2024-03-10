@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
-using iText.Kernel.Pdf.Tagutils;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
@@ -37,33 +36,6 @@ namespace iText.Pdfua.Checkers.Utils {
         }
 
         // Empty constructor
-        /// <summary>Creates the handler that handles PDF/UA compliance for Formula tags</summary>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Tagutils.ITagTreeIteratorHandler"/>
-        /// The formula tag handler.
-        /// </returns>
-        public static ITagTreeIteratorHandler CreateFormulaTagHandler() {
-            return new _ITagTreeIteratorHandler_48();
-        }
-
-        private sealed class _ITagTreeIteratorHandler_48 : ITagTreeIteratorHandler {
-            public _ITagTreeIteratorHandler_48() {
-            }
-
-            public void NextElement(IStructureNode elem) {
-                PdfStructElem structElem = TagTreeHandlerUtil.GetElementIfRoleMatches(PdfName.Formula, elem);
-                if (structElem == null) {
-                    return;
-                }
-                PdfDictionary pdfObject = structElem.GetPdfObject();
-                if (iText.Pdfua.Checkers.Utils.FormulaCheckUtil.HasInvalidValues(pdfObject.GetAsString(PdfName.Alt), pdfObject
-                    .GetAsString(PdfName.ActualText))) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.FORMULA_SHALL_HAVE_ALT);
-                }
-            }
-        }
-
         private static bool HasInvalidValues(PdfString altText, PdfString actualText) {
             String altTextValue = null;
             if (altText != null) {
@@ -74,6 +46,31 @@ namespace iText.Pdfua.Checkers.Utils {
                 actualTextValue = actualText.GetValue();
             }
             return !(!(altTextValue == null || String.IsNullOrEmpty(altTextValue)) || actualTextValue != null);
+        }
+
+        /// <summary>Handler for checking Formula elements in the TagTree.</summary>
+        public class FormulaTagHandler : ContextAwareTagTreeIteratorHandler {
+            /// <summary>
+            /// Creates a new
+            /// <see cref="FormulaTagHandler"/>
+            /// instance.
+            /// </summary>
+            /// <param name="context">The validation context.</param>
+            public FormulaTagHandler(PdfUAValidationContext context)
+                : base(context) {
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override void NextElement(IStructureNode elem) {
+                PdfStructElem structElem = context.GetElementIfRoleMatches(PdfName.Formula, elem);
+                if (structElem == null) {
+                    return;
+                }
+                PdfDictionary pdfObject = structElem.GetPdfObject();
+                if (HasInvalidValues(pdfObject.GetAsString(PdfName.Alt), pdfObject.GetAsString(PdfName.ActualText))) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.FORMULA_SHALL_HAVE_ALT);
+                }
+            }
         }
     }
 }
