@@ -260,7 +260,7 @@ namespace iText.Signatures {
         /// </param>
         /// <param name="issuerCert">the issuer certificate. This certificate is considered trusted and valid by this method.
         ///     </param>
-        /// <param name="signDate">sign date</param>
+        /// <param name="signDate">sign date for backwards compatibility</param>
         public virtual void IsValidResponse(IBasicOcspResponse ocspResp, IX509Certificate issuerCert, DateTime signDate
             ) {
             // OCSP response might be signed by the issuer certificate or
@@ -302,10 +302,7 @@ namespace iText.Signatures {
                     // and "This certificate MUST be issued directly by the CA that is identified in the request".
                     responderCert.Verify(issuerCert.GetPublicKey());
                     // Check if the lifetime of the certificate is valid. Responder cert could be created after the signing.
-                    if (signDate.After(responderCert.GetNotAfter())) {
-                        throw new VerificationException(responderCert, "Authorized OCSP responder certificate expired on " + responderCert
-                            .GetNotAfter());
-                    }
+                    responderCert.CheckValidity(ocspResp.GetProducedAt());
                     // Validating ocsp signer's certificate (responderCert).
                     // See RFC6960 4.2.2.2.1. Revocation Checking of an Authorized Responder.
                     // 1. Check if responders certificate has id-pkix-ocsp-nocheck extension, in which case we do not
@@ -378,7 +375,7 @@ namespace iText.Signatures {
                 }
             }
             // Check if the lifetime of the certificate is valid.
-            responderCert.CheckValidity(signDate);
+            responderCert.CheckValidity(ocspResp.GetProducedAt());
         }
 
         /// <summary>Checks if an OCSP response is genuine.</summary>

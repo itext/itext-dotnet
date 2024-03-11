@@ -31,15 +31,15 @@ using iText.Signatures.Validation.Extensions;
 namespace iText.Signatures.Validation {
     /// <summary>Validator class, which is expected to be used for certificates chain validation.</summary>
     public class CertificateChainValidator {
-        private const String CERTIFICATE_CHECK = "Certificate check.";
+        internal const String CERTIFICATE_CHECK = "Certificate check.";
 
-        private const String VALIDITY_CHECK = "Certificate validity period check.";
+        internal const String VALIDITY_CHECK = "Certificate validity period check.";
 
-        private const String EXTENSIONS_CHECK = "Required certificate extensions check.";
+        internal const String EXTENSIONS_CHECK = "Required certificate extensions check.";
 
-        private const String CERTIFICATE_TRUSTED = "Certificate {0} is trusted, revocation data checks are not required.";
+        internal const String CERTIFICATE_TRUSTED = "Certificate {0} is trusted, revocation data checks are not required.";
 
-        private const String EXTENSION_MISSING = "Required extension {0} is missing or incorrect.";
+        internal const String EXTENSION_MISSING = "Required extension {0} is missing or incorrect.";
 
         private const String GLOBAL_EXTENSION_MISSING = "Globally required extension {0} is missing or incorrect.";
 
@@ -346,6 +346,7 @@ namespace iText.Signatures.Validation {
 
         private void ValidateRevocationData(ValidationReport result, IX509Certificate certificate, DateTime validationDate
             ) {
+            // TODO DEVSIX-8176 Implement RevocationDataValidator class: take into account ID_PKIX_OCSP_NOCHECK extension
             ValidateOCSP(result, certificate, validationDate);
             ValidateCRL(result, certificate, validationDate);
         }
@@ -357,7 +358,7 @@ namespace iText.Signatures.Validation {
         private void ValidateOCSP(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
         }
 
-        // TODO DEVSIX-8170 Implement OCSPValidator
+        // TODO DEVSIX-8176 Implement RevocationDataValidator class
         private void ValidateChain(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
             IList<CertificateExtension> requiredCertificateExtensions = new List<CertificateExtension>();
             requiredCertificateExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN));

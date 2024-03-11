@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Logs;
 
@@ -118,6 +119,45 @@ namespace iText.Signatures {
             if (certificateChain.Length > 1) {
                 return certificateChain[1];
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves OCSP responder certificate either from the response certs or
+        /// trusted store in case responder certificate isn't found in /Certs.
+        /// </summary>
+        /// <param name="ocspResp">basic OCSP response to get responder certificate for</param>
+        /// <returns>retrieved OCSP responder certificate or null in case it wasn't found.</returns>
+        public virtual IX509Certificate RetrieveOCSPResponderCertificate(IBasicOcspResponse ocspResp) {
+            // Look for the existence of an Authorized OCSP responder inside the cert chain in the ocsp response.
+            IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
+            foreach (IX509Certificate cert in certs) {
+                try {
+                    if (CertificateUtil.IsSignatureValid(ocspResp, cert)) {
+                        return cert;
+                    }
+                }
+                catch (Exception) {
+                }
+            }
+            // Ignore.
+            // Certificate chain is not present in the response.
+            // Try to verify using trusted store according to RFC 6960 2.2. Response:
+            // "The key used to sign the response MUST belong to one of the following:
+            // - ...
+            // - a Trusted Responder whose public key is trusted by the requester;
+            // - ..."
+            try {
+                foreach (IX509Certificate anchor in trustedCertificates.Values) {
+                    if (CertificateUtil.IsSignatureValid(ocspResp, anchor)) {
+                        // Certificate from the root store is considered trusted and valid by this method.
+                        return anchor;
+                    }
+                }
+            }
+            catch (Exception) {
+            }
+            // Ignore.
             return null;
         }
 

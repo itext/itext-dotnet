@@ -32,6 +32,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
 using iText.IO.Util;
 using iText.Signatures.Logs;
@@ -277,6 +278,53 @@ namespace iText.Signatures {
                 revocationInfoChoices.Add(revInfo);
             }
             return FACTORY.CreateDERSet(revocationInfoChoices);
+        }
+
+        /// <summary>
+        /// Checks if the issuer of the provided certID (specified in the OCSP response) and provided issuer of the
+        /// certificate in question matches, i.e. checks that issuerNameHash and issuerKeyHash fields of the certID
+        /// is the hash of the issuer's name and public key.
+        /// </summary>
+        /// <remarks>
+        /// Checks if the issuer of the provided certID (specified in the OCSP response) and provided issuer of the
+        /// certificate in question matches, i.e. checks that issuerNameHash and issuerKeyHash fields of the certID
+        /// is the hash of the issuer's name and public key.
+        /// <para />
+        /// SingleResp contains the basic information of the status of the certificate identified by the certID. The issuer
+        /// name and serial number identify a unique certificate, so if serial numbers of the certificate in question and
+        /// certID serial number are equals and issuers match, then SingleResp contains the information about the status of
+        /// the certificate in question.
+        /// </remarks>
+        /// <param name="certID">certID specified in the OCSP response</param>
+        /// <param name="issuerCert">the issuer of the certificate in question</param>
+        /// <returns>true if the issuers are the same, false otherwise.</returns>
+        public static bool CheckIfIssuersMatch(ICertID certID, IX509Certificate issuerCert) {
+            return SignUtils.CheckIfIssuersMatch(certID, issuerCert);
+        }
+
+        /// <summary>Retrieves certificate extension value by its OID.</summary>
+        /// <param name="certificate">to get extension from</param>
+        /// <param name="id">extension OID to retrieve</param>
+        /// <returns>encoded extension value.</returns>
+        public static byte[] GetExtensionValueByOid(IX509Certificate certificate, String id) {
+            return SignUtils.GetExtensionValueByOid(certificate, id);
+        }
+
+        /// <summary>Checks if an OCSP response is genuine.</summary>
+        /// <param name="ocspResp">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
+        /// the OCSP response wrapper
+        /// </param>
+        /// <param name="responderCert">the responder certificate</param>
+        /// <returns>true if the OCSP response verifies against the responder certificate.</returns>
+        public static bool IsSignatureValid(IBasicOcspResponse ocspResp, IX509Certificate responderCert) {
+            try {
+                return SignUtils.IsSignatureValid(ocspResp, responderCert);
+            }
+            catch (Exception) {
+                return false;
+            }
         }
 
         /// <summary>Checks if the certificate is signed by provided issuer certificate.</summary>

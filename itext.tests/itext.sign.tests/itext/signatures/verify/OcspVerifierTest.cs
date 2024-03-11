@@ -68,6 +68,7 @@ namespace iText.Signatures.Verify {
             DateTime nextUpdate = DateTimeUtil.GetCalendar(caCert.GetNotAfter().AddDays(2));
             builder.SetThisUpdate(thisUpdate);
             builder.SetNextUpdate(nextUpdate);
+            builder.SetProducedAt(caCert.GetNotBefore());
             NUnit.Framework.Assert.IsTrue(VerifyTest(builder, certsSrc + "signCertRsa01.pem", caCert.GetNotAfter()));
         }
 
@@ -149,6 +150,7 @@ namespace iText.Signatures.Verify {
             DateTime nextUpdate = DateTimeUtil.GetCalendar(caCert.GetNotAfter().AddDays(2));
             builder.SetThisUpdate(thisUpdate);
             builder.SetNextUpdate(nextUpdate);
+            builder.SetProducedAt(caCert.GetNotBefore());
             NUnit.Framework.Assert.IsTrue(VerifyTest(builder, certsSrc + "signCertRsaWithExpiredChain.pem", caCert.GetNotAfter
                 ().AddDays(-1)));
         }
@@ -163,6 +165,7 @@ namespace iText.Signatures.Verify {
             DateTime nextUpdate = DateTimeUtil.GetCalendar(caCert.GetNotAfter().AddDays(2));
             builder.SetThisUpdate(thisUpdate);
             builder.SetNextUpdate(nextUpdate);
+            builder.SetProducedAt(caCert.GetNotAfter().AddDays(1));
             NUnit.Framework.Assert.Catch(typeof(AbstractCertificateExpiredException), () => VerifyTest(builder, certsSrc
                  + "signCertRsaWithExpiredChain.pem", caCert.GetNotAfter().AddDays(1)));
         }
@@ -192,7 +195,7 @@ namespace iText.Signatures.Verify {
             DateTime ocspResponderCertStartDate = TimeTestUtil.TEST_DATE_TIME.AddYears(-5);
             DateTime ocspResponderCertEndDate = TimeTestUtil.TEST_DATE_TIME.AddYears(-1);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            NUnit.Framework.Assert.Catch(typeof(VerificationException), () => VerifyAuthorizedOCSPResponderWithOCSPNoCheckTest
+            NUnit.Framework.Assert.Catch(typeof(AbstractCertificateExpiredException), () => VerifyAuthorizedOCSPResponderWithOCSPNoCheckTest
                 (ocspResponderCertStartDate, ocspResponderCertEndDate, checkDate));
         }
 
@@ -357,6 +360,7 @@ namespace iText.Signatures.Verify {
                 [0];
             IPrivateKey ocspRespPrivateKey = PemFileHelper.ReadFirstKey(ocspResponderCertFileName, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate.AddDays(365));
             builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(365)));
             builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(370)));
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
@@ -474,6 +478,7 @@ namespace iText.Signatures.Verify {
                 [0];
             IPrivateKey ocspRespPrivateKey = PemFileHelper.ReadFirstKey(ocspResponderCertFileName, password);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate.AddDays(-5));
             builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(-5)));
             builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(5)));
             builder.SetOcspCertsChain(new IX509Certificate[0]);
