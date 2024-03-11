@@ -1166,7 +1166,6 @@ namespace iText.Signatures {
         /// <summary>Checks if the timestamp refers to this document.</summary>
         /// <returns>true if it checks false otherwise</returns>
         public virtual bool VerifyTimestampImprint() {
-            // TODO DEVSIX-6011 ensure this method works correctly
             if (timeStampTokenInfo == null) {
                 return false;
             }

@@ -49,6 +49,8 @@ namespace iText.Signatures.Validation {
 
         private const String NOT_YET_VALID_CERTIFICATE = "Certificate {0} is not yet valid.";
 
+        private const String ISSUER_CANNOT_BE_VERIFIED = "Issuer certificate {0} for subject certificate {1} cannot be mathematically verified.";
+
         private IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
 
         private IOcspClient ocspClient = new OcspClientBouncyCastle(null);
@@ -171,12 +173,12 @@ namespace iText.Signatures.Validation {
         /// <summary>
         /// Set
         /// <see cref="CertificateChainValidator"/>
-        /// to be as a validator for the next certificate in the chain.
+        /// to be used as a validator for the next certificate in the chain.
         /// </summary>
         /// <param name="nextValidator">
         /// 
         /// <see cref="CertificateChainValidator"/>
-        /// to be as a validator for the next certificate in the chain
+        /// to be a validator for the next certificate in the chain
         /// </param>
         /// <returns>
         /// same instance of
@@ -244,12 +246,12 @@ namespace iText.Signatures.Validation {
         /// </param>
         /// <returns>
         /// 
-        /// <see cref="CertificateValidationReport"/>
+        /// <see cref="ValidationReport"/>
         /// which contains detailed validation results
         /// </returns>
-        public virtual CertificateValidationReport ValidateCertificate(IX509Certificate certificate, DateTime validationDate
-            , IList<CertificateExtension> requiredExtensions) {
-            CertificateValidationReport result = new CertificateValidationReport(certificate);
+        public virtual ValidationReport ValidateCertificate(IX509Certificate certificate, DateTime validationDate, 
+            IList<CertificateExtension> requiredExtensions) {
+            ValidationReport result = new ValidationReport();
             return Validate(result, certificate, validationDate, requiredExtensions);
         }
 
@@ -260,7 +262,7 @@ namespace iText.Signatures.Validation {
         /// </remarks>
         /// <param name="result">
         /// 
-        /// <see cref="CertificateValidationReport"/>
+        /// <see cref="ValidationReport"/>
         /// which is populated with detailed validation results
         /// </param>
         /// <param name="certificate">
@@ -280,19 +282,19 @@ namespace iText.Signatures.Validation {
         /// </param>
         /// <returns>
         /// 
-        /// <see cref="CertificateValidationReport"/>
+        /// <see cref="ValidationReport"/>
         /// which contains both provided and new validation results
         /// </returns>
-        public virtual CertificateValidationReport Validate(CertificateValidationReport result, IX509Certificate certificate
-            , DateTime validationDate, IList<CertificateExtension> requiredExtensions) {
+        public virtual ValidationReport Validate(ValidationReport result, IX509Certificate certificate, DateTime validationDate
+            , IList<CertificateExtension> requiredExtensions) {
             ValidateValidityPeriod(result, certificate, validationDate);
             ValidateRequiredExtensions(result, certificate, requiredExtensions);
             if (StopValidation(result)) {
                 return result;
             }
             if (certificateRetriever.IsCertificateTrusted(certificate)) {
-                result.AddLog(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_TRUSTED, certificate.GetSubjectDN
-                    ()));
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_TRUSTED
+                    , certificate.GetSubjectDN()), ValidationReport.ValidationResult.VALID));
                 return result;
             }
             ValidateRevocationData(result, certificate, validationDate);
@@ -303,77 +305,81 @@ namespace iText.Signatures.Validation {
             return result;
         }
 
-        private bool StopValidation(CertificateValidationReport result) {
-            return !proceedValidationAfterFail && result.GetValidationResult() != CertificateValidationReport.ValidationResult
-                .VALID;
+        private bool StopValidation(ValidationReport result) {
+            return !proceedValidationAfterFail && result.GetValidationResult() != ValidationReport.ValidationResult.VALID;
         }
 
-        private void ValidateValidityPeriod(CertificateValidationReport result, IX509Certificate certificate, DateTime
-             validationDate) {
+        private void ValidateValidityPeriod(ValidationReport result, IX509Certificate certificate, DateTime validationDate
+            ) {
             try {
                 certificate.CheckValidity(validationDate);
             }
             catch (AbstractCertificateExpiredException e) {
-                result.AddFailure(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(EXPIRED_CERTIFICATE, certificate.GetSubjectDN
-                    ()), e);
+                result.AddReportItem(new CertificateReportItem(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(EXPIRED_CERTIFICATE
+                    , certificate.GetSubjectDN()), e, ValidationReport.ValidationResult.INVALID));
             }
             catch (AbstractCertificateNotYetValidException e) {
-                result.AddFailure(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(NOT_YET_VALID_CERTIFICATE, certificate
-                    .GetSubjectDN()), e);
+                result.AddReportItem(new CertificateReportItem(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(NOT_YET_VALID_CERTIFICATE
+                    , certificate.GetSubjectDN()), e, ValidationReport.ValidationResult.INVALID));
             }
         }
 
-        private void ValidateRequiredExtensions(CertificateValidationReport result, IX509Certificate certificate, 
-            IList<CertificateExtension> requiredExtensions) {
+        private void ValidateRequiredExtensions(ValidationReport result, IX509Certificate certificate, IList<CertificateExtension
+            > requiredExtensions) {
             if (requiredExtensions != null) {
                 foreach (CertificateExtension requiredExtension in requiredExtensions) {
                     if (!requiredExtension.ExistsInCertificate(certificate)) {
-                        result.AddFailure(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(EXTENSION_MISSING, requiredExtension
-                            .GetExtensionOid()));
+                        result.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(EXTENSION_MISSING
+                            , requiredExtension.GetExtensionOid()), ValidationReport.ValidationResult.INVALID));
                     }
                 }
             }
             if (globalRequiredExtensions != null) {
                 foreach (CertificateExtension requiredExtension in globalRequiredExtensions) {
                     if (!requiredExtension.ExistsInCertificate(certificate)) {
-                        result.AddFailure(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(GLOBAL_EXTENSION_MISSING, requiredExtension
-                            .GetExtensionOid()));
+                        result.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(GLOBAL_EXTENSION_MISSING
+                            , requiredExtension.GetExtensionOid()), ValidationReport.ValidationResult.INVALID));
                     }
                 }
             }
         }
 
-        private void ValidateRevocationData(CertificateValidationReport result, IX509Certificate certificate, DateTime
-             validationDate) {
+        private void ValidateRevocationData(ValidationReport result, IX509Certificate certificate, DateTime validationDate
+            ) {
             ValidateOCSP(result, certificate, validationDate);
             ValidateCRL(result, certificate, validationDate);
         }
 
-        private void ValidateCRL(CertificateValidationReport result, IX509Certificate certificate, DateTime validationDate
-            ) {
+        private void ValidateCRL(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
         }
 
         // TODO DEVSIX-8122 Implement CRLValidator
-        private void ValidateOCSP(CertificateValidationReport result, IX509Certificate certificate, DateTime validationDate
-            ) {
+        private void ValidateOCSP(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
         }
 
         // TODO DEVSIX-8170 Implement OCSPValidator
-        private void ValidateChain(CertificateValidationReport result, IX509Certificate certificate, DateTime validationDate
-            ) {
+        private void ValidateChain(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
             IList<CertificateExtension> requiredCertificateExtensions = new List<CertificateExtension>();
             requiredCertificateExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN));
             requiredCertificateExtensions.Add(new BasicConstraintsExtension(true));
             IX509Certificate issuerCertificate = (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate(certificate
                 );
             if (issuerCertificate == null) {
-                result.AddFailure(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_MISSING, certificate.GetSubjectDN
-                    ()), CertificateValidationReport.ValidationResult.INDETERMINATE);
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_MISSING
+                    , certificate.GetSubjectDN()), ValidationReport.ValidationResult.INDETERMINATE));
+                return;
             }
-            else {
-                nextCertificateChainValidator.Validate(result, issuerCertificate, validationDate, requiredCertificateExtensions
-                    );
+            try {
+                certificate.Verify(issuerCertificate.GetPublicKey());
             }
+            catch (AbstractGeneralSecurityException e) {
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_CANNOT_BE_VERIFIED
+                    , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ValidationReport.ValidationResult.
+                    INVALID));
+                return;
+            }
+            nextCertificateChainValidator.Validate(result, issuerCertificate, validationDate, requiredCertificateExtensions
+                );
         }
     }
 }

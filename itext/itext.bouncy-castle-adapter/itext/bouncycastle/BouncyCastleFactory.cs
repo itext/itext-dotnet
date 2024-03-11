@@ -939,7 +939,12 @@ namespace iText.Bouncycastle {
         
         /// <summary><inheritDoc/></summary>
         public virtual IX509Certificate CreateX509Certificate(Stream s) {
-            return new X509CertificateBC(new X509CertificateParser().ReadCertificate(s));
+            try {
+                return new X509CertificateBC(new X509CertificateParser().ReadCertificate(s));
+            }
+            catch (GeneralSecurityException e) {
+                throw new GeneralSecurityExceptionBC(e);
+            }
         }
         
         /// <summary><inheritDoc/></summary>

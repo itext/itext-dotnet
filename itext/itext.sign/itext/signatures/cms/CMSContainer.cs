@@ -235,9 +235,9 @@ namespace iText.Signatures.Cms {
             ocsps.Add(ocspResponse);
         }
 
-        /// <summary>Sets the  Signed Attributes of the signer info to this serialized version.</summary>
+        /// <summary>Sets the Signed Attributes of the signer info to this serialized version.</summary>
         /// <remarks>
-        /// Sets the  Signed Attributes of the signer info to this serialized version.
+        /// Sets the Signed Attributes of the signer info to this serialized version.
         /// The signed attributes will become read-only.
         /// </remarks>
         /// <param name="signedAttributesData">the serialized Signed Attributes</param>

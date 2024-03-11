@@ -950,11 +950,17 @@ namespace iText.Bouncycastlefips {
                 return null;
             }
             pushbackStream.Unread(tag);
-            if (tag != 0x30) {
-                // assume ascii PEM encoded.
-                return ReadPemCertificate(pushbackStream);
+            try {
+                if (tag != 0x30) {
+                    // assume ascii PEM encoded.
+                    return ReadPemCertificate(pushbackStream);
+                }
+
+                return ReadDerCertificate(pushbackStream);
             }
-            return ReadDerCertificate(pushbackStream);
+            catch (Exception e) {
+                throw new GeneralSecurityExceptionBCFips("Cannot parse certificate from stream.", e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
