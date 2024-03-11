@@ -102,6 +102,61 @@ namespace iText.Pdfua.Checkers {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
+        public virtual void DocumentWithNoLangEntryTest() {
+            String outPdf = DESTINATION_FOLDER + "documentWithNoLangEntryTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
+                (PdfVersion.PDF_1_7)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
+                Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithEmptyStringLangEntryTest() {
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyStringLangEntryTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
+                (PdfVersion.PDF_1_7)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetLang(new PdfString(""));
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
+                Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithComplexLangEntryTest() {
+            String outPdf = DESTINATION_FOLDER + "documentWithComplexLangEntryTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
+                (PdfVersion.PDF_1_7)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetLang(new PdfString("qaa-Qaaa-QM-x-southern"));
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_documentWithComplexLangEntryTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
         public virtual void DocumentWithoutViewerPreferencesTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithoutViewerPreferencesTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion

@@ -236,6 +236,11 @@ namespace iText.Pdfua.Checkers {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY
                     );
             }
+            if (!(catalogDict.Get(PdfName.Lang) is PdfString) || !BCP47Validator.Validate(catalogDict.Get(PdfName.Lang
+                ).ToString())) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY
+                    );
+            }
             PdfDictionary markInfo = catalogDict.GetAsDictionary(PdfName.MarkInfo);
             if (markInfo != null && markInfo.ContainsKey(PdfName.Suspects)) {
                 PdfBoolean markInfoSuspects = markInfo.GetAsBoolean(PdfName.Suspects);
