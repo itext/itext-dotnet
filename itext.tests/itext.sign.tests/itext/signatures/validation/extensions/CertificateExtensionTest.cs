@@ -89,5 +89,81 @@ namespace iText.Signatures.Validation.Extensions {
                 (32802).ToASN1Primitive());
             NUnit.Framework.Assert.IsFalse(extension.ExistsInCertificate(certificate));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsTest() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            CertificateExtension extension2 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreEqual(extension1, extension2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsOtherTypeTest() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreNotEqual("extension1", extension1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsOtherExtensionTest() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            CertificateExtension extension2 = new CertificateExtension(OID.X509Extensions.EXTENDED_KEY_USAGE, FACTORY.
+                CreateKeyUsage(32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreNotEqual(extension1, extension2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsOtherValueTest() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            CertificateExtension extension2 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32800).ToASN1Primitive());
+            NUnit.Framework.Assert.AreNotEqual(extension1, extension2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SameHashCode() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            CertificateExtension extension2 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreEqual(extension1.GetHashCode(), extension2.GetHashCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HashOtherValueTest() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            CertificateExtension extension2 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32800).ToASN1Primitive());
+            NUnit.Framework.Assert.AreNotEqual(extension1.GetHashCode(), extension2.GetHashCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HashOtherExtensionTest() {
+            CertificateExtension extension1 = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            CertificateExtension extension2 = new CertificateExtension(OID.X509Extensions.EXTENDED_KEY_USAGE, FACTORY.
+                CreateKeyUsage(32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreNotEqual(extension1.GetHashCode(), extension2.GetHashCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetExtensionValueTest() {
+            CertificateExtension extension = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreEqual(FACTORY.CreateKeyUsage(32802).ToASN1Primitive(), extension.GetExtensionValue
+                ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetExtensionOidTest() {
+            CertificateExtension extension = new CertificateExtension(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage
+                (32802).ToASN1Primitive());
+            NUnit.Framework.Assert.AreEqual(OID.X509Extensions.KEY_USAGE, extension.GetExtensionOid());
+        }
     }
 }

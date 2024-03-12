@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Signatures;
 
 namespace iText.Signatures.Validation.Extensions {
@@ -100,6 +101,23 @@ namespace iText.Signatures.Validation.Extensions {
                 return false;
             }
             return Object.Equals(providedExtensionValue, extensionValue);
+        }
+
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            iText.Signatures.Validation.Extensions.CertificateExtension that = (iText.Signatures.Validation.Extensions.CertificateExtension
+                )o;
+            return Object.Equals(extensionOid, that.extensionOid) && Object.Equals(extensionValue, that.extensionValue
+                );
+        }
+
+        public override int GetHashCode() {
+            return JavaUtil.ArraysHashCode((Object)extensionOid, extensionValue);
         }
     }
 }

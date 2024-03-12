@@ -354,7 +354,7 @@ namespace iText.Signatures.Validation {
         private void ValidateCRL(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
         }
 
-        // TODO DEVSIX-8122 Implement CRLValidator
+        // TODO DEVSIX-8176 Implement RevocationDataValidator class
         private void ValidateOCSP(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
         }
 

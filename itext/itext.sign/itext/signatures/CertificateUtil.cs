@@ -97,7 +97,14 @@ namespace iText.Signatures {
             if (url == null) {
                 return null;
             }
-            return SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(url)));
+            return CertificateUtil.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(url)));
+        }
+
+        /// <summary>Parses a CRL from an InputStream.</summary>
+        /// <param name="input">the InputStream holding the unparsed CRL</param>
+        /// <returns>the parsed CRL object.</returns>
+        public static IX509Crl ParseCrlFromStream(Stream input) {
+            return SignUtils.ParseCrlFromStream(input);
         }
 
         /// <summary>Retrieves the URL for the issuer certificate for the given CRL.</summary>
