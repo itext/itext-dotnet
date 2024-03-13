@@ -103,6 +103,7 @@ namespace iText.Signatures.Validation {
         /// <summary>Validates a certificate against Certificate Revocation List (CRL) Responses.</summary>
         /// <param name="report">to store all the chain verification results</param>
         /// <param name="certificate">the certificate to check for</param>
+        /// <param name="encodedCrl">the crl response to be validated</param>
         /// <param name="verificationDate">verification date to check for</param>
         public virtual void Validate(ValidationReport report, IX509Certificate certificate, byte[] encodedCrl, DateTime
              verificationDate) {
