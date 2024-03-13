@@ -122,5 +122,16 @@ namespace iText.Forms.Xfa {
             NUnit.Framework.Assert.IsNotNull(node);
             NUnit.Framework.Assert.AreEqual("Number1", node.Name.LocalName);
         }
+        
+        [NUnit.Framework.Test]
+        public virtual void ExtractNodeTextByPathText() {
+             String inFileName = sourceFolder + "TextField1.pdf";
+             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName)))
+             {
+                 XfaForm xfaForm = new XfaForm(pdfDocument);
+                 Assert.AreEqual("Test", xfaForm.GetNodeTextByPath("xdp.datasets.data.form1"));
+                 Assert.IsNull(xfaForm.GetNodeTextByPath("xdp.datasets.noElement"));
+             }
+        }
     }
 }

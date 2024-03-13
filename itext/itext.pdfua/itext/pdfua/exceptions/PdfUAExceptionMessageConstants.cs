@@ -89,6 +89,8 @@ namespace iText.Pdfua.Exceptions {
         public const String VIEWER_PREFERENCES_IS_FALSE = "ViewerPreferences dictionary of the Catalog dictionary "
              + "contains a DisplayDocTitle entry with a value of false.";
 
+        public const String DYNAMIC_XFA_FORMS_SHALL_NOT_BE_USED = "Dynamic XFA forms shall not be used.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor

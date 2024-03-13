@@ -67,6 +67,7 @@ namespace iText.Pdfua.Checkers {
             CheckCatalog(validationContext.GetPdfDocument().GetCatalog());
             CheckStructureTreeRoot(validationContext.GetPdfDocument().GetStructTreeRoot());
             CheckFonts(validationContext.GetFonts());
+            XfaCheckUtil.Check(validationContext.GetPdfDocument());
         }
 
         /// <summary><inheritDoc/></summary>
