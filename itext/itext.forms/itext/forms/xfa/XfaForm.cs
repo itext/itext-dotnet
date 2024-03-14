@@ -370,10 +370,10 @@ namespace iText.Forms.Xfa
 		}
 
 		/// <summary>
-		/// Gets all the text contained in the child nodes of the node which correspond to the provided path.
+		/// Gets all the text contained in the child nodes of the node under the provided path.
 		/// </summary>
 		/// <param name="path">path to the node to extract text in the format "some.path.to.node"</param>
-		/// <returns>the found text or null if node or text wasn't found</returns>
+		/// <returns>text found under the provided path or <c>null</c> if node or text wasn't found</returns>
 		public virtual String GetNodeTextByPath(String path)
 		{
             if (!xfaPresent) {
