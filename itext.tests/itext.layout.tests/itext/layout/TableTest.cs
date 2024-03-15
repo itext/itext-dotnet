@@ -2991,6 +2991,57 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void KeepTogetherCaptionAndHugeCellTest() {
+            String fileName = "keepTogetherCaptionAndHugeCell.pdf";
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            Document document = new Document(pdfDocument, PageSize.A4);
+            Table table = new Table(1).SetCaption(new Div().Add(new Paragraph("hello world")));
+            Cell dataCell = new Cell().SetKeepTogether(true).Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(
+                PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 600)));
+            table.AddCell(dataCell);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void KeepTogetherCaptionDoesntFitPageTest() {
+            String fileName = "keepTogetherCaptionDoesntFitPage.pdf";
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            Document document = new Document(pdfDocument, PageSize.A4);
+            document.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS
+                , 580)));
+            Table table = new Table(1).SetCaption(new Div().Add(new Paragraph("hello world")));
+            Cell dataCell = new Cell().SetKeepTogether(true).Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(
+                PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 600)));
+            table.AddCell(dataCell);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void KeepTogetherCaptionAndSplitCellTest() {
+            String fileName = "keepTogetherCaptionAndSplitCell.pdf";
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            Document document = new Document(pdfDocument, PageSize.A4);
+            Table table = new Table(1).SetCaption(new Div().Add(new Paragraph("hello world").SetFontSize(40)), CaptionSide
+                .BOTTOM);
+            Cell dataCell = new Cell().SetKeepTogether(true).Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(
+                PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, 540)));
+            table.AddCell(dataCell);
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder));
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 

@@ -908,10 +908,14 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     else {
-                        int status = ((occupiedArea.GetBBox().GetHeight() - (null == footerRenderer ? 0 : footerRenderer.GetOccupiedArea
-                            ().GetBBox().GetHeight()) - (null == headerRenderer ? 0 : headerRenderer.GetOccupiedArea().GetBBox().GetHeight
-                            () - headerRenderer.bordersHandler.GetMaxBottomWidth()) == 0) && (isAndWasComplete || isFirstOnThePage
-                            )) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
+                        float footerHeight = null == footerRenderer ? 0 : footerRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                        float headerHeight = null == headerRenderer ? 0 : headerRenderer.GetOccupiedArea().GetBBox().GetHeight() -
+                             headerRenderer.bordersHandler.GetMaxBottomWidth();
+                        float captionHeight = null == captionRenderer ? 0 : captionRenderer.GetOccupiedArea().GetBBox().GetHeight(
+                            );
+                        float heightDiff = occupiedArea.GetBBox().GetHeight() - footerHeight - headerHeight - captionHeight;
+                        int status = JavaUtil.FloatCompare(0, heightDiff) == 0 && (isAndWasComplete || isFirstOnThePage) ? LayoutResult
+                            .NOTHING : LayoutResult.PARTIAL;
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
