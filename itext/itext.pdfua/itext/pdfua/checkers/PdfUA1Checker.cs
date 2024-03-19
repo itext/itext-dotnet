@@ -94,6 +94,26 @@ namespace iText.Pdfua.Checkers {
                     CheckText((String)obj, (PdfFont)extra);
                     break;
                 }
+
+                case IsoKey.PDF_OBJECT: {
+                    CheckPdfObject((PdfObject)obj);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>Verify the conformity of the file specification dictionary.</summary>
+        /// <param name="fileSpec">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing file specification to be checked
+        /// </param>
+        protected internal virtual void CheckFileSpec(PdfDictionary fileSpec) {
+            if (fileSpec.ContainsKey(PdfName.EF)) {
+                if (!fileSpec.ContainsKey(PdfName.F) || !fileSpec.ContainsKey(PdfName.UF)) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
+                        );
+                }
             }
         }
 
@@ -320,6 +340,21 @@ namespace iText.Pdfua.Checkers {
             if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
                     , String.Join(", ", fontNamesThatAreNotEmbedded)));
+            }
+        }
+
+        /// <summary>
+        /// This method checks the requirements that must be fulfilled by a COS
+        /// object in a PDF/UA document.
+        /// </summary>
+        /// <param name="obj">the COS object that must be checked</param>
+        private void CheckPdfObject(PdfObject obj) {
+            if (obj.GetObjectType() == PdfObject.DICTIONARY) {
+                PdfDictionary dict = (PdfDictionary)obj;
+                PdfName type = dict.GetAsName(PdfName.Type);
+                if (PdfName.Filespec.Equals(type)) {
+                    CheckFileSpec(dict);
+                }
             }
         }
     }

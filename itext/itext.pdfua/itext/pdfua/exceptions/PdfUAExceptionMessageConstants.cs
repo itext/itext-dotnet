@@ -97,6 +97,8 @@ namespace iText.Pdfua.Exceptions {
 
         public const String DYNAMIC_XFA_FORMS_SHALL_NOT_BE_USED = "Dynamic XFA forms shall not be used.";
 
+        public const String FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY = "File specification dictionary shall contain f key and uf key.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor
