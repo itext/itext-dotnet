@@ -773,21 +773,6 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 22)]
-        public virtual void Combination03() {
-            PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
-            for (int i = 0; i < 12; i++) {
-                tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id", "Header1", 1, 1, "None"));
-            }
-            for (int i = 0; i < 3; i++) {
-                tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
-                    ("id")));
-            }
-            framework.AddSuppliers(tableBuilder);
-            framework.AssertBothValid("combination03");
-        }
-
-        [NUnit.Framework.Test]
         public virtual void Combination04() {
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             for (int i = 0; i < 12; i++) {
@@ -888,14 +873,14 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("FancyTD", StandardRoles.TD);
             }
             ));
-            tableBuilder.AddBodyCell(new _Generator_1027());
-            tableBuilder.AddBodyCell(new _Generator_1037());
+            tableBuilder.AddBodyCell(new _Generator_1007());
+            tableBuilder.AddBodyCell(new _Generator_1017());
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableCustomRoles");
         }
 
-        private sealed class _Generator_1027 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_1027() {
+        private sealed class _Generator_1007 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_1007() {
             }
 
             public Cell Generate() {
@@ -906,8 +891,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1037 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_1037() {
+        private sealed class _Generator_1017 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_1017() {
             }
 
             public Cell Generate() {

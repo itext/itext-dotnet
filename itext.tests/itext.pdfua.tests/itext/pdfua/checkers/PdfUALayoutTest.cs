@@ -21,18 +21,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Pdfua;
+using iText.Pdfua.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua.Checkers {
@@ -47,6 +51,13 @@ namespace iText.Pdfua.Checkers {
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
+
+        private UaValidationTestFramework framework;
+
+        [NUnit.Framework.SetUp]
+        public virtual void InitializeFramework() {
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        }
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -122,6 +133,157 @@ namespace iText.Pdfua.Checkers {
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
+
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void AddNoteWithoutIdTest() {
+            framework.AddSuppliers(new _Generator_163());
+            framework.AssertBothFail("noteWithoutID", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY);
+        }
+
+        private sealed class _Generator_163 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_163() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph note = new Paragraph("note");
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(PdfUALayoutTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(StandardRoles.NOTE);
+                return note;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 2)]
+        public virtual void AddTwoNotesWithSameIdTest() {
+            framework.AddSuppliers(new _Generator_185(), new _Generator_201());
+            framework.AssertBothFail("twoNotesWithSameId", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
+                , "123"), false);
+        }
+
+        private sealed class _Generator_185 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_185() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph note = new Paragraph("note 1");
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(PdfUALayoutTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(StandardRoles.NOTE);
+                note.GetAccessibilityProperties().SetStructureElementIdString("123");
+                return note;
+            }
+        }
+
+        private sealed class _Generator_201 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_201() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph note = new Paragraph("note 2");
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(PdfUALayoutTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(StandardRoles.NOTE);
+                note.GetAccessibilityProperties().SetStructureElementIdString("123");
+                return note;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNoteWithValidIdTest() {
+            framework.AddSuppliers(new _Generator_224());
+            framework.AssertBothValid("noteWithValidID");
+        }
+
+        private sealed class _Generator_224 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_224() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph note = new Paragraph("note");
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(PdfUALayoutTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(StandardRoles.NOTE);
+                note.GetAccessibilityProperties().SetStructureElementIdString("123");
+                return note;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddTwoNotesWithDifferentIdTest() {
+            framework.AddSuppliers(new _Generator_245(), new _Generator_261());
+            framework.AssertBothValid("twoNotesWithDifferentId");
+        }
+
+        private sealed class _Generator_245 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_245() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph note = new Paragraph("note 1");
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(PdfUALayoutTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(StandardRoles.NOTE);
+                note.GetAccessibilityProperties().SetStructureElementIdString("123");
+                return note;
+            }
+        }
+
+        private sealed class _Generator_261 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_261() {
+            }
+
+            public IBlockElement Generate() {
+                Paragraph note = new Paragraph("note 2");
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(PdfUALayoutTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(StandardRoles.NOTE);
+                note.GetAccessibilityProperties().SetStructureElementIdString("234");
+                return note;
+            }
+        }
     }
 }

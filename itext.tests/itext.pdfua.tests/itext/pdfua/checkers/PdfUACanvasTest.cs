@@ -52,9 +52,16 @@ namespace iText.Pdfua.Checkers {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUACanvasTest/";
 
+        private UaValidationTestFramework framework;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.SetUp]
+        public virtual void InitializeFramework() {
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -539,6 +546,59 @@ namespace iText.Pdfua.Checkers {
             );
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
                 , "Courier"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_19_003_iDEntryInNoteTagIsNotPresent() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                PdfStructElem doc = pdfDoc.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDoc, PdfName.Document));
+                PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDoc, PdfName.P, page1));
+                PdfMcr mcr = paragraph.AddKid(new PdfMcrNumber(page1, paragraph));
+                doc.AddKid(new PdfStructElem(pdfDoc, PdfName.Note, page1));
+                canvas.OpenTag(new CanvasTag(mcr)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200, 200).ShowText
+                    ("Hello World!").EndText().RestoreState().CloseTag();
+            }
+            );
+            framework.AssertBothFail("invalidNoteTag02", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_19_003_validNoteTagIsPresent() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                PdfPage page1 = pdfDocument.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                PdfStructElem doc = pdfDocument.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDocument, PdfName.Document
+                    ));
+                PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDocument, PdfName.P, page1));
+                PdfMcr mcr = paragraph.AddKid(new PdfMcrNumber(page1, paragraph));
+                PdfStructElem note = doc.AddKid(new PdfStructElem(pdfDocument, PdfName.Note, page1));
+                note.Put(PdfName.ID, new PdfString("1"));
+                canvas.OpenTag(new CanvasTag(mcr)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200, 200).ShowText
+                    ("Hello World!").EndText().RestoreState().CloseTag();
+            }
+            );
+            framework.AssertBothValid("validNoteTagPresent");
+            String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent.pdf";
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validNoteTagPresent.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
     }
 }

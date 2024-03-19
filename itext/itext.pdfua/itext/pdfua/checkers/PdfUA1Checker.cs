@@ -95,6 +95,11 @@ namespace iText.Pdfua.Checkers {
                     break;
                 }
 
+                case IsoKey.DUPLICATE_ID_ENTRY: {
+                    throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
+                        , obj));
+                }
+
                 case IsoKey.PDF_OBJECT: {
                     CheckPdfObject((PdfObject)obj);
                     break;
@@ -288,6 +293,7 @@ namespace iText.Pdfua.Checkers {
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
             tagTreeIterator.AddHandler(new FormulaCheckUtil.FormulaTagHandler(context));
+            tagTreeIterator.AddHandler(new NoteCheckUtil.NoteTagHandler(context));
             tagTreeIterator.AddHandler(new HeadingsChecker.HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             tagTreeIterator.Traverse();

@@ -53,19 +53,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="key">key of the entry</param>
         /// <param name="value">object to add</param>
         public virtual void AddEntry(PdfString key, PdfObject value) {
-            PdfObject existingVal = items.Get(key);
-            if (existingVal != null) {
-                PdfIndirectReference valueRef = value.GetIndirectReference();
-                if (valueRef != null && valueRef.Equals(existingVal.GetIndirectReference())) {
-                    return;
-                }
-                else {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE
-                        , key));
-                }
-            }
-            modified = true;
-            items.Put(key, value);
+            AddEntry(key, value, null);
         }
 
         /// <summary>Add an entry to the name tree.</summary>
@@ -139,6 +127,30 @@ namespace iText.Kernel.Pdf {
             PdfDictionary[] leaves = ConstructLeafArr(names);
             // recursively refine the tree to balance it.
             return ReduceTree(names, leaves, leaves.Length, NODE_SIZE * NODE_SIZE);
+        }
+
+        /// <summary>Add an entry to the name tree.</summary>
+        /// <param name="key">key of the entry</param>
+        /// <param name="value">object to add</param>
+        /// <param name="onErrorAction">action to perform if such entry exists</param>
+        protected internal virtual void AddEntry(PdfString key, PdfObject value, Action<PdfDocument> onErrorAction
+            ) {
+            PdfObject existingVal = items.Get(key);
+            if (existingVal != null) {
+                PdfIndirectReference valueRef = value.GetIndirectReference();
+                if (valueRef != null && valueRef.Equals(existingVal.GetIndirectReference())) {
+                    return;
+                }
+                else {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE
+                        , key));
+                    if (onErrorAction != null) {
+                        onErrorAction(pdfDoc);
+                    }
+                }
+            }
+            modified = true;
+            items.Put(key, value);
         }
 
         protected internal void SetItems(LinkedDictionary<PdfString, PdfObject> items) {
