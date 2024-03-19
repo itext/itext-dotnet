@@ -1,61 +1,60 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.io.netstandard", "itext\itext.io\itext.io.csproj", "{4C4C74D4-00E2-43A4-9D7A-54352096DE32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.io", "itext\itext.io\itext.io.csproj", "{4C4C74D4-00E2-43A4-9D7A-54352096DE32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdftest.netstandard", "itext\itext.pdftest\itext.pdftest.csproj", "{9BE8BB63-8A73-4348-9387-F47377B9F1BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdftest", "itext\itext.pdftest\itext.pdftest.csproj", "{9BE8BB63-8A73-4348-9387-F47377B9F1BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.io.tests.netstandard", "itext.tests\itext.io.tests\itext.io.tests.csproj", "{DC025E65-67E8-47BD-B135-1B71C05EE35E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.io.tests", "itext.tests\itext.io.tests\itext.io.tests.csproj", "{DC025E65-67E8-47BD-B135-1B71C05EE35E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.kernel.netstandard", "itext\itext.kernel\itext.kernel.csproj", "{76166842-A194-43B3-B5C0-4C78B845DABA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.kernel", "itext\itext.kernel\itext.kernel.csproj", "{76166842-A194-43B3-B5C0-4C78B845DABA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.kernel.tests.netstandard", "itext.tests\itext.kernel.tests\itext.kernel.tests.csproj", "{9EB233B4-5821-49DC-959E-F7BBA3D6DEB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.kernel.tests", "itext.tests\itext.kernel.tests\itext.kernel.tests.csproj", "{9EB233B4-5821-49DC-959E-F7BBA3D6DEB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.layout.netstandard", "itext\itext.layout\itext.layout.csproj", "{7CACC13D-D87F-4AE3-9B07-6B94F1798AE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.layout", "itext\itext.layout\itext.layout.csproj", "{7CACC13D-D87F-4AE3-9B07-6B94F1798AE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdfa.netstandard", "itext\itext.pdfa\itext.pdfa.csproj", "{6BF0A6C3-8982-4507-B704-C0878243B322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdfa", "itext\itext.pdfa\itext.pdfa.csproj", "{6BF0A6C3-8982-4507-B704-C0878243B322}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.forms.netstandard", "itext\itext.forms\itext.forms.csproj", "{22FE2361-9580-43BC-98A7-608CFCAE4E8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.forms", "itext\itext.forms\itext.forms.csproj", "{22FE2361-9580-43BC-98A7-608CFCAE4E8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.barcodes.netstandard", "itext\itext.barcodes\itext.barcodes.csproj", "{ED4A03D3-DFC7-4760-9066-D01D4134627D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.barcodes", "itext\itext.barcodes\itext.barcodes.csproj", "{ED4A03D3-DFC7-4760-9066-D01D4134627D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.font-asian.netstandard", "itext\itext.font-asian\itext.font-asian.csproj", "{C3D759CE-C105-4566-A125-FBD77CFC7A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.font-asian", "itext\itext.font-asian\itext.font-asian.csproj", "{C3D759CE-C105-4566-A125-FBD77CFC7A82}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.hyph.netstandard", "itext\itext.hyph\itext.hyph.csproj", "{9AB67CFB-6695-4769-8E21-9BA0A12BD67C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.hyph", "itext\itext.hyph\itext.hyph.csproj", "{9AB67CFB-6695-4769-8E21-9BA0A12BD67C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.sign.netstandard", "itext\itext.sign\itext.sign.csproj", "{F284CE2A-821F-4B04-8CE3-558DAC5F8674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.sign", "itext\itext.sign\itext.sign.csproj", "{F284CE2A-821F-4B04-8CE3-558DAC5F8674}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.barcodes.tests.netstandard", "itext.tests\itext.barcodes.tests\itext.barcodes.tests.csproj", "{4BB4B5FD-1EE1-4558-B126-E9E18BC45876}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.barcodes.tests", "itext.tests\itext.barcodes.tests\itext.barcodes.tests.csproj", "{4BB4B5FD-1EE1-4558-B126-E9E18BC45876}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.forms.tests.netstandard", "itext.tests\itext.forms.tests\itext.forms.tests.csproj", "{732D6882-40DF-41CB-8A18-ED43D4757177}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.forms.tests", "itext.tests\itext.forms.tests\itext.forms.tests.csproj", "{732D6882-40DF-41CB-8A18-ED43D4757177}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.layout.tests.netstandard", "itext.tests\itext.layout.tests\itext.layout.tests.csproj", "{620C13EC-D9B8-4F49-B536-5DD7E08B3984}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.layout.tests", "itext.tests\itext.layout.tests\itext.layout.tests.csproj", "{620C13EC-D9B8-4F49-B536-5DD7E08B3984}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdfa.tests.netstandard", "itext.tests\itext.pdfa.tests\itext.pdfa.tests.csproj", "{BA6474C1-E64B-4522-8D8B-A7AE10D2ED86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdfa.tests", "itext.tests\itext.pdfa.tests\itext.pdfa.tests.csproj", "{BA6474C1-E64B-4522-8D8B-A7AE10D2ED86}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.sign.tests.netstandard", "itext.tests\itext.sign.tests\itext.sign.tests.csproj", "{22C91DB4-51CD-4339-B904-E5FE38B271CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.sign.tests", "itext.tests\itext.sign.tests\itext.sign.tests.csproj", "{22C91DB4-51CD-4339-B904-E5FE38B271CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.styledxmlparser.netstandard", "itext\itext.styledxmlparser\itext.styledxmlparser.csproj", "{6894C148-5379-4D63-AC21-D67BD04AA064}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.styledxmlparser", "itext\itext.styledxmlparser\itext.styledxmlparser.csproj", "{6894C148-5379-4D63-AC21-D67BD04AA064}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.styledxmlparser.tests.netstandard", "itext.tests\itext.styledxmlparser.tests\itext.styledxmlparser.tests.csproj", "{2785E385-0940-4023-9868-8CDD25998176}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.styledxmlparser.tests", "itext.tests\itext.styledxmlparser.tests\itext.styledxmlparser.tests.csproj", "{2785E385-0940-4023-9868-8CDD25998176}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.svg.netstandard", "itext\itext.svg\itext.svg.csproj", "{8D69BA6B-D165-45C1-B144-F187B72850B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.svg", "itext\itext.svg\itext.svg.csproj", "{8D69BA6B-D165-45C1-B144-F187B72850B9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.svg.tests.netstandard", "itext.tests\itext.svg.tests\itext.svg.tests.csproj", "{9F61F451-EC4F-4D1A-B339-CEDD5FA4257C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.svg.tests", "itext.tests\itext.svg.tests\itext.svg.tests.csproj", "{9F61F451-EC4F-4D1A-B339-CEDD5FA4257C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.pdftest.tests.netstandard", "itext.tests\itext.pdftest.tests\itext.pdftest.tests.csproj", "{46C393D2-BFAB-473A-AF06-E5FB586493FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.pdftest.tests", "itext.tests\itext.pdftest.tests\itext.pdftest.tests.csproj", "{46C393D2-BFAB-473A-AF06-E5FB586493FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.commons.netstandard", "itext\itext.commons\itext.commons.csproj", "{6DBE9C11-7C0D-4039-B8B1-01AC743D5309}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.commons", "itext\itext.commons\itext.commons.csproj", "{6DBE9C11-7C0D-4039-B8B1-01AC743D5309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.commons.tests.netstandard", "itext.tests\itext.commons.tests\itext.commons.tests.csproj", "{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.commons.tests", "itext.tests\itext.commons.tests\itext.commons.tests.csproj", "{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-adapter.netstandard", "itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj", "{3A5D9DAC-A654-4542-8114-1D5B2F153D69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.bouncy-castle-adapter", "itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj", "{3A5D9DAC-A654-4542-8114-1D5B2F153D69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-fips-adapter.netstandard", "itext\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj", "{3B634E19-5522-4907-8EE4-3FB017A4FC86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.bouncy-castle-fips-adapter", "itext\itext.bouncy-castle-fips-adapter\itext.bouncy-castle-fips-adapter.csproj", "{3B634E19-5522-4907-8EE4-3FB017A4FC86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.bouncy-castle-connector.netstandard", "itext\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj", "{C68E3329-A2E4-4B33-BADE-0521B8E832AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itext.bouncy-castle-connector", "itext\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj", "{C68E3329-A2E4-4B33-BADE-0521B8E832AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "itext.pdfua", "itext\itext.pdfua\itext.pdfua.csproj", "{9E785EC2-E32B-4C02-AFB4-84F99C587DEF}"
 EndProject
@@ -359,18 +358,6 @@ Global
 		{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}.Release|x64.Build.0 = Release|Any CPU
 		{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}.Release|x86.ActiveCfg = Release|Any CPU
 		{726AEDB2-0B0D-45B8-A744-BFFEE36A187E}.Release|x86.Build.0 = Release|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x64.Build.0 = Debug|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x86.Build.0 = Debug|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x64.ActiveCfg = Release|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x64.Build.0 = Release|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x86.ActiveCfg = Release|Any CPU
-		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x86.Build.0 = Release|Any CPU
 		{3A5D9DAC-A654-4542-8114-1D5B2F153D69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A5D9DAC-A654-4542-8114-1D5B2F153D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A5D9DAC-A654-4542-8114-1D5B2F153D69}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -383,6 +370,18 @@ Global
 		{3A5D9DAC-A654-4542-8114-1D5B2F153D69}.Release|x64.Build.0 = Release|Any CPU
 		{3A5D9DAC-A654-4542-8114-1D5B2F153D69}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A5D9DAC-A654-4542-8114-1D5B2F153D69}.Release|x86.Build.0 = Release|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x64.Build.0 = Debug|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Debug|x86.Build.0 = Debug|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x64.ActiveCfg = Release|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x64.Build.0 = Release|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x86.ActiveCfg = Release|Any CPU
+		{3B634E19-5522-4907-8EE4-3FB017A4FC86}.Release|x86.Build.0 = Release|Any CPU
 		{C68E3329-A2E4-4B33-BADE-0521B8E832AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C68E3329-A2E4-4B33-BADE-0521B8E832AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C68E3329-A2E4-4B33-BADE-0521B8E832AD}.Debug|x64.ActiveCfg = Debug|Any CPU

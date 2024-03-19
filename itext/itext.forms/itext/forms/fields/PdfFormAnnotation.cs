@@ -766,17 +766,46 @@ namespace iText.Forms.Fields {
         /// <param name="value">the value of the radio button.</param>
         protected internal virtual void DrawRadioButtonAndSaveAppearance(String value) {
             Rectangle rectangle = GetRect(this.GetPdfObject());
-            if (rectangle == null) {
+            if(rectangle == null) {
                 return;
             }
-            if (!(formFieldElement is Radio)) {
+
+            // Custom >>>>>>>>>>>>>>
+            var fontColor = ColorConstants.BLACK;
+            CheckBoxType? checkType = null;
+            if(parent != null && parent.checkType != null)
+            {
+                fontColor = GetParentField().GetColor();
+                checkType = parent.checkType.GetValue();
+            }
+            if(this.GetColor() != null)
+                fontColor = this.GetColor();
+            // Custom<<<<<<<<<<<<<<<<<<<<<
+
+
+            if(!(formFieldElement is Radio)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new Radio("");
+                if(checkType != null)
+                    formFieldElement = new Radio("", checkType.Value);
+                else
+                    formFieldElement = new Radio("");
             }
             bool wasChecked = true.Equals(formFieldElement.GetProperty<bool?>(FormProperty.FORM_FIELD_CHECKED));
             SetModelElementProperties(GetRect(GetPdfObject()));
             // First draw off appearance
             ((Radio)formFieldElement).SetChecked(false);
+
+            // Custom >>>>>>>>>>>>>> 
+            if(checkType != null)
+            {
+                if(((Radio)formFieldElement).HasProperty(FormProperty.FORM_CHECKBOX_TYPE))
+                    ((Radio)formFieldElement).SetCheckBoxType(checkType.Value);
+
+                ((Radio)formFieldElement).SetFontColor(fontColor);
+            }
+            // Custom<<<<<<<<<<<<<<<<<<<<<
+
+
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight
                 ()));
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, this.GetDocument());
@@ -788,6 +817,15 @@ namespace iText.Forms.Fields {
             if (value != null && !String.IsNullOrEmpty(value) && !iText.Forms.Fields.PdfFormAnnotation.OFF_STATE_VALUE
                 .Equals(value)) {
                 ((Radio)formFieldElement).SetChecked(true);
+                if(checkType != null)
+                {
+                    if(((Radio)formFieldElement).HasProperty(FormProperty.FORM_CHECKBOX_TYPE))
+                        ((Radio)formFieldElement).SetCheckBoxType(checkType.Value);
+
+                    ((Radio)formFieldElement).SetFontColor(fontColor);
+                }
+                // Custom<<<<<<<<<<<<<<<<<<<<<
+
                 PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
                     )));
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());

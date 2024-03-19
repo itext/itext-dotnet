@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Forms;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Util;
@@ -114,10 +115,17 @@ namespace iText.Forms.Form.Renderer {
         /// <summary><inheritDoc/></summary>
         protected internal override IRenderer CreateFlatRenderer() {
             UnitValue heightUV = GetPropertyAsUnitValue(Property.HEIGHT);
-            UnitValue widthUV = GetPropertyAsUnitValue(Property.WIDTH);
-            float height = null == heightUV ? DEFAULT_SIZE : heightUV.GetValue();
-            float width = null == widthUV ? DEFAULT_SIZE : widthUV.GetValue();
-            float size = Math.Min(height, width);
+            UnitValue widthUV  = GetPropertyAsUnitValue(Property.WIDTH);
+            float height       = null == heightUV ? DEFAULT_SIZE : heightUV.GetValue();
+            float width        = null == widthUV ? DEFAULT_SIZE : widthUV.GetValue();
+            float size         = Math.Min(height, width);
+            var border         = this.GetProperty<Border>(Property.BORDER);
+            var checkType      = (int)CheckBoxType.CIRCLE;
+            if(this.HasProperty(FormProperty.FORM_CHECKBOX_TYPE))
+                   checkType   = ((IFormField)this.modelElement).GetProperty<int>(FormProperty.FORM_CHECKBOX_TYPE);
+            var backGround     = this.GetProperty<Background>(Property.BACKGROUND);
+
+
             // Set size to current renderer
             SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(height));
             SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
@@ -125,8 +133,13 @@ namespace iText.Forms.Form.Renderer {
                 ).SetVerticalAlignment(DEFAULT_VERTICAL_ALIGNMENT).SetMargin(0);
             paragraph.SetProperty(Property.BOX_SIZING, this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING));
             paragraph.SetBorder(this.GetProperty<Border>(Property.BORDER));
-            paragraph.SetProperty(Property.BACKGROUND, this.GetProperty<Background>(Property.BACKGROUND));
-            paragraph.SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
+
+            if(backGround != null)
+            {
+                paragraph.SetProperty(Property.BACKGROUND, backGround);
+            }
+            if(checkType == (int)CheckBoxType.CIRCLE)
+                paragraph.SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
             return new RadioRenderer.FlatParagraphRenderer(this, paragraph);
         }
 
@@ -201,10 +214,95 @@ namespace iText.Forms.Form.Renderer {
                     // Nothing to draw
                     return;
                 }
+                var checkType = (int)CheckBoxType.CIRCLE;
+                if(this._enclosing.HasProperty(FormProperty.FORM_CHECKBOX_TYPE))
+                {
+                    checkType = ((IFormField)this._enclosing.modelElement).GetProperty<int>(FormProperty.FORM_CHECKBOX_TYPE);
+                    var fontColor = this.GetProperty<Color>(Property.FONT_COLOR);
+                    if(checkType == (int)CheckBoxType.CIRCLE && (fontColor == null || fontColor == DEFAULT_CHECKED_COLOR))
+                    {
+                        // classic circle
+                        DrawChildren_Classic(drawContext);
+                    }
+                    else
+                        DrawChildren_Custom(drawContext);
+                }
+                else
+                    DrawChildren_Classic(drawContext);
+            }
+
+            private void DrawChildren_Custom(DrawContext drawContext)
+            {
+                ((IFormField)this._enclosing.modelElement).SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                var checkType           = ((IFormField)this._enclosing.modelElement).GetProperty<int>(FormProperty.FORM_CHECKBOX_TYPE);
+                PdfCanvas pdfCanvas     = drawContext.GetCanvas();
+                Rectangle rectangle     = this.GetOccupiedArea().GetBBox().Clone();
+                Border border           = this.GetProperty<Border>(Property.BORDER);
+                var fontColor           = this.GetProperty<Color>(Property.FONT_COLOR);
+                var annotationFontColor = this._enclosing.GetProperty<Color>(Property.FONT_COLOR);
+                var borderWith          = 0f;
+                if(border != null)
+                {
+                    borderWith = border.GetWidth();
+                    var db = border.GetWidth() * 2;
+                    if(checkType == (int)CheckBoxType.CIRCLE)
+                        rectangle.ApplyMargins(borderWith, borderWith, borderWith, borderWith, false);
+                    else
+                        rectangle = new Rectangle(rectangle.GetWidth() - db, rectangle.GetHeight() - db);
+                }
+                else
+                {
+                    borderWith = 1f;
+                }
+
+                if(annotationFontColor != null)
+                    fontColor = annotationFontColor;
+                if(fontColor == null && annotationFontColor == null)
+                    fontColor = DEFAULT_CHECKED_COLOR;
+
+                pdfCanvas.SetFillColor(fontColor);
+                pdfCanvas.SaveState();
+
+                DrawCheckType(checkType, pdfCanvas, rectangle, borderWith);
+                pdfCanvas.RestoreState();
+            }
+            private static void DrawCheckType(int checkType, PdfCanvas pdfCanvas, Rectangle rectangle, float borderWith)
+            {
+                switch(checkType)
+                {
+                    case (int)CheckBoxType.CHECK:
+                        DrawingUtil.DrawPdfCheck(pdfCanvas, rectangle.GetWidth(), rectangle.GetHeight(), borderWith, borderWith);
+                        break;
+                    case (int)CheckBoxType.CIRCLE:
+                        DrawingUtil.DrawPdfCircle(pdfCanvas, rectangle.GetWidth(), rectangle.GetHeight(), borderWith, borderWith);
+                        break;
+                    case (int)CheckBoxType.CROSS:
+                        DrawingUtil.DrawPdfCross(pdfCanvas, rectangle.GetWidth(), rectangle.GetHeight(), borderWith, borderWith);
+                        break;
+                    case (int)CheckBoxType.DIAMOND:
+                        DrawingUtil.DrawPdfDiamond(pdfCanvas, rectangle.GetWidth(), rectangle.GetHeight(), borderWith, borderWith);
+                        break;
+                    case (int)CheckBoxType.SQUARE:
+                        DrawingUtil.DrawPdfSquare(pdfCanvas, rectangle.GetWidth(), rectangle.GetHeight(), borderWith, borderWith);
+                        break;
+                    case (int)CheckBoxType.STAR:
+                        DrawingUtil.DrawPdfStar(pdfCanvas, rectangle.GetWidth(), rectangle.GetHeight(), borderWith, borderWith);
+                        break;
+                }
+            }
+
+            public void DrawChildren_Classic(DrawContext drawContext)
+            {
+                if(!this._enclosing.IsBoxChecked())
+                {
+                    // Nothing to draw
+                    return;
+                }
                 PdfCanvas canvas = drawContext.GetCanvas();
                 Rectangle rectangle = this.GetOccupiedArea().GetBBox().Clone();
                 Border border = this.GetProperty<Border>(Property.BORDER);
-                if (border != null) {
+                if(border != null)
+                {
                     rectangle.ApplyMargins(border.GetWidth(), border.GetWidth(), border.GetWidth(), border.GetWidth(), false);
                 }
                 float radius = Math.Min(rectangle.GetWidth(), rectangle.GetHeight()) / 2;
@@ -213,6 +311,7 @@ namespace iText.Forms.Form.Renderer {
                 DrawingUtil.DrawCircle(canvas, rectangle.GetLeft() + radius, rectangle.GetBottom() + radius, radius / 2);
                 canvas.RestoreState();
             }
+
 
             /// <summary><inheritDoc/></summary>
             /// <param name="drawContext">

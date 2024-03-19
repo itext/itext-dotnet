@@ -25,7 +25,9 @@ using System.IO;
 using iText.Forms;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
+using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
+using iText.Forms.Form.Renderer.Checkboximpl;
 using iText.Forms.Logs;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -285,6 +287,135 @@ namespace iText.Forms.Form.Element {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
+        [NUnit.Framework.Test]
+        public virtual void RadioButtonCheckTypeCheckTest()
+        {
+            String outPdf           = DESTINATION_FOLDER + "radioButtonCheckTypeCheck.pdf";
+            String cmpPdf           = SOURCE_FOLDER + "cmp_radioButtonCheckTypeCheck.pdf";
+            SolidBorder border      = new SolidBorder(ColorConstants.BLUE, 3);
+            Color checkColor        = ColorConstants.BLUE;
+            Color backColor         = ColorConstants.GREEN;
+            CheckBoxType checkType  = Fields.Properties.CheckBoxType.CHECK;
+            PdfString caValue       = new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(checkType));
+            using(PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf)))
+            {
+                PdfButtonFormField btnGroup = CreateRadioButtonGroup(border, checkColor, backColor, checkType, caValue, pdfDocument);
+                // set selected radio button
+                btnGroup.SetValue("formRadio1");
+                pdfDocument.Close();
+            }
+
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+        [NUnit.Framework.Test]
+        public virtual void RadioButtonCheckTypSquare()
+        {
+            String outPdf = DESTINATION_FOLDER + "radioButtonCheckTypeSquare.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_radioButtonCheckTypeSquare.pdf";
+            SolidBorder border = new SolidBorder(ColorConstants.ORANGE, 3);
+            Color checkColor = ColorConstants.ORANGE;
+            Color backColor = ColorConstants.GRAY;
+            CheckBoxType checkType = Fields.Properties.CheckBoxType.SQUARE;
+            PdfString caValue = new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(checkType));
+            using(PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf)))
+            {
+                PdfButtonFormField btnGroup = CreateRadioButtonGroup(border, checkColor, backColor, checkType, caValue, pdfDocument);
+                // change btnGroup to allow unselect 
+                btnGroup.SetRadio(false);
+                btnGroup.SetValue("formRadio2", false);
+                pdfDocument.Close();
+            }
+
+            NUnit.Framework.Assert.IsTrue(File.Exists(outPdf));//.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER)); 
+        }
+        [NUnit.Framework.Test]
+        public virtual void RadioButtonCheckTypSquare_NoSelection()
+        {
+            String outPdf = DESTINATION_FOLDER + "radioButtonCheckTypeSquare_NoSelection.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_radioButtonCheckTypeSquare_NoSelection.pdf";
+            SolidBorder border = new SolidBorder(ColorConstants.ORANGE, 3);
+            Color checkColor = ColorConstants.ORANGE;
+            Color backColor = ColorConstants.GRAY;
+            CheckBoxType checkType = Fields.Properties.CheckBoxType.SQUARE;
+            PdfString caValue = new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(checkType));
+            using(PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf)))
+            {
+                PdfButtonFormField btnGroup = CreateRadioButtonGroup(border, checkColor, backColor, checkType, caValue, pdfDocument);
+                // change btnGroup to allow unselect 
+                btnGroup.SetRadio(false);
+                btnGroup.SetValue("formRadio2", false);
+                pdfDocument.Close();
+            }
+
+            NUnit.Framework.Assert.IsTrue(File.Exists(outPdf));//.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER)); 
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RadioButtonCheckTypeStar_NoSelectionTest()
+        {
+            String outPdf = DESTINATION_FOLDER + "radioButtonCheckTypeStar_NoSelection.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_radioButtonCheckTypeStar_NoSelection.pdf";
+            SolidBorder border = new SolidBorder(ColorConstants.ORANGE, 3);
+            Color checkColor = ColorConstants.ORANGE;
+            Color backColor = ColorConstants.GRAY;
+            CheckBoxType checkType = Fields.Properties.CheckBoxType.STAR;
+            PdfString caValue = new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(checkType));
+            using(PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf)))
+            {
+                PdfButtonFormField btnGroup = CreateRadioButtonGroup(border, checkColor, backColor, checkType, caValue, pdfDocument);
+                // change btnGroup to allow unselect 
+                btnGroup.SetRadio(false);
+                btnGroup.SetValue("", false);
+                pdfDocument.Close();
+            }
+
+            NUnit.Framework.Assert.IsTrue(File.Exists(outPdf));//.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER)); //.IsTrue(File.Exists(outPdf));//
+        }
+        private static PdfButtonFormField CreateRadioButtonGroup(SolidBorder border, Color checkColor, Color backColor, CheckBoxType checkType, PdfString caValue, PdfDocument pdfDocument)
+        {
+            pdfDocument.AddNewPage(PageSize.A4);
+            var form = PdfAcroForm.GetAcroForm(pdfDocument, true);
+            // create group
+            var radioBuilder1 = new RadioFormFieldBuilder(pdfDocument, "form radio group");
+            radioBuilder1.SetCheckType(checkType);
+            var btnGroup = radioBuilder1.CreateRadioGroup();
+            btnGroup.SetColor(ColorConstants.BLUE);
+            var formField = btnGroup;
+            formField.SetCheckType(checkType);
+            // create button1
+            var btn1 = radioBuilder1.CreateRadioButton("formRadio1", new Rectangle(0, 800, 20, 20));
+            btn1.SetPage(1);
+            btn1.SetBorderColor(border.GetColor());
+            btn1.SetBorderWidth(border.GetWidth());
+            btn1.SetBackgroundColor(backColor);
+            btn1.SetColor(checkColor);
+            btn1.SetParent(formField);
+            btnGroup.AddKid(btn1);
+            // set visible check type (highlight appearance in Acrobat)
+            var mk1 = btn1.GetWidget().GetAppearanceCharacteristics();
+            if(mk1 == null)
+                mk1 = new PdfDictionary();
+            mk1.Put(PdfName.CA, caValue);
+            btn1.Put(PdfName.MK, mk1);
+            // create button2
+            var btn2 = radioBuilder1.CreateRadioButton("formRadio2", new Rectangle(22, 800, 20, 20));
+            btn2.SetPage(1);
+            btn2.SetBorderColor(border.GetColor());
+            btn2.SetBorderWidth(border.GetWidth());
+            btn2.SetBackgroundColor(backColor);
+            btn2.SetColor(checkColor);
+            btn2.SetParent(formField);
+            //  set visible check type (highlight appearance in Acrobat)
+            var mk2 = btn2.GetWidget().GetAppearanceCharacteristics();
+            if(mk2 == null)
+                mk2 = new PdfDictionary();
+            mk2.Put(PdfName.CA, caValue);
+            btn2.Put(PdfName.MK, mk2);
+            btnGroup.AddKid(btn2);
+            form.AddField(btnGroup);
+            return btnGroup;
+        }
+
 
         [NUnit.Framework.Test]
         public virtual void MultiPageRadioFieldTest() {

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms.Exceptions;
+using iText.Forms.Fields.Properties;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -36,6 +37,8 @@ namespace iText.Forms.Fields {
         public RadioFormFieldBuilder(PdfDocument document, String radioGroupFormFieldName)
             : base(document, radioGroupFormFieldName) {
         }
+
+        private CheckBoxType checkType = CheckBoxType.CIRCLE;
 
         /// <summary>Creates radio group form field instance based on provided parameters.</summary>
         /// <returns>
@@ -82,6 +85,22 @@ namespace iText.Forms.Fields {
 
         /// <summary><inheritDoc/></summary>
         protected internal override iText.Forms.Fields.RadioFormFieldBuilder GetThis() {
+            return this;
+        }
+
+        /// <summary>Gets check type for checkbox form field.</summary>
+        /// <returns>check type to be set for checkbox form field</returns>
+        public virtual CheckBoxType GetCheckType()
+        {
+            return checkType;
+        }
+        public virtual RadioFormFieldBuilder SetCheckType(CheckBoxType checkType)
+        {
+            if(GetConformanceLevel() != null)
+                this.checkType = CheckBoxType.CIRCLE;
+            else
+                this.checkType = checkType;
+
             return this;
         }
     }

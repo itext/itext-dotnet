@@ -52,6 +52,129 @@ namespace iText.Forms.Util {
              + "-0.47 0 l\n" + "-0.761 0 l\n" + "-0.526 -0.171 l\n" + "-0.616 -0.448 l\n" + "-0.381 -0.277 l\n" + 
             "-0.145 -0.448 l\n" + "-0.236 -0.171 l\n" + "h\n" + "f\n";
 
+        #region PDF Custom  Appearance
+        private static void DrawPdfAppearanceString(PdfCanvas canvas, float width, float height, float moveX, float moveY, String appearanceString)
+        {
+            canvas.SaveState();
+            canvas.ConcatMatrix(width, 0, 0, height, moveX, moveY);
+            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            canvas.RestoreState();
+        }
+        /// <summary>Draws a PDF check mark in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
+        public static void DrawPdfCheck(PdfCanvas canvas, float width, float height, float moveX, float moveY)
+        {
+            DrawPdfAppearanceString(canvas, width, height, moveX, moveY, check);
+        }
+
+        /// <summary>Draws a PDF check mark in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        public static void DrawPdfCheck(PdfCanvas canvas, float width, float height)
+        {
+            DrawPdfAppearanceString(canvas, width, height, 0, 0, check);
+        }
+
+        /// <summary>Draws a PDF circle in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
+        public static void DrawPdfCircle(PdfCanvas canvas, float width, float height, float moveX, float moveY)
+        {
+            DrawPdfAppearanceString(canvas, width, height, moveX, moveY, circle);
+        }
+
+        /// <summary>Draws a PDFcircle in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        public static void DrawPdfCircle(PdfCanvas canvas, float width, float height)
+        {
+            DrawPdfAppearanceString(canvas, width, height, 0, 0, circle);
+        }
+
+        /// <summary>Draws a PDF  cross in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
+        public static void DrawPdfCross(PdfCanvas canvas, float width, float height, float moveX, float moveY)
+        {
+            DrawPdfAppearanceString(canvas, width, height, moveX, moveY, cross);
+        }
+
+        /// <summary>Draws a PDF  cross in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        public static void DrawPdfCross(PdfCanvas canvas, float width, float height)
+        {
+            DrawPdfAppearanceString(canvas, width, height, 0, 0, cross);
+        }
+
+        /// <summary>Draws a PDF diamond in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
+        public static void DrawPdfDiamond(PdfCanvas canvas, float width, float height, float moveX, float moveY)
+        {
+            DrawPdfAppearanceString(canvas, width, height, moveX, moveY, diamond);
+        }
+
+        /// <summary>Draws a PDF diamond in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        public static void DrawPdfDiamond(PdfCanvas canvas, float width, float height)
+        {
+            DrawPdfAppearanceString(canvas, width, height, 0, 0, diamond);
+        }
+
+        /// <summary>Draws a PDF square in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
+        public static void DrawPdfSquare(PdfCanvas canvas, float width, float height, float moveX, float moveY)
+        {
+            DrawPdfAppearanceString(canvas, width, height, moveX, moveY, square);
+        }
+
+
+
+        /// <summary>Draws a PDF star in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        /// <param name="moveX">the x coordinate of the bottom left corner of the rectangle</param>
+        /// <param name="moveY">the y coordinate of the bottom left corner of the rectangle</param>
+        public static void DrawPdfStar(PdfCanvas canvas, float width, float height, float moveX, float moveY)
+        {
+            DrawPdfAppearanceString(canvas, width, height, moveX, moveY, star);
+        }
+
+        /// <summary>Draws a PDF star in the specified rectangle.</summary>
+        /// <param name="canvas">the canvas to draw on</param>
+        /// <param name="width">the width of the rectangle</param>
+        /// <param name="height">the height of the rectangle</param>
+        public static void DrawPdfStar(PdfCanvas canvas, float width, float height)
+        {
+            DrawPdfAppearanceString(canvas, width, height, 0, 0, star);
+        }
+        #endregion
+
+        #region PDF A Appearance
         private static void DrawPdfAAppearanceString(PdfCanvas canvas, float width, float height, float moveX, float
              moveY, String appearanceString) {
             canvas.SaveState();
@@ -190,5 +313,7 @@ namespace iText.Forms.Util {
         public static void DrawCircle(PdfCanvas canvas, float centerX, float centerY, float radius) {
             canvas.Circle(centerX, centerY, radius).Fill();
         }
+
+        #endregion
     }
 }
