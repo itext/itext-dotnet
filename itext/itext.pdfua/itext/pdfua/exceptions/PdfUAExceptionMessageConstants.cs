@@ -89,6 +89,12 @@ namespace iText.Pdfua.Exceptions {
         public const String VIEWER_PREFERENCES_IS_FALSE = "ViewerPreferences dictionary of the Catalog dictionary "
              + "contains a DisplayDocTitle entry with a value of false.";
 
+        public const String NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG = "Name entry is missing or has " + "an empty string as its value in an Optional Content Configuration Dictionary.";
+
+        public const String OCG_SHALL_NOT_CONTAIN_AS_ENTRY = "An AS entry appears in an Optional Content.";
+
+        public const String OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY = "Optional Content properties " + "configs shall be an array.";
+
         public const String DYNAMIC_XFA_FORMS_SHALL_NOT_BE_USED = "Dynamic XFA forms shall not be used.";
 
         private PdfUAExceptionMessageConstants() {

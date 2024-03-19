@@ -54,9 +54,16 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FOX = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/img/FOX.bmp";
 
+        private UaValidationTestFramework framework;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.SetUp]
+        public virtual void InitializeFramework() {
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -204,6 +211,119 @@ namespace iText.Pdfua.Checkers {
             info.SetTitle("English pangram");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckNameEntryShouldPresentInAllOCGDictionariesTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                pdfDocument.AddNewPage();
+                PdfDictionary ocProperties = new PdfDictionary();
+                PdfDictionary d = new PdfDictionary();
+                PdfArray configs = new PdfArray();
+                PdfDictionary config = new PdfDictionary();
+                config.Put(PdfName.Name, new PdfString("CustomName"));
+                configs.Add(config);
+                ocProperties.Put(PdfName.D, d);
+                ocProperties.Put(PdfName.Configs, configs);
+                pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            }
+            );
+            framework.AssertBothFail("pdfuaOCGPropertiesCheck01", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckAsKeyInContentConfigDictTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                pdfDocument.AddNewPage();
+                PdfDictionary ocProperties = new PdfDictionary();
+                PdfArray configs = new PdfArray();
+                PdfDictionary config = new PdfDictionary();
+                config.Put(PdfName.Name, new PdfString("CustomName"));
+                config.Put(PdfName.AS, new PdfArray());
+                configs.Add(config);
+                ocProperties.Put(PdfName.Configs, configs);
+                pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            }
+            );
+            framework.AssertBothFail("pdfuaOCGPropertiesCheck02", PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NameEntryisEmptyTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfDictionary ocProperties = new PdfDictionary();
+                PdfDictionary d = new PdfDictionary();
+                d.Put(PdfName.Name, new PdfString(""));
+                PdfArray configs = new PdfArray();
+                PdfDictionary config = new PdfDictionary();
+                config.Put(PdfName.Name, new PdfString(""));
+                configs.Add(config);
+                ocProperties.Put(PdfName.D, d);
+                ocProperties.Put(PdfName.Configs, configs);
+                pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            }
+            );
+            framework.AssertBothFail("pdfuaOCGPropertiesCheck03", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConfigsEntryisNotAnArrayTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfDictionary ocProperties = new PdfDictionary();
+                PdfDictionary d = new PdfDictionary();
+                d.Put(PdfName.Name, new PdfString(""));
+                PdfDictionary configs = new PdfDictionary();
+                ocProperties.Put(PdfName.D, d);
+                ocProperties.Put(PdfName.Configs, configs);
+                pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            }
+            );
+            framework.AssertBothFail("pdfuaOCGPropertiesCheck04", PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigsTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfDictionary ocProperties = new PdfDictionary();
+                PdfDictionary d = new PdfDictionary();
+                d.Put(PdfName.Name, new PdfString("CustomName"));
+                PdfArray configs = new PdfArray();
+                PdfDictionary config = new PdfDictionary();
+                config.Put(PdfName.Name, new PdfString("CustomName"));
+                configs.Add(config);
+                ocProperties.Put(PdfName.D, d);
+                ocProperties.Put(PdfName.Configs, configs);
+                pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            }
+            );
+            framework.AssertBothValid("pdfuaOCGPropertiesCheck");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidOCGsTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfDictionary ocProperties = new PdfDictionary();
+                PdfDictionary d = new PdfDictionary();
+                d.Put(PdfName.Name, new PdfString("CustomName"));
+                PdfArray configs = new PdfArray();
+                PdfArray ocgs = new PdfArray();
+                PdfDictionary config = new PdfDictionary();
+                config.Put(PdfName.Name, new PdfString("CustomName"));
+                configs.Add(config);
+                PdfDictionary ocg = new PdfDictionary();
+                ocg.Put(PdfName.Name, new PdfString("CustomName"));
+                ocgs.Add(ocg);
+                ocProperties.Put(PdfName.D, d);
+                ocProperties.Put(PdfName.Configs, configs);
+                ocProperties.Put(PdfName.OCGs, configs);
+                pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
+            }
+            );
+            framework.AssertBothValid("pdfuaOCGsPropertiesCheck");
         }
 
         [NUnit.Framework.Test]

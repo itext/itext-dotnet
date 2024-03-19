@@ -252,6 +252,7 @@ namespace iText.Pdfua.Checkers {
             }
             CheckViewerPreferences(catalog);
             CheckMetadata(catalog);
+            CheckOCProperties(catalogDict.GetAsDictionary(PdfName.OCProperties));
         }
 
         private void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
@@ -270,6 +271,43 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new HeadingsChecker.HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             tagTreeIterator.Traverse();
+        }
+
+        private void CheckOCProperties(PdfDictionary ocProperties) {
+            if (ocProperties == null) {
+                return;
+            }
+            if (!(ocProperties.Get(PdfName.Configs) is PdfArray)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
+                    );
+            }
+            PdfArray configs = ocProperties.GetAsArray(PdfName.Configs);
+            if (configs != null && !configs.IsEmpty()) {
+                PdfDictionary d = ocProperties.GetAsDictionary(PdfName.D);
+                CheckOCGNameAndASKey(d);
+                foreach (PdfObject config in configs) {
+                    CheckOCGNameAndASKey((PdfDictionary)config);
+                }
+                PdfArray ocgsArray = ocProperties.GetAsArray(PdfName.OCGs);
+                if (ocgsArray != null) {
+                    foreach (PdfObject ocg in ocgsArray) {
+                        CheckOCGNameAndASKey((PdfDictionary)ocg);
+                    }
+                }
+            }
+        }
+
+        private void CheckOCGNameAndASKey(PdfDictionary dict) {
+            if (dict == null) {
+                return;
+            }
+            if (dict.Get(PdfName.AS) != null) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY);
+            }
+            if (!(dict.Get(PdfName.Name) is PdfString) || (String.IsNullOrEmpty(((PdfString)dict.Get(PdfName.Name)).ToString
+                ()))) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG);
+            }
         }
 
         private void CheckFonts(ICollection<PdfFont> fontsInDocument) {
