@@ -414,6 +414,14 @@ namespace iText.Kernel.Pdf {
             readingCompleted = true;
         }
 
+        /// <summary>
+        /// Change the state of the cross-reference table to unmark that reading of the document
+        /// was completed.
+        /// </summary>
+        internal virtual void UnmarkReadingCompleted() {
+            readingCompleted = false;
+        }
+
         /// <summary>Check if reading of the document was completed.</summary>
         /// <returns>true if reading was completed and false otherwise</returns>
         internal virtual bool IsReadingCompleted() {
@@ -487,12 +495,20 @@ namespace iText.Kernel.Pdf {
             return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
 
-        /// <summary>Clear the state of the cross-reference table.</summary>
+        /// <summary>Clear the state of the cross-reference table without free references removal.</summary>
         internal virtual void Clear() {
             for (int i = 1; i <= count; i++) {
                 if (xref[i] != null && xref[i].IsFree()) {
                     continue;
                 }
+                xref[i] = null;
+            }
+            count = 1;
+        }
+
+        /// <summary>Clear the state of the cross-reference table including free references.</summary>
+        internal virtual void ClearAllReferences() {
+            for (int i = 1; i <= count; i++) {
                 xref[i] = null;
             }
             count = 1;

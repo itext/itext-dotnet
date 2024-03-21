@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.Test;
@@ -165,6 +166,44 @@ namespace iText.IO.Source {
                 ))));
             tok.ReadFully(new byte[7]);
             NUnit.Framework.Assert.AreEqual("15", tok.ReadString(data.Length));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNextEofShortTextTest() {
+            String data = "some text to test \ngetting end of\n file logic%%EOF";
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(
+                iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                long eofPosition = tok.GetNextEof();
+                NUnit.Framework.Assert.AreEqual(data.Length + 1, eofPosition);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNextEofLongTextTest() {
+            String data = "some text to test \ngetting end of\n file logic";
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < 20; ++i) {
+                stringBuilder.Append(data);
+            }
+            stringBuilder.Append("%%EOF");
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(stringBuilder.
+                ToString().GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                long eofPosition = tok.GetNextEof();
+                NUnit.Framework.Assert.AreEqual(data.Length * 20 + 6, eofPosition);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNextEofSeveralEofTest() {
+            String data = "some text %%EOFto test \nget%%EOFting end of\n fil%%EOFe logic%%EOF";
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(
+                iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                long eofPosition = tok.GetNextEof();
+                NUnit.Framework.Assert.AreEqual(data.IndexOf("%%EOF", StringComparison.Ordinal) + 6, eofPosition);
+            }
         }
 
         [NUnit.Framework.Test]

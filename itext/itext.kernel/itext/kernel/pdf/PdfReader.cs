@@ -67,6 +67,8 @@ namespace iText.Kernel.Pdf {
 
         private XMPMeta xmpMeta;
 
+        private PdfReader.XrefProcessor xrefProcessor = new PdfReader.XrefProcessor();
+
         protected internal PdfTokenizer tokens;
 
         protected internal PdfEncryption decrypt;
@@ -1222,6 +1224,7 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
+            ProcessXref(xref);
             PdfDictionary trailer = (PdfDictionary)ReadObject(false);
             PdfObject xrs = trailer.Get(PdfName.XRefStm);
             if (xrs != null && xrs.GetObjectType() == PdfObject.NUMBER) {
@@ -1362,6 +1365,7 @@ namespace iText.Kernel.Pdf {
                         ++start;
                     }
                 }
+                ProcessXref(xref);
                 ptr = prev;
                 if (alreadyVisitedXrefStreams.Contains(ptr)) {
                     throw new XrefCycledReferencesException(KernelExceptionMessageConstant.XREF_STREAM_HAS_CYCLED_REFERENCES);
@@ -1502,6 +1506,10 @@ namespace iText.Kernel.Pdf {
 
         internal virtual bool IsMemorySavingMode() {
             return memorySavingMode;
+        }
+
+        internal virtual void SetXrefProcessor(PdfReader.XrefProcessor xrefProcessor) {
+            this.xrefProcessor = xrefProcessor;
         }
 
         private void ProcessArrayReadError() {
@@ -1699,6 +1707,16 @@ namespace iText.Kernel.Pdf {
             return tok;
         }
 
+        private void ProcessXref(PdfXrefTable xrefTable) {
+            long currentPosition = tokens.GetPosition();
+            try {
+                xrefProcessor.ProcessXref(xrefTable, tokens);
+            }
+            finally {
+                tokens.Seek(currentPosition);
+            }
+        }
+
         protected internal class ReusableRandomAccessSource : IRandomAccessSource {
             private ByteBuffer buffer;
 
@@ -1783,6 +1801,24 @@ namespace iText.Kernel.Pdf {
             public bool IsStricter(PdfReader.StrictnessLevel compareWith) {
                 return compareWith == null || this.levelValue > compareWith.levelValue;
             }
+        }
+
+        /// <summary>Class containing a callback which is called on every xref table reading.</summary>
+        internal class XrefProcessor {
+            /// <summary>Process xref table.</summary>
+            /// <param name="xrefTable">
+            /// 
+            /// <see cref="PdfXrefTable"/>
+            /// to be processed
+            /// </param>
+            /// <param name="tokenizer">
+            /// 
+            /// <see cref="iText.IO.Source.PdfTokenizer"/>
+            /// to be processed
+            /// </param>
+            internal virtual void ProcessXref(PdfXrefTable xrefTable, PdfTokenizer tokenizer) {
+            }
+            // Do nothing.
         }
 
         void System.IDisposable.Dispose() {

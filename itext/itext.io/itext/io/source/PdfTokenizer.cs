@@ -253,6 +253,24 @@ namespace iText.IO.Source {
             throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND, this);
         }
 
+        /// <summary>Gets next %%EOF marker in current PDF file.</summary>
+        /// <returns>next %%EOF marker position</returns>
+        public virtual long GetNextEof() {
+            int arrLength = 128;
+            String str;
+            do {
+                long currentPosition = file.GetPosition();
+                str = ReadString(arrLength);
+                long eofPosition = str.IndexOf("%%EOF", StringComparison.Ordinal);
+                if (eofPosition >= 0) {
+                    // 6 stands for '%%EOF' length + 1
+                    return currentPosition + eofPosition + 6;
+                }
+            }
+            while (!String.IsNullOrEmpty(str));
+            throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_EOF_NOT_FOUND, this);
+        }
+
         public virtual void NextValidToken() {
             int level = 0;
             byte[] n1 = null;
