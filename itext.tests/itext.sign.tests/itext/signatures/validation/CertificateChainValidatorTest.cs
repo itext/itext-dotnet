@@ -27,6 +27,7 @@ using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Validation.Extensions;
+using iText.Signatures.Validation.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation {
@@ -43,6 +44,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), null
@@ -65,6 +67,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             validator.SetGlobalRequiredExtensions(JavaCollectionsUtil.SingletonList<CertificateExtension>(new KeyUsageExtension
@@ -133,6 +136,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), null
                 );
@@ -154,6 +158,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), JavaCollectionsUtil
@@ -176,6 +181,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             validator.SetGlobalRequiredExtensions(JavaCollectionsUtil.SingletonList<CertificateExtension>(new KeyUsageExtension
@@ -200,6 +206,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), JavaCollectionsUtil
@@ -228,6 +235,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             validator.SetGlobalRequiredExtensions(JavaCollectionsUtil.SingletonList<CertificateExtension>(new KeyUsageExtension
@@ -264,6 +272,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaUtil.ArraysAsList(intermediateCert, rootCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), null
                 );
@@ -289,6 +298,7 @@ namespace iText.Signatures.Validation {
                 ];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), null
@@ -321,6 +331,7 @@ namespace iText.Signatures.Validation {
                 ];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             CertificateChainValidator validator = new CertificateChainValidator();
+            validator.SetRevocationDataValidator(new CertificateChainValidatorTest.MockRevocationDataValidator());
             validator.SetKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             validator.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(signingCert, DateTimeUtil.GetCurrentUtcTime(), null
@@ -341,6 +352,13 @@ namespace iText.Signatures.Validation {
                 ()), item.GetMessage());
             Exception exception = item.GetExceptionCause();
             NUnit.Framework.Assert.IsTrue(exception is AbstractCertificateExpiredException);
+        }
+
+        private class MockRevocationDataValidator : RevocationDataValidator {
+            public override void Validate(ValidationReport report, IX509Certificate certificate, DateTime validationDate
+                ) {
+                return;
+            }
         }
     }
 }

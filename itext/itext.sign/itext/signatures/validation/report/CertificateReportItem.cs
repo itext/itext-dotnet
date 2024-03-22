@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Bouncycastle.Cert;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Report {
     /// <summary>Report item to be used for single certificate related failure or log message.</summary>
     public class CertificateReportItem : ReportItem {
         private readonly IX509Certificate certificate;
@@ -48,14 +48,14 @@ namespace iText.Signatures.Validation {
         /// <see cref="System.String"/>
         /// with the exact report item message
         /// </param>
-        /// <param name="result">
+        /// <param name="status">
         /// 
-        /// <see cref="ValidationResult"/>
-        /// , which this report item leads to
+        /// <see cref="ReportItemStatus"/>
+        /// report item status that determines validation result
         /// </param>
-        public CertificateReportItem(IX509Certificate certificate, String checkName, String message, ValidationReport.ValidationResult
-             result)
-            : this(certificate, checkName, message, null, result) {
+        public CertificateReportItem(IX509Certificate certificate, String checkName, String message, ReportItem.ReportItemStatus
+             status)
+            : this(certificate, checkName, message, null, status) {
         }
 
         /// <summary>
@@ -83,14 +83,14 @@ namespace iText.Signatures.Validation {
         /// <see cref="System.Exception"/>
         /// , which caused this report item
         /// </param>
-        /// <param name="result">
+        /// <param name="status">
         /// 
-        /// <see cref="ValidationResult"/>
-        /// , which this report item leads to
+        /// <see cref="ReportItemStatus"/>
+        /// report item status that determines validation result
         /// </param>
         public CertificateReportItem(IX509Certificate certificate, String checkName, String message, Exception cause
-            , ValidationReport.ValidationResult result)
-            : base(checkName, message, cause, result) {
+            , ReportItem.ReportItemStatus status)
+            : base(checkName, message, cause, status) {
             this.certificate = certificate;
         }
 
@@ -98,7 +98,7 @@ namespace iText.Signatures.Validation {
         /// <returns>
         /// 
         /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
-        /// related to this report item
+        /// related to this report item.
         /// </returns>
         public virtual IX509Certificate GetCertificate() {
             return certificate;

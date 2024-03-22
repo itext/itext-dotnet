@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -32,6 +33,7 @@ using iText.Signatures.Logs;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Validation.Extensions;
+using iText.Signatures.Validation.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation {
@@ -45,12 +47,6 @@ namespace iText.Signatures.Validation {
         private static readonly char[] KEY_PASSWORD = "testpassphrase".ToCharArray();
 
         private CRLValidator validator;
-
-        /// <summary>This field is used to configure the file to use for the missing certificates.</summary>
-        private String missingCertsFileName;
-
-        /// <summary>This field is used to configure the CRL response to return.</summary>
-        private IssuingCertificateRetriever mockCertificateRetriever;
 
         private CRLValidatorTest.MockChainValidator mockChainValidator;
 
@@ -92,7 +88,7 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
                 ());
             NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CRLValidator.UPDATE_DATE_BEFORE_CHECKDATE, nextUpdate
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CRLValidator.UPDATE_DATE_BEFORE_CHECK_DATE, nextUpdate
                 , TimeTestUtil.TEST_DATE_TIME), report.GetFailures()[0].GetMessage());
         }
 
@@ -120,23 +116,6 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
                 ());
             NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_ISSUER_NOT_FOUND, report.GetFailures()[0].GetMessage());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CrlEncodingErrorTest() {
-            RetrieveTestResources("crlEncodingError");
-            byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
-                TEST_DATE_TIME.AddDays(+5));
-            crl[5] = 0;
-            String resourcePath = SOURCE_FOLDER + "crlEncodingError/";
-            this.missingCertsFileName = resourcePath + "chain.pem";
-            IX509Certificate certificateUnderTest = (IX509Certificate)PemFileHelper.ReadFirstChain(resourcePath + "sign.cert.pem"
-                )[0];
-            ValidationReport report = new ValidationReport();
-            new CRLValidator().SetIssuingCertificateRetriever(mockCertificateRetriever).Validate(report, certificateUnderTest
-                , crl, TimeTestUtil.TEST_DATE_TIME);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
         }
 
         [NUnit.Framework.Test]
@@ -222,15 +201,16 @@ namespace iText.Signatures.Validation {
 
         public virtual ValidationReport PerformValidation(String testName, DateTime testDate, byte[] encodedCrl) {
             String resourcePath = SOURCE_FOLDER + testName + '/';
-            this.missingCertsFileName = resourcePath + "chain.pem";
+            String missingCertsFileName = resourcePath + "chain.pem";
             IX509Certificate[] knownCerts = PemFileHelper.ReadFirstChain(missingCertsFileName);
-            mockCertificateRetriever = new IssuingCertificateRetriever();
+            IssuingCertificateRetriever mockCertificateRetriever = new IssuingCertificateRetriever();
             mockCertificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
             validator.SetIssuingCertificateRetriever(mockCertificateRetriever);
             IX509Certificate certificateUnderTest = (IX509Certificate)PemFileHelper.ReadFirstChain(resourcePath + "sign.cert.pem"
                 )[0];
             ValidationReport result = new ValidationReport();
-            validator.Validate(result, certificateUnderTest, encodedCrl, testDate);
+            validator.Validate(result, certificateUnderTest, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
+                (encodedCrl)), testDate);
             return result;
         }
 

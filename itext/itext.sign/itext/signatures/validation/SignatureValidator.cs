@@ -29,6 +29,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.Extensions;
+using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
     /// <summary>Validator class, which is expected to be used for signatures validation.</summary>
@@ -161,7 +162,7 @@ namespace iText.Signatures.Validation {
         /// <summary>Validate the latest signature in the document.</summary>
         /// <returns>
         /// 
-        /// <see cref="ValidationReport"/>
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
         /// which contains detailed validation results
         /// </returns>
         public virtual ValidationReport ValidateLatestSignature() {
@@ -179,12 +180,12 @@ namespace iText.Signatures.Validation {
             if (pkcs7.GetTimeStampTokenInfo() != null) {
                 try {
                     if (!pkcs7.VerifyTimestampImprint()) {
-                        validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ValidationReport.ValidationResult
+                        validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ReportItem.ReportItemStatus
                             .INVALID));
                     }
                 }
                 catch (AbstractGeneralSecurityException e) {
-                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ValidationReport.ValidationResult
+                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
                         .INVALID));
                 }
                 if (StopValidation(validationReport)) {
@@ -214,17 +215,17 @@ namespace iText.Signatures.Validation {
             PdfPKCS7 pkcs7 = signatureUtil.ReadSignatureData(latestSignatureName);
             if (!signatureUtil.SignatureCoversWholeDocument(latestSignatureName)) {
                 validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(DOCUMENT_IS_NOT_COVERED
-                    , latestSignatureName), ValidationReport.ValidationResult.INVALID));
+                    , latestSignatureName), ReportItem.ReportItemStatus.INVALID));
             }
             try {
                 if (!pkcs7.VerifySignatureIntegrityAndAuthenticity()) {
                     validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_VERIFY_SIGNATURE
-                        , latestSignatureName), ValidationReport.ValidationResult.INVALID));
+                        , latestSignatureName), ReportItem.ReportItemStatus.INVALID));
                 }
             }
             catch (AbstractGeneralSecurityException e) {
                 validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_VERIFY_SIGNATURE
-                    , latestSignatureName), e, ValidationReport.ValidationResult.INVALID));
+                    , latestSignatureName), e, ReportItem.ReportItemStatus.INVALID));
             }
             return pkcs7;
         }
@@ -253,7 +254,7 @@ namespace iText.Signatures.Validation {
                         }
                         catch (AbstractGeneralSecurityException e) {
                             validationReport.AddReportItem(new ReportItem(CERTS_FROM_DSS, MessageFormatUtil.Format(CANNOT_PARSE_CERT_FROM_DSS
-                                , certStream), e, ValidationReport.ValidationResult.VALID));
+                                , certStream), e, ReportItem.ReportItemStatus.INFO));
                         }
                     }
                 }

@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Report {
     /// <summary>Report item to be used for single failure or log message.</summary>
     public class ReportItem {
         private readonly String checkName;
@@ -31,7 +31,7 @@ namespace iText.Signatures.Validation {
 
         private readonly Exception cause;
 
-        internal readonly ValidationReport.ValidationResult result;
+        private ReportItem.ReportItemStatus status;
 
         /// <summary>
         /// Create
@@ -48,13 +48,13 @@ namespace iText.Signatures.Validation {
         /// <see cref="System.String"/>
         /// with the exact report item message
         /// </param>
-        /// <param name="result">
+        /// <param name="status">
         /// 
-        /// <see cref="ValidationResult"/>
-        /// , which this report item leads to
+        /// <see cref="ReportItemStatus"/>
+        /// report item status that determines validation result
         /// </param>
-        public ReportItem(String checkName, String message, ValidationReport.ValidationResult result)
-            : this(checkName, message, null, result) {
+        public ReportItem(String checkName, String message, ReportItem.ReportItemStatus status)
+            : this(checkName, message, null, status) {
         }
 
         /// <summary>
@@ -77,24 +77,23 @@ namespace iText.Signatures.Validation {
         /// <see cref="System.Exception"/>
         /// , which caused this report item
         /// </param>
-        /// <param name="result">
+        /// <param name="status">
         /// 
-        /// <see cref="ValidationResult"/>
-        /// , which this report item leads to
+        /// <see cref="ReportItemStatus"/>
+        /// report item status that determines validation result
         /// </param>
-        public ReportItem(String checkName, String message, Exception cause, ValidationReport.ValidationResult result
-            ) {
+        public ReportItem(String checkName, String message, Exception cause, ReportItem.ReportItemStatus status) {
             this.checkName = checkName;
             this.message = message;
             this.cause = cause;
-            this.result = result;
+            this.status = status;
         }
 
         /// <summary>Get the check name related to this report item.</summary>
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// check name related to this report item
+        /// check name related to this report item.
         /// </returns>
         public virtual String GetCheckName() {
             return checkName;
@@ -104,7 +103,7 @@ namespace iText.Signatures.Validation {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// message related to this report item
+        /// message related to this report item.
         /// </returns>
         public virtual String GetMessage() {
             return message;
@@ -114,20 +113,46 @@ namespace iText.Signatures.Validation {
         /// <returns>
         /// 
         /// <see cref="System.Exception"/>
-        /// , which cause this report item
+        /// , which cause this report item.
         /// </returns>
         public virtual Exception GetExceptionCause() {
             return cause;
         }
 
-        /// <summary>Get validation result this report item leads to.</summary>
+        /// <summary>Get report item status that determines validation result this report item corresponds to.</summary>
         /// <returns>
         /// 
-        /// <see cref="ValidationResult"/>
-        /// this report item leads to
+        /// <see cref="ReportItemStatus"/>
+        /// report item status that determines validation result.
         /// </returns>
-        public virtual ValidationReport.ValidationResult GetValidationResult() {
-            return result;
+        public virtual ReportItem.ReportItemStatus GetStatus() {
+            return status;
+        }
+
+        /// <summary>Set report item status that determines validation result this report item corresponds to.</summary>
+        /// <param name="status">
+        /// 
+        /// <see cref="ReportItemStatus"/>
+        /// report item status that determines validation result
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="ReportItem"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Signatures.Validation.Report.ReportItem SetStatus(ReportItem.ReportItemStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        /// <summary>Enum representing possible report item statuses that determine validation result.</summary>
+        public enum ReportItemStatus {
+            /// <summary>Report item status for info messages.</summary>
+            INFO,
+            /// <summary>Report item status that leads to invalid validation result.</summary>
+            INVALID,
+            /// <summary>Report item status that leads to indeterminate validation result.</summary>
+            INDETERMINATE
         }
     }
 }

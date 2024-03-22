@@ -152,5 +152,9 @@ namespace iText.Signatures {
         public static bool Before(this DateTime date, DateTime when) {
             return date.CompareTo(when) < 0;
         }
+        
+        public static IEnumerable<T> Sorted<T>(this IEnumerable<T> source, Comparison<T> comp) {
+            return source.OrderBy(x => x, Comparer<T>.Create(comp));
+        }
     }
 }

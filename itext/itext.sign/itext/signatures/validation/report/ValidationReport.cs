@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using iText.Commons.Utils;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Report {
     /// <summary>Validation report, which contains detailed validation results.</summary>
     public class ValidationReport {
         private readonly IList<ReportItem> reportItems = new List<ReportItem>();
@@ -44,10 +44,10 @@ namespace iText.Signatures.Validation {
         /// , which represents the result of a validation
         /// </returns>
         public virtual ValidationReport.ValidationResult GetValidationResult() {
-            if (reportItems.Any((reportItem) => reportItem.result == ValidationReport.ValidationResult.INVALID)) {
+            if (reportItems.Any((reportItem) => reportItem.GetStatus() == ReportItem.ReportItemStatus.INVALID)) {
                 return ValidationReport.ValidationResult.INVALID;
             }
-            if (reportItems.Any((reportItem) => reportItem.result == ValidationReport.ValidationResult.INDETERMINATE)) {
+            if (reportItems.Any((reportItem) => reportItem.GetStatus() == ReportItem.ReportItemStatus.INDETERMINATE)) {
                 return ValidationReport.ValidationResult.INDETERMINATE;
             }
             return ValidationReport.ValidationResult.VALID;
@@ -60,7 +60,7 @@ namespace iText.Signatures.Validation {
         /// , which contains all recognized failures
         /// </returns>
         public virtual IList<ReportItem> GetFailures() {
-            return reportItems.Where((item) => item.result != ValidationReport.ValidationResult.VALID).ToList();
+            return reportItems.Where((item) => item.GetStatus() != ReportItem.ReportItemStatus.INFO).ToList();
         }
 
         /// <summary>Get list of failures, which are related to certificate validation.</summary>
@@ -111,11 +111,11 @@ namespace iText.Signatures.Validation {
 
         /// <summary>Enum representing possible validation results.</summary>
         public enum ValidationResult {
-            /// <summary>Result for valid certificate.</summary>
+            /// <summary>Valid validation result.</summary>
             VALID,
-            /// <summary>Result for invalid certificate.</summary>
+            /// <summary>Invalid validation result.</summary>
             INVALID,
-            /// <summary>Result for certificate, which status is indeterminate.</summary>
+            /// <summary>Indeterminate validation result.</summary>
             INDETERMINATE
         }
     }

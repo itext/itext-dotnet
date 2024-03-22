@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Validation.Extensions;
+using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
     /// <summary>Validator class, which is expected to be used for certificates chain validation.</summary>
@@ -41,21 +42,19 @@ namespace iText.Signatures.Validation {
 
         internal const String EXTENSION_MISSING = "Required extension {0} is missing or incorrect.";
 
-        private const String GLOBAL_EXTENSION_MISSING = "Globally required extension {0} is missing or incorrect.";
+        internal const String GLOBAL_EXTENSION_MISSING = "Globally required extension {0} is missing or incorrect.";
 
-        private const String ISSUER_MISSING = "Certificate {0} isn't trusted and issuer certificate isn't provided.";
+        internal const String ISSUER_MISSING = "Certificate {0} isn't trusted and issuer certificate isn't provided.";
 
-        private const String EXPIRED_CERTIFICATE = "Certificate {0} is expired.";
+        internal const String EXPIRED_CERTIFICATE = "Certificate {0} is expired.";
 
-        private const String NOT_YET_VALID_CERTIFICATE = "Certificate {0} is not yet valid.";
+        internal const String NOT_YET_VALID_CERTIFICATE = "Certificate {0} is not yet valid.";
 
-        private const String ISSUER_CANNOT_BE_VERIFIED = "Issuer certificate {0} for subject certificate {1} cannot be mathematically verified.";
+        internal const String ISSUER_CANNOT_BE_VERIFIED = "Issuer certificate {0} for subject certificate {1} cannot be mathematically verified.";
 
         private IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
 
-        private IOcspClient ocspClient = new OcspClientBouncyCastle(null);
-
-        private ICrlClient crlClient = new CrlClientOnline();
+        private RevocationDataValidator revocationDataValidator;
 
         private iText.Signatures.Validation.CertificateChainValidator nextCertificateChainValidator;
 
@@ -74,6 +73,43 @@ namespace iText.Signatures.Validation {
         // Empty constructor.
         /// <summary>
         /// Set
+        /// <see cref="RevocationDataValidator"/>
+        /// to be used for OCSP and CRL responses validation.
+        /// </summary>
+        /// <param name="revocationDataValidator">
+        /// 
+        /// <see cref="RevocationDataValidator"/>
+        /// to be used for OCSP and CRL responses validation
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="CertificateChainValidator"/>
+        /// </returns>
+        public virtual iText.Signatures.Validation.CertificateChainValidator SetRevocationDataValidator(RevocationDataValidator
+             revocationDataValidator) {
+            this.revocationDataValidator = revocationDataValidator;
+            return this;
+        }
+
+        /// <summary>
+        /// Get
+        /// <see cref="RevocationDataValidator"/>
+        /// to be used for OCSP and CRL responses validation.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="RevocationDataValidator"/>
+        /// to be used for OCSP and CRL responses validation.
+        /// </returns>
+        public virtual RevocationDataValidator GetRevocationDataValidator() {
+            if (this.revocationDataValidator == null) {
+                this.revocationDataValidator = new RevocationDataValidator();
+            }
+            return this.revocationDataValidator;
+        }
+
+        /// <summary>
+        /// Add
         /// <see cref="iText.Signatures.ICrlClient"/>
         /// to be used for CRL responses receiving.
         /// </summary>
@@ -86,13 +122,13 @@ namespace iText.Signatures.Validation {
         /// same instance of
         /// <see cref="CertificateChainValidator"/>
         /// </returns>
-        public virtual iText.Signatures.Validation.CertificateChainValidator SetCrlClient(ICrlClient crlClient) {
-            this.crlClient = crlClient;
+        public virtual iText.Signatures.Validation.CertificateChainValidator AddCrlClient(ICrlClient crlClient) {
+            GetRevocationDataValidator().AddCrlClient(crlClient);
             return this;
         }
 
         /// <summary>
-        /// Set
+        /// Add
         /// <see cref="iText.Signatures.IOcspClient"/>
         /// to be used for OCSP responses receiving.
         /// </summary>
@@ -105,8 +141,8 @@ namespace iText.Signatures.Validation {
         /// same instance of
         /// <see cref="CertificateChainValidator"/>
         /// </returns>
-        public virtual iText.Signatures.Validation.CertificateChainValidator SetOcspClient(IOcspClient ocpsClient) {
-            this.ocspClient = ocpsClient;
+        public virtual iText.Signatures.Validation.CertificateChainValidator AddOcspClient(IOcspClient ocpsClient) {
+            GetRevocationDataValidator().AddOcspClient(ocpsClient);
             return this;
         }
 
@@ -246,7 +282,7 @@ namespace iText.Signatures.Validation {
         /// </param>
         /// <returns>
         /// 
-        /// <see cref="ValidationReport"/>
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
         /// which contains detailed validation results
         /// </returns>
         public virtual ValidationReport ValidateCertificate(IX509Certificate certificate, DateTime validationDate, 
@@ -262,7 +298,7 @@ namespace iText.Signatures.Validation {
         /// </remarks>
         /// <param name="result">
         /// 
-        /// <see cref="ValidationReport"/>
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
         /// which is populated with detailed validation results
         /// </param>
         /// <param name="certificate">
@@ -282,7 +318,7 @@ namespace iText.Signatures.Validation {
         /// </param>
         /// <returns>
         /// 
-        /// <see cref="ValidationReport"/>
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
         /// which contains both provided and new validation results
         /// </returns>
         public virtual ValidationReport Validate(ValidationReport result, IX509Certificate certificate, DateTime validationDate
@@ -294,7 +330,7 @@ namespace iText.Signatures.Validation {
             }
             if (certificateRetriever.IsCertificateTrusted(certificate)) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_TRUSTED
-                    , certificate.GetSubjectDN()), ValidationReport.ValidationResult.VALID));
+                    , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INFO));
                 return result;
             }
             ValidateRevocationData(result, certificate, validationDate);
@@ -316,11 +352,11 @@ namespace iText.Signatures.Validation {
             }
             catch (AbstractCertificateExpiredException e) {
                 result.AddReportItem(new CertificateReportItem(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(EXPIRED_CERTIFICATE
-                    , certificate.GetSubjectDN()), e, ValidationReport.ValidationResult.INVALID));
+                    , certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID));
             }
             catch (AbstractCertificateNotYetValidException e) {
                 result.AddReportItem(new CertificateReportItem(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(NOT_YET_VALID_CERTIFICATE
-                    , certificate.GetSubjectDN()), e, ValidationReport.ValidationResult.INVALID));
+                    , certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID));
             }
         }
 
@@ -330,7 +366,7 @@ namespace iText.Signatures.Validation {
                 foreach (CertificateExtension requiredExtension in requiredExtensions) {
                     if (!requiredExtension.ExistsInCertificate(certificate)) {
                         result.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(EXTENSION_MISSING
-                            , requiredExtension.GetExtensionOid()), ValidationReport.ValidationResult.INVALID));
+                            , requiredExtension.GetExtensionOid()), ReportItem.ReportItemStatus.INVALID));
                     }
                 }
             }
@@ -338,27 +374,18 @@ namespace iText.Signatures.Validation {
                 foreach (CertificateExtension requiredExtension in globalRequiredExtensions) {
                     if (!requiredExtension.ExistsInCertificate(certificate)) {
                         result.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(GLOBAL_EXTENSION_MISSING
-                            , requiredExtension.GetExtensionOid()), ValidationReport.ValidationResult.INVALID));
+                            , requiredExtension.GetExtensionOid()), ReportItem.ReportItemStatus.INVALID));
                     }
                 }
             }
         }
 
-        private void ValidateRevocationData(ValidationReport result, IX509Certificate certificate, DateTime validationDate
+        private void ValidateRevocationData(ValidationReport report, IX509Certificate certificate, DateTime validationDate
             ) {
-            // TODO DEVSIX-8176 Implement RevocationDataValidator class: take into account ID_PKIX_OCSP_NOCHECK extension
-            ValidateOCSP(result, certificate, validationDate);
-            ValidateCRL(result, certificate, validationDate);
+            GetRevocationDataValidator().SetIssuingCertificateRetriever(certificateRetriever).Validate(report, certificate
+                , validationDate);
         }
 
-        private void ValidateCRL(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
-        }
-
-        // TODO DEVSIX-8176 Implement RevocationDataValidator class
-        private void ValidateOCSP(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
-        }
-
-        // TODO DEVSIX-8176 Implement RevocationDataValidator class
         private void ValidateChain(ValidationReport result, IX509Certificate certificate, DateTime validationDate) {
             IList<CertificateExtension> requiredCertificateExtensions = new List<CertificateExtension>();
             requiredCertificateExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN));
@@ -367,7 +394,7 @@ namespace iText.Signatures.Validation {
                 );
             if (issuerCertificate == null) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_MISSING
-                    , certificate.GetSubjectDN()), ValidationReport.ValidationResult.INDETERMINATE));
+                    , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
             try {
@@ -375,8 +402,8 @@ namespace iText.Signatures.Validation {
             }
             catch (AbstractGeneralSecurityException e) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_CANNOT_BE_VERIFIED
-                    , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ValidationReport.ValidationResult.
-                    INVALID));
+                    , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID
+                    ));
                 return;
             }
             nextCertificateChainValidator.Validate(result, issuerCertificate, validationDate, requiredCertificateExtensions

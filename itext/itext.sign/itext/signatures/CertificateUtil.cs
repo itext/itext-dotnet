@@ -346,7 +346,7 @@ namespace iText.Signatures {
         /// <summary>Checks if the certificate is self-signed.</summary>
         /// <param name="certificate">a certificate to check</param>
         /// <returns>true if the certificate is self-signed.</returns>
-        internal static bool IsSelfSigned(IX509Certificate certificate) {
+        public static bool IsSelfSigned(IX509Certificate certificate) {
             return certificate.GetIssuerDN().Equals(certificate.GetSubjectDN());
         }
 
