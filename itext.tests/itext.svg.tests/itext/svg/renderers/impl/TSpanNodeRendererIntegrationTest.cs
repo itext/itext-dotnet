@@ -159,6 +159,12 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-textAnchor");
         }
 
+        //Text-anchor test using transform attribute for X position
+        [NUnit.Framework.Test]
+        public virtual void TSpanTextAnchorTransformFunctionalTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-textAnchor-transform");
+        }
+
         [NUnit.Framework.Test]
         //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
