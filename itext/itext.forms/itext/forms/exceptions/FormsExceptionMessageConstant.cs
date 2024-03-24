@@ -63,6 +63,9 @@ namespace iText.Forms.Exceptions {
 
         public const String FIELD_NAME_ALREADY_EXISTS_IN_FORM = "Field name {0} already exists in the form.";
 
+        public const String ROLE_NAME_INVALID_FOR_FORM = "Invalid formfield type: {0}, only following values are "
+             + "allowed {1}.";
+
         private FormsExceptionMessageConstant() {
         }
         // empty constructor

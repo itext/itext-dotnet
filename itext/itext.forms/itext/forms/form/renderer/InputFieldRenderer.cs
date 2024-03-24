@@ -157,6 +157,7 @@ namespace iText.Forms.Form.Renderer {
                 inputField.GetFirstFormAnnotation().SetRotation(rotation);
             }
             ApplyDefaultFieldProperties(inputField);
+            ApplyAccessibilityProperties(inputField, doc);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
             inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);

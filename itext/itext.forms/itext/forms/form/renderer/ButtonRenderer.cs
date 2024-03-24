@@ -247,6 +247,7 @@ namespace iText.Forms.Form.Renderer {
             button.SetFontSize(fontSizeValue);
             button.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(button);
+            ApplyAccessibilityProperties(button, doc);
             button.GetFirstFormAnnotation().SetFormFieldElement((Button)modelElement);
             button.EnableFieldRegeneration();
             PdfAcroForm forms = PdfFormCreator.GetAcroForm(doc, true);

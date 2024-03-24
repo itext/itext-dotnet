@@ -22,8 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Forms;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -123,6 +125,15 @@ namespace iText.Forms.Form.Element {
                 }
             }
             return selectedStrings;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new FormDefaultAccessibilityProperties(FormDefaultAccessibilityProperties.FORM_FIELD_LIST_BOX
+                    );
+            }
+            return tagProperties;
         }
 
         protected override IRenderer MakeNewRenderer() {

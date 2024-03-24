@@ -24,11 +24,13 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
@@ -159,11 +161,22 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary><inheritDoc/></summary>
+        public override MinMaxWidth GetMinMaxWidth() {
+            childRenderers.Clear();
+            flatRenderer = null;
+            IRenderer renderer = CreateFlatRenderer();
+            AddChild(renderer);
+            MinMaxWidth minMaxWidth = base.GetMinMaxWidth();
+            return minMaxWidth;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             drawContext.GetCanvas().SaveState();
             bool flatten = IsFlatten();
             if (flatten) {
-                drawContext.GetCanvas().Rectangle(ApplyBorderBox(occupiedArea.GetBBox(), false)).Clip().EndPath();
+                PdfCanvas canvas = drawContext.GetCanvas();
+                canvas.Rectangle(ApplyBorderBox(occupiedArea.GetBBox(), false)).Clip().EndPath();
                 flatRenderer.Draw(drawContext);
             }
             else {
@@ -172,14 +185,19 @@ namespace iText.Forms.Form.Renderer {
             drawContext.GetCanvas().RestoreState();
         }
 
-        /// <summary><inheritDoc/></summary>
-        public override MinMaxWidth GetMinMaxWidth() {
-            childRenderers.Clear();
-            flatRenderer = null;
-            IRenderer renderer = CreateFlatRenderer();
-            AddChild(renderer);
-            MinMaxWidth minMaxWidth = base.GetMinMaxWidth();
-            return minMaxWidth;
+        /// <summary>Applies the accessibility properties to the form field.</summary>
+        /// <param name="formField">The form field to which the accessibility properties should be applied.</param>
+        /// <param name="pdfDocument">The document to which the form field belongs.</param>
+        protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, PdfDocument pdfDocument
+            ) {
+            if (!pdfDocument.IsTagged()) {
+                return;
+            }
+            AccessibilityProperties properties = ((IAccessibleElement)this.modelElement).GetAccessibilityProperties();
+            String alternativeDescription = properties.GetAlternateDescription();
+            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
+                formField.SetAlternativeName(alternativeDescription);
+            }
         }
 
         /// <summary>Adjusts the field layout.</summary>
@@ -216,6 +234,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Gets the accessibility language.</summary>
         /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
+            //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
             return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
         }
 

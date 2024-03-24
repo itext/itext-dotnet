@@ -57,7 +57,9 @@ namespace iText.Forms.Form {
         public const int FORM_FIELD_LABEL = PROPERTY_START + 10;
 
         /// <summary>The Constant FORM_ACCESSIBILITY_LANGUAGE.</summary>
-        public const int FORM_ACCESSIBILITY_LANGUAGE = PROPERTY_START + 11;
+        public const int FORM_ACCESSIBILITY_LANGUAGE = 
+                //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
+                PROPERTY_START + 11;
 
         /// <summary>The Constant FORM_FIELD_RADIO_GROUP_NAME.</summary>
         public const int FORM_FIELD_RADIO_GROUP_NAME = PROPERTY_START + 12;

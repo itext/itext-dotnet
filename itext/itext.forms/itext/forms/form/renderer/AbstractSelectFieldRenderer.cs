@@ -27,11 +27,11 @@ using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -119,6 +119,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Gets the accessibility language.</summary>
         /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
+            //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
             return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
         }
 
@@ -128,13 +129,24 @@ namespace iText.Forms.Form.Renderer {
         protected internal virtual void WriteAcroFormFieldLangAttribute(PdfDocument pdfDoc) {
             if (pdfDoc.IsTagged()) {
                 TagTreePointer formParentPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
-                IList<String> kidsRoles = formParentPointer.GetKidsRoles();
-                int lastFormIndex = kidsRoles.LastIndexOf(StandardRoles.FORM);
-                TagTreePointer formPointer = formParentPointer.MoveToKid(lastFormIndex);
                 if (GetLang() != null) {
-                    formPointer.GetProperties().SetLanguage(GetLang());
+                    formParentPointer.GetProperties().SetLanguage(GetLang());
                 }
-                formParentPointer.MoveToParent();
+            }
+        }
+
+        /// <summary>Applies the accessibility properties to the form field.</summary>
+        /// <param name="formField">The form field to which the accessibility properties should be applied.</param>
+        /// <param name="pdfDocument">The document to which the form field belongs.</param>
+        protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, PdfDocument pdfDocument
+            ) {
+            if (!pdfDocument.IsTagged()) {
+                return;
+            }
+            AccessibilityProperties properties = ((IAccessibleElement)this.modelElement).GetAccessibilityProperties();
+            String alternativeDescription = properties.GetAlternateDescription();
+            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
+                formField.SetAlternativeName(alternativeDescription);
             }
         }
 

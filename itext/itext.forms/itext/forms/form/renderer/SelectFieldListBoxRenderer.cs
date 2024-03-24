@@ -177,6 +177,7 @@ namespace iText.Forms.Form.Renderer {
             SetupBuilderValues(builder, lbModelElement);
             PdfChoiceFormField choiceField = builder.CreateList();
             choiceField.DisableFieldRegeneration();
+            ApplyAccessibilityProperties(choiceField, drawContext.GetDocument());
             choiceField.SetFontSize(fontSize.GetValue());
             choiceField.SetMultiSelect(IsMultiple());
             choiceField.SetListSelected(selectedOptions.ToArray(new String[selectedOptions.Count]));

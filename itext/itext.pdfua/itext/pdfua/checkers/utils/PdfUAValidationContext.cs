@@ -66,6 +66,9 @@ namespace iText.Pdfua.Checkers.Utils {
             }
             IRoleMappingResolver resolver = pdfDocument.GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole
                 (role, null);
+            if (resolver == null) {
+                return role;
+            }
             return resolver.GetRole();
         }
 

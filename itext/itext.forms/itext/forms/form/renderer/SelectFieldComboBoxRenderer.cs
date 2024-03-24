@@ -101,6 +101,7 @@ namespace iText.Forms.Form.Renderer {
             SetupBuilderValues(builder, comboBoxFieldModelElement);
             PdfChoiceFormField comboBoxField = builder.CreateComboBox();
             comboBoxField.DisableFieldRegeneration();
+            ApplyAccessibilityProperties(comboBoxField, doc);
             Background background = this.modelElement.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());

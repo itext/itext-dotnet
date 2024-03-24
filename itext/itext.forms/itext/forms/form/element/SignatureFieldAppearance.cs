@@ -23,9 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Renderer;
 using iText.IO.Image;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -248,6 +250,14 @@ namespace iText.Forms.Form.Element {
         /// </returns>
         public override String GetId() {
             return idWithDots == null ? base.GetId() : idWithDots;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new FormDefaultAccessibilityProperties(FormDefaultAccessibilityProperties.FORM_FIELD_TEXT);
+            }
+            return tagProperties;
         }
 
         /// <summary><inheritDoc/></summary>

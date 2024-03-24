@@ -24,11 +24,13 @@ using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
 using iText.Forms.Logs;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -113,6 +115,18 @@ namespace iText.Forms.Form.Element {
             SetProperty(Property.WIDTH, UnitValue.CreatePointValue(size));
             SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(size));
             return this;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new FormDefaultAccessibilityProperties(FormDefaultAccessibilityProperties.FORM_FIELD_CHECK
+                    );
+            }
+            if (tagProperties is FormDefaultAccessibilityProperties) {
+                ((FormDefaultAccessibilityProperties)tagProperties).UpdateCheckedValue(this);
+            }
+            return tagProperties;
         }
 
         /* (non-Javadoc)

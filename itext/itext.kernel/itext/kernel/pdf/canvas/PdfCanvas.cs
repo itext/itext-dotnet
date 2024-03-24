@@ -857,7 +857,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y">y coordinate.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas LineTo(double x, double y) {
-            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace().WriteBytes(l);
             return this;
         }
@@ -872,7 +871,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas CurveTo(double x1, double y1, double x2, double y2, double
              x3, double y3) {
-            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x1).WriteSpace().WriteDouble(y1).WriteSpace().WriteDouble(x2).
                 WriteSpace().WriteDouble(y2).WriteSpace().WriteDouble(x3).WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes
                 (c);
@@ -886,7 +884,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y3">y coordinate of the ending point.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas CurveTo(double x2, double y2, double x3, double y3) {
-            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x2).WriteSpace().WriteDouble(y2).WriteSpace().WriteDouble(x3).
                 WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes(v);
             return this;
@@ -899,7 +896,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y3">y coordinate of the ending point.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas CurveFromTo(double x1, double y1, double x3, double y3) {
-            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x1).WriteSpace().WriteDouble(y1).WriteSpace().WriteDouble(x3).
                 WriteSpace().WriteDouble(y3).WriteSpace().WriteBytes(y);
             return this;
@@ -1041,7 +1037,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Rectangle(double x, double y, double width, double height
             ) {
-            this.CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteDouble(x).WriteSpace().WriteDouble(y).WriteSpace().WriteDouble(width)
                 .WriteSpace().WriteDouble(height).WriteSpace().WriteBytes(re);
             return this;
@@ -1127,6 +1122,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathEoFillStroke() {
+            CheckIsoConformanceWritingOnContent();
             CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(bStar);
             return this;
@@ -1179,6 +1175,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Closes the path and strokes it.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ClosePathStroke() {
+            CheckIsoConformanceWritingOnContent();
             contentStream.GetOutputStream().WriteBytes(s);
             return this;
         }
@@ -1186,6 +1183,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas Fill() {
+            CheckIsoConformanceWritingOnContent();
             CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL);
             contentStream.GetOutputStream().WriteBytes(f);
             return this;
@@ -1195,6 +1193,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas FillStroke() {
+            CheckIsoConformanceWritingOnContent();
             CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(B);
             return this;
@@ -1203,6 +1202,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>EOFills current path.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFill() {
+            CheckIsoConformanceWritingOnContent();
             CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL);
             contentStream.GetOutputStream().WriteBytes(fStar);
             return this;
@@ -1211,6 +1211,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Fills the path, using the even-odd rule to determine the region to fill and strokes it.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas EoFillStroke() {
+            CheckIsoConformanceWritingOnContent();
             CheckDefaultDeviceGrayBlackColor(PdfCanvas.CheckColorMode.FILL_AND_STROKE);
             contentStream.GetOutputStream().WriteBytes(BStar);
             return this;
@@ -2357,7 +2358,6 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private iText.Kernel.Pdf.Canvas.PdfCanvas DrawArc(double x1, double y1, double x2, double y2, double startAng
             , double extent, bool continuous) {
-            this.CheckIsoConformanceWritingOnContent();
             IList<double[]> ar = BezierArc(x1, y1, x2, y2, startAng, extent);
             if (ar.IsEmpty()) {
                 return this;

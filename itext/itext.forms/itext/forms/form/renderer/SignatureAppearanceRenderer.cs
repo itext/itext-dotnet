@@ -222,6 +222,7 @@ namespace iText.Forms.Form.Renderer {
             sigField.SetFontSize(fontSizeValue);
             sigField.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);
             ApplyDefaultFieldProperties(sigField);
+            ApplyAccessibilityProperties(sigField, doc);
             sigField.GetFirstFormAnnotation().SetFormFieldElement((SignatureFieldAppearance)modelElement);
             sigField.EnableFieldRegeneration();
             PdfAcroForm forms = PdfFormCreator.GetAcroForm(doc, true);

@@ -33,6 +33,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -176,6 +177,7 @@ namespace iText.Forms.Form.Renderer {
             radio.SetFormFieldElement((Radio)modelElement);
             radioGroup.AddKid(radio);
             radioGroup.EnableFieldRegeneration();
+            ApplyAccessibilityProperties(radioGroup, doc);
             form.AddField(radioGroup, page);
             WriteAcroFormFieldLangAttribute(doc);
             ApplyProperties(margins);
@@ -202,6 +204,11 @@ namespace iText.Forms.Form.Renderer {
                     return;
                 }
                 PdfCanvas canvas = drawContext.GetCanvas();
+                bool isTaggingEnabled = drawContext.IsTaggingEnabled();
+                if (isTaggingEnabled) {
+                    TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                    canvas.OpenTag(tp.GetTagReference());
+                }
                 Rectangle rectangle = this.GetOccupiedArea().GetBBox().Clone();
                 Border border = this.GetProperty<Border>(Property.BORDER);
                 if (border != null) {
@@ -212,6 +219,9 @@ namespace iText.Forms.Form.Renderer {
                 canvas.SetFillColor(RadioRenderer.DEFAULT_CHECKED_COLOR);
                 DrawingUtil.DrawCircle(canvas, rectangle.GetLeft() + radius, rectangle.GetBottom() + radius, radius / 2);
                 canvas.RestoreState();
+                if (isTaggingEnabled) {
+                    canvas.CloseTag();
+                }
             }
 
             /// <summary><inheritDoc/></summary>
@@ -235,8 +245,15 @@ namespace iText.Forms.Form.Renderer {
                     float cx = rectangle.GetX() + rectangle.GetWidth() / 2;
                     float cy = rectangle.GetY() + rectangle.GetHeight() / 2;
                     float r = (Math.Min(rectangle.GetWidth(), rectangle.GetHeight()) + borderWidth) / 2;
-                    drawContext.GetCanvas().SetStrokeColor(border.GetColor()).SetLineWidth(borderWidth).Circle(cx, cy, r).Stroke
-                        ();
+                    bool isTaggingEnabled = drawContext.IsTaggingEnabled();
+                    PdfCanvas canvas = drawContext.GetCanvas();
+                    if (isTaggingEnabled) {
+                        canvas.OpenTag(new CanvasArtifact());
+                    }
+                    canvas.SetStrokeColor(border.GetColor()).SetLineWidth(borderWidth).Circle(cx, cy, r).Stroke();
+                    if (isTaggingEnabled) {
+                        canvas.CloseTag();
+                    }
                 }
             }
 
@@ -264,7 +281,15 @@ namespace iText.Forms.Form.Renderer {
                     float cx = rectangle.GetX() + rectangle.GetWidth() / 2;
                     float cy = rectangle.GetY() + rectangle.GetHeight() / 2;
                     float r = (Math.Min(rectangle.GetWidth(), rectangle.GetHeight()) + borderWidth) / 2;
-                    drawContext.GetCanvas().SetFillColor(backgroundColor).Circle(cx, cy, r).Fill();
+                    bool isTaggingEnabled = drawContext.IsTaggingEnabled();
+                    PdfCanvas canvas = drawContext.GetCanvas();
+                    if (isTaggingEnabled) {
+                        canvas.OpenTag(new CanvasArtifact());
+                    }
+                    canvas.SetFillColor(backgroundColor).Circle(cx, cy, r).Fill();
+                    if (isTaggingEnabled) {
+                        canvas.CloseTag();
+                    }
                 }
             }
 

@@ -30,6 +30,8 @@ using iText.Forms.Form.Renderer.Checkboximpl;
 using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -197,6 +199,7 @@ namespace iText.Forms.Form.Renderer {
             if (!IsBoxChecked()) {
                 checkBox.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
             }
+            ApplyAccessibilityProperties(checkBox, doc);
             checkBox.GetFirstFormAnnotation().SetFormFieldElement((CheckBox)modelElement);
             checkBox.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(checkBox, page);
@@ -225,8 +228,17 @@ namespace iText.Forms.Form.Renderer {
             /// <summary><inheritDoc/></summary>
             public override void DrawChildren(DrawContext drawContext) {
                 Rectangle rectangle = this.GetInnerAreaBBox().Clone();
+                PdfCanvas canvas = drawContext.GetCanvas();
+                bool isTaggingEnabled = drawContext.IsTaggingEnabled();
+                if (isTaggingEnabled) {
+                    TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                    canvas.OpenTag(tp.GetTagReference());
+                }
                 this._enclosing.CreateCheckBoxRenderStrategy().DrawCheckBoxContent(drawContext, this._enclosing, rectangle
                     );
+                if (isTaggingEnabled) {
+                    canvas.CloseTag();
+                }
             }
 
             private readonly CheckBoxRenderer _enclosing;

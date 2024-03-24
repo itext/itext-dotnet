@@ -527,6 +527,22 @@ namespace iText.Forms.Form.Element {
             );
         }
 
+        [NUnit.Framework.Test]
+        public virtual void BasicCheckBoxTagged() {
+            String outPdf = DESTINATION_FOLDER + "basicCheckboxTagged.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckboxTagged.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                document.GetPdfDocument().SetTagged();
+                GenerateCheckBoxes(document, (checkBox) => {
+                }
+                );
+                GenerateCheckBoxes(document, (checkBox) => {
+                }
+                );
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
         private IList<CheckBox> GenerateCheckBoxes(Document document, Action<CheckBox> alterFunction) {
             IList<CheckBox> checkBoxList = new List<CheckBox>();
             CheckBox formCheckbox = new CheckBox("checkbox_interactive_off_" + this.counter);

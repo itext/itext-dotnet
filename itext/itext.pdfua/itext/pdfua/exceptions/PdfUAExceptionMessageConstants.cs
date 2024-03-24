@@ -77,7 +77,7 @@ namespace iText.Pdfua.Exceptions {
 
         public const String H1_IS_SKIPPED = "Heading level 1 is skipped in a descending sequence of header levels.";
 
-        public const String HN_IS_SKIPPED = "Heading level {0} is skipped in a descending sequence of header levels.";
+        public const String HN_IS_SKIPPED = "Heading level {0} is skipped in a descending sequence of header " + "levels.";
 
         public const String MORE_THAN_ONE_H_TAG = "A node contains more than one H tag.";
 
@@ -103,6 +103,10 @@ namespace iText.Pdfua.Exceptions {
 
         public const String NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT = "ID entry '{0}' shall be unique among all elements "
              + "in the document’s structure hierarchy";
+
+        public const String FORM_FIELD_SHALL_CONTAIN_ALT_ENTRY = "Interactive formfields should have an alternative "
+             + "description. You can set it using FormField#getAccessibilityProperties().setAlternateDescription" 
+            + "(\"your alternative description\").";
 
         private PdfUAExceptionMessageConstants() {
         }

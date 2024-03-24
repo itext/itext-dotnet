@@ -272,6 +272,7 @@ namespace iText.Forms.Form.Element {
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 2"));
                 flattenComboBoxField.SetSelected("option 1");
+                //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
                 flattenComboBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
                 document.Add(flattenComboBoxField);
             }
@@ -474,6 +475,38 @@ namespace iText.Forms.Form.Element {
             ComboBoxField comboBoxField = new ComboBoxField("test");
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => comboBoxField.AddOption(new SelectFieldItem(
                 "option 1", (String)null)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicComboBoxFieldTaggedTest() {
+            String outPdf = DESTINATION_FOLDER + "basicComboBoxFieldTagged.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_basicComboBoxFieldTagged.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                document.GetPdfDocument().SetTagged();
+                ComboBoxField formComboBoxField = new ComboBoxField("form combo box field");
+                formComboBoxField.SetInteractive(true);
+                formComboBoxField.AddOption(new SelectFieldItem("option 1"));
+                formComboBoxField.AddOption(new SelectFieldItem("option 2"));
+                document.Add(formComboBoxField);
+                ComboBoxField flattenComboBoxField = new ComboBoxField("flatten combo box field");
+                flattenComboBoxField.SetInteractive(false);
+                flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
+                flattenComboBoxField.AddOption(new SelectFieldItem("option 2"));
+                document.Add(flattenComboBoxField);
+                ComboBoxField formComboBoxFieldSelected = new ComboBoxField("form combo box field selected");
+                formComboBoxFieldSelected.SetInteractive(true);
+                formComboBoxFieldSelected.AddOption(new SelectFieldItem("option 1"));
+                formComboBoxFieldSelected.AddOption(new SelectFieldItem("option 2"));
+                formComboBoxFieldSelected.SetSelected("option 1");
+                document.Add(formComboBoxFieldSelected);
+                ComboBoxField flattenComboBoxFieldSelected = new ComboBoxField("flatten combo box field selected");
+                flattenComboBoxFieldSelected.SetInteractive(false);
+                flattenComboBoxFieldSelected.AddOption(new SelectFieldItem("option 1"));
+                flattenComboBoxFieldSelected.AddOption(new SelectFieldItem("option 2"));
+                flattenComboBoxFieldSelected.SetSelected("option 1");
+                document.Add(flattenComboBoxFieldSelected);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
     }
 }

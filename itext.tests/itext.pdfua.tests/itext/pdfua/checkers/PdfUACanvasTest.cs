@@ -40,7 +40,8 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua.Checkers {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua
+    // validation on Android)
     [NUnit.Framework.Category("UnitTest")]
     public class PdfUACanvasTest : ExtendedITextTest {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -66,16 +67,23 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextContentIsNotTagged() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SaveState().BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 12);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                canvas.ShowText("Hello World!");
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().BeginText().SetFontAndSize(GetFont(), 10).ShowText("Hello World!");
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, 
-                e.Message);
+            framework.AssertBothFail("checkPoint_01_005_TextContentIsNotTagged", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_TextNoContentIsNotTagged() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().BeginText().SetFontAndSize(GetFont(), 10).EndText();
+            }
+            );
+            framework.AssertBothValid("checkPoint_01_005_TextNoContentIsNotTagged");
         }
 
         [NUnit.Framework.Test]
@@ -250,30 +258,50 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.LineTo(200, 200).Fill();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_LineContentThatIsContentIsNotTagged", PdfUAExceptionMessageConstants
+                .TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged_noContent() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
                 canvas.LineTo(200, 200);
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, 
-                e.Message);
+            framework.AssertBothValid("checkPoint_01_005_LineContentThatIsContentIsNotTagged_noContent");
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.OpenTag(new CanvasTag(PdfName.H1)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                canvas.LineTo(200, 200);
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
+                canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.LineTo(200, 200).Fill();
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
-                , e.Message);
+            framework.AssertBothFail("checkPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact", PdfUAExceptionMessageConstants
+                .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact_no_drawing() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
+                canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.LineTo(200, 200);
+                canvas.LineTo(300, 200);
+            }
+            );
+            framework.AssertBothValid("checkPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact_no_drawing"
+                );
         }
 
         [NUnit.Framework.Test]
@@ -295,16 +323,103 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_RectangleNotMarked() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.Fill();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_RectangleNotMarked", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_RectangleNoContent() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
                 canvas.Rectangle(new Rectangle(200, 200, 100, 100));
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, 
-                e.Message);
+            framework.AssertBothValid("checkPoint_01_005_RectangleNoContent");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_RectangleClip() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.Clip();
+            }
+            );
+            framework.AssertBothValid("checkPoint_01_005_RectangleNoContent");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_RectangleClosePathStroke() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.ClosePathStroke();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_RectangleClosePathStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_Rectangle_EOFIllStroke() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.ClosePathEoFillStroke();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_Rectangle_ClosPathEOFIllStroke", PdfUAExceptionMessageConstants
+                .TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_Rectangle_FillStroke() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.FillStroke();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_Rectangle_FillStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_Rectangle_eoFill() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.EoFill();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_Rectangle_eoFill", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_Rectangle_eoFillStroke() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100));
+                canvas.EoFillStroke();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_Rectangle_eoFillStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false);
         }
 
         [NUnit.Framework.Test]
@@ -324,17 +439,25 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid() {
-            String outPdf = DESTINATION_FOLDER + "01_005_RectangleMarkedContentWithoutMcid.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SaveState().OpenTag(new CanvasTag(PdfName.Art)).SetFillColor(ColorConstants.RED);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().OpenTag(new CanvasTag(PdfName.P)).SetFillColor(ColorConstants.RED);
+                canvas.Rectangle(new Rectangle(200, 200, 100, 100)).Fill();
+            }
+            );
+            framework.AssertBothFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid", PdfUAExceptionMessageConstants
+                .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().OpenTag(new CanvasTag(PdfName.P)).SetFillColor(ColorConstants.RED);
                 canvas.Rectangle(new Rectangle(200, 200, 100, 100));
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
-                , e.Message);
+            framework.AssertBothValid("checkPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent");
         }
 
         [NUnit.Framework.Test]
@@ -390,18 +513,25 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_004_bezierCurveInvalidMCID() {
-            String outPdf = DESTINATION_FOLDER + "01_004_bezierCurveInvalidMCID.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
-                5).SetStrokeColor(ColorConstants.RED);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                canvas.Arc(400, 400, 500, 500, 30, 50);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
+                    5).MoveTo(20, 20).LineTo(300, 300).SetStrokeColor(ColorConstants.RED).Fill();
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
-                , e.Message);
+            framework.AssertBothFail("checkPoint_01_004_bezierCurveInvalidMCID", PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
+                , false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_004_bezierCurveInvalidMCID_NoContent() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
+                    5).MoveTo(20, 20).LineTo(300, 300).SetStrokeColor(ColorConstants.RED);
+            }
+            );
+            framework.AssertBothValid("checkPoint_01_004_bezierCurveInvalidMCID_NoContent");
         }
 
         [NUnit.Framework.Test]
@@ -599,6 +729,16 @@ namespace iText.Pdfua.Checkers {
             String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent.pdf";
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validNoteTagPresent.pdf"
                 , DESTINATION_FOLDER, "diff_"));
+        }
+
+        private PdfFont GetFont() {
+            try {
+                return PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                    );
+            }
+            catch (System.IO.IOException) {
+                throw new Exception();
+            }
         }
     }
 }
