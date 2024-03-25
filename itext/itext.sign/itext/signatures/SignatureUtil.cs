@@ -274,7 +274,7 @@ namespace iText.Signatures {
             }
             try {
                 SignatureUtil.ContentsChecker signatureReader = new SignatureUtil.ContentsChecker(document.GetReader().GetSafeFile
-                    ().CreateSourceView());
+                    ().CreateSourceView(), document);
                 return signatureReader.CheckWhetherSignatureCoversWholeDocument(acroForm.GetField(name));
             }
             catch (System.IO.IOException e) {
@@ -352,9 +352,11 @@ namespace iText.Signatures {
         }
 
         private class ContentsChecker : PdfReader {
-            private long contentsStart;
+            public const int OBJECT_HEADER_OFFSET = 6;
 
-            private long contentsEnd;
+            private long rangeExclusionStart;
+
+            private long rangeExlusionEnd;
 
             private int currentLevel = 0;
 
@@ -364,8 +366,9 @@ namespace iText.Signatures {
 
             private bool rangeIsCorrect = false;
 
-            public ContentsChecker(IRandomAccessSource byteSource)
+            public ContentsChecker(IRandomAccessSource byteSource, PdfDocument doc)
                 : base(byteSource, null) {
+                pdfDocument = doc;
             }
 
             public virtual bool CheckWhetherSignatureCoversWholeDocument(PdfFormField signatureField) {
@@ -376,8 +379,8 @@ namespace iText.Signatures {
                     [3]) {
                     return false;
                 }
-                contentsStart = byteRange[1];
-                contentsEnd = byteRange[2];
+                rangeExclusionStart = byteRange[1];
+                rangeExlusionEnd = byteRange[2];
                 long signatureOffset;
                 if (null != signature.GetIndirectReference()) {
                     signatureOffset = signature.GetIndirectReference().GetOffset();
@@ -405,6 +408,7 @@ namespace iText.Signatures {
                 // Only Contents related checks have been introduced.
                 currentLevel++;
                 PdfDictionary dic = new PdfDictionary();
+                int contentsEntryCount = 0;
                 while (!rangeIsCorrect) {
                     tokens.NextValidToken();
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
@@ -417,18 +421,28 @@ namespace iText.Signatures {
                     PdfName name = ReadPdfName(true);
                     PdfObject obj;
                     if (PdfName.Contents.Equals(name) && searchInV && contentsLevel == currentLevel) {
-                        long startPosition = tokens.GetPosition();
-                        int ch;
-                        int whiteSpacesCount = -1;
-                        do {
-                            ch = tokens.Read();
-                            whiteSpacesCount++;
+                        contentsEntryCount++;
+                        if (contentsEntryCount > 1) {
+                            rangeIsCorrect = false;
+                            break;
                         }
-                        while (ch != -1 && PdfTokenizer.IsWhitespace(ch));
-                        tokens.Seek(startPosition);
+                        long contentsValueStart;
                         obj = ReadObject(true, objStm);
-                        long endPosition = tokens.GetPosition();
-                        if (endPosition == contentsEnd && startPosition + whiteSpacesCount == contentsStart) {
+                        long contentsValueEnd;
+                        if (obj.IsIndirectReference()) {
+                            PdfIndirectReference @ref = (PdfIndirectReference)obj;
+                            contentsValueStart = @ref.GetOffset() + CountDigits(@ref.GetObjNumber()) + CountDigits(@ref.GetGenNumber()
+                                ) + OBJECT_HEADER_OFFSET;
+                            contentsValueEnd = contentsValueStart + 
+                                                        //*2 + 2 to account for hex encoding
+                                                        ((PdfString)@ref.GetRefersTo()).GetValueBytes().Length * 2L + 2L;
+                        }
+                        else {
+                            contentsValueEnd = tokens.GetPosition();
+                            //*2 + 2 to account for hex encoding
+                            contentsValueStart = contentsValueEnd - (((PdfString)obj).GetValueBytes().Length * 2L + 2L);
+                        }
+                        if (contentsValueEnd == rangeExlusionEnd && contentsValueStart == rangeExclusionStart) {
                             rangeIsCorrect = true;
                         }
                     }
@@ -455,8 +469,17 @@ namespace iText.Signatures {
                 return dic;
             }
 
-            protected override PdfObject ReadReference(bool readAsDirect) {
-                return new PdfNull();
+            private static long CountDigits(int number) {
+                int x = number;
+                if (x == 0) {
+                    x = 1;
+                }
+                int l = 0;
+                while (x > 0) {
+                    x /= 10;
+                    l++;
+                }
+                return l;
             }
         }
     }
