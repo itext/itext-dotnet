@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
+    /// <summary>Class that provides methods for checking PDF/UA compliance of Formula elements.</summary>
     public sealed class FormulaCheckUtil {
         /// <summary>
         /// Creates a new

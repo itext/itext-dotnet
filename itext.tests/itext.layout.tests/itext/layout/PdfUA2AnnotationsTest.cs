@@ -144,6 +144,7 @@ namespace iText.Layout {
                 stamp.SetStampName(PdfName.Approved);
                 stamp.SetContents("stamp contents");
                 stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
+                pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().AddTag(StandardRoles.SECT);
                 pdfPage.AddAnnotation(stamp);
                 pdfPage.Flush();
             }

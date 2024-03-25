@@ -296,6 +296,7 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new NoteCheckUtil.NoteTagHandler(context));
             tagTreeIterator.AddHandler(new HeadingsChecker.HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
+            tagTreeIterator.AddHandler(new AnnotationCheckUtil.AnnotationHandler(context));
             tagTreeIterator.Traverse();
         }
 

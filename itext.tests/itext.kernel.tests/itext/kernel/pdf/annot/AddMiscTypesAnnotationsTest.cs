@@ -41,25 +41,25 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf.Annot {
     [NUnit.Framework.Category("IntegrationTest")]
     public class AddMiscTypesAnnotationsTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/annot/AddMiscTypesAnnotationsTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/annot/AddMiscTypesAnnotationsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddTextAnnotation01() {
-            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "textAnnotation01.pdf"
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "textAnnotation01.pdf"
                 ));
             PdfPage page = document.AddNewPage();
             PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
@@ -72,13 +72,29 @@ namespace iText.Kernel.Pdf.Annot {
             page.AddAnnotation(popupAnnot);
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "textAnnotation01.pdf"
-                , sourceFolder + "cmp_textAnnotation01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "textAnnotation01.pdf"
+                , SOURCE_FOLDER + "cmp_textAnnotation01.pdf", DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddTextAnnotInTagged14PdfTest() {
+            String outPdf = DESTINATION_FOLDER + "addTextAnnotInTagged14PdfTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_addTextAnnotInTagged14PdfTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf, new WriterProperties()
+                .SetPdfVersion(PdfVersion.PDF_1_4)))) {
+                pdfDoc.SetTagged();
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfTextAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
+                annot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
+                page.AddAnnotation(annot);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void CaretTest() {
-            String filename = destinationFolder + "caretAnnotation.pdf";
+            String filename = DESTINATION_FOLDER + "caretAnnotation.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -97,7 +113,7 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_CaretAnnotation.pdf", destinationFolder
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_CaretAnnotation.pdf", DESTINATION_FOLDER
                 , "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -106,7 +122,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void AddFreeTextAnnotation01() {
-            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "freeTextAnnotation01.pdf"
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "freeTextAnnotation01.pdf"
                 ));
             PdfPage page = document.AddNewPage();
             new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24).MoveText
@@ -123,13 +139,13 @@ namespace iText.Kernel.Pdf.Annot {
             textannot.Flush();
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "freeTextAnnotation01.pdf"
-                , sourceFolder + "cmp_freeTextAnnotation01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "freeTextAnnotation01.pdf"
+                , SOURCE_FOLDER + "cmp_freeTextAnnotation01.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AddSquareAndCircleAnnotations01() {
-            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "squareAndCircleAnnotations01.pdf"
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "squareAndCircleAnnotations01.pdf"
                 ));
             PdfPage page = document.AddNewPage();
             PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
@@ -142,18 +158,18 @@ namespace iText.Kernel.Pdf.Annot {
             page.AddAnnotation(circle);
             page.Flush();
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "squareAndCircleAnnotations01.pdf"
-                , sourceFolder + "cmp_squareAndCircleAnnotations01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "squareAndCircleAnnotations01.pdf"
+                , SOURCE_FOLDER + "cmp_squareAndCircleAnnotations01.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FileAttachmentTest() {
-            String filename = destinationFolder + "fileAttachmentAnnotation.pdf";
+            String filename = DESTINATION_FOLDER + "fileAttachmentAnnotation.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfPage page1 = pdfDoc.AddNewPage();
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav", null, "sample.wav"
                 , null, null);
             PdfFileAttachmentAnnotation fileAttach = new PdfFileAttachmentAnnotation(new Rectangle(100, 100), spec);
             fileAttach.SetIconName(PdfName.Paperclip);
@@ -161,8 +177,8 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_fileAttachmentAnnotation.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_fileAttachmentAnnotation.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -170,9 +186,9 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void FileAttachmentTargetTest() {
-            String filename = destinationFolder + "fileAttachmentTargetTest.pdf";
+            String filename = DESTINATION_FOLDER + "fileAttachmentTargetTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.pdf", null, "embedded_doc.pdf"
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, SOURCE_FOLDER + "sample.pdf", null, "embedded_doc.pdf"
                 , null, null);
             PdfFileAttachmentAnnotation fileAttachmentAnnotation = new PdfFileAttachmentAnnotation(new Rectangle(300, 
                 500, 50, 50), spec);
@@ -198,8 +214,8 @@ namespace iText.Kernel.Pdf.Annot {
             pdfDoc.GetFirstPage().AddAnnotation(linkAnnotation);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_fileAttachmentTargetTest.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_fileAttachmentTargetTest.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -209,15 +225,15 @@ namespace iText.Kernel.Pdf.Annot {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED)]
         public virtual void NoFileAttachmentTargetTest() {
             String fileName = "noFileAttachmentTargetTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName));
             pdfDoc.AddNewPage();
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(400, 500, 50, 50));
             linkAnnotation.SetAction(PdfAction.CreateGoToE(null, true, null));
             pdfDoc.GetFirstPage().AddAnnotation(linkAnnotation);
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(destinationFolder + fileName, sourceFolder + "cmp_" + fileName
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER + "cmp_" +
+                 fileName, DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -226,7 +242,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>see DEVSIX-1539</summary>
         [NUnit.Framework.Test]
         public virtual void FileAttachmentAppendModeTest() {
-            String fileName = destinationFolder + "fileAttachmentAppendModeTest.pdf";
+            String fileName = DESTINATION_FOLDER + "fileAttachmentAppendModeTest.pdf";
             MemoryStream baos = new MemoryStream();
             PdfDocument inputDoc = new PdfDocument(new PdfWriter(baos));
             PdfPage page1 = inputDoc.AddNewPage();
@@ -240,13 +256,13 @@ namespace iText.Kernel.Pdf.Annot {
                 null);
             finalDoc.AddFileAttachment("some_test", spec);
             finalDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_fileAttachmentAppendModeTest.pdf"
-                , destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, SOURCE_FOLDER + "cmp_fileAttachmentAppendModeTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void RubberStampTest() {
-            String filename = destinationFolder + "rubberStampAnnotation01.pdf";
+            String filename = DESTINATION_FOLDER + "rubberStampAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
@@ -294,8 +310,8 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_rubberStampAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_rubberStampAnnotation01.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -303,7 +319,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void RubberStampWrongStampTest() {
-            String filename = destinationFolder + "rubberStampAnnotation02.pdf";
+            String filename = DESTINATION_FOLDER + "rubberStampAnnotation02.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
@@ -312,8 +328,8 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_rubberStampAnnotation02.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_rubberStampAnnotation02.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
             }
@@ -321,7 +337,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void InkTest() {
-            String filename = destinationFolder + "inkAnnotation01.pdf";
+            String filename = DESTINATION_FOLDER + "inkAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             float[] array1 = new float[] { 100, 100, 100, 200, 200, 200, 300, 300 };
@@ -340,7 +356,7 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_inkAnnotation01.pdf", destinationFolder
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_inkAnnotation01.pdf", DESTINATION_FOLDER
                 , "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
@@ -349,7 +365,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void PrinterMarkText() {
-            String filename = destinationFolder + "printerMarkAnnotation01.pdf";
+            String filename = DESTINATION_FOLDER + "printerMarkAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page1);
@@ -364,8 +380,8 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_printerMarkAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_printerMarkAnnotation01.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -373,7 +389,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void TrapNetworkText() {
-            String filename = destinationFolder + "trapNetworkAnnotation01.pdf";
+            String filename = DESTINATION_FOLDER + "trapNetworkAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page);
@@ -389,8 +405,8 @@ namespace iText.Kernel.Pdf.Annot {
             page.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_trapNetworkAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_trapNetworkAnnotation01.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -398,7 +414,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void WaterMarkTest() {
-            String filename = destinationFolder + "watermarkAnnotation01.pdf";
+            String filename = DESTINATION_FOLDER + "watermarkAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfWatermarkAnnotation watermark = new PdfWatermarkAnnotation(new Rectangle(400, 400, 200, 200));
@@ -418,8 +434,8 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_watermarkAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_watermarkAnnotation01.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -427,7 +443,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void RedactionTest() {
-            String filename = destinationFolder + "redactionAnnotation01.pdf";
+            String filename = DESTINATION_FOLDER + "redactionAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page1 = pdfDoc.AddNewPage();
             float[] rgb = new float[] { 0, 0, 0 };
@@ -457,8 +473,8 @@ namespace iText.Kernel.Pdf.Annot {
             page1.Flush();
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_redactionAnnotation01.pdf"
-                , destinationFolder, "diff_");
+            String errorMessage = compareTool.CompareByContent(filename, SOURCE_FOLDER + "cmp_redactionAnnotation01.pdf"
+                , DESTINATION_FOLDER, "diff_");
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
@@ -467,9 +483,9 @@ namespace iText.Kernel.Pdf.Annot {
         [NUnit.Framework.Test]
         public virtual void DefaultAppearanceTest() {
             String name = "defaultAppearance";
-            String inPath = sourceFolder + "in_" + name + ".pdf";
-            String outPath = destinationFolder + name + ".pdf";
-            String cmpPath = sourceFolder + "cmp_" + name + ".pdf";
+            String inPath = SOURCE_FOLDER + "in_" + name + ".pdf";
+            String outPath = DESTINATION_FOLDER + name + ".pdf";
+            String cmpPath = SOURCE_FOLDER + "cmp_" + name + ".pdf";
             String diff = "diff_" + name + "_";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPath), CompareTool.CreateTestPdfWriter(outPath));
             PdfPage page = pdfDoc.GetPage(1);
@@ -498,13 +514,13 @@ namespace iText.Kernel.Pdf.Annot {
                 (new AnnotationDefaultAppearance().SetColor(DeviceGray.GRAY).SetFont(ExtendedAnnotationFont.HeiseiMinW3
                 ).SetFontSize(20)).SetColor(ColorConstants.WHITE));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, DESTINATION_FOLDER, diff
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void Make3dAnnotationTest() {
-            String filename = sourceFolder + "3d_annotation.pdf";
+            String filename = SOURCE_FOLDER + "3d_annotation.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             PdfPage page1 = pdfDoc.GetPage(1);
             IList<PdfAnnotation> annots = page1.GetAnnotations();
@@ -513,10 +529,10 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void Add3dAnnotationTest() {
-            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "add3DAnnotation01.pdf"
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "add3DAnnotation01.pdf"
                 ));
             Rectangle rect = new Rectangle(100, 400, 400, 400);
-            PdfStream stream3D = new PdfStream(pdfDoc, new FileStream(sourceFolder + "teapot.u3d", FileMode.Open, FileAccess.Read
+            PdfStream stream3D = new PdfStream(pdfDoc, new FileStream(SOURCE_FOLDER + "teapot.u3d", FileMode.Open, FileAccess.Read
                 ));
             stream3D.Put(PdfName.Type, new PdfName("3D"));
             stream3D.Put(PdfName.Subtype, new PdfName("U3D"));
@@ -534,8 +550,8 @@ namespace iText.Kernel.Pdf.Annot {
             annot.SetDefaultInitialView(dict3D);
             pdfDoc.AddNewPage().AddAnnotation(annot);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "add3DAnnotation01.pdf"
-                , sourceFolder + "cmp_add3DAnnotation01.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "add3DAnnotation01.pdf"
+                , SOURCE_FOLDER + "cmp_add3DAnnotation01.pdf", DESTINATION_FOLDER, "diff_"));
         }
     }
 }

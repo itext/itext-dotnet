@@ -1,0 +1,103 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+using iText.Kernel.Exceptions;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Tagging;
+using iText.Pdfua.Exceptions;
+
+namespace iText.Pdfua.Checkers.Utils {
+    /// <summary>Class that provides methods for checking PDF/UA compliance of annotations.</summary>
+    public sealed class AnnotationCheckUtil {
+        private AnnotationCheckUtil() {
+        }
+
+        // Empty constructor.
+        /// <summary>
+        /// Is annotation visible:
+        /// <see langword="true"/>
+        /// if hidden flag isn't
+        /// set and annotation intersects CropBox (default value is MediaBox).
+        /// </summary>
+        /// <param name="annotDict">annotation to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if annotation should be checked, otherwise
+        /// <see langword="false"/>
+        /// </returns>
+        public static bool IsAnnotationVisible(PdfDictionary annotDict) {
+            if (annotDict.GetAsNumber(PdfName.F) != null) {
+                int flags = annotDict.GetAsNumber(PdfName.F).IntValue();
+                if ((flags & PdfAnnotation.HIDDEN) != 0) {
+                    return false;
+                }
+            }
+            if (annotDict.GetAsDictionary(PdfName.P) != null) {
+                PdfDictionary page = annotDict.GetAsDictionary(PdfName.P);
+                PdfArray pageBox = page.GetAsArray(PdfName.CropBox) == null ? page.GetAsArray(PdfName.MediaBox) : page.GetAsArray
+                    (PdfName.CropBox);
+                if (pageBox != null && annotDict.GetAsArray(PdfName.Rect) != null) {
+                    PdfArray annotBox = annotDict.GetAsArray(PdfName.Rect);
+                    try {
+                        if (pageBox.ToRectangle().GetIntersection(annotBox.ToRectangle()) == null) {
+                            return false;
+                        }
+                    }
+                    catch (PdfException) {
+                    }
+                }
+            }
+            // ignore
+            return true;
+        }
+
+        /// <summary>Helper class that checks the conformance of annotations while iterating the tag tree structure.</summary>
+        public class AnnotationHandler : ContextAwareTagTreeIteratorHandler {
+            /// <summary>
+            /// Creates a new instance of the
+            /// <see cref="AnnotationHandler"/>.
+            /// </summary>
+            /// <param name="context">The validation context.</param>
+            public AnnotationHandler(PdfUAValidationContext context)
+                : base(context) {
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override void NextElement(IStructureNode elem) {
+                if (!(elem is PdfObjRef)) {
+                    return;
+                }
+                PdfObjRef objRef = (PdfObjRef)elem;
+                PdfDictionary annotObj = objRef.GetReferencedObject();
+                if (annotObj != null && PdfName.Link.Equals(annotObj.Get(PdfName.Subtype)) && IsAnnotationVisible(annotObj
+                    )) {
+                    PdfStructElem parentLink = context.GetElementIfRoleMatches(PdfName.Link, objRef.GetParent());
+                    if (parentLink == null) {
+                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK);
+                    }
+                }
+            }
+        }
+    }
+}

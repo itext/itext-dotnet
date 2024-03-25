@@ -1089,9 +1089,20 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged()) {
                 if (tagAnnotation) {
                     TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    if (annotation is PdfMarkupAnnotation && StandardRoles.DOCUMENT.Equals(tagPointer.GetRole()) && PdfVersion
-                        .PDF_1_4.CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                        tagPointer.AddTag(StandardRoles.ANNOT);
+                    if (!StandardRoles.ANNOT.Equals(tagPointer.GetRole()) && PdfVersion.PDF_1_4
+                                        // "Annot" tag was added starting from PDF 1.5
+                                        .CompareTo(GetDocument().GetPdfVersion()) < 0) {
+                        if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) > 0) {
+                            if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfLinkAnnotation) && !(annotation is PdfPrinterMarkAnnotation
+                                )) {
+                                tagPointer.AddTag(StandardRoles.ANNOT);
+                            }
+                        }
+                        else {
+                            if (annotation is PdfMarkupAnnotation) {
+                                tagPointer.AddTag(StandardRoles.ANNOT);
+                            }
+                        }
                     }
                     iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
                     tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
