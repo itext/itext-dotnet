@@ -2457,7 +2457,8 @@ namespace iText.Kernel.Pdf {
 
         private void ResolveDestinations(iText.Kernel.Pdf.PdfDocument toDocument, IDictionary<PdfPage, PdfPage> page2page
             ) {
-            foreach (PdfDocument.DestinationMutationInfo mutation in pendingDestinationMutations) {
+            for (int i = 0; i < pendingDestinationMutations.Count; ++i) {
+                PdfDocument.DestinationMutationInfo mutation = pendingDestinationMutations[i];
                 PdfDestination copiedDest = null;
                 copiedDest = GetCatalog().CopyDestination(mutation.GetOriginalDestination().GetPdfObject(), page2page, toDocument
                     );

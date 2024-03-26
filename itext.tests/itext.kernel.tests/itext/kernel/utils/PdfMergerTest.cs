@@ -101,6 +101,20 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithLinkAnnotationTest() {
+            String filename = sourceFolder + "documentWithLinkAnnotation.pdf";
+            String resultFile = destinationFolder + "mergedDocumentWithLinkAnnotation.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(resultFile);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDocument result = new PdfDocument(writer1);
+            PdfMerger merger = new PdfMerger(result).SetCloseSourceDocuments(true);
+            merger.Merge(pdfDoc, 1, 1).Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedDocumentWithLinkAnnotation.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MergeDocumentTest02() {
             String filename = sourceFolder + "doc1.pdf";
             String filename1 = sourceFolder + "doc2.pdf";
