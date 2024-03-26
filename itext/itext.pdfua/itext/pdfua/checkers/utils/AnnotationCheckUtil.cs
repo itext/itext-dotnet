@@ -90,8 +90,23 @@ namespace iText.Pdfua.Checkers.Utils {
                 }
                 PdfObjRef objRef = (PdfObjRef)elem;
                 PdfDictionary annotObj = objRef.GetReferencedObject();
-                if (annotObj != null && PdfName.Link.Equals(annotObj.Get(PdfName.Subtype)) && IsAnnotationVisible(annotObj
-                    )) {
+                if (annotObj == null) {
+                    return;
+                }
+                if (annotObj.GetAsDictionary(PdfName.P) != null) {
+                    PdfDictionary pageDict = annotObj.GetAsDictionary(PdfName.P);
+                    if (!PdfName.S.Equals(pageDict.GetAsName(PdfName.Tabs))) {
+                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                            );
+                    }
+                }
+                if (!IsAnnotationVisible(annotObj)) {
+                    return;
+                }
+                if (PdfName.TrapNet.Equals(annotObj.Get(PdfName.Subtype))) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED);
+                }
+                if (PdfName.Link.Equals(annotObj.Get(PdfName.Subtype))) {
                     PdfStructElem parentLink = context.GetElementIfRoleMatches(PdfName.Link, objRef.GetParent());
                     if (parentLink == null) {
                         throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK);

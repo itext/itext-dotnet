@@ -110,6 +110,10 @@ namespace iText.Pdfua.Exceptions {
 
         public const String LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK = "A link annotation is not nested within a <Link> tag.";
 
+        public const String ANNOT_TRAP_NET_IS_NOT_PERMITTED = "Annotations of subtype TrapNet shall not be permitted.";
+
+        public const String PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S = "A page with annotation(s) doesn't contains Tabs key with S value.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor

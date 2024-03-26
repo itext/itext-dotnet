@@ -36,7 +36,6 @@ using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
-using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -45,7 +44,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUAAnnotationsTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -71,12 +69,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_115());
+            framework.AddSuppliers(new _Generator_113());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_115 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_115() {
+        private sealed class _Generator_113 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_113() {
             }
 
             public IBlockElement Generate() {
@@ -221,12 +219,8 @@ namespace iText.Pdfua {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("TODO DEVSIX-8208 should be complain here about TrapNetwork annot")]
-        public virtual void Ua1TrapNAnnotDirectChildOfAnnotTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1TrapNAnnotDirectChildOfAnnotTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_ua1TrapNAnnotDirectChildOfAnnotTest.pdf";
-            using (PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()))) {
+        public virtual void TrapNetAnnotNotPermittedTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
                 PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
@@ -237,10 +231,27 @@ namespace iText.Pdfua {
                 annot.SetContents("Some content");
                 pdfPage.AddAnnotation(annot);
             }
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
-                ));
+            );
+            framework.AssertBothFail("trapNetAnnotNotPermittedTest", PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvisibleTrapNetAnnotTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfFormXObject form = new PdfFormXObject(PageSize.A4);
+                PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
+                canvas.SaveState().Circle(272, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
+                canvas.Release();
+                form.SetProcessColorModel(PdfName.DeviceN);
+                PdfTrapNetworkAnnotation annot = new PdfTrapNetworkAnnotation(PageSize.A4, form);
+                annot.SetContents("Some content");
+                annot.SetFlag(PdfAnnotation.HIDDEN);
+                pdfPage.AddAnnotation(annot);
+            }
+            );
+            framework.AssertBothValid("invisibleTrapNetAnnotTest");
         }
 
         [NUnit.Framework.Test]
@@ -391,6 +402,59 @@ namespace iText.Pdfua {
                 );
         }
 
+        [NUnit.Framework.Test]
+        public virtual void UndefinedAnnotTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfUAAnnotationsTest.PdfCustomAnnot annot = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
+                    , 400, 100));
+                annot.SetContents("Content of unique annot");
+                page.AddAnnotation(annot);
+            }
+            );
+            framework.AssertBothValid("undefinedAnnotTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TabsEntryAbsentInPageTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfTextAnnotation annot = CreateRichTextAnnotation();
+                pdfPage.AddAnnotation(annot);
+                pdfPage.GetPdfObject().Remove(PdfName.Tabs);
+            }
+            );
+            framework.AssertBothFail("tabsEntryAbsentInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TabsEntryNotSInPageTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfTextAnnotation annot = CreateRichTextAnnotation();
+                pdfPage.AddAnnotation(annot);
+                pdfPage.SetTabOrder(PdfName.O);
+            }
+            );
+            framework.AssertBothFail("tabsEntryNotSInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidTabsEntryButAnnotInvisibleTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfTextAnnotation annot = CreateRichTextAnnotation();
+                annot.SetFlag(PdfAnnotation.HIDDEN);
+                pdfPage.AddAnnotation(annot);
+                pdfPage.SetTabOrder(PdfName.O);
+            }
+            );
+            framework.AssertBothFail("invalidTabsEntryButAnnotInvisibleTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                );
+        }
+
         private PdfTextAnnotation CreateRichTextAnnotation() {
             PdfTextAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 100, 100, 100));
             annot.SetContents("Rich media annot");
@@ -451,6 +515,16 @@ namespace iText.Pdfua {
             }
             catch (System.IO.IOException e) {
                 throw new Exception(e.Message);
+            }
+        }
+
+        private class PdfCustomAnnot : PdfAnnotation {
+            protected internal PdfCustomAnnot(Rectangle rect)
+                : base(rect) {
+            }
+
+            public override PdfName GetSubtype() {
+                return new PdfName("CustomUniqueAnnot");
             }
         }
     }
