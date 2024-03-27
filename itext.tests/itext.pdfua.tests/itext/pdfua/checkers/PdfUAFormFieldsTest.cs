@@ -1719,9 +1719,9 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestSignatureAppearanceWithSignedAppearanceAndCustomAppearanceTextInteractive() {
+        public virtual void TestSignedAndCustomAppearanceTextInteractive() {
             framework.AddSuppliers(new _Generator_1300(this));
-            framework.AssertBothValid("testSignatureAppearanceWithSignedAppearanceAndCustomAppearanceTextInteractive");
+            framework.AssertBothValid("testSignedAndCustomAppearanceTextInteractive");
         }
 
         private sealed class _Generator_1300 : UaValidationTestFramework.Generator<IBlockElement> {
