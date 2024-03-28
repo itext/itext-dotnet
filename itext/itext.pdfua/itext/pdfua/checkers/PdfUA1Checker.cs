@@ -104,6 +104,11 @@ namespace iText.Pdfua.Checkers {
                     CheckPdfObject((PdfObject)obj);
                     break;
                 }
+
+                case IsoKey.CRYPTO: {
+                    CheckCrypto((PdfDictionary)obj);
+                    break;
+                }
             }
         }
 
@@ -347,6 +352,20 @@ namespace iText.Pdfua.Checkers {
             if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
                     , String.Join(", ", fontNamesThatAreNotEmbedded)));
+            }
+        }
+
+        private void CheckCrypto(PdfDictionary encryptionDictionary) {
+            if (encryptionDictionary != null) {
+                if (!(encryptionDictionary.Get(PdfName.P) is PdfNumber)) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.P_VALUE_IS_ABSENT_IN_ENCRYPTION_DICTIONARY
+                        );
+                }
+                long permissions = ((PdfNumber)encryptionDictionary.Get(PdfName.P)).LongValue();
+                if ((permissions & (1L << 8)) == 0) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO
+                        );
+                }
             }
         }
 
