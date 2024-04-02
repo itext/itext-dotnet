@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Test;
@@ -27,16 +29,83 @@ using iText.Test;
 namespace iText.Kernel.Utils.Checkers {
     [NUnit.Framework.Category("UnitTest")]
     public class FontCheckUtilTest : ExtendedITextTest {
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+
         [NUnit.Framework.Test]
         public virtual void CheckFontAvailable() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-            NUnit.Framework.Assert.IsTrue(FontCheckUtil.DoesFontContainAllUsedGlyphs("123", font));
+            NUnit.Framework.Assert.AreEqual(-1, FontCheckUtil.CheckGlyphsOfText("123", font, new _CharacterChecker_48(
+                )));
+        }
+
+        private sealed class _CharacterChecker_48 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_48() {
+            }
+
+            public bool Check(int ch, PdfFont fontToCheck) {
+                return !fontToCheck.ContainsGlyph(ch);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckFontNotAvailable() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-            NUnit.Framework.Assert.IsFalse(FontCheckUtil.DoesFontContainAllUsedGlyphs("⫊", font));
+            NUnit.Framework.Assert.AreEqual(2, FontCheckUtil.CheckGlyphsOfText("hi⫊", font, new _CharacterChecker_60()
+                ));
+        }
+
+        private sealed class _CharacterChecker_60 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_60() {
+            }
+
+            public bool Check(int ch, PdfFont fontToCheck) {
+                return !fontToCheck.ContainsGlyph(ch);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckUnicodeMappingNotAvailable() {
+            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONTS_FOLDER + "cmr10.afm", FONTS_FOLDER
+                 + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+            int index = FontCheckUtil.CheckGlyphsOfText("h i", font, new _CharacterChecker_73());
+            NUnit.Framework.Assert.AreEqual(1, index);
+        }
+
+        private sealed class _CharacterChecker_73 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_73() {
+            }
+
+            public bool Check(int ch, PdfFont fontToCheck) {
+                if (fontToCheck.ContainsGlyph(ch)) {
+                    return !fontToCheck.GetGlyph(ch).HasValidUnicode();
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckUnicodeMappingAvailable() {
+            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONTS_FOLDER + "cmr10.afm", FONTS_FOLDER
+                 + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+            int index = FontCheckUtil.CheckGlyphsOfText("hi", font, new _CharacterChecker_91());
+            NUnit.Framework.Assert.AreEqual(-1, index);
+        }
+
+        private sealed class _CharacterChecker_91 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_91() {
+            }
+
+            public bool Check(int ch, PdfFont fontToCheck) {
+                if (fontToCheck.ContainsGlyph(ch)) {
+                    return !fontToCheck.GetGlyph(ch).HasValidUnicode();
+                }
+                else {
+                    return true;
+                }
+            }
         }
     }
 }

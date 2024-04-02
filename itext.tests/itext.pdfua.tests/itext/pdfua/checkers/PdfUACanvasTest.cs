@@ -47,6 +47,9 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/";
+
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/pdfua/PdfUACanvasTest/";
 
@@ -729,6 +732,29 @@ namespace iText.Pdfua.Checkers {
             String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent.pdf";
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validNoteTagPresent.pdf"
                 , DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UsingCharacterWithoutUnicodeMappingTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONT_FOLDER + "cmr10.afm", FONT_FOLDER
+                         + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                PdfPage page = pdfDoc.AddNewPage();
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page).AddTag(StandardRoles.P);
+                new PdfCanvas(page).OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().MoveText(36, 700).SetFontAndSize
+                    (font, 72)
+                                // space symbol isn't defined in the font
+                                .ShowText("Hello world").EndText().RestoreState().CloseTag();
+            }
+            );
+            framework.AssertBothFail("usingCharacterWithoutUnicodeMappingTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, " "), false);
         }
 
         private PdfFont GetFont() {

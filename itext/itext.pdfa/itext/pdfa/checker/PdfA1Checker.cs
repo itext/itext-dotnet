@@ -322,7 +322,8 @@ namespace iText.Pdfa.Checker {
         /// <inheritDoc/>
         /// </param>
         public override void CheckText(String text, PdfFont font) {
-            if (!FontCheckUtil.DoesFontContainAllUsedGlyphs(text, font)) {
+            int index = FontCheckUtil.CheckGlyphsOfText(text, font, new PdfA1Checker.ACharacterChecker());
+            if (index != -1) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                     );
             }
@@ -778,6 +779,12 @@ namespace iText.Pdfa.Checker {
 
         private int GetMaxDictionaryCapacity() {
             return 4095;
+        }
+
+        private sealed class ACharacterChecker : FontCheckUtil.CharacterChecker {
+            public bool Check(int ch, PdfFont font) {
+                return !font.ContainsGlyph(ch);
+            }
         }
     }
 }

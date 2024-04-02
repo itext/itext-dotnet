@@ -128,9 +128,10 @@ namespace iText.Pdfua.Checkers {
         }
 
         private void CheckText(String str, PdfFont font) {
-            if (!FontCheckUtil.DoesFontContainAllUsedGlyphs(str, font)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                    );
+            int index = FontCheckUtil.CheckGlyphsOfText(str, font, new PdfUA1Checker.UaCharacterChecker());
+            if (index != -1) {
+                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                    , str[index]));
             }
         }
 
@@ -380,6 +381,17 @@ namespace iText.Pdfua.Checkers {
                 PdfName type = dict.GetAsName(PdfName.Type);
                 if (PdfName.Filespec.Equals(type)) {
                     CheckFileSpec(dict);
+                }
+            }
+        }
+
+        private sealed class UaCharacterChecker : FontCheckUtil.CharacterChecker {
+            public bool Check(int ch, PdfFont font) {
+                if (font.ContainsGlyph(ch)) {
+                    return !font.GetGlyph(ch).HasValidUnicode();
+                }
+                else {
+                    return true;
                 }
             }
         }

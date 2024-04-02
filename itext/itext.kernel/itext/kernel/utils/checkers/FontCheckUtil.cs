@@ -30,15 +30,16 @@ namespace iText.Kernel.Utils.Checkers {
         }
 
         // Empty constructor
-        /// <summary>Checks if all characters in the string contain a valid glyph in the font.</summary>
-        /// <param name="text">The string we want to compare.</param>
-        /// <param name="font">The font we want to check</param>
+        /// <summary>Checks the text by the passed checker and the font.</summary>
+        /// <param name="text">the text to check</param>
+        /// <param name="font">the font to check</param>
+        /// <param name="checker">the checker which checks the text according to the font</param>
         /// <returns>
         /// 
-        /// <see langword="true"/>
-        /// if all glyphs in the string are available in the font.
+        /// <c>-1</c>
+        /// if no character passes the check, or index of the first symbol which passes the check
         /// </returns>
-        public static bool DoesFontContainAllUsedGlyphs(String text, PdfFont font) {
+        public static int CheckGlyphsOfText(String text, PdfFont font, FontCheckUtil.CharacterChecker checker) {
             for (int i = 0; i < text.Length; ++i) {
                 int ch;
                 if (iText.IO.Util.TextUtil.IsSurrogatePair(text, i)) {
@@ -48,11 +49,25 @@ namespace iText.Kernel.Utils.Checkers {
                 else {
                     ch = text[i];
                 }
-                if (!font.ContainsGlyph(ch)) {
-                    return false;
+                if (checker.Check(ch, font)) {
+                    return i;
                 }
             }
-            return true;
+            return -1;
+        }
+
+        /// <summary>Character checker which performs check of passed symbol against the font.</summary>
+        public interface CharacterChecker {
+            /// <summary>Checks passed symbol against the font</summary>
+            /// <param name="ch">character to check</param>
+            /// <param name="font">font to check</param>
+            /// <returns>
+            /// 
+            /// <see langword="true"/>
+            /// if check passes, otherwise
+            /// <see langword="false"/>
+            /// </returns>
+            bool Check(int ch, PdfFont font);
         }
     }
 }

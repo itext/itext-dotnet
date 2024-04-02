@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -55,12 +56,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest01() {
-            framework.AddSuppliers(new _Generator_72());
+            framework.AddSuppliers(new _Generator_74());
             framework.AssertBothFail("layout01");
         }
 
-        private sealed class _Generator_72 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_72() {
+        private sealed class _Generator_74 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_74() {
             }
 
             public IBlockElement Generate() {
@@ -72,12 +73,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest02() {
-            framework.AddSuppliers(new _Generator_85());
+            framework.AddSuppliers(new _Generator_87());
             framework.AssertBothValid("layout02");
         }
 
-        private sealed class _Generator_85 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_85() {
+        private sealed class _Generator_87 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_87() {
             }
 
             public IBlockElement Generate() {
@@ -90,12 +91,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest03() {
-            framework.AddSuppliers(new _Generator_100());
+            framework.AddSuppliers(new _Generator_102());
             framework.AssertBothValid("layout03");
         }
 
-        private sealed class _Generator_100 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_100() {
+        private sealed class _Generator_102 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_102() {
             }
 
             public IBlockElement Generate() {
@@ -108,12 +109,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest04() {
-            framework.AddSuppliers(new _Generator_115());
+            framework.AddSuppliers(new _Generator_117());
             framework.AssertBothFail("layout04");
         }
 
-        private sealed class _Generator_115 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_115() {
+        private sealed class _Generator_117 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_117() {
             }
 
             public IBlockElement Generate() {
@@ -126,12 +127,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest05() {
-            framework.AddSuppliers(new _Generator_129());
+            framework.AddSuppliers(new _Generator_131());
             framework.AssertBothValid("layout05");
         }
 
-        private sealed class _Generator_129 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_129() {
+        private sealed class _Generator_131 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_131() {
             }
 
             public IBlockElement Generate() {
@@ -144,12 +145,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest06() {
-            framework.AddSuppliers(new _Generator_143());
-            framework.AssertBothFail("layout06", false);
+            framework.AddSuppliers(new _Generator_145());
+            framework.AssertBothFail("layout06", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false);
         }
 
-        private sealed class _Generator_143 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_143() {
+        private sealed class _Generator_145 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_145() {
             }
 
             public IBlockElement Generate() {
@@ -162,12 +164,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutTest07() {
-            framework.AddSuppliers(new _Generator_157());
-            framework.AssertBothFail("layout07", false);
+            framework.AddSuppliers(new _Generator_160());
+            framework.AssertBothFail("layout07", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false);
         }
 
-        private sealed class _Generator_157 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_157() {
+        private sealed class _Generator_160 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_160() {
             }
 
             public IBlockElement Generate() {
@@ -180,7 +183,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutWithValidRole() {
-            framework.AddSuppliers(new _Generator_171());
+            framework.AddSuppliers(new _Generator_175());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfStructTreeRoot tagStructureContext = pdfDocument.GetStructTreeRoot();
                 tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
@@ -189,8 +192,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothValid("layoutWithValidRole");
         }
 
-        private sealed class _Generator_171 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_171() {
+        private sealed class _Generator_175 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_175() {
             }
 
             public IBlockElement Generate() {
@@ -203,7 +206,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void LayoutWithValidRoleButNoAlternateDescription() {
-            framework.AddSuppliers(new _Generator_190());
+            framework.AddSuppliers(new _Generator_194());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfStructTreeRoot tagStructureContext = pdfDocument.GetStructTreeRoot();
                 tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
@@ -212,8 +215,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("layoutWithValidRoleButNoDescription");
         }
 
-        private sealed class _Generator_190 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_190() {
+        private sealed class _Generator_194 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_194() {
             }
 
             public IBlockElement Generate() {
@@ -271,10 +274,9 @@ namespace iText.Pdfua.Checkers {
             tagPointer.SetPageForTagging(document.GetFirstPage());
             tagPointer.AddTag(StandardRoles.FORMULA);
             canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12);
-            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                canvas.ShowText("⫊");
-            }
-            );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => canvas.ShowText("⫊"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), e.Message);
         }
 
         private static PdfFont LoadFont(String fontPath) {
