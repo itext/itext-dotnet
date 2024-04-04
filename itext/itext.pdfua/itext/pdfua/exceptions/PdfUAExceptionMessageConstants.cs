@@ -117,6 +117,8 @@ namespace iText.Pdfua.Exceptions {
 
         public const String TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO = "10th bit of P value of " + "Encryption dictionary should be 1 if the document is tagged.";
 
+        public const String PRINTER_MARK_IS_NOT_PERMITTED = "Annotations of subtype PrinterMark shall not be included in logical structure.";
+
         private PdfUAExceptionMessageConstants() {
         }
         // Empty constructor

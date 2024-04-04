@@ -69,12 +69,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_113());
+            framework.AddSuppliers(new _Generator_114());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_113 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_113() {
+        private sealed class _Generator_114 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_114() {
             }
 
             public IBlockElement Generate() {
@@ -453,6 +453,47 @@ namespace iText.Pdfua {
             );
             framework.AssertBothFail("invalidTabsEntryButAnnotInvisibleTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Ua1PrinterMAnnotIsInLogicalStructureTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfFormXObject form = new PdfFormXObject(PageSize.A4);
+                PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
+                canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
+                canvas.Release();
+                PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
+                annot.SetContents("link annot");
+                pdfPage.AddAnnotation(annot);
+            }
+            );
+            framework.AssertBothFail("ua1PrinterMAnnotIsInLogicalStructureTest", PdfUAExceptionMessageConstants.PRINTER_MARK_IS_NOT_PERMITTED
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Ua1PrinterMAnnotNotInTagStructureTest() {
+            String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNotInTagStructureTest.pdf";
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfPage pdfPage = pdfDoc.AddNewPage();
+            PdfFormXObject form = new PdfFormXObject(PageSize.A4);
+            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
+            canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
+            canvas.Release();
+            PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
+            annot.SetContents("link annot");
+            // Put false as 3rd parameter to not tag annotation
+            pdfPage.AddAnnotation(-1, annot, false);
+            PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
+                , 400, 100));
+            annot2.SetContents("Content of unique annot");
+            pdfPage.AddAnnotation(annot2);
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
+            // VeraPdf complains about the fact that PrinterMark annotation isn't wrapped by Annot tag.
+            // But in that test we don't put PrinterMark annot in tag structure at all.
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         private PdfTextAnnotation CreateRichTextAnnotation() {
