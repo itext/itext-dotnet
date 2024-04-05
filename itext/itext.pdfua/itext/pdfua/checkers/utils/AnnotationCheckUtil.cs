@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -100,19 +101,29 @@ namespace iText.Pdfua.Checkers.Utils {
                             );
                     }
                 }
-                if (!IsAnnotationVisible(annotObj)) {
+                PdfName subtype = annotObj.GetAsName(PdfName.Subtype);
+                if (!IsAnnotationVisible(annotObj) || PdfName.Popup.Equals(subtype)) {
                     return;
                 }
-                if (PdfName.PrinterMark.Equals(annotObj.Get(PdfName.Subtype))) {
+                if (PdfName.PrinterMark.Equals(subtype)) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.PRINTER_MARK_IS_NOT_PERMITTED);
                 }
-                if (PdfName.TrapNet.Equals(annotObj.Get(PdfName.Subtype))) {
+                if (PdfName.TrapNet.Equals(subtype)) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED);
                 }
-                if (PdfName.Link.Equals(annotObj.Get(PdfName.Subtype))) {
+                if (!PdfName.Widget.Equals(subtype) && !(annotObj.ContainsKey(PdfName.Contents) || annotObj.ContainsKey(PdfName
+                    .Alt))) {
+                    throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY
+                        , subtype.GetValue()));
+                }
+                if (PdfName.Link.Equals(subtype)) {
                     PdfStructElem parentLink = context.GetElementIfRoleMatches(PdfName.Link, objRef.GetParent());
                     if (parentLink == null) {
                         throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK);
+                    }
+                    if (!annotObj.ContainsKey(PdfName.Contents)) {
+                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY
+                            );
                     }
                 }
             }

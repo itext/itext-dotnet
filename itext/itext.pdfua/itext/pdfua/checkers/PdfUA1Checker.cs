@@ -362,8 +362,8 @@ namespace iText.Pdfua.Checkers {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.P_VALUE_IS_ABSENT_IN_ENCRYPTION_DICTIONARY
                         );
                 }
-                long permissions = ((PdfNumber)encryptionDictionary.Get(PdfName.P)).LongValue();
-                if ((permissions & (1L << 8)) == 0) {
+                int permissions = ((PdfNumber)encryptionDictionary.Get(PdfName.P)).IntValue();
+                if ((EncryptionConstants.ALLOW_SCREENREADERS & permissions) == 0) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO
                         );
                 }

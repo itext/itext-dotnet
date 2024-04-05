@@ -117,6 +117,11 @@ namespace iText.Pdfua.Exceptions {
 
         public const String TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO = "10th bit of P value of " + "Encryption dictionary should be 1 if the document is tagged.";
 
+        public const String ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY = "Annotation of type {0} should "
+             + "have contents or alternate description.";
+
+        public const String LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY = "Annotation of type Link " + "shall contain an alternate description via their Contents key.";
+
         public const String PRINTER_MARK_IS_NOT_PERMITTED = "Annotations of subtype PrinterMark shall not be included in logical structure.";
 
         private PdfUAExceptionMessageConstants() {

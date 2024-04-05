@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Font;
@@ -36,6 +37,7 @@ using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -69,12 +71,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_114());
+            framework.AddSuppliers(new _Generator_120());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_114 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_114() {
+        private sealed class _Generator_120 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_120() {
             }
 
             public IBlockElement Generate() {
@@ -170,6 +172,70 @@ namespace iText.Pdfua {
             framework.AssertBothValid("ua1ScreenAnnotDirectChildOfAnnotTest");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void Ua1ScreenAnnotWithoutContentsAndAltTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                pdfPage.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothFail("ua1ScreenWithoutContentsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                .ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY, "Screen"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Ua1PopupWithoutContentOrAltTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfPopupAnnotation popup = new PdfPopupAnnotation(new Rectangle(0f, 0f));
+                pdfPage.AddAnnotation(popup);
+            }
+            );
+            framework.AssertBothValid("ua1PopupWithoutContentOrAltTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Ua1StampAnnotWithAltTest() {
+            String outPdf = DESTINATION_FOLDER + "ua1StampAnnotWithAltTest.pdf";
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfPage pdfPage = pdfDoc.AddNewPage();
+            PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
+            stamp.SetStampName(PdfName.Approved);
+            stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
+            pdfPage.AddAnnotation(stamp);
+            stamp.GetPdfObject().Put(PdfName.Alt, new PdfString("Alt description"));
+            pdfPage.AddAnnotation(stamp);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfDoc.Close();
+            }
+            );
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_ua1StampAnnotWithAltTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void Ua1ScreenAnnotWithAltTest() {
+            String outPdf = DESTINATION_FOLDER + "ua1ScreenAnnotWithAltTest.pdf";
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfPage pdfPage = pdfDoc.AddNewPage();
+            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+            pdfPage.AddAnnotation(screen);
+            screen.GetPdfObject().Put(PdfName.Alt, new PdfString("Alt description"));
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                pdfDoc.Close();
+            }
+            );
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_ua1ScreenAnnotWithAltTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void Ua1InkAnnotDirectChildOfAnnotTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
@@ -336,6 +402,25 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothValid("linkAnnotNestedWithinLinkTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotWithoutContentsTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Rectangle rect = new Rectangle(100, 650, 400, 100);
+                PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
+                    ));
+                Document doc = new Document(pdfDoc);
+                Paragraph p2 = new Paragraph("Text");
+                p2.SetFont(LoadFont());
+                p2.GetAccessibilityProperties().SetRole(StandardRoles.LINK);
+                p2.SetProperty(Property.LINK_ANNOTATION, annot);
+                doc.Add(p2);
+                doc.GetPdfDocument().GetPage(1).GetPdfObject().GetAsArray(PdfName.Annots).GetAsDictionary(0).Put(PdfName.Alt
+                    , new PdfString("Alt description"));
+            }
+            );
+            framework.AssertBothFail("linkAnnotNestedWithinLinkWithAnAlternateDescriptionTest");
         }
 
         [NUnit.Framework.Test]
