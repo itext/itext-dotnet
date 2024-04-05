@@ -122,6 +122,9 @@ namespace iText.Pdfua.Exceptions {
 
         public const String LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY = "Annotation of type Link " + "shall contain an alternate description via their Contents key.";
 
+        public const String CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP = "CT or Alt entry is missing from the media "
+             + "clip data dictionary.";
+
         public const String PRINTER_MARK_IS_NOT_PERMITTED = "Annotations of subtype PrinterMark shall not be included in logical structure.";
 
         private PdfUAExceptionMessageConstants() {

@@ -28,7 +28,10 @@ using iText.IO.Image;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
@@ -110,6 +113,29 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_emptyPageDocument.pdf"
                 , DESTINATION_FOLDER, "diff_"));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void InvalidUA1DocumentWithFlushedPageTest() {
+            String outPdf = DESTINATION_FOLDER + "invalidDocWithFlushedPageTest.pdf";
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()))) {
+                PdfPage page = pdfDocument.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDocument, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
+                NUnit.Framework.Assert.DoesNotThrow(() => {
+                    page.Flush();
+                }
+                );
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_invalidDocWithFlushedPageTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

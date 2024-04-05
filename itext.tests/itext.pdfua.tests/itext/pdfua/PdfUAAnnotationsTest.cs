@@ -71,12 +71,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_120());
+            framework.AddSuppliers(new _Generator_123());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_120 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_120() {
+        private sealed class _Generator_123 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_123() {
             }
 
             public IBlockElement Generate() {
@@ -465,6 +465,180 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButOutsideTest2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationWithMediaDataTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                action.GetPdfObject().GetAsDictionary(PdfName.R).GetAsDictionary(PdfName.C).Put(PdfName.Alt, new PdfArray(
+                    ));
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationAsAAWithMediaDataTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAdditionalAction(PdfName.E, action);
+                screen.SetContents("screen annotation");
+                action.GetPdfObject().GetAsDictionary(PdfName.R).GetAsDictionary(PdfName.C).Put(PdfName.Alt, new PdfArray(
+                    ));
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationWithBEMediaDataTest() {
+            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithBEMediaDataTest.pdf";
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfPage page = pdfDoc.AddNewPage();
+            String file = "sample.wav";
+            String mimeType = "audio/x-wav";
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, file);
+            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+            PdfDictionary be = new PdfDictionary();
+            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+            mediaClipData.Put(PdfName.Alt, new PdfArray());
+            be.Put(PdfName.C, mediaClipData);
+            PdfDictionary rendition = new PdfDictionary();
+            rendition.Put(PdfName.S, PdfName.MR);
+            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+            rendition.Put(PdfName.BE, be);
+            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+            screen.SetAction(action);
+            screen.SetContents("screen annotation");
+            page.AddAnnotation(screen);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_screenAnnotationWithBEMediaDataTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+        }
+
+        //Verapdf throws runtime exception, so we don't do this check here.
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationWithMHMediaDataTest() {
+            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithMHMediaDataTest.pdf";
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfPage page = pdfDoc.AddNewPage();
+            String file = "sample.wav";
+            String mimeType = "audio/x-wav";
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, file);
+            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+            PdfDictionary mh = new PdfDictionary();
+            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+            mediaClipData.Put(PdfName.Alt, new PdfArray());
+            mh.Put(PdfName.C, mediaClipData);
+            PdfDictionary rendition = new PdfDictionary();
+            rendition.Put(PdfName.S, PdfName.MR);
+            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+            rendition.Put(PdfName.MH, mh);
+            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+            screen.SetAction(action);
+            screen.SetContents("screen annotation");
+            page.AddAnnotation(screen);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_screenAnnotationWithMHMediaDataTest.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+        }
+
+        //Verapdf throws runtime exception, so we don't do this check here.
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest() {
+            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithInvalidMHMediaDataTest.pdf";
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
+                ()));
+            PdfPage page = pdfDoc.AddNewPage();
+            String file = "sample.wav";
+            String mimeType = "audio/x-wav";
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, file);
+            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+            PdfDictionary mh = new PdfDictionary();
+            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+            mh.Put(PdfName.C, mediaClipData);
+            PdfDictionary rendition = new PdfDictionary();
+            rendition.Put(PdfName.S, PdfName.MR);
+            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+            rendition.Put(PdfName.MH, mh);
+            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+            screen.SetAction(action);
+            screen.SetContents("screen annotation");
+            page.AddAnnotation(screen);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+                pdfDoc.Close();
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP, e
+                .Message);
+        }
+
+        //Verapdf throws runtime exception, so we don't do this check here.
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationWithoutAltInMediaDataTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationAsAAWithoutAltInMediaDataTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAdditionalAction(PdfName.E, action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ScreenAnnotationWithoutCTInMediaDataTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                action.GetPdfObject().GetAsDictionary(PdfName.R).GetAsDictionary(PdfName.C).Put(PdfName.Alt, new PdfArray(
+                    ));
+                action.GetPdfObject().GetAsDictionary(PdfName.R).GetAsDictionary(PdfName.C).Remove(PdfName.CT);
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                );
         }
 
         [NUnit.Framework.Test]

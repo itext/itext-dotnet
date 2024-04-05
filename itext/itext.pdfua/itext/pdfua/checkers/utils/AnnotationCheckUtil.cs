@@ -126,6 +126,22 @@ namespace iText.Pdfua.Checkers.Utils {
                             );
                     }
                 }
+                if (PdfName.Screen.Equals(subtype)) {
+                    PdfDictionary action = annotObj.GetAsDictionary(PdfName.A);
+                    PdfDictionary additionalActions = annotObj.GetAsDictionary(PdfName.AA);
+                    ActionCheckUtil.CheckAction(action);
+                    CheckAAEntry(additionalActions);
+                }
+            }
+
+            private static void CheckAAEntry(PdfDictionary additionalActions) {
+                if (additionalActions != null) {
+                    foreach (PdfObject val in additionalActions.Values()) {
+                        if (val is PdfDictionary) {
+                            ActionCheckUtil.CheckAction((PdfDictionary)val);
+                        }
+                    }
+                }
             }
         }
     }
