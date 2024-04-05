@@ -40,9 +40,9 @@ namespace iText.Bouncycastle.X509
 
         public CRLReason GetReason()
         {
-            var reasonExt = entry.GetExtensionValue(new Org.BouncyCastle.Asn1.DerObjectIdentifier("2.5.29.21"));
+            Asn1OctetString reasonExt = entry.GetExtensionValue(new Org.BouncyCastle.Asn1.DerObjectIdentifier("2.5.29.21"));
             if (reasonExt == null) return CRLReason.UNSPECIFIED;
-            var reasonEnum = DerEnumerated.GetInstance(reasonExt);
+            var reasonEnum = DerEnumerated.GetInstance(reasonExt.GetOctets());
             return (CRLReason)reasonEnum.IntValueExact;
         }
 

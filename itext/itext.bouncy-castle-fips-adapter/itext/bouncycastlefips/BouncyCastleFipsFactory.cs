@@ -654,8 +654,34 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual IIssuingDistributionPoint CreateIssuingDistributionPoint(Object point) {
+            return new IssuingDistributionPointBCFips(IssuingDistributionPoint.GetInstance(point is Asn1EncodableBCFips ?
+                ((Asn1EncodableBCFips) point).GetEncodable() : point));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IIssuingDistributionPoint CreateIssuingDistributionPoint(IDistributionPointName distributionPoint,
+            bool onlyContainsUserCerts, bool onlyContainsCACerts, IReasonFlags onlySomeReasons, bool indirectCRL,
+            bool onlyContainsAttributeCerts) {
+            return new IssuingDistributionPointBCFips(new IssuingDistributionPoint(distributionPoint == null ? null :
+                    ((DistributionPointNameBCFips) distributionPoint).GetDistributionPointName(), onlyContainsUserCerts,
+                onlyContainsCACerts, onlySomeReasons == null ? null :
+                    ((ReasonFlagsBCFips) onlySomeReasons).GetReasonFlags(), indirectCRL, onlyContainsAttributeCerts));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IReasonFlags CreateReasonFlags(int reasons) {
+            return new ReasonFlagsBCFips(new ReasonFlags(reasons));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IDistributionPointName CreateDistributionPointName() {
             return DistributionPointNameBCFips.GetInstance();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IDistributionPointName CreateDistributionPointName(IGeneralNames generalNames) {
+            return new DistributionPointNameBCFips(new DistributionPointName(((GeneralNamesBCFips)generalNames).GetGeneralNames()));
         }
 
         /// <summary><inheritDoc/></summary>

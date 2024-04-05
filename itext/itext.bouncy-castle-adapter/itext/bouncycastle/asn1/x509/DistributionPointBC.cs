@@ -56,5 +56,15 @@ namespace iText.Bouncycastle.Asn1.X509 {
         public virtual IDistributionPointName GetDistributionPoint() {
             return new DistributionPointNameBC(GetPoint().DistributionPointName);
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IGeneralNames GetCRLIssuer() {
+            return new GeneralNamesBC(GetPoint().CrlIssuer);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IReasonFlags GetReasons() {
+            return new ReasonFlagsBC(GetPoint().Reasons);
+        }
     }
 }

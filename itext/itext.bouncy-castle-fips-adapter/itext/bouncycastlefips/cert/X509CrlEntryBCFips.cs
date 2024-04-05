@@ -40,9 +40,9 @@ namespace iText.Bouncycastlefips.Cert
 
         public CRLReason GetReason()
         {
-            var reasonExt = entry.GetExtensionValue(new Org.BouncyCastle.Asn1.DerObjectIdentifier("2.5.29.21"));
+            byte[] reasonExt = entry.GetExtensionValue(new Org.BouncyCastle.Asn1.DerObjectIdentifier("2.5.29.21"));
             if (reasonExt == null) return CRLReason.UNSPECIFIED;
-            var reasonEnum = DerEnumerated.GetInstance(reasonExt);
+            var reasonEnum = DerEnumerated.GetInstance(Asn1Object.FromByteArray(reasonExt));
             return (CRLReason)reasonEnum.IntValueExact;
         }
 

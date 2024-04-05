@@ -27,55 +27,29 @@ using iText.Commons.Bouncycastle.Asn1.X509;
 namespace iText.Bouncycastle.Asn1.X509 {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Asn1.X509.CrlReason"/>.
+    /// <see cref="Org.BouncyCastle.Asn1.X509.ReasonFlags"/>.
     /// </summary>
-    public class CrlReasonBC : Asn1EncodableBC, ICrlReason {
-        private static readonly CrlReasonBC INSTANCE = new CrlReasonBC(null);
-
-        private const int KEY_COMPROMISE = Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise;
-
-        private const int REMOVE_FROM_CRL = Org.BouncyCastle.Asn1.X509.CrlReason.RemoveFromCrl;
-
+    public class ReasonFlagsBC : DerBitStringBC, IReasonFlags {
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.CrlReason"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.X509.ReasonFlags"/>.
         /// </summary>
-        /// <param name="reason">
+        /// <param name="reasonFlags">
         /// 
-        /// <see cref="Org.BouncyCastle.Asn1.X509.CrlReason"/>
+        /// <see cref="Org.BouncyCastle.Asn1.X509.ReasonFlags"/>
         /// to be wrapped
         /// </param>
-        public CrlReasonBC(CrlReason reason)
-            : base(reason) {
-        }
-
-        /// <summary>Gets wrapper instance.</summary>
-        /// <returns>
-        /// 
-        /// <see cref="CrlReasonBC"/>
-        /// instance.
-        /// </returns>
-        public static CrlReasonBC GetInstance() {
-            return INSTANCE;
+        public ReasonFlagsBC(ReasonFlags reasonFlags)
+            : base(reasonFlags) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.X509.CrlReason"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.X509.ReasonFlags"/>.
         /// </returns>
-        public virtual CrlReason GetCrlReason() {
-            return (CrlReason)GetEncodable();
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual int GetKeyCompromise() {
-            return KEY_COMPROMISE;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual int GetRemoveFromCRL() {
-            return REMOVE_FROM_CRL;
+        public virtual ReasonFlags GetReasonFlags() {
+            return (ReasonFlags)GetEncodable();
         }
     }
 }

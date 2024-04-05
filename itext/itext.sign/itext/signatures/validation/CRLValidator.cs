@@ -21,6 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures;
@@ -34,6 +39,13 @@ namespace iText.Signatures.Validation {
     public class CRLValidator {
         internal const String CRL_CHECK = "CRL response check.";
 
+        internal const String ATTRIBUTE_CERTS_ASSERTED = "The onlyContainsAttributeCerts is asserted. Conforming CRLs "
+             + "issuers MUST set the onlyContainsAttributeCerts boolean to FALSE.";
+
+        internal const String CERTIFICATE_IS_UNREVOKED = "The certificate was unrevoked.";
+
+        internal const String CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE = "Certificate isn't in the current CRL scope.";
+
         internal const String CERTIFICATE_REVOKED = "Certificate was revoked by {0} on {1}.";
 
         internal const String CRL_ISSUER_NOT_FOUND = "Unable to validate CRL response: no issuer certificate found.";
@@ -44,10 +56,22 @@ namespace iText.Signatures.Validation {
 
         internal const String FRESHNESS_CHECK = "CRL response is not fresh enough: " + "this update: {0}, validation date: {1}, freshness: {2}.";
 
+        internal const String ONLY_SOME_REASONS_CHECKED = "Revocation status cannot be determined since " + "not all reason codes are covered by the current CRL.";
+
+        internal const String SAME_REASONS_CHECK = "CRLs that cover the same reason codes were already verified.";
+
         internal const String UPDATE_DATE_BEFORE_CHECK_DATE = "nextUpdate: {0} of CRLResponse is before validation date {1}.";
 
         internal static readonly CertificateExtension KEY_USAGE_EXTENSION = new KeyUsageExtension(KeyUsage.CRL_SIGN
             );
+
+        // All reasons without unspecified.
+        internal const int ALL_REASONS = 32895;
+
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private readonly IDictionary<IX509Certificate, int?> checkedReasonsMask = new Dictionary<IX509Certificate, 
+            int?>();
 
         private IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
 
@@ -64,6 +88,7 @@ namespace iText.Signatures.Validation {
         public CRLValidator() {
         }
 
+        // Empty constructor.
         /// <summary>
         /// Sets the revocation freshness value which is a time interval in milliseconds indicating that the validation
         /// accepts revocation data responses that were emitted at a point in time after the validation time minus the
@@ -148,15 +173,56 @@ namespace iText.Signatures.Validation {
                 return;
             }
             // Check that the validation date is before the nextUpdate.
-            if (crl.GetNextUpdate() != null && validationDate.After(crl.GetNextUpdate())) {
+            if (crl.GetNextUpdate() != TimestampConstants.UNDEFINED_TIMESTAMP_DATE && validationDate.After(crl.GetNextUpdate())) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, MessageFormatUtil.Format(UPDATE_DATE_BEFORE_CHECK_DATE
                     , crl.GetNextUpdate(), validationDate), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
+            }
+            IIssuingDistributionPoint issuingDistPoint = GetIssuingDistributionPointExtension(crl);
+            IDistributionPoint distributionPoint = null;
+            if (!issuingDistPoint.IsNull()) {
+                // Verify that certificate is in the CRL scope using IDP extension.
+                bool basicConstraintsCaAsserted = new BasicConstraintsExtension(true).ExistsInCertificate(certificate);
+                if ((issuingDistPoint.OnlyContainsUserCerts() && basicConstraintsCaAsserted) || (issuingDistPoint.OnlyContainsCACerts
+                    () && !basicConstraintsCaAsserted)) {
+                    report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE
+                        , ReportItem.ReportItemStatus.INDETERMINATE));
+                    return;
+                }
+                if (issuingDistPoint.OnlyContainsAttributeCerts()) {
+                    report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, ATTRIBUTE_CERTS_ASSERTED, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                    return;
+                }
+                // Try to retrieve corresponding DP from the certificate by name specified in the IDP.
+                if (!issuingDistPoint.GetDistributionPoint().IsNull()) {
+                    distributionPoint = CertificateUtil.GetDistributionPointByName(certificate, issuingDistPoint.GetDistributionPoint
+                        ());
+                }
+            }
+            int interimReasonsMask = ComputeInterimReasonsMask(issuingDistPoint, distributionPoint);
+            int? reasonsMask = checkedReasonsMask.Get(certificate);
+            if (reasonsMask != null) {
+                interimReasonsMask |= (int) reasonsMask;
+                // Verify that interim_reasons_mask includes one or more reasons that are not included in the reasons_mask.
+                if (interimReasonsMask == reasonsMask) {
+                    report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, SAME_REASONS_CHECK, ReportItem.ReportItemStatus
+                        .INFO));
+                }
             }
             // Verify the CRL issuer.
             VerifyCrlIntegrity(report, certificate, crl);
             // Check the status of the certificate.
             VerifyRevocation(report, certificate, validationDate, crl);
+            if (report.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
+                checkedReasonsMask.Put(certificate, interimReasonsMask);
+            }
+            // If ((reasons_mask is all-reasons) OR (cert_status is not UNREVOKED)),
+            // then the revocation status has been determined.
+            if (interimReasonsMask != ALL_REASONS) {
+                report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, ONLY_SOME_REASONS_CHECKED, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+            }
         }
 
         private static void VerifyRevocation(ValidationReport report, IX509Certificate certificate, DateTime verificationDate
@@ -169,10 +235,46 @@ namespace iText.Signatures.Validation {
                         .VALID_CERTIFICATE_IS_REVOKED, revocationDate), ReportItem.ReportItemStatus.INFO));
                 }
                 else {
-                    report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, MessageFormatUtil.Format(CERTIFICATE_REVOKED
-                        , crl.GetIssuerDN(), revocation.GetRevocationDate()), ReportItem.ReportItemStatus.INVALID));
+                    if (CRLReason.REMOVE_FROM_CRL == revocation.GetReason()) {
+                        report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, MessageFormatUtil.Format(CERTIFICATE_IS_UNREVOKED
+                            , revocationDate), ReportItem.ReportItemStatus.INFO));
+                    }
+                    else {
+                        report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, MessageFormatUtil.Format(CERTIFICATE_REVOKED
+                            , crl.GetIssuerDN(), revocation.GetRevocationDate()), ReportItem.ReportItemStatus.INVALID));
+                    }
                 }
             }
+        }
+
+        private static IIssuingDistributionPoint GetIssuingDistributionPointExtension(IX509Crl crl) {
+            IAsn1Object issuingDistPointExtension = null;
+            try {
+                issuingDistPointExtension = CertificateUtil.GetExtensionValue(crl, FACTORY.CreateExtensions().GetIssuingDistributionPoint
+                    ().GetId());
+            }
+            catch (System.IO.IOException) {
+            }
+            // Ignore exception.
+            return FACTORY.CreateIssuingDistributionPoint(issuingDistPointExtension);
+        }
+
+        private static int ComputeInterimReasonsMask(IIssuingDistributionPoint issuingDistPoint, IDistributionPoint
+             distributionPoint) {
+            int interimReasonsMask = ALL_REASONS;
+            if (!issuingDistPoint.IsNull()) {
+                IReasonFlags onlySomeReasons = issuingDistPoint.GetOnlySomeReasons();
+                if (!onlySomeReasons.IsNull()) {
+                    interimReasonsMask &= onlySomeReasons.IntValue();
+                }
+            }
+            if (distributionPoint != null) {
+                IReasonFlags reasons = distributionPoint.GetReasons();
+                if (!reasons.IsNull()) {
+                    interimReasonsMask &= reasons.IntValue();
+                }
+            }
+            return interimReasonsMask;
         }
 
         private void VerifyCrlIntegrity(ValidationReport report, IX509Certificate certificate, IX509Crl crl) {
@@ -199,7 +301,7 @@ namespace iText.Signatures.Validation {
             }
             // Ideally this date should be the date this response was retrieved from the server.
             DateTime crlIssuerDate;
-            if (null != crl.GetNextUpdate()) {
+            if (TimestampConstants.UNDEFINED_TIMESTAMP_DATE != crl.GetNextUpdate()) {
                 crlIssuerDate = crl.GetNextUpdate();
                 report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, "Using crl nextUpdate date as validation date"
                     , ReportItem.ReportItemStatus.INFO));

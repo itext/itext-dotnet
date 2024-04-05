@@ -56,5 +56,15 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         public virtual IDistributionPointName GetDistributionPoint() {
             return new DistributionPointNameBCFips(GetPoint().DistributionPointName);
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IGeneralNames GetCRLIssuer() {
+            return new GeneralNamesBCFips(GetPoint().CrlIssuer);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IReasonFlags GetReasons() {
+            return new ReasonFlagsBCFips(GetPoint().Reasons);
+        }
     }
 }

@@ -36,6 +36,14 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
 
         /// <summary>
         /// Gets
+        /// <c>issuingDistributionPoint</c>
+        /// constant for the wrapped Extension.
+        /// </summary>
+        /// <returns>Extension.issuingDistributionPoint wrapper.</returns>
+        IDerObjectIdentifier GetIssuingDistributionPoint();
+
+        /// <summary>
+        /// Gets
         /// <c>authorityInfoAccess</c>
         /// constant for the wrapped Extension.
         /// </summary>

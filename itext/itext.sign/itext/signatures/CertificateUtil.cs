@@ -34,6 +34,7 @@ using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Signatures.Logs;
 
@@ -59,18 +60,7 @@ namespace iText.Signatures {
         /// <param name="certificate">the Certificate</param>
         /// <returns>the String where you can check if the certificate was revoked</returns>
         public static String GetCRLURL(IX509Certificate certificate) {
-            IAsn1Object obj;
-            try {
-                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetCRlDistributionPoints().GetId());
-            }
-            catch (System.IO.IOException) {
-                obj = null;
-            }
-            if (obj == null) {
-                return null;
-            }
-            ICrlDistPoint dist = FACTORY.CreateCRLDistPoint(obj);
-            IDistributionPoint[] dists = dist.GetDistributionPoints();
+            IDistributionPoint[] dists = GetDistributionPoints(certificate);
             foreach (IDistributionPoint p in dists) {
                 IDistributionPointName distributionPointName = p.GetDistributionPoint();
                 if (FACTORY.CreateDistributionPointName().GetFullName() != distributionPointName.GetType()) {
@@ -85,6 +75,32 @@ namespace iText.Signatures {
                     IDerIA5String derStr = FACTORY.CreateDERIA5String(FACTORY.CreateASN1TaggedObject(name.ToASN1Primitive()), 
                         false);
                     return derStr.GetString();
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the Distribution Point from the certificate by name specified in the Issuing Distribution Point from the
+        /// Certificate Revocation List for a Certificate.
+        /// </summary>
+        /// <param name="certificate">the certificate to retrieve Distribution Points</param>
+        /// <param name="issuingDistributionPointName">distributionPointName retrieved from the IDP of the CRL</param>
+        /// <returns>distribution point withthe same name as specified in the IDP.</returns>
+        public static IDistributionPoint GetDistributionPointByName(IX509Certificate certificate, IDistributionPointName
+             issuingDistributionPointName) {
+            IDistributionPoint[] distributionPoints = GetDistributionPoints(certificate);
+            IList<IGeneralName> issuingNames = JavaUtil.ArraysAsList(FACTORY.CreateGeneralNames(issuingDistributionPointName
+                .GetName()).GetNames());
+            foreach (IDistributionPoint distributionPoint in distributionPoints) {
+                IDistributionPointName distributionPointName = distributionPoint.GetDistributionPoint();
+                IGeneralNames generalNames = distributionPointName.IsNull() ? distributionPoint.GetCRLIssuer() : FACTORY.CreateGeneralNames
+                    (distributionPointName.GetName());
+                IGeneralName[] names = generalNames.GetNames();
+                foreach (IGeneralName name in names) {
+                    if (issuingNames.Contains(name)) {
+                        return distributionPoint;
+                    }
                 }
             }
             return null;
@@ -351,8 +367,9 @@ namespace iText.Signatures {
         }
 
         // helper methods
+        /// <summary>Gets certificate extension value.</summary>
         /// <param name="certificate">the certificate from which we need the ExtensionValue</param>
-        /// <param name="oid">the Object Identifier value for the extension.</param>
+        /// <param name="oid">the Object Identifier value for the extension</param>
         /// <returns>
         /// the extension value as an
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
@@ -362,14 +379,15 @@ namespace iText.Signatures {
             return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(certificate, oid));
         }
 
+        /// <summary>Gets CRL extension value.</summary>
         /// <param name="crl">the CRL from which we need the ExtensionValue</param>
-        /// <param name="oid">the Object Identifier value for the extension.</param>
+        /// <param name="oid">the Object Identifier value for the extension</param>
         /// <returns>
         /// the extension value as an
         /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1Object"/>
         /// object.
         /// </returns>
-        private static IAsn1Object GetExtensionValue(IX509Crl crl, String oid) {
+        public static IAsn1Object GetExtensionValue(IX509Crl crl, String oid) {
             return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(crl, oid));
         }
 
@@ -453,6 +471,21 @@ namespace iText.Signatures {
                 }
             }
             return null;
+        }
+
+        private static IDistributionPoint[] GetDistributionPoints(IX509Certificate certificate) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetCRlDistributionPoints().GetId());
+            }
+            catch (System.IO.IOException) {
+                obj = null;
+            }
+            if (obj == null) {
+                return new IDistributionPoint[0];
+            }
+            ICrlDistPoint dist = FACTORY.CreateCRLDistPoint(obj);
+            return dist.GetDistributionPoints();
         }
     }
 }

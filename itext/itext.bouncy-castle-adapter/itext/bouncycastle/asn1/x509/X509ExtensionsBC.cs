@@ -33,8 +33,11 @@ namespace iText.Bouncycastle.Asn1.X509 {
         private static readonly iText.Bouncycastle.Asn1.X509.X509ExtensionsBC INSTANCE = new iText.Bouncycastle.Asn1.X509.X509ExtensionsBC
             (null);
 
-        private static readonly DerObjectIdentifierBC C_RL_DISTRIBUTION_POINTS = new DerObjectIdentifierBC(X509Extensions.CrlDistributionPoints
+        private static readonly DerObjectIdentifierBC CRL_DISTRIBUTION_POINTS = new DerObjectIdentifierBC(X509Extensions.CrlDistributionPoints
             );
+
+        private static readonly DerObjectIdentifierBC ISSUING_DISTRIBUTION_POINT = new DerObjectIdentifierBC(X509Extensions.IssuingDistributionPoint
+        );
 
         private static readonly DerObjectIdentifierBC AUTHORITY_INFO_ACCESS = new DerObjectIdentifierBC(X509Extensions.AuthorityInfoAccess
             );
@@ -88,7 +91,12 @@ namespace iText.Bouncycastle.Asn1.X509 {
 
         /// <summary><inheritDoc/></summary>
         public virtual IDerObjectIdentifier GetCRlDistributionPoints() {
-            return C_RL_DISTRIBUTION_POINTS;
+            return CRL_DISTRIBUTION_POINTS;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerObjectIdentifier GetIssuingDistributionPoint() {
+            return ISSUING_DISTRIBUTION_POINT;
         }
 
         /// <summary><inheritDoc/></summary>

@@ -173,6 +173,154 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_INVALID, report.GetFailures()[0].GetMessage());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CrlContainsOnlyCACertsTest() {
+            String crlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyCA.crl";
+            ValidationReport report = CheckCrlScope(crlPath);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
+            NUnit.Framework.Assert.AreEqual(CRLValidator.CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE, report.GetFailures()[0].
+                GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlContainsOnlyUserCertsTest() {
+            String crlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyUser.crl";
+            ValidationReport report = CheckCrlScope(crlPath);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
+            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlContainsOnlyAttributeCertsTest() {
+            String crlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyAttr.crl";
+            ValidationReport report = CheckCrlScope(crlPath);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
+            NUnit.Framework.Assert.AreEqual(CRLValidator.ATTRIBUTE_CERTS_ASSERTED, report.GetFailures()[0].GetMessage(
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OnlySomeReasonsTest() {
+            String root = SOURCE_FOLDER + "issuingDistributionPointTest/root.pem";
+            String sign = SOURCE_FOLDER + "issuingDistributionPointTest/sign.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(root)[0];
+            IPrivateKey rootKey = PemFileHelper.ReadFirstKey(root, KEY_PASSWORD);
+            IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(sign)[0];
+            TestCrlBuilder builder = new TestCrlBuilder(rootCert, rootKey);
+            builder.AddExtension(FACTORY.CreateExtensions().GetIssuingDistributionPoint(), true, FACTORY.CreateIssuingDistributionPoint
+                (null, false, false, FACTORY.CreateReasonFlags(CRLValidator.ALL_REASONS - 31), false, false));
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+            ValidationReport report = new ValidationReport();
+            validator.SetIssuingCertificateRetriever(certificateRetriever);
+            validator.Validate(report, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream(builder
+                .MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
+            CertificateReportItem reportItem = (CertificateReportItem)report.GetFailures()[0];
+            NUnit.Framework.Assert.AreEqual(signCert, reportItem.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.ONLY_SOME_REASONS_CHECKED, reportItem.GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckLessReasonsTest() {
+            String fullCrlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyUser.crl";
+            String root = SOURCE_FOLDER + "issuingDistributionPointTest/root.pem";
+            String sign = SOURCE_FOLDER + "issuingDistributionPointTest/sign.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(root)[0];
+            IPrivateKey rootKey = PemFileHelper.ReadFirstKey(root, KEY_PASSWORD);
+            IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(sign)[0];
+            TestCrlBuilder builder = new TestCrlBuilder(rootCert, rootKey);
+            builder.AddExtension(FACTORY.CreateExtensions().GetIssuingDistributionPoint(), true, FACTORY.CreateIssuingDistributionPoint
+                (null, false, false, FACTORY.CreateReasonFlags(CRLValidator.ALL_REASONS - 31), false, false));
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+            ValidationReport report = new ValidationReport();
+            validator.SetIssuingCertificateRetriever(certificateRetriever);
+            // Validate full CRL.
+            validator.Validate(report, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile
+                (fullCrlPath)), TimeTestUtil.TEST_DATE_TIME);
+            // Validate CRL with onlySomeReasons.
+            validator.Validate(report, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream(builder
+                .MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
+            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
+            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[1];
+            NUnit.Framework.Assert.AreEqual(signCert, reportItem.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.SAME_REASONS_CHECK, reportItem.GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveFromCrlTest() {
+            String root = SOURCE_FOLDER + "issuingDistributionPointTest/root.pem";
+            String sign = SOURCE_FOLDER + "issuingDistributionPointTest/sign.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(root)[0];
+            IPrivateKey rootKey = PemFileHelper.ReadFirstKey(root, KEY_PASSWORD);
+            IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(sign)[0];
+            TestCrlBuilder builder = new TestCrlBuilder(rootCert, rootKey);
+            builder.AddCrlEntry(signCert, TimeTestUtil.TEST_DATE_TIME.AddDays(-1), FACTORY.CreateCRLReason().GetRemoveFromCRL
+                ());
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+            ValidationReport report = new ValidationReport();
+            validator.SetIssuingCertificateRetriever(certificateRetriever);
+            validator.Validate(report, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream(builder
+                .MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
+            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
+            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[1];
+            NUnit.Framework.Assert.AreEqual(signCert, reportItem.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.CERTIFICATE_IS_UNREVOKED, reportItem.GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FullCrlButDistributionPointWithReasonsTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "issuingDistributionPointTest/rootCert.pem"
+                )[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(SOURCE_FOLDER + "issuingDistributionPointTest/rootCert.pem"
+                , KEY_PASSWORD);
+            IX509Certificate cert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "issuingDistributionPointTest/certWithDPReasons.pem"
+                )[0];
+            TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey);
+            builder.AddExtension(FACTORY.CreateExtensions().GetIssuingDistributionPoint(), true, FACTORY.CreateIssuingDistributionPoint
+                (FACTORY.CreateDistributionPointName(FACTORY.CreateCRLDistPoint(CertificateUtil.GetExtensionValue(cert
+                , FACTORY.CreateExtensions().GetCRlDistributionPoints().GetId())).GetDistributionPoints()[0].GetCRLIssuer
+                ()), false, false, null, false, false));
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            ValidationReport report = new ValidationReport();
+            validator.SetIssuingCertificateRetriever(certificateRetriever);
+            validator.Validate(report, cert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream(builder.MakeCrl
+                ())), checkDate);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
+            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[1];
+            NUnit.Framework.Assert.AreEqual(ReportItem.ReportItemStatus.INDETERMINATE, reportItem.GetStatus());
+            NUnit.Framework.Assert.AreEqual(cert, reportItem.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.ONLY_SOME_REASONS_CHECKED, reportItem.GetMessage());
+        }
+
+        private ValidationReport CheckCrlScope(String crlPath) {
+            String root = SOURCE_FOLDER + "issuingDistributionPointTest/root.pem";
+            String sign = SOURCE_FOLDER + "issuingDistributionPointTest/sign.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(root)[0];
+            IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(sign)[0];
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+            ValidationReport report = new ValidationReport();
+            validator.SetIssuingCertificateRetriever(certificateRetriever);
+            validator.Validate(report, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile
+                (crlPath)), TimeTestUtil.TEST_DATE_TIME);
+            return report;
+        }
+
         private void RetrieveTestResources(String path) {
             String resourcePath = SOURCE_FOLDER + path + "/";
             crlIssuerCert = (IX509Certificate)PemFileHelper.ReadFirstChain(resourcePath + "crl-issuer.cert.pem")[0];

@@ -259,7 +259,7 @@ namespace iText.Signatures.Validation {
             crl[5] = 0;
             ValidationReport report = new ValidationReport();
             new RevocationDataValidator().SetIssuingCertificateRetriever(new IssuingCertificateRetriever()).SetOnlineFetching
-                (RevocationDataValidator.OnlineFetching.NEVER_FETCH).AddCrlClient(new _ICrlClient_309(crl)).Validate(report
+                (RevocationDataValidator.OnlineFetching.NEVER_FETCH).AddCrlClient(new _ICrlClient_310(crl)).Validate(report
                 , checkCert, TimeTestUtil.TEST_DATE_TIME);
             CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
             NUnit.Framework.Assert.AreEqual(RevocationDataValidator.REVOCATION_DATA_CHECK, item.GetCheckName());
@@ -271,8 +271,8 @@ namespace iText.Signatures.Validation {
                 ());
         }
 
-        private sealed class _ICrlClient_309 : ICrlClient {
-            public _ICrlClient_309(byte[] crl) {
+        private sealed class _ICrlClient_310 : ICrlClient {
+            public _ICrlClient_310(byte[] crl) {
                 this.crl = crl;
             }
 
@@ -347,6 +347,34 @@ namespace iText.Signatures.Validation {
                 .GetCertificate().GetSubjectDN()), item.GetMessage());
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlWithOnlySomeReasonsTest() {
+            TestCrlBuilder builder1 = new TestCrlBuilder(caCert, caPrivateKey);
+            builder1.AddExtension(FACTORY.CreateExtensions().GetIssuingDistributionPoint(), true, FACTORY.CreateIssuingDistributionPoint
+                (null, false, false, FACTORY.CreateReasonFlags(CRLValidator.ALL_REASONS - 31), false, false));
+            TestCrlBuilder builder2 = new TestCrlBuilder(caCert, caPrivateKey);
+            builder2.AddExtension(FACTORY.CreateExtensions().GetIssuingDistributionPoint(), true, FACTORY.CreateIssuingDistributionPoint
+                (null, false, false, FACTORY.CreateReasonFlags(31), false, false));
+            TestCrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(builder1).AddBuilderForCertIssuer(builder2
+                );
+            TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            ocspBuilder.SetProducedAt(TimeTestUtil.TEST_DATE_TIME.AddDays(-100));
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = new RevocationDataValidator();
+            validator.SetIssuingCertificateRetriever(certificateRetriever).SetOnlineFetching(RevocationDataValidator.OnlineFetching
+                .NEVER_FETCH).AddOcspClient(new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder)).AddCrlClient
+                (crlClient);
+            validator.Validate(report, checkCert, TimeTestUtil.TEST_DATE_TIME);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
+            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
+            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[2];
+            NUnit.Framework.Assert.AreEqual(ReportItem.ReportItemStatus.INFO, reportItem.GetStatus());
+            NUnit.Framework.Assert.AreEqual(checkCert, reportItem.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.ONLY_SOME_REASONS_CHECKED, reportItem.GetMessage());
         }
     }
 }

@@ -34,6 +34,8 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
 
         private const int KEY_COMPROMISE = Org.BouncyCastle.Asn1.X509.CrlReason.KeyCompromise;
 
+        private const int REMOVE_FROM_CRL = Org.BouncyCastle.Asn1.X509.CrlReason.RemoveFromCrl;
+
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.CrlReason"/>.
@@ -69,6 +71,11 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual int GetKeyCompromise() {
             return KEY_COMPROMISE;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual int GetRemoveFromCRL() {
+            return REMOVE_FROM_CRL;
         }
     }
 }

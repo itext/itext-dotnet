@@ -56,5 +56,10 @@ namespace iText.Bouncycastle.Asn1 {
         public virtual String GetString() {
             return GetDerBitString().GetString();
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual int IntValue() {
+            return GetDerBitString().IntValue;
+        }
     }
 }
