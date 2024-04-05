@@ -28,7 +28,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 
-namespace iText.Signatures.Validation.Extensions {
+namespace iText.Signatures.Validation.V1.Extensions {
     /// <summary>Class representing "Extended Key Usage" extension.</summary>
     public class ExtendedKeyUsageExtension : CertificateExtension {
         public const String ANY_EXTENDED_KEY_USAGE_OID = "2.5.29.37.0";
