@@ -132,7 +132,6 @@ namespace iText.Forms.Form.Renderer {
             comboBoxField.GetFirstFormAnnotation().SetFormFieldElement(comboBoxFieldModelElement);
             comboBoxField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(comboBoxField, page);
-            WriteAcroFormFieldLangAttribute(doc);
         }
 
         private UnitValue GetFontSize() {

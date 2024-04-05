@@ -385,10 +385,12 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void OpenDocumentWithDuplicatingIdInStructTree() {
             String source = SOURCE_FOLDER + "documentWithDuplicatingIdsInStructTree.pdf";
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfReader(new FileInfo(source)))) {
+            String outPdf = DESTINATION_FOLDER + "documentWithDuplicatingIdsInStructTree.pdf";
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfReader(new FileInfo(source)), new PdfWriter
+                (outPdf))) {
             }
             //Vera pdf doesn't complain on this document
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(source));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

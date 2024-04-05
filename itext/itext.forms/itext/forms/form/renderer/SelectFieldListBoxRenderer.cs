@@ -194,7 +194,6 @@ namespace iText.Forms.Form.Renderer {
             choiceField.GetFirstFormAnnotation().SetFormFieldElement(lbModelElement);
             choiceField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(choiceField, page);
-            WriteAcroFormFieldLangAttribute(doc);
         }
 
         private float GetCalculatedHeight(IRenderer flatRenderer) {

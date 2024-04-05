@@ -203,7 +203,6 @@ namespace iText.Forms.Form.Renderer {
             checkBox.GetFirstFormAnnotation().SetFormFieldElement((CheckBox)modelElement);
             checkBox.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(checkBox, page);
-            WriteAcroFormFieldLangAttribute(doc);
             ApplyProperties(margins);
         }
 

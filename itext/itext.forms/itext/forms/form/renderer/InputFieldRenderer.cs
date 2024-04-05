@@ -161,7 +161,6 @@ namespace iText.Forms.Form.Renderer {
             inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
             inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
-            WriteAcroFormFieldLangAttribute(doc);
             ApplyProperties(margins);
         }
 

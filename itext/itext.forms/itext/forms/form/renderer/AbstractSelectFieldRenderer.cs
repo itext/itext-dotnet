@@ -27,6 +27,7 @@ using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -113,14 +114,21 @@ namespace iText.Forms.Form.Renderer {
             }
             else {
                 ApplyAcroField(drawContext);
+                WriteAcroFormFieldLangAttribute(drawContext.GetDocument());
             }
         }
 
         /// <summary>Gets the accessibility language.</summary>
         /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
-            //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
-            return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+            String language = null;
+            if (this.GetModelElement() is IAccessibleElement) {
+                language = ((IAccessibleElement)this.GetModelElement()).GetAccessibilityProperties().GetLanguage();
+            }
+            if (language == null) {
+                language = this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+            }
+            return language;
         }
 
         /// <summary>Sets the form accessibility language identifier of the form element in case the document is tagged.
@@ -129,9 +137,13 @@ namespace iText.Forms.Form.Renderer {
         protected internal virtual void WriteAcroFormFieldLangAttribute(PdfDocument pdfDoc) {
             if (pdfDoc.IsTagged()) {
                 TagTreePointer formParentPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                IList<String> kidsRoles = formParentPointer.GetKidsRoles();
+                int lastFormIndex = kidsRoles.LastIndexOf(StandardRoles.FORM);
+                TagTreePointer formPointer = formParentPointer.MoveToKid(lastFormIndex);
                 if (GetLang() != null) {
-                    formParentPointer.GetProperties().SetLanguage(GetLang());
+                    formPointer.GetProperties().SetLanguage(GetLang());
                 }
+                formParentPointer.MoveToParent();
             }
         }
 

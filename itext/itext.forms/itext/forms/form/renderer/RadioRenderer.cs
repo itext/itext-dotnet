@@ -179,7 +179,6 @@ namespace iText.Forms.Form.Renderer {
             radioGroup.EnableFieldRegeneration();
             ApplyAccessibilityProperties(radioGroup, doc);
             form.AddField(radioGroup, page);
-            WriteAcroFormFieldLangAttribute(doc);
             ApplyProperties(margins);
         }
 

@@ -269,7 +269,6 @@ namespace iText.Forms.Form.Element {
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
                 listBoxField.AddOption("option 1");
                 listBoxField.AddOption("option 2");
-                //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
                 listBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
                 document.Add(listBoxField);
                 document.Add(new Paragraph("Line break"));

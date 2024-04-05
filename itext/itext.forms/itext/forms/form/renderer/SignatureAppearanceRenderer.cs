@@ -227,7 +227,6 @@ namespace iText.Forms.Form.Renderer {
             sigField.EnableFieldRegeneration();
             PdfAcroForm forms = PdfFormCreator.GetAcroForm(doc, true);
             forms.AddField(sigField, page);
-            WriteAcroFormFieldLangAttribute(doc);
         }
 
         private void AdjustChildrenLayout(SignatureAppearanceRenderer.RenderingMode renderingMode, Rectangle signatureRect

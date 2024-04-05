@@ -181,6 +181,7 @@ namespace iText.Forms.Form.Renderer {
             }
             else {
                 ApplyAcroField(drawContext);
+                WriteAcroFormFieldLangAttribute(drawContext.GetDocument());
             }
             drawContext.GetCanvas().RestoreState();
         }
@@ -233,9 +234,17 @@ namespace iText.Forms.Form.Renderer {
 
         /// <summary>Gets the accessibility language.</summary>
         /// <returns>the accessibility language.</returns>
+        [System.ObsoleteAttribute(@"use iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties() instead"
+            )]
         protected internal virtual String GetLang() {
-            //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
-            return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+            String language = null;
+            if (this.GetModelElement() is IAccessibleElement) {
+                language = ((IAccessibleElement)this.GetModelElement()).GetAccessibilityProperties().GetLanguage();
+            }
+            if (language == null) {
+                language = this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+            }
+            return language;
         }
 
         /// <summary>Gets the conformance level.</summary>

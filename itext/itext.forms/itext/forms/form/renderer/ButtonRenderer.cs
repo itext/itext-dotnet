@@ -254,7 +254,6 @@ namespace iText.Forms.Form.Renderer {
             // Fields can be already added on split, e.g. when button split into multiple pages. But now we merge fields
             // with the same names (and add all the widgets as kids to that merged field), so we can add it anyway.
             forms.AddField(button, page);
-            WriteAcroFormFieldLangAttribute(doc);
             ApplyProperties(margins);
         }
 

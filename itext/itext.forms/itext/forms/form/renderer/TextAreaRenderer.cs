@@ -175,7 +175,6 @@ namespace iText.Forms.Form.Renderer {
             inputField.EnableFieldRegeneration();
             ApplyAccessibilityProperties(inputField, doc);
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
-            WriteAcroFormFieldLangAttribute(doc);
             ApplyProperties(margins);
         }
 
