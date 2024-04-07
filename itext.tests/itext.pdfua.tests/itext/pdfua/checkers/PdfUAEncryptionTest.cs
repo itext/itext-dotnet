@@ -55,8 +55,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void EncryptWithPassword() {
             String outPdf = DESTINATION_FOLDER + "encryptWithPassword.pdf";
-            WriterProperties writerProperties = PdfUATestPdfDocument.CreateWriterProperties().SetStandardEncryption(USER_PASSWORD
-                , OWNER_PASSWORD, EncryptionConstants.ALLOW_SCREENREADERS, 3);
+            WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(USER_PASSWORD, OWNER_PASSWORD
+                , EncryptionConstants.ALLOW_SCREENREADERS, 3);
             using (PdfWriter writer = new PdfWriter(outPdf, writerProperties)) {
                 using (PdfUATestPdfDocument document = new PdfUATestPdfDocument(writer)) {
                     WriteTextToDocument(document);
@@ -69,8 +69,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void EncryptWithPasswordWithInvalidPermissionsTest() {
             String outPdf = DESTINATION_FOLDER + "encryptWithPassword2.pdf";
-            WriterProperties writerProperties = PdfUATestPdfDocument.CreateWriterProperties().SetStandardEncryption(USER_PASSWORD
-                , OWNER_PASSWORD, ~EncryptionConstants.ALLOW_SCREENREADERS, 3);
+            WriterProperties writerProperties = new WriterProperties().SetStandardEncryption(USER_PASSWORD, OWNER_PASSWORD
+                , ~EncryptionConstants.ALLOW_SCREENREADERS, 3);
             PdfUATestPdfDocument document = new PdfUATestPdfDocument(new PdfWriter(outPdf, writerProperties));
             WriteTextToDocument(document);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => document.Close());

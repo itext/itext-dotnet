@@ -123,6 +123,16 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Gets the writer properties.</summary>
+        /// <returns>
+        /// The
+        /// <see cref="WriterProperties"/>
+        /// of the current PdfWriter.
+        /// </returns>
+        public virtual WriterProperties GetProperties() {
+            return properties;
+        }
+
         /// <summary>Sets the smart mode.</summary>
         /// <remarks>
         /// Sets the smart mode.

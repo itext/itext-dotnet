@@ -68,8 +68,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void SimpleParagraphTest() {
             String outPdf = DESTINATION_FOLDER + "simpleParagraphTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_simpleParagraphTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             Document doc = new Document(pdfDoc);
@@ -85,8 +84,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void SimpleParagraphWithUnderlineTest() {
             String outPdf = DESTINATION_FOLDER + "simpleParagraphTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_simpleParagraphWithUnderlineTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             Document doc = new Document(pdfDoc);
@@ -102,8 +100,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void SimpleBorderTest() {
             String outPdf = DESTINATION_FOLDER + "simpleBorderTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_simpleBorderTest.pdf";
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
                 PdfPage page = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.OpenTag(new CanvasTag(PdfName.Artifact));
@@ -120,8 +117,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void SimpleTableTest() {
             String outPdf = DESTINATION_FOLDER + "simpleTableTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_simpleTableTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             Document doc = new Document(pdfDoc);
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );

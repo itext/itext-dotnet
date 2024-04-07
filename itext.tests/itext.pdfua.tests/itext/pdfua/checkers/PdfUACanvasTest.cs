@@ -92,8 +92,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextContentIsCorrectlyTaggedAsContent() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextContentIsCorrectlyTaggedAsContent.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -111,8 +110,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextContentIsNotInTagTree() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextContentIsNotInTagTree.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -130,8 +128,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextArtifactIsNotInTagTree() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextArtifactIsNotInTagTree.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -148,8 +145,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextContentWithMCIDButNotInTagTree() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextContentWithMCIDButNotInTagTree.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -167,8 +163,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsTaggedButNotInTagTree() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextGlyphLineContentIsTagged.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -186,8 +181,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextGlyphLineContentIsArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -204,8 +198,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsContentCorrect() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextGlyphLineContentIsContentCorrect.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -224,8 +217,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_allowPureBmcInArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_005_allowPureBmcInArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -243,8 +235,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_allowNestedPureBmcInArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_005_allowNestedPureBmcInArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -310,8 +301,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_LineContentThatIsMarkedAsArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_005_LineContentThatIsMarkedAsArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
                 .H);
@@ -428,8 +418,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_RectangleMarkedArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_005_RectangleMarkedArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetFillColor(ColorConstants.RED).Rectangle(new 
                 Rectangle(200, 200, 100, 100)).Fill().CloseTag().RestoreState();
@@ -466,8 +455,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_RectangleMarkedContent() {
             String outPdf = DESTINATION_FOLDER + "01_005_RectangleMarkedContent.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
                 .H);
@@ -483,8 +471,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_004_bezierMarkedAsContent() {
             String outPdf = DESTINATION_FOLDER + "01_004_bezierCurveShouldBeTagged.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
                 .DIV);
@@ -501,8 +488,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_004_bezierMarkedAsArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_004_bezierMarkedAsArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetColor(ColorConstants.RED, true).SetLineWidth
                 (5).SetStrokeColor(ColorConstants.RED).Arc(400, 400, 500, 500, 30, 50).Stroke().CloseTag().RestoreState
@@ -540,8 +526,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_RandomOperationsWithoutActuallyAddingContent() {
             String outPdf = DESTINATION_FOLDER + "01_005_RandomOperationsWithoutActuallyAddingContent.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             canvas.SetColor(ColorConstants.RED, true).SetLineCapStyle(1).SetTextMatrix(20, 2).SetLineWidth(2);
             pdfDoc.Close();
@@ -554,8 +539,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_003_ContentMarkedAsArtifactsPresentInsideTaggedContent() {
             String outPdf = DESTINATION_FOLDER + "01_003_ContentMarkedAsArtifactsPresentInsideTaggedContent.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -574,8 +558,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_validRoleAddedInsideMarkedContent() {
             String outPdf = DESTINATION_FOLDER + "validRoleAddedInsideMarkedContent.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -597,8 +580,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_validRoleAddedInsideMarkedContentMultiple() {
             String outPdf = DESTINATION_FOLDER + "validRoleAddedInsideMarkedContentMultiple.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -620,8 +602,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_validRoleAddedInsideMarkedContentMCR_IN_MCR() {
             String outPdf = DESTINATION_FOLDER + "validRoleAddedInsideMarkedContentMCR_IN_MCR.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -645,8 +626,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint_01_004_TaggedContentShouldNotBeInsideArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_004_TaggedContentShouldNotBeInsideArtifact.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -664,8 +644,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CheckPoint_31_009_FontIsNotEmbedded() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.COURIER);
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc);

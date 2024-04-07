@@ -47,6 +47,9 @@ namespace iText.Forms.Fields {
         protected internal FormFieldBuilder(PdfDocument document, String formFieldName) {
             this.document = document;
             this.formFieldName = formFieldName;
+            if (document != null) {
+                this.conformanceLevel = document.GetConformanceLevel();
+            }
         }
 
         /// <summary>Gets document to be used for form field creation.</summary>

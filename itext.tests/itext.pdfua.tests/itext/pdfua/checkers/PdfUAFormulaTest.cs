@@ -228,8 +228,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CanvasTest01() {
-            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             PdfFont font = PdfFontFactory.CreateFont(FONT);
@@ -246,8 +245,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CanvasTest02() {
-            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             PdfFont font = PdfFontFactory.CreateFont(FONT);
@@ -265,8 +263,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CanvasTest03() {
-            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             PdfFont font = PdfFontFactory.CreateFont(FONT);

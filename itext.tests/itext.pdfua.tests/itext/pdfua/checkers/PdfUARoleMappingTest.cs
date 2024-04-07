@@ -57,8 +57,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void NonStandardMappingViaTagTreePointer1_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaTagTreePointer1Test.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tagPointer.AddTag("chapter"));
@@ -69,8 +68,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void NonStandardMappingViaTagTreePointer2_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaTagTreePointer2Test.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStructTreeRoot root = pdfDoc.GetStructTreeRoot();
             root.AddRoleMapping("chapter", "chapterChild");
@@ -84,8 +82,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void NonStandardMappingViaTagTreePointer3_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaTagTreePointer3Test.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1);
             // Although PDF/UA defines the nomenclature for heading levels above <H6> (<Hn>), these are not standard
@@ -99,8 +96,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void NonStandardMappingViaPdfName_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaPdfNameTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfPage page1 = pdfDoc.AddNewPage();
@@ -115,8 +111,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void NonStandardMappingViaPdfMcr_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaPdfMcrTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStructElem doc = pdfDoc.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDoc, PdfName.Document));
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDoc, new PdfName("chapter"), page1));
@@ -132,8 +127,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void StandardMappingViaTagTreePointer_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "standardMappingViaTagTreePointerTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_standardMappingViaTagTreePointerTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             PdfStructTreeRoot root = pdfDoc.GetStructTreeRoot();
@@ -156,8 +150,7 @@ namespace iText.Pdfua.Checkers {
              = LogLevelConstants.WARN)]
         public virtual void StandardMappingViaNamespace_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "standardMappingViaNamespaceTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStructElem doc = pdfDoc.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDoc, PdfName.Document));
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
@@ -181,8 +174,7 @@ namespace iText.Pdfua.Checkers {
             LogLevelConstants.ERROR)]
         public virtual void CycleMappingViaTagTreePointer1_02_003_Test() {
             String outPdf = DESTINATION_FOLDER + "cycleMappingViaTagTreePointer1Test.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfStructTreeRoot root = pdfDoc.GetStructTreeRoot();
             root.AddRoleMapping("chapter", "chapterChild");
@@ -196,8 +188,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CycleMappingViaTagTreePointer2_02_003_Test() {
             String outPdf = DESTINATION_FOLDER + "cycleMappingViaTagTreePointer2Test.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
@@ -218,8 +209,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void MappingStandardRoles_02_004_Test() {
             String outPdf = DESTINATION_FOLDER + "mappingStandardRolesTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page1 = pdfDoc.AddNewPage();
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );

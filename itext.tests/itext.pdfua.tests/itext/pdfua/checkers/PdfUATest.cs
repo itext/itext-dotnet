@@ -75,9 +75,27 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FlushingOnPageWarningDisabledDoesntLog() {
+            String outPdf = DESTINATION_FOLDER + "flushingOnPageCloseLogsWarningDisabledTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_flushingOnPageCloseLogsWarningDisabledTest.pdf";
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
+            pdfDoc.DisablePageFlushingWarning();
+            Document document = new Document(pdfDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
+            document.SetFont(font);
+            for (int i = 0; i < 40; i++) {
+                document.Add(new Paragraph("Hello World!"));
+            }
+            pdfDoc.GetPage(1).Flush();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckPoint01_007_suspectsHasEntryTrue() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
             NUnit.Framework.Assert.IsNotNull(markInfo);
             markInfo.Put(PdfName.Suspects, new PdfBoolean(true));
@@ -88,8 +106,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void CheckPoint01_007_suspectsHasEntryFalse() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
             markInfo.Put(PdfName.Suspects, new PdfBoolean(false));
             NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
@@ -98,16 +115,14 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckPoint01_007_suspectsHasNoEntry() {
             // suspects entry is optional so it is ok to not have it according to the spec
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyPageDocument() {
             String outPdf = DESTINATION_FOLDER + "emptyPageDocument.pdf";
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
                 pdfDocument.AddNewPage();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_emptyPageDocument.pdf"
@@ -117,28 +132,24 @@ namespace iText.Pdfua.Checkers {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED, Count = 1)]
         public virtual void InvalidUA1DocumentWithFlushedPageTest() {
             String outPdf = DESTINATION_FOLDER + "invalidDocWithFlushedPageTest.pdf";
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()))) {
-                PdfPage page = pdfDocument.AddNewPage();
-                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDocument, "sample.wav");
-                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
-                screen.SetAction(action);
-                screen.SetContents("screen annotation");
-                page.AddAnnotation(screen);
-                NUnit.Framework.Assert.DoesNotThrow(() => {
-                    page.Flush();
-                }
-                );
+            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf));
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDocument, "sample.wav");
+            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+            PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+            screen.SetAction(action);
+            screen.SetContents("screen annotation");
+            page.AddAnnotation(screen);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                page.Flush();
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_invalidDocWithFlushedPageTest.pdf"
-                , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            );
+            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoLangEntryTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithNoLangEntryTest.pdf";
@@ -361,7 +372,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 1)]
         public virtual void DocumentWithDuplicatingIdInStructTree() {
             MemoryStream os = new MemoryStream();
-            PdfWriter writer = new PdfWriter(os, PdfUATestPdfDocument.CreateWriterProperties());
+            PdfWriter writer = new PdfWriter(os);
             PdfDocument document = new PdfUATestPdfDocument(writer);
             PdfPage page1 = document.AddNewPage();
             TagTreePointer tagPointer = new TagTreePointer(document);
@@ -385,12 +396,15 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void OpenDocumentWithDuplicatingIdInStructTree() {
             String source = SOURCE_FOLDER + "documentWithDuplicatingIdsInStructTree.pdf";
-            String outPdf = DESTINATION_FOLDER + "documentWithDuplicatingIdsInStructTree.pdf";
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfReader(new FileInfo(source)), new PdfWriter
-                (outPdf))) {
+            String dest = DESTINATION_FOLDER + "documentWithDuplicatingIdsInStructTree.pdf";
+            File.Copy(new FileInfo(source).FullName, new FileInfo(dest).FullName);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInfo(source)))) {
+                ValidationContainer validationContainer = new ValidationContainer();
+                validationContainer.AddChecker(new PdfUA1Checker(pdfDocument));
+                pdfDocument.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             }
             //Vera pdf doesn't complain on this document
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

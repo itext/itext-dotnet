@@ -106,10 +106,22 @@ namespace iText.Pdfua {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Ua1WidgetAnnotNoDirectChildOfAnnotAutomaticConformanceLevelTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
+                    (10, 650, 40, 20)).CreateCheckBox();
+                checkBox.SetAlternativeName("widget");
+                acroForm.AddField(checkBox);
+            }
+            );
+            framework.AssertBothValid("ua1WidgetAnnotNoDirectChildOfAnnotAutomaticConformanceLevelTest");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Ua1PrinterMAnnotNoDirectChildOfAnnotTest() {
             String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNoDirectChildOfAnnotTest.pdf";
-            using (PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()))) {
+            using (PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
                 PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
@@ -198,8 +210,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void Ua1StampAnnotWithAltTest() {
             String outPdf = DESTINATION_FOLDER + "ua1StampAnnotWithAltTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage pdfPage = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
             stamp.SetStampName(PdfName.Approved);
@@ -220,8 +231,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void Ua1ScreenAnnotWithAltTest() {
             String outPdf = DESTINATION_FOLDER + "ua1ScreenAnnotWithAltTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage pdfPage = pdfDoc.AddNewPage();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             pdfPage.AddAnnotation(screen);
@@ -504,8 +514,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithBEMediaDataTest() {
             String outPdf = DESTINATION_FOLDER + "screenAnnotationWithBEMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page = pdfDoc.AddNewPage();
             String file = "sample.wav";
             String mimeType = "audio/x-wav";
@@ -533,8 +542,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithMHMediaDataTest() {
             String outPdf = DESTINATION_FOLDER + "screenAnnotationWithMHMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page = pdfDoc.AddNewPage();
             String file = "sample.wav";
             String mimeType = "audio/x-wav";
@@ -562,8 +570,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest() {
             String outPdf = DESTINATION_FOLDER + "screenAnnotationWithInvalidMHMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page = pdfDoc.AddNewPage();
             String file = "sample.wav";
             String mimeType = "audio/x-wav";
@@ -644,8 +651,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void LinkAnnotNotDirectChildOfLinkInvalidCropTest() {
             String outPdf = DESTINATION_FOLDER + "linkAnnotNotDirectChildOfLinkInvalidCropTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage page = pdfDoc.AddNewPage();
             PdfArray array = new PdfArray();
             array.Add(new PdfString("hey"));
@@ -734,8 +740,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void Ua1PrinterMAnnotNotInTagStructureTest() {
             String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNotInTagStructureTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfPage pdfPage = pdfDoc.AddNewPage();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc);

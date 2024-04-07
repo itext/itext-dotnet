@@ -145,8 +145,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void TrueTypeFontWithDifferencesTest() {
             String outPdf = DESTINATION_FOLDER + "trueTypeFontWithDifferencesTest.pdf";
-            using (PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf, PdfUATestPdfDocument.CreateWriterProperties
-                ()))) {
+            using (PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
                 PdfFont font;
                 try {
                     font = PdfFontFactory.CreateFont(FONT, "# simple 32 0077 006f 0072 006c 0064", PdfFontFactory.EmbeddingStrategy
@@ -180,6 +179,7 @@ namespace iText.Pdfua {
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Helloworld");
                 document.Add(paragraph);
+                document.Close();
             }
             );
             framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants

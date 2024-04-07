@@ -35,8 +35,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoTitleInMetadataTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "no_title_metadata.xmp"));
@@ -52,8 +51,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidMetadataVersionTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_version_metadata.xmp"));
@@ -69,8 +67,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoMetadataVersionTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "no_version_metadata.xmp"));
@@ -86,8 +83,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidMetadataTypeTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 catalog.Put(PdfName.Metadata, new PdfDictionary());
@@ -102,8 +98,8 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidPdfVersionTest() {
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument.
-                CreateWriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties(
+                ).SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.INVALID_PDF_VERSION, e.Message);
@@ -111,8 +107,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithBrokenMetadataTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), PdfUATestPdfDocument
-                .CreateWriterProperties()))) {
+            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_metadata.xmp"));

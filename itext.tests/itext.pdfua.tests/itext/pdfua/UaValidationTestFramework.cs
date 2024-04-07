@@ -119,8 +119,7 @@ namespace iText.Pdfua {
         public virtual String VerAPdfResult(String filename) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename, PdfUATestPdfDocument
-                .CreateWriterProperties()));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename));
             Document document = new Document(pdfDoc);
             document.GetPdfDocument().GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer()
                 );
@@ -159,8 +158,7 @@ namespace iText.Pdfua {
             try {
                 String outPath = destinationFolder + filename;
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath, PdfUATestPdfDocument.CreateWriterProperties
-                    ()));
+                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath));
                 foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
                     pdfDocumentConsumer(pdfDoc);
                 }
@@ -181,8 +179,7 @@ namespace iText.Pdfua {
                 String outPath = destinationFolder + "reopen_" + filename;
                 String inPath = destinationFolder + filename;
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath, PdfUATestPdfDocument
-                    .CreateWriterProperties()));
+                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
                 pdfDoc.Close();
             }
             catch (Exception e) {
