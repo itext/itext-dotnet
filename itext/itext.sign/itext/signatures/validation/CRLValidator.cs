@@ -173,7 +173,8 @@ namespace iText.Signatures.Validation {
                 return;
             }
             // Check that the validation date is before the nextUpdate.
-            if (crl.GetNextUpdate() != TimestampConstants.UNDEFINED_TIMESTAMP_DATE && validationDate.After(crl.GetNextUpdate())) {
+            if (crl.GetNextUpdate() != TimestampConstants.UNDEFINED_TIMESTAMP_DATE && validationDate.After(crl.GetNextUpdate
+                ())) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, MessageFormatUtil.Format(UPDATE_DATE_BEFORE_CHECK_DATE
                     , crl.GetNextUpdate(), validationDate), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
@@ -203,7 +204,7 @@ namespace iText.Signatures.Validation {
             int interimReasonsMask = ComputeInterimReasonsMask(issuingDistPoint, distributionPoint);
             int? reasonsMask = checkedReasonsMask.Get(certificate);
             if (reasonsMask != null) {
-                interimReasonsMask |= (int) reasonsMask;
+                interimReasonsMask |= (int)reasonsMask;
                 // Verify that interim_reasons_mask includes one or more reasons that are not included in the reasons_mask.
                 if (interimReasonsMask == reasonsMask) {
                     report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, SAME_REASONS_CHECK, ReportItem.ReportItemStatus

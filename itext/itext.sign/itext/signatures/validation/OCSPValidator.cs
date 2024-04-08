@@ -203,7 +203,8 @@ namespace iText.Signatures.Validation {
             }
             // If nextUpdate is not set, the responder is indicating that newer revocation information
             // is available all the time.
-            if (singleResp.GetNextUpdate() != TimestampConstants.UNDEFINED_TIMESTAMP_DATE && validationDate.After(singleResp.GetNextUpdate())) {
+            if (singleResp.GetNextUpdate() != TimestampConstants.UNDEFINED_TIMESTAMP_DATE && validationDate.After(singleResp
+                .GetNextUpdate())) {
                 report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, MessageFormatUtil.Format(OCSP_IS_NO_LONGER_VALID
                     , validationDate, singleResp.GetNextUpdate()), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
