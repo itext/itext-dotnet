@@ -81,7 +81,6 @@ namespace iText.Forms.Fields {
             bool tagged = document.IsTagged();
             if (tagged) {
                 tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                //TODO DEVSIX-4117 PrintField attributes
                 if (!StandardRoles.FORM.Equals(tagPointer.GetRole())) {
                     tagPointer.AddTag(StandardRoles.FORM);
                 }
