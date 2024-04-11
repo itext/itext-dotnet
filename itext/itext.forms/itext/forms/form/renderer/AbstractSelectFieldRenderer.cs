@@ -68,6 +68,10 @@ namespace iText.Forms.Form.Renderer {
             bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
             LayoutResult layoutResult = base.Layout(new LayoutContext(area, layoutContext.GetMarginsCollapseInfo(), layoutContext
                 .GetFloatRendererAreas(), layoutContext.IsClippedHeight()));
+            if (isForcedPlacement) {
+                // Restore the Property.FORCED_PLACEMENT value as it was before super.layout
+                SetProperty(Property.FORCED_PLACEMENT, true);
+            }
             if (layoutResult.GetStatus() != LayoutResult.FULL) {
                 if (isForcedPlacement) {
                     layoutResult = MakeLayoutResultFull(layoutContext.GetArea(), layoutResult);

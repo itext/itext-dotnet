@@ -35,6 +35,7 @@ using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -408,14 +409,35 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-8158")]
-        public virtual void TestListBoxInfiniteLoop() {
-            Document document = new Document(new PdfDocument(new PdfWriter(new MemoryStream())));
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void ListBoxIsBiggerThanPage() {
+            String outPdf = DESTINATION_FOLDER + "listBoxIsBiggerThenPage.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_listBoxIsBiggerThenPage.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
             ListBoxField list = (ListBoxField)new ListBoxField("name", 200, false).SetInteractive(true);
+            list.SetBackgroundColor(ColorConstants.RED);
             list.AddOption("value1");
             list.AddOption("value2");
+            document.Add(new Paragraph("s\no\nm\ne\nl\no\nn\ng\nt\ne\nx\nt\n"));
             document.Add(list);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void ListBoxIsBiggerThanPageNonI() {
+            String outPdf = DESTINATION_FOLDER + "listBoxIsBiggerThenPageNonI.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_listBoxIsBiggerThenPageNonI.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            ListBoxField list = (ListBoxField)new ListBoxField("name", 200, false);
+            list.SetBackgroundColor(ColorConstants.RED);
+            list.AddOption("value1");
+            list.AddOption("value2");
+            document.Add(new Paragraph("s\no\nm\ne\nl\no\nn\ng\nt\ne\nx\nt\n"));
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
