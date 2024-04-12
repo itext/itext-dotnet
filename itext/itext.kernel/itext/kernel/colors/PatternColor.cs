@@ -24,26 +24,42 @@ using System;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Representation of a Pattern Color.</summary>
     public class PatternColor : Color {
         private PdfPattern pattern;
 
         // The underlying color for uncolored patterns. Will be null for colored ones.
         private Color underlyingColor;
 
+        /// <summary>Creates a pattern color using the given color pattern object.</summary>
+        /// <param name="coloredPattern">Color space that uses pattern objects</param>
         public PatternColor(PdfPattern coloredPattern)
             : base(new PdfSpecialCs.Pattern(), null) {
             this.pattern = coloredPattern;
         }
 
+        /// <summary>Creates a pattern color using the given uncolored pattern object and color.</summary>
+        /// <param name="uncoloredPattern">Tiling pattern object of the color space</param>
+        /// <param name="color">Color object</param>
         public PatternColor(PdfPattern.Tiling uncoloredPattern, Color color)
             : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue()) {
         }
 
+        /// <summary>Creates a pattern color using the given uncolored pattern object, an underlying color space and color values.
+        ///     </summary>
+        /// <param name="uncoloredPattern">Tiling pattern object of the color space</param>
+        /// <param name="underlyingCS">Underlying color space object</param>
+        /// <param name="colorValue">Color values</param>
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS, float[] colorValue)
             : this(uncoloredPattern, new PdfSpecialCs.UncoloredTilingPattern(EnsureNotPatternCs(underlyingCS)), colorValue
                 ) {
         }
 
+        /// <summary>Creates a pattern color using the given uncolored pattern object, uncolored tiling pattern and color values.
+        ///     </summary>
+        /// <param name="uncoloredPattern">Tiling pattern object of the color space</param>
+        /// <param name="uncoloredTilingCS">Tiling pattern color space</param>
+        /// <param name="colorValue">Color values</param>
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
             , float[] colorValue)
             : base(uncoloredTilingCS, colorValue) {
@@ -51,6 +67,8 @@ namespace iText.Kernel.Colors {
             this.underlyingColor = MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(), colorValue);
         }
 
+        /// <summary>Returns the pattern of the color space.</summary>
+        /// <returns>PdfPattern object</returns>
         public virtual PdfPattern GetPattern() {
             return pattern;
         }

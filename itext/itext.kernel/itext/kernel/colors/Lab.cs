@@ -23,19 +23,41 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Representation of a lab color space.</summary>
     public class Lab : Color {
+        /// <summary>
+        /// Creates a lab color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+        /// color space.
+        /// </summary>
+        /// <param name="cs">Color space</param>
         public Lab(PdfCieBasedCs.Lab cs)
             : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
+        /// <summary>
+        /// Creates a lab color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+        /// color space and color values.
+        /// </summary>
+        /// <param name="cs">Color space</param>
+        /// <param name="value">Color values</param>
         public Lab(PdfCieBasedCs.Lab cs, float[] value)
             : base(cs, value) {
         }
 
+        /// <summary>Creates a lab color using the given white point and color values.</summary>
+        /// <param name="whitePoint">Color values for defining the white point</param>
+        /// <param name="value">Color values</param>
         public Lab(float[] whitePoint, float[] value)
             : base(new PdfCieBasedCs.Lab(whitePoint), value) {
         }
 
+        /// <summary>Creates a lab color using the given white point, black point and color values.</summary>
+        /// <param name="whitePoint">Color values for defining the white point</param>
+        /// <param name="blackPoint">Color values for defining the black point</param>
+        /// <param name="range">Range for color</param>
+        /// <param name="value">Color values</param>
         public Lab(float[] whitePoint, float[] blackPoint, float[] range, float[] value)
             : this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value) {
         }
