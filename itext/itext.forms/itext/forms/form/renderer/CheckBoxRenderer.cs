@@ -144,6 +144,23 @@ namespace iText.Forms.Form.Renderer {
         }
 
         // We don't need any layout adjustments
+        /// <summary>Applies given paddings to the given rectangle.</summary>
+        /// <remarks>
+        /// Applies given paddings to the given rectangle.
+        /// Checkboxes don't support setting of paddings as they are always centered.
+        /// So that this method returns the rectangle as is.
+        /// </remarks>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="paddings">the paddings to be applied on the given rectangle</param>
+        /// <param name="reverse">
+        /// indicates whether paddings will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>The rectangle NOT modified by the paddings.</returns>
+        protected override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
+            return rect;
+        }
+
         /// <summary>Creates a flat renderer for the checkbox.</summary>
         /// <returns>an IRenderer object for the flat renderer</returns>
         protected internal override IRenderer CreateFlatRenderer() {
@@ -181,7 +198,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetGenericConformanceLevel
                 (this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
@@ -203,7 +220,7 @@ namespace iText.Forms.Form.Renderer {
             checkBox.GetFirstFormAnnotation().SetFormFieldElement((CheckBox)modelElement);
             checkBox.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(checkBox, page);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>

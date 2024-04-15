@@ -29,6 +29,7 @@ using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
+using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Layout;
@@ -157,7 +158,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             PdfString defaultValue = new PdfString(GetDefaultValue());
@@ -175,7 +176,7 @@ namespace iText.Forms.Form.Renderer {
             inputField.EnableFieldRegeneration();
             ApplyAccessibilityProperties(inputField, doc);
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>

@@ -95,6 +95,8 @@ namespace iText.Forms.Form.Renderer {
             PdfFont font = GetResolvedFont(doc);
             ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
                 ).SetGenericConformanceLevel(GetGenericConformanceLevel(doc));
+            ApplyMargins(area, false);
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
@@ -132,6 +134,7 @@ namespace iText.Forms.Form.Renderer {
             comboBoxField.GetFirstFormAnnotation().SetFormFieldElement(comboBoxFieldModelElement);
             comboBoxField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(comboBoxField, page);
+            FormFieldRendererUtil.ReapplyProperties(this.modelElement, properties);
         }
 
         private UnitValue GetFontSize() {

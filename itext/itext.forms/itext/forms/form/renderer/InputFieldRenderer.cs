@@ -30,6 +30,7 @@ using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
+using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Font;
@@ -129,7 +130,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = this.GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             // Some properties are set to the HtmlDocumentRenderer, which is root renderer for this ButtonRenderer, but
@@ -161,7 +162,7 @@ namespace iText.Forms.Form.Renderer {
             inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
             inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>

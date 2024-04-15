@@ -147,7 +147,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             String groupName = this.GetProperty<String>(FormProperty.FORM_FIELD_RADIO_GROUP_NAME);
             if (groupName == null || String.IsNullOrEmpty(groupName)) {
@@ -179,7 +179,7 @@ namespace iText.Forms.Form.Renderer {
             radioGroup.EnableFieldRegeneration();
             ApplyAccessibilityProperties(radioGroup, doc);
             form.AddField(radioGroup, page);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(this.modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>

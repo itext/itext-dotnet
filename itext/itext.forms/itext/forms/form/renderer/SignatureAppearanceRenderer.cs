@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Form.Element;
+using iText.Forms.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -106,6 +107,7 @@ namespace iText.Forms.Form.Renderer {
             Rectangle bBox = GetOccupiedArea().GetBBox().Clone();
             ApplyPaddings(bBox, false);
             ApplyBorderBox(bBox, false);
+            ApplyMargins(bBox, false);
             if (bBox.GetY() < 0) {
                 bBox.SetHeight(bBox.GetY() + bBox.GetHeight());
                 bBox.SetY(0);
@@ -201,7 +203,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             // Background is light gray by default, but can be set to null by user.
@@ -227,6 +229,7 @@ namespace iText.Forms.Form.Renderer {
             sigField.EnableFieldRegeneration();
             PdfAcroForm forms = PdfFormCreator.GetAcroForm(doc, true);
             forms.AddField(sigField, page);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         private void AdjustChildrenLayout(SignatureAppearanceRenderer.RenderingMode renderingMode, Rectangle signatureRect
