@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using iText.Commons.Actions.Contexts;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
@@ -48,16 +49,31 @@ namespace iText.Signatures.Validation {
 
         internal const String UNEXPECTED_ENTRY_IN_XREF = "New PDF document revision contains unexpected entry \"{0}\" in XREF table.";
 
+        private IMetaInfo metaInfo;
+
         internal DocumentRevisionsValidator() {
         }
 
         // Empty constructor.
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
+        /// that will be used during
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// creation.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        public virtual void SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
+        }
+
         internal virtual ValidationReport ValidateRevision(PdfDocument originalDocument, PdfDocument documentWithoutRevision
             , DocumentRevision revision) {
             ValidationReport validationReport = new ValidationReport();
             using (Stream inputStream = CreateInputStreamFromRevision(originalDocument, revision)) {
                 using (PdfReader newReader = new PdfReader(inputStream)) {
-                    using (PdfDocument documentWithRevision = new PdfDocument(newReader)) {
+                    using (PdfDocument documentWithRevision = new PdfDocument(newReader, new DocumentProperties().SetEventCountingMetaInfo
+                        (metaInfo))) {
                         ICollection<PdfIndirectReference> indirectReferences = revision.GetModifiedObjects();
                         if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport)) {
                             return validationReport;

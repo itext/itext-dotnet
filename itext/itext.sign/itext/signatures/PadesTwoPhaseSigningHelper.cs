@@ -62,6 +62,9 @@ namespace iText.Signatures {
 
         private StampingProperties stampingProperties = new StampingProperties().UseAppendMode();
 
+        private StampingProperties stampingPropertiesWithMetaInfo = (StampingProperties)new StampingProperties().UseAppendMode
+            ().SetEventCountingMetaInfo(new SignMetaInfo());
+
         private IIssuingCertificateRetriever issuingCertificateRetriever = new IssuingCertificateRetriever();
 
         private int estimatedSize = -1;
@@ -299,6 +302,9 @@ namespace iText.Signatures {
         public virtual iText.Signatures.PadesTwoPhaseSigningHelper SetStampingProperties(StampingProperties stampingProperties
             ) {
             this.stampingProperties = stampingProperties;
+            if (stampingProperties.IsEventCountingMetaInfoSet()) {
+                this.stampingPropertiesWithMetaInfo = stampingProperties;
+            }
             return this;
         }
 
@@ -326,6 +332,7 @@ namespace iText.Signatures {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(certificates);
             IX509Certificate[] x509FullChain = JavaUtil.ArraysAsList(fullChain).ToArray(new IX509Certificate[0]);
             PdfTwoPhaseSigner pdfTwoPhaseSigner = new PdfTwoPhaseSigner(inputDocument, outputStream);
+            pdfTwoPhaseSigner.SetStampingProperties(stampingProperties);
             CMSContainer cms = new CMSContainer();
             SignerInfo signerInfo = new SignerInfo();
             String digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(digestAlgorithm);
@@ -360,7 +367,7 @@ namespace iText.Signatures {
             , Stream outputStream, String signatureFieldName, CMSContainer cmsContainer) {
             SetSignatureAlgorithmAndSignature(externalSignature, cmsContainer);
             try {
-                using (PdfDocument document = new PdfDocument(inputDocument)) {
+                using (PdfDocument document = new PdfDocument(inputDocument, stampingProperties)) {
                     PdfTwoPhaseSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
                 }
             }
@@ -394,7 +401,7 @@ namespace iText.Signatures {
                 cmsContainer.GetSignerInfo().AddUnSignedAttribute(timestampAttribute);
             }
             try {
-                using (PdfDocument document = new PdfDocument(inputDocument)) {
+                using (PdfDocument document = new PdfDocument(inputDocument, stampingProperties)) {
                     PdfTwoPhaseSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
                 }
             }
@@ -423,7 +430,7 @@ namespace iText.Signatures {
                         );
                     using (Stream inputStream = padesSigner.CreateInputStream()) {
                         using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(outputStream), 
-                            new StampingProperties().UseAppendMode())) {
+                            stampingPropertiesWithMetaInfo)) {
                             padesSigner.PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signatureFieldName), LtvVerification.RevocationDataNecessity
                                 .REQUIRED_FOR_SIGNING_CERTIFICATE);
                         }
@@ -455,7 +462,7 @@ namespace iText.Signatures {
                         );
                     using (Stream inputStream = padesSigner.CreateInputStream()) {
                         using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(padesSigner.CreateOutputStream
-                            ()), new StampingProperties().UseAppendMode())) {
+                            ()), stampingPropertiesWithMetaInfo)) {
                             padesSigner.PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signatureFieldName), LtvVerification.RevocationDataNecessity
                                 .REQUIRED_FOR_SIGNING_CERTIFICATE);
                             padesSigner.PerformTimestamping(pdfDocument, outputStream, tsaClient);

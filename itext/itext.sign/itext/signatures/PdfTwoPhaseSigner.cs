@@ -29,6 +29,21 @@ using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
+    /// <summary>
+    /// Class that prepares document and adds the signature to it while performing signing operation in two steps
+    /// (see
+    /// <see cref="PadesTwoPhaseSigningHelper"/>
+    /// for more info).
+    /// </summary>
+    /// <remarks>
+    /// Class that prepares document and adds the signature to it while performing signing operation in two steps
+    /// (see
+    /// <see cref="PadesTwoPhaseSigningHelper"/>
+    /// for more info).
+    /// <para />
+    /// Firstly, this class allows to prepare the document for signing and calculate the document digest to sign.
+    /// Secondly, it adds an existing signature to a PDF where space was already reserved.
+    /// </remarks>
     public class PdfTwoPhaseSigner {
         private readonly PdfReader reader;
 
@@ -40,6 +55,21 @@ namespace iText.Signatures {
 
         private bool closed;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="PdfTwoPhaseSigner"/>
+        /// instance.
+        /// </summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// instance to read the original PDF file
+        /// </param>
+        /// <param name="outputStream">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// output stream to write the resulting PDF file into
+        /// </param>
         public PdfTwoPhaseSigner(PdfReader reader, Stream outputStream) {
             this.reader = reader;
             this.outputStream = outputStream;

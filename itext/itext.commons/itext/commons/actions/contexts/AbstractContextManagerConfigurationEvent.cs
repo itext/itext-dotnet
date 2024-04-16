@@ -42,7 +42,7 @@ namespace iText.Commons.Actions.Contexts {
         }
 
         /// <summary>Unregisters certain namespaces.</summary>
-        /// <param name="namespaces">the namespaces to be unregisted</param>
+        /// <param name="namespaces">the namespaces to be unregistered</param>
         protected internal virtual void UnregisterContext(ICollection<String> namespaces) {
             ContextManager.GetInstance().UnregisterContext(namespaces);
         }

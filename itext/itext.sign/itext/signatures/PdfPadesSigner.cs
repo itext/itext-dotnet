@@ -61,6 +61,9 @@ namespace iText.Signatures {
 
         private StampingProperties stampingProperties = new StampingProperties().UseAppendMode();
 
+        private StampingProperties stampingPropertiesWithMetaInfo = (StampingProperties)new StampingProperties().UseAppendMode
+            ().SetEventCountingMetaInfo(new SignMetaInfo());
+
         private MemoryStream tempOutputStream;
 
         private FileInfo tempFile;
@@ -213,7 +216,7 @@ namespace iText.Signatures {
                 PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(outputStream), 
-                        new StampingProperties().UseAppendMode())) {
+                        stampingPropertiesWithMetaInfo)) {
                         PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
                             .REQUIRED_FOR_SIGNING_CERTIFICATE);
                     }
@@ -279,7 +282,7 @@ namespace iText.Signatures {
                 PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(CreateOutputStream
-                        ()), new StampingProperties().UseAppendMode())) {
+                        ()), stampingPropertiesWithMetaInfo)) {
                         PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
                             .REQUIRED_FOR_SIGNING_CERTIFICATE);
                         PerformTimestamping(pdfDocument, outputStream, tsaClient);
@@ -330,8 +333,8 @@ namespace iText.Signatures {
         /// </param>
         public virtual void ProlongSignatures(ITSAClient tsaClient) {
             Stream documentOutputStream = tsaClient == null ? outputStream : CreateOutputStream();
-            using (PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(documentOutputStream), new StampingProperties
-                ().UseAppendMode())) {
+            using (PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(documentOutputStream), stampingProperties
+                )) {
                 SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
                 IList<String> signatureNames = signatureUtil.GetSignatureNames();
                 if (signatureNames.IsEmpty()) {
@@ -415,6 +418,9 @@ namespace iText.Signatures {
         public virtual iText.Signatures.PdfPadesSigner SetStampingProperties(StampingProperties stampingProperties
             ) {
             this.stampingProperties = stampingProperties;
+            if (stampingProperties.IsEventCountingMetaInfoSet()) {
+                this.stampingPropertiesWithMetaInfo = stampingProperties;
+            }
             return this;
         }
 
