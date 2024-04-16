@@ -1696,7 +1696,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING)]
         public virtual void TableWithEmptyRowsBetweenFullRowsTest() {
             String testName = "tableWithEmptyRowsBetweenFullRowsTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1716,8 +1715,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 2
-            )]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithEmptyRowAfterJustOneCellTest() {
             String testName = "tableWithEmptyRowAfterJustOneCellTest.pdf";
@@ -1739,8 +1736,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 39
-            )]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithAlternatingRowsTest() {
             String testName = "tableWithAlternatingRowsTest.pdf";
@@ -1782,8 +1777,27 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING, Count = 2
-            )]
+        public virtual void TableWithEmptyRowsAndSpansTest() {
+            String testName = "tableWithEmptyRowsAndSpansTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30, 30 }));
+            table.AddCell(new Cell().Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("Lovely")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            StartSeveralEmptyRows(table);
+            table.AddCell(new Cell(2, 2).Add(new Paragraph("Hello")));
+            table.AddCell(new Cell().Add(new Paragraph("Lovely")));
+            table.AddCell(new Cell().Add(new Paragraph("World")));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TableWithEmptyRowsAndSeparatedBordersTest() {
             String testName = "tableWithEmptyRowsAndSeparatedBordersTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -1804,8 +1818,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-6020:Border-collapsing doesn't work in case startNewRow has been called
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING)]
         public virtual void TableWithCollapsedBordersTest() {
             String testName = "tableWithCollapsedBordersTest.pdf";
             String outFileName = destinationFolder + testName;

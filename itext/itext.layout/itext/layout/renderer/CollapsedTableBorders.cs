@@ -271,16 +271,10 @@ namespace iText.Layout.Renderer {
                 }
                 while (j > 0 && rows.Count != nextCellRow && (j + (int)rows[nextCellRow][j].GetPropertyAsInteger(Property.
                     COLSPAN) != col || (int)nextCellRow - rows[(int)nextCellRow][j].GetPropertyAsInteger(Property.ROWSPAN)
-                     + 1 + rowspansToDeduct[j] != row));
+                     + 1 != row));
                 // process only valid cells which hasn't been processed yet
                 if (j >= 0 && nextCellRow != rows.Count && nextCellRow > row) {
                     CellRenderer nextCell = rows[nextCellRow][j];
-                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetPropertyAsInteger(Property.ROWSPAN)) - rowspansToDeduct
-                        [j]);
-                    int nextCellColspan = (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
-                    for (int i = j; i < j + nextCellColspan; i++) {
-                        rowspansToDeduct[i] = 0;
-                    }
                     BuildBordersArrays(nextCell, nextCellRow, true);
                 }
             }
@@ -309,12 +303,6 @@ namespace iText.Layout.Renderer {
                 }
                 if (nextCellRow != rows.Count) {
                     CellRenderer nextCell = rows[nextCellRow][col + currCellColspan];
-                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetPropertyAsInteger(Property.ROWSPAN)) - rowspansToDeduct
-                        [col + currCellColspan]);
-                    int nextCellColspan = (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
-                    for (int i = col + currCellColspan; i < col + currCellColspan + nextCellColspan; i++) {
-                        rowspansToDeduct[i] = 0;
-                    }
                     BuildBordersArrays(nextCell, nextCellRow, true);
                 }
             }
