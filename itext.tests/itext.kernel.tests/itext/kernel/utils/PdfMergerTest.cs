@@ -231,8 +231,70 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void EmptyTrTableTest() {
-            // TODO DEVSIX-5974 Empty tr isn't copied.
             MergeAndCompareTagStructures("emptyTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitEmptyTrTableFirstPageTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTrFirstPage.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitEmptyTrTableSecondPageTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTrSecondPage.pdf", 2, 2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitEmptyTrTableFullTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTrFull.pdf", 1, 2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyFirstTrTableTest() {
+            MergeAndCompareTagStructures("emptyFirstTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyLastTrTableTest() {
+            MergeAndCompareTagStructures("emptyLastTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTwoAdjacentTrTableTest() {
+            MergeAndCompareTagStructures("emptyTwoAdjacentTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyAllTrTableTest() {
+            MergeAndCompareTagStructures("emptyAllTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptySingleTrTableTest() {
+            MergeAndCompareTagStructures("emptySingleTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitAndMergeEmptyTrTableTest() {
+            String sourceFilename = sourceFolder + "splitTableWithEmptyTrFull.pdf";
+            String firstPageFilename = destinationFolder + "firstPageDoc.pdf";
+            String secondPageFilename = destinationFolder + "secondPageDoc.pdf";
+            String resultFilename = destinationFolder + "splitAndMergeEmptyTrTable.pdf";
+            String cmpFilename = sourceFolder + "cmp_splitAndMergeEmptyTrTable.pdf";
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(sourceFilename));
+            PdfDocument firstPageDoc = new PdfDocument(new PdfWriter(firstPageFilename));
+            PdfMerger mergerFirstPage = new PdfMerger(firstPageDoc);
+            mergerFirstPage.Merge(sourceDoc, 1, 1);
+            mergerFirstPage.Close();
+            PdfDocument secondPageDoc = new PdfDocument(new PdfWriter(secondPageFilename));
+            PdfMerger mergerSecondPage = new PdfMerger(secondPageDoc);
+            mergerSecondPage.Merge(sourceDoc, 2, 2);
+            mergerSecondPage.Close();
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPageFilename));
+            sources.Add(new FileInfo(secondPageFilename));
+            MergePdfs(sources, resultFilename, new PdfMergerProperties(), false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(resultFilename, cmpFilename));
         }
 
         [NUnit.Framework.Test]
