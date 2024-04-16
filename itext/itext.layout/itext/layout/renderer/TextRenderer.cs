@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -41,6 +42,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Exceptions;
 using iText.Layout.Font;
+using iText.Layout.Font.Selectorstrategy;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -1481,19 +1483,17 @@ namespace iText.Layout.Renderer {
                         throw new InvalidOperationException(LayoutExceptionMessageConstant.FONT_PROVIDER_NOT_SET_FONT_FAMILY_NOT_RESOLVED
                             );
                     }
-                    FontCharacteristics fc = CreateFontCharacteristics();
-                    FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList((String[])font
-                        ), fc, fontSet);
                     // process empty renderers because they can have borders or paddings with background to be drawn
                     if (null == strToBeConverted || String.IsNullOrEmpty(strToBeConverted)) {
                         addTo.Add(this);
                     }
                     else {
-                        while (!strategy.EndOfText()) {
-                            GlyphLine nextGlyphs = new GlyphLine(strategy.NextGlyphs());
-                            PdfFont currentFont = strategy.GetCurrentFont();
-                            GlyphLine newGlyphs = TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(nextGlyphs, currentFont);
-                            iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(newGlyphs, currentFont);
+                        FontCharacteristics fc = CreateFontCharacteristics();
+                        IFontSelectorStrategy strategy = provider.CreateFontSelectorStrategy(JavaUtil.ArraysAsList((String[])font)
+                            , fc, fontSet);
+                        IList<Tuple2<GlyphLine, PdfFont>> subTextWithFont = strategy.GetGlyphLines(strToBeConverted);
+                        foreach (Tuple2<GlyphLine, PdfFont> subText in subTextWithFont) {
+                            iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(subText.GetFirst(), subText.GetSecond());
                             addTo.Add(textRenderer);
                         }
                     }
@@ -1625,19 +1625,12 @@ namespace iText.Layout.Renderer {
 
         internal override PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc
             , FontSet additionalFonts) {
-            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, JavaUtil.ArraysAsList(font), fc, additionalFonts
+            IFontSelectorStrategy strategy = provider.CreateFontSelectorStrategy(JavaUtil.ArraysAsList(font), fc, additionalFonts
                 );
-            IList<Glyph> resolvedGlyphs;
-            PdfFont currentFont;
-            //try to find first font that can render at least one glyph.
-            while (!strategy.EndOfText()) {
-                resolvedGlyphs = strategy.NextGlyphs();
-                currentFont = strategy.GetCurrentFont();
-                foreach (Glyph glyph in resolvedGlyphs) {
-                    if (currentFont.ContainsGlyph(glyph.GetUnicode())) {
-                        return currentFont;
-                    }
-                }
+            // Try to find first font that can render at least one glyph.
+            IList<Tuple2<GlyphLine, PdfFont>> glyphLines = strategy.GetGlyphLines(strToBeConverted);
+            if (!glyphLines.IsEmpty()) {
+                return glyphLines[0].GetSecond();
             }
             return base.ResolveFirstPdfFont(font, provider, fc, additionalFonts);
         }

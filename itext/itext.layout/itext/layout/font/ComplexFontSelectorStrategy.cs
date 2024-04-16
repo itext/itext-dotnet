@@ -39,6 +39,8 @@ namespace iText.Layout.Font {
     /// <see cref="FontSelector.BestMatch()"/>
     /// will be added.
     /// </remarks>
+    [System.ObsoleteAttribute(@"was replaced by iText.Layout.Font.Selectorstrategy.FirstMatchFontSelectorStrategy ."
+        )]
     public class ComplexFontSelectorStrategy : FontSelectorStrategy {
         private PdfFont font;
 

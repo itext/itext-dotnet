@@ -51,6 +51,15 @@ namespace iText.IO.Util {
 
         private TextUtil() {
         }
+        
+        /// <summary>
+        /// Checks if the passed code point corresponds to diacritic.
+        /// </summary>
+        /// <param name="codePoint">the code point to check</param>
+        /// <returns>true if passed code point is diacritic, false otherwise</returns>
+        public static bool IsDiacritic(int codePoint) {
+            return codePoint > 0x0300 && codePoint <= 0x036F;
+        }
 
         /// <summary>
         /// Check if the value of a character belongs to a certain interval
