@@ -26,7 +26,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures;
 
-namespace iText.Signatures.Validation.Extensions {
+namespace iText.Signatures.Validation.V1.Extensions {
     /// <summary>Class representing certificate extension with all the information required for validation.</summary>
     public class CertificateExtension {
         private readonly String extensionOid;
@@ -110,7 +110,7 @@ namespace iText.Signatures.Validation.Extensions {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Signatures.Validation.Extensions.CertificateExtension that = (iText.Signatures.Validation.Extensions.CertificateExtension
+            iText.Signatures.Validation.V1.Extensions.CertificateExtension that = (iText.Signatures.Validation.V1.Extensions.CertificateExtension
                 )o;
             return Object.Equals(extensionOid, that.extensionOid) && Object.Equals(extensionValue, that.extensionValue
                 );

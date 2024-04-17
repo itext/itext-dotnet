@@ -25,7 +25,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures;
 
-namespace iText.Signatures.Validation.Extensions {
+namespace iText.Signatures.Validation.V1.Extensions {
     /// <summary>Class representing "Basic Constraints" certificate extension.</summary>
     public class BasicConstraintsExtension : CertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();

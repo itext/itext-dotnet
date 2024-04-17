@@ -27,7 +27,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures;
 
-namespace iText.Signatures.Validation.Extensions {
+namespace iText.Signatures.Validation.V1.Extensions {
     /// <summary>Class representing "Key Usage" extenstion.</summary>
     public class KeyUsageExtension : CertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
