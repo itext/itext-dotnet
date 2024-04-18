@@ -342,7 +342,7 @@ namespace iText.Signatures {
             cms.SetSignerInfo(signerInfo);
             IMessageDigest messageDigest = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest
                 (DigestAlgorithms.GetDigest(digestAlgorithmOid));
-            int realSignatureSize = messageDigest.GetDigestLength() + (int)cms.GetSizeEstimation();
+            int realSignatureSize = (messageDigest.GetDigestLength() + (int)cms.GetSizeEstimation()) * 2 + 2;
             if (tsaClient != null) {
                 realSignatureSize += tsaClient.GetTokenSizeEstimate();
             }
