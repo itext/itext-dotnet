@@ -102,16 +102,7 @@ namespace iText.IO.Util {
                 }
             }
 
-#if !NETSTANDARD2_0
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-                if (assembly.GetName().Name.StartsWith("itext")) {
-                    istr = SearchResourceInAssembly(key, assembly);
-                    if (istr != null) {
-                        return istr;
-                    }
-                }
-            }
-#else
+#if NETSTANDARD2_0
             try {
                 if (DependencyContext.Default != null) {
                     string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
@@ -130,6 +121,15 @@ namespace iText.IO.Util {
                 }
             } catch { }
 #endif
+            // Fallback to old approach. The one from above might not work in Azure function.
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+                if (assembly.GetName().Name.StartsWith("itext")) {
+                    istr = SearchResourceInAssembly(key, assembly);
+                    if (istr != null) {
+                        return istr;
+                    }
+                }
+            }
 
             return istr;
         }
