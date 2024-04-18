@@ -56,7 +56,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void OneDiacriticWithUnsupportedFontTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithTNR(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithTNR(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(3, result.Count);
@@ -68,8 +68,24 @@ namespace iText.Layout.Font.Selectorstrategy {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DiacriticFontDoesnotContainPreviousSymbolTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("Ми\u0301ръ (mírə)");
+            NUnit.Framework.Assert.AreEqual(6, result.Count);
+            NUnit.Framework.Assert.AreEqual("Ми", result[0].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("\u0301", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("ръ", result[2].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual(" (mír", result[3].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("ə", result[4].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual(")", result[5].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual(result[0].GetSecond(), result[2].GetSecond());
+            NUnit.Framework.Assert.AreEqual(result[2].GetSecond(), result[3].GetSecond());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void OneDiacriticWithOneSupportedFontTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSans(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(1, result.Count);

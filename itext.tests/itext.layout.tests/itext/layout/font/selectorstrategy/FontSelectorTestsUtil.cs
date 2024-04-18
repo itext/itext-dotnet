@@ -41,6 +41,18 @@ namespace iText.Layout.Font.Selectorstrategy {
             return fontProvider.CreateFontSelectorStrategy(fontFamilies, new FontCharacteristics(), null);
         }
 
+        public static IFontSelectorStrategy CreateStrategyWithNotoSans(IFontSelectorStrategyFactory factory) {
+            FontSet fs = new FontSet();
+            fs.AddFont(FONTS_FOLDER + "NotoKufiArabic-Regular.ttf");
+            fs.AddFont(FONTS_FOLDER + "NotoSansCJKjp-Regular.otf");
+            fs.AddFont(FONTS_FOLDER + "NotoSansCherokee-Regular.ttf");
+            FontProvider fontProvider = new FontProvider(fs, StandardFontFamilies.TIMES);
+            fontProvider.SetFontSelectorStrategyFactory(factory);
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("random");
+            return fontProvider.CreateFontSelectorStrategy(fontFamilies, new FontCharacteristics(), null);
+        }
+
         public static IFontSelectorStrategy CreateStrategyWithTNR(IFontSelectorStrategyFactory factory) {
             FontSet fs = new FontSet();
             fs.AddFont(StandardFonts.TIMES_ROMAN);

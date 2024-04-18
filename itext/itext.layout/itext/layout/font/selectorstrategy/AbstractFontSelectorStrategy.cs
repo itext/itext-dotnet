@@ -117,9 +117,13 @@ namespace iText.Layout.Font.Selectorstrategy {
                         if (i > indexDiacritic) {
                             if (iText.IO.Util.TextUtil.IsDiacritic(codePoint)) {
                                 PdfFont diacriticFont = MatchFont(codePoint, fontSelector, fontProvider, additionalFonts);
+                                // Diacritic font must contain previous symbol, if not, don't
+                                // enable special logic for diacritic and process it as usual symbol
+                                bool isPreviousMatchFont = i == 0 || diacriticFont == null || diacriticFont.ContainsGlyph(ExtractCodePoint
+                                    (text, i - 1));
                                 // If diacritic font equals to the current font or null, don't
                                 // enable special logic for diacritic and process it as usual symbol
-                                if (diacriticFont != null && diacriticFont != currentFont) {
+                                if (diacriticFont != null && diacriticFont != currentFont && isPreviousMatchFont) {
                                     // If it's the first diacritic in a row, we want to break to try to find a better font for
                                     // the previous letter during the next iteration
                                     if (indexDiacritic != i - 1) {
