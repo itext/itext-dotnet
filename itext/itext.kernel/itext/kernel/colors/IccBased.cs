@@ -25,11 +25,25 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Representation on an ICC Based color space.</summary>
     public class IccBased : Color {
+        /// <summary>
+        /// Creates an ICC Based color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+        /// color space.
+        /// </summary>
+        /// <param name="cs">Color space</param>
         public IccBased(PdfCieBasedCs.IccBased cs)
             : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
+        /// <summary>
+        /// Creates an ICC Based color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfCieBasedCs"/>
+        /// color space and color values.
+        /// </summary>
+        /// <param name="cs">Color space</param>
+        /// <param name="value">Color values</param>
         public IccBased(PdfCieBasedCs.IccBased cs, float[] value)
             : base(cs, value) {
         }
@@ -51,6 +65,10 @@ namespace iText.Kernel.Colors {
             : this(new PdfCieBasedCs.IccBased(iccStream), value) {
         }
 
+        /// <summary>Creates an ICC Based color using the given ICC profile stream, range and color values.</summary>
+        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
+        /// <param name="range">Range for color</param>
+        /// <param name="value">Color values</param>
         public IccBased(Stream iccStream, float[] range, float[] value)
             : this(new PdfCieBasedCs.IccBased(iccStream, range), value) {
             if (GetNumberOfComponents() * 2 != range.Length) {

@@ -20,12 +20,15 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+using iText.Commons.Digest;
+
 namespace iText.Commons.Bouncycastle.Crypto {
     /// <summary>
     /// This interface represents the wrapper for IDigest that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IDigest {
+    public interface IDigest : IMessageDigest {
         /// <summary>
         /// Calls actual
         /// <c>Digest</c>

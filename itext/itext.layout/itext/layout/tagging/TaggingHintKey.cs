@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Pdf.Tagutils;
 
 namespace iText.Layout.Tagging {
     /// <summary>
@@ -38,6 +39,8 @@ namespace iText.Layout.Tagging {
         private String overriddenRole;
 
         private bool elementBasedFinishingOnly;
+
+        private TagTreePointer tagPointer;
 
         /// <summary>
         /// Instantiate a new
@@ -60,6 +63,29 @@ namespace iText.Layout.Tagging {
         /// <returns>the accessible element.</returns>
         public IAccessibleElement GetAccessibleElement() {
             return elem;
+        }
+
+        /// <summary>Gets the TagTreePointer.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreePointer"/>
+        /// or null if there is no associated one yet.
+        /// </returns>
+        public TagTreePointer GetTagPointer() {
+            return tagPointer;
+        }
+
+        /// <summary>Sets the TagTreePointer.</summary>
+        /// <param name="tag">the TagTreePointer to set.</param>
+        public void SetTagPointer(TagTreePointer tag) {
+            this.tagPointer = tag;
+        }
+
+        internal AccessibilityProperties GetAccessibilityProperties() {
+            if (elem == null) {
+                return null;
+            }
+            return elem.GetAccessibilityProperties();
         }
 
         /// <summary>Retrieve hint key finished flag.</summary>

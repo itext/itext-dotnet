@@ -145,7 +145,7 @@ namespace iText.Signatures.Sign {
             }
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
-            signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
         }
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {

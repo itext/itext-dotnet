@@ -57,7 +57,12 @@ namespace iText.Signatures {
 
         private String temporaryDirectoryPath = null;
 
+        private IExternalDigest externalDigest = new BouncyCastleDigest();
+
         private StampingProperties stampingProperties = new StampingProperties().UseAppendMode();
+
+        private StampingProperties stampingPropertiesWithMetaInfo = (StampingProperties)new StampingProperties().UseAppendMode
+            ().SetEventCountingMetaInfo(new SignMetaInfo());
 
         private MemoryStream tempOutputStream;
 
@@ -211,7 +216,7 @@ namespace iText.Signatures {
                 PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(outputStream), 
-                        new StampingProperties().UseAppendMode())) {
+                        stampingPropertiesWithMetaInfo)) {
                         PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
                             .REQUIRED_FOR_SIGNING_CERTIFICATE);
                     }
@@ -277,7 +282,7 @@ namespace iText.Signatures {
                 PerformSignDetached(signerProperties, false, externalSignature, chain, tsaClient);
                 using (Stream inputStream = CreateInputStream()) {
                     using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputStream), new PdfWriter(CreateOutputStream
-                        ()), new StampingProperties().UseAppendMode())) {
+                        ()), stampingPropertiesWithMetaInfo)) {
                         PerformLtvVerification(pdfDocument, JavaCollectionsUtil.SingletonList(signerProperties.GetFieldName()), LtvVerification.RevocationDataNecessity
                             .REQUIRED_FOR_SIGNING_CERTIFICATE);
                         PerformTimestamping(pdfDocument, outputStream, tsaClient);
@@ -328,8 +333,8 @@ namespace iText.Signatures {
         /// </param>
         public virtual void ProlongSignatures(ITSAClient tsaClient) {
             Stream documentOutputStream = tsaClient == null ? outputStream : CreateOutputStream();
-            using (PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(documentOutputStream), new StampingProperties
-                ().UseAppendMode())) {
+            using (PdfDocument pdfDocument = new PdfDocument(reader, new PdfWriter(documentOutputStream), stampingProperties
+                )) {
                 SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
                 IList<String> signatureNames = signatureUtil.GetSignatureNames();
                 if (signatureNames.IsEmpty()) {
@@ -413,6 +418,9 @@ namespace iText.Signatures {
         public virtual iText.Signatures.PdfPadesSigner SetStampingProperties(StampingProperties stampingProperties
             ) {
             this.stampingProperties = stampingProperties;
+            if (stampingProperties.IsEventCountingMetaInfoSet()) {
+                this.stampingPropertiesWithMetaInfo = stampingProperties;
+            }
             return this;
         }
 
@@ -487,6 +495,34 @@ namespace iText.Signatures {
         /// </returns>
         public virtual iText.Signatures.PdfPadesSigner SetCrlClient(ICrlClient crlClient) {
             this.crlClient = crlClient;
+            return this;
+        }
+
+        /// <summary>
+        /// Set
+        /// <see cref="IExternalDigest"/>
+        /// to be used for main signing operation.
+        /// </summary>
+        /// <remarks>
+        /// Set
+        /// <see cref="IExternalDigest"/>
+        /// to be used for main signing operation.
+        /// <para />
+        /// If none is set,
+        /// <see cref="BouncyCastleDigest"/>
+        /// instance will be used instead.
+        /// </remarks>
+        /// <param name="externalDigest">
+        /// 
+        /// <see cref="IExternalDigest"/>
+        /// to be used for main signing operation.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetExternalDigest(IExternalDigest externalDigest) {
+            this.externalDigest = externalDigest;
             return this;
         }
 
@@ -606,7 +642,7 @@ namespace iText.Signatures {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(chain);
             PdfSigner signer = CreatePdfSigner(signerProperties, isFinal);
             try {
-                signer.SignDetached(externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
+                signer.SignDetached(externalDigest, externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
                     .CADES);
             }
             finally {

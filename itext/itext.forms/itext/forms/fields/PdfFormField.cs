@@ -272,7 +272,7 @@ namespace iText.Forms.Fields {
             field.MakeIndirect(document);
             if (document != null && document.GetReader() != null && document.GetReader().GetPdfAConformanceLevel() != 
                 null) {
-                field.pdfAConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
+                field.pdfConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
             }
             return field;
         }
@@ -1190,7 +1190,7 @@ namespace iText.Forms.Fields {
                 checkType = CheckBoxType.CROSS;
             }
             this.checkType = new NullableContainer<CheckBoxType>(checkType);
-            if (GetPdfAConformanceLevel() != null) {
+            if (GetPdfConformanceLevel() != null) {
                 return this;
             }
             try {

@@ -696,7 +696,7 @@ namespace iText.Kernel.XMP.Impl
 		/// <returns>Returns a read-only copy of child nodes list.</returns>
 		public virtual IList GetUnmodifiableChildren()
 		{
-			return JavaCollectionsUtil.UnmodifiableList(GetChildren());
+			return JavaCollectionsUtil.UnmodifiableList(new ArrayList(GetChildren()));
 		}
 
 		/// <returns>Returns list of qualifier that is lazy initialized.</returns>

@@ -75,5 +75,9 @@ namespace iText.Kernel.Pdf.Tagging {
         public virtual PdfStructElem GetStructElemById(byte[] id) {
             return this.GetStructElemById(new PdfString(id));
         }
+
+        public override void AddEntry(PdfString key, PdfObject value) {
+            base.AddEntry(key, value, (pdfDoc) => pdfDoc.CheckIsoConformance(key, IsoKey.DUPLICATE_ID_ENTRY));
+        }
     }
 }

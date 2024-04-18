@@ -29,6 +29,7 @@ using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
@@ -782,8 +783,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        //TODO update cmp-file after DEVSIX-3351 fixed
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XOBJECT_HAS_NO_STRUCT_PARENTS)]
+        [LogMessage(KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
         public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
             String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
@@ -881,6 +881,84 @@ namespace iText.Layout {
                 div.Add(p1);
                 document.Add(div);
             }
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableAppendsScopeToCell() {
+            String outFile = "tableAppendsScopeToCell.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            Cell cell = new Cell().Add(new Paragraph("Header 1"));
+            cell.GetAccessibilityProperties().SetRole(StandardRoles.TH);
+            table.AddHeaderCell(cell);
+            Cell cell2 = new Cell().Add(new Paragraph("Header 2"));
+            cell2.GetAccessibilityProperties().SetRole(StandardRoles.TH);
+            table.AddHeaderCell(cell2);
+            Cell cell3 = new Cell().Add(new Paragraph("Data 1"));
+            table.AddCell(cell3);
+            Cell cell4 = new Cell().Add(new Paragraph("Data 2"));
+            table.AddCell(cell4);
+            document.Add(table);
+            document.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableAppendsScopeNoneToCell() {
+            String outFile = "tableAppendsScopeNoneToCell.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
+            Cell cell = new Cell().Add(new Paragraph("Header 1"));
+            cell.GetAccessibilityProperties().SetRole(StandardRoles.TH);
+            cell.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes("Table").AddEnumAttribute("Scope"
+                , "None"));
+            table.AddHeaderCell(cell);
+            Cell cell2 = new Cell().Add(new Paragraph("Header 2"));
+            cell2.GetAccessibilityProperties().SetRole(StandardRoles.TH);
+            cell2.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes("Table").AddEnumAttribute("Scope"
+                , "None"));
+            table.AddHeaderCell(cell2);
+            Cell cell3 = new Cell().Add(new Paragraph("Data 1"));
+            table.AddCell(cell3);
+            Cell cell4 = new Cell().Add(new Paragraph("Data 2"));
+            table.AddCell(cell4);
+            document.Add(table);
+            document.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableAddsScopeRegardlessOfHeaderId() {
+            String outFile = "tableAddsScopeRegardlessOfHeaderId.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            Cell hCell = new Cell().Add(new Paragraph("Header 1"));
+            hCell.GetAccessibilityProperties().SetRole(StandardRoles.TH).GetAttributesList().Add(new PdfStructureAttributes
+                ("Table").AddEnumAttribute("Scope", "Both"));
+            table.AddHeaderCell(hCell);
+            Cell hCell2 = new Cell().Add(new Paragraph("Header 2"));
+            hCell2.GetAccessibilityProperties().SetRole(StandardRoles.TH);
+            hCell2.GetAccessibilityProperties().SetStructureElementIdString("ID_header");
+            table.AddHeaderCell(hCell2);
+            Cell hCell3 = new Cell().Add(new Paragraph("Header 2"));
+            hCell3.GetAccessibilityProperties().SetRole(StandardRoles.TH);
+            hCell3.GetAccessibilityProperties().GetAttributesList().Add(new PdfStructureAttributes("Table").AddEnumAttribute
+                ("Scope", "Row"));
+            table.AddHeaderCell(hCell3);
+            Cell cell3 = new Cell().Add(new Paragraph("Data 1"));
+            table.AddCell(cell3);
+            Cell cell4 = new Cell().Add(new Paragraph("Data 2"));
+            table.AddCell(cell4);
+            table.AddCell(new Cell().Add(new Paragraph("Data 3")));
+            document.Add(table);
+            document.Close();
             CompareResult(outFile, "cmp_" + outFile);
         }
 

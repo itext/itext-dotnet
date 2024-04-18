@@ -77,7 +77,7 @@ namespace iText.Signatures.Sign {
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            signer.SignDetached(pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
             TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }

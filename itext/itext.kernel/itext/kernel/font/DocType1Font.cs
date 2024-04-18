@@ -48,6 +48,7 @@ namespace iText.Kernel.Font {
             if (!fontDictionary.ContainsKey(PdfName.FontDescriptor)) {
                 Type1Font type1StdFont = GetType1Font(baseFont);
                 if (type1StdFont != null) {
+                    type1StdFont.InitializeGlyphs(fontEncoding);
                     return type1StdFont;
                 }
             }
@@ -55,12 +56,12 @@ namespace iText.Kernel.Font {
             PdfDictionary fontDesc = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             fontProgram.subtype = fontDesc != null ? fontDesc.GetAsName(PdfName.Subtype) : null;
             FillFontDescriptor(fontProgram, fontDesc);
-            ProcessWidth(fontDictionary, fontEncoding, toUnicode, fontProgram);
+            InitializeGlyphs(fontDictionary, fontEncoding, toUnicode, fontProgram);
             return fontProgram;
         }
 
-        internal static void ProcessWidth(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode toUnicode
-            , iText.Kernel.Font.DocType1Font fontProgram) {
+        internal static void InitializeGlyphs(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
+             toUnicode, iText.Kernel.Font.DocType1Font fontProgram) {
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
             int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, fontProgram
@@ -103,7 +104,7 @@ namespace iText.Kernel.Font {
             try {
                 //if there are no font modifiers, cached font could be used,
                 //otherwise a new instance should be created.
-                return (Type1Font)FontProgramFactory.CreateFont(baseFont, true);
+                return (Type1Font)FontProgramFactory.CreateFont(baseFont, false);
             }
             catch (Exception) {
                 return null;

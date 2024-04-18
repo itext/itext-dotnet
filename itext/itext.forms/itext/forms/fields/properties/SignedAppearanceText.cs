@@ -28,10 +28,10 @@ namespace iText.Forms.Fields.Properties {
     /// <summary>Class representing the signature text identifying the signer.</summary>
     public class SignedAppearanceText {
         /// <summary>The reason for signing.</summary>
-        private String reason = "Reason: ";
+        private String reason = "";
 
         /// <summary>Holds value of property location.</summary>
-        private String location = "Location: ";
+        private String location = "";
 
         /// <summary>The name of the signer from the certificate.</summary>
         private String signedBy = "";
@@ -71,7 +71,7 @@ namespace iText.Forms.Fields.Properties {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetReasonLine(String reason) {
-            this.reason = reason;
+            this.reason = reason.Trim();
             return this;
         }
 
@@ -96,7 +96,7 @@ namespace iText.Forms.Fields.Properties {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetLocationLine(String location) {
-            this.location = location;
+            this.location = location.Trim();
             return this;
         }
 
@@ -113,7 +113,7 @@ namespace iText.Forms.Fields.Properties {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetSignedBy(String signedBy) {
-            this.signedBy = signedBy;
+            this.signedBy = signedBy.Trim();
             return this;
         }
 
@@ -153,16 +153,16 @@ namespace iText.Forms.Fields.Properties {
         /// <returns>signature description.</returns>
         public virtual String GenerateDescriptionText() {
             StringBuilder buf = new StringBuilder();
-            if (!String.IsNullOrEmpty(signedBy)) {
+            if (signedBy != null && !String.IsNullOrEmpty(signedBy)) {
                 buf.Append("Digitally signed by ").Append(signedBy);
             }
             if (isSignDateSet) {
                 buf.Append('\n').Append("Date: ").Append(DateTimeUtil.DateToString(signDate));
             }
-            if (reason != null) {
+            if (reason != null && !String.IsNullOrEmpty(reason)) {
                 buf.Append('\n').Append(reason);
             }
-            if (location != null) {
+            if (location != null && !String.IsNullOrEmpty(location)) {
                 buf.Append('\n').Append(location);
             }
             return buf.ToString();

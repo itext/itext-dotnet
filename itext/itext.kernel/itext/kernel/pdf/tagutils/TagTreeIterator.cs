@@ -75,6 +75,9 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private static void Traverse(IStructureNode elem, ICollection<ITagTreeIteratorHandler> handlerList) {
+            if (elem == null) {
+                return;
+            }
             foreach (ITagTreeIteratorHandler handler in handlerList) {
                 handler.NextElement(elem);
             }

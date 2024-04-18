@@ -35,6 +35,10 @@ namespace iText.Forms.Xfdf {
         /// <summary>Represents a list of children fields</summary>
         private IList<FieldObject> fieldList;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="FieldsObject"/>.
+        /// </summary>
         public FieldsObject() {
             this.fieldList = new List<FieldObject>();
         }
@@ -51,7 +55,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Adds a new field to the list.</summary>
-        /// <param name="field">FieldObject containing the info about the form field.</param>
+        /// <param name="field">FieldObject containing the info about the form field</param>
         /// <returns>
         /// current
         /// <see cref="FieldsObject">fields object</see>

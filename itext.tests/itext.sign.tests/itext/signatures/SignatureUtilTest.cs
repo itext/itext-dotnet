@@ -84,8 +84,8 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        public virtual void BytesAreNotCoveredTest01() {
-            String inPdf = sourceFolder + "bytesAreNotCoveredTest01.pdf";
+        public virtual void ExclusionSmallerThenContentsTest01() {
+            String inPdf = sourceFolder + "exclusionSmallerThenContentsTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
@@ -108,11 +108,51 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void IndirectBytesAreCoveredTest01() {
+            String inPdf = sourceFolder + "indirectBytesAreCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CommentsBytesAreCoveredTest01() {
+            String inPdf = sourceFolder + "commentsBytesAreCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CommentsBytesAreNotCoveredTest01() {
+            String inPdf = sourceFolder + "commentsBytesAreNotCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectBytesAreCoveredTest02() {
+            String inPdf = sourceFolder + "indirectBytesAreCoveredTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndirectBytesAreNotCoveredTest01() {
+            String inPdf = sourceFolder + "indirectBytesAreNotCoveredTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TwoContentsTest01() {
             String inPdf = sourceFolder + "twoContentsTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
-            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
         [NUnit.Framework.Test]
@@ -121,14 +161,6 @@ namespace iText.Signatures {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
             NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void SpacesBeforeContentsTest02() {
-            String inPdf = sourceFolder + "spacesBeforeContentsTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
-            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
-            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
         [NUnit.Framework.Test]

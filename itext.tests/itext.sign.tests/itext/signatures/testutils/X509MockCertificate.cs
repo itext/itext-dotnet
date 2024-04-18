@@ -112,7 +112,12 @@ namespace iText.Signatures.Testutils
         {
             throw new NotImplementedException();
         }
-        
+
+        public DateTime GetNotAfter()
+        {
+            throw new NotImplementedException();
+        }
+
         public IX500Name GetSubjectDN()
         {
             return null;
@@ -126,6 +131,14 @@ namespace iText.Signatures.Testutils
         public IList GetExtendedKeyUsage()
         {
             return this.extendedKeyUsage;
+        }
+        
+        public bool[] GetKeyUsage() {
+            throw new NotImplementedException();
+        }
+        
+        public int GetBasicConstraints() {
+            throw new NotImplementedException();
         }
     }
 }

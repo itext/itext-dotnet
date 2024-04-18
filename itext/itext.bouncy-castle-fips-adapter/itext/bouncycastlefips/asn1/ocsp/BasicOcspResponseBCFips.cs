@@ -88,10 +88,19 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         /// <summary><inheritDoc/></summary>
         public IEnumerable<IX509Certificate> GetCerts() {
             List<IX509Certificate> certificates = new List<IX509Certificate>();
-            foreach (Asn1Object asn1Object in GetBasicOcspResponse().Certs) {
-                certificates.Add(new X509CertificateBCFips(new X509Certificate(asn1Object.GetEncoded())));
+            if (GetBasicOcspResponse() != null && GetBasicOcspResponse().Certs != null) {
+                foreach (Asn1Object asn1Object in GetBasicOcspResponse().Certs) {
+                    if (asn1Object != null) {
+                        certificates.Add(new X509CertificateBCFips(new X509Certificate(asn1Object.GetEncoded())));
+                    }
+                }
             }
             return certificates;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IX509Certificate[] GetOcspCerts() {
+            return ((List<IX509Certificate>)GetCerts()).ToArray();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -107,6 +116,11 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
                 rs[i] = new SingleResponseBCFips(SingleResponse.GetInstance(Asn1Sequence.GetInstance(s[i].GetEncoded())));
             }
             return rs;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public DateTime GetProducedAt() {
+            return GetBasicOcspResponse().TbsResponseData.ProducedAt.ToDateTime();
         }
     }
 }

@@ -74,6 +74,26 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BasicRadioTaggedTest() {
+            String outPdf = DESTINATION_FOLDER + "basicRadioTagged.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_basicRadioTagged.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                document.GetPdfDocument().SetTagged();
+                Radio formRadio1 = CreateRadioButton("form radio button 1", "form radio group", null, null, true, false);
+                document.Add(formRadio1);
+                Radio formRadio2 = CreateRadioButton("form radio button 2", "form radio group", null, null, false, false);
+                document.Add(formRadio2);
+                Radio flattenRadio1 = CreateRadioButton("flatten radio button 1", "flatten radio group", null, null, true, 
+                    true);
+                document.Add(flattenRadio1);
+                Radio flattenRadio2 = CreateRadioButton("flatten radio button 2", "flatten radio group", null, null, false
+                    , true);
+                document.Add(flattenRadio2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void EmptyNameTest() {
             using (Document document = new Document(new PdfDocument(new PdfWriter(new MemoryStream())))) {
                 Radio formRadio = CreateRadioButton("radio button 1", null, null, null, true, false);

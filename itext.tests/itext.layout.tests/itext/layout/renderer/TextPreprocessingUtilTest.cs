@@ -71,7 +71,10 @@ namespace iText.Layout.Renderer {
             TextPreprocessingUtil.ReplaceSpecialWhitespaceGlyphs(glyphLine, pdfFont);
             Glyph glyph = glyphLine.Get(0);
             Glyph space = pdfFont.GetGlyph('\u0020');
-            NUnit.Framework.Assert.IsTrue(space.GetCode() == glyph.GetCode() && space.GetWidth() == glyph.GetWidth());
+            NUnit.Framework.Assert.AreEqual(space.GetCode(), glyph.GetCode());
+            NUnit.Framework.Assert.AreEqual(space.GetWidth(), glyph.GetWidth());
+            NUnit.Framework.Assert.AreEqual(space.GetUnicode(), glyph.GetUnicode());
+            NUnit.Framework.Assert.AreEqual(iText.IO.Util.TextUtil.ConvertFromUtf32(unicode), glyph.GetChars());
         }
     }
 }

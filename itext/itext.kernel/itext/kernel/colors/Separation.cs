@@ -25,11 +25,25 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Representation of a separation color space.</summary>
     public class Separation : Color {
+        /// <summary>
+        /// Creates a separation color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfSpecialCs"/>
+        /// color space.
+        /// </summary>
+        /// <param name="cs">Color space</param>
         public Separation(PdfSpecialCs.Separation cs)
             : this(cs, 1f) {
         }
 
+        /// <summary>
+        /// Creates a separation color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfSpecialCs"/>
+        /// color space and color value.
+        /// </summary>
+        /// <param name="cs">Color space</param>
+        /// <param name="value">Color value</param>
         public Separation(PdfSpecialCs.Separation cs, float value)
             : base(cs, new float[] { value }) {
         }
@@ -37,7 +51,7 @@ namespace iText.Kernel.Colors {
         /// <summary>Creates a color in a new separation color space.</summary>
         /// <param name="name">the name for the separation color</param>
         /// <param name="alternateCs">the alternative color space</param>
-        /// <param name="tintTransform">the function to transform color to the alternate colorspace</param>
+        /// <param name="tintTransform">the function to transform color to the alternate color space</param>
         /// <param name="value">the color value</param>
         public Separation(String name, PdfColorSpace alternateCs, IPdfFunction tintTransform, float value)
             : this(new PdfSpecialCs.Separation(name, alternateCs, tintTransform), value) {

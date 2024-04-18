@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+
 namespace iText.Forms.Form {
     /// <summary>Set of constants that will be used as keys to get and set properties.</summary>
     public sealed class FormProperty {
@@ -57,6 +59,7 @@ namespace iText.Forms.Form {
         public const int FORM_FIELD_LABEL = PROPERTY_START + 10;
 
         /// <summary>The Constant FORM_ACCESSIBILITY_LANGUAGE.</summary>
+        [Obsolete]
         public const int FORM_ACCESSIBILITY_LANGUAGE = PROPERTY_START + 11;
 
         /// <summary>The Constant FORM_FIELD_RADIO_GROUP_NAME.</summary>

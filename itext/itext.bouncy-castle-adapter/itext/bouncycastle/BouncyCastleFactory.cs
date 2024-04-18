@@ -641,8 +641,34 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual IIssuingDistributionPoint CreateIssuingDistributionPoint(Object point) {
+            return new IssuingDistributionPointBC(IssuingDistributionPoint.GetInstance(point is Asn1EncodableBC ?
+                ((Asn1EncodableBC) point).GetEncodable() : point));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IIssuingDistributionPoint CreateIssuingDistributionPoint(IDistributionPointName distributionPoint,
+            bool onlyContainsUserCerts, bool onlyContainsCACerts, IReasonFlags onlySomeReasons, bool indirectCRL,
+            bool onlyContainsAttributeCerts) {
+            return new IssuingDistributionPointBC(new IssuingDistributionPoint(distributionPoint == null ? null :
+                    ((DistributionPointNameBC) distributionPoint).GetDistributionPointName(), onlyContainsUserCerts,
+                onlyContainsCACerts, onlySomeReasons == null ? null :
+                    ((ReasonFlagsBC) onlySomeReasons).GetReasonFlags(), indirectCRL, onlyContainsAttributeCerts));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IReasonFlags CreateReasonFlags(int reasons) {
+            return new ReasonFlagsBC(new ReasonFlags(reasons));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IDistributionPointName CreateDistributionPointName() {
             return DistributionPointNameBC.GetInstance();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IDistributionPointName CreateDistributionPointName(IGeneralNames generalNames) {
+            return new DistributionPointNameBC(new DistributionPointName(((GeneralNamesBC)generalNames).GetGeneralNames()));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -864,6 +890,11 @@ namespace iText.Bouncycastle {
         public virtual IBasicConstraints CreateBasicConstraints(bool b) {
             return new BasicConstraintsBC(new BasicConstraints(b));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicConstraints CreateBasicConstraints(int pathLength) {
+            return new BasicConstraintsBC(new BasicConstraints(pathLength));
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual IKeyUsage CreateKeyUsage() {
@@ -883,6 +914,15 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId) {
             return new ExtendedKeyUsageBC(purposeId);
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IDerObjectIdentifier[] purposeId) {
+            DerObjectIdentifier[] unwrappedPurposeIds = new DerObjectIdentifier[purposeId.Length];
+            for (int i = 0; i < purposeId.Length; ++i) {
+                unwrappedPurposeIds[i] = ((DerObjectIdentifierBC)purposeId[i]).GetDerObjectIdentifier();
+            }
+            return new ExtendedKeyUsageBC(new ExtendedKeyUsage(unwrappedPurposeIds));
         }
         
         /// <summary><inheritDoc/></summary>
@@ -925,12 +965,21 @@ namespace iText.Bouncycastle {
         
         /// <summary><inheritDoc/></summary>
         public virtual IX509Certificate CreateX509Certificate(Stream s) {
-            return new X509CertificateBC(new X509CertificateParser().ReadCertificate(s));
+            try {
+                return new X509CertificateBC(new X509CertificateParser().ReadCertificate(s));
+            }
+            catch (GeneralSecurityException e) {
+                throw new GeneralSecurityExceptionBC(e);
+            }
         }
         
         /// <summary><inheritDoc/></summary>
         public IX509Crl CreateX509Crl(Stream input) {
-            return new X509CrlBC(new X509CrlParser().ReadCrl(input));
+            X509Crl crl = new X509CrlParser().ReadCrl(input);
+            if (crl != null) {
+                return new X509CrlBC(crl);
+            }
+            return null;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -948,7 +997,11 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public IDigest CreateIDigest(string hashAlgorithm) {
-            return new DigestBC(DigestUtilities.GetDigest(hashAlgorithm));
+            try {
+                return new DigestBC(DigestUtilities.GetDigest(hashAlgorithm));
+            } catch (SecurityUtilityException e) {
+                throw new SecurityUtilityExceptionBC(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1105,7 +1158,12 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public IBouncyCastleUtil GetBouncyCastleUtil() {
             return BOUNCY_CASTLE_UTIL;
-        } 
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public string CreateEndDate(IX509Certificate certificate) {
+            return certificate.GetEndDateTime();
+        }
 
         internal class BouncyCastlePasswordFinder : IPasswordFinder {
             private readonly char[] password;

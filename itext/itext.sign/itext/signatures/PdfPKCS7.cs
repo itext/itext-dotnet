@@ -39,6 +39,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -81,8 +82,9 @@ namespace iText.Signatures {
         /// <param name="hashAlgorithm">the hash algorithm</param>
         /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         /// <param name="hasEncapContent"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
-        public PdfPKCS7(IPrivateKey privKey, IX509Certificate[] certChain, String hashAlgorithm, bool hasEncapContent
-            ) {
+        public PdfPKCS7(IPrivateKey privKey, IX509Certificate[] certChain, String hashAlgorithm, IExternalDigest interfaceDigest
+            , bool hasEncapContent) {
+            this.interfaceDigest = interfaceDigest;
             // message digest
             digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             if (digestAlgorithmOid == null) {
@@ -115,6 +117,17 @@ namespace iText.Signatures {
             if (privKey != null) {
                 sig = InitSignature(privKey);
             }
+        }
+
+        /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
+        /// <param name="privKey">the private key</param>
+        /// <param name="certChain">the certificate chain</param>
+        /// <param name="hashAlgorithm">the hash algorithm</param>
+        /// <param name="provider">the provider or <c>null</c> for the default provider</param>
+        /// <param name="hasEncapContent"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
+        public PdfPKCS7(IPrivateKey privKey, IX509Certificate[] certChain, String hashAlgorithm, bool hasEncapContent
+            )
+            : this(privKey, certChain, hashAlgorithm, new BouncyCastleDigest(), hasEncapContent) {
         }
 
         // Constructors for validating existing signatures
@@ -281,7 +294,7 @@ namespace iText.Signatures {
                                     IEssCertID[] cerv2m = sv2.GetCerts();
                                     IEssCertID cerv2 = cerv2m[0];
                                     byte[] enc2 = signCert.GetEncoded();
-                                    IDigest m2 = SignUtils.GetMessageDigest("SHA-1");
+                                    IMessageDigest m2 = SignUtils.GetMessageDigest("SHA-1");
                                     byte[] signCertHash = m2.Digest(enc2);
                                     byte[] hs2 = cerv2.GetCertHash();
                                     if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
@@ -298,7 +311,7 @@ namespace iText.Signatures {
                                         IEssCertIDv2 cerv2 = cerv2m[0];
                                         IAlgorithmIdentifier ai2 = cerv2.GetHashAlgorithm();
                                         byte[] enc2 = signCert.GetEncoded();
-                                        IDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.GetAlgorithm().GetId()));
+                                        IMessageDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.GetAlgorithm().GetId()));
                                         byte[] signCertHash = m2.Digest(enc2);
                                         byte[] hs2 = cerv2.GetCertHash();
                                         if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
@@ -457,7 +470,7 @@ namespace iText.Signatures {
         private readonly String digestAlgorithmOid;
 
         /// <summary>The object that will create the digest</summary>
-        private IDigest messageDigest;
+        private IMessageDigest messageDigest;
 
         /// <summary>The digest algorithms</summary>
         private ICollection<String> digestalgos;
@@ -561,6 +574,8 @@ namespace iText.Signatures {
         /*
         *	DIGITAL SIGNATURE CREATION
         */
+        private IExternalDigest interfaceDigest;
+
         // The signature is created externally
         /// <summary>The signature value or signed digest, if created outside this class</summary>
         private byte[] externalSignatureValue;
@@ -1045,7 +1060,7 @@ namespace iText.Signatures {
                             (digestAlgorithmOid));
                         aaV2.Add(algoId);
                     }
-                    IDigest md = SignUtils.GetMessageDigest(GetDigestAlgorithmName());
+                    IMessageDigest md = SignUtils.GetMessageDigest(GetDigestAlgorithmName(), interfaceDigest);
                     byte[] dig = md.Digest(signCert.GetEncoded());
                     aaV2.Add(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(dig));
                     v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(BOUNCY_CASTLE_FACTORY.CreateDERSequence(BOUNCY_CASTLE_FACTORY.CreateDERSequence
@@ -1075,7 +1090,7 @@ namespace iText.Signatures {
         private byte[] sigAttrDer;
 
         /// <summary>encrypted digest</summary>
-        private IDigest encContDigest;
+        private IMessageDigest encContDigest;
 
         // Stefan Santesson
         /// <summary>Indicates if a signature has already been verified</summary>
@@ -1151,7 +1166,6 @@ namespace iText.Signatures {
         /// <summary>Checks if the timestamp refers to this document.</summary>
         /// <returns>true if it checks false otherwise</returns>
         public virtual bool VerifyTimestampImprint() {
-            // TODO DEVSIX-6011 ensure this method works correctly
             if (timeStampTokenInfo == null) {
                 return false;
             }

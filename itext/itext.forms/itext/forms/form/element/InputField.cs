@@ -21,9 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms;
 using iText.Forms.Exceptions;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -105,6 +107,12 @@ namespace iText.Forms.Form.Element {
             }
         }
 
+        /// <summary>Get rotation.</summary>
+        /// <returns>rotation value.</returns>
+        public virtual int GetRotation() {
+            return this.rotation;
+        }
+
         /// <summary>Set rotation of the input field.</summary>
         /// <param name="rotation">
         /// new rotation value, counterclockwise. Must be a multiple of 90 degrees.
@@ -123,10 +131,12 @@ namespace iText.Forms.Form.Element {
             return this;
         }
 
-        /// <summary>Get rotation.</summary>
-        /// <returns>rotation value.</returns>
-        public virtual int GetRotation() {
-            return this.rotation;
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new FormDefaultAccessibilityProperties(FormDefaultAccessibilityProperties.FORM_FIELD_TEXT);
+            }
+            return tagProperties;
         }
 
         /* (non-Javadoc)

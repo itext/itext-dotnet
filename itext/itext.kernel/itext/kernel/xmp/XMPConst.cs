@@ -231,6 +231,9 @@ namespace iText.Kernel.XMP {
         /// <summary>Part, 1, 2, or 3</summary>
         public const String PART = "part";
 
+        /// <summary>XMP meta title</summary>
+        public const String TITLE = "title";
+
         /// <summary>ISO 19005 revision</summary>
         public const String REV = "rev";
 

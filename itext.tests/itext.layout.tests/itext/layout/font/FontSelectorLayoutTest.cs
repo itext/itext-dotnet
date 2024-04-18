@@ -29,18 +29,19 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Font.Selectorstrategy;
 using iText.Test;
 
 namespace iText.Layout.Font {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FontSelectorLayoutTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/NonBreakingHyphenTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/NonBreakingHyphenTest/";
 
-        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
@@ -50,11 +51,12 @@ namespace iText.Layout.Font {
 
         [NUnit.Framework.Test]
         public virtual void NonBreakingHyphenDifferentFonts() {
-            //TODO: update after fix of DEVSIX-2052
             String outFileName = destinationFolder + "nonBreakingHyphenDifferentFonts.pdf";
             String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenDifferentFonts.pdf";
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
             FontProvider sel = new FontProvider();
+            sel.SetFontSelectorStrategyFactory(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory(
+                ));
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
             sel.GetFontSet().AddFont(StandardFonts.COURIER);
             sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan2");

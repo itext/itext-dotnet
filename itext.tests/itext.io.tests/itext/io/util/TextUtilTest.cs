@@ -98,6 +98,12 @@ namespace iText.IO.Util {
             NUnit.Framework.Assert.IsFalse(iText.IO.Util.TextUtil.IsMark(glyph));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void IsDiacriticTest() {
+            NUnit.Framework.Assert.IsTrue(iText.IO.Util.TextUtil.IsDiacritic("\u0303"[0]));
+            NUnit.Framework.Assert.IsFalse(iText.IO.Util.TextUtil.IsDiacritic("\u006b"[0]));
+        }
+
         private void Helper(bool expected, int currentCRPosition, params Glyph[] glyphs) {
             GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyphs));
             NUnit.Framework.Assert.IsTrue(expected == iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(glyphLine

@@ -29,7 +29,7 @@ namespace iText.Pdfa {
         public const String PDF_UA_EXTENSION = "    <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "      <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
              + "        <rdf:Description rdf:about=\"\" xmlns:pdfaExtension=\"http://www.aiim.org/pdfa/ns/extension/\" xmlns:pdfaSchema=\"http://www.aiim.org/pdfa/ns/schema#\" xmlns:pdfaProperty=\"http://www.aiim.org/pdfa/ns/property#\">\n"
              + "          <pdfaExtension:schemas>\n" + "            <rdf:Bag>\n" + "              <rdf:li rdf:parseType=\"Resource\">\n"
-             + "                <pdfaSchema:namespaceURI>http://www.aiim.org/pdfua/ns/id/</pdfaSchema:namespaceURI>\n"
+             + "                <pdfaSchema:namespaceURI rdf:resource=\"http://www.aiim.org/pdfua/ns/id/\"/>\n"
              + "                <pdfaSchema:prefix>pdfuaid</pdfaSchema:prefix>\n" + "                <pdfaSchema:schema>PDF/UA identification schema</pdfaSchema:schema>\n"
              + "                <pdfaSchema:property>\n" + "                  <rdf:Seq>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n"
              + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n" + "                      <pdfaProperty:description>PDF/UA version identifier</pdfaProperty:description>\n"

@@ -22,8 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms.Form;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Element {
     /// <summary>
@@ -32,10 +34,13 @@ namespace iText.Forms.Form.Element {
     /// class for form fields.
     /// </summary>
     /// <typeparam name="T">the generic type of the form field (e.g. input field, button, text area)</typeparam>
-    public abstract class FormField<T> : AbstractElement<T>, IFormField
+    public abstract class FormField<T> : AbstractElement<T>, IFormField, IAccessibleElement
         where T : IFormField {
         /// <summary>The id.</summary>
         private readonly String id;
+
+        /// <summary>The tag properties.</summary>
+        protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
         /// Instantiates a new
@@ -152,5 +157,7 @@ namespace iText.Forms.Form.Element {
             SetProperty(FormProperty.FORM_FIELD_FLATTEN, !interactive);
             return this;
         }
+
+        public abstract AccessibilityProperties GetAccessibilityProperties();
     }
 }

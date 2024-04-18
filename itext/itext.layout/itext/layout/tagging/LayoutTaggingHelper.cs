@@ -39,24 +39,24 @@ namespace iText.Layout.Tagging {
     /// tree for layout element (with keeping right order for tags).
     /// </summary>
     public class LayoutTaggingHelper {
-        private TagStructureContext context;
+        private readonly TagStructureContext context;
 
-        private PdfDocument document;
+        private readonly PdfDocument document;
 
-        private bool immediateFlush;
+        private readonly bool immediateFlush;
 
         // kidsHints and parentHints fields represent tree of TaggingHintKey, where parentHints
         // stores a parent for the key, and kidsHints stores kids for key.
-        private IDictionary<TaggingHintKey, IList<TaggingHintKey>> kidsHints;
+        private readonly IDictionary<TaggingHintKey, IList<TaggingHintKey>> kidsHints;
 
-        private IDictionary<TaggingHintKey, TaggingHintKey> parentHints;
+        private readonly IDictionary<TaggingHintKey, TaggingHintKey> parentHints;
 
-        private IDictionary<IRenderer, TagTreePointer> autoTaggingPointerSavedPosition;
+        private readonly IDictionary<IRenderer, TagTreePointer> autoTaggingPointerSavedPosition;
 
-        private IDictionary<String, IList<ITaggingRule>> taggingRules;
+        private readonly IDictionary<String, IList<ITaggingRule>> taggingRules;
 
         // dummiesForPreExistingTags is used to process TaggingDummyElement
-        private IDictionary<PdfObject, TaggingDummyElement> dummiesForPreExistingTags;
+        private readonly IDictionary<PdfObject, TaggingDummyElement> dummiesForPreExistingTags;
 
         private readonly int RETVAL_NO_PARENT = -1;
 
@@ -554,6 +554,7 @@ namespace iText.Layout.Tagging {
                     }
                 }
                 tagPointer.AddTag(ind, modelElement.GetAccessibilityProperties());
+                hintKey.SetTagPointer(new TagTreePointer(tagPointer));
                 if (hintKey.GetOverriddenRole() != null) {
                     tagPointer.SetRole(hintKey.GetOverriddenRole());
                 }
@@ -724,6 +725,7 @@ namespace iText.Layout.Tagging {
             RegisterSingleRule(StandardRoles.TABLE, tableRule);
             RegisterSingleRule(StandardRoles.TFOOT, tableRule);
             RegisterSingleRule(StandardRoles.THEAD, tableRule);
+            RegisterSingleRule(StandardRoles.TH, new THTaggingRule());
             if (pdfVersion.CompareTo(PdfVersion.PDF_1_5) < 0) {
                 TableTaggingPriorToOneFiveVersionRule priorToOneFiveRule = new TableTaggingPriorToOneFiveVersionRule();
                 RegisterSingleRule(StandardRoles.TABLE, priorToOneFiveRule);

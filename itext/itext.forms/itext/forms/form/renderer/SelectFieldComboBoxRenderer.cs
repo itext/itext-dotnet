@@ -94,13 +94,16 @@ namespace iText.Forms.Form.Renderer {
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             PdfFont font = GetResolvedFont(doc);
             ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
-                ).SetConformanceLevel(GetConformanceLevel(doc));
+                ).SetGenericConformanceLevel(GetGenericConformanceLevel(doc));
+            ApplyMargins(area, false);
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
             SetupBuilderValues(builder, comboBoxFieldModelElement);
             PdfChoiceFormField comboBoxField = builder.CreateComboBox();
             comboBoxField.DisableFieldRegeneration();
+            ApplyAccessibilityProperties(comboBoxField, doc);
             Background background = this.modelElement.GetProperty<Background>(Property.BACKGROUND);
             if (background != null) {
                 comboBoxField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
@@ -131,7 +134,7 @@ namespace iText.Forms.Form.Renderer {
             comboBoxField.GetFirstFormAnnotation().SetFormFieldElement(comboBoxFieldModelElement);
             comboBoxField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(comboBoxField, page);
-            WriteAcroFormFieldLangAttribute(doc);
+            FormFieldRendererUtil.ReapplyProperties(this.modelElement, properties);
         }
 
         private UnitValue GetFontSize() {

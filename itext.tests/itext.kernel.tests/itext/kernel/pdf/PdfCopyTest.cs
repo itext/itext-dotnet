@@ -323,6 +323,19 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CopyDocWithFullDDictionary() {
+            String outFileName = destinationFolder + "copyDocWithDDictionary.pdf";
+            String cmpFileName = sourceFolder + "cmp_copyDocWithDDictionary.pdf";
+            PdfDocument inPdf = new PdfDocument(new PdfReader(sourceFolder + "DocWithDDictionary.pdf"));
+            PdfDocument outPdf = new PdfDocument(new PdfWriter(outFileName));
+            inPdf.CopyPagesTo(1, 1, outPdf);
+            inPdf.Close();
+            outPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
         private IList<PdfAnnotation> GetPdfAnnotations(PdfDocument pdfDoc) {
             int number = pdfDoc.GetNumberOfPages();
             List<PdfAnnotation> annotations = new List<PdfAnnotation>();

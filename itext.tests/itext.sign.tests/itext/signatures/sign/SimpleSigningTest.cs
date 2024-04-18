@@ -119,7 +119,8 @@ namespace iText.Signatures.Sign {
             CreateAppearance(signer, "Test 1", "TestCity", false, rect, 12f);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(rect)));
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
@@ -141,7 +142,7 @@ namespace iText.Signatures.Sign {
             CreateAppearance(signer, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
-            signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
         }
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {

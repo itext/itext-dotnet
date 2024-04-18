@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Forms;
 using iText.Forms.Form.Renderer;
 using iText.Kernel.Colors;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -145,6 +147,15 @@ namespace iText.Forms.Form.Element {
                 return (T1)(Object)true;
             }
             return base.GetDefaultProperty<T1>(property);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new FormDefaultAccessibilityProperties(FormDefaultAccessibilityProperties.FORM_FIELD_PUSH_BUTTON
+                    );
+            }
+            return tagProperties;
         }
 
         /// <summary><inheritDoc/></summary>

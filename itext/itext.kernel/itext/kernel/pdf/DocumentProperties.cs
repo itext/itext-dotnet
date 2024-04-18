@@ -58,5 +58,11 @@ namespace iText.Kernel.Pdf {
             this.metaInfo = metaInfo;
             return this;
         }
+
+        /// <summary>Checks if the document event counting meta info was already set.</summary>
+        /// <returns>true if the document event counting meta info is set, false otherwise.</returns>
+        public virtual bool IsEventCountingMetaInfoSet() {
+            return this.metaInfo != null;
+        }
     }
 }

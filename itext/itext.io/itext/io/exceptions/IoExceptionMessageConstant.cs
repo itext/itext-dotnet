@@ -208,6 +208,8 @@ namespace iText.IO.Exceptions {
 
         public const String PDF_STARTXREF_NOT_FOUND = "PDF startxref not found.";
 
+        public const String PDF_EOF_NOT_FOUND = "PDF \"%%EOF\" marker is not found.";
+
         public const String PHOTOMETRIC_IS_NOT_SUPPORTED = "Photometric {0} is not supported.";
 
         public const String PLANAR_IMAGES_ARE_NOT_SUPPORTED = "Planar images are not supported.";

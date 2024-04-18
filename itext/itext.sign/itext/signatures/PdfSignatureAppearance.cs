@@ -764,10 +764,10 @@ namespace iText.Signatures {
             SignedAppearanceText signedAppearanceText = modelElement.GetSignedAppearanceText();
             if (signedAppearanceText != null) {
                 signedAppearanceText.SetSignedBy(GetSignerName()).SetSignDate(signDate);
-                if (reasonCaption.Equals(signedAppearanceText.GetReasonLine())) {
+                if (String.IsNullOrEmpty(signedAppearanceText.GetReasonLine())) {
                     signedAppearanceText.SetReasonLine(reasonCaption + reason);
                 }
-                if (locationCaption.Equals(signedAppearanceText.GetLocationLine())) {
+                if (String.IsNullOrEmpty(signedAppearanceText.GetLocationLine())) {
                     signedAppearanceText.SetLocationLine(locationCaption + location);
                 }
             }

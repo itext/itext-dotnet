@@ -24,10 +24,12 @@ using System;
 using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.X500;
 using iText.Bouncycastlefips.Crypto;
+using iText.Bouncycastlefips.Math;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Cert;
@@ -71,6 +73,12 @@ namespace iText.Bouncycastlefips.Cert {
         }
 
         /// <summary><inheritDoc/></summary>
+        public DateTime GetThisUpdate()
+        {
+            return x509Crl.ThisUpdate;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public DateTime GetNextUpdate() {
             return x509Crl.NextUpdate.Value;
         }
@@ -92,6 +100,14 @@ namespace iText.Bouncycastlefips.Cert {
                 return new Asn1OctetStringBCFips(null);
             }
             return new Asn1OctetStringBCFips(new DerOctetString(extensionValue));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IX509CrlEntry GetRevokedCertificate(IBigInteger serial)
+        {
+            var entry = x509Crl.GetRevokedCertificate(((BigIntegerBCFips)serial).GetBigInteger());
+            if (entry == null) return null;
+            return new X509CrlEntryBCFips(entry);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
@@ -118,6 +134,6 @@ namespace iText.Bouncycastlefips.Cert {
         /// </summary>
         public override String ToString() {
             return x509Crl.ToString();
-        }
+        }        
     }
 }

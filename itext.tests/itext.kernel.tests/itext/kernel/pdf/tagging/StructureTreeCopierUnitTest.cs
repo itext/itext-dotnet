@@ -64,14 +64,14 @@ namespace iText.Kernel.Pdf.Tagging {
         public virtual void ShouldTableElementBeCopiedTrTdTest() {
             PdfDictionary obj = new PdfDictionary(tr);
             PdfDictionary parent = new PdfDictionary(td);
-            NUnit.Framework.Assert.IsFalse(StructureTreeCopier.ShouldTableElementBeCopied(obj, parent));
+            NUnit.Framework.Assert.IsTrue(StructureTreeCopier.ShouldTableElementBeCopied(obj, parent));
         }
 
         [NUnit.Framework.Test]
         public virtual void ShouldTableElementBeCopiedTrTrTest() {
             PdfDictionary obj = new PdfDictionary(tr);
             PdfDictionary parent = new PdfDictionary(tr);
-            NUnit.Framework.Assert.IsFalse(StructureTreeCopier.ShouldTableElementBeCopied(obj, parent));
+            NUnit.Framework.Assert.IsTrue(StructureTreeCopier.ShouldTableElementBeCopied(obj, parent));
         }
 
         [NUnit.Framework.Test]

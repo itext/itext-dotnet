@@ -223,11 +223,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        public virtual void InvalidHighlightTest() {
-            //TODO: DEVSIX-4784 (incorrect displaying of highlights)
-            String input = sourceFolder + "invalidHighlight.pdf";
-            String output = outputPath + "invalidHighlightOutput.pdf";
-            String cmp = sourceFolder + "cmp_invalidHighlight.pdf";
+        public virtual void DoubleMappingSimpleFontTest() {
+            String input = sourceFolder + "doubleMappingSimpleFont.pdf";
+            String output = outputPath + "doubleMappingSimpleFont.pdf";
+            String cmp = sourceFolder + "cmp_doubleMappingSimpleFont.pdf";
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
+            ParseAndHighlight(input, writer, false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DoubleMappingSimpleFontTest2() {
+            String input = sourceFolder + "doubleMappingSimpleFont2.pdf";
+            String output = outputPath + "doubleMappingSimpleFont2.pdf";
+            String cmp = sourceFolder + "cmp_doubleMappingSimpleFont2.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(output);
             ParseAndHighlight(input, writer, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, outputPath));

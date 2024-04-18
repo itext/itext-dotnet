@@ -71,6 +71,24 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void PrepareDocumentTestWithExternalDigest() {
+            PdfReader reader = new PdfReader(new MemoryStream(CreateSimpleDocument()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfTwoPhaseSigner signer = new PdfTwoPhaseSigner(reader, outputStream);
+            int estimatedSize = 8079;
+            SignerProperties signerProperties = new SignerProperties();
+            signer.SetExternalDigest(new BouncyCastleDigest());
+            byte[] digest = signer.PrepareDocumentForSignature(signerProperties, DigestAlgorithms.SHA256, PdfName.Adobe_PPKLite
+                , PdfName.Adbe_pkcs7_detached, estimatedSize, false);
+            String fieldName = signerProperties.GetFieldName();
+            PdfReader resultReader = new PdfReader(new MemoryStream(outputStream.ToArray()));
+            PdfDocument resultDoc = new PdfDocument(resultReader);
+            SignatureUtil signatureUtil = new SignatureUtil(resultDoc);
+            PdfSignature signature = signatureUtil.GetSignature(fieldName);
+            NUnit.Framework.Assert.AreEqual(estimatedSize, signature.GetContents().GetValueBytes().Length);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AddSignatureToPreparedDocumentTest() {
             PdfReader reader = new PdfReader(new MemoryStream(CreateSimpleDocument()));
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

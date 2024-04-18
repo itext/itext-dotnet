@@ -32,6 +32,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -51,6 +52,7 @@ namespace iText.Forms.Form.Renderer {
             AddChild(CreateFlatRenderer());
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             // Resolve width here in case it's relative, while parent width is still intact.
             // If it's inline-block context, relative width is already resolved.
@@ -66,6 +68,10 @@ namespace iText.Forms.Form.Renderer {
             bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
             LayoutResult layoutResult = base.Layout(new LayoutContext(area, layoutContext.GetMarginsCollapseInfo(), layoutContext
                 .GetFloatRendererAreas(), layoutContext.IsClippedHeight()));
+            if (isForcedPlacement) {
+                // Restore the Property.FORCED_PLACEMENT value as it was before super.layout
+                SetProperty(Property.FORCED_PLACEMENT, true);
+            }
             if (layoutResult.GetStatus() != LayoutResult.FULL) {
                 if (isForcedPlacement) {
                     layoutResult = MakeLayoutResultFull(layoutContext.GetArea(), layoutResult);
@@ -105,21 +111,33 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             if (IsFlatten()) {
                 base.DrawChildren(drawContext);
             }
             else {
                 ApplyAcroField(drawContext);
+                WriteAcroFormFieldLangAttribute(drawContext.GetDocument());
             }
         }
 
         /// <summary>Gets the accessibility language.</summary>
-        /// <returns>the accessibility language</returns>
+        /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
-            return this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+            String language = null;
+            if (this.GetModelElement() is IAccessibleElement) {
+                language = ((IAccessibleElement)this.GetModelElement()).GetAccessibilityProperties().GetLanguage();
+            }
+            if (language == null) {
+                language = this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
+            }
+            return language;
         }
 
+        /// <summary>Sets the form accessibility language identifier of the form element in case the document is tagged.
+        ///     </summary>
+        /// <param name="pdfDoc">the document which contains form field.</param>
         protected internal virtual void WriteAcroFormFieldLangAttribute(PdfDocument pdfDoc) {
             if (pdfDoc.IsTagged()) {
                 TagTreePointer formParentPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
@@ -133,18 +151,41 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
+        /// <summary>Applies the accessibility properties to the form field.</summary>
+        /// <param name="formField">The form field to which the accessibility properties should be applied.</param>
+        /// <param name="pdfDocument">The document to which the form field belongs.</param>
+        protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, PdfDocument pdfDocument
+            ) {
+            if (!pdfDocument.IsTagged()) {
+                return;
+            }
+            AccessibilityProperties properties = ((IAccessibleElement)this.modelElement).GetAccessibilityProperties();
+            String alternativeDescription = properties.GetAlternateDescription();
+            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
+                formField.SetAlternativeName(alternativeDescription);
+            }
+        }
+
+        /// <summary>Creates the flat renderer instance.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Layout.Renderer.IRenderer"/>
+        /// instance.
+        /// </returns>
         protected internal abstract IRenderer CreateFlatRenderer();
 
+        /// <summary>Applies the AcroField widget.</summary>
+        /// <param name="drawContext">the draw context</param>
         protected internal abstract void ApplyAcroField(DrawContext drawContext);
 
         /// <summary>Checks if form fields need to be flattened.</summary>
-        /// <returns>true, if fields need to be flattened</returns>
+        /// <returns>true, if fields need to be flattened.</returns>
         protected internal virtual bool IsFlatten() {
             return (bool)GetPropertyAsBoolean(FormProperty.FORM_FIELD_FLATTEN);
         }
 
         /// <summary>Gets the model id.</summary>
-        /// <returns>the model id</returns>
+        /// <returns>the model id.</returns>
         protected internal virtual String GetModelId() {
             return ((IFormField)GetModelElement()).GetId();
         }
@@ -156,12 +197,12 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="builder">
         /// 
         /// <see cref="iText.Forms.Fields.ChoiceFormFieldBuilder"/>
-        /// to set options to.
+        /// to set options to
         /// </param>
         /// <param name="field">
         /// 
         /// <see cref="iText.Forms.Form.Element.AbstractSelectField"/>
-        /// to retrieve the options from.
+        /// to retrieve the options from
         /// </param>
         protected internal virtual void SetupBuilderValues(ChoiceFormFieldBuilder builder, AbstractSelectField field
             ) {
@@ -194,6 +235,11 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
+        /// <summary>Returns final height of the select field.</summary>
+        /// <param name="availableHeight">available height of the layout area</param>
+        /// <param name="actualHeight">actual occupied height of the select field</param>
+        /// <param name="isClippedHeight">indicates whether the layout area's height is clipped or not</param>
+        /// <returns>final height of the select field.</returns>
         protected internal virtual float GetFinalSelectFieldHeight(float availableHeight, float actualHeight, bool
              isClippedHeight) {
             bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
@@ -211,8 +257,20 @@ namespace iText.Forms.Form.Renderer {
         ///     </remarks>
         /// <param name="document">the document</param>
         /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        [System.ObsoleteAttribute(@"since 8.0.4 will be return iText.Kernel.Pdf.IConformanceLevel")]
         protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
-            PdfAConformanceLevel conformanceLevel = this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+            return PdfAConformanceLevel.GetPDFAConformance(this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                ), document);
+        }
+
+        /// <summary>Gets the conformance level.</summary>
+        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
+        ///     </remarks>
+        /// <param name="document">the document</param>
+        /// <returns>the conformance level or null if the conformance level is not set.</returns>
+        [System.ObsoleteAttribute(@"since 8.0.4 will be renamed to getConformanceLevel()")]
+        protected internal virtual IConformanceLevel GetGenericConformanceLevel(PdfDocument document) {
+            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
                 );
             if (conformanceLevel != null) {
                 return conformanceLevel;
@@ -220,12 +278,12 @@ namespace iText.Forms.Form.Renderer {
             if (document == null) {
                 return null;
             }
-            if (document.GetConformanceLevel() is PdfAConformanceLevel) {
-                return (PdfAConformanceLevel)document.GetConformanceLevel();
-            }
-            return null;
+            return document.GetConformanceLevel();
         }
 
+        /// <summary>Gets options that are marked as selected from the select field options subtree.</summary>
+        /// <param name="optionsSubTree">options subtree to get selected options</param>
+        /// <returns>selected options list.</returns>
         protected internal virtual IList<IRenderer> GetOptionsMarkedSelected(IRenderer optionsSubTree) {
             IList<IRenderer> selectedOptions = new List<IRenderer>();
             foreach (IRenderer option in optionsSubTree.GetChildRenderers()) {

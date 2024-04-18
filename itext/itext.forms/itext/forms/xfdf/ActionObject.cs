@@ -83,6 +83,22 @@ namespace iText.Forms.Xfdf {
         /// </remarks>
         private DestObject destination;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="ActionObject"/>.
+        /// </summary>
+        /// <param name="type">
+        /// type of inner action element. Possible values:
+        /// <see cref="iText.Kernel.Pdf.PdfName.URI"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Launch"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.GoTo"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.GoToR"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Named"/>
+        /// </param>
         public ActionObject(PdfName type) {
             this.type = type;
         }
@@ -103,7 +119,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// type of inner action element
+        /// type of inner action element.
         /// </returns>
         public virtual PdfName GetType() {
             return type;
@@ -129,7 +145,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetType(PdfName type) {
             this.type = type;
@@ -144,7 +160,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
-        /// value of URI element
+        /// value of URI element.
         /// </returns>
         public virtual PdfString GetUri() {
             return uri;
@@ -162,7 +178,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetUri(PdfString uri) {
             this.uri = uri;
@@ -172,7 +188,7 @@ namespace iText.Forms.Xfdf {
         /// <summary>Gets IsMap, optional attribute of URI element.</summary>
         /// <remarks>Gets IsMap, optional attribute of URI element. For more details see paragraph 6.5.30 in Xfdf specification.
         ///     </remarks>
-        /// <returns>boolean indicating if URI element is a map</returns>
+        /// <returns>boolean indicating if URI element is a map.</returns>
         public virtual bool IsMap() {
             return isMap;
         }
@@ -183,7 +199,7 @@ namespace iText.Forms.Xfdf {
         /// <param name="map">boolean indicating if URI element is a map</param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetMap(bool map) {
             isMap = map;
@@ -191,20 +207,24 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets the value of Name, required attribute of Named element.</summary>
-        /// <remarks>Gets the value of Name, required attribute of Named element. For more details see paragraph 6.5.24 in Xfdf specification.
-        ///     </remarks>
+        /// <remarks>
+        /// Gets the value of Name, required attribute of Named element.
+        /// For more details see paragraph 6.5.24 in Xfdf specification.
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// value of Name attribute of a named action element
+        /// value of Name attribute of a named action element.
         /// </returns>
         public virtual PdfName GetNameAction() {
             return nameAction;
         }
 
         /// <summary>Sets the value of Name, required attribute of Named element.</summary>
-        /// <remarks>Sets the value of Name, required attribute of Named element. For more details see paragraph 6.5.24 in Xfdf specification.
-        ///     </remarks>
+        /// <remarks>
+        /// Sets the value of Name, required attribute of Named element.
+        /// For more details see paragraph 6.5.24 in Xfdf specification.
+        /// </remarks>
         /// <param name="nameAction">
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
@@ -212,7 +232,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetNameAction(PdfName nameAction) {
             this.nameAction = nameAction;
@@ -229,7 +249,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of OriginalName attribute of current action object
+        /// value of OriginalName attribute of current action object.
         /// </returns>
         public virtual String GetFileOriginalName() {
             return fileOriginalName;
@@ -249,7 +269,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetFileOriginalName(String fileOriginalName) {
             this.fileOriginalName = fileOriginalName;
@@ -257,21 +277,25 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets the boolean value of NewWindow, optional attribute of Launch element.</summary>
-        /// <remarks>Gets the boolean value of NewWindow, optional attribute of Launch element. For more details see paragraph 6.5.23 in Xfdf specification.
-        ///     </remarks>
-        /// <returns>boolean indicating if current Launch action element should be opened in a new window</returns>
+        /// <remarks>
+        /// Gets the boolean value of NewWindow, optional attribute of Launch element.
+        /// For more details see paragraph 6.5.23 in Xfdf specification.
+        /// </remarks>
+        /// <returns>boolean indicating if current Launch action element should be opened in a new window.</returns>
         public virtual bool IsNewWindow() {
             return isNewWindow;
         }
 
         /// <summary>Sets the boolean value of NewWindow, optional attribute of Launch element.</summary>
-        /// <remarks>Sets the boolean value of NewWindow, optional attribute of Launch element. For more details see paragraph 6.5.23 in Xfdf specification.
-        ///     </remarks>
+        /// <remarks>
+        /// Sets the boolean value of NewWindow, optional attribute of Launch element.
+        /// For more details see paragraph 6.5.23 in Xfdf specification.
+        /// </remarks>
         /// <param name="newWindow">boolean indicating if current Launch action element should be opened in a new window
         ///     </param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetNewWindow(bool newWindow) {
             isNewWindow = newWindow;
@@ -287,7 +311,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="DestObject"/>
-        /// destination attribute of current action element
+        /// destination attribute of current action element.
         /// </returns>
         public virtual DestObject GetDestination() {
             return destination;
@@ -306,7 +330,7 @@ namespace iText.Forms.Xfdf {
         /// </param>
         /// <returns>
         /// current
-        /// <see cref="ActionObject"/>
+        /// <see cref="ActionObject"/>.
         /// </returns>
         public virtual iText.Forms.Xfdf.ActionObject SetDestination(DestObject destination) {
             this.destination = destination;

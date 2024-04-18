@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas;
@@ -67,7 +67,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest02() {
             MemoryStream baos = new MemoryStream();
-            IDigest md5;
+            IMessageDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
@@ -94,7 +94,7 @@ namespace iText.Kernel.Pdf {
         public virtual void ChangeIdTest03() {
             MemoryStream baosInitial = new MemoryStream();
             MemoryStream baosModified = new MemoryStream();
-            IDigest md5;
+            IMessageDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
@@ -138,7 +138,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void FetchReaderIdTest() {
             MemoryStream baos = new MemoryStream();
-            IDigest md5;
+            IMessageDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }
@@ -165,7 +165,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void WriterPropertiesPriorityTest() {
             MemoryStream baos = new MemoryStream();
-            IDigest md5;
+            IMessageDigest md5;
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
             }

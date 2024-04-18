@@ -727,9 +727,62 @@ namespace iText.Commons.Bouncycastle {
         /// <returns>created CRL Dist point wrapper</returns>
         ICrlDistPoint CreateCRLDistPoint(Object @object);
 
+        /// <summary>
+        /// Create Issuing Distribution Point wrapper from the object.
+        /// </summary>
+        /// <param name="point">
+        /// <see cref="System.Object"/> to create Issuing Distribution Point wrapper from
+        /// </param>
+        /// <returns>created Issuing Distribution Point wrapper.</returns>
+        IIssuingDistributionPoint CreateIssuingDistributionPoint(Object point);
+
+        /// <summary>
+        /// Create Issuing Distribution Point wrapper with specified values.
+        /// </summary>
+        /// <param name="distributionPoint">
+        /// one of names from the corresponding distributionPoint from the cRLDistributionPoints
+        /// extension of every certificate that is within the scope of this CRL
+        /// </param>
+        /// <param name="onlyContainsUserCerts">
+        /// true if the scope of the CRL only includes end entity public key certificates
+        /// </param>
+        /// <param name="onlyContainsCACerts">
+        /// true if the scope of the CRL only includes CA certificates
+        /// </param>
+        /// <param name="onlySomeReasons">
+        /// reason codes associated with a distribution point
+        /// </param>
+        /// <param name="indirectCRL">
+        /// true if CRL includes certificates issued by authorities other than the CRL issuer,
+        /// false if the scope of the CRL only includes certificates issued by the CRL issuer
+        /// </param>
+        /// <param name="onlyContainsAttributeCerts">
+        /// true if the scope of the CRL only includes attribute certificates
+        /// </param>
+        /// <returns>created Issuing Distribution Point wrapper.</returns>
+        IIssuingDistributionPoint CreateIssuingDistributionPoint(IDistributionPointName distributionPoint,
+            bool onlyContainsUserCerts, bool onlyContainsCACerts, IReasonFlags onlySomeReasons, bool indirectCRL,
+            bool onlyContainsAttributeCerts);
+
+        /// <summary>
+        /// Creates the wrapper for ReasonFlags.
+        /// </summary>
+        /// <param name="reasons">
+        /// the bitwise OR of the Key Reason flags giving the allowed uses for the key
+        /// </param>
+        /// <returns>created ReasonFlags wrapper.</returns>
+        IReasonFlags CreateReasonFlags(int reasons);
+
         /// <summary>Create distribution point name wrapper without parameters.</summary>
-        /// <returns>created distribution point name wrapper</returns>
+        /// <returns>created distribution point name wrapper.</returns>
         IDistributionPointName CreateDistributionPointName();
+
+        /// <summary>Create distribution point name wrapper by passing general names.</summary>
+        /// <param name="generalNames">
+        /// general names to create distribution point name from
+        /// </param>
+        /// <returns>created distribution point name wrapper.</returns>
+        IDistributionPointName CreateDistributionPointName(IGeneralNames generalNames);
 
         /// <summary>Cast ASN1 Encodable wrapper to general names wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
@@ -1086,6 +1139,18 @@ namespace iText.Commons.Bouncycastle {
         /// <returns>created basic constraints wrapper</returns>
         IBasicConstraints CreateBasicConstraints(bool b);
 
+        /// <summary>
+        /// Create basic constraints wrapper from
+        /// <c>int</c>
+        /// value.
+        /// </summary>
+        /// <param name="pathLength"></param>
+        ///
+        /// <c>int</c>
+        /// flag to create basic constraints wrapper from
+        /// <returns>created basic constraints wrapper</returns>
+        IBasicConstraints CreateBasicConstraints(int pathLength);
+
         /// <summary>Create key usage wrapper without parameters.</summary>
         /// <returns>created key usage wrapper</returns>
         IKeyUsage CreateKeyUsage();
@@ -1111,6 +1176,13 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="purposeId">key purpose id wrapper to create extended key usage wrapper from</param>
         /// <returns>created extended key usage wrapper</returns>
         IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId);
+
+        /// <summary>
+        /// Create extended key usage wrapper from an array of object identifier wrappers.
+        /// </summary>
+        /// <param name="purposeId">an array of object identifier wrappers</param>
+        /// <returns>created extended key usage wrapper</returns>
+        IExtendedKeyUsage CreateExtendedKeyUsage(IDerObjectIdentifier[] purposeId);
 
         /// <summary>
         /// Create subject public key info wrapper from public key wrapper
@@ -1551,5 +1623,12 @@ namespace iText.Commons.Bouncycastle {
         /// </summary>
         /// <returns><see cref="IBouncyCastleUtil"/> instance implementation</returns>
         IBouncyCastleUtil GetBouncyCastleUtil();
+
+        /// <summary>
+        /// Create string from the end date of the certificate.
+        /// </summary>
+        /// <param name="certificate">certificate to get end date</param>
+        /// <returns>The end date of the certificate</returns>
+        string CreateEndDate(IX509Certificate certificate);
     }
 }

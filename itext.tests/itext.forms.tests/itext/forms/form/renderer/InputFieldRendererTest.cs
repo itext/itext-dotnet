@@ -87,14 +87,14 @@ namespace iText.Forms.Form.Renderer {
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelTest() {
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
-            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformanceLevel(null));
+            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetGenericConformanceLevel(null));
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelWithDocumentTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
-            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformanceLevel(pdfDocument));
+            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetGenericConformanceLevel(pdfDocument));
         }
 
         [NUnit.Framework.Test]
@@ -102,8 +102,8 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
             inputFieldRenderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfAConformanceLevel.PDF_A_1B);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, inputFieldRenderer.GetConformanceLevel(pdfDocument
-                ));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, inputFieldRenderer.GetGenericConformanceLevel
+                (pdfDocument));
         }
 
         [NUnit.Framework.Test]

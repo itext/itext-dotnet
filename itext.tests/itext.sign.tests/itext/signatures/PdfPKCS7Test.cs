@@ -45,7 +45,7 @@ namespace iText.Signatures {
             // only the hash algorithm is altered
             String hashAlgorithm = "";
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfPKCS7(null, chain, hashAlgorithm
-                , false));
+                , new BouncyCastleDigest(), false));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.UNKNOWN_HASH_ALGORITHM
                 , hashAlgorithm), e.Message);
         }
@@ -67,7 +67,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void SimpleCreationWithPrivateKeyTest() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, false);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest(), false);
             String expectedOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
@@ -79,7 +79,8 @@ namespace iText.Signatures {
         public virtual void NotAvailableSignatureTest() {
             String hashAlgorithm = "GOST3411";
             // Throws different exceptions on .net and java, bc/bcfips
-            NUnit.Framework.Assert.Catch(typeof(Exception), () => new PdfPKCS7(pk, chain, hashAlgorithm, false));
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest
+                (), false));
         }
 
         [NUnit.Framework.Test]
@@ -232,7 +233,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetEncodedPkcs1Test() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest(), true);
             byte[] bytes = pkcs7.GetEncodedPKCS1();
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs1.txt"));
             IAsn1OctetString outOctetString = BOUNCY_CASTLE_FACTORY.CreateASN1OctetString(bytes);
@@ -243,7 +244,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetEncodedPkcs1NullPrivateKeyTest() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, hashAlgorithm, true);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(null, chain, hashAlgorithm, new BouncyCastleDigest(), true);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pkcs7.GetEncodedPKCS1());
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, exception.Message);
         }
@@ -251,7 +252,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetEncodedPkcs7UnknownExceptionTest() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest(), true);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(chain), pk);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pkcs7.GetEncodedPKCS7(null, 
                 PdfSigner.CryptoStandard.CMS, testTsa, null, null));
@@ -261,7 +262,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetEncodedPkcs7Test() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest(), true);
             byte[] bytes = pkcs7.GetEncodedPKCS7();
             byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "cmpBytesPkcs7.txt"));
             IAsn1Object outStream = BOUNCY_CASTLE_FACTORY.CreateASN1Primitive(bytes);
@@ -273,7 +274,7 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void GetEncodedPkcs7WithRevocationInfoTest() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
-            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, true);
+            PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest(), true);
             pkcs7.GetSignedDataCRLs().Add(SignTestPortUtil.ParseCrlFromStream(new FileStream(SOURCE_FOLDER + "firstCrl.bin"
                 , FileMode.Open, FileAccess.Read)));
             pkcs7.GetSignedDataOcsps().Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
@@ -309,7 +310,7 @@ namespace iText.Signatures {
 
         // PdfPKCS7 is created here the same way it's done in PdfSigner#signDetached
         private static PdfPKCS7 CreateSimplePdfPKCS7() {
-            return new PdfPKCS7(null, chain, DigestAlgorithms.SHA256, false);
+            return new PdfPKCS7(null, chain, DigestAlgorithms.SHA256, new BouncyCastleDigest(), false);
         }
 
         private String SerializedAsString(byte[] serialized) {

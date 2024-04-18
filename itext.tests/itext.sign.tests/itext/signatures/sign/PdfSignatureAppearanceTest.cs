@@ -140,7 +140,8 @@ namespace iText.Signatures.Sign {
                 (1).SetSignatureAppearance(appearance);
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             // Make sure iText can open the document
             new PdfDocument(new PdfReader(dest)).Close();
             // Assert that the document can be rendered correctly
@@ -162,7 +163,8 @@ namespace iText.Signatures.Sign {
                 (ColorConstants.RED).SetContent("Verified and signed by me."));
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
                 , "diff_"));
         }
@@ -204,7 +206,8 @@ namespace iText.Signatures.Sign {
                 .GetFieldName()).SetContent("Verified and signed by me."));
             signer.GetSignatureField().SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
                 , "diff_"));
         }
@@ -225,7 +228,8 @@ namespace iText.Signatures.Sign {
             signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(appearance);
             signer.GetSignatureField().SetReuseAppearance(true);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
                 , "diff_"));
         }
@@ -244,7 +248,8 @@ namespace iText.Signatures.Sign {
                 .GetFieldName()).SetContent("Verified and signed by me."));
             signer.GetSignatureField().SetReuseAppearance(true);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
                 , "diff_"));
         }
@@ -275,7 +280,8 @@ namespace iText.Signatures.Sign {
                 (ColorConstants.BLACK).Circle(50, 50, 50).FillStroke().RestoreState();
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -297,7 +303,8 @@ namespace iText.Signatures.Sign {
             appearance.SetLayer2Text("Hello");
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -320,7 +327,8 @@ namespace iText.Signatures.Sign {
             appearance.SetLayer2Text("Hello");
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -343,7 +351,8 @@ namespace iText.Signatures.Sign {
             appearance.SetLayer2Text("Hello");
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -370,7 +379,8 @@ namespace iText.Signatures.Sign {
                 (ColorConstants.BLACK).Circle(50, 50, 50).FillStroke().RestoreState();
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -394,7 +404,8 @@ namespace iText.Signatures.Sign {
             signer.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_createdAndSignedSignatureField.pdf");
         }
 
@@ -413,7 +424,8 @@ namespace iText.Signatures.Sign {
             signer.GetSignatureField().SetReuseAppearance(true);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -472,9 +484,33 @@ namespace iText.Signatures.Sign {
                 (appearance);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, cmp));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, cmp, DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptySignatureAppearanceTest() {
+            String srcFile = SOURCE_FOLDER + "simpleDocument.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_emptySignatureAppearance.pdf";
+            String outPdf = DESTINATION_FOLDER + "emptySignatureAppearance.pdf";
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName);
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFile), new FileStream(outPdf, FileMode.Create), new StampingProperties
+                ());
+            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            signer.SetFieldName(fieldName);
+            signer.SetReason("test reason").SetLocation("test location").SetSignatureAppearance(appearance);
+            signer.SetPageRect(rect);
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
         }
 
         private static void CompareSignatureAppearances(String outPdf, String cmpPdf) {
@@ -505,7 +541,8 @@ namespace iText.Signatures.Sign {
             signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(fieldName
                 ).SetContent("New appearance").SetFontColor(ColorConstants.GREEN));
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, cmp, DESTINATION_FOLDER, "diff_"));
         }
 
@@ -540,7 +577,8 @@ namespace iText.Signatures.Sign {
             }
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
@@ -557,7 +595,8 @@ namespace iText.Signatures.Sign {
                 (SOURCE_FOLDER + "itext.png")).SetPageNumber(pageNum);
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             // Make sure iText can open the document
             new PdfDocument(new PdfReader(dest)).Close();
             try {
@@ -585,7 +624,8 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName("Signature1");
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
         }
 
         private static void AssertAppearanceFontSize(String filename, float expectedFontSize) {

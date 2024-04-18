@@ -36,6 +36,7 @@ namespace iText.Layout.Font {
     /// <see cref="NextGlyphs()"/>
     /// will create next sub text and set current font.
     /// </remarks>
+    [System.ObsoleteAttribute(@"replaced by iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy .")]
     public abstract class FontSelectorStrategy {
         protected internal String text;
 

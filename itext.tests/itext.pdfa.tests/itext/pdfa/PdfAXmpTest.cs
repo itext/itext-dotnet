@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -109,6 +110,46 @@ namespace iText.Pdfa {
                     NUnit.Framework.Assert.AreEqual(Count(expectedRdf, (byte)'<'), Count(rdf, (byte)'<'));
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(cmpFile, outFile, true));
                 }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUAExtensionMetadata() {
+            String outFile = destinationFolder + "testPdfUAExtensionMetadata.pdf";
+            String cmpFile = cmpFolder + "cmp_testPdfUAExtensionMetadata.pdf";
+            using (FileStream fos = new FileStream(outFile, FileMode.Create)) {
+                GeneratePdfAWithUA(fos);
+            }
+            CompareTool ct = new CompareTool();
+            NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUAIdSchemaNameSpaceUriIsNotText() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            GeneratePdfAWithUA(baos);
+            // check whether the pdfuaid NS URI was properly encoded as a URI with rdf:resource
+            PdfDocument readDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
+            String xmpString = iText.Commons.Utils.JavaUtil.GetStringForBytes(readDoc.GetXmpMetadata(), System.Text.Encoding
+                .UTF8);
+            NUnit.Framework.Assert.IsTrue(xmpString.Contains("<pdfaSchema:namespaceURI rdf:resource=\"http://www.aiim.org/pdfua/ns/id/\"/>"
+                ), "Did not find expected namespaceURI definition");
+        }
+
+        private void GeneratePdfAWithUA(Stream os) {
+            WriterProperties wp = new WriterProperties().AddUAXmpMetadata();
+            using (PdfWriter w = new PdfWriter(os, wp)) {
+                PdfOutputIntent outputIntent;
+                using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
+                    )) {
+                    outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
+                }
+                PdfDocument pdfDoc = new PdfADocument(w, PdfAConformanceLevel.PDF_A_2A, outputIntent).SetTagged();
+                pdfDoc.GetDocumentInfo().SetTitle("Test document");
+                pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+                pdfDoc.GetCatalog().SetLang(new PdfString("en"));
+                pdfDoc.AddNewPage();
+                pdfDoc.Close();
             }
         }
 

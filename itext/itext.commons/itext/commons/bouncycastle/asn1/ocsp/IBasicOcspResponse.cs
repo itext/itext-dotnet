@@ -53,7 +53,15 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>list of wrapped certificates.</returns>
         IEnumerable<IX509Certificate> GetCerts();
-        
+
+        /// <summary>
+        /// Gets actual
+        /// <c>Certs</c>
+        /// field for the wrapped BasicOCSPResponse object.
+        /// </summary>
+        /// <returns>list of wrapped certificates.</returns>
+        IX509Certificate[] GetOcspCerts();
+
         /// <summary>
         /// Calls actual
         /// <c>GetEncoded</c>
@@ -69,5 +77,13 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>wrapped SingleResp list.</returns>
         ISingleResponse[] GetResponses();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetProducedAt</c>
+        /// method for the wrapped BasicOCSPResponse object.
+        /// </summary>
+        /// <returns>date BasicOCSPResponse was produced at.</returns>
+        DateTime GetProducedAt();
     }
 }

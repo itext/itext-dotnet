@@ -37,6 +37,8 @@ namespace iText.Commons.Actions.Contexts {
             iText.Commons.Actions.Contexts.ContextManager local = new iText.Commons.Actions.Contexts.ContextManager();
             local.RegisterGenericContext(NamespaceConstant.ITEXT_CORE_NAMESPACES, JavaCollectionsUtil.Singleton(ProductNameConstant
                 .ITEXT_CORE));
+            local.RegisterGenericContext(JavaCollectionsUtil.Singleton(NamespaceConstant.CORE_SIGN), JavaCollectionsUtil
+                .Singleton(ProductNameConstant.ITEXT_CORE_SIGN));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil
                 .Singleton(ProductNameConstant.PDF_HTML));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil

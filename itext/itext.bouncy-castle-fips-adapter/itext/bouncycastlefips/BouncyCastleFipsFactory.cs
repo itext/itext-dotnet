@@ -83,7 +83,6 @@ using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
-using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Operators.Utilities;
@@ -655,8 +654,34 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual IIssuingDistributionPoint CreateIssuingDistributionPoint(Object point) {
+            return new IssuingDistributionPointBCFips(IssuingDistributionPoint.GetInstance(point is Asn1EncodableBCFips ?
+                ((Asn1EncodableBCFips) point).GetEncodable() : point));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IIssuingDistributionPoint CreateIssuingDistributionPoint(IDistributionPointName distributionPoint,
+            bool onlyContainsUserCerts, bool onlyContainsCACerts, IReasonFlags onlySomeReasons, bool indirectCRL,
+            bool onlyContainsAttributeCerts) {
+            return new IssuingDistributionPointBCFips(new IssuingDistributionPoint(distributionPoint == null ? null :
+                    ((DistributionPointNameBCFips) distributionPoint).GetDistributionPointName(), onlyContainsUserCerts,
+                onlyContainsCACerts, onlySomeReasons == null ? null :
+                    ((ReasonFlagsBCFips) onlySomeReasons).GetReasonFlags(), indirectCRL, onlyContainsAttributeCerts));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IReasonFlags CreateReasonFlags(int reasons) {
+            return new ReasonFlagsBCFips(new ReasonFlags(reasons));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IDistributionPointName CreateDistributionPointName() {
             return DistributionPointNameBCFips.GetInstance();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IDistributionPointName CreateDistributionPointName(IGeneralNames generalNames) {
+            return new DistributionPointNameBCFips(new DistributionPointName(((GeneralNamesBCFips)generalNames).GetGeneralNames()));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -869,6 +894,11 @@ namespace iText.Bouncycastlefips {
         public virtual IBasicConstraints CreateBasicConstraints(bool b) {
             return new BasicConstraintsBCFips(new BasicConstraints(b));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IBasicConstraints CreateBasicConstraints(int pathLength) {
+            return new BasicConstraintsBCFips(new BasicConstraints(pathLength));
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual IKeyUsage CreateKeyUsage() {
@@ -888,6 +918,15 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId) {
             return new ExtendedKeyUsageBCFips(purposeId);
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IExtendedKeyUsage CreateExtendedKeyUsage(IDerObjectIdentifier[] purposeId) {
+            DerObjectIdentifier[] unwrappedPurposeIds = new DerObjectIdentifier[purposeId.Length];
+            for (int i = 0; i < purposeId.Length; ++i) {
+                unwrappedPurposeIds[i] = ((DerObjectIdentifierBCFips)purposeId[i]).GetDerObjectIdentifier();
+            }
+            return new ExtendedKeyUsageBCFips(new ExtendedKeyUsage(unwrappedPurposeIds));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -937,11 +976,17 @@ namespace iText.Bouncycastlefips {
                 return null;
             }
             pushbackStream.Unread(tag);
-            if (tag != 0x30) {
-                // assume ascii PEM encoded.
-                return ReadPemCertificate(pushbackStream);
+            try {
+                if (tag != 0x30) {
+                    // assume ascii PEM encoded.
+                    return ReadPemCertificate(pushbackStream);
+                }
+
+                return ReadDerCertificate(pushbackStream);
             }
-            return ReadDerCertificate(pushbackStream);
+            catch (Exception e) {
+                throw new GeneralSecurityExceptionBCFips("Cannot parse certificate from stream.", e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -950,7 +995,7 @@ namespace iText.Bouncycastlefips {
             int tag = pushbackStream.ReadByte();
 
             if (tag < 0) {
-                return new X509CrlBCFips(null);
+                return null;
             }
             
             pushbackStream.Unread(tag);
@@ -978,7 +1023,7 @@ namespace iText.Bouncycastlefips {
             try {
                 ICollection<IX509Crl> crls = new List<IX509Crl>();
                 X509CrlBCFips crl;
-                while ((crl = (X509CrlBCFips)CreateX509Crl(input)).GetX509Crl() != null) {
+                while ((crl = (X509CrlBCFips)CreateX509Crl(input)) != null && crl.GetX509Crl() != null) {
                     crls.Add(crl);
                 }
                 return crls;
@@ -1181,7 +1226,12 @@ namespace iText.Bouncycastlefips {
         public IBouncyCastleUtil GetBouncyCastleUtil() {
             return BOUNCY_CASTLE_UTIL;
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public string CreateEndDate(IX509Certificate certificate) {
+            return certificate.GetEndDateTime();
+        }
+
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {
             using (TextReader file = new StreamReader(pushbackStream)) {
                 PEMParserBCFips parser = new PEMParserBCFips(new OpenSslPemReader(file), null);

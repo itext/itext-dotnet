@@ -47,12 +47,12 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Returns the
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IDigest"/>
+        /// <see cref="IDigest"/>
         /// to digest the data imprint
         /// </summary>
         /// <returns>
         /// The
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IDigest"/>
+        /// <see cref="IDigest"/>
         /// object.
         /// </returns>
         IDigest GetMessageDigest();

@@ -52,6 +52,15 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
             : base(new ExtendedKeyUsage(((KeyPurposeIDBCFips)purposeId).GetKeyPurposeID())) {
         }
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.X509.ExtendedKeyUsage"/>.
+        /// </summary>
+        /// <param name="purposeIds">KeyPurposeId wrappers array</param>
+        public ExtendedKeyUsageBCFips(IKeyPurposeID[] purposeIds)
+            : base(new ExtendedKeyUsage(UnwrapPurposeIds(purposeIds))) {
+        }
+
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
@@ -59,6 +68,14 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// </returns>
         public virtual ExtendedKeyUsage GetExtendedKeyUsage() {
             return (ExtendedKeyUsage)GetEncodable();
+        }
+
+        private static KeyPurposeID[] UnwrapPurposeIds(IKeyPurposeID[] purposeIds) {
+            KeyPurposeID[] purposeIdsUnwrapped = new KeyPurposeID[purposeIds.Length];
+            for (int i = 0; i < purposeIds.Length; ++i) {
+                purposeIdsUnwrapped[i] = ((KeyPurposeIDBCFips)purposeIds[i]).GetKeyPurposeID();
+            }
+            return purposeIdsUnwrapped;
         }
     }
 }

@@ -445,8 +445,10 @@ namespace iText.Kernel.Exceptions {
 
         public const String STREAM_SHALL_END_WITH_ENDSTREAM = "Stream shall end with endstream keyword.";
 
-        public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = "StructParent index not found in " + 
-            "tagged object.";
+        [Obsolete]
+        public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = 
+                // Replaced with log message
+                "StructParent index not found in " + "tagged object.";
 
         public const String STRUCTURE_ELEMENT_IN_STRUCTURE_DESTINATION_SHALL_BE_AN_INDIRECT_OBJECT = "Structure " 
             + "element referenced by a structure destination shall be an indirect object.";

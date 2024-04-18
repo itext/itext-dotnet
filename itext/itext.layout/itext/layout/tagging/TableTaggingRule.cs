@@ -36,37 +36,31 @@ namespace iText.Layout.Tagging {
             IList<TaggingHintKey> tableCellTagsUnindexed = new List<TaggingHintKey>();
             IList<TaggingHintKey> nonCellKids = new List<TaggingHintKey>();
             foreach (TaggingHintKey kidKey in kidKeys) {
-                if (StandardRoles.TD.Equals(kidKey.GetAccessibleElement().GetAccessibilityProperties().GetRole()) || StandardRoles
-                    .TH.Equals(kidKey.GetAccessibleElement().GetAccessibilityProperties().GetRole())) {
-                    if (kidKey.GetAccessibleElement() is Cell) {
-                        Cell cell = (Cell)kidKey.GetAccessibleElement();
-                        int rowInd = cell.GetRow();
-                        int colInd = cell.GetCol();
-                        SortedDictionary<int, TaggingHintKey> rowTags = tableTags.Get(rowInd);
-                        if (rowTags == null) {
-                            rowTags = new SortedDictionary<int, TaggingHintKey>();
-                            tableTags.Put(rowInd, rowTags);
-                        }
-                        rowTags.Put(colInd, kidKey);
+                String kidRole = GetKidRole(kidKey, taggingHelper);
+                bool isCell = StandardRoles.TD.Equals(kidRole) || StandardRoles.TH.Equals(kidRole);
+                if (isCell && kidKey.GetAccessibleElement() is Cell) {
+                    Cell cell = (Cell)kidKey.GetAccessibleElement();
+                    int rowInd = cell.GetRow();
+                    int colInd = cell.GetCol();
+                    SortedDictionary<int, TaggingHintKey> rowTags = tableTags.Get(rowInd);
+                    if (rowTags == null) {
+                        rowTags = new SortedDictionary<int, TaggingHintKey>();
+                        tableTags.Put(rowInd, rowTags);
                     }
-                    else {
-                        tableCellTagsUnindexed.Add(kidKey);
-                    }
+                    rowTags.Put(colInd, kidKey);
                 }
                 else {
-                    nonCellKids.Add(kidKey);
+                    if (isCell) {
+                        tableCellTagsUnindexed.Add(kidKey);
+                    }
+                    else {
+                        nonCellKids.Add(kidKey);
+                    }
                 }
             }
-            bool createTBody = true;
-            if (tableHintKey.GetAccessibleElement() is Table) {
-                Table modelElement = (Table)tableHintKey.GetAccessibleElement();
-                createTBody = modelElement.GetHeader() != null && !modelElement.IsSkipFirstHeader() || modelElement.GetFooter
-                    () != null && !modelElement.IsSkipLastFooter();
-            }
-            TaggingDummyElement tbodyTag = null;
-            tbodyTag = new TaggingDummyElement(createTBody ? StandardRoles.TBODY : null);
+            TaggingDummyElement tbodyTag = GetTbodyTag(tableHintKey);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
+                String kidRole = GetKidRole(nonCellKid, taggingHelper);
                 if (!StandardRoles.THEAD.Equals(kidRole) && !StandardRoles.TFOOT.Equals(kidRole) && !StandardRoles.CAPTION
                     .Equals(kidRole)) {
                     // In usual cases it isn't expected that this for loop will work, but it is possible to
@@ -75,16 +69,14 @@ namespace iText.Layout.Tagging {
                 }
             }
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
-                if (StandardRoles.THEAD.Equals(kidRole)) {
+                if (StandardRoles.THEAD.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
             taggingHelper.AddKidsHint(tableHintKey, JavaCollectionsUtil.SingletonList<TaggingHintKey>(LayoutTaggingHelper
                 .GetOrCreateHintKey(tbodyTag)), -1);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
-                if (StandardRoles.TFOOT.Equals(kidRole)) {
+                if (StandardRoles.TFOOT.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
@@ -103,12 +95,43 @@ namespace iText.Layout.Tagging {
                 taggingHelper.AddKidsHint(tbodyTag, JavaCollectionsUtil.SingletonList<TaggingDummyElement>(row), -1);
             }
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
-                String kidRole = nonCellKid.GetAccessibleElement().GetAccessibilityProperties().GetRole();
-                if (StandardRoles.CAPTION.Equals(kidRole)) {
+                if (StandardRoles.CAPTION.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     MoveCaption(taggingHelper, nonCellKid, tableHintKey);
                 }
             }
             return true;
+        }
+
+        private static String GetKidRole(TaggingHintKey kidKey, LayoutTaggingHelper helper) {
+            return helper.GetPdfDocument().GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole(kidKey
+                .GetAccessibilityProperties().GetRole(), null).GetRole();
+        }
+
+        /// <summary>
+        /// Creates a dummy element with
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>
+        /// role if needed.
+        /// </summary>
+        /// <remarks>
+        /// Creates a dummy element with
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>
+        /// role if needed.
+        /// Otherwise, returns a dummy element with a null role.
+        /// </remarks>
+        /// <param name="tableHintKey">the hint key of the table.</param>
+        /// <returns>
+        /// a dummy element with
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardRoles.TBODY"/>
+        /// role if needed.
+        /// </returns>
+        private static TaggingDummyElement GetTbodyTag(TaggingHintKey tableHintKey) {
+            bool createTBody = true;
+            if (tableHintKey.GetAccessibleElement() is Table) {
+                Table modelElement = (Table)tableHintKey.GetAccessibleElement();
+                createTBody = modelElement.GetHeader() != null && !modelElement.IsSkipFirstHeader() || modelElement.GetFooter
+                    () != null && !modelElement.IsSkipLastFooter();
+            }
+            return new TaggingDummyElement(createTBody ? StandardRoles.TBODY : null);
         }
 
         private static void MoveCaption(LayoutTaggingHelper taggingHelper, TaggingHintKey caption, TaggingHintKey 

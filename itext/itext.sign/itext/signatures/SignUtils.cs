@@ -37,6 +37,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Digest;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
@@ -84,7 +85,11 @@ namespace iText.Signatures {
         }
 
         internal static IDigest GetMessageDigest(String hashAlgorithm) {
-            return FACTORY.CreateIDigest(hashAlgorithm);
+            return (IDigest)new BouncyCastleDigest().GetMessageDigest(hashAlgorithm);
+        }
+        
+        internal static IMessageDigest GetMessageDigest(String hashAlgorithm, IExternalDigest externalDigest) {
+            return externalDigest.GetMessageDigest(hashAlgorithm);
         }
 
         internal static Stream GetHttpResponse(Uri urlt) {

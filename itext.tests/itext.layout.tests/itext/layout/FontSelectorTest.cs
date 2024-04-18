@@ -32,6 +32,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Font;
+using iText.Layout.Font.Selectorstrategy;
 using iText.Layout.Properties;
 using iText.Test;
 
@@ -405,10 +406,11 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void NotSignificantCharacterOfTheFontWithUnicodeRange() {
-            // TODO update cmp after fix DEVSIX-2052
             String outFileName = destinationFolder + "notSignificantCharacterOfTheFontWithUnicodeRange.pdf";
             String cmpFileName = sourceFolder + "cmp_notSignificantCharacterOfTheFontWithUnicodeRange.pdf";
             FontProvider sel = new FontProvider();
+            sel.SetFontSelectorStrategyFactory(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory(
+                ));
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSansCJKjp-Bold.otf", null, "FontAlias"
                 , new RangeBuilder(117, 117).Create()));
             // just 'u' letter
@@ -427,19 +429,20 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CheckThreeFontsInOneLineWithUnicodeRange() {
-            // TODO update cmp after fix DEVSIX-2052
             String outFileName = destinationFolder + "checkThreeFontsInOneLineWithUnicodeRange.pdf";
             String cmpFileName = sourceFolder + "cmp_checkThreeFontsInOneLineWithUnicodeRange.pdf";
             FontProvider sel = new FontProvider();
+            sel.SetFontSelectorStrategyFactory(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory(
+                ));
+            // 'a', 'b' and 'c' are in that interval
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSansCJKjp-Bold.otf", null, "FontAlias"
                 , new RangeBuilder(97, 99).Create()));
-            // 'a', 'b' and 'c' are in that interval
+            // 'd', 'e' and 'f' are in that interval
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", null, "FontAlias", new 
                 RangeBuilder(100, 102).Create()));
-            // 'd', 'e' and 'f' are in that interval
+            // 'x', 'y' and 'z' are in that interval
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", null, "FontAlias", new 
                 RangeBuilder(120, 122).Create()));
-            // 'x', 'y' and 'z' are in that interval
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);

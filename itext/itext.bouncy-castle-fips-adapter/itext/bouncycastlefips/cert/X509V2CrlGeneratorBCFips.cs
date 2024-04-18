@@ -21,10 +21,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using iText.Bouncycastlefips.Asn1;
 using Org.BouncyCastle.Cert;
 using iText.Bouncycastlefips.Asn1.X500;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Operator;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Math;
@@ -82,6 +84,14 @@ namespace iText.Bouncycastlefips.Cert {
         /// <summary><inheritDoc/></summary>
         public virtual IX509V2CrlGenerator AddCRLEntry(IBigInteger bigInteger, DateTime date, int i) {
             builder.AddCrlEntry(((BigIntegerBCFips)bigInteger).GetBigInteger(), date, i);
+            return this;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IX509V2CrlGenerator AddExtension(IDerObjectIdentifier objectIdentifier, bool isCritical, 
+            IAsn1Encodable extension) {
+            builder.AddExtension(((DerObjectIdentifierBCFips) objectIdentifier).GetDerObjectIdentifier(), isCritical,
+                ((Asn1EncodableBCFips) extension).GetEncodable());
             return this;
         }
 

@@ -30,6 +30,8 @@ using iText.Forms.Form.Renderer.Checkboximpl;
 using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -77,8 +79,11 @@ namespace iText.Forms.Form.Renderer {
 
         /// <summary>Returns whether or not the checkbox is in PDF/A mode.</summary>
         /// <returns>true if the checkbox is in PDF/A mode, false otherwise</returns>
+        [System.ObsoleteAttribute(@"since 8.0.4 will be removed")]
         public virtual bool IsPdfA() {
-            return this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL) != null;
+            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
+                );
+            return conformanceLevel is PdfAConformanceLevel;
         }
 
         /// <summary>Gets the checkBoxType.</summary>
@@ -95,11 +100,13 @@ namespace iText.Forms.Form.Renderer {
         public virtual ICheckBoxRenderingStrategy CreateCheckBoxRenderStrategy() {
             // html rendering is PDFA compliant this means we don't have to check if its PDFA.
             ICheckBoxRenderingStrategy renderingStrategy;
+            bool isConformantPdfDocument = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL) !=
+                 null;
             if (GetRenderingMode() == RenderingMode.HTML_MODE) {
                 renderingStrategy = new HtmlCheckBoxRenderingStrategy();
             }
             else {
-                if (GetRenderingMode() == RenderingMode.DEFAULT_LAYOUT_MODE && IsPdfA()) {
+                if (GetRenderingMode() == RenderingMode.DEFAULT_LAYOUT_MODE && isConformantPdfDocument) {
                     renderingStrategy = new PdfACheckBoxRenderingStrategy();
                 }
                 else {
@@ -137,6 +144,23 @@ namespace iText.Forms.Form.Renderer {
         }
 
         // We don't need any layout adjustments
+        /// <summary>Applies given paddings to the given rectangle.</summary>
+        /// <remarks>
+        /// Applies given paddings to the given rectangle.
+        /// Checkboxes don't support setting of paddings as they are always centered.
+        /// So that this method returns the rectangle as is.
+        /// </remarks>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="paddings">the paddings to be applied on the given rectangle</param>
+        /// <param name="reverse">
+        /// indicates whether paddings will be applied
+        /// inside (in case of false) or outside (in case of true) the rectangle.
+        /// </param>
+        /// <returns>The rectangle NOT modified by the paddings.</returns>
+        protected override Rectangle ApplyPaddings(Rectangle rect, UnitValue[] paddings, bool reverse) {
+            return rect;
+        }
+
         /// <summary>Creates a flat renderer for the checkbox.</summary>
         /// <returns>an IRenderer object for the flat renderer</returns>
         protected internal override IRenderer CreateFlatRenderer() {
@@ -174,10 +198,10 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
-                (this.GetProperty<PdfAConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetGenericConformanceLevel
+                (this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
             if (this.HasProperty(FormProperty.FORM_CHECKBOX_TYPE)) {
                 builder.SetCheckType((CheckBoxType)this.GetProperty<CheckBoxType?>(FormProperty.FORM_CHECKBOX_TYPE));
             }
@@ -192,11 +216,11 @@ namespace iText.Forms.Form.Renderer {
             if (!IsBoxChecked()) {
                 checkBox.SetValue(PdfFormAnnotation.OFF_STATE_VALUE);
             }
+            ApplyAccessibilityProperties(checkBox, doc);
             checkBox.GetFirstFormAnnotation().SetFormFieldElement((CheckBox)modelElement);
             checkBox.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(checkBox, page);
-            WriteAcroFormFieldLangAttribute(doc);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -220,8 +244,17 @@ namespace iText.Forms.Form.Renderer {
             /// <summary><inheritDoc/></summary>
             public override void DrawChildren(DrawContext drawContext) {
                 Rectangle rectangle = this.GetInnerAreaBBox().Clone();
+                PdfCanvas canvas = drawContext.GetCanvas();
+                bool isTaggingEnabled = drawContext.IsTaggingEnabled();
+                if (isTaggingEnabled) {
+                    TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                    canvas.OpenTag(tp.GetTagReference());
+                }
                 this._enclosing.CreateCheckBoxRenderStrategy().DrawCheckBoxContent(drawContext, this._enclosing, rectangle
                     );
+                if (isTaggingEnabled) {
+                    canvas.CloseTag();
+                }
             }
 
             private readonly CheckBoxRenderer _enclosing;

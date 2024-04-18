@@ -118,7 +118,8 @@ namespace iText.Signatures {
             signer.SetPageRect(new Rectangle(100, 100, 10, 10));
             signer.fieldLock = new PdfSigFieldLock();
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             NUnit.Framework.Assert.IsTrue(signer.closed);
         }
 
@@ -127,9 +128,10 @@ namespace iText.Signatures {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => signer.SignDetached(pks, chain, null
-                , null, null, 0, PdfSigner.CryptoStandard.CADES));
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => signer.SignDetached(new BouncyCastleDigest
+                (), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
             NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED, e
                 .Message);
         }
@@ -139,7 +141,8 @@ namespace iText.Signatures {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
-            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => signer.SignExternalContainer(new ExternalBlankSignatureContainer
                 (new PdfDictionary()), 0));
             NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED, e

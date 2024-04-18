@@ -236,14 +236,14 @@ namespace iText.Signatures.Sign {
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA3_256);
                 PdfSigner signer = new PdfSigner(new PdfReader(in1), baos1, new StampingProperties());
                 signer.SetFieldName("Signature1");
-                signer.SignDetached(pks, signChain1, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+                signer.SignDetached(new BouncyCastleDigest(), pks, signChain1, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
             }
             using (Stream in2 = new MemoryStream(baos1.ToArray())) {
                 IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, keySample2 + ".key.pem"));
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA512);
                 PdfSigner signer = new PdfSigner(new PdfReader(in2), baos2, new StampingProperties());
                 signer.SetFieldName("Signature2");
-                signer.SignDetached(pks, signChain2, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+                signer.SignDetached(new BouncyCastleDigest(), pks, signChain2, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
             }
             CheckIsoExtensions(baos2.ToArray(), JavaUtil.ArraysAsList(32001, 32002));
         }
@@ -286,7 +286,7 @@ namespace iText.Signatures.Sign {
             signer.SetFieldName(SIGNATURE_FIELD);
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
-            signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+            signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
         }
         
         private void DoVerify(String fileName, DerObjectIdentifier expectedSigAlgoIdentifier) {

@@ -30,6 +30,7 @@ using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
+using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Font;
@@ -129,7 +130,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = this.GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             // Some properties are set to the HtmlDocumentRenderer, which is root renderer for this ButtonRenderer, but
@@ -141,8 +142,8 @@ namespace iText.Forms.Form.Renderer {
             // Default html2pdf input field appearance differs from the default one for form fields.
             // That's why we got rid of several properties we set by default during InputField instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font).SetConformanceLevel
-                (GetConformanceLevel(doc)).CreateText();
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font).SetGenericConformanceLevel
+                (GetGenericConformanceLevel(doc)).CreateText();
             inputField.DisableFieldRegeneration();
             inputField.SetValue(value);
             inputField.SetFontSize(fontSizeValue);
@@ -157,11 +158,11 @@ namespace iText.Forms.Form.Renderer {
                 inputField.GetFirstFormAnnotation().SetRotation(rotation);
             }
             ApplyDefaultFieldProperties(inputField);
+            ApplyAccessibilityProperties(inputField, doc);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((InputField)modelElement);
             inputField.EnableFieldRegeneration();
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
-            WriteAcroFormFieldLangAttribute(doc);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>

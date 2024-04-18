@@ -24,15 +24,21 @@ using System;
 using iText.Commons.Exceptions;
 
 namespace iText.Forms.Exceptions {
+    /// <summary>
+    /// This class represents iText exception that should be thrown when some errors occur while working with
+    /// XFDF objects (XFDF file is XML-based Acrobat Forms Data Format).
+    /// </summary>
     public class XfdfException : ITextException {
+        /// <summary>The exception thrown when some errors occur while working with XFDF objects.</summary>
+        /// <param name="message">exception message.</param>
         public XfdfException(String message)
             : base(message) {
         }
 
-        /// <summary>Message in case one tries to add attribute with null name or value</summary>
+        /// <summary>Message in case one tries to add attribute with null name or value.</summary>
         public const String ATTRIBUTE_NAME_OR_VALUE_MISSING = "Attribute name or value are missing";
 
-        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to</summary>
+        /// <summary>Message in case one tries to add annotation without indicating the page it belongs to.</summary>
         public const String PAGE_IS_MISSING = "Required Page attribute is missing.";
     }
 }

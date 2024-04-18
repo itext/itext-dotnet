@@ -33,16 +33,17 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
 namespace iText.Forms.Xfdf {
+    /// <summary>
+    /// A factory for creating
+    /// <see cref="XfdfObject"/>
+    /// objects.
+    /// </summary>
     public class XfdfObjectFactory {
         private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(XfdfObjectFactory));
 
         /// <summary>Extracts data from pdf document acroform and annotations into XfdfObject.</summary>
-        /// <remarks>
-        /// Extracts data from pdf document acroform and annotations into XfdfObject.
-        /// *
-        /// </remarks>
-        /// <param name="document">Pdf document for data extraction.</param>
-        /// <param name="filename">The name od pdf document for data extraction.</param>
+        /// <param name="document">Pdf document for data extraction</param>
+        /// <param name="filename">The name od pdf document for data extraction</param>
         /// <returns>XfdfObject containing data from pdf forms and annotations.</returns>
         public virtual XfdfObject CreateXfdfObject(PdfDocument document, String filename) {
             PdfAcroForm form = PdfFormCreator.GetAcroForm(document, false);
@@ -79,8 +80,8 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Extracts data from input stream into XfdfObject.</summary>
-        /// <remarks>Extracts data from input stream into XfdfObject. Typically input stream is based on .xfdf file</remarks>
-        /// <param name="xfdfInputStream">The input stream containing xml-styled xfdf data.</param>
+        /// <remarks>Extracts data from input stream into XfdfObject. Typically input stream is based on .xfdf file.</remarks>
+        /// <param name="xfdfInputStream">the input stream containing xml-styled xfdf data</param>
         /// <returns>XfdfObject containing original xfdf data.</returns>
         public virtual XfdfObject CreateXfdfObject(Stream xfdfInputStream) {
             XfdfObject xfdfObject = new XfdfObject();
@@ -444,7 +445,7 @@ namespace iText.Forms.Xfdf {
             ) {
         }
 
-        //TODO DEVSIX-4132 implement update, refactor createXfdfAnnotation() method to accommodate the change
+        // TODO DEVSIX-4132 implement update, refactor createXfdfAnnotation() method to accommodate the change.
         private static void AddCommonAnnotationAttributes(AnnotObject annot, PdfAnnotation pdfAnnotation) {
             annot.SetName(pdfAnnotation.GetSubtype().GetValue().ToLowerInvariant());
             if (pdfAnnotation.GetColorObject() != null) {

@@ -49,9 +49,9 @@ namespace iText.Signatures {
             this.crls = crls;
         }
 
-        /// <summary>Verifies if a a valid CRL is found for the certificate.</summary>
+        /// <summary>Verifies whether a valid CRL is found for the certificate.</summary>
         /// <remarks>
-        /// Verifies if a a valid CRL is found for the certificate.
+        /// Verifies whether a valid CRL is found for the certificate.
         /// If this method returns false, it doesn't mean the certificate isn't valid.
         /// It means we couldn't verify it against any CRL that was available.
         /// </remarks>
@@ -120,12 +120,9 @@ namespace iText.Signatures {
 
         /// <summary>Fetches a CRL for a specific certificate online (without further checking).</summary>
         /// <param name="signCert">the certificate</param>
-        /// <param name="issuerCert">its issuer</param>
-        /// <returns>an X509CRL object</returns>
+        /// <param name="issuerCert">its issuer left for backwards compatibility</param>
+        /// <returns>an X509CRL object.</returns>
         public virtual IX509Crl GetCRL(IX509Certificate signCert, IX509Certificate issuerCert) {
-            if (issuerCert == null) {
-                issuerCert = signCert;
-            }
             try {
                 // gets the URL from the certificate
                 String crlurl = CertificateUtil.GetCRLURL(signCert);

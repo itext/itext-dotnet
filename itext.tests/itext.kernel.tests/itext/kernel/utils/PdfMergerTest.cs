@@ -101,6 +101,20 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithLinkAnnotationTest() {
+            String filename = sourceFolder + "documentWithLinkAnnotation.pdf";
+            String resultFile = destinationFolder + "mergedDocumentWithLinkAnnotation.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfWriter writer1 = CompareTool.CreateTestPdfWriter(resultFile);
+            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDocument result = new PdfDocument(writer1);
+            PdfMerger merger = new PdfMerger(result).SetCloseSourceDocuments(true);
+            merger.Merge(pdfDoc, 1, 1).Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedDocumentWithLinkAnnotation.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MergeDocumentTest02() {
             String filename = sourceFolder + "doc1.pdf";
             String filename1 = sourceFolder + "doc2.pdf";
@@ -217,8 +231,70 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.Test]
         public virtual void EmptyTrTableTest() {
-            // TODO DEVSIX-5974 Empty tr isn't copied.
             MergeAndCompareTagStructures("emptyTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitEmptyTrTableFirstPageTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTrFirstPage.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitEmptyTrTableSecondPageTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTrSecondPage.pdf", 2, 2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitEmptyTrTableFullTest() {
+            MergeAndCompareTagStructures("splitTableWithEmptyTrFull.pdf", 1, 2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyFirstTrTableTest() {
+            MergeAndCompareTagStructures("emptyFirstTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyLastTrTableTest() {
+            MergeAndCompareTagStructures("emptyLastTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTwoAdjacentTrTableTest() {
+            MergeAndCompareTagStructures("emptyTwoAdjacentTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyAllTrTableTest() {
+            MergeAndCompareTagStructures("emptyAllTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptySingleTrTableTest() {
+            MergeAndCompareTagStructures("emptySingleTrTable.pdf", 1, 1);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitAndMergeEmptyTrTableTest() {
+            String sourceFilename = sourceFolder + "splitTableWithEmptyTrFull.pdf";
+            String firstPageFilename = destinationFolder + "firstPageDoc.pdf";
+            String secondPageFilename = destinationFolder + "secondPageDoc.pdf";
+            String resultFilename = destinationFolder + "splitAndMergeEmptyTrTable.pdf";
+            String cmpFilename = sourceFolder + "cmp_splitAndMergeEmptyTrTable.pdf";
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(sourceFilename));
+            PdfDocument firstPageDoc = new PdfDocument(new PdfWriter(firstPageFilename));
+            PdfMerger mergerFirstPage = new PdfMerger(firstPageDoc);
+            mergerFirstPage.Merge(sourceDoc, 1, 1);
+            mergerFirstPage.Close();
+            PdfDocument secondPageDoc = new PdfDocument(new PdfWriter(secondPageFilename));
+            PdfMerger mergerSecondPage = new PdfMerger(secondPageDoc);
+            mergerSecondPage.Merge(sourceDoc, 2, 2);
+            mergerSecondPage.Close();
+            IList<FileInfo> sources = new List<FileInfo>();
+            sources.Add(new FileInfo(firstPageFilename));
+            sources.Add(new FileInfo(secondPageFilename));
+            MergePdfs(sources, resultFilename, new PdfMergerProperties(), false);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(resultFilename, cmpFilename));
         }
 
         [NUnit.Framework.Test]
@@ -471,36 +547,41 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
         public virtual void MergePdfWithMissingStructElemBeginningOfTreeTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("structParentMissingFirstElement.pdf"
-                ));
+            String name = "structParentMissingFirstElement.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED)]
         public virtual void MergePdfWithMissingStructElemEndOfTreeTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("structParentMissingLastElement.pdf"
-                ));
+            String name = "structParentMissingLastElement.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED, Count = 4)]
         public virtual void MergePdfAllObjectsMissingStructParentTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("allObjectsHaveStructParent.pdf"
-                ));
+            String name = "allObjectsHaveStructParent.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED, Count = 2)]
         public virtual void MergePdfChildObjectsOfSameStructElemMissingStructParentTest() {
-            //TODO change assertion after DEVSIX-7478 is fixed
-            NUnit.Framework.Assert.IsNull(MergeSinglePdfAndGetResultingStructTreeRoot("SameStructElemNoParent.pdf"));
+            String name = "SameStructElemNoParent.pdf";
+            NUnit.Framework.Assert.IsNotNull(MergeSinglePdfAndGetResultingStructTreeRoot(name));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name, sourceFolder + 
+                "cmp_" + name, destinationFolder));
         }
 
         [NUnit.Framework.Test]

@@ -28,6 +28,7 @@ using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Layout.Exceptions;
+using iText.Layout.Font.Selectorstrategy;
 
 namespace iText.Layout.Font {
     /// <summary>Main entry point of font selector logic.</summary>
@@ -63,7 +64,7 @@ namespace iText.Layout.Font {
     /// ,
     /// <see cref="GetPdfFont(FontInfo, FontSet)"/>
     /// ,
-    /// <see cref="GetStrategy(System.String, System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
+    /// <see cref="CreateFontSelectorStrategy(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
     ///     >.
     /// <para />
     /// Note, FontProvider does not close created
@@ -86,6 +87,8 @@ namespace iText.Layout.Font {
         protected internal readonly String defaultFontFamily;
 
         protected internal readonly IDictionary<FontInfo, PdfFont> pdfFonts;
+
+        private IFontSelectorStrategyFactory fontSelectorStrategyFactory;
 
         /// <summary>Creates a new instance of FontProvider.</summary>
         /// <param name="fontSet">predefined set of fonts, could be null.</param>
@@ -112,6 +115,8 @@ namespace iText.Layout.Font {
             pdfFonts = new Dictionary<FontInfo, PdfFont>();
             fontSelectorCache = new FontSelectorCache(this.fontSet);
             this.defaultFontFamily = defaultFontFamily;
+            this.fontSelectorStrategyFactory = new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+                ();
         }
 
         /// <summary>
@@ -433,6 +438,8 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelectorStrategy"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"use CreateFontSelectorStrategy(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"
+            )]
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
              fc, FontSet additionalFonts) {
             return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc, additionalFonts), this, additionalFonts
@@ -470,6 +477,8 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelectorStrategy"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"use CreateFontSelectorStrategy(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"
+            )]
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
              fc) {
             return GetStrategy(text, fontFamilies, fc, null);
@@ -499,8 +508,63 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelectorStrategy"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"use CreateFontSelectorStrategy(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"
+            )]
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies) {
             return GetStrategy(text, fontFamilies, null);
+        }
+
+        /// <summary>
+        /// Sets factory which will be used in
+        /// <see cref="CreateFontSelectorStrategy(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
+        ///     >
+        /// method.
+        /// </summary>
+        /// <param name="factory">the factory which will be used to create font selector strategies</param>
+        public virtual void SetFontSelectorStrategyFactory(IFontSelectorStrategyFactory factory) {
+            this.fontSelectorStrategyFactory = factory;
+        }
+
+        /// <summary>
+        /// Creates the
+        /// <see cref="iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+        /// to split text into sequences of glyphs, already tied
+        /// to the fonts which contain them.
+        /// </summary>
+        /// <remarks>
+        /// Creates the
+        /// <see cref="iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+        /// to split text into sequences of glyphs, already tied
+        /// to the fonts which contain them. The fonts can be taken from the added fonts to the font provider and
+        /// are chosen based on font-families list and desired font characteristics.
+        /// </remarks>
+        /// <param name="fontFamilies">
+        /// target font families to create
+        /// <see cref="FontSelector"/>
+        /// for sequences of glyphs.
+        /// </param>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristics"/>
+        /// to create
+        /// <see cref="FontSelector"/>
+        /// for sequences of glyphs.
+        /// </param>
+        /// <param name="additionalFonts">
+        /// set which provides fonts additionally to the fonts added to font provider.
+        /// Combined set of font provider fonts and additional fonts is used when choosing
+        /// a single font for a sequence of glyphs. Additional fonts will only be used for the given
+        /// font selector strategy instance and will not be otherwise preserved in font provider.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Layout.Font.Selectorstrategy.IFontSelectorStrategy"/>
+        /// instance
+        /// </returns>
+        public virtual IFontSelectorStrategy CreateFontSelectorStrategy(IList<String> fontFamilies, FontCharacteristics
+             fc, FontSet additionalFonts) {
+            FontSelector fontSelector = GetFontSelector(fontFamilies, fc, additionalFonts);
+            return fontSelectorStrategyFactory.CreateFontSelectorStrategy(this, fontSelector, additionalFonts);
         }
 
         /// <summary>

@@ -61,6 +61,8 @@ namespace iText.Layout.Exceptions {
 
         public const String INVALID_FONT_PROPERTY_VALUE = "Invalid FONT property value type.";
 
+        public const String TAGGING_HINTKEY_SHOULD_HAVE_ACCES = "TaggingHintKey should have accessibility properties";
+
         private LayoutExceptionMessageConstant() {
         }
     }

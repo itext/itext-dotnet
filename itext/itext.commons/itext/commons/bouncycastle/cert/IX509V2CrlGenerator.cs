@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Operator;
 
@@ -45,6 +46,22 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// the current wrapper object.
         /// </returns>
         IX509V2CrlGenerator AddCRLEntry(IBigInteger bigInteger, DateTime date, int i);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>addExtension</c>
+        /// method for the wrapped X509v2CRLBuilder object.
+        /// </summary>
+        /// <param name="objectIdentifier">extension object identifier</param>
+        /// <param name="isCritical">specifies if extension is critical or not</param>
+        /// <param name="extension">encoded extension value</param>
+        /// <returns>
+        /// 
+        /// <see cref="IX509V2CrlGenerator"/>
+        /// the current wrapper object.
+        /// </returns>
+        IX509V2CrlGenerator AddExtension(IDerObjectIdentifier objectIdentifier, bool isCritical, IAsn1Encodable extension
+            );
 
         /// <summary>
         /// Calls actual

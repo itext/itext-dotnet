@@ -372,7 +372,25 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
+        public IIssuingDistributionPoint CreateIssuingDistributionPoint(object point) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public IIssuingDistributionPoint CreateIssuingDistributionPoint(IDistributionPointName distributionPoint,
+            bool onlyContainsUserCerts, bool onlyContainsCACerts, IReasonFlags onlySomeReasons, bool indirectCRL,
+            bool onlyContainsAttributeCerts) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public IReasonFlags CreateReasonFlags(int reasons) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
         public IDistributionPointName CreateDistributionPointName() {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public IDistributionPointName CreateDistributionPointName(IGeneralNames generalNames) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -522,6 +540,10 @@ namespace iText.Bouncycastleconnector {
         public IBasicConstraints CreateBasicConstraints(bool b) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        public IBasicConstraints CreateBasicConstraints(int pathLength) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public IKeyUsage CreateKeyUsage() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
@@ -536,6 +558,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public IExtendedKeyUsage CreateExtendedKeyUsage(IKeyPurposeID purposeId) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+        
+        public IExtendedKeyUsage CreateExtendedKeyUsage(IDerObjectIdentifier[] purposeId) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -685,6 +711,10 @@ namespace iText.Bouncycastleconnector {
         }
         
         public IBouncyCastleUtil GetBouncyCastleUtil() {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public string CreateEndDate(IX509Certificate certificate) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
     }

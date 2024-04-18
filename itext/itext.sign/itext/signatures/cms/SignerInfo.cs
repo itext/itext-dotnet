@@ -29,7 +29,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures;
@@ -202,7 +202,7 @@ namespace iText.Signatures.Cms {
             if (signedAttributesReadOnly) {
                 throw new InvalidOperationException(SignExceptionMessageConstant.CMS_SIGNERINFO_READONLY);
             }
-            IDigest md = DigestAlgorithms.GetMessageDigestFromOid(digestAlgorithmOid);
+            IMessageDigest md = DigestAlgorithms.GetMessageDigestFromOid(digestAlgorithmOid);
             IAsn1EncodableVector certContents = BC_FACTORY.CreateASN1EncodableVector();
             // don't add if it is the default value
             if (!SecurityIDs.ID_SHA256.Equals(digestAlgorithmOid)) {

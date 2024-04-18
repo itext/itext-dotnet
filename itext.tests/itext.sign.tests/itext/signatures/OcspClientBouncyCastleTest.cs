@@ -152,24 +152,32 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED)]
         public virtual void OcspStatusIsRevokedTest() {
             IRevokedCertStatus status = BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(DateTimeUtil.GetCurrentUtcTime().AddDays
                 (-20), BOUNCY_CASTLE_FACTORY.CreateOCSPResponse().GetSuccessful());
             TestOcspResponseBuilder responseBuilder = CreateBuilder(status);
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateTestOcspClient(responseBuilder);
             byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
-            NUnit.Framework.Assert.IsNull(encoded);
+            NUnit.Framework.Assert.IsNotNull(BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(OcspClientBouncyCastle.GetCertificateStatus
+                (encoded)));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN)]
         public virtual void OcspStatusIsUnknownTest() {
             IUnknownCertStatus status = BOUNCY_CASTLE_FACTORY.CreateUnknownStatus();
             TestOcspResponseBuilder responseBuilder = CreateBuilder(status);
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateTestOcspClient(responseBuilder);
             byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
-            NUnit.Framework.Assert.IsNull(encoded);
+            NUnit.Framework.Assert.AreNotEqual(BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood(), OcspClientBouncyCastle
+                .GetCertificateStatus(encoded));
+            NUnit.Framework.Assert.IsNull(BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(OcspClientBouncyCastle.GetCertificateStatus
+                (encoded)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidOcspStatusIsNullTest() {
+            byte[] encoded = new byte[0];
+            NUnit.Framework.Assert.IsNull(OcspClientBouncyCastle.GetCertificateStatus(encoded));
         }
 
         private static OcspClientBouncyCastle CreateOcspClient() {

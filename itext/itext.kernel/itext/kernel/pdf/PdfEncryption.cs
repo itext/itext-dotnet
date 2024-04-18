@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
@@ -328,7 +329,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public static byte[] GenerateNewDocumentId() {
-            IDigest sha512;
+            IMessageDigest sha512;
             try {
                 sha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512");
             }

@@ -159,6 +159,7 @@ namespace iText.Kernel.Utils {
             return new MemoryFirstPdfWriter(filename, properties);
         }
 
+        // Android-Conversion-Replace return new PdfWriter(filename, properties);
         /// <summary>
         /// Create
         /// <see cref="iText.Kernel.Pdf.PdfReader"/>

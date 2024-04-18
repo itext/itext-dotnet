@@ -1776,7 +1776,7 @@ namespace iText.Layout.Renderer {
             return GetPaddings(this);
         }
 
-        /// <summary>Applies given paddings on the given rectangle</summary>
+        /// <summary>Applies given paddings to the given rectangle.</summary>
         /// <param name="rect">a rectangle paddings will be applied on.</param>
         /// <param name="paddings">the paddings to be applied on the given rectangle</param>
         /// <param name="reverse">

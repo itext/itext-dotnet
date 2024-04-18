@@ -67,7 +67,7 @@ namespace iText.Bouncycastlefips.Cert {
         public X509V3CertificateGeneratorBCFips(IX509Certificate signingCert, IBigInteger number, DateTime startDate, 
             DateTime endDate, IX500Name subjectDn, IPublicKey publicKey) {
             certificateBuilder = new X509V3CertificateGenerator();
-            certificateBuilder.SetIssuerDN(((X500NameBCFips) signingCert.GetIssuerDN()).GetX500Name());
+            certificateBuilder.SetIssuerDN(((X500NameBCFips) signingCert.GetSubjectDN()).GetX500Name());
             certificateBuilder.SetSerialNumber(((BigIntegerBCFips) number).GetBigInteger());
             certificateBuilder.SetNotBefore(startDate);
             certificateBuilder.SetNotAfter(endDate);

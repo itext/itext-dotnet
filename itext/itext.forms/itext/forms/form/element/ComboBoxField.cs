@@ -24,10 +24,12 @@ using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Forms.Exceptions;
 using iText.Forms.Form;
 using iText.Forms.Form.Renderer;
 using iText.Forms.Logs;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Form.Element {
@@ -143,6 +145,15 @@ namespace iText.Forms.Form.Element {
                 }
             }
             return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new FormDefaultAccessibilityProperties(FormDefaultAccessibilityProperties.FORM_FIELD_LIST_BOX
+                    );
+            }
+            return tagProperties;
         }
 
         protected override IRenderer MakeNewRenderer() {

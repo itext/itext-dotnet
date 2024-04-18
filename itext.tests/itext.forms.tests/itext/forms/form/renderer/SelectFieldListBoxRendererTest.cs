@@ -49,14 +49,14 @@ namespace iText.Forms.Form.Renderer {
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelTest() {
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
-            NUnit.Framework.Assert.IsNull(renderer.GetConformanceLevel(null));
+            NUnit.Framework.Assert.IsNull(renderer.GetGenericConformanceLevel(null));
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelWithDocumentTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
-            NUnit.Framework.Assert.IsNull(renderer.GetConformanceLevel(pdfDocument));
+            NUnit.Framework.Assert.IsNull(renderer.GetGenericConformanceLevel(pdfDocument));
         }
 
         [NUnit.Framework.Test]
@@ -64,7 +64,8 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
             renderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfAConformanceLevel.PDF_A_1B);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, renderer.GetConformanceLevel(pdfDocument));
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, renderer.GetGenericConformanceLevel(pdfDocument
+                ));
         }
 
         private class CustomSelectFieldListBoxRenderer : SelectFieldListBoxRenderer {

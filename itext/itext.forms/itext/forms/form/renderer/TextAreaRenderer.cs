@@ -29,6 +29,7 @@ using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
 using iText.Forms.Logs;
+using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Layout;
@@ -157,15 +158,15 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument doc = drawContext.GetDocument();
             Rectangle area = GetOccupiedArea().GetBBox().Clone();
             ApplyMargins(area, false);
-            IDictionary<int, Object> margins = DeleteMargins();
+            IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             float fontSizeValue = fontSize.GetValue();
             PdfString defaultValue = new PdfString(GetDefaultValue());
             // Default html2pdf text area appearance differs from the default one for form fields.
             // That's why we got rid of several properties we set by default during TextArea instance creation.
             modelElement.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
-                (GetConformanceLevel(doc)).SetFont(font).CreateMultilineText();
+            PdfFormField inputField = new TextFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetGenericConformanceLevel
+                (GetGenericConformanceLevel(doc)).SetFont(font).CreateMultilineText();
             inputField.DisableFieldRegeneration();
             inputField.SetValue(value);
             inputField.SetFontSize(fontSizeValue);
@@ -173,9 +174,9 @@ namespace iText.Forms.Form.Renderer {
             ApplyDefaultFieldProperties(inputField);
             inputField.GetFirstFormAnnotation().SetFormFieldElement((TextArea)modelElement);
             inputField.EnableFieldRegeneration();
+            ApplyAccessibilityProperties(inputField, doc);
             PdfFormCreator.GetAcroForm(doc, true).AddField(inputField, page);
-            WriteAcroFormFieldLangAttribute(doc);
-            ApplyProperties(margins);
+            FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
         /// <summary><inheritDoc/></summary>

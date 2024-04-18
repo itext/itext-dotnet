@@ -74,9 +74,20 @@ namespace iText.Forms.Xfdf {
         /// <summary>Parent field of current field.</summary>
         private iText.Forms.Xfdf.FieldObject parent;
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="FieldObject"/>.
+        /// </summary>
         public FieldObject() {
         }
 
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="FieldObject"/>.
+        /// </summary>
+        /// <param name="name">the name attribute of the field element</param>
+        /// <param name="value">the field's value</param>
+        /// <param name="containsRichText">indicates if a value-richtext element is present inside the field</param>
         public FieldObject(String name, String value, bool containsRichText) {
             this.name = name;
             this.containsRichText = containsRichText;
@@ -98,7 +109,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// value of field name attribute
+        /// value of field name attribute.
         /// </returns>
         public virtual String GetName() {
             return name;
@@ -132,7 +143,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// representation of inner value element of the field
+        /// representation of inner value element of the field.
         /// </returns>
         public virtual String GetValue() {
             return value;
@@ -170,7 +181,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// 
         /// <see cref="System.String"/>
-        /// representation of inner value-richtext element of the field
+        /// representation of inner value-richtext element of the field.
         /// </returns>
         public virtual String GetRichTextValue() {
             return richTextValue;
@@ -196,7 +207,7 @@ namespace iText.Forms.Xfdf {
         }
 
         /// <summary>Gets a boolean indicating if a value-richtext element is present inside the field.</summary>
-        /// <returns>true if a value-richtext element is present inside the field, false otherwise</returns>
+        /// <returns>true if a value-richtext element is present inside the field, false otherwise.</returns>
         public virtual bool IsContainsRichText() {
             return containsRichText;
         }
@@ -212,7 +223,7 @@ namespace iText.Forms.Xfdf {
         /// <returns>
         /// parent
         /// <see cref="FieldObject">field object</see>
-        /// of the current field
+        /// of the current field.
         /// </returns>
         public virtual iText.Forms.Xfdf.FieldObject GetParent() {
             return parent;

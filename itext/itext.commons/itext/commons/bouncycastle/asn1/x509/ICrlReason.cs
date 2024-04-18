@@ -35,5 +35,13 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
         /// </summary>
         /// <returns>CRLReason.keyCompromise value.</returns>
         int GetKeyCompromise();
+
+        /// <summary>
+        /// Gets
+        /// <c>removeFromCRL</c>
+        /// constant for the wrapped CRLReason.
+        /// </summary>
+        /// <returns>CRLReason.removeFromCRL value.</returns>
+        int GetRemoveFromCRL();
     }
 }

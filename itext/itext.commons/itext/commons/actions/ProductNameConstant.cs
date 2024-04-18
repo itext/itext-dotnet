@@ -30,6 +30,9 @@ namespace iText.Commons.Actions {
         /// <summary>itext-core constant.</summary>
         public const String ITEXT_CORE = "itext-core";
 
+        /// <summary>itext-core sign module constant.</summary>
+        public const String ITEXT_CORE_SIGN = "itext-core-sign";
+
         /// <summary>pdfhtml constant.</summary>
         public const String PDF_HTML = "pdfHtml";
 

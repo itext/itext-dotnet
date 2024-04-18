@@ -179,6 +179,7 @@ namespace iText.Layout {
                 logger.LogError(iText.IO.Logs.IoLogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
             }
             this.page = page;
+            this.pdfCanvas.SetDrawingOnPage(this.IsAutoTaggingEnabled());
         }
 
         /// <returns>true if autotagging of canvas content is enabled. Default value - false.</returns>

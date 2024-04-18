@@ -39,7 +39,6 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -123,7 +122,6 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED, Ignore = true)]
         public virtual void SignWithAdvancedClientsTest() {
             String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
             String signCertFileName = CERTS_SRC + signingCertName;

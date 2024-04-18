@@ -156,6 +156,18 @@ namespace iText.Commons.Utils {
             return result;
         }
 
+        public static int HashCode(params Object[] a)
+        {
+            if (a == null)
+                return 0;
+            int result = 1;
+            foreach (Object element in a)
+            {
+                result = 31 * result + (element == null ? 0 : element.GetHashCode());
+            }
+            return result;
+        }
+
         public static String ArraysToString<T>(T[] a) {
             if (a == null)
                 return "null";

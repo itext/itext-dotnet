@@ -71,7 +71,7 @@ namespace iText.Forms.Fields {
             else {
                 annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
                 field = PdfFormCreator.CreateButtonFormField(annotation, GetDocument());
-                if (null != GetConformanceLevel()) {
+                if (null != GetGenericConformanceLevel()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
             }
@@ -79,7 +79,7 @@ namespace iText.Forms.Fields {
             if (this.GetFont() != null) {
                 field.SetFont(this.GetFont());
             }
-            field.pdfAConformanceLevel = GetConformanceLevel();
+            field.pdfConformanceLevel = GetGenericConformanceLevel();
             field.SetPushButton(true);
             field.SetFieldName(GetFormFieldName());
             field.text = caption;

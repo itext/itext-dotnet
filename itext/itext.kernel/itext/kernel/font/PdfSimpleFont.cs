@@ -261,28 +261,20 @@ namespace iText.Kernel.Font {
             byte[] contentBytes = characterCodes.GetValueBytes();
             foreach (byte b in contentBytes) {
                 int code = b & 0xff;
-                Glyph glyph = null;
-                CMapToUnicode toUnicodeCMap = GetToUnicode();
-                if (toUnicodeCMap != null && toUnicodeCMap.Lookup(code) != null && (glyph = GetFontProgram().GetGlyphByCode
-                    (code)) != null) {
-                    if (!JavaUtil.ArraysEquals(toUnicodeCMap.Lookup(code), glyph.GetChars())) {
-                        // Copy the glyph because the original one may be reused (e.g. standard Helvetica font program)
-                        glyph = new Glyph(glyph);
-                        glyph.SetChars(toUnicodeCMap.Lookup(code));
-                    }
-                }
-                else {
-                    int uni = enc.GetUnicode(code);
-                    if (uni > -1) {
-                        glyph = GetGlyph(uni);
-                    }
-                    else {
-                        if (enc.GetBaseEncoding() == null) {
-                            glyph = GetFontProgram().GetGlyphByCode(code);
-                        }
-                    }
+                Glyph glyph = GetFontProgram().GetGlyphByCode(code);
+                int uni = enc.GetUnicode(code);
+                if (glyph == null && uni > -1) {
+                    glyph = GetGlyph(uni);
                 }
                 if (glyph != null) {
+                    char[] chars;
+                    CMapToUnicode toUnicodeCMap = GetToUnicode();
+                    if (toUnicodeCMap != null && (chars = toUnicodeCMap.Lookup(code)) != null && !JavaUtil.ArraysEquals(chars, 
+                        glyph.GetChars())) {
+                        // Copy the glyph because the original one may be reused (e.g. standard Helvetica font program)
+                        glyph = new Glyph(glyph);
+                        glyph.SetChars(chars);
+                    }
                     list.Add(glyph);
                 }
                 else {

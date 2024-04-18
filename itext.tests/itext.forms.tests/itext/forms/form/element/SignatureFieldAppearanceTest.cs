@@ -341,21 +341,19 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         public virtual void FontNullCustomCheck() {
             String outPdf = DESTINATION_FOLDER + "fontNullCustomCheck.pdf";
-            PdfDocument pdfDoc = new _PdfDocument_412(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new _PdfDocument_413(new PdfWriter(outPdf));
             Document document = new Document(pdfDoc);
             SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
             sigField.SetContent("test");
             sigField.SetInteractive(true);
             sigField.SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
-            Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => {
-                document.Add(sigField);
-            }
-            );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => document.Add(sigField)
+                );
             NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE, e.Message);
         }
 
-        private sealed class _PdfDocument_412 : PdfDocument {
-            public _PdfDocument_412(PdfWriter baseArg1)
+        private sealed class _PdfDocument_413 : PdfDocument {
+            public _PdfDocument_413(PdfWriter baseArg1)
                 : base(baseArg1) {
             }
 
@@ -425,6 +423,19 @@ namespace iText.Forms.Form.Element {
                 document.Add(appearance);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlattenEmptySignatureTest() {
+            String srcPdf = SOURCE_FOLDER + "emptySignature.pdf";
+            String outPdf = DESTINATION_FOLDER + "flattenEmptySignature.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_flattenEmptySignature.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, false);
+                acroForm.FlattenFields();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
         }
     }
 }

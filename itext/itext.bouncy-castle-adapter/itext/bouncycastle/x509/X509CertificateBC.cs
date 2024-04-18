@@ -132,6 +132,9 @@ namespace iText.Bouncycastle.X509 {
             } catch (CertificateExpiredException e) {
                 throw new CertificateExpiredExceptionBC(e);
             }
+            catch (CertificateNotYetValidException e) {
+                throw new CertificateNotYetValidExceptionBC(e);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -150,8 +153,23 @@ namespace iText.Bouncycastle.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
+        public DateTime GetNotAfter() {
+            return certificate.NotAfter;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public IList GetExtendedKeyUsage() {
             return certificate.GetExtendedKeyUsage()?.Select(ku=> ku.Id).ToList();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public bool[] GetKeyUsage() {
+            return certificate.GetKeyUsage();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public int GetBasicConstraints() {
+            return certificate.GetBasicConstraints();
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

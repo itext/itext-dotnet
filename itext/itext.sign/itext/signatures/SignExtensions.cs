@@ -45,6 +45,15 @@ namespace iText.Signatures {
                 t.Add(item);
             }
         }
+        
+        public static bool ContainsAll<T>(this ICollection<T> thisC, ICollection<T> otherC) {
+            foreach (T e in otherC) {
+                if (!thisC.Contains(e)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
             T[] r;
@@ -142,6 +151,10 @@ namespace iText.Signatures {
 
         public static bool Before(this DateTime date, DateTime when) {
             return date.CompareTo(when) < 0;
+        }
+        
+        public static IEnumerable<T> Sorted<T>(this IEnumerable<T> source, Comparison<T> comp) {
+            return source.OrderBy(x => x, Comparer<T>.Create(comp));
         }
     }
 }

@@ -23,11 +23,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Representation of an indexed color space.</summary>
     public class Indexed : Color {
+        /// <summary>
+        /// Creates an indexed color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>.
+        /// </summary>
+        /// <param name="colorSpace">Object containing the most common properties of color spaces</param>
         public Indexed(PdfColorSpace colorSpace)
             : this(colorSpace, 0) {
         }
 
+        /// <summary>
+        /// Creates an indexed color using the given
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
+        /// and color values.
+        /// </summary>
+        /// <param name="colorSpace">Object containing the most common properties of color spaces</param>
+        /// <param name="colorValue">Color values</param>
         public Indexed(PdfColorSpace colorSpace, int colorValue)
             : base(colorSpace, new float[] { colorValue }) {
         }

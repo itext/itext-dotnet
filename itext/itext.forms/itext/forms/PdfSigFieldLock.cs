@@ -44,8 +44,8 @@ namespace iText.Forms {
         /// <see cref="PdfSigFieldLock"/>.
         /// </summary>
         /// <param name="dict">
-        /// The dictionary whose entries should be added to
-        /// the signature field lock dictionary.
+        /// the dictionary whose entries should be added to
+        /// the signature field lock dictionary
         /// </param>
         public PdfSigFieldLock(PdfDictionary dict)
             : base(dict) {
@@ -62,9 +62,9 @@ namespace iText.Forms {
         /// <see cref="LockPermissions"/>
         /// for getting more info.
         /// </remarks>
-        /// <param name="permissions">The permissions granted for the document.</param>
+        /// <param name="permissions">the permissions granted for the document</param>
         /// <returns>
-        /// This
+        /// this
         /// <see cref="PdfSigFieldLock"/>
         /// object.
         /// </returns>
@@ -76,12 +76,12 @@ namespace iText.Forms {
 
         /// <summary>Sets signature lock for specific fields in the document.</summary>
         /// <param name="action">
-        /// Indicates the set of fields that should be locked after the actual
-        /// signing of the corresponding signature takes place.
+        /// indicates the set of fields that should be locked after the actual
+        /// signing of the corresponding signature takes place
         /// </param>
-        /// <param name="fields">Names indicating the fields.</param>
+        /// <param name="fields">names indicating the fields</param>
         /// <returns>
-        /// This
+        /// this
         /// <see cref="PdfSigFieldLock"/>
         /// object.
         /// </returns>
@@ -96,6 +96,19 @@ namespace iText.Forms {
             return this;
         }
 
+        /// <summary>
+        /// Returns the specified action of a signature field lock as
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// value.
+        /// </summary>
+        /// <param name="action">
+        /// the action as
+        /// <see cref="LockAction"/>
+        /// </param>
+        /// <returns>
+        /// the specified action of a signature field lock as
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>.
+        /// </returns>
         public static PdfName GetLockActionValue(PdfSigFieldLock.LockAction action) {
             switch (action) {
                 case PdfSigFieldLock.LockAction.ALL: {
@@ -116,6 +129,19 @@ namespace iText.Forms {
             }
         }
 
+        /// <summary>
+        /// Returns the specified level of access permissions granted for the document as
+        /// <see cref="iText.Kernel.Pdf.PdfNumber"/>
+        /// value.
+        /// </summary>
+        /// <param name="permissions">
+        /// the level of access permissions as
+        /// <see cref="LockPermissions"/>
+        /// </param>
+        /// <returns>
+        /// the specified level of access permissions as
+        /// <see cref="iText.Kernel.Pdf.PdfNumber"/>.
+        /// </returns>
         public static PdfNumber GetLockPermission(PdfSigFieldLock.LockPermissions permissions) {
             switch (permissions) {
                 case PdfSigFieldLock.LockPermissions.NO_CHANGES_ALLOWED: {
