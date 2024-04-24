@@ -28,6 +28,9 @@ using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Extensions;
 
 namespace iText.Signatures.Validation.V1 {
+    /// <summary>
+    /// Class which stores properties, which are related to signature validation process.
+    /// </summary>
     public class SignatureValidationProperties {
         public const bool DEFAULT_CONTINUE_AFTER_FAILURE = true;
 
@@ -43,6 +46,9 @@ namespace iText.Signatures.Validation.V1 {
         private readonly Dictionary<ValidationContext, SignatureValidationProperties.ContextProperties> properties
              = new Dictionary<ValidationContext, SignatureValidationProperties.ContextProperties>();
 
+        /// <summary>
+        /// Create <see cref="SignatureValidationProperties"/> with default values.
+        /// </summary>
         public SignatureValidationProperties() {
             SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), DEFAULT_CONTINUE_AFTER_FAILURE);
             SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), DEFAULT_ONLINE_FETCHING

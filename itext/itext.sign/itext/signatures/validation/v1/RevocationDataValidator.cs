@@ -147,7 +147,7 @@ namespace iText.Signatures.Validation.V1 {
                     .INFO));
                 return;
             }
-            if (CertificateSource.OCSP_ISSUER == context.GetCertificateSource()) {
+            if (CertificateSource.OCSP_ISSUER == localContext.GetCertificateSource()) {
                 // Check if Authorised OCSP Responder certificate has id-pkix-ocsp-nocheck extension, in which case we
                 // do not perform revocation check for it.
                 if (CertificateUtil.GetExtensionValueByOid(certificate, BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers(

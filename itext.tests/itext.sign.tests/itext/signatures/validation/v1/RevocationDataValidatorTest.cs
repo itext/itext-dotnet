@@ -139,7 +139,7 @@ namespace iText.Signatures.Validation.V1 {
             CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
             NUnit.Framework.Assert.AreEqual(caCert, item.GetCertificate());
             NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual("Using crl nextUpdate date as validation date", item.GetMessage());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.NEXT_UPDATE_VALIDATION, item.GetMessage());
             item = (CertificateReportItem)report.GetLogs()[1];
             NUnit.Framework.Assert.AreEqual(caCert, item.GetCertificate());
             NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
@@ -182,7 +182,7 @@ namespace iText.Signatures.Validation.V1 {
             CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
             NUnit.Framework.Assert.AreEqual(caCert, item.GetCertificate());
             NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual("Using crl nextUpdate date as validation date", item.GetMessage());
+            NUnit.Framework.Assert.AreEqual(CRLValidator.NEXT_UPDATE_VALIDATION, item.GetMessage());
             item = (CertificateReportItem)report.GetLogs()[1];
             NUnit.Framework.Assert.AreEqual(caCert, item.GetCertificate());
             NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());

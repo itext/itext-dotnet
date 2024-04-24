@@ -194,7 +194,8 @@ namespace iText.Signatures.Validation.V1 {
                         .INDETERMINATE));
                     return;
                 }
-                if (!certificateRetriever.IsCertificateTrusted(responderCert)) {
+                if (!certificateRetriever.IsCertificateTrusted(responderCert) && !certificateRetriever.GetTrustedCertificatesStore
+                    ().IsCertificateTrustedForOcsp(responderCert)) {
                     // RFC 6960 4.2.2.2. Authorized Responders:
                     // "Systems relying on OCSP responses MUST recognize a delegation certificate as being issued
                     // by the CA that issued the certificate in question only if the delegation certificate and the

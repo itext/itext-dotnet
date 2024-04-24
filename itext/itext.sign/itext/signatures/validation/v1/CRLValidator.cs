@@ -65,6 +65,10 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String UPDATE_DATE_BEFORE_CHECK_DATE = "nextUpdate: {0} of CRLResponse is before validation date {1}.";
 
+        internal const String NEXT_UPDATE_VALIDATION = "Using crl nextUpdate date as validation date.";
+
+        internal const String THIS_UPDATE_VALIDATION = "Using crl thisUpdate date as validation date.";
+
         // All reasons without unspecified.
         internal const int ALL_REASONS = 32895;
 
@@ -281,12 +285,12 @@ namespace iText.Signatures.Validation.V1 {
             DateTime crlIssuerDate;
             if (TimestampConstants.UNDEFINED_TIMESTAMP_DATE != crl.GetNextUpdate()) {
                 crlIssuerDate = crl.GetNextUpdate();
-                report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, "Using crl nextUpdate date as validation date"
+                report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, NEXT_UPDATE_VALIDATION
                     , ReportItem.ReportItemStatus.INFO));
             }
             else {
                 crlIssuerDate = crl.GetThisUpdate();
-                report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, "Using crl thisUpdate date as validation date"
+                report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, THIS_UPDATE_VALIDATION
                     , ReportItem.ReportItemStatus.INFO));
             }
             builder.GetCertificateChainValidator().Validate(report, context.SetCertificateSource(CertificateSource.CRL_ISSUER

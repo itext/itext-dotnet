@@ -28,6 +28,7 @@ using iText.Commons;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Logs;
+using iText.Signatures.Validation.V1;
 
 namespace iText.Signatures {
     /// <summary>
@@ -38,8 +39,7 @@ namespace iText.Signatures {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.IssuingCertificateRetriever
             ));
 
-        private readonly IDictionary<String, IX509Certificate> trustedCertificates = new Dictionary<String, IX509Certificate
-            >();
+        private readonly TrustedCertificatesStore trustedCertificatesStore = new TrustedCertificatesStore();
 
         private readonly IDictionary<String, IX509Certificate> knownCertificates = new Dictionary<String, IX509Certificate
             >();
@@ -80,7 +80,8 @@ namespace iText.Signatures {
                     ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
                     if (certificatesFromAIA == null || certificatesFromAIA.IsEmpty()) {
                         // Retrieve Issuer from the certificate store
-                        IX509Certificate issuer = trustedCertificates.Get(lastAddedCert.GetIssuerDN().ToString());
+                        IX509Certificate issuer = trustedCertificatesStore.GetKnownCertificate(lastAddedCert.GetIssuerDN().ToString
+                            ());
                         if (issuer == null) {
                             issuer = knownCertificates.Get(lastAddedCert.GetIssuerDN().ToString());
                             if (issuer == null) {
@@ -148,7 +149,7 @@ namespace iText.Signatures {
             // - a Trusted Responder whose public key is trusted by the requester;
             // - ..."
             try {
-                foreach (IX509Certificate anchor in trustedCertificates.Values) {
+                foreach (IX509Certificate anchor in trustedCertificatesStore.GetAllTrustedCertificates()) {
                     if (CertificateUtil.IsSignatureValid(ocspResp, anchor)) {
                         // Certificate from the root store is considered trusted and valid by this method.
                         return anchor;
@@ -180,7 +181,8 @@ namespace iText.Signatures {
             IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
             if (certificatesFromAIA == null) {
                 // Retrieve Issuer from the certificate store
-                IX509Certificate issuer = trustedCertificates.Get(((IX509Crl)crl).GetIssuerDN().ToString());
+                IX509Certificate issuer = trustedCertificatesStore.GetKnownCertificate(((IX509Crl)crl).GetIssuerDN().ToString
+                    ());
                 if (issuer == null) {
                     issuer = knownCertificates.Get(((IX509Crl)crl).GetIssuerDN().ToString());
                     if (issuer == null) {
@@ -193,11 +195,14 @@ namespace iText.Signatures {
             return RetrieveMissingCertificates(certificatesFromAIA.ToArray(new IX509Certificate[0]));
         }
 
-        /// <summary><inheritDoc/></summary>
-        /// <param name="certificates">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
+        /// <summary>Sets trusted certificate list to be used as certificates trusted for any possible usage.</summary>
+        /// <remarks>
+        /// Sets trusted certificate list to be used as certificates trusted for any possible usage.
+        /// In case more specific trusted is desired to be configured
+        /// <see cref="GetTrustedCertificatesStore()"/>
+        /// method is expected to be used.
+        /// </remarks>
+        /// <param name="certificates">certificate list to be used as certificates trusted for any possible usage.</param>
         public virtual void SetTrustedCertificates(ICollection<IX509Certificate> certificates) {
             AddTrustedCertificates(certificates);
         }
@@ -209,9 +214,7 @@ namespace iText.Signatures {
         /// to be added
         /// </param>
         public virtual void AddTrustedCertificates(ICollection<IX509Certificate> certificates) {
-            foreach (IX509Certificate certificate in certificates) {
-                trustedCertificates.Put(((IX509Certificate)certificate).GetSubjectDN().ToString(), certificate);
-            }
+            trustedCertificatesStore.AddGenerallyTrustedCertificates(certificates);
         }
 
         /// <summary>Add certificates collection to known certificates storage, which is used for issuer certificates retrieval.
@@ -225,6 +228,20 @@ namespace iText.Signatures {
             foreach (IX509Certificate certificate in certificates) {
                 knownCertificates.Put(((IX509Certificate)certificate).GetSubjectDN().ToString(), certificate);
             }
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Signatures.Validation.V1.TrustedCertificatesStore"/>
+        /// to be used to provide more complex trusted certificates configuration.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.TrustedCertificatesStore"/>
+        /// storage
+        /// </returns>
+        public virtual TrustedCertificatesStore GetTrustedCertificatesStore() {
+            return trustedCertificatesStore;
         }
 
         /// <summary>Check if provided certificate is present in trusted certificates storage.</summary>
@@ -241,7 +258,7 @@ namespace iText.Signatures {
         /// otherwise
         /// </returns>
         public virtual bool IsCertificateTrusted(IX509Certificate certificate) {
-            return trustedCertificates.ContainsKey(((IX509Certificate)certificate).GetSubjectDN().ToString());
+            return trustedCertificatesStore.IsCertificateGenerallyTrusted(certificate);
         }
 
         /// <summary>
