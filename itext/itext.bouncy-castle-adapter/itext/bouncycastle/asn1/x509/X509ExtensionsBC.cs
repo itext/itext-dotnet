@@ -57,6 +57,8 @@ namespace iText.Bouncycastle.Asn1.X509 {
         private static readonly DerObjectIdentifierBC SUBJECT_KEY_IDENTIFIER = new DerObjectIdentifierBC(X509Extensions.SubjectKeyIdentifier
             );
 
+        private static readonly IDerObjectIdentifier EXPIRED_CERTS_ON_CRL = new DerObjectIdentifierBC(X509Extensions.ExpiredCertsOnCrl
+            );
         /// <summary>
         /// Creates new wrapper instance for
         /// <see cref="Org.BouncyCastle.Asn1.X509.X509Extensions"/>.
@@ -127,6 +129,11 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IDerObjectIdentifier GetSubjectKeyIdentifier() {
             return SUBJECT_KEY_IDENTIFIER;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IDerObjectIdentifier GetExpiredCertsOnCRL() {
+            return EXPIRED_CERTS_ON_CRL;
         }
     }
 }

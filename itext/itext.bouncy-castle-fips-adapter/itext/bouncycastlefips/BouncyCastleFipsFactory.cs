@@ -829,6 +829,11 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual IDerGeneralizedTime CreateASN1GeneralizedTime(DateTime date) {
+            return new DerGeneralizedTimeBCFips(new DerGeneralizedTime(date));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IDerUtcTime CreateASN1UTCTime(IAsn1Encodable encodable) {
             Asn1EncodableBCFips encodableBCFips = (Asn1EncodableBCFips)encodable;
             if (encodableBCFips.GetEncodable() is DerUtcTime) {

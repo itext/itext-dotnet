@@ -308,6 +308,52 @@ namespace iText.Signatures.Validation.V1 {
             NUnit.Framework.Assert.AreEqual(CRLValidator.ONLY_SOME_REASONS_CHECKED, reportItem.GetMessage());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NoExpiredCertOnCrlExtensionTest() {
+            // Certificate is expired on 01/01/2400.
+            RetrieveTestResources("happyPath");
+            TestCrlBuilder builder = new TestCrlBuilder(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddYears
+                (401));
+            byte[] crl = builder.MakeCrl();
+            ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
+            new AssertValidationReport(report).HasStatus(ValidationReport.ValidationResult.INDETERMINATE).HasNumberOfFailures
+                (1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName().Equals(CRLValidator.CRL_CHECK) && l.GetMessage
+                ().Equals(MessageFormatUtil.Format(CRLValidator.CERTIFICATE_IS_EXPIRED, signCert.GetNotAfter())) && ((
+                CertificateReportItem)l).GetCertificate().Equals(signCert), CRLValidator.CERTIFICATE_IS_EXPIRED).DoAssert
+                ();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertExpiredBeforeDateFromExpiredCertOnCrlTest() {
+            // Certificate is expired on 01/01/2400.
+            RetrieveTestResources("happyPath");
+            TestCrlBuilder builder = new TestCrlBuilder(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddYears
+                (401));
+            builder.AddExtension(FACTORY.CreateExtensions().GetExpiredCertsOnCRL(), false, FACTORY.CreateASN1GeneralizedTime
+                (TimeTestUtil.TEST_DATE_TIME.AddYears(400)));
+            byte[] crl = builder.MakeCrl();
+            ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
+            new AssertValidationReport(report).HasStatus(ValidationReport.ValidationResult.INDETERMINATE).HasNumberOfFailures
+                (1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName().Equals(CRLValidator.CRL_CHECK) && l.GetMessage
+                ().Equals(MessageFormatUtil.Format(CRLValidator.CERTIFICATE_IS_EXPIRED, signCert.GetNotAfter())) && ((
+                CertificateReportItem)l).GetCertificate().Equals(signCert), CRLValidator.CERTIFICATE_IS_EXPIRED).DoAssert
+                ();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertExpiredAfterDateFromExpiredCertOnCrlExtensionTest() {
+            // Certificate is expired on 01/01/2400.
+            RetrieveTestResources("happyPath");
+            TestCrlBuilder builder = new TestCrlBuilder(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddYears
+                (401));
+            builder.AddExtension(FACTORY.CreateExtensions().GetExpiredCertsOnCRL(), false, FACTORY.CreateASN1GeneralizedTime
+                (TimeTestUtil.TEST_DATE_TIME.AddYears(399)));
+            byte[] crl = builder.MakeCrl();
+            ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
+            new AssertValidationReport(report).HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures(
+                0).DoAssert();
+        }
+
         private ValidationReport CheckCrlScope(String crlPath) {
             String root = SOURCE_FOLDER + "issuingDistributionPointTest/root.pem";
             String sign = SOURCE_FOLDER + "issuingDistributionPointTest/sign.pem";

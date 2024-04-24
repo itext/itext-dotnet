@@ -813,10 +813,15 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public virtual IDerGeneralizedTime CreateASN1GeneralizedTime(IAsn1Encodable encodable) {
             Asn1EncodableBC encodableBC = (Asn1EncodableBC)encodable;
-            if (encodableBC.GetEncodable() is DerGeneralizedTime) {
-                return new DerGeneralizedTimeBC((DerGeneralizedTime)encodableBC.GetEncodable());
+            if (encodableBC.GetEncodable() is Asn1GeneralizedTime) {
+                return new IAsn1GeneralizedTimeBC((Asn1GeneralizedTime)encodableBC.GetEncodable());
             }
             return null;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerGeneralizedTime CreateASN1GeneralizedTime(DateTime date) {
+            return new IAsn1GeneralizedTimeBC(new Asn1GeneralizedTime(date));
         }
 
         /// <summary><inheritDoc/></summary>

@@ -104,6 +104,11 @@ namespace iText.Signatures.Validation.V1.Report {
             return certificate;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
         public override String ToString() {
             return "\nCertificateReportItem{" + "baseclass=" + base.ToString() + "\ncertificate=" + certificate.GetSubjectDN
                 () + '}';

@@ -89,5 +89,13 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
         /// </summary>
         /// <returns>Extension.subjectKeyIdentifier wrapper.</returns>
         IDerObjectIdentifier GetSubjectKeyIdentifier();
+
+        /// <summary>
+        /// Gets
+        /// <c>expiredCertsOnCRL</c>
+        /// constant for the wrapped Extension.
+        /// </summary>
+        /// <returns>Extension.expiredCertsOnCRL wrapper.</returns>
+        IDerObjectIdentifier GetExpiredCertsOnCRL();
     }
 }

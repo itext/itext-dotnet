@@ -23,6 +23,7 @@
 using Org.BouncyCastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using Org.BouncyCastle.Asn1;
 
 namespace iText.Bouncycastlefips.Asn1.X509 {
     /// <summary>
@@ -36,8 +37,8 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         private static readonly DerObjectIdentifierBCFips CRL_DISTRIBUTION_POINTS = new DerObjectIdentifierBCFips
             (X509Extensions.CrlDistributionPoints);
 
-        private static readonly DerObjectIdentifierBCFips ISSUING_DISTRIBUTION_POINT = new DerObjectIdentifierBCFips(X509Extensions.IssuingDistributionPoint
-        );
+        private static readonly DerObjectIdentifierBCFips ISSUING_DISTRIBUTION_POINT = new DerObjectIdentifierBCFips
+        (X509Extensions.IssuingDistributionPoint);
 
         private static readonly DerObjectIdentifierBCFips AUTHORITY_INFO_ACCESS = new DerObjectIdentifierBCFips(
             X509Extensions.AuthorityInfoAccess);
@@ -56,6 +57,9 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
 
         private static readonly DerObjectIdentifierBCFips SUBJECT_KEY_IDENTIFIER = new DerObjectIdentifierBCFips
             (X509Extensions.SubjectKeyIdentifier);
+
+        private static readonly IDerObjectIdentifier EXPIRED_CERTS_ON_CRL = new DerObjectIdentifierBCFips
+            (new DerObjectIdentifier("2.5.29.60"));
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -127,6 +131,11 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IDerObjectIdentifier GetSubjectKeyIdentifier() {
             return SUBJECT_KEY_IDENTIFIER;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IDerObjectIdentifier GetExpiredCertsOnCRL() {
+            return EXPIRED_CERTS_ON_CRL;
         }
     }
 }
