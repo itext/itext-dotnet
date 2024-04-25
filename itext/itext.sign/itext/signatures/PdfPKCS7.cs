@@ -384,10 +384,22 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Set signature policy identifier to be used during signature creation.</summary>
+        /// <param name="signaturePolicy">
+        /// 
+        /// <see cref="SignaturePolicyInfo"/>
+        /// to be used during signature creation
+        /// </param>
         public virtual void SetSignaturePolicy(SignaturePolicyInfo signaturePolicy) {
             this.signaturePolicyIdentifier = signaturePolicy.ToSignaturePolicyIdentifier();
         }
 
+        /// <summary>Set signature policy identifier to be used during signature creation.</summary>
+        /// <param name="signaturePolicy">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Esf.ISignaturePolicyIdentifier"/>
+        /// to be used during signature creation
+        /// </param>
         public virtual void SetSignaturePolicy(ISignaturePolicyIdentifier signaturePolicy) {
             this.signaturePolicyIdentifier = signaturePolicy;
         }
@@ -1178,7 +1190,7 @@ namespace iText.Signatures {
 
         // Certificates
         /// <summary>All the X.509 certificates in no particular order.</summary>
-        private ICollection<IX509Certificate> certs;
+        private readonly ICollection<IX509Certificate> certs;
 
         private ICollection<IX509Certificate> timestampCerts;
 

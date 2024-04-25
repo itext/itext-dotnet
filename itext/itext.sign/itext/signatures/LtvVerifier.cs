@@ -323,6 +323,22 @@ namespace iText.Signatures {
             return ocsps;
         }
 
+        /// <summary>
+        /// Initialize
+        /// <see cref="LtvVerifier"/>
+        /// object by using provided document.
+        /// </summary>
+        /// <remarks>
+        /// Initialize
+        /// <see cref="LtvVerifier"/>
+        /// object by using provided document.
+        /// This method reads all the existing signatures and mathematically validates the last one.
+        /// </remarks>
+        /// <param name="document">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to be verified
+        /// </param>
         protected internal virtual void InitLtvVerifier(PdfDocument document) {
             this.document = document;
             this.acroForm = PdfFormCreator.GetAcroForm(document, true);

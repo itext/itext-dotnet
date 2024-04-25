@@ -23,6 +23,9 @@
 using System;
  
 namespace iText.Signatures {
+    /// <summary>
+    /// Timestamp constants util class for internal usage only.
+    /// </summary>
     public class TimestampConstants {
         /// <summary>The timestamp which is returned in case the signed document doesn't contain timestamp.</summary>
         /// <remarks>

@@ -184,6 +184,12 @@ namespace iText.Signatures {
             LOGGER.LogInformation("Added CRL url: " + url);
         }
 
+        /// <summary>Get an amount of URLs provided for this CRL.</summary>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// number of URLs
+        /// </returns>
         public virtual int GetUrlsSize() {
             return urls.Count;
         }

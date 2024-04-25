@@ -30,6 +30,17 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
+    /// <summary>
+    /// Implementation class for
+    /// <see cref="IExternalSignatureContainer"/>.
+    /// </summary>
+    /// <remarks>
+    /// Implementation class for
+    /// <see cref="IExternalSignatureContainer"/>.
+    /// This external signature container is implemented based on PCS7 standard and
+    /// <see cref="PdfPKCS7"/>
+    /// class.
+    /// </remarks>
     public class PKCS7ExternalSignatureContainer : IExternalSignatureContainer {
         private readonly IX509Certificate[] chain;
 
@@ -58,6 +69,11 @@ namespace iText.Signatures {
             this.privateKey = privateKey;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
         public virtual byte[] Sign(Stream data) {
             PdfPKCS7 sgn = new PdfPKCS7((IPrivateKey)null, chain, hashAlgorithm, new BouncyCastleDigest(), false);
             if (signaturePolicy != null) {
@@ -93,6 +109,11 @@ namespace iText.Signatures {
             return sgn.GetEncodedPKCS7(hash, sigType, tsaClient, ocspList, crlBytes);
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
         public virtual void ModifySigningDictionary(PdfDictionary signDic) {
             signDic.Put(PdfName.Filter, PdfName.Adobe_PPKLite);
             signDic.Put(PdfName.SubFilter, sigType == PdfSigner.CryptoStandard.CADES ? PdfName.ETSI_CAdES_DETACHED : PdfName

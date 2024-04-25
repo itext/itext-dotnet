@@ -40,13 +40,13 @@ namespace iText.Signatures {
     public class SignaturePolicyInfo {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private String policyIdentifier;
+        private readonly String policyIdentifier;
 
-        private byte[] policyHash;
+        private readonly byte[] policyHash;
 
-        private String policyDigestAlgorithm;
+        private readonly String policyDigestAlgorithm;
 
-        private String policyUri;
+        private readonly String policyUri;
 
         /// <summary>
         /// Constructs a new
@@ -59,13 +59,13 @@ namespace iText.Signatures {
         /// <param name="policyUri">the uri of the full policy description</param>
         public SignaturePolicyInfo(String policyIdentifier, byte[] policyHash, String policyDigestAlgorithm, String
              policyUri) {
-            if (policyIdentifier == null || policyIdentifier.Length == 0) {
+            if (policyIdentifier == null || String.IsNullOrEmpty(policyIdentifier)) {
                 throw new ArgumentException("Policy identifier cannot be null");
             }
             if (policyHash == null) {
                 throw new ArgumentException("Policy hash cannot be null");
             }
-            if (policyDigestAlgorithm == null || policyDigestAlgorithm.Length == 0) {
+            if (policyDigestAlgorithm == null || String.IsNullOrEmpty(policyDigestAlgorithm)) {
                 throw new ArgumentException("Policy digest algorithm cannot be null");
             }
             this.policyIdentifier = policyIdentifier;
@@ -89,30 +89,37 @@ namespace iText.Signatures {
                 , policyUri) {
         }
 
+        /// <summary>Get the ID of the signature policy.</summary>
+        /// <returns>the ID of the signature policy</returns>
         public virtual String GetPolicyIdentifier() {
             return policyIdentifier;
         }
 
+        /// <summary>Get the hash of the signature policy.</summary>
+        /// <returns>the hash of the signature policy</returns>
         public virtual byte[] GetPolicyHash() {
             return policyHash;
         }
 
+        /// <summary>Get the digestion algorithm of the signature policy.</summary>
+        /// <returns>the digestion algorithm of the signature policy</returns>
         public virtual String GetPolicyDigestAlgorithm() {
             return policyDigestAlgorithm;
         }
 
+        /// <summary>Get the uri of the full policy description.</summary>
+        /// <returns>the uri of the full policy description</returns>
         public virtual String GetPolicyUri() {
             return policyUri;
         }
 
         internal virtual ISignaturePolicyIdentifier ToSignaturePolicyIdentifier() {
             String algId = DigestAlgorithms.GetAllowedDigest(this.policyDigestAlgorithm);
-            if (algId == null || algId.Length == 0) {
+            if (algId == null || String.IsNullOrEmpty(algId)) {
                 throw new ArgumentException("Invalid policy hash algorithm");
             }
-            ISignaturePolicyIdentifier signaturePolicyIdentifier = null;
             ISigPolicyQualifierInfo spqi = null;
-            if (this.policyUri != null && this.policyUri.Length > 0) {
+            if (this.policyUri != null && !String.IsNullOrEmpty(this.policyUri)) {
                 spqi = FACTORY.CreateSigPolicyQualifierInfo(FACTORY.CreatePKCSObjectIdentifiers().GetIdSpqEtsUri(), FACTORY
                     .CreateDERIA5String(this.policyUri));
             }
@@ -122,8 +129,7 @@ namespace iText.Signatures {
                 (FACTORY.CreateASN1ObjectIdentifier(algId)), FACTORY.CreateDEROctetString(this.policyHash));
             ISignaturePolicyId signaturePolicyId = FACTORY.CreateSignaturePolicyId(identifier, otherHashAlgAndValue, spqi
                 );
-            signaturePolicyIdentifier = FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId);
-            return signaturePolicyIdentifier;
+            return FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId);
         }
     }
 }
