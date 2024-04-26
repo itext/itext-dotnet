@@ -70,6 +70,10 @@ namespace iText.Signatures {
         }
 
         /// <summary><inheritDoc/></summary>
+        /// <param name="data">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
         /// <returns>
         /// 
         /// <inheritDoc/>
@@ -110,10 +114,10 @@ namespace iText.Signatures {
         }
 
         /// <summary><inheritDoc/></summary>
-        /// <returns>
+        /// <param name="signDic">
         /// 
         /// <inheritDoc/>
-        /// </returns>
+        /// </param>
         public virtual void ModifySigningDictionary(PdfDictionary signDic) {
             signDic.Put(PdfName.Filter, PdfName.Adobe_PPKLite);
             signDic.Put(PdfName.SubFilter, sigType == PdfSigner.CryptoStandard.CADES ? PdfName.ETSI_CAdES_DETACHED : PdfName
