@@ -29,6 +29,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils {
+    /// <summary>Helper class to split the document based on some condition.</summary>
     public class PdfSplitter {
         private PdfDocument pdfDocument;
 
@@ -192,6 +193,12 @@ namespace iText.Kernel.Utils {
             return ExtractPageRanges(JavaCollectionsUtil.SingletonList(pageRange))[0];
         }
 
+        /// <summary>Gets the document to be split.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to be split.
+        /// </returns>
         public virtual PdfDocument GetPdfDocument() {
             return pdfDocument;
         }
@@ -224,7 +231,11 @@ namespace iText.Kernel.Utils {
             return newDocument;
         }
 
+        /// <summary>The event listener which is called when another document is ready.</summary>
         public interface IDocumentReadyListener {
+            /// <summary>Performs some action in case document is ready, e.g. closes the document.</summary>
+            /// <param name="pdfDocument">the current document created as a result of the original document split</param>
+            /// <param name="pageRange">original document page range corresponding to the current document</param>
             void DocumentReady(PdfDocument pdfDocument, PageRange pageRange);
         }
 

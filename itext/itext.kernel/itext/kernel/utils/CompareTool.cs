@@ -116,6 +116,11 @@ namespace iText.Kernel.Utils {
 
         private String compareExec;
 
+        /// <summary>
+        /// Create new
+        /// <see cref="CompareTool"/>
+        /// instance.
+        /// </summary>
         public CompareTool() {
         }
 
@@ -1691,6 +1696,20 @@ namespace iText.Kernel.Utils {
             return null;
         }
 
+        /// <summary>Compare PDF objects.</summary>
+        /// <param name="outObj">out object corresponding to the output file, which is to be compared with cmp object</param>
+        /// <param name="cmpObj">cmp object corresponding to the cmp-file, which is to be compared with out object</param>
+        /// <param name="currentPath">
+        /// current objects
+        /// <see cref="iText.Kernel.Utils.Objectpathitems.ObjectPath"/>
+        /// path
+        /// </param>
+        /// <param name="compareResult">
+        /// 
+        /// <see cref="CompareResult"/>
+        /// for the results of the comparison of the two documents
+        /// </param>
+        /// <returns>true if objects are equal, false otherwise.</returns>
         protected internal virtual bool CompareObjects(PdfObject outObj, PdfObject cmpObj, ObjectPath currentPath, 
             CompareTool.CompareResult compareResult) {
             PdfObject outDirectObj = null;
@@ -2281,10 +2300,23 @@ namespace iText.Kernel.Utils {
                 XmlUtils.WriteXmlDocToStream(xmlReport, stream);
             }
 
+            /// <summary>Checks whether maximum number of difference messages to be handled by this CompareResult is reached.
+            ///     </summary>
+            /// <returns>true if limit of difference messages is reached, false otherwise.</returns>
             protected internal virtual bool IsMessageLimitReached() {
                 return differences.Count >= messageLimit;
             }
 
+            /// <summary>
+            /// Adds an error message for the
+            /// <see cref="iText.Kernel.Utils.Objectpathitems.ObjectPath"/>.
+            /// </summary>
+            /// <param name="path">
+            /// 
+            /// <see cref="iText.Kernel.Utils.Objectpathitems.ObjectPath"/>
+            /// for the two corresponding objects in the compared documents
+            /// </param>
+            /// <param name="message">an error message</param>
             protected internal virtual void AddError(ObjectPath path, String message) {
                 if (differences.Count < messageLimit) {
                     differences.Put(new ObjectPath(path), message);

@@ -37,7 +37,7 @@ namespace iText.Kernel.Utils {
 
         private static readonly Regex SINGLE_PAGE_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("(\\d+)");
 
-        private IList<PageRange.IPageRangePart> sequences = new List<PageRange.IPageRangePart>();
+        private readonly IList<PageRange.IPageRangePart> sequences = new List<PageRange.IPageRangePart>();
 
         /// <summary>
         /// Constructs an empty
@@ -208,15 +208,30 @@ namespace iText.Kernel.Utils {
         /// <summary>Inner interface for range parts definition</summary>
         public interface IPageRangePart {
             //public List<Integer> getAllPages();
+            /// <summary>Gets the list of pages that have been added to the range part so far.</summary>
+            /// <param name="nbPages">
+            /// number of pages of the document to get the pages,
+            /// to list only the pages eligible for this document
+            /// </param>
+            /// <returns>the list containing page numbers added to the range part matching this document</returns>
             IList<int> GetAllPagesInRange(int nbPages);
 
+            /// <summary>Checks if a given page is present in the range part built so far.</summary>
+            /// <param name="pageNumber">the page number to check</param>
+            /// <returns><c>true</c> if the page is present in this range, <c>false</c> otherwise</returns>
             bool IsPageInRange(int pageNumber);
         }
 
-        /// <summary>Class for range part containing a single page</summary>
+        /// <summary>Class for range part containing a single page.</summary>
         public class PageRangePartSingle : PageRange.IPageRangePart {
             private readonly int page;
 
+            /// <summary>
+            /// Creates new
+            /// <see cref="PageRangePartSingle"/>
+            /// instance.
+            /// </summary>
+            /// <param name="page">a single page for a range part</param>
             public PageRangePartSingle(int page) {
                 this.page = page;
             }
@@ -251,13 +266,20 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// Class for range part containing a range of pages represented by a start
-        /// and an end page
+        /// and an end page.
         /// </summary>
         public class PageRangePartSequence : PageRange.IPageRangePart {
             private readonly int start;
 
             private readonly int end;
 
+            /// <summary>
+            /// Creates new
+            /// <see cref="PageRangePartSequence"/>
+            /// instance.
+            /// </summary>
+            /// <param name="start">the number of the first page in a range part</param>
+            /// <param name="end">the number of the last page in a range part</param>
             public PageRangePartSequence(int start, int end) {
                 this.start = start;
                 this.end = end;
@@ -292,11 +314,17 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// Class for range part containing a range of pages for all pages after a
-        /// given start page
+        /// given start page.
         /// </summary>
         public class PageRangePartAfter : PageRange.IPageRangePart {
             private readonly int start;
 
+            /// <summary>
+            /// Creates new
+            /// <see cref="PageRangePartAfter"/>
+            /// instance.
+            /// </summary>
+            /// <param name="start">the number of the first page in a range part</param>
             public PageRangePartAfter(int start) {
                 this.start = start;
             }
@@ -391,6 +419,17 @@ namespace iText.Kernel.Utils {
         public class PageRangePartAnd : PageRange.IPageRangePart {
             private readonly IList<PageRange.IPageRangePart> conditions = new List<PageRange.IPageRangePart>();
 
+            /// <summary>
+            /// Creates new
+            /// <see cref="PageRangePartAnd"/>
+            /// instance.
+            /// </summary>
+            /// <param name="conditions">
+            /// 
+            /// <see cref="IPageRangePart"/>
+            /// conditions to combine several range parts,
+            /// e.g. to configure odd pages between page 19 and 25
+            /// </param>
             public PageRangePartAnd(params PageRange.IPageRangePart[] conditions) {
                 this.conditions.AddAll(JavaUtil.ArraysAsList(conditions));
             }

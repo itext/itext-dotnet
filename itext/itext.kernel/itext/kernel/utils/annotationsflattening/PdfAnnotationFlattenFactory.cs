@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils.Annotationsflattening {
+    /// <summary>Helper class to retrieve the annotation flatten worker for the specified annotation subtype.</summary>
     public class PdfAnnotationFlattenFactory {
         private static readonly Dictionary<PdfName, Func<IAnnotationFlattener>> map;
 

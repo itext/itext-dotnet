@@ -59,7 +59,7 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Checks if a character value should be escaped/unescaped.</summary>
         /// <param name="c">a character value</param>
-        /// <returns>true if it's OK to escape or unescape this value</returns>
+        /// <returns>true if it's OK to escape or unescape this value.</returns>
         public static bool IsValidCharacterValue(int c) {
             return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000 && c <= 0xFFFD || c >=
                  0x10000 && c <= 0x10FFFF);
@@ -101,6 +101,8 @@ namespace iText.Kernel.Utils {
             return this;
         }
 
+        /// <summary>Inspect the children of the StructTreeRoot.</summary>
+        /// <param name="kids">list of the direct kids of the StructTreeRoot</param>
         protected internal virtual void InspectKids(IList<IStructureNode> kids) {
             if (kids == null) {
                 return;
@@ -110,6 +112,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        /// <summary>Inspect the child of the StructTreeRoot.</summary>
+        /// <param name="kid">the direct kid of the StructTreeRoot</param>
         protected internal virtual void InspectKid(IStructureNode kid) {
             try {
                 if (kid is PdfStructElem) {
@@ -146,6 +150,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        /// <summary>Inspects attributes dictionary of the StructTreeRoot child.</summary>
+        /// <param name="kid">the direct kid of the StructTreeRoot</param>
         protected internal virtual void InspectAttributes(PdfStructElem kid) {
             PdfObject attrObj = kid.GetAttributes(false);
             if (attrObj != null) {
@@ -172,6 +178,12 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        /// <summary>Parses tag of the Marked Content Reference (MCR) kid of the StructTreeRoot.</summary>
+        /// <param name="kid">
+        /// the direct
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfMcr"/>
+        /// kid of the StructTreeRoot
+        /// </param>
         protected internal virtual void ParseTag(PdfMcr kid) {
             int mcid = kid.GetMcid();
             PdfDictionary pageDic = kid.GetPageObject();
@@ -205,6 +217,9 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        /// <summary>Fixes specified tag name to be valid XML tag.</summary>
+        /// <param name="tag">tag name to fix</param>
+        /// <returns>fixed tag name.</returns>
         protected internal static String FixTagName(String tag) {
             StringBuilder sb = new StringBuilder();
             for (int k = 0; k < tag.Length; ++k) {
