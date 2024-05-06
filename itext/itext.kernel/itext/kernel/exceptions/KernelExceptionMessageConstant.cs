@@ -445,10 +445,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String STREAM_SHALL_END_WITH_ENDSTREAM = "Stream shall end with endstream keyword.";
 
-        [Obsolete]
-        public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = 
-                // Replaced with log message
-                "StructParent index not found in " + "tagged object.";
+        public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = "StructParent index not found in " + 
+            "tagged object.";
 
         public const String STRUCTURE_ELEMENT_IN_STRUCTURE_DESTINATION_SHALL_BE_AN_INDIRECT_OBJECT = "Structure " 
             + "element referenced by a structure destination shall be an indirect object.";
@@ -543,6 +541,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT = "Xref structure contains too many elements " 
             + "and may cause OOM exception. You can increase number of elements by setting custom " + "MemoryLimitsAwareHandler.";
+
+        public const String XOBJECT_STRUCT_PARENT_INDEX_MISSED = "XObject has no StructParents index in its stream.";
 
         public const String TOTAL_XOBJECT_SIZE_ONE_PAGE_EXCEEDED_THE_LIMIT = "Pdf contains too many xObject elements on a page "
              + "and may cause OOM exception. You can increase page size limit by setting custom " + "MemoryLimitsAwareHandler.";

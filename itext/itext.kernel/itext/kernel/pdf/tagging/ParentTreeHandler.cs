@@ -165,11 +165,16 @@ namespace iText.Kernel.Pdf.Tagging {
                     }
                 }
                 else {
-                    maxStructParentIndex++;
-                    xObjectToStructParentsInd.Put(stmIndRef, maxStructParentIndex);
-                    xObjectStream.Put(PdfName.StructParents, new PdfNumber(maxStructParentIndex));
-                    structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
-                    LOGGER.LogWarning(KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
+                    if (IsModificationAllowed()) {
+                        maxStructParentIndex++;
+                        xObjectToStructParentsInd.Put(stmIndRef, maxStructParentIndex);
+                        xObjectStream.Put(PdfName.StructParents, new PdfNumber(maxStructParentIndex));
+                        structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
+                        LOGGER.LogWarning(KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
+                    }
+                    else {
+                        throw new PdfException(KernelExceptionMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED);
+                    }
                 }
                 pageMcrs.PutXObjectMcr(stmIndRef, mcr);
             }
@@ -185,11 +190,16 @@ namespace iText.Kernel.Pdf.Tagging {
                         pageMcrs.PutObjectReferenceMcr(n.IntValue(), mcr);
                     }
                     else {
-                        maxStructParentIndex++;
-                        pageMcrs.PutObjectReferenceMcr(maxStructParentIndex, mcr);
-                        obj.Put(PdfName.StructParent, new PdfNumber(maxStructParentIndex));
-                        structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
-                        LOGGER.LogWarning(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
+                        if (IsModificationAllowed()) {
+                            maxStructParentIndex++;
+                            pageMcrs.PutObjectReferenceMcr(maxStructParentIndex, mcr);
+                            obj.Put(PdfName.StructParent, new PdfNumber(maxStructParentIndex));
+                            structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
+                            LOGGER.LogWarning(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
+                        }
+                        else {
+                            throw new PdfException(KernelExceptionMessageConstant.STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT);
+                        }
                     }
                 }
                 else {
@@ -248,6 +258,16 @@ namespace iText.Kernel.Pdf.Tagging {
                         structTreeRoot.SetModified();
                     }
                 }
+            }
+        }
+
+        private bool IsModificationAllowed() {
+            PdfReader reader = this.structTreeRoot.GetDocument().GetReader();
+            if (reader != null) {
+                return PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(reader.GetStrictnessLevel());
+            }
+            else {
+                return true;
             }
         }
 
