@@ -301,13 +301,20 @@ namespace iText.Kernel.Pdf.Action {
 
         /// <summary>Creates a URI action (section 12.6.4.7 of ISO 32000-1).</summary>
         /// <param name="uri">the uniform resource identifier to resolve</param>
+        /// <returns>created action</returns>
+        public static iText.Kernel.Pdf.Action.PdfAction CreateURI(Uri uri) {
+            return CreateURI(uri.AbsoluteUri, false);
+        }
+
+        /// <summary>Creates a URI action (section 12.6.4.7 of ISO 32000-1).</summary>
+        /// <param name="uri">the uniform resource identifier to resolve</param>
         /// <param name="isMap">a flag specifying whether to track the mouse position when the URI is resolved</param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateURI(String uri, bool isMap) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.URI).Put(PdfName.URI, new PdfString(
                 uri)).Put(PdfName.IsMap, PdfBoolean.ValueOf(isMap));
         }
-
+        
         /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
         /// <remarks>Creates a Sound action (section 12.6.4.8 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
