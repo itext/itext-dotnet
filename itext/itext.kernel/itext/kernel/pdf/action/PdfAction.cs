@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.IO.Util;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -100,6 +101,13 @@ namespace iText.Kernel.Pdf.Action {
         public PdfAction(PdfDictionary pdfObject)
             : base(pdfObject) {
             MarkObjectAsIndirect(GetPdfObject());
+        }
+
+        /// <summary>Creates a GoTo action (section 12.6.4.2 of ISO 32000-1) via a given uri.</summary>
+        /// <param name="uri">the uniform resource identifier to resolve</param>
+        /// <returns>created action</returns>
+        public static iText.Kernel.Pdf.Action.PdfAction CreateURI(Uri uri) {
+            return CreateURI(UrlUtil.ToAbsoluteURI(uri));
         }
 
         /// <summary>Creates a GoTo action (section 12.6.4.2 of ISO 32000-1) via a given destination.</summary>

@@ -71,6 +71,19 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ActionTest03() {
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "actionTest03.pdf"
+                ), true);
+            String uri = "http://itextpdf.com/";
+            document.GetCatalog().SetOpenAction(PdfAction.CreateURI(new Uri(uri)));
+            NUnit.Framework.Assert.AreEqual(new PdfString(uri), document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
+                .OpenAction).Get(PdfName.URI));
+            document.Close();
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("Please open document {0} and make sure that you're automatically redirected to {1} site."
+                , destinationFolder + "actionTest01.pdf", "http://itextpdf.com"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SoundActionTest() {
             String fileName = "soundActionTest.pdf";
             PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
