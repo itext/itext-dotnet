@@ -56,14 +56,16 @@ namespace iText.Signatures.Validation.V1 {
 
         private static IPrivateKey ocspRespPrivateKey;
 
+        private readonly ValidationContext baseContext = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR
+            , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
+
         private IssuingCertificateRetriever certificateRetriever;
 
         private SignatureValidationProperties parameters;
 
-        private readonly ValidationContext baseContext = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR
-            , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
-
         private ValidatorChainBuilder validatorChainBuilder;
+
+        private MockChainValidator mockCertificateChainValidator;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -81,79 +83,49 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void SetUp() {
             certificateRetriever = new IssuingCertificateRetriever();
             parameters = new SignatureValidationProperties();
+            mockCertificateChainValidator = new MockChainValidator();
             validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(parameters).WithIssuingCertificateRetriever
-                (certificateRetriever);
+                (certificateRetriever).WithCertificateChainValidator(mockCertificateChainValidator);
         }
 
         [NUnit.Framework.Test]
-        public virtual void ValidateResponderOcspNoCheckTest() {
+        public virtual void HappyPathTest() {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             ValidationReport report = ValidateTest(checkDate);
-            new AssertValidationReport(report).HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((l) => l.GetCheckName
-                ().Equals(RevocationDataValidator.REVOCATION_DATA_CHECK) && l.GetMessage().Equals(RevocationDataValidator
-                .TRUSTED_OCSP_RESPONDER), "Revocation data check with trusted responder").HasLogItem((l) => l.GetCheckName
-                ().Equals(CertificateChainValidator.CERTIFICATE_CHECK) && l.GetMessage().Equals(MessageFormatUtil.Format
-                (CertificateChainValidator.CERTIFICATE_TRUSTED, ((CertificateReportItem)l).GetCertificate().GetSubjectDN
-                ())), "ChainValidator certificate trusted").HasStatus(ValidationReport.ValidationResult.VALID).DoAssert
-                ();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
         [NUnit.Framework.Test]
-        public virtual void ValidateAuthorizedOCSPResponderWithOcspTest() {
-            ValidationReport report = VerifyResponderWithOcsp(false);
-            new AssertValidationReport(report).HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItems((l) => l.GetCheckName
-                ().Equals(CertificateChainValidator.CERTIFICATE_CHECK) && l.GetMessage().Equals(MessageFormatUtil.Format
-                (CertificateChainValidator.CERTIFICATE_TRUSTED, ((CertificateReportItem)l).GetCertificate().GetSubjectDN
-                ())), 2, "Certificate check with trusted certificate").HasStatus(ValidationReport.ValidationResult.VALID
-                ).DoAssert();
+        public virtual void OcpsIssuerChainValidationsUsesCorrectParametersTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            ValidationReport report = ValidateTest(checkDate);
+            NUnit.Framework.Assert.AreEqual(1, mockCertificateChainValidator.verificationCalls.Count);
+            NUnit.Framework.Assert.AreEqual(responderCert, mockCertificateChainValidator.verificationCalls[0].certificate
+                );
+            NUnit.Framework.Assert.AreEqual(ValidatorContext.OCSP_VALIDATOR, mockCertificateChainValidator.verificationCalls
+                [0].context.GetValidatorContext());
+            NUnit.Framework.Assert.AreEqual(CertificateSource.OCSP_ISSUER, mockCertificateChainValidator.verificationCalls
+                [0].context.GetCertificateSource());
+            NUnit.Framework.Assert.AreEqual(checkDate, mockCertificateChainValidator.verificationCalls[0].checkDate);
+            NUnit.Framework.Assert.AreEqual(checkDate.AddDays(0), mockCertificateChainValidator.verificationCalls[0].checkDate
+                );
         }
 
         [NUnit.Framework.Test]
-        public virtual void ValidateAuthorizedOCSPResponderWithOcspRevokedTest() {
-            String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertForOcspTest.pem";
-            IX509Certificate responderCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspResponderCertFileName)
-                [0];
-            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.Singleton(responderCert));
-            ValidationReport report = VerifyResponderWithOcsp(true);
-            new AssertValidationReport(report).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName
-                ().Equals(OCSPValidator.OCSP_CHECK) && l.GetMessage().Equals(OCSPValidator.CERT_IS_REVOKED) && l.GetStatus
-                ().Equals(ReportItem.ReportItemStatus.INDETERMINATE), "Certificate revoked").DoAssert();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ValidateAuthorizedOCSPResponderFromTheTrustedStoreTest() {
-            ValidationReport report = ValidateOcspWithoutCertsTest(true);
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NoResponderFoundInCertsTest() {
+        public virtual void OcspForSelfSignedCertShouldNotValdateFurtherTest() {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
-            builder.SetOcspCertsChain(new IX509Certificate[] { caCert });
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
-            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
-                GetEncoded(checkCert, caCert, null)));
+            IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
+                .GetEncoded(caCert, caCert, null)));
             ValidationReport report = new ValidationReport();
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
-            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
+            validator.Validate(report, baseContext, caCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, TimeTestUtil
                 .TEST_DATE_TIME);
-            new AssertValidationReport(report).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName
-                ().Equals(OCSPValidator.OCSP_CHECK) && l.GetMessage().Equals(OCSPValidator.OCSP_COULD_NOT_BE_VERIFIED)
-                , "OCSP responder not found").HasStatus(ValidationReport.ValidationResult.INDETERMINATE).DoAssert();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NoResponderFoundTest() {
-            ValidationReport report = ValidateOcspWithoutCertsTest(false);
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem item = (CertificateReportItem)report.GetFailures()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_COULD_NOT_BE_VERIFIED, item.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                (1).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(RevocationDataValidator.
+                SELF_SIGNED_CERTIFICATE).WithCertificate(caCert)));
+            NUnit.Framework.Assert.AreEqual(0, mockCertificateChainValidator.verificationCalls.Count);
         }
 
         [NUnit.Framework.Test]
@@ -162,38 +134,94 @@ namespace iText.Signatures.Validation.V1 {
             DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(30);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME.AddDays(45);
             ValidationReport report = ValidateTest(checkDate, TimeTestUtil.TEST_DATE_TIME, 50);
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(OCSPValidator.OCSP_IS_NO_LONGER_VALID, checkDate, 
-                nextUpdate), item.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_IS_NO_LONGER_VALID
+                , (l) => checkDate, (l) => nextUpdate)));
         }
 
         [NUnit.Framework.Test]
-        public virtual void CertificateWasRevokedAfterCheckDateTest() {
+        public virtual void SerialNumbersDoNotMatchTest() {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            DateTime revocationDate = TimeTestUtil.TEST_DATE_TIME.AddDays(10);
-            ValidationReport report = ValidateRevokedTest(checkDate, revocationDate);
-            new AssertValidationReport(report).HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItem((l) => l.GetCheckName
-                ().Equals(OCSPValidator.OCSP_CHECK) && l.GetMessage().Equals(MessageFormatUtil.Format(SignLogMessageConstant
-                .VALID_CERTIFICATE_IS_REVOKED, revocationDate)), "valid certificate is revoked").HasStatus(ValidationReport.ValidationResult
-                .VALID).DoAssert();
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(1)));
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
+            IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
+                .GetEncoded(caCert, caCert, null)));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
+            validator.Validate(report, baseContext, checkCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, checkDate
+                );
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfLogs(1).HasStatus(ValidationReport.ValidationResult
+                .INDETERMINATE).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator
+                .SERIAL_NUMBERS_DO_NOT_MATCH).WithCertificate(checkCert)));
+            NUnit.Framework.Assert.AreEqual(0, mockCertificateChainValidator.verificationCalls.Count);
         }
 
         [NUnit.Framework.Test]
-        public virtual void CertificateWasRevokedBeforeCheckDateTest() {
+        public virtual void IssuersDoNotMatchTest() {
+            String wrongRootCertFileName = SOURCE_FOLDER + "rootCertForOcspTest.pem";
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
+                GetEncoded(checkCert, caCert, null)));
+            ValidationReport report = new ValidationReport();
+            validatorChainBuilder.WithIssuingCertificateRetriever(new OCSPValidatorTest.TestIssuingCertificateRetriever
+                (wrongRootCertFileName));
+            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
+            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
+                .TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((la
+                ) => la.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.ISSUERS_DO_NOT_MATCH).WithStatus
+                (ReportItem.ReportItemStatus.INDETERMINATE)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PositiveFreshnessNegativeTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime thisUpdate = checkDate.AddDays(-3);
+            ValidationReport report = ValidateTest(checkDate, thisUpdate, 2);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasNumberOfFailures(1).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator
+                .FRESHNESS_CHECK, (l) => thisUpdate, (l) => checkDate, (l) => TimeSpan.FromDays(2))));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NextUpdateNotSetResultsInValidStatusTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(-20)));
+            builder.SetNextUpdate(DateTimeUtil.GetCalendar((DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE));
+            builder.SetProducedAt(TimeTestUtil.TEST_DATE_TIME.AddDays(-20));
+            TestOcspClient client = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(client.GetEncoded
+                (checkCert, caCert, "")));
+            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.Singleton(caCert));
+            ValidationReport report = new ValidationReport();
+            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
+            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
+                );
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateWasRevokedBeforeCheckDateShouldFailTest() {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime revocationDate = TimeTestUtil.TEST_DATE_TIME.AddDays(-1);
-            ValidationReport report = ValidateRevokedTest(checkDate, revocationDate);
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem ocspCheckItem = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, ocspCheckItem.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.CERT_IS_REVOKED, ocspCheckItem.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
+            ValidationReport report = ValidateRevokedTestMocked(checkDate, revocationDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasLogItem
+                ((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERT_IS_REVOKED).WithCertificate
+                (checkCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateWasRevokedAfterCheckDateShouldSucceedTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime revocationDate = TimeTestUtil.TEST_DATE_TIME.AddDays(10);
+            ValidationReport report = ValidateRevokedTestMocked(checkDate, revocationDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((la) => la.WithCheckName(OCSPValidator.OCSP_CHECK
+                ).WithMessage(SignLogMessageConstant.VALID_CERTIFICATE_IS_REVOKED, (l) => revocationDate)).HasStatus(ValidationReport.ValidationResult
+                .VALID));
         }
 
         [NUnit.Framework.Test]
@@ -209,77 +237,14 @@ namespace iText.Signatures.Validation.V1 {
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
                 );
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem ocspCheckItem = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, ocspCheckItem.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.CERT_STATUS_IS_UNKNOWN, ocspCheckItem.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERT_STATUS_IS_UNKNOWN
+                ).WithCertificate(checkCert)));
+            NUnit.Framework.Assert.AreEqual(0, mockCertificateChainValidator.verificationCalls.Count);
         }
 
         [NUnit.Framework.Test]
-        public virtual void SerialNumbersDoesNotMatchTest() {
-            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
-            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(1)));
-            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
-            IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
-                .GetEncoded(caCert, caCert, null)));
-            ValidationReport report = new ValidationReport();
-            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
-            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
-            validator.Validate(report, baseContext, checkCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, checkDate
-                );
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem item = (CertificateReportItem)report.GetFailures()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.SERIAL_NUMBERS_DO_NOT_MATCH, item.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void OcspForSelfSignedCertTest() {
-            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
-            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
-            IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
-                .GetEncoded(caCert, caCert, null)));
-            ValidationReport report = new ValidationReport();
-            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
-            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
-            validator.Validate(report, baseContext, caCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, TimeTestUtil
-                .TEST_DATE_TIME);
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.SELF_SIGNED_CERTIFICATE, item.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void IssuersDoesNotMatchTest() {
-            String wrongRootCertFileName = SOURCE_FOLDER + "rootCertForOcspTest.pem";
-            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
-            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
-            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
-                GetEncoded(checkCert, caCert, null)));
-            ValidationReport report = new ValidationReport();
-            validatorChainBuilder.WithIssuingCertificateRetriever(new OCSPValidatorTest.TestIssuingCertificateRetriever
-                (wrongRootCertFileName));
-            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
-            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
-                .TEST_DATE_TIME);
-            new AssertValidationReport(report).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName
-                ().Equals(OCSPValidator.OCSP_CHECK) && l.GetMessage().Equals(OCSPValidator.ISSUERS_DO_NOT_MATCH) && l.
-                GetStatus().Equals(ReportItem.ReportItemStatus.INDETERMINATE), OCSPValidator.ISSUERS_DO_NOT_MATCH).DoAssert
-                ();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CertificateDoesNotVerifyWithSuppliedKeyTest() {
+        public virtual void OcspIssuerCertificateDoesNotVerifyWithCaPKTest() {
             String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertForOcspTest.pem";
             IX509Certificate responderCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspResponderCertFileName)
                 [0];
@@ -293,37 +258,19 @@ namespace iText.Signatures.Validation.V1 {
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
                 .TEST_DATE_TIME);
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem ocspCheckItem = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, ocspCheckItem.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.INVALID_OCSP, ocspCheckItem.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasStatus(ValidationReport.ValidationResult
+                .INVALID).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.INVALID_OCSP
+                )
+                        // This should be the checked certificate, not the ocsp responder
+                        
+                        //.withCertificate(checkCert)
+                        .WithCertificate(responderCert)));
         }
 
         [NUnit.Framework.Test]
-        public virtual void TrustedOcspResponderDoesNotHaveOcspSigningExtensionTest() {
-            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
-            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
-            IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
-                .GetEncoded(checkCert, caCert, null)));
-            ValidationReport report = new ValidationReport();
-            // Configure OCSP signing authority for the certificate in question
-            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
-            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
-            validator.Validate(report, baseContext, checkCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, TimeTestUtil
-                .TEST_DATE_TIME);
-            new AssertValidationReport(report).HasNumberOfFailures(0).HasStatus(ValidationReport.ValidationResult.VALID
-                ).DoAssert();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void AuthorizedOcspResponderDoesNotHaveOcspSigningExtensionTest() {
-            String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertWithoutOcspSigning.pem";
-            IX509Certificate responderCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspResponderCertFileName)
-                [0];
+        public virtual void NoResponderFoundInCertsTest() {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
-            builder.SetThisUpdate(DateTimeUtil.GetCalendar(TimeTestUtil.TEST_DATE_TIME.AddDays(1)));
+            builder.SetOcspCertsChain(new IX509Certificate[] { caCert });
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
                 GetEncoded(checkCert, caCert, null)));
@@ -332,56 +279,25 @@ namespace iText.Signatures.Validation.V1 {
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
                 .TEST_DATE_TIME);
-            new AssertValidationReport(report).HasNumberOfFailures(1).HasLogItem((l) => l.GetCheckName().Equals(CertificateChainValidator
-                .EXTENSIONS_CHECK) && l.GetMessage().Equals(MessageFormatUtil.Format(CertificateChainValidator.EXTENSION_MISSING
-                , OID.X509Extensions.EXTENDED_KEY_USAGE)), "OCSP_SIGNING extended key usage is missing").HasStatus(ValidationReport.ValidationResult
-                .INDETERMINATE).DoAssert();
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((la) => la.WithCheckName(OCSPValidator.OCSP_CHECK
+                ).WithMessage(OCSPValidator.OCSP_COULD_NOT_BE_VERIFIED)).HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ));
         }
 
         [NUnit.Framework.Test]
-        public virtual void PositiveFreshnessPositiveTest() {
+        public virtual void ChainValidatorReportWrappingTest() {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            ValidationReport report = ValidateTest(checkDate, checkDate.AddDays(-3), 5);
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void PositiveFreshnessNegativeTest() {
-            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            DateTime thisUpdate = checkDate.AddDays(-3);
-            ValidationReport report = ValidateTest(checkDate, thisUpdate, 2);
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(OCSPValidator.FRESHNESS_CHECK, thisUpdate, checkDate
-                , TimeSpan.FromDays(2)), item.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NegativeFreshnessPositiveTest() {
-            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            ValidationReport report = ValidateTest(checkDate, checkDate.AddDays(5), -3);
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NegativeFreshnessNegativeTest() {
-            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            DateTime thisUpdate = checkDate.AddDays(2);
-            ValidationReport report = ValidateTest(checkDate, thisUpdate, -3);
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
-            CertificateReportItem item = (CertificateReportItem)report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(OCSPValidator.OCSP_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(OCSPValidator.FRESHNESS_CHECK, thisUpdate, checkDate
-                , TimeSpan.FromDays(-3)), item.GetMessage());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
+            mockCertificateChainValidator.OnCallDo((c) => {
+                c.report.AddReportItem(new ReportItem("test1", "test1", ReportItem.ReportItemStatus.INFO));
+                c.report.AddReportItem(new ReportItem("test2", "test2", ReportItem.ReportItemStatus.INDETERMINATE));
+                c.report.AddReportItem(new ReportItem("test3", "test3", ReportItem.ReportItemStatus.INVALID));
+            }
+            );
+            ValidationReport report = ValidateTest(checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItems(0, 0, (la) => la.WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItems(2, 2, (la) =>
+                 la.WithStatus(ReportItem.ReportItemStatus.INDETERMINATE)).HasLogItem((la) => la.WithStatus(ReportItem.ReportItemStatus
+                .INFO)));
         }
 
         private ValidationReport ValidateTest(DateTime checkDate) {
@@ -404,7 +320,7 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
-        private ValidationReport ValidateRevokedTest(DateTime checkDate, DateTime revocationDate) {
+        private ValidationReport ValidateRevokedTestMocked(DateTime checkDate, DateTime revocationDate) {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetCertificateStatus(FACTORY.CreateRevokedStatus(revocationDate, FACTORY.CreateCRLReason().GetKeyCompromise
                 ()));
@@ -419,7 +335,7 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
-        private ValidationReport ValidateOcspWithoutCertsTest(bool addResponderToTrusted) {
+        private ValidationReport ValidateOcspWithoutCertsTestMocked(bool addResponderToTrusted) {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetOcspCertsChain(new IX509Certificate[0]);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
@@ -436,7 +352,7 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
-        private ValidationReport VerifyResponderWithOcsp(bool revokedOcsp) {
+        private ValidationReport VerifyResponderWithOcspMocked(bool revokedOcsp) {
             String rootCertFileName = SOURCE_FOLDER + "rootCertForOcspTest.pem";
             String checkCertFileName = SOURCE_FOLDER + "signCertForOcspTest.pem";
             String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertForOcspTest.pem";
@@ -467,8 +383,6 @@ namespace iText.Signatures.Validation.V1 {
             if (revokedOcsp) {
                 parameters.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
             }
-            validatorChainBuilder.GetRevocationDataValidator().AddOcspClient(ocspClient);
-            validatorChainBuilder.GetRevocationDataValidator().AddOcspClient(ocspClient2);
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
                 );

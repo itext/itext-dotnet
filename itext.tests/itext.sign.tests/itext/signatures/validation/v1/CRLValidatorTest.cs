@@ -79,8 +79,7 @@ namespace iText.Signatures.Validation.V1 {
             byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
                 TEST_DATE_TIME.AddDays(+5));
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.IsTrue(report.GetFailures().IsEmpty());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
         [NUnit.Framework.Test]
@@ -89,11 +88,9 @@ namespace iText.Signatures.Validation.V1 {
             DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(-5);
             byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-15), nextUpdate);
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CRLValidator.UPDATE_DATE_BEFORE_CHECK_DATE, nextUpdate
-                , TimeTestUtil.TEST_DATE_TIME), report.GetFailures()[0].GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((la) => la.WithMessage(CRLValidator.UPDATE_DATE_BEFORE_CHECK_DATE, (l) => nextUpdate, (l) =>
+                 TimeTestUtil.TEST_DATE_TIME)));
         }
 
         [NUnit.Framework.Test]
@@ -103,9 +100,12 @@ namespace iText.Signatures.Validation.V1 {
                 TEST_DATE_TIME.AddDays(+5));
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.IsTrue(report.GetFailures().IsEmpty());
             NUnit.Framework.Assert.AreEqual(1, mockChainValidator.verificationCalls.Count);
             NUnit.Framework.Assert.AreEqual(crlIssuerCert, mockChainValidator.verificationCalls[0].certificate);
+            NUnit.Framework.Assert.AreEqual(CertificateSource.CRL_ISSUER, mockChainValidator.verificationCalls[0].context
+                .GetCertificateSource());
+            NUnit.Framework.Assert.AreEqual(ValidatorContext.CRL_VALIDATOR, mockChainValidator.verificationCalls[0].context
+                .GetValidatorContext());
         }
 
         [NUnit.Framework.Test]
@@ -114,9 +114,8 @@ namespace iText.Signatures.Validation.V1 {
             byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
                 TEST_DATE_TIME.AddDays(+5));
             ValidationReport report = PerformValidation("missingIssuer", TimeTestUtil.TEST_DATE_TIME, crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_ISSUER_NOT_FOUND, report.GetFailures()[0].GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((la) => la.WithMessage(CRLValidator.CRL_ISSUER_NOT_FOUND)));
         }
 
         [NUnit.Framework.Test]
@@ -126,10 +125,8 @@ namespace iText.Signatures.Validation.V1 {
                 TEST_DATE_TIME.AddDays(+5));
             ValidationReport report = PerformValidation("crlIssuerAndSignCertHaveNoSharedRoot", TimeTestUtil.TEST_DATE_TIME
                 , crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_ISSUER_NO_COMMON_ROOT, report.GetFailures()[0].GetMessage
-                ());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((la) => la.WithMessage(CRLValidator.CRL_ISSUER_NO_COMMON_ROOT)));
         }
 
         [NUnit.Framework.Test]
@@ -141,10 +138,9 @@ namespace iText.Signatures.Validation.V1 {
                 TEST_DATE_TIME.AddDays(+5), signCert, revocationDate, 1);
             ValidationReport report = PerformValidation("crlIssuerRevokedBeforeSigningDate", TimeTestUtil.TEST_DATE_TIME
                 , crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CRLValidator.CERTIFICATE_REVOKED, crlIssuerCert.GetSubjectDN
-                (), revocationDate), report.GetFailures()[0].GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((al) => al.WithStatus(ReportItem.ReportItemStatus
+                .INVALID).WithMessage(CRLValidator.CERTIFICATE_REVOKED, (i) => crlIssuerCert.GetSubjectDN(), (i) => revocationDate
+                )));
         }
 
         [NUnit.Framework.Test]
@@ -155,10 +151,9 @@ namespace iText.Signatures.Validation.V1 {
             byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(+18), TimeTestUtil
                 .TEST_DATE_TIME.AddDays(+23), signCert, revocationDate, 1);
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(2, report.GetLogs().Count);
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignLogMessageConstant.VALID_CERTIFICATE_IS_REVOKED
-                , revocationDate), report.GetLogs()[1].GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((la) => la.WithMessage(SignLogMessageConstant
+                .VALID_CERTIFICATE_IS_REVOKED, (i) => revocationDate).WithStatus(ReportItem.ReportItemStatus.INFO).WithCertificate
+                (signCert)));
         }
 
         [NUnit.Framework.Test]
@@ -168,21 +163,16 @@ namespace iText.Signatures.Validation.V1 {
             byte[] crl = CreateCrl(crlIssuerCert, intermediateKey, TimeTestUtil.TEST_DATE_TIME.AddDays(+18), TimeTestUtil
                 .TEST_DATE_TIME.AddDays(+23), signCert, TimeTestUtil.TEST_DATE_TIME.AddDays(+20), 1);
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(CRLValidator.CRL_INVALID, report.GetFailures()[0].GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((la) => la.WithMessage(CRLValidator.CRL_INVALID
+                ).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CrlContainsOnlyCACertsTest() {
             String crlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyCA.crl";
             ValidationReport report = CheckCrlScope(crlPath);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(CRLValidator.CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE, report.GetFailures()[0].
-                GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((la) => la.WithMessage(CRLValidator.CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE
+                ).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE)));
         }
 
         [NUnit.Framework.Test]
@@ -190,18 +180,14 @@ namespace iText.Signatures.Validation.V1 {
             String crlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyUser.crl";
             ValidationReport report = CheckCrlScope(crlPath);
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
         }
 
         [NUnit.Framework.Test]
         public virtual void CrlContainsOnlyAttributeCertsTest() {
             String crlPath = SOURCE_FOLDER + "issuingDistributionPointTest/onlyAttr.crl";
             ValidationReport report = CheckCrlScope(crlPath);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(CRLValidator.ATTRIBUTE_CERTS_ASSERTED, report.GetFailures()[0].GetMessage(
-                ));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((la) => la.WithMessage(CRLValidator.ATTRIBUTE_CERTS_ASSERTED)));
         }
 
         [NUnit.Framework.Test]
@@ -220,12 +206,9 @@ namespace iText.Signatures.Validation.V1 {
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
                 (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            CertificateReportItem reportItem = (CertificateReportItem)report.GetFailures()[0];
-            NUnit.Framework.Assert.AreEqual(signCert, reportItem.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(CRLValidator.ONLY_SOME_REASONS_CHECKED, reportItem.GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((al) => al.WithMessage(CRLValidator.ONLY_SOME_REASONS_CHECKED).WithCertificate(signCert))
+                );
         }
 
         [NUnit.Framework.Test]
@@ -249,11 +232,8 @@ namespace iText.Signatures.Validation.V1 {
             // Validate CRL with onlySomeReasons.
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
                 (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
-            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[1];
-            NUnit.Framework.Assert.AreEqual(signCert, reportItem.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(CRLValidator.SAME_REASONS_CHECK, reportItem.GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((al) => al.WithMessage(CRLValidator.SAME_REASONS_CHECK)));
         }
 
         [NUnit.Framework.Test]
@@ -272,11 +252,9 @@ namespace iText.Signatures.Validation.V1 {
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
                 (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
-            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[1];
-            NUnit.Framework.Assert.AreEqual(signCert, reportItem.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(CRLValidator.CERTIFICATE_IS_UNREVOKED, reportItem.GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((la) => la.WithCertificate(signCert).WithCheckName(CRLValidator.CRL_CHECK).WithMessage(CRLValidator.CERTIFICATE_IS_UNREVOKED
+                )));
         }
 
         [NUnit.Framework.Test]
@@ -299,13 +277,9 @@ namespace iText.Signatures.Validation.V1 {
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             validator.Validate(report, context, cert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream(builder
                 .MakeCrl())), checkDate);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            CertificateReportItem reportItem = (CertificateReportItem)report.GetLogs()[1];
-            NUnit.Framework.Assert.AreEqual(ReportItem.ReportItemStatus.INDETERMINATE, reportItem.GetStatus());
-            NUnit.Framework.Assert.AreEqual(cert, reportItem.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(CRLValidator.ONLY_SOME_REASONS_CHECKED, reportItem.GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((la) => la.WithStatus(ReportItem.ReportItemStatus.INDETERMINATE).WithCertificate(cert).WithMessage
+                (CRLValidator.ONLY_SOME_REASONS_CHECKED)));
         }
 
         [NUnit.Framework.Test]
@@ -316,11 +290,10 @@ namespace iText.Signatures.Validation.V1 {
                 (401));
             byte[] crl = builder.MakeCrl();
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            new AssertValidationReport(report).HasStatus(ValidationReport.ValidationResult.INDETERMINATE).HasNumberOfFailures
-                (1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName().Equals(CRLValidator.CRL_CHECK) && l.GetMessage
-                ().Equals(MessageFormatUtil.Format(CRLValidator.CERTIFICATE_IS_EXPIRED, signCert.GetNotAfter())) && ((
-                CertificateReportItem)l).GetCertificate().Equals(signCert), CRLValidator.CERTIFICATE_IS_EXPIRED).DoAssert
-                ();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(CRLValidator.CRL_CHECK).
+                WithMessage(CRLValidator.CERTIFICATE_IS_EXPIRED, (i) => signCert.GetNotAfter()).WithCertificate(signCert
+                )));
         }
 
         [NUnit.Framework.Test]
@@ -333,11 +306,10 @@ namespace iText.Signatures.Validation.V1 {
                 (TimeTestUtil.TEST_DATE_TIME.AddYears(400)));
             byte[] crl = builder.MakeCrl();
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            new AssertValidationReport(report).HasStatus(ValidationReport.ValidationResult.INDETERMINATE).HasNumberOfFailures
-                (1).HasNumberOfLogs(1).HasLogItem((l) => l.GetCheckName().Equals(CRLValidator.CRL_CHECK) && l.GetMessage
-                ().Equals(MessageFormatUtil.Format(CRLValidator.CERTIFICATE_IS_EXPIRED, signCert.GetNotAfter())) && ((
-                CertificateReportItem)l).GetCertificate().Equals(signCert), CRLValidator.CERTIFICATE_IS_EXPIRED).DoAssert
-                ();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(CRLValidator.CRL_CHECK).
+                WithMessage(CRLValidator.CERTIFICATE_IS_EXPIRED, (i) => signCert.GetNotAfter()).WithCertificate(signCert
+                )));
         }
 
         [NUnit.Framework.Test]
@@ -350,8 +322,8 @@ namespace iText.Signatures.Validation.V1 {
                 (TimeTestUtil.TEST_DATE_TIME.AddYears(399)));
             byte[] crl = builder.MakeCrl();
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
-            new AssertValidationReport(report).HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures(
-                0).DoAssert();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0));
         }
 
         private ValidationReport CheckCrlScope(String crlPath) {

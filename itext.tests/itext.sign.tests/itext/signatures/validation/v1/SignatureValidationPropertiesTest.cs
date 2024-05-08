@@ -144,9 +144,9 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private class IncrementalFreshnessValueSetter {
-            private int value;
-
             private readonly int increment;
+
+            private int value;
 
             public IncrementalFreshnessValueSetter(int initialValue, int increment) {
                 this.value = initialValue;

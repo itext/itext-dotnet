@@ -27,9 +27,11 @@ using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1 {
-    internal class MockChainValidator : CertificateChainValidator {
+    public class MockChainValidator : CertificateChainValidator {
         public IList<MockChainValidator.ValidationCallBack> verificationCalls = new List<MockChainValidator.ValidationCallBack
             >();
+
+        private Action<MockChainValidator.ValidationCallBack> onCallHandler;
 
         internal MockChainValidator()
             : base(new ValidatorChainBuilder()) {
@@ -37,17 +39,33 @@ namespace iText.Signatures.Validation.V1 {
 
         public override ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate
              certificate, DateTime verificationDate) {
-            verificationCalls.Add(new MockChainValidator.ValidationCallBack(certificate, verificationDate));
+            MockChainValidator.ValidationCallBack call = new MockChainValidator.ValidationCallBack(certificate, context
+                , result, verificationDate);
+            if (onCallHandler != null) {
+                onCallHandler(call);
+            }
+            verificationCalls.Add(call);
             return result;
         }
 
-        public class ValidationCallBack {
-            public IX509Certificate certificate;
+        public virtual void OnCallDo(Action<MockChainValidator.ValidationCallBack> c) {
+            onCallHandler = c;
+        }
 
-            public DateTime checkDate;
+        public sealed class ValidationCallBack {
+            public readonly IX509Certificate certificate;
 
-            public ValidationCallBack(IX509Certificate certificate, DateTime checkDate) {
+            public readonly ValidationContext context;
+
+            public readonly ValidationReport report;
+
+            public readonly DateTime checkDate;
+
+            public ValidationCallBack(IX509Certificate certificate, ValidationContext context, ValidationReport report
+                , DateTime checkDate) {
                 this.certificate = certificate;
+                this.context = context;
+                this.report = report;
                 this.checkDate = checkDate;
             }
         }

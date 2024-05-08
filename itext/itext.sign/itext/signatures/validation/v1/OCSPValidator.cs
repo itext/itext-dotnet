@@ -113,9 +113,9 @@ namespace iText.Signatures.Validation.V1 {
                     return;
                 }
             }
-            catch (Exception) {
+            catch (Exception e) {
                 report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, UNABLE_TO_CHECK_IF_ISSUERS_MATCH, 
-                    ReportItem.ReportItemStatus.INDETERMINATE));
+                    e, ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
             // So, since the issuer name and serial number identify a unique certificate, we found the single response

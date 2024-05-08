@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using iText.Commons.Utils;
 
 namespace iText.Signatures.Validation.V1.Report {
@@ -111,7 +112,13 @@ namespace iText.Signatures.Validation.V1.Report {
         }
 
         public override String ToString() {
-            return "ValidationReport{" + "reportItems=" + reportItems + '}';
+            StringBuilder sb = new StringBuilder("ValidationReport{validationResult=");
+            sb.Append(GetValidationResult()).Append("\nreportItems=");
+            foreach (ReportItem i in reportItems) {
+                sb.Append(i).Append(", ");
+            }
+            sb.Append("}");
+            return sb.ToString();
         }
 
         /// <summary>Enum representing possible validation results.</summary>

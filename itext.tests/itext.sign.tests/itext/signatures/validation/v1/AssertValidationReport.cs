@@ -21,26 +21,40 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1 {
-    public class AssertValidationReport {
+    public class AssertValidationReport : IDisposable {
         private readonly ValidationReport report;
 
         private readonly AssertValidationReport.CheckChain chain = new AssertValidationReport.StartOfChain();
 
-        public AssertValidationReport(ValidationReport report) {
+        private bool asserted = false;
+
+        private AssertValidationReport(ValidationReport report) {
             this.report = report;
         }
 
-        public virtual void DoAssert() {
+        public static void AssertThat(ValidationReport report, Action<iText.Signatures.Validation.V1.AssertValidationReport
+            > c) {
+            iText.Signatures.Validation.V1.AssertValidationReport assertion = new iText.Signatures.Validation.V1.AssertValidationReport
+                (report);
+            c(assertion);
+            assertion.DoAssert();
+        }
+
+        private void DoAssert() {
+            asserted = true;
             AssertValidationReport.CheckResult result = new AssertValidationReport.CheckResult();
             chain.Run(report, result);
             if (!result.success) {
-                result.messageBuilder.Append("\n For item: ").Append(report);
+                result.messageBuilder.Append("\n For report: ").Append(report);
                 throw new AssertionException(result.messageBuilder.ToString());
             }
         }
@@ -55,15 +69,26 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
-        public virtual iText.Signatures.Validation.V1.AssertValidationReport HasLogItem(Func<ReportItem, bool> check
-            , String itemDescription) {
-            chain.SetNext(new AssertValidationReport.ItemCheck(check, 1, itemDescription));
+        public virtual iText.Signatures.Validation.V1.AssertValidationReport HasLogItem(ReportItem logItem) {
+            chain.SetNext(new AssertValidationReport.LogItemCheck(logItem));
             return this;
         }
 
-        public virtual iText.Signatures.Validation.V1.AssertValidationReport HasLogItems(Func<ReportItem, bool> check
-            , int count, String itemDescription) {
-            chain.SetNext(new AssertValidationReport.ItemCheck(check, count, itemDescription));
+        public virtual iText.Signatures.Validation.V1.AssertValidationReport HasLogItem(Action<AssertValidationReport.AssertValidationReportLogItem
+            > c) {
+            AssertValidationReport.AssertValidationReportLogItem asserter = new AssertValidationReport.AssertValidationReportLogItem
+                (1, 1);
+            c(asserter);
+            asserter.AddToChain(this);
+            return this;
+        }
+
+        public virtual iText.Signatures.Validation.V1.AssertValidationReport HasLogItems(int minCount, int maxCount
+            , Action<AssertValidationReport.AssertValidationReportLogItem> c) {
+            AssertValidationReport.AssertValidationReportLogItem asserter = new AssertValidationReport.AssertValidationReportLogItem
+                (minCount, maxCount);
+            c(asserter);
+            asserter.AddToChain(this);
             return this;
         }
 
@@ -71,6 +96,53 @@ namespace iText.Signatures.Validation.V1 {
              expectedStatus) {
             chain.SetNext((new AssertValidationReport.StatusCheck(expectedStatus)));
             return this;
+        }
+
+        public virtual void Close() {
+            if (!asserted) {
+                throw new InvalidOperationException("AssertValidationReport not asserted!");
+            }
+        }
+
+        public class AssertValidationReportLogItem {
+            private readonly AssertValidationReport.ValidationReportLogItemCheck check;
+
+            public AssertValidationReportLogItem(int minCount, int maxCount) {
+                this.check = new AssertValidationReport.ValidationReportLogItemCheck(minCount, maxCount);
+            }
+
+            public virtual AssertValidationReport.AssertValidationReportLogItem WithCheckName(String checkName) {
+                check.WithCheckName(checkName);
+                return this;
+            }
+
+            public AssertValidationReport.AssertValidationReportLogItem WithMessage(String message, params Func<ReportItem
+                , Object>[] @params) {
+                check.WithMessage(message, @params);
+                return this;
+            }
+
+            public virtual AssertValidationReport.AssertValidationReportLogItem WithStatus(ReportItem.ReportItemStatus
+                 status) {
+                check.WithStatus(status);
+                return this;
+            }
+
+            public virtual AssertValidationReport.AssertValidationReportLogItem WithCertificate(IX509Certificate certificate
+                ) {
+                check.WithCertificate(certificate);
+                return this;
+            }
+
+            public virtual AssertValidationReport.AssertValidationReportLogItem WithExceptionCauseType(Type exceptionType
+                ) {
+                check.WithExceptionCauseType(exceptionType);
+                return this;
+            }
+
+            public virtual void AddToChain(AssertValidationReport asserter) {
+                asserter.chain.SetNext(check);
+            }
         }
 
         private class CheckResult {
@@ -129,6 +201,110 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
+        private class ValidationReportLogItemCheck : AssertValidationReport.CheckChain {
+            private readonly int minCount;
+
+            private readonly int maxCount;
+
+            private readonly IList<Func<ReportItem, Object>> messageParams = new List<Func<ReportItem, Object>>();
+
+            private readonly StringBuilder errorMessage = new StringBuilder();
+
+            private String checkName;
+
+            private String message;
+
+            private ReportItem.ReportItemStatus status;
+
+            private bool checkStatus = false;
+
+            private IX509Certificate certificate;
+
+            private Type exceptionType;
+
+            public ValidationReportLogItemCheck(int minCount, int maxCount) {
+                this.minCount = minCount;
+                this.maxCount = maxCount;
+                errorMessage.Append("\nExpected between ").Append(minCount).Append(" and ").Append(maxCount).Append(" message with "
+                    );
+            }
+
+            public virtual void WithCheckName(String checkName) {
+                this.checkName = checkName;
+                errorMessage.Append(" check name '").Append(checkName).Append("'");
+            }
+
+            public virtual void WithMessage(String message, params Func<ReportItem, Object>[] @params) {
+                this.message = message;
+                messageParams.AddAll(@params);
+                errorMessage.Append(" message '").Append(message).Append("'");
+            }
+
+            public virtual void WithStatus(ReportItem.ReportItemStatus status) {
+                this.status = status;
+                checkStatus = true;
+                errorMessage.Append(" status '").Append(status).Append("'");
+            }
+
+            public virtual void WithCertificate(IX509Certificate certificate) {
+                this.certificate = certificate;
+                errorMessage.Append(" certificate '").Append(certificate.GetSubjectDN()).Append("'");
+            }
+
+            public virtual void WithExceptionCauseType(Type exceptionType) {
+                this.exceptionType = exceptionType;
+                errorMessage.Append(" with exception cause '").Append(exceptionType.FullName).Append("'");
+            }
+
+            protected internal override void Check(ValidationReport report, AssertValidationReport.CheckResult result) {
+                errorMessage.Append("\n");
+                IList<ReportItem> prefiltered;
+                if (message != null) {
+                    prefiltered = report.GetLogs().Where((i) => {
+                        Object[] @params = new Object[messageParams.Count];
+                        for (int p = 0; p < messageParams.Count; p++) {
+                            @params[p] = messageParams[p].Invoke(i);
+                        }
+                        return i.GetMessage().Equals(MessageFormatUtil.Format(message, @params));
+                    }
+                    ).ToList();
+                    errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after message filter\n");
+                }
+                else {
+                    prefiltered = report.GetLogs();
+                }
+                if (checkName != null) {
+                    prefiltered = prefiltered.Where((i) => (checkName.Equals(i.GetCheckName()))).ToList();
+                    errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after check name filter\n");
+                }
+                if (checkStatus) {
+                    prefiltered = prefiltered.Where((i) => (status.Equals(i.GetStatus()))).ToList();
+                    errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after status filter\n");
+                }
+                if (certificate != null) {
+                    prefiltered = prefiltered.Where((i) => certificate.Equals(((CertificateReportItem)i).GetCertificate())).ToList
+                        ();
+                    errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after certificate filter\n");
+                }
+                if (exceptionType != null) {
+                    prefiltered = prefiltered.Where((i) => i.GetExceptionCause() != null && exceptionType.IsAssignableFrom(i.GetExceptionCause
+                        ().GetType())).ToList();
+                    errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after exception cause filter\n");
+                }
+                long foundCount = prefiltered.Count;
+                if (foundCount < minCount || foundCount > maxCount) {
+                    result.success = false;
+                    result.messageBuilder.Append(errorMessage);
+                }
+            }
+
+            public override String ToString() {
+                return "checkName='" + checkName + '\'' + ", message='" + message + '\'' + ", status=" + status + ", certificate="
+                     + (certificate == null ? "null" : certificate.GetSubjectDN().ToString()) + ", exceptionType=" + (exceptionType
+                     == null ? "null" : exceptionType.FullName);
+            }
+        }
+
         private class LogCountCheck : AssertValidationReport.CheckChain {
             private readonly int expected;
 
@@ -146,26 +322,18 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private class ItemCheck : AssertValidationReport.CheckChain {
-            private readonly Func<ReportItem, bool> check;
+        private class LogItemCheck : AssertValidationReport.CheckChain {
+            private readonly ReportItem expectedItem;
 
-            private readonly String message;
-
-            private readonly int expectedCount;
-
-            public ItemCheck(Func<ReportItem, bool> check, int count, String itemDescription)
+            public LogItemCheck(ReportItem expectedItem)
                 : base() {
-                this.check = check;
-                this.expectedCount = count;
-                this.message = itemDescription;
+                this.expectedItem = expectedItem;
             }
 
             protected internal override void Check(ValidationReport report, AssertValidationReport.CheckResult result) {
-                long foundCount = report.GetLogs().Where((i) => check.Invoke(i)).Count();
-                if (foundCount != expectedCount) {
+                if (!report.GetLogs().Contains(expectedItem)) {
                     result.success = false;
-                    result.messageBuilder.Append("\nExpected ").Append(expectedCount).Append(" report logs like '").Append(message
-                        ).Append("' but found ").Append(foundCount);
+                    result.messageBuilder.Append("\nExpected report item not found:").Append(expectedItem);
                 }
             }
         }
@@ -185,6 +353,10 @@ namespace iText.Signatures.Validation.V1 {
                         ).Append(report.GetValidationResult());
                 }
             }
+        }
+
+        void System.IDisposable.Dispose() {
+            Close();
         }
     }
 }
