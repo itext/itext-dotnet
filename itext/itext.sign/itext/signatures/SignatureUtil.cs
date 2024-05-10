@@ -155,13 +155,17 @@ namespace iText.Signatures {
         /// a signature
         /// </returns>
         public virtual PdfDictionary GetSignatureDictionary(String name) {
+            PdfDictionary merged = GetSignatureFormFieldDictionary(name);
+            return merged == null ? null : merged.GetAsDictionary(PdfName.V);
+        }
+
+        public virtual PdfDictionary GetSignatureFormFieldDictionary(String name) {
             GetSignatureNames();
             if (acroForm == null || !sigNames.ContainsKey(name)) {
                 return null;
             }
             PdfFormField field = acroForm.GetField(name);
-            PdfDictionary merged = field.GetPdfObject();
-            return merged.GetAsDictionary(PdfName.V);
+            return field.GetPdfObject();
         }
 
         /* Updates the /ByteRange with the provided value */

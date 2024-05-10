@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Actions.Contexts;
 using iText.Commons.Utils;
 using iText.IO.Source;
 
@@ -31,6 +32,8 @@ namespace iText.Kernel.Pdf {
         private readonly PdfReader reader;
 
         private IList<DocumentRevision> documentRevisions = null;
+
+        private IMetaInfo metaInfo;
 
         /// <summary>
         /// Creates
@@ -44,6 +47,18 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public PdfRevisionsReader(PdfReader reader) {
             this.reader = reader;
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
+        /// that will be used during
+        /// <see cref="PdfDocument"/>
+        /// creation.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        public virtual void SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+            this.metaInfo = metaInfo;
         }
 
         /// <summary>Gets information about PDF document revisions.</summary>
@@ -60,7 +75,8 @@ namespace iText.Kernel.Pdf {
                 WindowRandomAccessSource source = new WindowRandomAccessSource(raf.CreateSourceView(), 0, raf.Length());
                 using (Stream inputStream = new RASInputStream(source)) {
                     using (PdfReader newReader = new PdfReader(inputStream)) {
-                        using (PdfDocument newDocument = new PdfDocument(newReader)) {
+                        using (PdfDocument newDocument = new PdfDocument(newReader, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
                             newDocument.GetXref().UnmarkReadingCompleted();
                             newDocument.GetXref().ClearAllReferences();
                             PdfRevisionsReader.RevisionsXrefProcessor xrefProcessor = new PdfRevisionsReader.RevisionsXrefProcessor();

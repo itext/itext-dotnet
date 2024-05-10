@@ -30,6 +30,7 @@ using iText.Forms;
 using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
+using iText.Signatures;
 using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1 {
@@ -61,7 +62,7 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String NOT_ALLOWED_CATALOG_CHANGES = "PDF document catalog contains changes other than " + 
             "DSS dictionary and DTS addition (docMDP level >= 1), " + "form fill-in and digital signatures (docMDP level >= 2), "
-             + "adding or editing annotations (docMDP level 3), which are not allowed.";
+             + "adding or editing annotations (docMDP level 3).";
 
         internal const String OBJECT_REMOVED = "Object \"{0}\", which is not allowed to be removed, was removed from the document through XREF table.";
 
@@ -83,16 +84,36 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String UNEXPECTED_ENTRY_IN_XREF = "New PDF document revision contains unexpected entry \"{0}\" in XREF table.";
 
+        internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
+
+        internal const String DOCUMENT_WITHOUT_SIGNATURES = "Document doesn't contain any signatures.";
+
+        internal const String TOO_MANY_CERTIFICATION_SIGNATURES = "Document contains more than one certification signature.";
+
+        internal const String SIGNATURE_REVISION_NOT_FOUND = "Not possible to identify document revision corresponding to the first signature in the document.";
+
+        internal const String ACCESS_PERMISSIONS_ADDED = "Access permissions level specified for \"{0}\" approval signature "
+             + "is higher than previous one specified. These access permissions will be ignored.";
+
+        internal const String UNKNOWN_ACCESS_PERMISSIONS = "Access permissions level number specified for \"{0}\" signature "
+             + "is undefined. Default level 2 will be used instead.";
+
         internal const String UNEXPECTED_FORM_FIELD = "New PDF document revision contains unexpected form field \"{0}\".";
 
-        internal int docMDP = 2;
+        private IMetaInfo metaInfo = new ValidationMetaInfo();
 
-        private IMetaInfo metaInfo;
+        private DocumentRevisionsValidator.AccessPermissions accessPermissions = DocumentRevisionsValidator.AccessPermissions
+            .ANNOTATION_MODIFICATION;
 
-        internal DocumentRevisionsValidator() {
+        private DocumentRevisionsValidator.AccessPermissions requestedAccessPermissions = DocumentRevisionsValidator.AccessPermissions
+            .UNSPECIFIED;
+
+        private readonly PdfDocument document;
+
+        internal DocumentRevisionsValidator(PdfDocument document) {
+            this.document = document;
         }
 
-        // Empty constructor.
         /// <summary>
         /// Sets the
         /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
@@ -101,11 +122,163 @@ namespace iText.Signatures.Validation.V1 {
         /// creation.
         /// </summary>
         /// <param name="metaInfo">meta info to set</param>
-        public virtual void SetEventCountingMetaInfo(IMetaInfo metaInfo) {
+        /// <returns>
+        /// the same
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetEventCountingMetaInfo(IMetaInfo
+             metaInfo) {
             this.metaInfo = metaInfo;
+            return this;
         }
 
-        internal static Stream CreateInputStreamFromRevision(PdfDocument originalDocument, DocumentRevision revision
+        /// <summary>Set access permissions to be used during docMDP validation.</summary>
+        /// <remarks>
+        /// Set access permissions to be used during docMDP validation.
+        /// If value is provided, related signature fields will be ignored during the validation.
+        /// </remarks>
+        /// <param name="accessPermissions">
+        /// 
+        /// <see cref="AccessPermissions"/>
+        /// docMDP validation level
+        /// </param>
+        /// <returns>
+        /// the same
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions
+             accessPermissions) {
+            this.requestedAccessPermissions = accessPermissions;
+            return this;
+        }
+
+        /// <summary>Validate all document revisions according to docMDP and fieldMDP transform methods.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
+        /// which contains detailed validation results
+        /// </returns>
+        public virtual ValidationReport ValidateAllDocumentRevisions() {
+            ValidationReport report = new ValidationReport();
+            PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
+            revisionsReader.SetEventCountingMetaInfo(metaInfo);
+            IList<DocumentRevision> documentRevisions;
+            try {
+                documentRevisions = revisionsReader.GetAllRevisions();
+            }
+            catch (System.IO.IOException) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_RETRIEVAL_FAILED, ReportItem.ReportItemStatus
+                    .INVALID));
+                return report;
+            }
+            SignatureUtil signatureUtil = new SignatureUtil(document);
+            IList<String> signatures = new List<String>(signatureUtil.GetSignatureNames());
+            if (signatures.IsEmpty()) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, DOCUMENT_WITHOUT_SIGNATURES, ReportItem.ReportItemStatus
+                    .INFO));
+                return report;
+            }
+            bool signatureFound = false;
+            bool certificationSignatureFound = false;
+            PdfSignature currentSignature = signatureUtil.GetSignature(signatures[0]);
+            for (int i = 0; i < documentRevisions.Count - 1; i++) {
+                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0])) {
+                    signatureFound = true;
+                    if (IsCertificationSignature(currentSignature)) {
+                        if (certificationSignatureFound) {
+                            report.AddReportItem(new ReportItem(DOC_MDP_CHECK, TOO_MANY_CERTIFICATION_SIGNATURES, ReportItem.ReportItemStatus
+                                .INDETERMINATE));
+                        }
+                        else {
+                            certificationSignatureFound = true;
+                            UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                        }
+                    }
+                    UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(signatures[0]), report
+                        );
+                    signatures.JRemoveAt(0);
+                    if (signatures.IsEmpty()) {
+                        currentSignature = null;
+                    }
+                    else {
+                        currentSignature = signatureUtil.GetSignature(signatures[0]);
+                    }
+                }
+                if (signatureFound) {
+                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], report);
+                }
+            }
+            if (!signatureFound) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, SIGNATURE_REVISION_NOT_FOUND, ReportItem.ReportItemStatus
+                    .INVALID));
+            }
+            return report;
+        }
+
+        internal virtual ValidationReport ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
+            , ValidationReport validationReport) {
+            try {
+                using (Stream previousInputStream = CreateInputStreamFromRevision(document, previousRevision)) {
+                    using (PdfReader previousReader = new PdfReader(previousInputStream)) {
+                        using (PdfDocument documentWithoutRevision = new PdfDocument(previousReader, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
+                            using (Stream currentInputStream = CreateInputStreamFromRevision(document, currentRevision)) {
+                                using (PdfReader currentReader = new PdfReader(currentInputStream)) {
+                                    using (PdfDocument documentWithRevision = new PdfDocument(currentReader, new DocumentProperties().SetEventCountingMetaInfo
+                                        (metaInfo))) {
+                                        ICollection<PdfIndirectReference> indirectReferences = currentRevision.GetModifiedObjects();
+                                        if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport)) {
+                                            return validationReport;
+                                        }
+                                        IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = CreateAllowedReferences(documentWithRevision
+                                            , documentWithoutRevision);
+                                        foreach (PdfIndirectReference indirectReference in indirectReferences) {
+                                            if (indirectReference.IsFree()) {
+                                                // In this boolean flag we check that reference which is about to be removed is the one which
+                                                // changed in the new revision. For instance DSS reference was 5 0 obj and changed to be 6 0 obj.
+                                                // In this case and only in this case reference with obj number 5 can be safely removed.
+                                                bool referenceAllowedToBeRemoved = allowedReferences.Any((reference) => reference.GetPreviousReference() !=
+                                                     null && reference.GetPreviousReference().GetObjNumber() == indirectReference.GetObjNumber() && (reference
+                                                    .GetCurrentReference() == null || reference.GetCurrentReference().GetObjNumber() != indirectReference.
+                                                    GetObjNumber()));
+                                                // If some reference wasn't in the previous document, it is safe to remove it,
+                                                // since it is not possible to introduce new reference and remove it at the same revision.
+                                                bool referenceWasInPrevDocument = documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) !=
+                                                     null;
+                                                if (!IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument && !referenceAllowedToBeRemoved
+                                                    ) {
+                                                    validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(OBJECT_REMOVED, indirectReference
+                                                        .GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
+                                                }
+                                            }
+                                            else {
+                                                if (!CheckAllowedReferences(allowedReferences, indirectReference, documentWithoutRevision)) {
+                                                    validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_ENTRY_IN_XREF
+                                                        , indirectReference.GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.IO.IOException) {
+            }
+            // error
+            return validationReport;
+        }
+
+        internal virtual DocumentRevisionsValidator.AccessPermissions GetAccessPermissions() {
+            return requestedAccessPermissions == DocumentRevisionsValidator.AccessPermissions.UNSPECIFIED ? accessPermissions
+                 : requestedAccessPermissions;
+        }
+
+        private static Stream CreateInputStreamFromRevision(PdfDocument originalDocument, DocumentRevision revision
             ) {
             RandomAccessFileOrArray raf = originalDocument.GetReader().GetSafeFile();
             WindowRandomAccessSource source = new WindowRandomAccessSource(raf.CreateSourceView(), 0, revision.GetEofOffset
@@ -113,49 +286,119 @@ namespace iText.Signatures.Validation.V1 {
             return new RASInputStream(source);
         }
 
-        internal virtual ValidationReport ValidateRevision(PdfDocument originalDocument, PdfDocument documentWithoutRevision
-            , DocumentRevision revision) {
-            ValidationReport validationReport = new ValidationReport();
-            using (Stream inputStream = CreateInputStreamFromRevision(originalDocument, revision)) {
-                using (PdfReader newReader = new PdfReader(inputStream)) {
-                    using (PdfDocument documentWithRevision = new PdfDocument(newReader, new DocumentProperties().SetEventCountingMetaInfo
-                        (metaInfo))) {
-                        ICollection<PdfIndirectReference> indirectReferences = revision.GetModifiedObjects();
-                        if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport)) {
-                            return validationReport;
+        private void UpdateApprovalSignatureAccessPermissions(PdfDictionary signatureField, ValidationReport report
+            ) {
+            PdfDictionary fieldLock = signatureField.GetAsDictionary(PdfName.Lock);
+            if (fieldLock == null || fieldLock.GetAsNumber(PdfName.P) == null) {
+                return;
+            }
+            PdfNumber p = fieldLock.GetAsNumber(PdfName.P);
+            DocumentRevisionsValidator.AccessPermissions newAccessPermissions;
+            switch (p.IntValue()) {
+                case 1: {
+                    newAccessPermissions = DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED;
+                    break;
+                }
+
+                case 2: {
+                    newAccessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                    break;
+                }
+
+                case 3: {
+                    newAccessPermissions = DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION;
+                    break;
+                }
+
+                default: {
+                    // Do nothing.
+                    return;
+                }
+            }
+            if (accessPermissions.CompareTo(newAccessPermissions) < 0) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(ACCESS_PERMISSIONS_ADDED, signatureField
+                    .Get(PdfName.T)), ReportItem.ReportItemStatus.INDETERMINATE));
+            }
+            else {
+                accessPermissions = newAccessPermissions;
+            }
+        }
+
+        private void UpdateCertificationSignatureAccessPermissions(PdfSignature signature, ValidationReport report
+            ) {
+            PdfArray references = signature.GetPdfObject().GetAsArray(PdfName.Reference);
+            foreach (PdfObject reference in references) {
+                PdfDictionary referenceDict = (PdfDictionary)reference;
+                PdfName transformMethod = referenceDict.GetAsName(PdfName.TransformMethod);
+                if (PdfName.DocMDP.Equals(transformMethod)) {
+                    PdfDictionary transformParameters = referenceDict.GetAsDictionary(PdfName.TransformParams);
+                    if (transformParameters == null || transformParameters.GetAsNumber(PdfName.P) == null) {
+                        accessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                        return;
+                    }
+                    PdfNumber p = transformParameters.GetAsNumber(PdfName.P);
+                    switch (p.IntValue()) {
+                        case 1: {
+                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED;
+                            break;
                         }
-                        IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = CreateAllowedReferences(documentWithRevision
-                            , documentWithoutRevision);
-                        foreach (PdfIndirectReference indirectReference in indirectReferences) {
-                            if (indirectReference.IsFree()) {
-                                // In this boolean flag we check that reference which is about to be removed is the one which
-                                // changed in the new revision. For instance DSS reference was 5 0 obj and changed to be 6 0 obj.
-                                // In this case and only in this case reference with obj number 5 can be safely removed.
-                                bool referenceAllowedToBeRemoved = allowedReferences.Any((reference) => reference.GetPreviousReference() !=
-                                     null && reference.GetPreviousReference().GetObjNumber() == indirectReference.GetObjNumber() && (reference
-                                    .GetCurrentReference() == null || reference.GetCurrentReference().GetObjNumber() != indirectReference.
-                                    GetObjNumber()));
-                                // If some reference wasn't in the previous document, it is safe to remove it,
-                                // since it is not possible to introduce new reference and remove it at the same revision.
-                                bool referenceWasInPrevDocument = documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) !=
-                                     null;
-                                if (!IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument && !referenceAllowedToBeRemoved
-                                    ) {
-                                    validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(OBJECT_REMOVED, indirectReference
-                                        .GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
-                                }
-                            }
-                            else {
-                                if (!CheckAllowedReferences(allowedReferences, indirectReference, documentWithoutRevision)) {
-                                    validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_ENTRY_IN_XREF
-                                        , indirectReference.GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
-                                }
-                            }
+
+                        case 2: {
+                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                            break;
+                        }
+
+                        case 3: {
+                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION;
+                            break;
+                        }
+
+                        default: {
+                            report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNKNOWN_ACCESS_PERMISSIONS, signature
+                                .GetName()), ReportItem.ReportItemStatus.INDETERMINATE));
+                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                            break;
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+
+        private bool IsCertificationSignature(PdfSignature signature) {
+            if (PdfName.DocTimeStamp.Equals(signature.GetType()) || PdfName.ETSI_RFC3161.Equals(signature.GetSubFilter
+                ())) {
+                // Timestamp is never a certification signature.
+                return false;
+            }
+            PdfArray references = signature.GetPdfObject().GetAsArray(PdfName.Reference);
+            if (references != null) {
+                foreach (PdfObject reference in references) {
+                    if (reference is PdfDictionary) {
+                        PdfDictionary referenceDict = (PdfDictionary)reference;
+                        PdfName transformMethod = referenceDict.GetAsName(PdfName.TransformMethod);
+                        return PdfName.DocMDP.Equals(transformMethod);
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool RevisionContainsSignature(DocumentRevision revision, String signature) {
+            try {
+                using (Stream inputStream = CreateInputStreamFromRevision(document, revision)) {
+                    using (PdfReader reader = new PdfReader(inputStream)) {
+                        using (PdfDocument documentWithRevision = new PdfDocument(reader, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
+                            SignatureUtil signatureUtil = new SignatureUtil(documentWithRevision);
+                            return signatureUtil.SignatureCoversWholeDocument(signature);
                         }
                     }
                 }
             }
-            return validationReport;
+            catch (System.IO.IOException) {
+            }
+            return false;
         }
 
         private bool CompareCatalogs(PdfDocument documentWithoutRevision, PdfDocument documentWithRevision, ValidationReport
@@ -492,7 +735,8 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             else {
-                if (docMDP == 1 && !ComparePdfObjects(prevValue, currValue)) {
+                if (GetAccessPermissions() == DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED && !ComparePdfObjects
+                    (prevValue, currValue)) {
                     return false;
                 }
             }
@@ -606,8 +850,8 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>true if newly added field is allowed to be added, false otherwise.</returns>
         private bool IsAllowedSignatureField(PdfDictionary field, ValidationReport report) {
             PdfDictionary value = field.GetAsDictionary(PdfName.V);
-            if (!PdfName.Sig.Equals(field.GetAsName(PdfName.FT)) || value == null || (docMDP == 1 && !PdfName.DocTimeStamp
-                .Equals(value.GetAsName(PdfName.Type)))) {
+            if (!PdfName.Sig.Equals(field.GetAsName(PdfName.FT)) || value == null || (GetAccessPermissions() == DocumentRevisionsValidator.AccessPermissions
+                .NO_CHANGES_PERMITTED && !PdfName.DocTimeStamp.Equals(value.GetAsName(PdfName.Type)))) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_FORM_FIELD, field.GetAsString
                     (PdfName.T).GetValue()), ReportItem.ReportItemStatus.INVALID));
                 return false;
@@ -692,7 +936,7 @@ namespace iText.Signatures.Validation.V1 {
 
         private void RemoveAppearanceRelatedProperties(PdfDictionary annotDict) {
             annotDict.Remove(PdfName.P);
-            if (docMDP > 1) {
+            if (GetAccessPermissions() != DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED) {
                 annotDict.Remove(PdfName.AP);
                 annotDict.Remove(PdfName.AS);
                 annotDict.Remove(PdfName.M);
@@ -846,8 +1090,8 @@ namespace iText.Signatures.Validation.V1 {
                 PdfFormField previousField = prevFields.Get(fieldEntry.Key);
                 PdfFormField currentField = fieldEntry.Value;
                 PdfObject value = currentField.GetValue();
-                if (docMDP >= 2 || (value is PdfDictionary && PdfName.DocTimeStamp.Equals(((PdfDictionary)value).GetAsName
-                    (PdfName.Type)))) {
+                if (GetAccessPermissions() != DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED || (value 
+                    is PdfDictionary && PdfName.DocTimeStamp.Equals(((PdfDictionary)value).GetAsName(PdfName.Type)))) {
                     allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentField.GetPdfObject().GetIndirectReference
                         (), GetIndirectReferenceOrNull(() => previousField.GetPdfObject().GetIndirectReference())));
                     if (previousField == null) {
@@ -1079,6 +1323,13 @@ namespace iText.Signatures.Validation.V1 {
             catch (Exception) {
                 return null;
             }
+        }
+
+        internal enum AccessPermissions {
+            UNSPECIFIED,
+            NO_CHANGES_PERMITTED,
+            FORM_FIELDS_MODIFICATION,
+            ANNOTATION_MODIFICATION
         }
 
         private class ReferencesPair {
