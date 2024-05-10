@@ -72,12 +72,11 @@ namespace iText.Signatures {
         /// <summary>Creates a CrlClientOnline instance using a certificate chain.</summary>
         /// <param name="chain">a certificate chain</param>
         public CrlClientOnline(IX509Certificate[] chain) {
-            for (int i = 0; i < chain.Length; i++) {
-                IX509Certificate cert = (IX509Certificate)chain[i];
+            foreach (IX509Certificate certificate in chain) {
+                IX509Certificate cert = (IX509Certificate)certificate;
                 LOGGER.LogInformation("Checking certificate: " + cert.GetSubjectDN());
-                String url = null;
-                url = CertificateUtil.GetCRLURL(cert);
-                if (url != null) {
+                IList<String> urls = CertificateUtil.GetCRLURLs(cert);
+                foreach (String url in urls) {
                     AddUrl(url);
                 }
             }
@@ -97,18 +96,24 @@ namespace iText.Signatures {
                 return null;
             }
             IList<Uri> urlList = new List<Uri>(urls);
-            if (urlList.Count == 0) {
+            if (urlList.IsEmpty()) {
                 LOGGER.LogInformation(MessageFormatUtil.Format("Looking for CRL for certificate {0}", BOUNCY_CASTLE_FACTORY
                     .CreateX500Name(checkCert)));
                 try {
+                    IList<String> urlsList = new List<String>();
                     if (url == null) {
-                        url = CertificateUtil.GetCRLURL(checkCert);
+                        urlsList = CertificateUtil.GetCRLURLs(checkCert);
                     }
-                    if (url == null) {
+                    else {
+                        urlsList.Add(url);
+                    }
+                    if (urlsList.IsEmpty()) {
                         throw new ArgumentException("Passed url can not be null.");
                     }
-                    urlList.Add(new Uri(url));
-                    LOGGER.LogInformation("Found CRL url: " + url);
+                    foreach (String urlString in urlsList) {
+                        urlList.Add(new Uri(urlString));
+                        LOGGER.LogInformation("Found CRL url: " + urlString);
+                    }
                 }
                 catch (Exception e) {
                     LOGGER.LogInformation("Skipped CRL url: " + e.Message);

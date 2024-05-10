@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Testutils;
 using iText.Test;
@@ -63,6 +64,13 @@ namespace iText.Signatures {
             IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
             IX509Crl crl = CertificateUtil.GetCRL(tsaCert);
             NUnit.Framework.Assert.IsNull(crl);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCRLsFromCertificateWithoutCRLTest() {
+            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
+            IList<IX509Crl> crls = CertificateUtil.GetCRLs(tsaCert);
+            NUnit.Framework.Assert.IsTrue(crls.IsEmpty());
         }
     }
 }

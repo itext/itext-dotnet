@@ -52,14 +52,36 @@ namespace iText.Signatures {
         /// <summary>Gets a CRL from an X509 certificate.</summary>
         /// <param name="certificate">the X509Certificate to extract the CRL from</param>
         /// <returns>CRL or null if there's no CRL available</returns>
+        [System.ObsoleteAttribute(@"use GetCRLs(iText.Commons.Bouncycastle.Cert.IX509Certificate) .")]
         public static IX509Crl GetCRL(IX509Certificate certificate) {
             return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
         }
 
+        /// <summary>Gets a CRLs from the X509 certificate.</summary>
+        /// <param name="certificate">the X509Certificate to extract the CRLs from</param>
+        /// <returns>CRL list or null if there's no CRL available</returns>
+        public static IList<IX509Crl> GetCRLs(IX509Certificate certificate) {
+            IList<IX509Crl> crls = new List<IX509Crl>();
+            foreach (String crlUrl in GetCRLURLs(certificate)) {
+                crls.Add(CertificateUtil.GetCRL(crlUrl));
+            }
+            return crls;
+        }
+
         /// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
         /// <param name="certificate">the Certificate</param>
-        /// <returns>the String where you can check if the certificate was revoked</returns>
+        /// <returns>the String where you can check if the certificate was revoked.</returns>
+        [System.ObsoleteAttribute(@"use GetCRLURLs(iText.Commons.Bouncycastle.Cert.IX509Certificate) .")]
         public static String GetCRLURL(IX509Certificate certificate) {
+            IList<String> urls = GetCRLURLs(certificate);
+            return urls.IsEmpty() ? null : urls[0];
+        }
+
+        /// <summary>Gets the list of the Certificate Revocation List URLs for a Certificate.</summary>
+        /// <param name="certificate">the Certificate to get CRL URLs for</param>
+        /// <returns>the list of URL strings where you can check if the certificate is revoked.</returns>
+        public static IList<String> GetCRLURLs(IX509Certificate certificate) {
+            IList<String> crls = new List<String>();
             IDistributionPoint[] dists = GetDistributionPoints(certificate);
             foreach (IDistributionPoint p in dists) {
                 IDistributionPointName distributionPointName = p.GetDistributionPoint();
@@ -68,16 +90,18 @@ namespace iText.Signatures {
                 }
                 IGeneralNames generalNames = FACTORY.CreateGeneralNames(distributionPointName.GetName());
                 IGeneralName[] names = generalNames.GetNames();
+                // If the DistributionPointName contains multiple values, each name describes a different mechanism
+                // to obtain the same CRL.
                 foreach (IGeneralName name in names) {
                     if (name.GetTagNo() != FACTORY.CreateGeneralName().GetUniformResourceIdentifier()) {
                         continue;
                     }
                     IDerIA5String derStr = FACTORY.CreateDERIA5String(FACTORY.CreateASN1TaggedObject(name.ToASN1Primitive()), 
                         false);
-                    return derStr.GetString();
+                    crls.Add(derStr.GetString());
                 }
             }
-            return null;
+            return crls;
         }
 
         /// <summary>

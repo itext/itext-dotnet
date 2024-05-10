@@ -624,8 +624,8 @@ namespace iText.Signatures {
         internal virtual void CreateRevocationClients(IX509Certificate signingCert, bool clientsRequired) {
             if (crlClient == null && ocspClient == null && clientsRequired) {
                 IX509Certificate signingCertificate = (IX509Certificate)signingCert;
-                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURL(signingCertificate
-                    ) == null) {
+                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURLs(signingCertificate
+                    ).IsEmpty()) {
                     throw new PdfException(SignExceptionMessageConstant.DEFAULT_CLIENTS_CANNOT_BE_CREATED);
                 }
             }

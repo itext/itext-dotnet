@@ -40,6 +40,8 @@ namespace iText.Signatures.Sign {
 
         private static readonly String certWithCorrectUrl = certSrc + "certWithCorrectUrl.crt";
 
+        private static readonly String chainWithSeveralUrls = certSrc + "chainWithSeveralUrls.pem";
+
         private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/";
 
@@ -94,10 +96,41 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage("Checking certificate: ", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: ", LogLevel = LogLevelConstants.INFO, Count = 4)]
+        public virtual void CheckCrlCertWithSeveralUrlsTest() {
+            // Root certificate with 1 CRL and leaf certificate with 3 CRLs in 3 Distribution Points.
+            IX509Certificate[] chain = PemFileHelper.ReadFirstChain(chainWithSeveralUrls);
+            CrlClientOnline crlClientOnline = new CrlClientOnline(chain);
+            NUnit.Framework.Assert.AreEqual(4, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CannotGetEncodedWhenCertIsNullTest() {
             CrlClientOnline crlClientOnline = new CrlClientOnline();
             NUnit.Framework.Assert.IsNull(crlClientOnline.GetEncoded(null, ""));
             NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Looking for CRL for certificate ", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Found CRL url: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
+        [LogMessage("Checking CRL: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
+        [LogMessage("Added CRL found at: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
+        public virtual void UnreachableSeveralCrlDistributionPointsFromTheCertChainTest() {
+            CrlClientOnline crlClientOnline = new _CrlClientOnline_153();
+            IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(chainWithSeveralUrls)[1];
+            ICollection<byte[]> bytes = crlClientOnline.GetEncoded(checkCert, null);
+            NUnit.Framework.Assert.AreEqual(3, bytes.Count);
+        }
+
+        private sealed class _CrlClientOnline_153 : CrlClientOnline {
+            public _CrlClientOnline_153() {
+            }
+
+            protected internal override Stream GetCrlResponse(IX509Certificate cert, Uri url) {
+                return new MemoryStream(new byte[0]);
+            }
         }
 
         [NUnit.Framework.Test]
