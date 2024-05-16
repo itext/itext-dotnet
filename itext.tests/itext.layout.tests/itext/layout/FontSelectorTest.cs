@@ -952,6 +952,18 @@ namespace iText.Layout {
                 ().GetDescriptor().GetFontName());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MonospaceFontsTest() {
+            FontSet set = new FontSet();
+            set.AddFont(fontsFolder + "SpaceMono-Regular.ttf");
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("SpaceMono");
+            FontCharacteristics fc = new FontCharacteristics();
+            FontSelector fontSelector = new FontSelector(set.GetFonts(), fontFamilies, fc);
+            NUnit.Framework.Assert.IsTrue(fontSelector.BestMatch().GetDescriptor().IsMonospace(), "Font is not recognized as monospace."
+                );
+        }
+
         private void CheckSelector(ICollection<FontInfo> fontInfoCollection, String fontFamily, String expectedNormal
             , String expectedBold, String expectedItalic, String expectedBoldItalic) {
             IList<String> fontFamilies = new List<String>();
