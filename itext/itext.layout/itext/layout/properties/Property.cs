@@ -320,6 +320,8 @@ namespace iText.Layout.Properties {
 
         public const int ROWSPAN = 60;
 
+        public const int ROW_GAP = 153;
+
         public const int SPACING_RATIO = 61;
 
         public const int SPLIT_CHARACTERS = 62;
@@ -398,7 +400,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 152;
+        private const int MAX_INHERITED_PROPERTY_ID = 153;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

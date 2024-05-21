@@ -139,6 +139,8 @@ namespace iText.Layout.Renderer {
             this.modelElement = modelElement;
         }
 
+        /// <summary>Creates a new renderer based on an instance of another renderer.</summary>
+        /// <param name="other">renderer from which to copy essential properties</param>
         protected internal AbstractRenderer(iText.Layout.Renderer.AbstractRenderer other) {
             this.childRenderers = other.childRenderers;
             this.positionedRenderers = other.positionedRenderers;
@@ -462,6 +464,16 @@ namespace iText.Layout.Renderer {
             flushed = true;
         }
 
+        /// <summary>
+        /// Apply
+        /// <c>Property.OPACITY</c>
+        /// property if specified by setting corresponding values in graphic state dictionary
+        /// opacity will be applied to all elements drawn after calling this method and before
+        /// calling
+        /// <see cref="EndElementOpacityApplying(DrawContext)"/>
+        /// ()}.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         protected internal virtual void BeginElementOpacityApplying(DrawContext drawContext) {
             float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
             if (opacity != null && opacity < 1f) {
@@ -471,6 +483,10 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// <see cref="BeginElementOpacityApplying(DrawContext)"/>.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         protected internal virtual void EndElementOpacityApplying(DrawContext drawContext) {
             float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
             if (opacity != null && opacity < 1f) {

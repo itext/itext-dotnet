@@ -46,14 +46,20 @@ namespace iText.Layout.Renderer {
         //TODO DEVSIX-8326 here should be a list/map of different resolvers
         private readonly GridSizer.SizeResolver sizeResolver;
 
+        private readonly float columnGap;
+
+        private readonly float rowGap;
+
         internal GridSizer(Grid grid, IList<float> templateRows, IList<float> templateColumns, float? rowAutoHeight
-            , float? columnAutoWidth) {
+            , float? columnAutoWidth, float? columnGap, float? rowGap) {
             this.grid = grid;
             this.templateRows = templateRows;
             this.templateColumns = templateColumns;
             this.rowAutoHeight = rowAutoHeight;
             this.columnAutoWidth = columnAutoWidth;
             this.sizeResolver = new GridSizer.MinContentResolver(grid);
+            this.columnGap = columnGap == null ? 0.0f : (float)columnGap;
+            this.rowGap = rowGap == null ? 0.0f : (float)rowGap;
         }
 
         //Grid Sizing Algorithm
@@ -86,7 +92,7 @@ namespace iText.Layout.Renderer {
             //is a null row) and all cells in a row above have the same top.
             GridCell topNeighbor = grid.GetClosestTopNeighbor(cell);
             if (topNeighbor != null) {
-                return topNeighbor.GetLayoutArea().GetTop();
+                return topNeighbor.GetLayoutArea().GetTop() + rowGap;
             }
             return 0.0f;
         }
@@ -100,6 +106,7 @@ namespace iText.Layout.Renderer {
             if (templateColumns != null) {
                 for (; currentColumn < Math.Min(templateColumns.Count, cell.GetColumnStart()); ++currentColumn) {
                     x += (float)templateColumns[currentColumn];
+                    x += columnGap;
                 }
                 if (currentColumn == cell.GetColumnStart()) {
                     return x;
@@ -108,6 +115,7 @@ namespace iText.Layout.Renderer {
             if (columnAutoWidth != null) {
                 for (; currentColumn < cell.GetColumnStart(); ++currentColumn) {
                     x += (float)columnAutoWidth;
+                    x += columnGap;
                 }
                 return x;
             }
@@ -120,6 +128,7 @@ namespace iText.Layout.Renderer {
                 else {
                     x = leftNeighbor.GetLayoutArea().GetRight();
                 }
+                x += columnGap;
             }
             return x;
         }
@@ -147,6 +156,9 @@ namespace iText.Layout.Renderer {
                             cellHeight += (float)rowAutoHeight;
                         }
                     }
+                }
+                if (counter > 1) {
+                    cellHeight += rowGap * (counter - 1);
                 }
                 if (counter == cell.GetGridHeight()) {
                     return cellHeight;
@@ -184,6 +196,9 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
+                if (counter > 1) {
+                    cellWidth += columnGap * (counter - 1);
+                }
                 if (counter == cell.GetGridWidth()) {
                     return cellWidth;
                 }
@@ -202,9 +217,22 @@ namespace iText.Layout.Renderer {
             return cellWidth;
         }
 
+        /// <summary>
+        /// The
+        /// <c>SizeResolver</c>
+        /// is used to calculate cell width and height on layout area.
+        /// </summary>
         protected internal abstract class SizeResolver {
             protected internal Grid grid;
 
+            /// <summary>
+            /// Create a new
+            /// <c>SizeResolver</c>
+            /// instance for the given
+            /// <c>Grid</c>
+            /// instance.
+            /// </summary>
+            /// <param name="grid">grid which cells sizes will be resolved</param>
             public SizeResolver(Grid grid) {
                 this.grid = grid;
             }
@@ -249,11 +277,19 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// The
+        /// <c>MinContentResolver</c>
+        /// is used to calculate cell width and height on layout area by calculating their
+        /// min required size.
+        /// </summary>
         protected internal class MinContentResolver : GridSizer.SizeResolver {
+            /// <summary><inheritDoc/></summary>
             public MinContentResolver(Grid grid)
                 : base(grid) {
             }
 
+            /// <summary><inheritDoc/></summary>
             public override float ResolveHeight(GridCell cell, float cellHeight) {
                 float maxRowTop = grid.GetMaxRowTop(cell.GetRowStart(), cell.GetColumnStart());
                 cellHeight = Math.Max(cellHeight, CalculateImplicitCellHeight(cell));
@@ -266,6 +302,7 @@ namespace iText.Layout.Renderer {
                 return cellHeight;
             }
 
+            /// <summary><inheritDoc/></summary>
             public override float ResolveWidth(GridCell cell, float cellWidth) {
                 float maxColumnRight = grid.GetMaxColumnRight(cell.GetRowStart(), cell.GetColumnStart());
                 cellWidth = Math.Max(cellWidth, CalculateMinRequiredCellWidth(cell));

@@ -273,6 +273,8 @@ namespace iText.Layout.Renderer {
                 )((UnitValue)renderer.GetProperty<UnitValue>(Property.GRID_AUTO_COLUMNS)).GetValue();
             float? rowAutoHeight = renderer.GetProperty<UnitValue>(Property.GRID_AUTO_ROWS) == null ? null : (float?)(
                 (UnitValue)renderer.GetProperty<UnitValue>(Property.GRID_AUTO_ROWS)).GetValue();
+            float? columnGap = renderer.GetProperty<float?>(Property.COLUMN_GAP);
+            float? rowGap = renderer.GetProperty<float?>(Property.ROW_GAP);
             //Grid Item Placement Algorithm
             int initialRowsCount = templateRows == null ? 1 : templateRows.Count;
             int initialColumnsCount = templateColumns == null ? 1 : templateColumns.Count;
@@ -297,7 +299,8 @@ namespace iText.Layout.Renderer {
             //TODO DEVSIX-8325 eliminate null rows/columns
             // for rows it's easy: grid.getCellsRows().removeIf(row -> row.stream().allMatch(cell -> cell == null));
             // shrinkNullAxis(grid);
-            GridSizer gridSizer = new GridSizer(grid, templateRows, templateColumns, rowAutoHeight, columnAutoWidth);
+            GridSizer gridSizer = new GridSizer(grid, templateRows, templateColumns, rowAutoHeight, columnAutoWidth, columnGap
+                , rowGap);
             gridSizer.SizeCells();
             //calculating explicit height to ensure that even empty rows which covered by template would be considered
             //TODO DEVSIX-8324 improve those methods in future for working correctly with minmax/repeat/etc.
