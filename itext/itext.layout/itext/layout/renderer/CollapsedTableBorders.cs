@@ -502,7 +502,7 @@ namespace iText.Layout.Renderer {
 
         public static IList<Border> GetCollapsedList(IList<Border> innerList, IList<Border> outerList) {
             int size = Math.Min(null == innerList ? 0 : innerList.Count, null == outerList ? 0 : outerList.Count);
-            IList<Border> collapsedList = new List<Border>();
+            IList<Border> collapsedList = new List<Border>(size);
             for (int i = 0; i < size; i++) {
                 collapsedList.Add(GetCollapsedBorder(innerList[i], outerList[i]));
             }

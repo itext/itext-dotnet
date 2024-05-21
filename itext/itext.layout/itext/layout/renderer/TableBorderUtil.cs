@@ -76,9 +76,13 @@ namespace iText.Layout.Renderer {
 
         public static IList<Border> CreateAndFillBorderList(IList<Border> originalList, Border borderToCollapse, int
              size) {
-            IList<Border> borderList = new List<Border>();
+            IList<Border> borderList;
             if (null != originalList) {
+                borderList = new List<Border>(originalList.Count + size);
                 borderList.AddAll(originalList);
+            }
+            else {
+                borderList = new List<Border>(size);
             }
             while (borderList.Count < size) {
                 borderList.Add(borderToCollapse);
