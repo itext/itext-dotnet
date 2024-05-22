@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
+using iText.Signatures;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
@@ -45,7 +46,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -68,7 +69,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void HugeDocumentTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hugeDocument.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -83,7 +84,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "extensionsModifications.pdf")
                 )) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -122,7 +123,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "completelyInvalidDocument.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -140,7 +141,7 @@ namespace iText.Signatures.Validation.V1 {
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
@@ -167,7 +168,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RandomEntryAddedTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryAdded.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -185,7 +186,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryWithoutUsage.pdf")
                 )) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -202,7 +203,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void ChangeExistingFontTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "changeExistingFont.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -219,7 +220,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "changeExistingFontAndAddAsDss.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -236,7 +237,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void FillInFieldAtLevel1Test() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fillInField.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED);
+                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -255,7 +256,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument2.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -280,7 +281,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RemovePermissionsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removePermissions.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -298,7 +299,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RemoveDSSTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeDSS.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -316,7 +317,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RemoveAcroformTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeAcroform.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -334,7 +335,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RemoveFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeField.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -352,7 +353,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RenameFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "renameField.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -371,7 +372,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void AddTextFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addTextField.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -392,7 +393,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addUnsignedSignatureField.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -413,7 +414,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "brokenSignatureFieldDictionary.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
@@ -434,7 +435,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void ModifyPageAnnotsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifyPageAnnots.pdf"))) {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
-                validator.SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION);
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();

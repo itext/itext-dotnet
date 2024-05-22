@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
@@ -56,6 +57,10 @@ namespace iText.Signatures {
         private String timestampSignatureName;
 
         private String temporaryDirectoryPath = null;
+
+        private AccessPermissions accessPermissions = AccessPermissions.UNSPECIFIED;
+
+        private PdfSigFieldLock fieldLock = null;
 
         private IExternalDigest externalDigest = new BouncyCastleDigest();
 
@@ -373,6 +378,36 @@ namespace iText.Signatures {
             return this;
         }
 
+        /// <summary>Set certification level which specifies DocMDP level which is expected to be set.</summary>
+        /// <param name="accessPermissions">
+        /// 
+        /// <see cref="AccessPermissions"/>
+        /// certification level
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetCertificationLevel(AccessPermissions accessPermissions) {
+            this.accessPermissions = accessPermissions;
+            return this;
+        }
+
+        /// <summary>Set FieldMDP rules to be applied for this signature.</summary>
+        /// <param name="fieldLock">
+        /// 
+        /// <see cref="iText.Forms.PdfSigFieldLock"/>
+        /// field lock dictionary.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetSignatureFieldLock(PdfSigFieldLock fieldLock) {
+            this.fieldLock = fieldLock;
+            return this;
+        }
+
         /// <summary>Set the name to be used for timestamp signature creation.</summary>
         /// <remarks>
         /// Set the name to be used for timestamp signature creation.
@@ -641,6 +676,8 @@ namespace iText.Signatures {
             , IX509Certificate[] chain, ITSAClient tsaClient) {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(chain);
             PdfSigner signer = CreatePdfSigner(signerProperties, isFinal);
+            signer.SetCertificationLevel(accessPermissions);
+            signer.SetFieldLockDict(fieldLock);
             try {
                 signer.SignDetached(externalDigest, externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
                     .CADES);

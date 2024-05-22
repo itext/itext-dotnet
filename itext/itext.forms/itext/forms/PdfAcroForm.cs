@@ -373,7 +373,7 @@ namespace iText.Forms {
         /// objects
         /// </returns>
         public virtual IDictionary<String, PdfFormField> GetAllFormFields() {
-            if (fields.Count == 0) {
+            if (fields.IsEmpty()) {
                 fields = PopulateFormFieldsMap();
             }
             IDictionary<String, PdfFormField> allFields = new LinkedDictionary<String, PdfFormField>(fields);

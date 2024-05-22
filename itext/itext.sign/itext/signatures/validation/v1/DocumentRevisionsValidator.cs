@@ -38,6 +38,8 @@ namespace iText.Signatures.Validation.V1 {
     internal class DocumentRevisionsValidator {
         internal const String DOC_MDP_CHECK = "DocMDP check.";
 
+        internal const String FIELD_MDP_CHECK = "FieldMDP check.";
+
         internal const String ACROFORM_REMOVED = "AcroForm dictionary was removed from catalog.";
 
         internal const String ANNOTATIONS_MODIFIED = "Field annotations were removed, added or unexpectedly modified.";
@@ -100,13 +102,27 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String UNEXPECTED_FORM_FIELD = "New PDF document revision contains unexpected form field \"{0}\".";
 
+        internal const String REVISIONS_READING_EXCEPTION = "IOException occurred during document revisions reading.";
+
+        internal const String UNRECOGNIZED_ACTION = "Signature field lock dictionary contains unrecognized " + "\"Action\" value \"{0}\". \"All\" will be used instead.";
+
+        internal const String LOCKED_FIELD_REMOVED = "Locked form field \"{0}\" was removed from the document.";
+
+        internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
+
+        internal const String LOCKED_FIELD_KIDS_REMOVED = "Kids were removed from locked form field \"{0}\" .";
+
+        internal const String FIELD_NOT_DICTIONARY = "Form field \"{0}\" or one of its widgets is not a dictionary. It will not be validated.";
+
+        internal const String LOCKED_FIELD_MODIFIED = "Locked form field \"{0}\" or one of its widgets was modified.";
+
         private IMetaInfo metaInfo = new ValidationMetaInfo();
 
-        private DocumentRevisionsValidator.AccessPermissions accessPermissions = DocumentRevisionsValidator.AccessPermissions
-            .ANNOTATION_MODIFICATION;
+        private AccessPermissions accessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
 
-        private DocumentRevisionsValidator.AccessPermissions requestedAccessPermissions = DocumentRevisionsValidator.AccessPermissions
-            .UNSPECIFIED;
+        private AccessPermissions requestedAccessPermissions = AccessPermissions.UNSPECIFIED;
+
+        private readonly ICollection<String> lockedFields = new HashSet<String>();
 
         private readonly PdfDocument document;
 
@@ -136,11 +152,11 @@ namespace iText.Signatures.Validation.V1 {
         /// <summary>Set access permissions to be used during docMDP validation.</summary>
         /// <remarks>
         /// Set access permissions to be used during docMDP validation.
-        /// If value is provided, related signature fields will be ignored during the validation.
+        /// If value is provided, access permission related signature parameters will be ignored during the validation.
         /// </remarks>
         /// <param name="accessPermissions">
         /// 
-        /// <see cref="AccessPermissions"/>
+        /// <see cref="iText.Signatures.AccessPermissions"/>
         /// docMDP validation level
         /// </param>
         /// <returns>
@@ -148,7 +164,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <see cref="DocumentRevisionsValidator"/>
         /// instance
         /// </returns>
-        public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetAccessPermissions(DocumentRevisionsValidator.AccessPermissions
+        public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetAccessPermissions(AccessPermissions
              accessPermissions) {
             this.requestedAccessPermissions = accessPermissions;
             return this;
@@ -170,7 +186,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             catch (System.IO.IOException) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_RETRIEVAL_FAILED, ReportItem.ReportItemStatus
-                    .INVALID));
+                    .INDETERMINATE));
                 return report;
             }
             SignatureUtil signatureUtil = new SignatureUtil(document);
@@ -198,6 +214,8 @@ namespace iText.Signatures.Validation.V1 {
                     }
                     UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(signatures[0]), report
                         );
+                    UpdateApprovalSignatureFieldLock(documentRevisions[i], signatureUtil.GetSignatureFormFieldDictionary(signatures
+                        [0]), report);
                     signatures.JRemoveAt(0);
                     if (signatures.IsEmpty()) {
                         currentSignature = null;
@@ -217,20 +235,22 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
-        internal virtual ValidationReport ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
+        internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
             , ValidationReport validationReport) {
             try {
                 using (Stream previousInputStream = CreateInputStreamFromRevision(document, previousRevision)) {
-                    using (PdfReader previousReader = new PdfReader(previousInputStream)) {
+                    using (PdfReader previousReader = new PdfReader(previousInputStream).SetStrictnessLevel(PdfReader.StrictnessLevel
+                        .CONSERVATIVE)) {
                         using (PdfDocument documentWithoutRevision = new PdfDocument(previousReader, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
                             using (Stream currentInputStream = CreateInputStreamFromRevision(document, currentRevision)) {
-                                using (PdfReader currentReader = new PdfReader(currentInputStream)) {
+                                using (PdfReader currentReader = new PdfReader(currentInputStream).SetStrictnessLevel(PdfReader.StrictnessLevel
+                                    .CONSERVATIVE)) {
                                     using (PdfDocument documentWithRevision = new PdfDocument(currentReader, new DocumentProperties().SetEventCountingMetaInfo
                                         (metaInfo))) {
                                         ICollection<PdfIndirectReference> indirectReferences = currentRevision.GetModifiedObjects();
                                         if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport)) {
-                                            return validationReport;
+                                            return;
                                         }
                                         IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = CreateAllowedReferences(documentWithRevision
                                             , documentWithoutRevision);
@@ -267,15 +287,14 @@ namespace iText.Signatures.Validation.V1 {
                     }
                 }
             }
-            catch (System.IO.IOException) {
+            catch (System.IO.IOException exception) {
+                validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
             }
-            // error
-            return validationReport;
         }
 
-        internal virtual DocumentRevisionsValidator.AccessPermissions GetAccessPermissions() {
-            return requestedAccessPermissions == DocumentRevisionsValidator.AccessPermissions.UNSPECIFIED ? accessPermissions
-                 : requestedAccessPermissions;
+        internal virtual AccessPermissions GetAccessPermissions() {
+            return requestedAccessPermissions == AccessPermissions.UNSPECIFIED ? accessPermissions : requestedAccessPermissions;
         }
 
         private static Stream CreateInputStreamFromRevision(PdfDocument originalDocument, DocumentRevision revision
@@ -293,20 +312,20 @@ namespace iText.Signatures.Validation.V1 {
                 return;
             }
             PdfNumber p = fieldLock.GetAsNumber(PdfName.P);
-            DocumentRevisionsValidator.AccessPermissions newAccessPermissions;
+            AccessPermissions newAccessPermissions;
             switch (p.IntValue()) {
                 case 1: {
-                    newAccessPermissions = DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED;
+                    newAccessPermissions = AccessPermissions.NO_CHANGES_PERMITTED;
                     break;
                 }
 
                 case 2: {
-                    newAccessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                    newAccessPermissions = AccessPermissions.FORM_FIELDS_MODIFICATION;
                     break;
                 }
 
                 case 3: {
-                    newAccessPermissions = DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION;
+                    newAccessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
                     break;
                 }
 
@@ -324,6 +343,68 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
+        private void UpdateApprovalSignatureFieldLock(DocumentRevision revision, PdfDictionary signatureField, ValidationReport
+             report) {
+            PdfDictionary fieldLock = signatureField.GetAsDictionary(PdfName.Lock);
+            if (fieldLock == null || fieldLock.GetAsName(PdfName.Action) == null) {
+                return;
+            }
+            PdfName action = fieldLock.GetAsName(PdfName.Action);
+            if (PdfName.Include.Equals(action)) {
+                PdfArray fields = fieldLock.GetAsArray(PdfName.Fields);
+                if (fields != null) {
+                    foreach (PdfObject fieldName in fields) {
+                        if (fieldName is PdfString) {
+                            lockedFields.Add(((PdfString)fieldName).ToUnicodeString());
+                        }
+                    }
+                }
+            }
+            else {
+                if (PdfName.Exclude.Equals(action)) {
+                    PdfArray fields = fieldLock.GetAsArray(PdfName.Fields);
+                    IList<String> excludedFields = JavaCollectionsUtil.EmptyList<String>();
+                    if (fields != null) {
+                        excludedFields = fields.SubList(0, fields.Size()).Select((field) => field is PdfString ? ((PdfString)field
+                            ).ToUnicodeString() : "").ToList();
+                    }
+                    LockAllFormFields(revision, excludedFields, report);
+                }
+                else {
+                    if (!PdfName.All.Equals(action)) {
+                        report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(UNRECOGNIZED_ACTION, action.
+                            GetValue()), ReportItem.ReportItemStatus.INVALID));
+                    }
+                    LockAllFormFields(revision, JavaCollectionsUtil.EmptyList<String>(), report);
+                }
+            }
+        }
+
+        private void LockAllFormFields(DocumentRevision revision, IList<String> excludedFields, ValidationReport report
+            ) {
+            try {
+                using (Stream inputStream = CreateInputStreamFromRevision(document, revision)) {
+                    using (PdfReader reader = new PdfReader(inputStream)) {
+                        using (PdfDocument documentWithRevision = new PdfDocument(reader, new DocumentProperties().SetEventCountingMetaInfo
+                            (metaInfo))) {
+                            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(documentWithRevision, false);
+                            if (acroForm != null) {
+                                foreach (String fieldName in acroForm.GetAllFormFields().Keys) {
+                                    if (!excludedFields.Contains(fieldName)) {
+                                        lockedFields.Add(fieldName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.IO.IOException exception) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+            }
+        }
+
         private void UpdateCertificationSignatureAccessPermissions(PdfSignature signature, ValidationReport report
             ) {
             PdfArray references = signature.GetPdfObject().GetAsArray(PdfName.Reference);
@@ -333,30 +414,30 @@ namespace iText.Signatures.Validation.V1 {
                 if (PdfName.DocMDP.Equals(transformMethod)) {
                     PdfDictionary transformParameters = referenceDict.GetAsDictionary(PdfName.TransformParams);
                     if (transformParameters == null || transformParameters.GetAsNumber(PdfName.P) == null) {
-                        accessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                        accessPermissions = AccessPermissions.FORM_FIELDS_MODIFICATION;
                         return;
                     }
                     PdfNumber p = transformParameters.GetAsNumber(PdfName.P);
                     switch (p.IntValue()) {
                         case 1: {
-                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED;
+                            accessPermissions = AccessPermissions.NO_CHANGES_PERMITTED;
                             break;
                         }
 
                         case 2: {
-                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                            accessPermissions = AccessPermissions.FORM_FIELDS_MODIFICATION;
                             break;
                         }
 
                         case 3: {
-                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION;
+                            accessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
                             break;
                         }
 
                         default: {
                             report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNKNOWN_ACCESS_PERMISSIONS, signature
                                 .GetName()), ReportItem.ReportItemStatus.INDETERMINATE));
-                            accessPermissions = DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION;
+                            accessPermissions = AccessPermissions.FORM_FIELDS_MODIFICATION;
                             break;
                         }
                     }
@@ -416,8 +497,121 @@ namespace iText.Signatures.Validation.V1 {
                 report) && ComparePermissions(previousCatalog.Get(PdfName.Perms), currentCatalog.Get(PdfName.Perms), report
                 ) && CompareDss(previousCatalog.Get(PdfName.DSS), currentCatalog.Get(PdfName.DSS), report) && ComparePages
                 (previousCatalog.GetAsDictionary(PdfName.Pages), currentCatalog.GetAsDictionary(PdfName.Pages), report
-                ) && CompareAcroForms(previousCatalog.GetAsDictionary(PdfName.AcroForm), currentCatalog.GetAsDictionary
-                (PdfName.AcroForm), report);
+                ) && CompareAcroFormsWithFieldMDP(documentWithoutRevision, documentWithRevision, report) && CompareAcroForms
+                (previousCatalog.GetAsDictionary(PdfName.AcroForm), currentCatalog.GetAsDictionary(PdfName.AcroForm), 
+                report);
+        }
+
+        private bool CompareAcroFormsWithFieldMDP(PdfDocument documentWithoutRevision, PdfDocument documentWithRevision
+            , ValidationReport report) {
+            PdfAcroForm currentAcroForm = PdfFormCreator.GetAcroForm(documentWithRevision, false);
+            PdfAcroForm previousAcroForm = PdfFormCreator.GetAcroForm(documentWithoutRevision, false);
+            if (currentAcroForm == null || previousAcroForm == null) {
+                // This is not a part of FieldMDP validation.
+                return true;
+            }
+            if (accessPermissions == AccessPermissions.NO_CHANGES_PERMITTED) {
+                // In this case FieldMDP makes no sense, because related changes are forbidden anyway.
+                return true;
+            }
+            foreach (KeyValuePair<String, PdfFormField> previousField in previousAcroForm.GetAllFormFields()) {
+                if (lockedFields.Contains(previousField.Key)) {
+                    // For locked form fields nothing can change,
+                    // however annotations can contain page link which should be excluded from direct comparison.
+                    PdfFormField currentFormField = currentAcroForm.GetField(previousField.Key);
+                    if (currentFormField == null) {
+                        report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_REMOVED, previousField
+                            .Key), ReportItem.ReportItemStatus.INVALID));
+                        return false;
+                    }
+                    if (!CompareFormFieldWithFieldMDP(previousField.Value.GetPdfObject(), currentFormField.GetPdfObject(), previousField
+                        .Key, report)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool CompareFormFieldWithFieldMDP(PdfDictionary previousField, PdfDictionary currentField, String 
+            fieldName, ValidationReport report) {
+            PdfDictionary previousFieldCopy = new PdfDictionary(previousField);
+            previousFieldCopy.Remove(PdfName.Kids);
+            previousFieldCopy.Remove(PdfName.P);
+            previousFieldCopy.Remove(PdfName.Parent);
+            previousFieldCopy.Remove(PdfName.V);
+            PdfDictionary currentFieldCopy = new PdfDictionary(currentField);
+            currentFieldCopy.Remove(PdfName.Kids);
+            currentFieldCopy.Remove(PdfName.P);
+            currentFieldCopy.Remove(PdfName.Parent);
+            currentFieldCopy.Remove(PdfName.V);
+            if (!ComparePdfObjects(previousFieldCopy, currentFieldCopy)) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
+                    ), ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            PdfObject prevValue = previousField.Get(PdfName.V);
+            PdfObject currValue = currentField.Get(PdfName.V);
+            if (PdfName.Sig.Equals(currentField.GetAsName(PdfName.FT))) {
+                if (!CompareSignatureDictionaries(prevValue, currValue, report)) {
+                    report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
+                        ), ReportItem.ReportItemStatus.INVALID));
+                    return false;
+                }
+            }
+            else {
+                if (!ComparePdfObjects(prevValue, currValue)) {
+                    report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
+                        ), ReportItem.ReportItemStatus.INVALID));
+                    return false;
+                }
+            }
+            if (!CompareIndirectReferencesObjNums(previousField.Get(PdfName.P), currentField.Get(PdfName.P), report, "Page object with which field annotation is associated"
+                ) || !CompareIndirectReferencesObjNums(previousField.Get(PdfName.Parent), currentField.Get(PdfName.Parent
+                ), report, "Form field parent")) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
+                    ), ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            PdfArray previousKids = previousField.GetAsArray(PdfName.Kids);
+            PdfArray currentKids = currentField.GetAsArray(PdfName.Kids);
+            if (previousKids == null && currentKids != null) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_KIDS_ADDED, fieldName
+                    ), ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            if (previousKids != null && currentKids == null) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_KIDS_REMOVED, fieldName
+                    ), ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            if (previousKids == currentKids) {
+                return true;
+            }
+            if (previousKids.Size() < currentKids.Size()) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_KIDS_ADDED, fieldName
+                    ), ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            if (previousKids.Size() > currentKids.Size()) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_KIDS_REMOVED, fieldName
+                    ), ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            for (int i = 0; i < previousKids.Size(); ++i) {
+                PdfDictionary previousKid = previousKids.GetAsDictionary(i);
+                PdfDictionary currentKid = currentKids.GetAsDictionary(i);
+                if (previousKid == null || currentKid == null) {
+                    report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(FIELD_NOT_DICTIONARY, fieldName
+                        ), ReportItem.ReportItemStatus.INDETERMINATE));
+                    continue;
+                }
+                if (PdfFormAnnotationUtil.IsPureWidget(previousKid) && !CompareFormFieldWithFieldMDP(previousKid, currentKid
+                    , fieldName, report)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private IList<DocumentRevisionsValidator.ReferencesPair> CreateAllowedReferences(PdfDocument documentWithRevision
@@ -735,8 +929,8 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             else {
-                if (GetAccessPermissions() == DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED && !ComparePdfObjects
-                    (prevValue, currValue)) {
+                if (GetAccessPermissions() == AccessPermissions.NO_CHANGES_PERMITTED && !ComparePdfObjects(prevValue, currValue
+                    )) {
                     return false;
                 }
             }
@@ -850,7 +1044,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>true if newly added field is allowed to be added, false otherwise.</returns>
         private bool IsAllowedSignatureField(PdfDictionary field, ValidationReport report) {
             PdfDictionary value = field.GetAsDictionary(PdfName.V);
-            if (!PdfName.Sig.Equals(field.GetAsName(PdfName.FT)) || value == null || (GetAccessPermissions() == DocumentRevisionsValidator.AccessPermissions
+            if (!PdfName.Sig.Equals(field.GetAsName(PdfName.FT)) || value == null || (GetAccessPermissions() == AccessPermissions
                 .NO_CHANGES_PERMITTED && !PdfName.DocTimeStamp.Equals(value.GetAsName(PdfName.Type)))) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_FORM_FIELD, field.GetAsString
                     (PdfName.T).GetValue()), ReportItem.ReportItemStatus.INVALID));
@@ -936,7 +1130,7 @@ namespace iText.Signatures.Validation.V1 {
 
         private void RemoveAppearanceRelatedProperties(PdfDictionary annotDict) {
             annotDict.Remove(PdfName.P);
-            if (GetAccessPermissions() != DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED) {
+            if (GetAccessPermissions() != AccessPermissions.NO_CHANGES_PERMITTED) {
                 annotDict.Remove(PdfName.AP);
                 annotDict.Remove(PdfName.AS);
                 annotDict.Remove(PdfName.M);
@@ -1090,8 +1284,8 @@ namespace iText.Signatures.Validation.V1 {
                 PdfFormField previousField = prevFields.Get(fieldEntry.Key);
                 PdfFormField currentField = fieldEntry.Value;
                 PdfObject value = currentField.GetValue();
-                if (GetAccessPermissions() != DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED || (value 
-                    is PdfDictionary && PdfName.DocTimeStamp.Equals(((PdfDictionary)value).GetAsName(PdfName.Type)))) {
+                if (GetAccessPermissions() != AccessPermissions.NO_CHANGES_PERMITTED || (value is PdfDictionary && PdfName
+                    .DocTimeStamp.Equals(((PdfDictionary)value).GetAsName(PdfName.Type)))) {
                     allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentField.GetPdfObject().GetIndirectReference
                         (), GetIndirectReferenceOrNull(() => previousField.GetPdfObject().GetIndirectReference())));
                     if (previousField == null) {
@@ -1099,8 +1293,10 @@ namespace iText.Signatures.Validation.V1 {
                         AddAllNestedDictionaryEntries(allowedReferences, currentField.GetPdfObject(), null);
                     }
                     else {
-                        // For already existing form field only several entries are allowed to be updated.
-                        allowedReferences.AddAll(CreateAllowedExistingFormFieldEntries(currentField, previousField));
+                        if (!lockedFields.Contains(fieldEntry.Key)) {
+                            // For already existing form field only several entries are allowed to be updated.
+                            allowedReferences.AddAll(CreateAllowedExistingFormFieldEntries(currentField, previousField));
+                        }
                     }
                 }
             }
@@ -1323,13 +1519,6 @@ namespace iText.Signatures.Validation.V1 {
             catch (Exception) {
                 return null;
             }
-        }
-
-        internal enum AccessPermissions {
-            UNSPECIFIED,
-            NO_CHANGES_PERMITTED,
-            FORM_FIELDS_MODIFICATION,
-            ANNOTATION_MODIFICATION
         }
 
         private class ReferencesPair {

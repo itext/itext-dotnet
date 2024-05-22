@@ -24,6 +24,7 @@ using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
+using iText.Signatures;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
@@ -48,8 +49,8 @@ namespace iText.Signatures.Validation.V1 {
                     (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
                     (DocumentRevisionsValidator.DOCUMENT_WITHOUT_SIGNATURES).WithStatus(ReportItem.ReportItemStatus.INFO))
                     );
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
             }
         }
 
@@ -60,8 +61,8 @@ namespace iText.Signatures.Validation.V1 {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
                 ValidationReport report = validator.ValidateAllDocumentRevisions();
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
             }
         }
 
@@ -72,8 +73,8 @@ namespace iText.Signatures.Validation.V1 {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
                 ValidationReport report = validator.ValidateAllDocumentRevisions();
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
+                    ());
             }
         }
 
@@ -88,8 +89,8 @@ namespace iText.Signatures.Validation.V1 {
                     (DocumentRevisionsValidator.PERMISSION_REMOVED, (i) => PdfName.DocMDP).WithStatus(ReportItem.ReportItemStatus
                     .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
                     .TOO_MANY_CERTIFICATION_SIGNATURES).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE)));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
+                    ());
             }
         }
 
@@ -102,8 +103,8 @@ namespace iText.Signatures.Validation.V1 {
                     (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
                     (DocumentRevisionsValidator.SIGNATURE_REVISION_NOT_FOUND).WithStatus(ReportItem.ReportItemStatus.INVALID
                     )));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.ANNOTATION_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
             }
         }
 
@@ -118,8 +119,7 @@ namespace iText.Signatures.Validation.V1 {
                     (DocumentRevisionsValidator.UNEXPECTED_FORM_FIELD, (i) => "Signature4").WithStatus(ReportItem.ReportItemStatus
                     .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
                     .NOT_ALLOWED_ACROFORM_CHANGES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.NO_CHANGES_PERMITTED, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.NO_CHANGES_PERMITTED, validator.GetAccessPermissions());
             }
         }
 
@@ -133,8 +133,8 @@ namespace iText.Signatures.Validation.V1 {
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.ACCESS_PERMISSIONS_ADDED, (i) => "Signature3").
                     WithStatus(ReportItem.ReportItemStatus.INDETERMINATE)));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
+                    ());
             }
         }
 
@@ -145,8 +145,147 @@ namespace iText.Signatures.Validation.V1 {
                 DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
                 ValidationReport report = validator.ValidateAllDocumentRevisions();
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
-                NUnit.Framework.Assert.AreEqual(DocumentRevisionsValidator.AccessPermissions.FORM_FIELDS_MODIFICATION, validator
-                    .GetAccessPermissions());
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
+                    ());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockChildModificationAllowedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockChildModificationAllowed.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockChildModificationNotAllowedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockChildModificationNotAllowed.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "rootField.childTextField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockRootModificationAllowedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockRootModificationAllowed.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockRootModificationNotAllowedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockRootModificationNotAllowed.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "childTextField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockSequentialExcludeValuesTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockSequentialExcludeValues.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "rootField.childTextField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockSequentialIncludeValuesTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockSequentialIncludeValues.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "rootField.childTextField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .LOCKED_FIELD_MODIFIED, (i) => "childTextField").WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockKidsRemovedAndAddedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockKidsRemovedAndAdded.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_KIDS_REMOVED, (i) => "rootField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .LOCKED_FIELD_KIDS_ADDED, (i) => "rootField").WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PageAndParentIndirectReferenceModifiedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pageAndParentIndirectReferenceModified.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "rootField.childTextField2").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LockedSignatureFieldModifiedTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "lockedSignatureFieldModified.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "Signature2").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LockedFieldRemoveAddKidsEntryTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "lockedFieldRemoveAddKidsEntry.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_KIDS_REMOVED, (i) => "rootField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .LOCKED_FIELD_KIDS_ADDED, (i) => "rootField").WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovedLockedFieldTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removedLockedField.pdf"))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_REMOVED, (i) => "textField").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
             }
         }
     }

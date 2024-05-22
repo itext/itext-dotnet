@@ -327,6 +327,11 @@ namespace iText.Signatures {
         }
 
         /// <summary>Sets the document's certification level.</summary>
+        /// <remarks>
+        /// Sets the document's certification level.
+        /// This method overrides the value set by
+        /// <see cref="SetCertificationLevel(AccessPermissions)"/>.
+        /// </remarks>
         /// <param name="certificationLevel">
         /// a new certification level for a document.
         /// Possible values are: <list type="bullet">
@@ -346,6 +351,21 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SetCertificationLevel(int certificationLevel) {
             this.certificationLevel = certificationLevel;
+        }
+
+        /// <summary>Sets the document's certification level.</summary>
+        /// <remarks>
+        /// Sets the document's certification level.
+        /// This method overrides the value set by
+        /// <see cref="SetCertificationLevel(int)"/>.
+        /// </remarks>
+        /// <param name="accessPermissions">
+        /// 
+        /// <see cref="AccessPermissions"/>
+        /// enum which specifies which certification level shall be used
+        /// </param>
+        public virtual void SetCertificationLevel(AccessPermissions accessPermissions) {
+            this.certificationLevel = (int)(accessPermissions);
         }
 
         /// <summary>Gets the field name.</summary>
