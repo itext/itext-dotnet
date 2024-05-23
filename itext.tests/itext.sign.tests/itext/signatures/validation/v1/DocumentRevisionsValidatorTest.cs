@@ -448,5 +448,26 @@ namespace iText.Signatures.Validation.V1 {
                     .INVALID)));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MultipleRevisionsDocumentLevel3Test() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                validator.SetAccessPermissions(AccessPermissions.ANNOTATION_MODIFICATION);
+                PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
+                IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
+                ValidationReport validationReport = new ValidationReport();
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                // Between these two revisions annotations were added and deleted, text field was filled-in.
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
+                    ).HasNumberOfFailures(0).HasNumberOfLogs(0));
+                validationReport = new ValidationReport();
+                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], validationReport);
+                // Between these two revisions existed annotations were modified, it is allowed.
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
+                    ).HasNumberOfFailures(0).HasNumberOfLogs(0));
+            }
+        }
     }
 }

@@ -40,6 +40,9 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String FIELD_MDP_CHECK = "FieldMDP check.";
 
+        internal const String ACCESS_PERMISSIONS_ADDED = "Access permissions level specified for \"{0}\" approval signature "
+             + "is higher than previous one specified. These access permissions will be ignored.";
+
         internal const String ACROFORM_REMOVED = "AcroForm dictionary was removed from catalog.";
 
         internal const String ANNOTATIONS_MODIFIED = "Field annotations were removed, added or unexpectedly modified.";
@@ -47,6 +50,8 @@ namespace iText.Signatures.Validation.V1 {
         internal const String DEVELOPER_EXTENSION_REMOVED = "Developer extension \"{0}\" dictionary was removed or unexpectedly modified.";
 
         internal const String DIRECT_OBJECT = "{0} must be an indirect reference.";
+
+        internal const String DOCUMENT_WITHOUT_SIGNATURES = "Document doesn't contain any signatures.";
 
         internal const String DSS_REMOVED = "DSS dictionary was removed from catalog.";
 
@@ -56,7 +61,17 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String EXTENSION_LEVEL_DECREASED = "Extension level number in developer extension \"{0}\" dictionary was decreased.";
 
+        internal const String FIELD_NOT_DICTIONARY = "Form field \"{0}\" or one of its widgets is not a dictionary. It will not be validated.";
+
         internal const String FIELD_REMOVED = "Form field {0} was removed or unexpectedly modified.";
+
+        internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
+
+        internal const String LOCKED_FIELD_KIDS_REMOVED = "Kids were removed from locked form field \"{0}\" .";
+
+        internal const String LOCKED_FIELD_MODIFIED = "Locked form field \"{0}\" or one of its widgets was modified.";
+
+        internal const String LOCKED_FIELD_REMOVED = "Locked form field \"{0}\" was removed from the document.";
 
         internal const String NOT_ALLOWED_ACROFORM_CHANGES = "PDF document AcroForm contains changes other than " 
             + "document timestamp (docMDP level >= 1), form fill-in and digital signatures (docMDP level >= 2), " 
@@ -82,39 +97,24 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String REFERENCE_REMOVED = "Signature reference dictionary was removed or unexpectedly modified.";
 
-        internal const String SIGNATURE_MODIFIED = "Signature {0} was unexpectedly modified.";
-
-        internal const String UNEXPECTED_ENTRY_IN_XREF = "New PDF document revision contains unexpected entry \"{0}\" in XREF table.";
+        internal const String REVISIONS_READING_EXCEPTION = "IOException occurred during document revisions reading.";
 
         internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
 
-        internal const String DOCUMENT_WITHOUT_SIGNATURES = "Document doesn't contain any signatures.";
-
-        internal const String TOO_MANY_CERTIFICATION_SIGNATURES = "Document contains more than one certification signature.";
+        internal const String SIGNATURE_MODIFIED = "Signature {0} was unexpectedly modified.";
 
         internal const String SIGNATURE_REVISION_NOT_FOUND = "Not possible to identify document revision corresponding to the first signature in the document.";
 
-        internal const String ACCESS_PERMISSIONS_ADDED = "Access permissions level specified for \"{0}\" approval signature "
-             + "is higher than previous one specified. These access permissions will be ignored.";
+        internal const String TOO_MANY_CERTIFICATION_SIGNATURES = "Document contains more than one certification signature.";
+
+        internal const String UNEXPECTED_ENTRY_IN_XREF = "New PDF document revision contains unexpected entry \"{0}\" in XREF table.";
+
+        internal const String UNEXPECTED_FORM_FIELD = "New PDF document revision contains unexpected form field \"{0}\".";
 
         internal const String UNKNOWN_ACCESS_PERMISSIONS = "Access permissions level number specified for \"{0}\" signature "
              + "is undefined. Default level 2 will be used instead.";
 
-        internal const String UNEXPECTED_FORM_FIELD = "New PDF document revision contains unexpected form field \"{0}\".";
-
-        internal const String REVISIONS_READING_EXCEPTION = "IOException occurred during document revisions reading.";
-
         internal const String UNRECOGNIZED_ACTION = "Signature field lock dictionary contains unrecognized " + "\"Action\" value \"{0}\". \"All\" will be used instead.";
-
-        internal const String LOCKED_FIELD_REMOVED = "Locked form field \"{0}\" was removed from the document.";
-
-        internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
-
-        internal const String LOCKED_FIELD_KIDS_REMOVED = "Kids were removed from locked form field \"{0}\" .";
-
-        internal const String FIELD_NOT_DICTIONARY = "Form field \"{0}\" or one of its widgets is not a dictionary. It will not be validated.";
-
-        internal const String LOCKED_FIELD_MODIFIED = "Locked form field \"{0}\" or one of its widgets was modified.";
 
         private IMetaInfo metaInfo = new ValidationMetaInfo();
 
@@ -125,6 +125,10 @@ namespace iText.Signatures.Validation.V1 {
         private readonly ICollection<String> lockedFields = new HashSet<String>();
 
         private readonly PdfDocument document;
+
+        private ICollection<PdfObject> checkedAnnots;
+
+        private ICollection<PdfDictionary> newlyAddedFields;
 
         internal DocumentRevisionsValidator(PdfDocument document) {
             this.document = document;
@@ -170,11 +174,15 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
+        internal virtual AccessPermissions GetAccessPermissions() {
+            return requestedAccessPermissions == AccessPermissions.UNSPECIFIED ? accessPermissions : requestedAccessPermissions;
+        }
+
         /// <summary>Validate all document revisions according to docMDP and fieldMDP transform methods.</summary>
         /// <returns>
         /// 
         /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
-        /// which contains detailed validation results
+        /// which contains detailed validation results.
         /// </returns>
         public virtual ValidationReport ValidateAllDocumentRevisions() {
             ValidationReport report = new ValidationReport();
@@ -235,6 +243,11 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
+        //
+        //
+        // Revisions validation util section:
+        //
+        //
         internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
             , ValidationReport validationReport) {
             try {
@@ -252,17 +265,17 @@ namespace iText.Signatures.Validation.V1 {
                                         if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport)) {
                                             return;
                                         }
-                                        IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = CreateAllowedReferences(documentWithRevision
-                                            , documentWithoutRevision);
+                                        ICollection<PdfIndirectReference> currentAllowedReferences = CreateAllowedReferences(documentWithRevision);
+                                        ICollection<PdfIndirectReference> previousAllowedReferences = CreateAllowedReferences(documentWithoutRevision
+                                            );
                                         foreach (PdfIndirectReference indirectReference in indirectReferences) {
                                             if (indirectReference.IsFree()) {
                                                 // In this boolean flag we check that reference which is about to be removed is the one which
                                                 // changed in the new revision. For instance DSS reference was 5 0 obj and changed to be 6 0 obj.
                                                 // In this case and only in this case reference with obj number 5 can be safely removed.
-                                                bool referenceAllowedToBeRemoved = allowedReferences.Any((reference) => reference.GetPreviousReference() !=
-                                                     null && reference.GetPreviousReference().GetObjNumber() == indirectReference.GetObjNumber() && (reference
-                                                    .GetCurrentReference() == null || reference.GetCurrentReference().GetObjNumber() != indirectReference.
-                                                    GetObjNumber()));
+                                                bool referenceAllowedToBeRemoved = previousAllowedReferences.Any((reference) => reference != null && reference
+                                                    .GetObjNumber() == indirectReference.GetObjNumber()) && !currentAllowedReferences.Any((reference) => reference
+                                                     != null && reference.GetObjNumber() == indirectReference.GetObjNumber());
                                                 // If some reference wasn't in the previous document, it is safe to remove it,
                                                 // since it is not possible to introduce new reference and remove it at the same revision.
                                                 bool referenceWasInPrevDocument = documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) !=
@@ -274,7 +287,8 @@ namespace iText.Signatures.Validation.V1 {
                                                 }
                                             }
                                             else {
-                                                if (!CheckAllowedReferences(allowedReferences, indirectReference, documentWithoutRevision)) {
+                                                if (!CheckAllowedReferences(currentAllowedReferences, previousAllowedReferences, indirectReference, documentWithoutRevision
+                                                    )) {
                                                     validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_ENTRY_IN_XREF
                                                         , indirectReference.GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
                                                 }
@@ -291,10 +305,6 @@ namespace iText.Signatures.Validation.V1 {
                 validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
                     .INDETERMINATE));
             }
-        }
-
-        internal virtual AccessPermissions GetAccessPermissions() {
-            return requestedAccessPermissions == AccessPermissions.UNSPECIFIED ? accessPermissions : requestedAccessPermissions;
         }
 
         private static Stream CreateInputStreamFromRevision(PdfDocument originalDocument, DocumentRevision revision
@@ -335,8 +345,9 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             if (accessPermissions.CompareTo(newAccessPermissions) < 0) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(ACCESS_PERMISSIONS_ADDED, signatureField
-                    .Get(PdfName.T)), ReportItem.ReportItemStatus.INDETERMINATE));
+                PdfString fieldName = signatureField.GetAsString(PdfName.T);
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(ACCESS_PERMISSIONS_ADDED, fieldName
+                     == null ? "" : fieldName.GetValue()), ReportItem.ReportItemStatus.INDETERMINATE));
             }
             else {
                 accessPermissions = newAccessPermissions;
@@ -482,6 +493,11 @@ namespace iText.Signatures.Validation.V1 {
             return false;
         }
 
+        //
+        //
+        // Compare catalogs section:
+        //
+        //
         private bool CompareCatalogs(PdfDocument documentWithoutRevision, PdfDocument documentWithRevision, ValidationReport
              report) {
             PdfDictionary previousCatalog = documentWithoutRevision.GetCatalog().GetPdfObject();
@@ -495,11 +511,105 @@ namespace iText.Signatures.Validation.V1 {
             }
             return CompareExtensions(previousCatalog.Get(PdfName.Extensions), currentCatalog.Get(PdfName.Extensions), 
                 report) && ComparePermissions(previousCatalog.Get(PdfName.Perms), currentCatalog.Get(PdfName.Perms), report
-                ) && CompareDss(previousCatalog.Get(PdfName.DSS), currentCatalog.Get(PdfName.DSS), report) && ComparePages
-                (previousCatalog.GetAsDictionary(PdfName.Pages), currentCatalog.GetAsDictionary(PdfName.Pages), report
-                ) && CompareAcroFormsWithFieldMDP(documentWithoutRevision, documentWithRevision, report) && CompareAcroForms
-                (previousCatalog.GetAsDictionary(PdfName.AcroForm), currentCatalog.GetAsDictionary(PdfName.AcroForm), 
-                report);
+                ) && CompareDss(previousCatalog.Get(PdfName.DSS), currentCatalog.Get(PdfName.DSS), report) && CompareAcroFormsWithFieldMDP
+                (documentWithoutRevision, documentWithRevision, report) && CompareAcroForms(previousCatalog.GetAsDictionary
+                (PdfName.AcroForm), currentCatalog.GetAsDictionary(PdfName.AcroForm), report) && ComparePages(previousCatalog
+                .GetAsDictionary(PdfName.Pages), currentCatalog.GetAsDictionary(PdfName.Pages), report);
+        }
+
+        // Compare catalogs nested methods section:
+        private bool CompareExtensions(PdfObject previousExtensions, PdfObject currentExtensions, ValidationReport
+             report) {
+            if (previousExtensions == null || ComparePdfObjects(previousExtensions, currentExtensions)) {
+                return true;
+            }
+            if (currentExtensions == null) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, EXTENSIONS_REMOVED, ReportItem.ReportItemStatus.INVALID
+                    ));
+                return false;
+            }
+            if (!(previousExtensions is PdfDictionary) || !(currentExtensions is PdfDictionary)) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, EXTENSIONS_TYPE, ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            PdfDictionary previousExtensionsDictionary = (PdfDictionary)previousExtensions;
+            PdfDictionary currentExtensionsDictionary = (PdfDictionary)currentExtensions;
+            foreach (KeyValuePair<PdfName, PdfObject> previousExtension in previousExtensionsDictionary.EntrySet()) {
+                PdfDictionary currentExtension = currentExtensionsDictionary.GetAsDictionary(previousExtension.Key);
+                if (currentExtension == null) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
+                        .Key), ReportItem.ReportItemStatus.INVALID));
+                    return false;
+                }
+                else {
+                    PdfDictionary currentExtensionCopy = new PdfDictionary(currentExtension);
+                    currentExtensionCopy.Remove(PdfName.ExtensionLevel);
+                    PdfDictionary previousExtensionCopy = new PdfDictionary((PdfDictionary)previousExtension.Value);
+                    previousExtensionCopy.Remove(PdfName.ExtensionLevel);
+                    // Apart from extension level dictionaries are expected to be equal.
+                    if (!ComparePdfObjects(previousExtensionCopy, currentExtensionCopy)) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
+                            .Key), ReportItem.ReportItemStatus.INVALID));
+                        return false;
+                    }
+                    PdfNumber previousExtensionLevel = ((PdfDictionary)previousExtension.Value).GetAsNumber(PdfName.ExtensionLevel
+                        );
+                    PdfNumber currentExtensionLevel = currentExtension.GetAsNumber(PdfName.ExtensionLevel);
+                    if (previousExtensionLevel != null) {
+                        if (currentExtensionLevel == null || previousExtensionLevel.IntValue() > currentExtensionLevel.IntValue()) {
+                            report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(EXTENSION_LEVEL_DECREASED, previousExtension
+                                .Key), ReportItem.ReportItemStatus.INVALID));
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool ComparePermissions(PdfObject previousPerms, PdfObject currentPerms, ValidationReport report) {
+            if (previousPerms == null || ComparePdfObjects(previousPerms, currentPerms)) {
+                return true;
+            }
+            if (currentPerms == null) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PERMISSIONS_REMOVED, ReportItem.ReportItemStatus.INVALID
+                    ));
+                return false;
+            }
+            if (!(previousPerms is PdfDictionary) || !(currentPerms is PdfDictionary)) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PERMISSIONS_TYPE, ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            PdfDictionary previousPermsDictionary = (PdfDictionary)previousPerms;
+            PdfDictionary currentPermsDictionary = (PdfDictionary)currentPerms;
+            foreach (KeyValuePair<PdfName, PdfObject> previousPermission in previousPermsDictionary.EntrySet()) {
+                PdfDictionary currentPermission = currentPermsDictionary.GetAsDictionary(previousPermission.Key);
+                if (currentPermission == null) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(PERMISSION_REMOVED, previousPermission
+                        .Key), ReportItem.ReportItemStatus.INVALID));
+                    return false;
+                }
+                else {
+                    // Perms dictionary is the signature dictionary.
+                    if (!CompareSignatureDictionaries(previousPermission.Value, currentPermission, report)) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(PERMISSION_REMOVED, previousPermission
+                            .Key), ReportItem.ReportItemStatus.INVALID));
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool CompareDss(PdfObject previousDss, PdfObject currentDss, ValidationReport report) {
+            if (previousDss == null) {
+                return true;
+            }
+            if (currentDss == null) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, DSS_REMOVED, ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            return true;
         }
 
         private bool CompareAcroFormsWithFieldMDP(PdfDocument documentWithoutRevision, PdfDocument documentWithRevision
@@ -614,226 +724,10 @@ namespace iText.Signatures.Validation.V1 {
             return true;
         }
 
-        private IList<DocumentRevisionsValidator.ReferencesPair> CreateAllowedReferences(PdfDocument documentWithRevision
-            , PdfDocument documentWithoutRevision) {
-            // First indirect reference in the pair is an allowed reference to be present in new xref table,
-            // and the second indirect reference in the pair is the same entry in the previous document.
-            // If any reference is null, we expect this object to be newly generated or direct reference.
-            IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = new List<DocumentRevisionsValidator.ReferencesPair
-                >();
-            if (documentWithRevision.GetTrailer().Get(PdfName.Info) != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(documentWithRevision.GetTrailer().Get(
-                    PdfName.Info).GetIndirectReference(), GetIndirectReferenceOrNull(() => documentWithoutRevision.GetTrailer
-                    ().Get(PdfName.Info).GetIndirectReference())));
-            }
-            if (documentWithRevision.GetCatalog().GetPdfObject() == null) {
-                return allowedReferences;
-            }
-            allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(documentWithRevision.GetCatalog().GetPdfObject
-                ().GetIndirectReference(), GetIndirectReferenceOrNull(() => documentWithoutRevision.GetCatalog().GetPdfObject
-                ().GetIndirectReference())));
-            if (documentWithRevision.GetCatalog().GetPdfObject().Get(PdfName.Metadata) != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(documentWithRevision.GetCatalog().GetPdfObject
-                    ().Get(PdfName.Metadata).GetIndirectReference(), GetIndirectReferenceOrNull(() => documentWithoutRevision
-                    .GetCatalog().GetPdfObject().Get(PdfName.Metadata).GetIndirectReference())));
-            }
-            PdfDictionary currentDssDictionary = documentWithRevision.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
-                .DSS);
-            if (currentDssDictionary != null) {
-                PdfDictionary previousDssDictionary = documentWithoutRevision.GetCatalog().GetPdfObject().GetAsDictionary(
-                    PdfName.DSS);
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentDssDictionary.GetIndirectReference
-                    (), GetIndirectReferenceOrNull(() => previousDssDictionary.GetIndirectReference())));
-                allowedReferences.AddAll(CreateAllowedDssEntries(documentWithRevision, documentWithoutRevision));
-            }
-            PdfDictionary currentAcroForm = documentWithRevision.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm
-                );
-            if (currentAcroForm != null) {
-                PdfDictionary previousAcroForm = documentWithoutRevision.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
-                    .AcroForm);
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentAcroForm.GetIndirectReference()
-                    , GetIndirectReferenceOrNull(() => previousAcroForm.GetIndirectReference())));
-                allowedReferences.AddAll(CreateAllowedAcroFormEntries(documentWithRevision, documentWithoutRevision));
-            }
-            PdfDictionary currentPagesDictionary = documentWithRevision.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
-                .Pages);
-            if (currentPagesDictionary != null) {
-                PdfDictionary previousPagesDictionary = documentWithoutRevision.GetCatalog().GetPdfObject().GetAsDictionary
-                    (PdfName.Pages);
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentPagesDictionary.GetIndirectReference
-                    (), GetIndirectReferenceOrNull(() => previousPagesDictionary.GetIndirectReference())));
-                allowedReferences.AddAll(CreateAllowedPagesEntries(currentPagesDictionary, previousPagesDictionary));
-            }
-            return allowedReferences;
-        }
-
-        private bool CheckAllowedReferences(IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences, PdfIndirectReference
-             indirectReference, PdfDocument documentWithoutRevision) {
-            foreach (DocumentRevisionsValidator.ReferencesPair allowedReference in allowedReferences) {
-                if (IsSameReference(allowedReference.GetCurrentReference(), indirectReference)) {
-                    return documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) == null || allowedReferences
-                        .Any((reference) => IsSameReference(reference.GetPreviousReference(), indirectReference));
-                }
-            }
-            return false;
-        }
-
-        // Compare catalogs nested methods section:
-        private bool CompareExtensions(PdfObject previousExtensions, PdfObject currentExtensions, ValidationReport
-             report) {
-            if (previousExtensions == null || ComparePdfObjects(previousExtensions, currentExtensions)) {
-                return true;
-            }
-            if (currentExtensions == null) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, EXTENSIONS_REMOVED, ReportItem.ReportItemStatus.INVALID
-                    ));
-                return false;
-            }
-            if (!(previousExtensions is PdfDictionary) || !(currentExtensions is PdfDictionary)) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, EXTENSIONS_TYPE, ReportItem.ReportItemStatus.INVALID));
-                return false;
-            }
-            PdfDictionary previousExtensionsDictionary = (PdfDictionary)previousExtensions;
-            PdfDictionary currentExtensionsDictionary = (PdfDictionary)currentExtensions;
-            foreach (KeyValuePair<PdfName, PdfObject> previousExtension in previousExtensionsDictionary.EntrySet()) {
-                PdfDictionary currentExtension = currentExtensionsDictionary.GetAsDictionary(previousExtension.Key);
-                if (currentExtension == null) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
-                        .Key), ReportItem.ReportItemStatus.INVALID));
-                    return false;
-                }
-                else {
-                    PdfDictionary currentExtensionCopy = new PdfDictionary(currentExtension);
-                    currentExtensionCopy.Remove(PdfName.ExtensionLevel);
-                    PdfDictionary previousExtensionCopy = new PdfDictionary((PdfDictionary)previousExtension.Value);
-                    previousExtensionCopy.Remove(PdfName.ExtensionLevel);
-                    // Apart from extension level dictionaries are expected to be equal.
-                    if (!ComparePdfObjects(previousExtensionCopy, currentExtensionCopy)) {
-                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
-                            .Key), ReportItem.ReportItemStatus.INVALID));
-                        return false;
-                    }
-                    PdfNumber previousExtensionLevel = ((PdfDictionary)previousExtension.Value).GetAsNumber(PdfName.ExtensionLevel
-                        );
-                    PdfNumber currentExtensionLevel = currentExtension.GetAsNumber(PdfName.ExtensionLevel);
-                    if (previousExtensionLevel != null) {
-                        if (currentExtensionLevel == null || previousExtensionLevel.IntValue() > currentExtensionLevel.IntValue()) {
-                            report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(EXTENSION_LEVEL_DECREASED, previousExtension
-                                .Key), ReportItem.ReportItemStatus.INVALID));
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-        private bool ComparePermissions(PdfObject previousPerms, PdfObject currentPerms, ValidationReport report) {
-            if (previousPerms == null || ComparePdfObjects(previousPerms, currentPerms)) {
-                return true;
-            }
-            if (currentPerms == null) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PERMISSIONS_REMOVED, ReportItem.ReportItemStatus.INVALID
-                    ));
-                return false;
-            }
-            if (!(previousPerms is PdfDictionary) || !(currentPerms is PdfDictionary)) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PERMISSIONS_TYPE, ReportItem.ReportItemStatus.INVALID));
-                return false;
-            }
-            PdfDictionary previousPermsDictionary = (PdfDictionary)previousPerms;
-            PdfDictionary currentPermsDictionary = (PdfDictionary)currentPerms;
-            foreach (KeyValuePair<PdfName, PdfObject> previousPermission in previousPermsDictionary.EntrySet()) {
-                PdfDictionary currentPermission = currentPermsDictionary.GetAsDictionary(previousPermission.Key);
-                if (currentPermission == null) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(PERMISSION_REMOVED, previousPermission
-                        .Key), ReportItem.ReportItemStatus.INVALID));
-                    return false;
-                }
-                else {
-                    // Perms dictionary is the signature dictionary.
-                    if (!CompareSignatureDictionaries(previousPermission.Value, currentPermission, report)) {
-                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(PERMISSION_REMOVED, previousPermission
-                            .Key), ReportItem.ReportItemStatus.INVALID));
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private bool CompareDss(PdfObject previousDss, PdfObject currentDss, ValidationReport report) {
-            if (previousDss == null) {
-                return true;
-            }
-            if (currentDss == null) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, DSS_REMOVED, ReportItem.ReportItemStatus.INVALID));
-                return false;
-            }
-            return true;
-        }
-
-        private bool ComparePages(PdfDictionary prevPages, PdfDictionary currPages, ValidationReport report) {
-            if (prevPages == null ^ currPages == null) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
-                return false;
-            }
-            if (prevPages == null) {
-                return true;
-            }
-            PdfDictionary previousPagesCopy = new PdfDictionary(prevPages);
-            previousPagesCopy.Remove(PdfName.Kids);
-            previousPagesCopy.Remove(PdfName.Parent);
-            PdfDictionary currentPagesCopy = new PdfDictionary(currPages);
-            currentPagesCopy.Remove(PdfName.Kids);
-            currentPagesCopy.Remove(PdfName.Parent);
-            if (!ComparePdfObjects(previousPagesCopy, currentPagesCopy) || !CompareIndirectReferencesObjNums(prevPages
-                .Get(PdfName.Parent), currPages.Get(PdfName.Parent), report, "Page tree node parent")) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
-                return false;
-            }
-            PdfArray prevKids = prevPages.GetAsArray(PdfName.Kids);
-            PdfArray currKids = currPages.GetAsArray(PdfName.Kids);
-            if (prevKids.Size() != currKids.Size()) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
-                return false;
-            }
-            for (int i = 0; i < currKids.Size(); ++i) {
-                PdfDictionary previousKid = prevKids.GetAsDictionary(i);
-                PdfDictionary currentKid = currKids.GetAsDictionary(i);
-                if (PdfName.Pages.Equals(previousKid.GetAsName(PdfName.Type))) {
-                    // Compare page tree nodes.
-                    if (!ComparePages(previousKid, currentKid, report)) {
-                        return false;
-                    }
-                }
-                else {
-                    // Compare page objects (leaf node in the page tree).
-                    PdfDictionary previousPageCopy = new PdfDictionary(previousKid);
-                    previousPageCopy.Remove(PdfName.Annots);
-                    previousPageCopy.Remove(PdfName.Parent);
-                    PdfDictionary currentPageCopy = new PdfDictionary(currentKid);
-                    currentPageCopy.Remove(PdfName.Annots);
-                    currentPageCopy.Remove(PdfName.Parent);
-                    if (!ComparePdfObjects(previousPageCopy, currentPageCopy) || !CompareIndirectReferencesObjNums(previousKid
-                        .Get(PdfName.Parent), currentKid.Get(PdfName.Parent), report, "Page parent")) {
-                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_MODIFIED, ReportItem.ReportItemStatus.INVALID));
-                        return false;
-                    }
-                    PdfArray prevAnnots = GetAnnotsNotAllowedToBeModified(previousKid);
-                    PdfArray currAnnots = GetAnnotsNotAllowedToBeModified(currentKid);
-                    if (!ComparePdfObjects(prevAnnots, currAnnots)) {
-                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.
-                            INVALID));
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         private bool CompareAcroForms(PdfDictionary prevAcroForm, PdfDictionary currAcroForm, ValidationReport report
             ) {
+            checkedAnnots = new HashSet<PdfObject>();
+            newlyAddedFields = new HashSet<PdfDictionary>();
             if (prevAcroForm == null) {
                 if (currAcroForm == null) {
                     return true;
@@ -867,24 +761,45 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private bool CompareFormFields(PdfArray prevFields, PdfArray currFields, ValidationReport report) {
-            IDictionary<String, PdfDictionary> prevFieldsMap = PopulateFormFieldsMap(prevFields);
-            IDictionary<String, PdfDictionary> currFieldsMap = PopulateFormFieldsMap(currFields);
-            foreach (KeyValuePair<String, PdfDictionary> fieldEntry in prevFieldsMap) {
-                PdfDictionary previousField = fieldEntry.Value;
-                PdfDictionary currentField = currFieldsMap.Get(fieldEntry.Key);
+            ICollection<PdfDictionary> prevFieldsSet = PopulateFormFields(prevFields);
+            ICollection<PdfDictionary> currFieldsSet = PopulateFormFields(currFields);
+            foreach (PdfDictionary previousField in prevFieldsSet) {
+                PdfDictionary currentField = RetrieveTheSameField(currFieldsSet, previousField);
                 if (currentField == null || !CompareFields(previousField, currentField, report)) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(FIELD_REMOVED, fieldEntry.Key)
-                        , ReportItem.ReportItemStatus.INVALID));
+                    PdfString fieldName = previousField.GetAsString(PdfName.T);
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(FIELD_REMOVED, fieldName == null
+                         ? "" : fieldName.GetValue()), ReportItem.ReportItemStatus.INVALID));
                     return false;
                 }
-                currFieldsMap.JRemove(fieldEntry.Key);
+                if (PdfFormAnnotationUtil.IsPureWidgetOrMergedField(previousField)) {
+                    checkedAnnots.Add(previousField);
+                }
+                if (PdfFormAnnotationUtil.IsPureWidgetOrMergedField(currentField)) {
+                    checkedAnnots.Add(currentField);
+                }
+                currFieldsSet.Remove(currentField);
             }
-            foreach (KeyValuePair<String, PdfDictionary> fieldEntry in currFieldsMap) {
-                if (!IsAllowedSignatureField(fieldEntry.Value, report)) {
+            foreach (PdfDictionary field in currFieldsSet) {
+                if (!IsAllowedSignatureField(field, report)) {
                     return false;
                 }
             }
-            return CompareAnnotations(prevFields, currFields, report);
+            return CompareWidgets(prevFields, currFields, report);
+        }
+
+        private PdfDictionary RetrieveTheSameField(ICollection<PdfDictionary> currFields, PdfDictionary previousField
+            ) {
+            foreach (PdfDictionary currentField in currFields) {
+                PdfDictionary prevFormDict = CopyFieldDictionary(previousField);
+                PdfDictionary currFormDict = CopyFieldDictionary(currentField);
+                if (ComparePdfObjects(prevFormDict, currFormDict) && CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName
+                    .Parent), currFormDict.Get(PdfName.Parent), new ValidationReport(), "Form field parent") && CompareIndirectReferencesObjNums
+                    (prevFormDict.Get(PdfName.P), currFormDict.Get(PdfName.P), new ValidationReport(), "Page object with which field annotation is associated"
+                    )) {
+                    return currentField;
+                }
+            }
+            return null;
         }
 
         /// <summary>DocMDP level &gt;= 2 allows setting values of the fields and accordingly update the widget appearances of them.
@@ -906,14 +821,6 @@ namespace iText.Signatures.Validation.V1 {
         /// </returns>
         private bool CompareFields(PdfDictionary previousField, PdfDictionary currentField, ValidationReport report
             ) {
-            PdfDictionary prevFormDict = CopyFieldDictionary(previousField);
-            PdfDictionary currFormDict = CopyFieldDictionary(currentField);
-            if (!ComparePdfObjects(prevFormDict, currFormDict) || !CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName
-                .Parent), currFormDict.Get(PdfName.Parent), report, "Form field parent") || !CompareIndirectReferencesObjNums
-                (prevFormDict.Get(PdfName.P), currFormDict.Get(PdfName.P), report, "Page object with which field annotation is associated"
-                )) {
-                return false;
-            }
             PdfObject prevValue = previousField.Get(PdfName.V);
             PdfObject currValue = currentField.Get(PdfName.V);
             if (prevValue == null && currValue == null && PdfName.Ch.Equals(currentField.GetAsName(PdfName.FT))) {
@@ -923,8 +830,9 @@ namespace iText.Signatures.Validation.V1 {
             }
             if (PdfName.Sig.Equals(currentField.GetAsName(PdfName.FT))) {
                 if (!CompareSignatureDictionaries(prevValue, currValue, report)) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(SIGNATURE_MODIFIED, currentField
-                        .GetAsString(PdfName.T).GetValue()), ReportItem.ReportItemStatus.INVALID));
+                    PdfString fieldName = currentField.GetAsString(PdfName.T);
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(SIGNATURE_MODIFIED, fieldName 
+                        == null ? "" : fieldName.GetValue()), ReportItem.ReportItemStatus.INVALID));
                     return false;
                 }
             }
@@ -936,29 +844,6 @@ namespace iText.Signatures.Validation.V1 {
             }
             return CompareFormFields(previousField.GetAsArray(PdfName.Kids), currentField.GetAsArray(PdfName.Kids), report
                 );
-        }
-
-        private bool CompareAnnotations(PdfArray prevFields, PdfArray currFields, ValidationReport report) {
-            IList<PdfDictionary> prevAnnots = PopulateAnnotations(prevFields);
-            IList<PdfDictionary> currAnnots = PopulateAnnotations(currFields);
-            if (prevAnnots.Count != currAnnots.Count) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.INVALID
-                    ));
-                return false;
-            }
-            for (int i = 0; i < prevAnnots.Count; i++) {
-                PdfDictionary prevAnnot = new PdfDictionary(prevAnnots[i]);
-                RemoveAppearanceRelatedProperties(prevAnnot);
-                PdfDictionary currAnnot = new PdfDictionary(currAnnots[i]);
-                RemoveAppearanceRelatedProperties(currAnnot);
-                if (!ComparePdfObjects(prevAnnot, currAnnot) || !CompareIndirectReferencesObjNums(prevAnnots[i].Get(PdfName
-                    .P), currAnnots[i].Get(PdfName.P), report, "Page object with which annotation is associated")) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.INVALID
-                        ));
-                    return false;
-                }
-            }
-            return true;
         }
 
         private bool CompareSignatureDictionaries(PdfObject prevSigDict, PdfObject curSigDict, ValidationReport report
@@ -1015,6 +900,119 @@ namespace iText.Signatures.Validation.V1 {
             return true;
         }
 
+        private bool CompareWidgets(PdfArray prevFields, PdfArray currFields, ValidationReport report) {
+            if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
+                return true;
+            }
+            IList<PdfDictionary> prevAnnots = PopulateWidgetAnnotations(prevFields);
+            IList<PdfDictionary> currAnnots = PopulateWidgetAnnotations(currFields);
+            if (prevAnnots.Count != currAnnots.Count) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.INVALID
+                    ));
+                return false;
+            }
+            for (int i = 0; i < prevAnnots.Count; i++) {
+                PdfDictionary prevAnnot = new PdfDictionary(prevAnnots[i]);
+                RemoveAppearanceRelatedProperties(prevAnnot);
+                PdfDictionary currAnnot = new PdfDictionary(currAnnots[i]);
+                RemoveAppearanceRelatedProperties(currAnnot);
+                if (!ComparePdfObjects(prevAnnot, currAnnot) || !CompareIndirectReferencesObjNums(prevAnnots[i].Get(PdfName
+                    .P), currAnnots[i].Get(PdfName.P), report, "Page object with which annotation is associated") || !CompareIndirectReferencesObjNums
+                    (prevAnnots[i].Get(PdfName.Parent), currAnnots[i].Get(PdfName.Parent), report, "Annotation parent")) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.INVALID
+                        ));
+                    return false;
+                }
+                checkedAnnots.Add(prevAnnots[i]);
+                checkedAnnots.Add(currAnnots[i]);
+            }
+            return true;
+        }
+
+        private bool ComparePages(PdfDictionary prevPages, PdfDictionary currPages, ValidationReport report) {
+            if (prevPages == null ^ currPages == null) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            if (prevPages == null) {
+                return true;
+            }
+            PdfDictionary previousPagesCopy = new PdfDictionary(prevPages);
+            previousPagesCopy.Remove(PdfName.Kids);
+            previousPagesCopy.Remove(PdfName.Parent);
+            PdfDictionary currentPagesCopy = new PdfDictionary(currPages);
+            currentPagesCopy.Remove(PdfName.Kids);
+            currentPagesCopy.Remove(PdfName.Parent);
+            if (!ComparePdfObjects(previousPagesCopy, currentPagesCopy) || !CompareIndirectReferencesObjNums(prevPages
+                .Get(PdfName.Parent), currPages.Get(PdfName.Parent), report, "Page tree node parent")) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            PdfArray prevKids = prevPages.GetAsArray(PdfName.Kids);
+            PdfArray currKids = currPages.GetAsArray(PdfName.Kids);
+            if (prevKids.Size() != currKids.Size()) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
+                return false;
+            }
+            for (int i = 0; i < currKids.Size(); ++i) {
+                PdfDictionary previousKid = prevKids.GetAsDictionary(i);
+                PdfDictionary currentKid = currKids.GetAsDictionary(i);
+                if (PdfName.Pages.Equals(previousKid.GetAsName(PdfName.Type))) {
+                    // Compare page tree nodes.
+                    if (!ComparePages(previousKid, currentKid, report)) {
+                        return false;
+                    }
+                }
+                else {
+                    // Compare page objects (leaf node in the page tree).
+                    PdfDictionary previousPageCopy = new PdfDictionary(previousKid);
+                    previousPageCopy.Remove(PdfName.Annots);
+                    previousPageCopy.Remove(PdfName.Parent);
+                    PdfDictionary currentPageCopy = new PdfDictionary(currentKid);
+                    currentPageCopy.Remove(PdfName.Annots);
+                    currentPageCopy.Remove(PdfName.Parent);
+                    if (!ComparePdfObjects(previousPageCopy, currentPageCopy) || !CompareIndirectReferencesObjNums(previousKid
+                        .Get(PdfName.Parent), currentKid.Get(PdfName.Parent), report, "Page parent")) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_MODIFIED, ReportItem.ReportItemStatus.INVALID));
+                        return false;
+                    }
+                    PdfArray prevAnnots = GetAnnotsNotAllowedToBeModified(previousKid);
+                    PdfArray currAnnots = GetAnnotsNotAllowedToBeModified(currentKid);
+                    if (!ComparePageAnnotations(prevAnnots, currAnnots, report)) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.
+                            INVALID));
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool ComparePageAnnotations(PdfArray prevAnnots, PdfArray currAnnots, ValidationReport report) {
+            if (prevAnnots == null && currAnnots == null) {
+                return true;
+            }
+            if (prevAnnots == null || currAnnots == null || prevAnnots.Size() != currAnnots.Size()) {
+                return false;
+            }
+            for (int i = 0; i < prevAnnots.Size(); i++) {
+                PdfDictionary prevAnnot = new PdfDictionary(prevAnnots.GetAsDictionary(i));
+                prevAnnot.Remove(PdfName.P);
+                prevAnnot.Remove(PdfName.Parent);
+                PdfDictionary currAnnot = new PdfDictionary(currAnnots.GetAsDictionary(i));
+                currAnnot.Remove(PdfName.P);
+                currAnnot.Remove(PdfName.Parent);
+                if (!ComparePdfObjects(prevAnnot, currAnnot) || !CompareIndirectReferencesObjNums(prevAnnots.GetAsDictionary
+                    (i).Get(PdfName.P), currAnnots.GetAsDictionary(i).Get(PdfName.P), report, "Page object with which annotation is associated"
+                    ) || !CompareIndirectReferencesObjNums(prevAnnots.GetAsDictionary(i).Get(PdfName.Parent), currAnnots.GetAsDictionary
+                    (i).Get(PdfName.Parent), report, "Annotation parent")) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Compare catalogs util methods section:
         private bool CompareIndirectReferencesObjNums(PdfObject prevObj, PdfObject currObj, ValidationReport report
             , String type) {
             if (prevObj == null ^ currObj == null) {
@@ -1026,8 +1024,10 @@ namespace iText.Signatures.Validation.V1 {
             PdfIndirectReference prevObjRef = prevObj.GetIndirectReference();
             PdfIndirectReference currObjRef = currObj.GetIndirectReference();
             if (prevObjRef == null || currObjRef == null) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DIRECT_OBJECT, type), ReportItem.ReportItemStatus
-                    .INVALID));
+                if (report != null) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DIRECT_OBJECT, type), ReportItem.ReportItemStatus
+                        .INVALID));
+                }
                 return false;
             }
             return IsSameReference(prevObjRef, currObjRef);
@@ -1046,28 +1046,36 @@ namespace iText.Signatures.Validation.V1 {
             PdfDictionary value = field.GetAsDictionary(PdfName.V);
             if (!PdfName.Sig.Equals(field.GetAsName(PdfName.FT)) || value == null || (GetAccessPermissions() == AccessPermissions
                 .NO_CHANGES_PERMITTED && !PdfName.DocTimeStamp.Equals(value.GetAsName(PdfName.Type)))) {
-                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_FORM_FIELD, field.GetAsString
-                    (PdfName.T).GetValue()), ReportItem.ReportItemStatus.INVALID));
+                PdfString fieldName = field.GetAsString(PdfName.T);
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_FORM_FIELD, fieldName
+                     == null ? "" : fieldName.GetValue()), ReportItem.ReportItemStatus.INVALID));
                 return false;
             }
+            if (PdfFormAnnotationUtil.IsPureWidgetOrMergedField(field)) {
+                checkedAnnots.Add(field);
+            }
+            else {
+                PdfArray kids = field.GetAsArray(PdfName.Kids);
+                checkedAnnots.AddAll(PopulateWidgetAnnotations(kids));
+            }
+            newlyAddedFields.Add(field);
             return true;
         }
 
-        private IDictionary<String, PdfDictionary> PopulateFormFieldsMap(PdfArray fieldsArray) {
-            IDictionary<String, PdfDictionary> fields = new Dictionary<String, PdfDictionary>();
+        private ICollection<PdfDictionary> PopulateFormFields(PdfArray fieldsArray) {
+            ICollection<PdfDictionary> fields = new HashSet<PdfDictionary>();
             if (fieldsArray != null) {
                 for (int i = 0; i < fieldsArray.Size(); ++i) {
                     PdfDictionary fieldDict = (PdfDictionary)fieldsArray.Get(i);
                     if (PdfFormField.IsFormField(fieldDict)) {
-                        String fieldName = fieldDict.GetAsString(PdfName.T).GetValue();
-                        fields.Put(fieldName, fieldDict);
+                        fields.Add(fieldDict);
                     }
                 }
             }
             return fields;
         }
 
-        private IList<PdfDictionary> PopulateAnnotations(PdfArray fieldsArray) {
+        private IList<PdfDictionary> PopulateWidgetAnnotations(PdfArray fieldsArray) {
             IList<PdfDictionary> annotations = new List<PdfDictionary>();
             if (fieldsArray != null) {
                 for (int i = 0; i < fieldsArray.Size(); ++i) {
@@ -1082,15 +1090,14 @@ namespace iText.Signatures.Validation.V1 {
 
         private PdfArray GetAnnotsNotAllowedToBeModified(PdfDictionary page) {
             PdfArray annots = page.GetAsArray(PdfName.Annots);
-            if (annots == null) {
+            if (annots == null || GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
                 return null;
             }
             PdfArray annotsCopy = new PdfArray(annots);
             foreach (PdfObject annot in annots) {
-                PdfDictionary annotDict = (PdfDictionary)annot;
-                if (PdfFormAnnotationUtil.IsPureWidgetOrMergedField(annotDict)) {
-                    // Ideally we should also distinguish between docMDP level 1 (DTS) or 2 allowed annotations
-                    // (we check them only on the acroform level, but they could be added to the page)
+                // checkedAnnots contains all the fields' widget annotations from the Acroform which were already validated
+                // during the compareAcroForms call, so we shouldn't check them once again
+                if (checkedAnnots.Contains(annot)) {
                     annotsCopy.Remove(annot);
                 }
             }
@@ -1130,280 +1137,27 @@ namespace iText.Signatures.Validation.V1 {
 
         private void RemoveAppearanceRelatedProperties(PdfDictionary annotDict) {
             annotDict.Remove(PdfName.P);
-            if (GetAccessPermissions() != AccessPermissions.NO_CHANGES_PERMITTED) {
+            annotDict.Remove(PdfName.Parent);
+            if (GetAccessPermissions() == AccessPermissions.FORM_FIELDS_MODIFICATION) {
                 annotDict.Remove(PdfName.AP);
                 annotDict.Remove(PdfName.AS);
                 annotDict.Remove(PdfName.M);
                 annotDict.Remove(PdfName.F);
             }
-        }
-
-        // Allowed references creation nested methods section:
-        private IList<DocumentRevisionsValidator.ReferencesPair> CreateAllowedDssEntries(PdfDocument documentWithRevision
-            , PdfDocument documentWithoutRevision) {
-            IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = new List<DocumentRevisionsValidator.ReferencesPair
-                >();
-            PdfDictionary currentDssDictionary = documentWithRevision.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
-                .DSS);
-            PdfDictionary previousDssDictionary = documentWithoutRevision.GetCatalog().GetPdfObject().GetAsDictionary(
-                PdfName.DSS);
-            PdfArray certs = currentDssDictionary.GetAsArray(PdfName.Certs);
-            if (certs != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(certs.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => previousDssDictionary.Get(PdfName.Certs).GetIndirectReference())));
-                for (int i = 0; i < certs.Size(); ++i) {
-                    int finalI = i;
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(certs.Get(i).GetIndirectReference(), GetIndirectReferenceOrNull
-                        (() => previousDssDictionary.GetAsArray(PdfName.Certs).Get(finalI).GetIndirectReference())));
-                }
-            }
-            PdfArray ocsps = currentDssDictionary.GetAsArray(PdfName.OCSPs);
-            if (ocsps != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(ocsps.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => previousDssDictionary.Get(PdfName.OCSPs).GetIndirectReference())));
-                for (int i = 0; i < ocsps.Size(); ++i) {
-                    int finalI = i;
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(ocsps.Get(i).GetIndirectReference(), GetIndirectReferenceOrNull
-                        (() => previousDssDictionary.GetAsArray(PdfName.OCSPs).Get(finalI).GetIndirectReference())));
-                }
-            }
-            PdfArray crls = currentDssDictionary.GetAsArray(PdfName.CRLs);
-            if (crls != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(crls.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => previousDssDictionary.Get(PdfName.CRLs).GetIndirectReference())));
-                for (int i = 0; i < crls.Size(); ++i) {
-                    int finalI = i;
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(crls.Get(i).GetIndirectReference(), GetIndirectReferenceOrNull
-                        (() => previousDssDictionary.GetAsArray(PdfName.CRLs).Get(finalI).GetIndirectReference())));
-                }
-            }
-            PdfDictionary vris = currentDssDictionary.GetAsDictionary(PdfName.VRI);
-            if (vris != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vris.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => previousDssDictionary.Get(PdfName.VRI).GetIndirectReference())));
-                foreach (KeyValuePair<PdfName, PdfObject> vri in vris.EntrySet()) {
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vri.Value.GetIndirectReference(), GetIndirectReferenceOrNull
-                        (() => previousDssDictionary.GetAsDictionary(PdfName.VRI).Get(vri.Key).GetIndirectReference())));
-                    if (vri.Value is PdfDictionary) {
-                        PdfDictionary vriDictionary = (PdfDictionary)vri.Value;
-                        PdfArray vriCerts = vriDictionary.GetAsArray(PdfName.Cert);
-                        if (vriCerts != null) {
-                            allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriCerts.GetIndirectReference(), GetIndirectReferenceOrNull
-                                (() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary(vri.Key).Get(PdfName.Cert).GetIndirectReference
-                                ())));
-                            for (int i = 0; i < vriCerts.Size(); ++i) {
-                                int finalI = i;
-                                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriCerts.Get(i).GetIndirectReference()
-                                    , GetIndirectReferenceOrNull(() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary(
-                                    vri.Key).GetAsArray(PdfName.Cert).Get(finalI).GetIndirectReference())));
-                            }
-                        }
-                        PdfArray vriOcsps = vriDictionary.GetAsArray(PdfName.OCSP);
-                        if (vriOcsps != null) {
-                            allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriOcsps.GetIndirectReference(), GetIndirectReferenceOrNull
-                                (() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary(vri.Key).Get(PdfName.OCSP).GetIndirectReference
-                                ())));
-                            for (int i = 0; i < vriOcsps.Size(); ++i) {
-                                int finalI = i;
-                                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriOcsps.Get(i).GetIndirectReference()
-                                    , GetIndirectReferenceOrNull(() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary(
-                                    vri.Key).GetAsArray(PdfName.OCSP).Get(finalI).GetIndirectReference())));
-                            }
-                        }
-                        PdfArray vriCrls = vriDictionary.GetAsArray(PdfName.CRL);
-                        if (vriCrls != null) {
-                            allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriCrls.GetIndirectReference(), GetIndirectReferenceOrNull
-                                (() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary(vri.Key).Get(PdfName.CRL).GetIndirectReference
-                                ())));
-                            for (int i = 0; i < vriCrls.Size(); ++i) {
-                                int finalI = i;
-                                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriCrls.Get(i).GetIndirectReference(), 
-                                    GetIndirectReferenceOrNull(() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary(vri
-                                    .Key).GetAsArray(PdfName.CRL).Get(finalI).GetIndirectReference())));
-                            }
-                        }
-                        if (vriDictionary.Get(new PdfName("TS")) != null) {
-                            allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(vriDictionary.Get(new PdfName("TS")).GetIndirectReference
-                                (), GetIndirectReferenceOrNull(() => previousDssDictionary.GetAsDictionary(PdfName.VRI).GetAsDictionary
-                                (vri.Key).Get(new PdfName("TS")).GetIndirectReference())));
-                        }
+            if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
+                foreach (PdfName key in new PdfDictionary(annotDict).KeySet()) {
+                    if (!PdfFormField.GetFormFieldKeys().Contains(key)) {
+                        annotDict.Remove(key);
                     }
-                }
-            }
-            return allowedReferences;
-        }
-
-        private ICollection<DocumentRevisionsValidator.ReferencesPair> CreateAllowedPagesEntries(PdfDictionary currentPagesDictionary
-            , PdfDictionary previousPagesDictionary) {
-            IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = new List<DocumentRevisionsValidator.ReferencesPair
-                >();
-            PdfArray currentKids = currentPagesDictionary.GetAsArray(PdfName.Kids);
-            if (currentKids != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentKids.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => previousPagesDictionary.Get(PdfName.Kids).GetIndirectReference())));
-                for (int i = 0; i < currentKids.Size(); ++i) {
-                    int finalI = i;
-                    PdfDictionary currentPageNode = currentKids.GetAsDictionary(i);
-                    PdfDictionary previousPageNode = null;
-                    try {
-                        previousPageNode = previousPagesDictionary.GetAsArray(PdfName.Kids).GetAsDictionary(i);
-                    }
-                    catch (NullReferenceException) {
-                    }
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentKids.Get(i).GetIndirectReference
-                        (), GetIndirectReferenceOrNull(() => previousPagesDictionary.GetAsArray(PdfName.Kids).Get(finalI).GetIndirectReference
-                        ())));
-                    if (currentPageNode != null) {
-                        if (PdfName.Pages.Equals(currentPageNode.GetAsName(PdfName.Type))) {
-                            allowedReferences.AddAll(CreateAllowedPagesEntries(currentPageNode, previousPageNode));
-                        }
-                        else {
-                            PdfObject currentAnnots = currentPageNode.Get(PdfName.Annots);
-                            if (currentAnnots != null) {
-                                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentAnnots.GetIndirectReference(), 
-                                    GetIndirectReferenceOrNull(() => previousPagesDictionary.GetAsArray(PdfName.Kids).GetAsDictionary(finalI
-                                    ).Get(PdfName.Annots).GetIndirectReference())));
-                            }
-                        }
-                    }
-                }
-            }
-            // We don't need to add annotations because all the allowed ones are already added during acroform processing.
-            return allowedReferences;
-        }
-
-        private ICollection<DocumentRevisionsValidator.ReferencesPair> CreateAllowedAcroFormEntries(PdfDocument documentWithRevision
-            , PdfDocument documentWithoutRevision) {
-            IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = new List<DocumentRevisionsValidator.ReferencesPair
-                >();
-            PdfAcroForm prevAcroForm = PdfFormCreator.GetAcroForm(documentWithoutRevision, false);
-            PdfAcroForm currAcroForm = PdfFormCreator.GetAcroForm(documentWithRevision, false);
-            IDictionary<String, PdfFormField> prevFields = prevAcroForm == null ? new Dictionary<String, PdfFormField>
-                () : prevAcroForm.GetAllFormFields();
-            foreach (KeyValuePair<String, PdfFormField> fieldEntry in currAcroForm.GetAllFormFields()) {
-                PdfFormField previousField = prevFields.Get(fieldEntry.Key);
-                PdfFormField currentField = fieldEntry.Value;
-                PdfObject value = currentField.GetValue();
-                if (GetAccessPermissions() != AccessPermissions.NO_CHANGES_PERMITTED || (value is PdfDictionary && PdfName
-                    .DocTimeStamp.Equals(((PdfDictionary)value).GetAsName(PdfName.Type)))) {
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentField.GetPdfObject().GetIndirectReference
-                        (), GetIndirectReferenceOrNull(() => previousField.GetPdfObject().GetIndirectReference())));
-                    if (previousField == null) {
-                        // For newly generated form field all references are allowed to be added.
-                        AddAllNestedDictionaryEntries(allowedReferences, currentField.GetPdfObject(), null);
-                    }
-                    else {
-                        if (!lockedFields.Contains(fieldEntry.Key)) {
-                            // For already existing form field only several entries are allowed to be updated.
-                            allowedReferences.AddAll(CreateAllowedExistingFormFieldEntries(currentField, previousField));
-                        }
-                    }
-                }
-            }
-            PdfDictionary currentResources = currAcroForm.GetDefaultResources();
-            if (currentResources != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentResources.GetIndirectReference(
-                    ), GetIndirectReferenceOrNull(() => prevAcroForm.GetDefaultResources().GetIndirectReference())));
-                AddAllNestedDictionaryEntries(allowedReferences, currentResources, prevAcroForm == null ? null : prevAcroForm
-                    .GetDefaultResources());
-            }
-            return allowedReferences;
-        }
-
-        private ICollection<DocumentRevisionsValidator.ReferencesPair> CreateAllowedExistingFormFieldEntries(PdfFormField
-             currentField, PdfFormField previousField) {
-            IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences = new List<DocumentRevisionsValidator.ReferencesPair
-                >();
-            PdfObject currentValue = currentField.GetValue();
-            if (currentValue != null) {
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentValue.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => previousField.GetValue().GetIndirectReference())));
-            }
-            IList<PdfFormAnnotation> currAnnots = currentField.GetChildFormAnnotations();
-            if (!currAnnots.IsEmpty()) {
-                IList<PdfFormAnnotation> prevAnnots = previousField == null ? null : previousField.GetChildFormAnnotations
-                    ();
-                for (int i = 0; i < currAnnots.Count; i++) {
-                    int finalI = i;
-                    allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currAnnots[i].GetPdfObject().GetIndirectReference
-                        (), GetIndirectReferenceOrNull(() => prevAnnots[finalI].GetPdfObject().GetIndirectReference())));
-                    PdfObject currentAppearance = currAnnots[i].GetPdfObject().Get(PdfName.AP);
-                    if (currentAppearance != null) {
-                        allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentAppearance.GetIndirectReference
-                            (), GetIndirectReferenceOrNull(() => prevAnnots[finalI].GetPdfObject().Get(PdfName.AP).GetIndirectReference
-                            ())));
-                        if (currentAppearance is PdfDictionary) {
-                            PdfObject previousAppearance;
-                            try {
-                                previousAppearance = prevAnnots[finalI].GetPdfObject().Get(PdfName.AP);
-                            }
-                            catch (NullReferenceException) {
-                                previousAppearance = null;
-                            }
-                            AddAllNestedDictionaryEntries(allowedReferences, (PdfDictionary)currentAppearance, previousAppearance);
-                        }
-                    }
-                    PdfObject currentAppearanceState = currAnnots[i].GetPdfObject().Get(PdfName.AS);
-                    if (currentAppearanceState != null) {
-                        allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentAppearanceState.GetIndirectReference
-                            (), GetIndirectReferenceOrNull(() => prevAnnots[finalI].GetPdfObject().Get(PdfName.AS).GetIndirectReference
-                            ())));
-                    }
-                    PdfObject currentTimeStamp = currAnnots[i].GetPdfObject().Get(PdfName.M);
-                    if (currentTimeStamp != null) {
-                        allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentTimeStamp.GetIndirectReference(
-                            ), GetIndirectReferenceOrNull(() => prevAnnots[finalI].GetPdfObject().Get(PdfName.M).GetIndirectReference
-                            ())));
-                    }
-                }
-            }
-            return allowedReferences;
-        }
-
-        private void AddAllNestedDictionaryEntries(IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences
-            , PdfDictionary currentDictionary, PdfObject previousDictionary) {
-            foreach (KeyValuePair<PdfName, PdfObject> entry in currentDictionary.EntrySet()) {
-                PdfObject currValue = entry.Value;
-                if (currValue.GetIndirectReference() != null && allowedReferences.Any((pair) => IsSameReference(pair.GetCurrentReference
-                    (), currValue.GetIndirectReference()))) {
-                    // Required to not end up in an infinite loop.
-                    continue;
-                }
-                PdfObject prevValue = previousDictionary is PdfDictionary ? ((PdfDictionary)previousDictionary).Get(entry.
-                    Key) : null;
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currValue.GetIndirectReference(), GetIndirectReferenceOrNull
-                    (() => prevValue.GetIndirectReference())));
-                if (currValue is PdfDictionary) {
-                    AddAllNestedDictionaryEntries(allowedReferences, (PdfDictionary)currValue, prevValue);
-                }
-                if (currValue is PdfArray) {
-                    AddAllNestedArrayEntries(allowedReferences, (PdfArray)currValue, prevValue);
                 }
             }
         }
 
-        private void AddAllNestedArrayEntries(IList<DocumentRevisionsValidator.ReferencesPair> allowedReferences, 
-            PdfArray currentArray, PdfObject previousArray) {
-            for (int i = 0; i < currentArray.Size(); ++i) {
-                PdfObject currentArrayEntry = currentArray.Get(i);
-                if (currentArrayEntry.GetIndirectReference() != null && allowedReferences.Any((pair) => IsSameReference(pair
-                    .GetCurrentReference(), currentArrayEntry.GetIndirectReference()))) {
-                    // Required to not end up in an infinite loop.
-                    continue;
-                }
-                PdfObject previousArrayEntry = previousArray is PdfArray ? ((PdfArray)previousArray).Get(i) : null;
-                allowedReferences.Add(new DocumentRevisionsValidator.ReferencesPair(currentArrayEntry.GetIndirectReference
-                    (), GetIndirectReferenceOrNull(() => previousArrayEntry.GetIndirectReference())));
-                if (currentArrayEntry is PdfDictionary) {
-                    AddAllNestedDictionaryEntries(allowedReferences, currentArray.GetAsDictionary(i), previousArrayEntry);
-                }
-                if (currentArrayEntry is PdfArray) {
-                    AddAllNestedArrayEntries(allowedReferences, currentArray.GetAsArray(i), previousArrayEntry);
-                }
-            }
-        }
-
+        //
+        //
         // Compare PDF objects util section:
+        //
+        //
         private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2) {
             return ComparePdfObjects(pdfObject1, pdfObject2, new HashSet<PdfObject>());
         }
@@ -1512,31 +1266,258 @@ namespace iText.Signatures.Validation.V1 {
             return indirectReference.GetObjNumber() == 0 && indirectReference.GetGenNumber() == 65535;
         }
 
-        private static PdfIndirectReference GetIndirectReferenceOrNull(Func<PdfIndirectReference> referenceGetter) {
-            try {
-                return referenceGetter();
+        //
+        //
+        // Allowed references section:
+        //
+        //
+        private ICollection<PdfIndirectReference> CreateAllowedReferences(PdfDocument document) {
+            // Each indirect reference in the set is an allowed reference to be present in the new xref table
+            // or the same entry in the previous document.
+            // If any reference is null, we expect this object to be newly generated or direct reference.
+            ICollection<PdfIndirectReference> allowedReferences = new HashSet<PdfIndirectReference>();
+            if (document.GetTrailer().Get(PdfName.Info) != null) {
+                allowedReferences.Add(document.GetTrailer().Get(PdfName.Info).GetIndirectReference());
             }
-            catch (Exception) {
-                return null;
+            if (document.GetCatalog().GetPdfObject() == null) {
+                return allowedReferences;
+            }
+            allowedReferences.Add(document.GetCatalog().GetPdfObject().GetIndirectReference());
+            if (document.GetCatalog().GetPdfObject().Get(PdfName.Metadata) != null) {
+                allowedReferences.Add(document.GetCatalog().GetPdfObject().Get(PdfName.Metadata).GetIndirectReference());
+            }
+            PdfDictionary dssDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+            if (dssDictionary != null) {
+                allowedReferences.Add(dssDictionary.GetIndirectReference());
+                allowedReferences.AddAll(CreateAllowedDssEntries(document));
+            }
+            PdfDictionary acroForm = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
+            if (acroForm != null) {
+                allowedReferences.Add(acroForm.GetIndirectReference());
+                PdfArray fields = acroForm.GetAsArray(PdfName.Fields);
+                CreateAllowedFormFieldEntries(fields, allowedReferences);
+                PdfDictionary resources = acroForm.GetAsDictionary(PdfName.DR);
+                if (resources != null) {
+                    allowedReferences.Add(resources.GetIndirectReference());
+                    AddAllNestedDictionaryEntries(allowedReferences, resources);
+                }
+            }
+            PdfDictionary pagesDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Pages);
+            if (pagesDictionary != null) {
+                allowedReferences.Add(pagesDictionary.GetIndirectReference());
+                allowedReferences.AddAll(CreateAllowedPagesEntries(pagesDictionary));
+            }
+            return allowedReferences;
+        }
+
+        private bool CheckAllowedReferences(ICollection<PdfIndirectReference> currentAllowedReferences, ICollection
+            <PdfIndirectReference> previousAllowedReferences, PdfIndirectReference indirectReference, PdfDocument 
+            documentWithoutRevision) {
+            foreach (PdfIndirectReference currentAllowedReference in currentAllowedReferences) {
+                if (IsSameReference(currentAllowedReference, indirectReference)) {
+                    return documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) == null || previousAllowedReferences
+                        .Any((reference) => IsSameReference(reference, indirectReference));
+                }
+            }
+            return false;
+        }
+
+        // Allowed references creation nested methods section:
+        private ICollection<PdfIndirectReference> CreateAllowedDssEntries(PdfDocument document) {
+            ICollection<PdfIndirectReference> allowedReferences = new HashSet<PdfIndirectReference>();
+            PdfDictionary dssDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
+            PdfArray certs = dssDictionary.GetAsArray(PdfName.Certs);
+            if (certs != null) {
+                allowedReferences.Add(certs.GetIndirectReference());
+                for (int i = 0; i < certs.Size(); ++i) {
+                    allowedReferences.Add(certs.Get(i).GetIndirectReference());
+                }
+            }
+            PdfArray ocsps = dssDictionary.GetAsArray(PdfName.OCSPs);
+            if (ocsps != null) {
+                allowedReferences.Add(ocsps.GetIndirectReference());
+                for (int i = 0; i < ocsps.Size(); ++i) {
+                    allowedReferences.Add(ocsps.Get(i).GetIndirectReference());
+                }
+            }
+            PdfArray crls = dssDictionary.GetAsArray(PdfName.CRLs);
+            if (crls != null) {
+                allowedReferences.Add(crls.GetIndirectReference());
+                for (int i = 0; i < crls.Size(); ++i) {
+                    allowedReferences.Add(crls.Get(i).GetIndirectReference());
+                }
+            }
+            PdfDictionary vris = dssDictionary.GetAsDictionary(PdfName.VRI);
+            if (vris != null) {
+                allowedReferences.Add(vris.GetIndirectReference());
+                foreach (KeyValuePair<PdfName, PdfObject> vri in vris.EntrySet()) {
+                    allowedReferences.Add(vri.Value.GetIndirectReference());
+                    if (vri.Value is PdfDictionary) {
+                        PdfDictionary vriDictionary = (PdfDictionary)vri.Value;
+                        PdfArray vriCerts = vriDictionary.GetAsArray(PdfName.Cert);
+                        if (vriCerts != null) {
+                            allowedReferences.Add(vriCerts.GetIndirectReference());
+                            for (int i = 0; i < vriCerts.Size(); ++i) {
+                                allowedReferences.Add(vriCerts.Get(i).GetIndirectReference());
+                            }
+                        }
+                        PdfArray vriOcsps = vriDictionary.GetAsArray(PdfName.OCSP);
+                        if (vriOcsps != null) {
+                            allowedReferences.Add(vriOcsps.GetIndirectReference());
+                            for (int i = 0; i < vriOcsps.Size(); ++i) {
+                                allowedReferences.Add(vriOcsps.Get(i).GetIndirectReference());
+                            }
+                        }
+                        PdfArray vriCrls = vriDictionary.GetAsArray(PdfName.CRL);
+                        if (vriCrls != null) {
+                            allowedReferences.Add(vriCrls.GetIndirectReference());
+                            for (int i = 0; i < vriCrls.Size(); ++i) {
+                                allowedReferences.Add(vriCrls.Get(i).GetIndirectReference());
+                            }
+                        }
+                        if (vriDictionary.Get(new PdfName("TS")) != null) {
+                            allowedReferences.Add(vriDictionary.Get(new PdfName("TS")).GetIndirectReference());
+                        }
+                    }
+                }
+            }
+            return allowedReferences;
+        }
+
+        private ICollection<PdfIndirectReference> CreateAllowedPagesEntries(PdfDictionary pagesDictionary) {
+            ICollection<PdfIndirectReference> allowedReferences = new HashSet<PdfIndirectReference>();
+            PdfArray kids = pagesDictionary.GetAsArray(PdfName.Kids);
+            if (kids != null) {
+                allowedReferences.Add(kids.GetIndirectReference());
+                for (int i = 0; i < kids.Size(); ++i) {
+                    PdfDictionary pageNode = kids.GetAsDictionary(i);
+                    allowedReferences.Add(kids.Get(i).GetIndirectReference());
+                    if (pageNode != null) {
+                        if (PdfName.Pages.Equals(pageNode.GetAsName(PdfName.Type))) {
+                            allowedReferences.AddAll(CreateAllowedPagesEntries(pageNode));
+                        }
+                        else {
+                            PdfObject annots = pageNode.Get(PdfName.Annots);
+                            if (annots != null) {
+                                allowedReferences.Add(annots.GetIndirectReference());
+                                if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
+                                    AddAllNestedArrayEntries(allowedReferences, (PdfArray)annots);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return allowedReferences;
+        }
+
+        private void CreateAllowedFormFieldEntries(PdfArray fields, ICollection<PdfIndirectReference> allowedReferences
+            ) {
+            if (fields == null) {
+                return;
+            }
+            foreach (PdfObject field in fields) {
+                PdfDictionary fieldDict = (PdfDictionary)field;
+                if (PdfFormField.IsFormField(fieldDict)) {
+                    PdfObject value = fieldDict.Get(PdfName.V);
+                    if (GetAccessPermissions() != AccessPermissions.NO_CHANGES_PERMITTED || (value is PdfDictionary && PdfName
+                        .DocTimeStamp.Equals(((PdfDictionary)value).GetAsName(PdfName.Type)))) {
+                        allowedReferences.Add(fieldDict.GetIndirectReference());
+                        PdfString fieldName = PdfFormCreator.CreateFormField(fieldDict).GetFieldName();
+                        if (newlyAddedFields.Contains(fieldDict)) {
+                            // For newly generated form field all references are allowed to be added.
+                            AddAllNestedDictionaryEntries(allowedReferences, fieldDict);
+                        }
+                        else {
+                            if (fieldName == null || !lockedFields.Contains(fieldName.GetValue())) {
+                                // For already existing form field only several entries are allowed to be updated.
+                                if (value != null) {
+                                    allowedReferences.Add(value.GetIndirectReference());
+                                }
+                                if (PdfFormAnnotationUtil.IsPureWidgetOrMergedField(fieldDict)) {
+                                    AddWidgetAnnotation(allowedReferences, fieldDict);
+                                }
+                                else {
+                                    PdfArray kids = fieldDict.GetAsArray(PdfName.Kids);
+                                    CreateAllowedFormFieldEntries(kids, allowedReferences);
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    // Add annotation.
+                    AddWidgetAnnotation(allowedReferences, fieldDict);
+                }
             }
         }
 
-        private class ReferencesPair {
-            private readonly PdfIndirectReference currentReference;
-
-            private readonly PdfIndirectReference previousReference;
-
-            internal ReferencesPair(PdfIndirectReference currentReference, PdfIndirectReference previousReference) {
-                this.currentReference = currentReference;
-                this.previousReference = previousReference;
+        private void AddWidgetAnnotation(ICollection<PdfIndirectReference> allowedReferences, PdfDictionary annotDict
+            ) {
+            allowedReferences.Add(annotDict.GetIndirectReference());
+            if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
+                PdfDictionary pureAnnotDict = new PdfDictionary(annotDict);
+                foreach (PdfName key in annotDict.KeySet()) {
+                    if (PdfFormField.GetFormFieldKeys().Contains(key)) {
+                        pureAnnotDict.Remove(key);
+                    }
+                }
+                AddAllNestedDictionaryEntries(allowedReferences, pureAnnotDict);
             }
-
-            public virtual PdfIndirectReference GetCurrentReference() {
-                return currentReference;
+            else {
+                PdfObject appearance = annotDict.Get(PdfName.AP);
+                if (appearance != null) {
+                    allowedReferences.Add(appearance.GetIndirectReference());
+                    if (appearance is PdfDictionary) {
+                        AddAllNestedDictionaryEntries(allowedReferences, (PdfDictionary)appearance);
+                    }
+                }
+                PdfObject appearanceState = annotDict.Get(PdfName.AS);
+                if (appearanceState != null) {
+                    allowedReferences.Add(appearanceState.GetIndirectReference());
+                }
+                PdfObject timeStamp = annotDict.Get(PdfName.M);
+                if (timeStamp != null) {
+                    allowedReferences.Add(timeStamp.GetIndirectReference());
+                }
             }
+        }
 
-            public virtual PdfIndirectReference GetPreviousReference() {
-                return previousReference;
+        private void AddAllNestedDictionaryEntries(ICollection<PdfIndirectReference> allowedReferences, PdfDictionary
+             dictionary) {
+            foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.EntrySet()) {
+                PdfObject value = entry.Value;
+                if (value.GetIndirectReference() != null && allowedReferences.Any((reference) => IsSameReference(reference
+                    , value.GetIndirectReference()))) {
+                    // Required to not end up in an infinite loop.
+                    continue;
+                }
+                allowedReferences.Add(value.GetIndirectReference());
+                if (value is PdfDictionary) {
+                    AddAllNestedDictionaryEntries(allowedReferences, (PdfDictionary)value);
+                }
+                if (value is PdfArray) {
+                    AddAllNestedArrayEntries(allowedReferences, (PdfArray)value);
+                }
+            }
+        }
+
+        private void AddAllNestedArrayEntries(ICollection<PdfIndirectReference> allowedReferences, PdfArray pdfArray
+            ) {
+            for (int i = 0; i < pdfArray.Size(); ++i) {
+                PdfObject arrayEntry = pdfArray.Get(i);
+                if (arrayEntry.GetIndirectReference() != null && allowedReferences.Any((reference) => IsSameReference(reference
+                    , arrayEntry.GetIndirectReference()))) {
+                    // Required to not end up in an infinite loop.
+                    continue;
+                }
+                allowedReferences.Add(arrayEntry.GetIndirectReference());
+                if (arrayEntry is PdfDictionary) {
+                    AddAllNestedDictionaryEntries(allowedReferences, pdfArray.GetAsDictionary(i));
+                }
+                if (arrayEntry is PdfArray) {
+                    AddAllNestedArrayEntries(allowedReferences, pdfArray.GetAsArray(i));
+                }
             }
         }
     }

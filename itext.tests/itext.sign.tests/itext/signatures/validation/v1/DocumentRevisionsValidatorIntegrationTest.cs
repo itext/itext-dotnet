@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.V1.Report;
@@ -286,6 +287,62 @@ namespace iText.Signatures.Validation.V1 {
                     (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
                     (DocumentRevisionsValidator.LOCKED_FIELD_REMOVED, (i) => "textField").WithStatus(ReportItem.ReportItemStatus
                     .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DanglingWidgetAnnotationTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "danglingWidgetAnnotation.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                // New widget annotation not included into the acroform was added to the 1st page.
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.PAGE_ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)
+                    ));
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
+                    ());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveAllThePageAnnotationsTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeAllAnnots.pdf"))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                // All the annotations on the 2nd page were removed.
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveAllTheFieldAnnotationsTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeFieldAnnots.pdf"))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                // All the annotations of the text field were removed. Note that Acrobat considers it invalid.
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveUnnamedFieldTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeUnnamedField.pdf"))) {
+                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                ValidationReport report = validator.ValidateAllDocumentRevisions();
+                // Child field was removed, so parent field was modified. Both fields are unnamed.
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (3).HasNumberOfLogs(3).HasLogItems(2, 2, (l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK
+                    ).WithMessage(MessageFormatUtil.Format(DocumentRevisionsValidator.FIELD_REMOVED, "")).WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .NOT_ALLOWED_ACROFORM_CHANGES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
             }
         }
     }
