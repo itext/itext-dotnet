@@ -35,13 +35,13 @@ namespace iText.Layout.Renderer {
         //TODO DEVSIX-8326 since templates will have not only absoulute values, we're probably need to create
         // separate fields, something like rowsHeights, columnsWidths which will store absolute/calculated values.
         // replace all absolute value logic using this new fields
-        private readonly IList<float> templateRows;
+        private readonly IList<GridValue> templateRows;
 
-        private readonly IList<float> templateColumns;
+        private readonly IList<GridValue> templateColumns;
 
-        private readonly float? rowAutoHeight;
+        private readonly GridValue rowAutoHeight;
 
-        private readonly float? columnAutoWidth;
+        private readonly GridValue columnAutoWidth;
 
         //TODO DEVSIX-8326 here should be a list/map of different resolvers
         private readonly GridSizer.SizeResolver sizeResolver;
@@ -50,8 +50,8 @@ namespace iText.Layout.Renderer {
 
         private readonly float rowGap;
 
-        internal GridSizer(Grid grid, IList<float> templateRows, IList<float> templateColumns, float? rowAutoHeight
-            , float? columnAutoWidth, float? columnGap, float? rowGap) {
+        internal GridSizer(Grid grid, IList<GridValue> templateRows, IList<GridValue> templateColumns, GridValue rowAutoHeight
+            , GridValue columnAutoWidth, float? columnGap, float? rowGap) {
             this.grid = grid;
             this.templateRows = templateRows;
             this.templateColumns = templateColumns;
@@ -105,7 +105,7 @@ namespace iText.Layout.Renderer {
             int currentColumn = 0;
             if (templateColumns != null) {
                 for (; currentColumn < Math.Min(templateColumns.Count, cell.GetColumnStart()); ++currentColumn) {
-                    x += (float)templateColumns[currentColumn];
+                    x += (float)templateColumns[currentColumn].GetAbsoluteValue();
                     x += columnGap;
                 }
                 if (currentColumn == cell.GetColumnStart()) {
@@ -114,7 +114,7 @@ namespace iText.Layout.Renderer {
             }
             if (columnAutoWidth != null) {
                 for (; currentColumn < cell.GetColumnStart(); ++currentColumn) {
-                    x += (float)columnAutoWidth;
+                    x += (float)columnAutoWidth.GetAbsoluteValue();
                     x += columnGap;
                 }
                 return x;
@@ -148,12 +148,12 @@ namespace iText.Layout.Renderer {
                 for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
                     if (templateRows != null && i < templateRows.Count) {
                         ++counter;
-                        cellHeight += (float)templateRows[i];
+                        cellHeight += (float)templateRows[i].GetAbsoluteValue();
                     }
                     else {
                         if (rowAutoHeight != null) {
                             ++counter;
-                            cellHeight += (float)rowAutoHeight;
+                            cellHeight += (float)rowAutoHeight.GetAbsoluteValue();
                         }
                     }
                 }
@@ -167,12 +167,12 @@ namespace iText.Layout.Renderer {
             if (templateRows == null || cell.GetRowStart() >= templateRows.Count) {
                 //TODO DEVSIX-8324 if row auto height value is fr or min-content do not return here
                 if (rowAutoHeight != null) {
-                    return (float)rowAutoHeight;
+                    return (float)rowAutoHeight.GetAbsoluteValue();
                 }
                 cellHeight = sizeResolver.ResolveHeight(cell, cellHeight);
             }
             else {
-                cellHeight = templateRows[cell.GetRowStart()];
+                cellHeight = (float)templateRows[cell.GetRowStart()].GetAbsoluteValue();
             }
             return cellHeight;
         }
@@ -187,12 +187,12 @@ namespace iText.Layout.Renderer {
                 for (int i = cell.GetColumnStart(); i < cell.GetColumnEnd(); ++i) {
                     if (templateColumns != null && i < templateColumns.Count) {
                         ++counter;
-                        cellWidth += templateColumns[i];
+                        cellWidth += (float)templateColumns[i].GetAbsoluteValue();
                     }
                     else {
                         if (columnAutoWidth != null) {
                             ++counter;
-                            cellWidth += (float)columnAutoWidth;
+                            cellWidth += (float)columnAutoWidth.GetAbsoluteValue();
                         }
                     }
                 }
@@ -206,13 +206,13 @@ namespace iText.Layout.Renderer {
             if (templateColumns == null || cell.GetColumnEnd() > templateColumns.Count) {
                 //TODO DEVSIX-8324 if row auto width value is fr or min-content do not return here
                 if (columnAutoWidth != null) {
-                    return (float)columnAutoWidth;
+                    return (float)columnAutoWidth.GetAbsoluteValue();
                 }
                 cellWidth = sizeResolver.ResolveWidth(cell, cellWidth);
             }
             else {
                 //process absolute template values
-                cellWidth = templateColumns[cell.GetColumnStart()];
+                cellWidth = (float)templateColumns[cell.GetColumnStart()].GetAbsoluteValue();
             }
             return cellWidth;
         }

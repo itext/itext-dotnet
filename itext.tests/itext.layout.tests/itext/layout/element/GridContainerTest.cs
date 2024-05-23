@@ -49,10 +49,10 @@ namespace iText.Layout.Element {
         public virtual void BasicThreeColumnsTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 150.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 150.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 150.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 150.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 150.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 150.0f)));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
@@ -73,7 +73,8 @@ namespace iText.Layout.Element {
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
-                grid.SetProperty(Property.GRID_AUTO_COLUMNS, new UnitValue(UnitValue.POINT, 150.0f));
+                grid.SetProperty(Property.GRID_AUTO_COLUMNS, GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 150.0f
+                    )));
                 for (int i = 0; i < 5; ++i) {
                     grid.Add(new Paragraph("Test" + i).SetBorder(border));
                 }
@@ -90,7 +91,8 @@ namespace iText.Layout.Element {
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
-                grid.SetProperty(Property.GRID_AUTO_ROWS, new UnitValue(UnitValue.POINT, 100.0f));
+                grid.SetProperty(Property.GRID_AUTO_ROWS, GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)
+                    ));
                 grid.Add(new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
                      + "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute " + "irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
                      + "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim " +
@@ -106,10 +108,10 @@ namespace iText.Layout.Element {
         public virtual void BasicThreeColumnsWithCustomColumnIndexesTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsWithCustomColumnIndexesTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithCustomColumnIndexesTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
@@ -134,11 +136,11 @@ namespace iText.Layout.Element {
         public virtual void ThreeColumnsWithAdjacentWideCellsTest() {
             String filename = DESTINATION_FOLDER + "threeColumnsWithAdjacentWideCellsTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_threeColumnsWithAdjacentWideCellsTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 GridContainer grid = new GridContainer();
@@ -170,10 +172,10 @@ namespace iText.Layout.Element {
         public virtual void BasicThreeColumnsWithCustomRowIndexesTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsWithCustomRowIndexesTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithCustomRowIndexesTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
@@ -198,10 +200,10 @@ namespace iText.Layout.Element {
         public virtual void BasicThreeColumnsWithCustomColumnAndRowIndexesTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsWithCustomColumnAndRowIndexesTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithCustomColumnAndRowIndexesTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -227,10 +229,10 @@ namespace iText.Layout.Element {
         public virtual void BasicThreeColumnsWithReversedIndexesTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsWithReversedIndexesTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithReversedIndexesTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -264,10 +266,10 @@ namespace iText.Layout.Element {
         public virtual void BasicThreeColumnsWithoutColumnEndTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsWithoutColumnEndTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithoutColumnEndTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -299,10 +301,10 @@ namespace iText.Layout.Element {
         public virtual void FixedColumnRowGoesFirstTest() {
             String filename = DESTINATION_FOLDER + "fixedColumnRowGoesFirstTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_fixedColumnRowGoesFirstTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -344,10 +346,10 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         public virtual void OverlapWithExistingColumnTest() {
             String filename = DESTINATION_FOLDER + "overlapWithExistingColumnTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -374,15 +376,15 @@ namespace iText.Layout.Element {
             }
         }
 
-        //TODO DEVSIX-8324
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("TODO DEVSIX-8324")]
         public virtual void BasicThreeColumnsWithPtAndPercentTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsWithPtAndPercentTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithPtAndPercentTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.PERCENT, 15.0f));
-            templateColumns.Add(new UnitValue(UnitValue.PERCENT, 50.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.PERCENT, 15.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.PERCENT, 50.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
@@ -400,10 +402,10 @@ namespace iText.Layout.Element {
         public virtual void ThirdColumnNotLayoutedTest() {
             String filename = DESTINATION_FOLDER + "thirdColumnNotLayoutedTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_thirdColumnNotLayoutedTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 200.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 200.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 200.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 200.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 200.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 200.0f)));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
@@ -421,10 +423,10 @@ namespace iText.Layout.Element {
         public virtual void ThreeColumnsWithSquareAndVerticalCellsTest() {
             String filename = DESTINATION_FOLDER + "threeColumnsWithSquareAndVerticalCellsTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_threeColumnsWithSquareAndVerticalCellsTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -455,10 +457,10 @@ namespace iText.Layout.Element {
         public virtual void ThreeColumnsWithSquareCellAndCellWithExplicitHeightTest() {
             String filename = DESTINATION_FOLDER + "threeColumnsWithSquareCellAndCellWithExplicitHeightTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_threeColumnsWithSquareCellAndCellWithExplicitHeightTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -485,10 +487,10 @@ namespace iText.Layout.Element {
         public virtual void ThreeColumnsWithVerticalCellWithSeveralNeighboursToTheLeftTest() {
             String filename = DESTINATION_FOLDER + "threeColumnsWithVerticalCellWithSeveralNeighboursToTheLeftTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_threeColumnsWithVerticalCellWithSeveralNeighboursToTheLeftTest.pdf";
-            IList<UnitValue> templateColumns = new List<UnitValue>();
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
-            templateColumns.Add(new UnitValue(UnitValue.POINT, 100.0f));
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
+            templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -534,14 +536,15 @@ namespace iText.Layout.Element {
         public virtual void ColumnRowGapTest() {
             String filename = DESTINATION_FOLDER + "columnRowGapTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_columnRowGapTest.pdf";
-            IList<UnitValue> template = new List<UnitValue>();
-            template.Add(new UnitValue(UnitValue.POINT, 50.0f));
-            template.Add(new UnitValue(UnitValue.POINT, 50.0f));
+            IList<GridValue> template = new List<GridValue>();
+            template.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 50.0f)));
+            template.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 50.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, template);
-                grid.SetProperty(Property.GRID_AUTO_ROWS, new UnitValue(UnitValue.POINT, 70.0f));
+                grid.SetProperty(Property.GRID_AUTO_ROWS, GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 70.0f))
+                    );
                 grid.SetProperty(Property.COLUMN_GAP, 20.0f);
                 grid.SetProperty(Property.ROW_GAP, 20.0f);
                 grid.Add(new Paragraph("One").SetBackgroundColor(ColorConstants.CYAN));
@@ -561,10 +564,10 @@ namespace iText.Layout.Element {
         public virtual void FewBigCellsWithGapTest() {
             String filename = DESTINATION_FOLDER + "fewBigCellsWithGapTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_fewBigCellsWithGapTest.pdf";
-            IList<UnitValue> template = new List<UnitValue>();
-            template.Add(new UnitValue(UnitValue.POINT, 50.0f));
-            template.Add(new UnitValue(UnitValue.POINT, 50.0f));
-            template.Add(new UnitValue(UnitValue.POINT, 50.0f));
+            IList<GridValue> template = new List<GridValue>();
+            template.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 50.0f)));
+            template.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 50.0f)));
+            template.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 50.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);

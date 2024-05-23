@@ -307,6 +307,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant FONT_WEIGHT.</summary>
         public const String FONT_WEIGHT = "font-weight";
 
+        /// <summary>The Constant FR.</summary>
+        public const String FR = "fr";
+
         /// <summary>The Constant GAP.</summary>
         public const String GAP = "gap";
 

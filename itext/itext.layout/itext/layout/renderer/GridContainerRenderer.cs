@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -262,17 +261,14 @@ namespace iText.Layout.Renderer {
         // if it is inline-grid, than it won't be needed.
         private static Grid ConstructGrid(iText.Layout.Renderer.GridContainerRenderer renderer, Rectangle actualBBox
             ) {
-            //TODO DEVSIX-8324 create a new class GridTemplateValue, which will store fr, pt, %, minmax, etc. values
-            //TODO DEVSIX-8324 Use this new class instead of Float and use it inside Grid Sizing Algorithm
-            //TODO DEVSIX-8324 Right now we're assuming that all template values are points, and there is no % and fr in this list
-            IList<float> templateColumns = ProcessTemplateValues(renderer.GetProperty<IList<UnitValue>>(Property.GRID_TEMPLATE_COLUMNS
-                ));
-            IList<float> templateRows = ProcessTemplateValues(renderer.GetProperty<IList<UnitValue>>(Property.GRID_TEMPLATE_ROWS
-                ));
-            float? columnAutoWidth = renderer.GetProperty<UnitValue>(Property.GRID_AUTO_COLUMNS) == null ? null : (float?
-                )((UnitValue)renderer.GetProperty<UnitValue>(Property.GRID_AUTO_COLUMNS)).GetValue();
-            float? rowAutoHeight = renderer.GetProperty<UnitValue>(Property.GRID_AUTO_ROWS) == null ? null : (float?)(
-                (UnitValue)renderer.GetProperty<UnitValue>(Property.GRID_AUTO_ROWS)).GetValue();
+            IList<GridValue> templateColumns = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS) 
+                == null ? null : renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS);
+            IList<GridValue> templateRows = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS) == null
+                 ? null : renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS);
+            GridValue columnAutoWidth = renderer.GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS) == null ? null : renderer
+                .GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS);
+            GridValue rowAutoHeight = renderer.GetProperty<GridValue>(Property.GRID_AUTO_ROWS) == null ? null : renderer
+                .GetProperty<GridValue>(Property.GRID_AUTO_ROWS);
             float? columnGap = renderer.GetProperty<float?>(Property.COLUMN_GAP);
             float? rowGap = renderer.GetProperty<float?>(Property.ROW_GAP);
             //Grid Item Placement Algorithm
@@ -309,32 +305,27 @@ namespace iText.Layout.Renderer {
             return grid;
         }
 
-        //TODO DEVSIX-8324 This is temporary method, we should remove it and instead of having Property.GRID_TEMPLATE_...
-        // as a UnitValue and returning list of Float, we need a new class which will be passed to Grid Sizing Algorithm.
-        private static IList<float> ProcessTemplateValues(IList<UnitValue> template) {
-            if (template == null) {
-                return null;
-            }
-            return template.Select((value) => value.GetValue()).ToList();
-        }
-
         //This method calculates container minimal height, because if number of cells is not enough to fill all specified
         //rows by template than we need to set the height of the container higher than it's actual occupied height.
-        private static void SetGridContainerMinimalHeight(Grid grid, IList<float> templateRows) {
+        private static void SetGridContainerMinimalHeight(Grid grid, IList<GridValue> templateRows) {
             float explicitContainerHeight = 0.0f;
             if (templateRows != null) {
-                foreach (float? template in templateRows) {
-                    explicitContainerHeight += (float)template;
+                foreach (GridValue template in templateRows) {
+                    if (template.IsAbsoluteValue()) {
+                        explicitContainerHeight += (float)template.GetAbsoluteValue();
+                    }
                 }
             }
             grid.SetMinHeight(explicitContainerHeight);
         }
 
-        private static void SetGridContainerMinimalWidth(Grid grid, IList<float> templateColumns) {
+        private static void SetGridContainerMinimalWidth(Grid grid, IList<GridValue> templateColumns) {
             float explicitContainerWidth = 0.0f;
             if (templateColumns != null) {
-                foreach (float? template in templateColumns) {
-                    explicitContainerWidth += (float)template;
+                foreach (GridValue template in templateColumns) {
+                    if (template.IsAbsoluteValue()) {
+                        explicitContainerWidth += (float)template.GetAbsoluteValue();
+                    }
                 }
             }
             grid.SetMinWidth(explicitContainerWidth);

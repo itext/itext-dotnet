@@ -315,6 +315,23 @@ namespace iText.StyledXmlParser.Css.Util {
             return null;
         }
 
+        /// <summary>Parses a flex value "xfr" to x.</summary>
+        /// <param name="value">String containing the flex value to parse</param>
+        /// <returns>the flex value as a float</returns>
+        public static float? ParseFlex(String value) {
+            if (value == null) {
+                return null;
+            }
+            value = value.Trim();
+            if (value.EndsWith(CommonCssConstants.FR)) {
+                value = value.JSubstring(0, value.Length - CommonCssConstants.FR.Length);
+                if (CssTypesValidationUtils.IsNumber(value)) {
+                    return float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                }
+            }
+            return null;
+        }
+
         /// <summary>Parse length attributes.</summary>
         /// <param name="length">
         /// 
