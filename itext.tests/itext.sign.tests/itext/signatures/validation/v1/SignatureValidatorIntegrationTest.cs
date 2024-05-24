@@ -75,8 +75,8 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
                 certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 AddRevDataClients();
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
                 (3, 3, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK)
@@ -103,10 +103,10 @@ namespace iText.Signatures.Validation.V1 {
                 parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItems(2
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItems(2
                 , 2, (la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
@@ -119,12 +119,12 @@ namespace iText.Signatures.Validation.V1 {
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDocWithoutChain.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
                 certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((al) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
@@ -145,8 +145,8 @@ namespace iText.Signatures.Validation.V1 {
                 certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
                 AddRevDataClients();
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
                 (3, 3, (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
@@ -160,11 +160,11 @@ namespace iText.Signatures.Validation.V1 {
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
                 parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasNumberOfFailures(3).HasLogItem((al) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK

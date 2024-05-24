@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
@@ -34,6 +35,8 @@ using iText.Signatures.Validation.V1.Report;
 namespace iText.Signatures.Validation.V1 {
     /// <summary>Validator class, which is expected to be used for signatures validation.</summary>
     internal class SignatureValidator {
+        public const String VALIDATING_SIGNATURE_NAME = "Validating signature {0}";
+
         internal const String TIMESTAMP_VERIFICATION = "Timestamp verification check.";
 
         internal const String SIGNATURE_VERIFICATION = "Signature verification check.";
@@ -48,7 +51,9 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String CANNOT_VERIFY_TIMESTAMP = "Signature timestamp attribute cannot be verified";
 
-        private readonly PdfDocument document;
+        internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
+
+        private const String TIMESTAMP_EXTRACTION_FAILED = "Unable to extract timestamp from timestamp signature";
 
         private readonly ValidationContext baseValidationContext;
 
@@ -58,6 +63,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private readonly SignatureValidationProperties properties;
 
+        private DateTime lastKnownPoE = (DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE;
+
         /// <summary>
         /// Create new instance of
         /// <see cref="SignatureValidator"/>.
@@ -66,8 +73,7 @@ namespace iText.Signatures.Validation.V1 {
         /// See
         /// <see cref="ValidatorChainBuilder"/>
         /// </param>
-        internal SignatureValidator(PdfDocument document, ValidatorChainBuilder builder) {
-            this.document = document;
+        internal SignatureValidator(ValidatorChainBuilder builder) {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.certificateChainValidator = builder.GetCertificateChainValidator();
@@ -75,22 +81,51 @@ namespace iText.Signatures.Validation.V1 {
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
         }
 
-        /// <summary>Validate the latest signature in the document.</summary>
+        /// <summary>Validate all signatures in the document</summary>
+        /// <param name="document">the document to be validated</param>
         /// <returns>
         /// 
         /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
         /// which contains detailed validation results
         /// </returns>
-        public virtual ValidationReport ValidateLatestSignature() {
+        public virtual ValidationReport ValidateSignatures(PdfDocument document) {
+            ValidationReport report = new ValidationReport();
+            SignatureUtil util = new SignatureUtil(document);
+            IList<String> signatureNames = util.GetSignatureNames();
+            JavaCollectionsUtil.Reverse(signatureNames);
+            foreach (String fieldName in signatureNames) {
+                try {
+                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName)))) {
+                        ValidationReport subReport = ValidateLatestSignature(doc);
+                        report.Merge(subReport);
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    report.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+            }
+            return report;
+        }
+
+        /// <summary>Validate the latest signature in the document.</summary>
+        /// <param name="document">the document of which to validate the latest signature</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
+        /// which contains detailed validation results
+        /// </returns>
+        public virtual ValidationReport ValidateLatestSignature(PdfDocument document) {
             ValidationReport validationReport = new ValidationReport();
-            PdfPKCS7 pkcs7 = MathematicallyVerifySignature(validationReport);
+            PdfPKCS7 pkcs7 = MathematicallyVerifySignature(validationReport, document);
             if (StopValidation(validationReport, baseValidationContext)) {
                 return validationReport;
             }
-            IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport);
+            IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, document);
             certificateRetriever.AddKnownCertificates(certificatesFromDss);
             if (pkcs7.IsTsp()) {
-                return ValidateTimestampChain(validationReport, pkcs7.GetCertificates(), pkcs7.GetSigningCertificate());
+                return ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), pkcs7.GetCertificates(), pkcs7
+                    .GetSigningCertificate());
             }
             DateTime signingDate = DateTimeUtil.GetCurrentUtcTime();
             if (pkcs7.GetTimeStampTokenInfo() != null) {
@@ -108,8 +143,8 @@ namespace iText.Signatures.Validation.V1 {
                     return validationReport;
                 }
                 IX509Certificate[] timestampCertificates = pkcs7.GetTimestampCertificates();
-                ValidateTimestampChain(validationReport, timestampCertificates, (IX509Certificate)timestampCertificates[0]
-                    );
+                ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), timestampCertificates, (IX509Certificate
+                    )timestampCertificates[0]);
                 if (StopValidation(validationReport, baseValidationContext)) {
                     return validationReport;
                 }
@@ -122,11 +157,13 @@ namespace iText.Signatures.Validation.V1 {
                 );
         }
 
-        private PdfPKCS7 MathematicallyVerifySignature(ValidationReport validationReport) {
+        private PdfPKCS7 MathematicallyVerifySignature(ValidationReport validationReport, PdfDocument document) {
             SignatureUtil signatureUtil = new SignatureUtil(document);
             IList<String> signatures = signatureUtil.GetSignatureNames();
             String latestSignatureName = signatures[signatures.Count - 1];
             PdfPKCS7 pkcs7 = signatureUtil.ReadSignatureData(latestSignatureName);
+            validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(VALIDATING_SIGNATURE_NAME
+                , latestSignatureName), ReportItem.ReportItemStatus.INFO));
             if (!signatureUtil.SignatureCoversWholeDocument(latestSignatureName)) {
                 validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(DOCUMENT_IS_NOT_COVERED
                     , latestSignatureName), ReportItem.ReportItemStatus.INVALID));
@@ -144,15 +181,31 @@ namespace iText.Signatures.Validation.V1 {
             return pkcs7;
         }
 
-        private ValidationReport ValidateTimestampChain(ValidationReport validationReport, IX509Certificate[] knownCerts
-            , IX509Certificate signingCert) {
+        private ValidationReport ValidateTimestampChain(ValidationReport validationReport, ITstInfo timeStampTokenInfo
+            , IX509Certificate[] knownCerts, IX509Certificate signingCert) {
             certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
-            DateTime signingDate = DateTimeUtil.GetCurrentUtcTime();
-            return certificateChainValidator.Validate(validationReport, baseValidationContext.SetCertificateSource(CertificateSource
+            DateTime signingDate = lastKnownPoE;
+            if (signingDate == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
+                signingDate = DateTimeUtil.GetCurrentUtcTime();
+            }
+            ValidationReport tsValidationReport = new ValidationReport();
+            certificateChainValidator.Validate(tsValidationReport, baseValidationContext.SetCertificateSource(CertificateSource
                 .TIMESTAMP), signingCert, signingDate);
+            validationReport.Merge(tsValidationReport);
+            if (tsValidationReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
+                try {
+                    lastKnownPoE = timeStampTokenInfo.GetGenTime();
+                }
+                catch (Exception e) {
+                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, TIMESTAMP_EXTRACTION_FAILED, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+            }
+            return validationReport;
         }
 
-        private IList<IX509Certificate> GetCertificatesFromDss(ValidationReport validationReport) {
+        private IList<IX509Certificate> GetCertificatesFromDss(ValidationReport validationReport, PdfDocument document
+            ) {
             PdfDictionary dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             IList<IX509Certificate> certificatesFromDss = new List<IX509Certificate>();
             if (dss != null) {

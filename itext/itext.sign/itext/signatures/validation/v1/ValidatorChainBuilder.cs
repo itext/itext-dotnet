@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Kernel.Pdf;
 using iText.Signatures;
 
 namespace iText.Signatures.Validation.V1 {
@@ -54,14 +53,9 @@ namespace iText.Signatures.Validation.V1 {
         /// instance with the current configuration.
         /// This method can be used to create multiple validators.
         /// </remarks>
-        /// <param name="document">
-        /// The
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// to create the signatureValidator for.
-        /// </param>
         /// <returns>a new instance of a signature validator</returns>
-        internal virtual SignatureValidator BuildSignatureValidator(PdfDocument document) {
-            return new SignatureValidator(document, this);
+        internal virtual SignatureValidator BuildSignatureValidator() {
+            return new SignatureValidator(this);
         }
 
         /// <summary>

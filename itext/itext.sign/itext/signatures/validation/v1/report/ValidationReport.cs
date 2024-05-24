@@ -121,6 +121,12 @@ namespace iText.Signatures.Validation.V1.Report {
             return sb.ToString();
         }
 
+        public virtual void Merge(iText.Signatures.Validation.V1.Report.ValidationReport subReport) {
+            foreach (ReportItem item in subReport.GetLogs()) {
+                AddReportItem(item);
+            }
+        }
+
         /// <summary>Enum representing possible validation results.</summary>
         public enum ValidationResult {
             /// <summary>Valid validation result.</summary>
