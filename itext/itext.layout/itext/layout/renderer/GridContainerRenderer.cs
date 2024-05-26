@@ -70,33 +70,39 @@ namespace iText.Layout.Renderer {
             GridContainerRenderer.GridLayoutResult layoutResult = LayoutGrid(layoutContext, actualBBox, grid);
             //TODO DEVSIX-8329 improve nothing processing, consider checking for cause of nothing here?
             //TODO DEVSIX-8329 improve forced placement logic
-            if (layoutResult.GetSplitRenderers().IsEmpty()) {
-                if (true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
-                    this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
-                    return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
-                }
-                IRenderer cause = this;
-                if (!layoutResult.GetCauseOfNothing().IsEmpty()) {
-                    cause = layoutResult.GetCauseOfNothing()[0];
-                }
-                return new LayoutResult(LayoutResult.NOTHING, null, null, this, cause);
+            if (layoutResult.GetOverflowRenderers().IsEmpty() && layoutResult.GetSplitRenderers().IsEmpty()) {
+                this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
+                return new LayoutResult(LayoutResult.FULL, this.occupiedArea, null, null);
             }
             else {
-                if (layoutResult.GetOverflowRenderers().IsEmpty()) {
-                    ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
-                        );
-                    if (continuousContainer != null) {
-                        continuousContainer.ReApplyProperties(this);
+                if (layoutResult.GetSplitRenderers().IsEmpty()) {
+                    if (true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                        this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
+                        return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
                     }
-                    this.childRenderers.Clear();
-                    this.AddAllChildRenderers(layoutResult.GetSplitRenderers());
-                    this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
-                    return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
+                    IRenderer cause = this;
+                    if (!layoutResult.GetCauseOfNothing().IsEmpty()) {
+                        cause = layoutResult.GetCauseOfNothing()[0];
+                    }
+                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, cause);
                 }
                 else {
-                    this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, false);
-                    return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
-                        ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
+                    if (layoutResult.GetOverflowRenderers().IsEmpty()) {
+                        ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
+                            );
+                        if (continuousContainer != null) {
+                            continuousContainer.ReApplyProperties(this);
+                        }
+                        this.childRenderers.Clear();
+                        this.AddAllChildRenderers(layoutResult.GetSplitRenderers());
+                        this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
+                        return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
+                    }
+                    else {
+                        this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, false);
+                        return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
+                            ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
+                    }
                 }
             }
         }
