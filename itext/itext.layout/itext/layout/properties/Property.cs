@@ -203,6 +203,8 @@ namespace iText.Layout.Properties {
 
         public const int GRID_AUTO_COLUMNS = 152;
 
+        public const int GRID_FLOW = 154;
+
         public const int HEIGHT = 27;
 
         public const int HORIZONTAL_ALIGNMENT = 28;
@@ -400,7 +402,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 153;
+        private const int MAX_INHERITED_PROPERTY_ID = 154;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

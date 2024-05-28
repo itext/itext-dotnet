@@ -22,31 +22,35 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Utils;
 using iText.Layout.Exceptions;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     /// <summary>This class represents a grid of elements.</summary>
+    /// <remarks>
+    /// This class represents a grid of elements.
+    /// Complex elements (which span over few cells of a grid) are stored as duplicates.
+    /// For example if element with width = 2, height = 3 added to a grid, grid will store it as 6 elements each having
+    /// width = height = 1.
+    /// </remarks>
     internal class Grid {
-        private readonly IList<IList<GridCell>> rows = new List<IList<GridCell>>();
+        private GridCell[][] rows = new GridCell[][] { new GridCell[1] };
 
-        private readonly Grid.CellPacker cellPacker;
+        private readonly Grid.CellPlacementHelper cellPlacementHelper;
 
         private float minHeight = 0.0f;
 
         private float minWidth = 0.0f;
 
-        internal const int ROW_ORDER = 1;
-
-        internal const int COLUMN_ORDER = 2;
-
         /// <summary>Creates a new grid instance.</summary>
         /// <param name="initialRowsCount">initial number of row for the grid</param>
         /// <param name="initialColumnsCount">initial number of columns for the grid</param>
-        /// <param name="densePacking">if true, dense packing will be used, otherwise sparse packing will be used</param>
-        internal Grid(int initialRowsCount, int initialColumnsCount, bool densePacking) {
+        /// 
+        internal Grid(int initialRowsCount, int initialColumnsCount, GridFlow flow) {
+            cellPlacementHelper = new Grid.CellPlacementHelper(this, flow);
             EnsureGridSize(initialRowsCount, initialColumnsCount);
-            cellPacker = new Grid.CellPacker(this, densePacking);
         }
 
         /// <summary>
@@ -55,8 +59,8 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <returns>resulting layout height of a grid.</returns>
         internal virtual float GetHeight() {
-            for (int i = rows.Count - 1; i >= 0; --i) {
-                for (int j = 0; j < rows[0].Count; ++j) {
+            for (int i = rows.Length - 1; i >= 0; --i) {
+                for (int j = 0; j < rows[0].Length; ++j) {
                     if (rows[i][j] != null) {
                         return Math.Max(rows[i][j].GetLayoutArea().GetTop(), minHeight);
                     }
@@ -73,24 +77,25 @@ namespace iText.Layout.Renderer {
 
         /// <summary>Get internal matrix of cells.</summary>
         /// <returns>matrix of cells.</returns>
-        internal virtual IList<IList<GridCell>> GetRows() {
+        internal virtual GridCell[][] GetRows() {
             return rows;
         }
 
         /// <summary>Get any cell adjacent to the left of a given cell.</summary>
         /// <remarks>
         /// Get any cell adjacent to the left of a given cell.
-        /// If there is no a direct neighbor to the left, and other adjacent cells are big cells and their column end
+        /// If there is no a direct neighbor to the left, and other adjacent cells are wide cells and their column end
         /// is bigger than the column start of a given cell, method will still return such a neighbor, though it's not
-        /// actually a neighbor to the left.
+        /// actually a neighbor to the left. But if there will be a neighbor before column start of such a cell method will
+        /// return such a neighbor.
         /// </remarks>
-        /// <param name="value">cell for which to find the neighbor</param>
+        /// <param name="value">cell for which to find a neighbor</param>
         /// <returns>adjacent cell to the left if found one, null otherwise</returns>
         internal virtual GridCell GetClosestLeftNeighbor(GridCell value) {
             int x = value.GetColumnStart();
             GridCell bigNeighbor = null;
             for (int i = 1; i <= x; ++i) {
-                for (int j = 0; j < rows.Count; ++j) {
+                for (int j = 0; j < rows.Length; ++j) {
                     if (rows[j][x - i] != null) {
                         if (rows[j][x - i].GetColumnEnd() > x) {
                             bigNeighbor = rows[j][x - i];
@@ -108,17 +113,24 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Get any cell adjacent to the top of a given cell
-        /// If there is no a direct neighbor to the top, and other adjacent cells are big cells and their row end
+        /// If there is no a direct neighbor to the top, and other adjacent cells are tall cells and their row end
         /// is bigger than the row start of a given cell, method will still return such a neighbor, though it's not
         /// actually a neighbor to the top.
         /// </summary>
-        /// <param name="value">cell for which to find the neighbor</param>
+        /// <remarks>
+        /// Get any cell adjacent to the top of a given cell
+        /// If there is no a direct neighbor to the top, and other adjacent cells are tall cells and their row end
+        /// is bigger than the row start of a given cell, method will still return such a neighbor, though it's not
+        /// actually a neighbor to the top. But if there will be a neighbor before row start of such a cell method will
+        /// return such a neighbor.
+        /// </remarks>
+        /// <param name="value">cell for which to find a neighbor</param>
         /// <returns>adjacent cell to the top if found one, null otherwise</returns>
         internal virtual GridCell GetClosestTopNeighbor(GridCell value) {
             int y = value.GetRowStart();
             GridCell bigNeighbor = null;
             for (int i = 1; i <= y; ++i) {
-                for (int j = 0; j < rows[0].Count; ++j) {
+                for (int j = 0; j < rows[0].Length; ++j) {
                     if (rows[y - i][j] != null) {
                         if (rows[y - i][j].GetRowEnd() > y) {
                             bigNeighbor = rows[y - i][j];
@@ -142,27 +154,26 @@ namespace iText.Layout.Renderer {
         /// internal grid processing. This method counts such cells as one and returns a list of unique cells.
         /// </remarks>
         /// <param name="iterationOrder">
-        /// if <c>Grid.ROW</c> the order of cells is from left to right, top to bottom
-        /// if <c>Grid.COLUMN</c> the order of cells is from top to bottom, left to right
+        /// if {GridOrder.ROW} the order of cells is from left to right, top to bottom
+        /// if {GridOrder.COLUMN} the order of cells is from top to bottom, left to right
         /// </param>
         /// <returns>collection of unique grid cells.</returns>
-        internal virtual ICollection<GridCell> GetUniqueGridCells(int iterationOrder) {
+        internal virtual ICollection<GridCell> GetUniqueGridCells(Grid.GridOrder iterationOrder) {
             ICollection<GridCell> result = new LinkedHashSet<GridCell>();
-            if (iterationOrder == ROW_ORDER) {
-                foreach (IList<GridCell> cellsRow in rows) {
-                    foreach (GridCell cell in cellsRow) {
-                        if (cell != null) {
-                            result.Add(cell);
-                        }
-                    }
-                }
-            }
-            if (iterationOrder == COLUMN_ORDER) {
-                for (int j = 0; j < rows[0].Count; ++j) {
-                    for (int i = 0; i < rows.Count; ++i) {
+            if (Grid.GridOrder.COLUMN.Equals(iterationOrder)) {
+                for (int j = 0; j < rows[0].Length; ++j) {
+                    for (int i = 0; i < rows.Length; ++i) {
                         if (rows[i][j] != null) {
                             result.Add(rows[i][j]);
                         }
+                    }
+                }
+                return result;
+            }
+            foreach (GridCell[] cellsRow in rows) {
+                foreach (GridCell cell in cellsRow) {
+                    if (cell != null) {
+                        result.Add(cell);
                     }
                 }
             }
@@ -191,7 +202,7 @@ namespace iText.Layout.Renderer {
         /// <param name="value">new pos on a grid at which column should end</param>
         internal virtual void AlignColumn(int column, float value) {
             GridCell previousCell = null;
-            for (int i = 0; i < rows.Count; ++i) {
+            for (int i = 0; i < rows.Length; ++i) {
                 GridCell cell = rows[i][column];
                 if (cell == null) {
                     continue;
@@ -204,8 +215,13 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>Get max top (layout area y + height of a cell) in a row with index = y, for all elements in a row before given x.
+        ///     </summary>
+        /// <param name="y">index of a row to find max top value</param>
+        /// <param name="x">index of element in a row before which to search for max top value</param>
+        /// <returns>max top value, all cells which do not end in the given row are not counted.</returns>
         internal virtual float GetMaxRowTop(int y, int x) {
-            IList<GridCell> row = rows[y];
+            GridCell[] row = rows[y];
             float maxTop = 0.0f;
             for (int i = 0; i < x; ++i) {
                 if (row[i] == null || row[i].GetLayoutArea() == null) {
@@ -219,6 +235,13 @@ namespace iText.Layout.Renderer {
             return maxTop;
         }
 
+        /// <summary>
+        /// Get max right (layout area x + width of a cell) in a column with index = x,
+        /// for all elements in a column before given y.
+        /// </summary>
+        /// <param name="y">index of element in a column before which to search for max right value</param>
+        /// <param name="x">index of a column to find max right value</param>
+        /// <returns>max right value, all cells which do not end in the given column are not counted.</returns>
         internal virtual float GetMaxColumnRight(int y, int x) {
             float maxRight = 0.0f;
             for (int i = 0; i < y; ++i) {
@@ -234,11 +257,10 @@ namespace iText.Layout.Renderer {
             return maxRight;
         }
 
-        /// <summary>Add cell in the grid, checking that it would fit and initializing it upper left corner (x, y).</summary>
+        /// <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
         /// <param name="cell">cell to and in the grid</param>
         internal virtual void AddCell(GridCell cell) {
-            EnsureGridSize(cell.GetRowEnd(), cell.GetColumnEnd());
-            SetStartingRowAndColumn(cell);
+            cellPlacementHelper.Fit(cell);
             for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
                 for (int j = cell.GetColumnStart(); j < cell.GetColumnEnd(); ++j) {
                     rows[i][j] = cell;
@@ -246,171 +268,244 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        public virtual void SetMinHeight(float minHeight) {
+        internal virtual void SetMinHeight(float minHeight) {
             this.minHeight = minHeight;
         }
 
-        public virtual void SetMinWidth(float minWidth) {
+        internal virtual void SetMinWidth(float minWidth) {
             this.minWidth = minWidth;
         }
 
-        private void SetStartingRowAndColumn(GridCell cell) {
-            if (cell.GetColumnStart() != -1 && cell.GetRowStart() != -1) {
-                // cells which take more than 1 grid cells vertically and horizontally can't be moved
-                for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
-                    for (int j = cell.GetColumnStart(); j < cell.GetColumnEnd(); ++j) {
-                        if (rows[i][j] != null) {
-                            throw new ArgumentException(LayoutExceptionMessageConstant.INVALID_CELL_INDEXES);
-                        }
-                    }
-                }
+        /// <summary>Resize grid if needed, so it would have given number of rows/columns.</summary>
+        /// <param name="height">new grid height</param>
+        /// <param name="width">new grid width</param>
+        internal virtual void EnsureGridSize(int height, int width) {
+            if (height <= rows.Length && width <= rows[0].Length) {
+                return;
             }
-            else {
-                if (cell.GetColumnStart() != -1) {
-                    cellPacker.FitHorizontalCell(cell);
-                }
-                else {
-                    if (cell.GetRowStart() != -1) {
-                        cellPacker.FitVerticalCell(cell);
+            GridCell[][] resizedRows = height > rows.Length ? new GridCell[height][] : rows;
+            int gridWidth = Math.Max(width, rows[0].Length);
+            for (int i = 0; i < resizedRows.Length; ++i) {
+                if (i < rows.Length) {
+                    if (width <= rows[i].Length) {
+                        resizedRows[i] = rows[i];
                     }
                     else {
-                        cellPacker.FitSimpleCell(cell);
+                        GridCell[] row = new GridCell[width];
+                        Array.Copy(rows[i], 0, row, 0, rows[i].Length);
+                        resizedRows[i] = row;
                     }
-                }
-            }
-        }
-
-        /// <summary>Resize grid to ensure that right bottom corner of a cell will fit into the grid.</summary>
-        /// <param name="rowEnd">end row pos of a cell on a grid</param>
-        /// <param name="columnEnd">end column pos of a cell on a grid</param>
-        private void EnsureGridSize(int rowEnd, int columnEnd) {
-            int maxRowSize = -1;
-            for (int i = 0; i < Math.Max(rowEnd, rows.Count); i++) {
-                IList<GridCell> row;
-                if (i >= rows.Count) {
-                    row = new List<GridCell>();
-                    rows.Add(row);
                 }
                 else {
-                    row = rows[i];
+                    GridCell[] row = new GridCell[gridWidth];
+                    resizedRows[i] = row;
                 }
-                maxRowSize = Math.Max(maxRowSize, row.Count);
-                for (int j = row.Count; j < Math.Max(columnEnd, maxRowSize); j++) {
-                    row.Add(null);
+            }
+            rows = resizedRows;
+        }
+
+        internal enum GridOrder {
+            ROW,
+            COLUMN
+        }
+
+        /// <summary>This class is used to properly initialize starting values for grid.</summary>
+        internal sealed class Builder {
+            private int columnCount;
+
+            private int rowCount;
+
+            private GridFlow flow;
+
+            private IList<GridCell> cells;
+
+            private Builder() {
+            }
+
+            /// <summary>Get grid builder for list of values.</summary>
+            /// <param name="values">values to layout on grid</param>
+            /// <returns>new grid builder instance</returns>
+            internal static Grid.Builder ForItems(IList<IRenderer> values) {
+                Grid.Builder builder = new Grid.Builder();
+                builder.cells = values.Select((val) => new GridCell(val)).ToList();
+                return builder;
+            }
+
+            /// <summary>
+            /// Set number of columns for a grid, the result will be either a provided one or if some elements
+            /// have a property defining more columns on a grid than provided value it will be set instead.
+            /// </summary>
+            /// <param name="minColumnCount">min column count of a grid</param>
+            /// <returns>current builder instance</returns>
+            public Grid.Builder Columns(int minColumnCount) {
+                columnCount = Math.Max(minColumnCount, CalculateInitialColumnsCount(cells));
+                return this;
+            }
+
+            /// <summary>
+            /// Set number of rows for a grid, the result will be either a provided one or if some elements
+            /// have a property defining more rows on a grid than provided value it will be set instead.
+            /// </summary>
+            /// <param name="minRowCount">min height of a grid</param>
+            /// <returns>current builder instance</returns>
+            public Grid.Builder Rows(int minRowCount) {
+                rowCount = Math.Max(minRowCount, CalculateInitialRowsCount(cells));
+                return this;
+            }
+
+            /// <summary>Set iteration flow for a grid.</summary>
+            /// <param name="flow">iteration flow</param>
+            /// <returns>current builder instance</returns>
+            public Grid.Builder Flow(GridFlow flow) {
+                this.flow = flow;
+                JavaCollectionsUtil.Sort(cells, GetOrderingFunctionForFlow(flow));
+                return this;
+            }
+
+            /// <summary>Build a grid with provided properties.</summary>
+            /// <returns>
+            /// new
+            /// <c>Grid</c>
+            /// instance.
+            /// </returns>
+            public Grid Build() {
+                Grid grid = new Grid(rowCount, columnCount, flow);
+                foreach (GridCell cell in cells) {
+                    grid.AddCell(cell);
                 }
+                return grid;
+            }
+
+            private static int CalculateInitialColumnsCount(ICollection<GridCell> cells) {
+                int initialColumnsCount = 1;
+                foreach (GridCell cell in cells) {
+                    if (cell != null) {
+                        initialColumnsCount = Math.Max(cell.GetGridWidth(), Math.Max(initialColumnsCount, cell.GetColumnEnd()));
+                    }
+                }
+                return initialColumnsCount;
+            }
+
+            private static int CalculateInitialRowsCount(ICollection<GridCell> cells) {
+                int initialRowsCount = 1;
+                foreach (GridCell cell in cells) {
+                    if (cell != null) {
+                        initialRowsCount = Math.Max(cell.GetGridHeight(), Math.Max(initialRowsCount, cell.GetRowEnd()));
+                    }
+                }
+                return initialRowsCount;
+            }
+
+            internal static IComparer<GridCell> GetOrderingFunctionForFlow(GridFlow flow) {
+                if (GridFlow.COLUMN.Equals(flow) || GridFlow.COLUMN_DENSE.Equals(flow)) {
+                    return new Grid.ColumnCellComparator();
+                }
+                return new Grid.RowCellComparator();
             }
         }
 
-        //TODO DEVSIX-8323 Right now "row sparse" and "row dense" algorithms are implemented
-        // implement "column sparse" and "column dense" the only thing which changes is winding order of a grid.
-        // One will need to create a "view" on cellRows which is rotated 90 degrees to the right and also swap parameters
-        // for the ensureGridSize in such a case
-        private class CellPacker {
-            //Determines whether to use "dense" or "sparse" packing algorithm
-            private readonly bool densePacking;
-
-            private int placementCursorX = 0;
-
-            private int placementCursorY = 0;
-
-            internal CellPacker(Grid _enclosing, bool densePacking) {
-                this._enclosing = _enclosing;
-                this.densePacking = densePacking;
-            }
-
-            //TODO DEVSIX-8323 double check with https://drafts.csswg.org/css-grid/#grid-item-placement-algorithm
-            // they have 2 cases for such cells however I could not find a case for “sparse” and “dense” packing to
-            // be different
-            /// <summary>
-            /// init vertical (<c>GridCell#getGridHeight() &gt; 1</c>)
-            /// <c>GridCell</c> upper left corner to fit it in the grid
-            /// </summary>
-            /// <param name="cell">cell to fit</param>
-            internal virtual void FitVerticalCell(GridCell cell) {
-                for (int j = 0; j < this._enclosing.rows[0].Count; ++j) {
-                    bool found = true;
-                    for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
-                        if (this._enclosing.rows[i][j] != null) {
-                            found = false;
-                            break;
-                        }
-                    }
-                    if (found) {
-                        cell.SetStartingRowAndColumn(cell.GetRowStart(), j);
-                        return;
+        /// <summary>
+        /// This comparator sorts cells so ones with both fixed row and column positions would go first,
+        /// then cells with fixed row and then all other cells.
+        /// </summary>
+        private sealed class RowCellComparator : IComparer<GridCell> {
+            public int Compare(GridCell lhs, GridCell rhs) {
+                int lhsModifiers = 0;
+                if (lhs.GetColumnStart() != -1 && lhs.GetRowStart() != -1) {
+                    lhsModifiers = 2;
+                }
+                else {
+                    if (lhs.GetRowStart() != -1) {
+                        lhsModifiers = 1;
                     }
                 }
-                cell.SetStartingRowAndColumn(cell.GetRowStart(), this._enclosing.rows[0].Count);
-                this._enclosing.EnsureGridSize(-1, this._enclosing.rows[0].Count + 1);
-            }
-
-            /// <summary>
-            /// init horizontal (<c>GridCell#getColumnEnd() - GridCell#getColumnStart() &gt; 1</c>)
-            /// <c>GridCell</c> upper left corner to fit it in the grid
-            /// </summary>
-            /// <param name="cell">cell to fit</param>
-            internal virtual void FitHorizontalCell(GridCell cell) {
-                // All comments bellow are for the "sparse" packing, dense packing is much simpler and is achieved by
-                // disabling placement cursor
-                //Increment the cursor’s row position until a value is found where the grid item
-                // does not overlap any occupied grid cells (creating new rows in the implicit grid as necessary).
-                for (int i = this.GetPlacementCursorY(); i < this._enclosing.rows.Count; ++i, ++this.placementCursorY) {
-                    //Set the column position of the cursor to the grid item’s column-start line.
-                    // If this is less than the previous column position of the cursor, increment the row position by 1.
-                    if (cell.GetColumnStart() < this.GetPlacementCursorX()) {
-                        this.placementCursorX = cell.GetColumnStart();
-                        continue;
-                    }
-                    this.placementCursorX = cell.GetColumnStart();
-                    bool found = true;
-                    for (int j = cell.GetColumnStart(); j < cell.GetColumnEnd(); ++j, ++this.placementCursorX) {
-                        if (this._enclosing.rows[i][j] != null) {
-                            found = false;
-                            break;
-                        }
-                    }
-                    if (found) {
-                        //Set the item’s row-start line to the cursor’s row position
-                        cell.SetStartingRowAndColumn(i, cell.GetColumnStart());
-                        return;
+                int rhsModifiers = 0;
+                if (rhs.GetColumnStart() != -1 && rhs.GetRowStart() != -1) {
+                    rhsModifiers = 2;
+                }
+                else {
+                    if (rhs.GetRowStart() != -1) {
+                        rhsModifiers = 1;
                     }
                 }
-                cell.SetStartingRowAndColumn(this._enclosing.rows.Count, cell.GetColumnStart());
-                this._enclosing.EnsureGridSize(this._enclosing.rows.Count + 1, -1);
+                //passing parameters in reversed order so ones with properties would come first
+                return JavaUtil.IntegerCompare(rhsModifiers, lhsModifiers);
+            }
+        }
+
+        /// <summary>
+        /// This comparator sorts cells so ones with both fixed row and column positions would go first,
+        /// then cells with fixed column and then all other cells.
+        /// </summary>
+        private sealed class ColumnCellComparator : IComparer<GridCell> {
+            public int Compare(GridCell lhs, GridCell rhs) {
+                int lhsModifiers = 0;
+                if (lhs.GetColumnStart() != -1 && lhs.GetRowStart() != -1) {
+                    lhsModifiers = 2;
+                }
+                else {
+                    if (lhs.GetColumnStart() != -1) {
+                        lhsModifiers = 1;
+                    }
+                }
+                int rhsModifiers = 0;
+                if (rhs.GetColumnStart() != -1 && rhs.GetRowStart() != -1) {
+                    rhsModifiers = 2;
+                }
+                else {
+                    if (rhs.GetColumnStart() != -1) {
+                        rhsModifiers = 1;
+                    }
+                }
+                //passing parameters in reversed order so ones with properties would come first
+                return JavaUtil.IntegerCompare(rhsModifiers, lhsModifiers);
+            }
+        }
+
+        /// <summary>This class is used to place cells on grid.</summary>
+        private class CellPlacementHelper {
+            private readonly GridView view;
+
+            private readonly Grid grid;
+
+            internal CellPlacementHelper(Grid grid, GridFlow flow) {
+                this.view = new GridView(grid, flow);
+                this.grid = grid;
             }
 
-            /// <summary>
-            /// init simple (cell height = width = 1)
-            /// <c>GridCell</c> upper left corner to fit it in the grid
-            /// </summary>
-            /// <param name="cell">cell to fit</param>
-            internal virtual void FitSimpleCell(GridCell cell) {
-                //Algorithm the same as for horizontal cells except we're not checking for overlapping
-                //and just placing the cell to the first space place
-                for (int i = this.GetPlacementCursorY(); i < this._enclosing.rows.Count; ++i, ++this.placementCursorY) {
-                    for (int j = this.GetPlacementCursorX(); j < this._enclosing.rows[i].Count; ++j, ++this.placementCursorX) {
-                        if (this._enclosing.rows[i][j] == null) {
-                            cell.SetStartingRowAndColumn(i, j);
+            /// <summary>Place cell on grid and resize grid if needed.</summary>
+            /// <param name="cell">cell to place on a grid.</param>
+            internal virtual void Fit(GridCell cell) {
+                //resize the grid if needed to fit a cell into it
+                grid.EnsureGridSize(cell.GetRowEnd(), cell.GetColumnEnd());
+                bool result;
+                //reset grid view to process new cell
+                GridView.Pos pos = view.Reset(cell.GetRowStart(), cell.GetColumnStart(), cell.GetGridWidth(), cell.GetGridHeight
+                    ());
+                //Can use while(true) here, but since it's not expected to do more placement iteration as described with
+                //max statement, to be on a safe side and prevent algorithm from hanging in unexpected situations doing
+                //a finite number of iterations here.
+                for (int i = 0; i < Math.Max(cell.GetGridHeight(), cell.GetGridWidth()) + 1; ++i) {
+                    while (view.HasNext()) {
+                        //Try to place the cell
+                        result = view.Fit(cell.GetGridWidth(), cell.GetGridHeight());
+                        //If fit, init cell's left corner position
+                        if (result) {
+                            cell.SetPos(pos.GetY(), pos.GetX());
                             return;
                         }
+                        //Move grid view cursor
+                        pos = view.Next();
                     }
-                    this.placementCursorX = 0;
+                    //If cell restricts both x and y position grow and can't be fitted on a grid, throw an excpetion
+                    if (view.IsFixed()) {
+                        throw new ArgumentException(LayoutExceptionMessageConstant.INVALID_CELL_INDEXES);
+                    }
+                    //If cell was not fitted while iterating grid, then there is not enough space to fit it, and grid
+                    //has to be resized
+                    view.IncreaseDefaultAxis();
                 }
-                cell.SetStartingRowAndColumn(this._enclosing.rows.Count, 0);
-                this._enclosing.EnsureGridSize(this._enclosing.rows.Count + 1, -1);
             }
-
-            //If it's dense packing, then it's enough to just disable placement cursors
-            // and search for a spare place for the cell from the start of the grid.
-            internal virtual int GetPlacementCursorX() {
-                return this.densePacking ? 0 : this.placementCursorX;
-            }
-
-            internal virtual int GetPlacementCursorY() {
-                return this.densePacking ? 0 : this.placementCursorY;
-            }
-
-            private readonly Grid _enclosing;
         }
     }
 }

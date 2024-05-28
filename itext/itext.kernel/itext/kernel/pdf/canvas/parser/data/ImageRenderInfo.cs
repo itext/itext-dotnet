@@ -170,7 +170,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <summary>
         /// Gets the marked-content identifier associated with this
         /// <see cref="ImageRenderInfo"/>
-        /// instance
+        /// instance.
         /// </summary>
         /// <returns>associated marked-content identifier or -1 in case content is unmarked</returns>
         public virtual int GetMcid() {
@@ -183,23 +183,41 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <summary>
-        /// Checks if the text belongs to a marked content sequence
+        /// Checks if this
+        /// <see cref="ImageRenderInfo"/>
+        /// instance is associated with a marked content sequence
         /// with a given mcid.
         /// </summary>
         /// <param name="mcid">a marked content id</param>
-        /// <returns>true if the text is marked with this id</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the image is marked with this id,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasMcid(int mcid) {
             return HasMcid(mcid, false);
         }
 
         /// <summary>
-        /// Checks if the text belongs to a marked content sequence
+        /// Checks if this
+        /// <see cref="ImageRenderInfo"/>
+        /// instance is associated with a marked content sequence
         /// with a given mcid.
         /// </summary>
         /// <param name="mcid">a marked content id</param>
         /// <param name="checkTheTopmostLevelOnly">indicates whether to check the topmost level of marked content stack only
         ///     </param>
-        /// <returns>true if the text is marked with this id</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this
+        /// <see cref="ImageRenderInfo"/>
+        /// instance is marked with this id,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasMcid(int mcid, bool checkTheTopmostLevelOnly) {
             if (checkTheTopmostLevelOnly) {
                 if (canvasTagHierarchy != null) {

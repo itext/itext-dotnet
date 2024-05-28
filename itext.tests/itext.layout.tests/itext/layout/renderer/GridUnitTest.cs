@@ -30,7 +30,7 @@ namespace iText.Layout.Renderer {
     public class GridUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetClosestTopNeighborTest() {
-            Grid grid = new Grid(3, 3, false);
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
             grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
             grid.AddCell(new GridCell(new TextRenderer(new Text("Three"))));
             IRenderer value = new TextRenderer(new Text("Two"));
@@ -43,7 +43,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void GetClosestLeftNeighborTest() {
-            Grid grid = new Grid(3, 3, false);
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
             grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
             IRenderer value = new TextRenderer(new Text("Two"));
             value.SetProperty(Property.GRID_COLUMN_START, 2);
@@ -55,7 +55,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void GetUniqueCellsTest() {
-            Grid grid = new Grid(3, 3, false);
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
             grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
             IRenderer twoRenderer = new TextRenderer(new Text("Two"));
             twoRenderer.SetProperty(Property.GRID_COLUMN_START, 2);
@@ -64,12 +64,12 @@ namespace iText.Layout.Renderer {
             grid.AddCell(cell);
             grid.AddCell(new GridCell(new TextRenderer(new Text("Three"))));
             grid.AddCell(new GridCell(new TextRenderer(new Text("Four"))));
-            NUnit.Framework.Assert.AreEqual(4, grid.GetUniqueGridCells(Grid.ROW_ORDER).Count);
+            NUnit.Framework.Assert.AreEqual(4, grid.GetUniqueGridCells(Grid.GridOrder.ROW).Count);
         }
 
         [NUnit.Framework.Test]
         public virtual void IncreaseRowHeightTest() {
-            Grid grid = new Grid(3, 3, false);
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
             GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
             cell1.SetLayoutArea(new Rectangle(50.0f, 50.0f));
             GridCell cell2 = new GridCell(new TextRenderer(new Text("Two")));
@@ -87,7 +87,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void IncreaseColumnWidthTest() {
-            Grid grid = new Grid(3, 3, false);
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
             GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
             cell1.SetLayoutArea(new Rectangle(100.0f, 50.0f));
             GridCell cell2 = new GridCell(new TextRenderer(new Text("Two")));
@@ -112,7 +112,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void SparsePackingTest() {
-            Grid grid = new Grid(3, 3, false);
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
             GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
             grid.AddCell(cell1);
             IRenderer renderer = new TextRenderer(new Text("Two"));
@@ -138,7 +138,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DensePackingTest() {
-            Grid grid = new Grid(3, 3, true);
+            Grid grid = new Grid(3, 3, GridFlow.ROW_DENSE);
             GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
             grid.AddCell(cell1);
             IRenderer renderer = new TextRenderer(new Text("Two"));
@@ -160,6 +160,110 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[0][3]);
             NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[0][4]);
             NUnit.Framework.Assert.AreEqual(wideCell, grid.GetRows()[1][0]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColumnPackingTest() {
+            Grid grid = new Grid(3, 3, GridFlow.COLUMN);
+            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
+            GridCell cell2 = new GridCell(new TextRenderer(new Text("Two")));
+            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
+            GridCell cell4 = new GridCell(new TextRenderer(new Text("Four")));
+            GridCell cell5 = new GridCell(new TextRenderer(new Text("Five")));
+            GridCell cell6 = new GridCell(new TextRenderer(new Text("Six")));
+            grid.AddCell(cell1);
+            grid.AddCell(cell2);
+            grid.AddCell(cell3);
+            grid.AddCell(cell4);
+            grid.AddCell(cell5);
+            grid.AddCell(cell6);
+            NUnit.Framework.Assert.AreEqual(cell1, grid.GetRows()[0][0]);
+            NUnit.Framework.Assert.AreEqual(cell2, grid.GetRows()[1][0]);
+            NUnit.Framework.Assert.AreEqual(cell3, grid.GetRows()[2][0]);
+            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[0][1]);
+            NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[1][1]);
+            NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[2][1]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColumnWithFixedWideCellPackingTest() {
+            Grid grid = new Grid(3, 3, GridFlow.COLUMN);
+            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
+            IRenderer renderer = new TextRenderer(new Text("Two"));
+            renderer.SetProperty(Property.GRID_COLUMN_START, 1);
+            renderer.SetProperty(Property.GRID_COLUMN_END, 3);
+            GridCell wideCell = new GridCell(renderer);
+            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
+            GridCell cell4 = new GridCell(new TextRenderer(new Text("Four")));
+            GridCell cell5 = new GridCell(new TextRenderer(new Text("Five")));
+            GridCell cell6 = new GridCell(new TextRenderer(new Text("Six")));
+            grid.AddCell(cell1);
+            grid.AddCell(wideCell);
+            grid.AddCell(cell3);
+            grid.AddCell(cell4);
+            grid.AddCell(cell5);
+            grid.AddCell(cell6);
+            NUnit.Framework.Assert.AreEqual(cell1, grid.GetRows()[0][0]);
+            NUnit.Framework.Assert.AreEqual(wideCell, grid.GetRows()[1][0]);
+            NUnit.Framework.Assert.AreEqual(wideCell, grid.GetRows()[1][1]);
+            NUnit.Framework.Assert.AreEqual(cell3, grid.GetRows()[2][0]);
+            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[0][1]);
+            NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[2][1]);
+            NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[0][2]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColumnWithFixedTallCellPackingTest() {
+            Grid grid = new Grid(3, 3, GridFlow.COLUMN);
+            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
+            IRenderer renderer = new TextRenderer(new Text("Two"));
+            renderer.SetProperty(Property.GRID_ROW_START, 2);
+            renderer.SetProperty(Property.GRID_ROW_END, 4);
+            GridCell tallCell = new GridCell(renderer);
+            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
+            GridCell cell4 = new GridCell(new TextRenderer(new Text("Four")));
+            GridCell cell5 = new GridCell(new TextRenderer(new Text("Five")));
+            GridCell cell6 = new GridCell(new TextRenderer(new Text("Six")));
+            grid.AddCell(cell1);
+            grid.AddCell(tallCell);
+            grid.AddCell(cell3);
+            grid.AddCell(cell4);
+            grid.AddCell(cell5);
+            grid.AddCell(cell6);
+            NUnit.Framework.Assert.AreEqual(cell1, grid.GetRows()[0][0]);
+            NUnit.Framework.Assert.AreEqual(tallCell, grid.GetRows()[1][0]);
+            NUnit.Framework.Assert.AreEqual(tallCell, grid.GetRows()[2][0]);
+            NUnit.Framework.Assert.AreEqual(cell3, grid.GetRows()[0][1]);
+            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[1][1]);
+            NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[2][1]);
+            NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[0][2]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColumnWithTallAndWideCellPackingTest() {
+            Grid grid = new Grid(3, 3, GridFlow.COLUMN);
+            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
+            GridCell tallCell = new GridCell(new TextRenderer(new Text("Two")));
+            tallCell.GetGridArea().SetHeight(2);
+            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
+            GridCell cell4 = new GridCell(new TextRenderer(new Text("Four")));
+            cell4.GetGridArea().SetWidth(2);
+            GridCell cell5 = new GridCell(new TextRenderer(new Text("Five")));
+            GridCell cell6 = new GridCell(new TextRenderer(new Text("Six")));
+            grid.AddCell(cell1);
+            grid.AddCell(tallCell);
+            grid.AddCell(cell3);
+            grid.AddCell(cell4);
+            grid.AddCell(cell5);
+            grid.AddCell(cell6);
+            NUnit.Framework.Assert.AreEqual(cell1, grid.GetRows()[0][0]);
+            NUnit.Framework.Assert.AreEqual(tallCell, grid.GetRows()[1][0]);
+            NUnit.Framework.Assert.AreEqual(tallCell, grid.GetRows()[2][0]);
+            NUnit.Framework.Assert.AreEqual(cell3, grid.GetRows()[0][1]);
+            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[1][1]);
+            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[1][2]);
+            NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[2][1]);
+            NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[0][2]);
         }
     }
 }

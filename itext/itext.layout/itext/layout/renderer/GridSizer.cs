@@ -74,11 +74,11 @@ namespace iText.Layout.Renderer {
             // corresponding values of the elements and update auto height/width after calculating each cell layout area
             // and if its changed than re-layout
             //Grid Sizing Algorithm
-            foreach (GridCell cell in grid.GetUniqueGridCells(Grid.COLUMN_ORDER)) {
+            foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.COLUMN)) {
                 cell.GetLayoutArea().SetX(CalculateCellX(cell));
                 cell.GetLayoutArea().SetWidth(CalculateCellWidth(cell));
             }
-            foreach (GridCell cell in grid.GetUniqueGridCells(Grid.ROW_ORDER)) {
+            foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.ROW)) {
                 cell.GetLayoutArea().SetY(CalculateCellY(cell));
                 cell.GetLayoutArea().SetHeight(CalculateCellHeight(cell));
             }
@@ -88,8 +88,24 @@ namespace iText.Layout.Renderer {
         /// <param name="cell">cell to calculate starting position</param>
         /// <returns>left upper corner y value</returns>
         private float CalculateCellY(GridCell cell) {
-            //For y we always know that there is a top neighbor at least in one column (because if not it means there
-            //is a null row) and all cells in a row above have the same top.
+            float y = 0.0f;
+            int currentRow = 0;
+            if (templateRows != null) {
+                for (; currentRow < Math.Min(templateRows.Count, cell.GetRowStart()); ++currentRow) {
+                    y += (float)templateRows[currentRow].GetAbsoluteValue();
+                    y += rowGap;
+                }
+                if (currentRow == cell.GetRowStart()) {
+                    return y;
+                }
+            }
+            if (rowAutoHeight != null) {
+                for (; currentRow < cell.GetRowStart(); ++currentRow) {
+                    y += (float)rowAutoHeight.GetAbsoluteValue();
+                    y += rowGap;
+                }
+                return y;
+            }
             GridCell topNeighbor = grid.GetClosestTopNeighbor(cell);
             if (topNeighbor != null) {
                 return topNeighbor.GetLayoutArea().GetTop() + rowGap;

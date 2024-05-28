@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -140,7 +139,7 @@ namespace iText.Layout.Renderer {
             // area or returns nothing as layout result RootRenderer sets FORCED_PLACEMENT on this class instance.
             // And basically every cell inherits this value and force placed, but we only need to force place cells
             // which were not fitted originally.
-            foreach (GridCell cell in grid.GetUniqueGridCells(Grid.ROW_ORDER)) {
+            foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.ROW)) {
                 //If cell couldn't fit during cell layout area calculation than we need to put such cell straight to
                 //nothing result list
                 if (!cell.IsValueFitOnCellArea()) {
@@ -209,7 +208,6 @@ namespace iText.Layout.Renderer {
             return area;
         }
 
-        //TODO DEVSIX-8330: Probably height also has to be calculated before layout and set into actual bbox
         private void RecalculateHeightAndWidthAfterLayout(Rectangle bBox, bool isFull) {
             float? height = RetrieveHeight();
             if (height != null) {
@@ -224,8 +222,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        //TODO DEVSIX-8330: Consider extracting this method and same from MulticolRenderer to a separate class
-        // or derive GridRenderer and MulticolRenderer from one class which will manage this and isFirstLayout field
         private float UpdateOccupiedHeight(float initialHeight, bool isFull) {
             if (isFull) {
                 initialHeight += SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
@@ -267,40 +263,19 @@ namespace iText.Layout.Renderer {
         // if it is inline-grid, than it won't be needed.
         private static Grid ConstructGrid(iText.Layout.Renderer.GridContainerRenderer renderer, Rectangle actualBBox
             ) {
-            IList<GridValue> templateColumns = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS) 
-                == null ? null : renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS);
-            IList<GridValue> templateRows = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS) == null
-                 ? null : renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS);
-            GridValue columnAutoWidth = renderer.GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS) == null ? null : renderer
-                .GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS);
-            GridValue rowAutoHeight = renderer.GetProperty<GridValue>(Property.GRID_AUTO_ROWS) == null ? null : renderer
-                .GetProperty<GridValue>(Property.GRID_AUTO_ROWS);
+            IList<GridValue> templateColumns = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS);
+            IList<GridValue> templateRows = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS);
+            GridValue columnAutoWidth = renderer.GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS);
+            GridValue rowAutoHeight = renderer.GetProperty<GridValue>(Property.GRID_AUTO_ROWS);
             float? columnGap = renderer.GetProperty<float?>(Property.COLUMN_GAP);
             float? rowGap = renderer.GetProperty<float?>(Property.ROW_GAP);
-            //Grid Item Placement Algorithm
-            int initialRowsCount = templateRows == null ? 1 : templateRows.Count;
-            int initialColumnsCount = templateColumns == null ? 1 : templateColumns.Count;
-            //Sort cells to first position anything that’s not auto-positioned, then process the items locked to a given row.
-            //It would be better to use tree set here, but not using it due to .NET porting issues
-            IList<GridCell> sortedCells = new List<GridCell>();
+            GridFlow flow = renderer.GetProperty<GridFlow?>(Property.GRID_FLOW) == null ? GridFlow.ROW : (GridFlow)(renderer
+                .GetProperty<GridFlow?>(Property.GRID_FLOW));
             foreach (IRenderer child in renderer.GetChildRenderers()) {
-                sortedCells.Add(new GridCell(child));
+                child.SetParent(renderer);
             }
-            JavaCollectionsUtil.Sort(sortedCells, new GridContainerRenderer.CellComparator());
-            //Find a cell with a max column end to ensure it will fit on the grid
-            foreach (GridCell cell in sortedCells) {
-                if (cell != null) {
-                    initialColumnsCount = Math.Max(initialColumnsCount, cell.GetColumnEnd());
-                }
-            }
-            Grid grid = new Grid(initialRowsCount, initialColumnsCount, false);
-            foreach (GridCell cell in sortedCells) {
-                cell.GetValue().SetParent(renderer);
-                grid.AddCell(cell);
-            }
-            //TODO DEVSIX-8325 eliminate null rows/columns
-            // for rows it's easy: grid.getCellsRows().removeIf(row -> row.stream().allMatch(cell -> cell == null));
-            // shrinkNullAxis(grid);
+            Grid grid = Grid.Builder.ForItems(renderer.GetChildRenderers()).Columns(templateColumns == null ? 1 : templateColumns
+                .Count).Rows(templateRows == null ? 1 : templateRows.Count).Flow(flow).Build();
             GridSizer gridSizer = new GridSizer(grid, templateRows, templateColumns, rowAutoHeight, columnAutoWidth, columnGap
                 , rowGap);
             gridSizer.SizeCells();
@@ -335,35 +310,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             grid.SetMinWidth(explicitContainerWidth);
-        }
-
-        /// <summary>
-        /// This comparator sorts cells so ones with both fixed row and column positions would go first,
-        /// then cells with fixed row and then cells without such properties.
-        /// </summary>
-        private sealed class CellComparator : IComparer<GridCell> {
-            public int Compare(GridCell lhs, GridCell rhs) {
-                int lhsModifiers = 0;
-                if (lhs.GetColumnStart() != -1 && lhs.GetRowStart() != -1) {
-                    lhsModifiers = 2;
-                }
-                else {
-                    if (lhs.GetRowStart() != -1) {
-                        lhsModifiers = 1;
-                    }
-                }
-                int rhsModifiers = 0;
-                if (rhs.GetColumnStart() != -1 && rhs.GetRowStart() != -1) {
-                    rhsModifiers = 2;
-                }
-                else {
-                    if (rhs.GetRowStart() != -1) {
-                        rhsModifiers = 1;
-                    }
-                }
-                //passing parameters in reversed order so ones with properties would come first
-                return JavaUtil.IntegerCompare(rhsModifiers, lhsModifiers);
-            }
         }
 
         private sealed class GridLayoutResult {

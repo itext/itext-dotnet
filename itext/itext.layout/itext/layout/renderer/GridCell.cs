@@ -25,6 +25,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+    /// <summary>This class represents a cell in a grid.</summary>
     internal class GridCell {
         private readonly IRenderer value;
 
@@ -83,6 +84,10 @@ namespace iText.Layout.Renderer {
             return layoutArea;
         }
 
+        internal virtual GridCell.IntRectangle GetGridArea() {
+            return gridArea;
+        }
+
         internal virtual void SetLayoutArea(Rectangle layoutArea) {
             this.layoutArea = layoutArea;
         }
@@ -91,9 +96,9 @@ namespace iText.Layout.Renderer {
             isValueFitOnCellArea = valueFitOnCellArea;
         }
 
-        internal virtual void SetStartingRowAndColumn(int row, int column) {
-            this.gridArea.SetY(row);
-            this.gridArea.SetX(column);
+        internal virtual void SetPos(int y, int x) {
+            this.gridArea.SetY(y);
+            this.gridArea.SetX(x);
         }
 
         /// <summary>
@@ -103,7 +108,7 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="start">x/y pos of cell on a grid</param>
         /// <param name="end">x/y + width/height pos of cell on a grid</param>
-        /// <returns/>
+        /// <returns>row/column start/end values as a pair, where first value is start, second is end</returns>
         private int[] InitRowColumnsValues(int? start, int? end) {
             int[] result = new int[] { 0, 0 };
             if (start != null && end != null) {
@@ -129,7 +134,12 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
-        private class IntRectangle {
+        /// <summary>This class represents an integer rectangle.</summary>
+        /// <remarks>
+        /// This class represents an integer rectangle.
+        /// x,y - represents a bottom left corner of this rectangle.
+        /// </remarks>
+        internal class IntRectangle {
             private int x;
 
             private int y;
@@ -175,6 +185,14 @@ namespace iText.Layout.Renderer {
 
             public virtual void SetY(int y) {
                 this.y = y;
+            }
+
+            public virtual void SetWidth(int width) {
+                this.width = width;
+            }
+
+            public virtual void SetHeight(int height) {
+                this.height = height;
             }
 
             public override String ToString() {
