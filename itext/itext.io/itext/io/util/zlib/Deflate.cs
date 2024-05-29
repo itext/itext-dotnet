@@ -1383,7 +1383,7 @@ namespace System.util.zlib {
             pending_buf = new byte[lit_bufsize*4];
             pending_buf_size = lit_bufsize*4;
 
-            d_buf = lit_bufsize/2;
+            d_buf = lit_bufsize;
             l_buf = (1+2)*lit_bufsize;
 
             this.level = level;
