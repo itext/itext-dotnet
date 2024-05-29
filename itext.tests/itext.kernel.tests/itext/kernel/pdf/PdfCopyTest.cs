@@ -324,6 +324,21 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ObjRefAsStreamCopyTest() {
+            String pdf = sourceFolder + "objRefAsStream.pdf";
+            String outPdf = destinationFolder + "objRefAsStreamCopy.pdf";
+            String cmpPdf = sourceFolder + "cmp_objRefAsStreamCopy.pdf";
+            PdfDocument pdfFile = new PdfDocument(new PdfReader(pdf));
+            PdfDocument copiedFile = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
+            copiedFile.SetTagged();
+            pdfFile.CopyPagesTo(1, 1, copiedFile);
+            pdfFile.Close();
+            copiedFile.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CopyDocWithFullDDictionary() {
             String outFileName = destinationFolder + "copyDocWithDDictionary.pdf";
             String cmpFileName = sourceFolder + "cmp_copyDocWithDDictionary.pdf";

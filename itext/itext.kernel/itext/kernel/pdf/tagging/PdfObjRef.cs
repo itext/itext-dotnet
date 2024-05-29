@@ -47,7 +47,13 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual PdfDictionary GetReferencedObject() {
-            return ((PdfDictionary)GetPdfObject()).GetAsDictionary(PdfName.Obj);
+            PdfObject obj = ((PdfDictionary)GetPdfObject()).Get(PdfName.Obj);
+            if (obj is PdfDictionary) {
+                return (PdfDictionary)obj;
+            }
+            else {
+                return null;
+            }
         }
     }
 }

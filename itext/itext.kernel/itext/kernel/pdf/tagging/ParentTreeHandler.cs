@@ -180,8 +180,12 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             else {
                 if (mcr is PdfObjRef) {
-                    PdfDictionary obj = ((PdfDictionary)mcr.GetPdfObject()).GetAsDictionary(PdfName.Obj);
-                    if (obj == null || obj.IsFlushed()) {
+                    PdfObject mcrObj = ((PdfDictionary)mcr.GetPdfObject()).Get(PdfName.Obj);
+                    if (!(mcrObj is PdfDictionary)) {
+                        throw new PdfException(KernelExceptionMessageConstant.INVALID_OBJECT_REFERENCE_TYPE);
+                    }
+                    PdfDictionary obj = (PdfDictionary)mcrObj;
+                    if (obj.IsFlushed()) {
                         throw new PdfException(KernelExceptionMessageConstant.WHEN_ADDING_OBJECT_REFERENCE_TO_THE_TAG_TREE_IT_MUST_BE_CONNECTED_TO_NOT_FLUSHED_OBJECT
                             );
                     }
@@ -236,15 +240,6 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 else {
                     if (mcrToUnregister is PdfObjRef) {
-                        PdfDictionary obj = ((PdfDictionary)mcrToUnregister.GetPdfObject()).GetAsDictionary(PdfName.Obj);
-                        if (obj != null && !obj.IsFlushed()) {
-                            PdfNumber n = obj.GetAsNumber(PdfName.StructParent);
-                            if (n != null) {
-                                pageMcrs.GetObjRefs().JRemove(n.IntValue());
-                                structTreeRoot.SetModified();
-                                return;
-                            }
-                        }
                         foreach (KeyValuePair<int, PdfMcr> entry in pageMcrs.GetObjRefs()) {
                             if (entry.Value.GetPdfObject() == mcrToUnregister.GetPdfObject()) {
                                 pageMcrs.GetObjRefs().JRemove(entry.Key);

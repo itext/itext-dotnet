@@ -330,6 +330,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String INVALID_OFFSET_FOR_THIS_OBJECT = "Invalid offset for object {0}.";
 
+        public const String INVALID_OBJECT_REFERENCE_TYPE = "Object reference has unsupported type, " + "supported types are dictionaries and streams";
+
         public const String INVALID_XREF_STREAM = "Invalid xref stream.";
 
         public const String INVALID_XREF_TABLE = "Invalid xref table.";

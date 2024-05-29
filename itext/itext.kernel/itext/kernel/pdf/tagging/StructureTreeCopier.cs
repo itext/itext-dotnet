@@ -355,13 +355,14 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             else {
                 copied = source.CopyTo(copyingParams.GetToDocument(), ignoreKeysForCopy, true);
-                PdfDictionary obj = source.GetAsDictionary(PdfName.Obj);
-                if (obj != null) {
+                PdfObject obj = source.Get(PdfName.Obj);
+                if (obj is PdfDictionary) {
+                    PdfDictionary objDic = (PdfDictionary)obj;
                     // Link annotations could be not added to the toDocument, so we need to identify this case.
                     // When obj.copyTo is called, and annotation was already copied, we would get this already created copy.
                     // If it was already copied and added, /P key would be set. Otherwise /P won't be set.
-                    obj = obj.CopyTo(copyingParams.GetToDocument(), JavaUtil.ArraysAsList(PdfName.P), false);
-                    copied.Put(PdfName.Obj, obj);
+                    objDic = objDic.CopyTo(copyingParams.GetToDocument(), JavaUtil.ArraysAsList(PdfName.P), false);
+                    copied.Put(PdfName.Obj, objDic);
                 }
                 PdfDictionary nsDict = source.GetAsDictionary(PdfName.NS);
                 if (nsDict != null) {
@@ -456,7 +457,7 @@ namespace iText.Kernel.Pdf.Tagging {
                             PdfMcr mcr;
                             if (copiedKid.ContainsKey(PdfName.Obj)) {
                                 mcr = new PdfObjRef(copiedKid, new PdfStructElem(copiedParent));
-                                PdfDictionary contentItemObject = copiedKid.GetAsDictionary(PdfName.Obj);
+                                PdfDictionary contentItemObject = (PdfDictionary)copiedKid.Get(PdfName.Obj);
                                 if (PdfName.Link.Equals(contentItemObject.GetAsName(PdfName.Subtype)) && !contentItemObject.ContainsKey(PdfName
                                     .P)) {
                                     // Some link annotations may be not copied, because their destination page is not copied.

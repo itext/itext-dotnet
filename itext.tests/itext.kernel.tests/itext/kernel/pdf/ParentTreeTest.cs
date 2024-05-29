@@ -310,6 +310,38 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ObjRefAsStreamTest() {
+            String pdf = sourceFolder + "objRefAsStream.pdf";
+            String outPdf = destinationFolder + "objRefAsStream.pdf";
+            String cmpPdf = sourceFolder + "cmp_objRefAsStream.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        public virtual void ObjRefAsInvalidType() {
+            String pdf = sourceFolder + "objRefAsInvalidType.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(pdf));
+            NUnit.Framework.Assert.IsNull(doc.GetStructTreeRoot());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnregisterObjRefAsStreamTest() {
+            String pdf = sourceFolder + "objRefAsStream.pdf";
+            String outPdf = destinationFolder + "objRefAsStreamUnregisterMcr.pdf";
+            String cmpPdf = sourceFolder + "cmp_objRefAsStreamUnregisterMcr.pdf";
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
+            PdfStructElem elem = (PdfStructElem)taggedPdf.GetStructTreeRoot().GetKids()[0].GetKids()[0];
+            elem.RemoveKid(0);
+            taggedPdf.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED, Count = 4)]
         public virtual void AllObjRefDontHaveStructParentTest() {
             String pdf = sourceFolder + "allObjRefDontHaveStructParent.pdf";
