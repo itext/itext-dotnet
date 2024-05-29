@@ -463,6 +463,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(GridValue.CreateUnitValue(new UnitValue(UnitValue.POINT, 100.0f)));
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
+                grid.SetBackgroundColor(ColorConstants.GREEN);
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph paragraph1 = new Paragraph("One");

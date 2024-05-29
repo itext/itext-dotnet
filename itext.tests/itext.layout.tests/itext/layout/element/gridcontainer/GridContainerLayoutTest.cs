@@ -31,8 +31,10 @@ using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Element.Gridcontainer {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -156,23 +158,38 @@ namespace iText.Layout.Element.Gridcontainer {
                 , DESTINATION_FOLDER, "diff"));
         }
 
-        private GridContainer CreateGridBoxWithSizedDiv() {
-            GridContainer gridcontainer0 = new GridContainer();
-            gridcontainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
-            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList(new UnitValue(1, 150.0f), 
-                new UnitValue(1, 150.0f), new UnitValue(1, 150.0f)));
-            gridcontainer0.SetProperty(Property.COLUMN_GAP, 12.0f);
-            gridcontainer0.SetBackgroundColor(ColorConstants.RED);
-            for (int i = 0; i < 4; i++) {
-                Div div1 = new Div();
-                div1.SetBackgroundColor(ColorConstants.YELLOW);
-                div1.SetHeight(20);
-                div1.SetWidth(30);
-                div1.SetProperty(Property.COLUMN_GAP_BORDER, null);
-                div1.SetProperty(Property.COLUMN_GAP, 12.0f);
-                gridcontainer0.Add(div1);
-            }
-            return gridcontainer0;
+        // TODO DEVSIX-8340
+        [NUnit.Framework.Test]
+        public virtual void OverflowGridContainerTest() {
+            String fileName = DESTINATION_FOLDER + "overflowGridContainer.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            Document document = new Document(pdfDocument);
+            GridContainer gridcontainer0 = CreateGridBoxWithText();
+            gridcontainer0.SetBackgroundColor(ColorConstants.MAGENTA);
+            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_ROWS, JavaUtil.ArraysAsList(GridValue.CreateUnitValue(new 
+                UnitValue(1, 500.0f)), GridValue.CreateUnitValue(new UnitValue(1, 500.0f)), GridValue.CreateUnitValue(
+                new UnitValue(1, 500.0f))));
+            gridcontainer0.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"
+                )).SetHeight(150));
+            document.Add(gridcontainer0);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, SOURCE_FOLDER + "cmp_overflowGridContainer.pdf"
+                , DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
+        public virtual void NothingResultTest() {
+            String fileName = DESTINATION_FOLDER + "nothingResult.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            Document document = new Document(pdfDocument);
+            GridContainer gridcontainer = new GridContainer();
+            gridcontainer.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"
+                )).SetHeight(1200));
+            document.Add(gridcontainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, SOURCE_FOLDER + "cmp_nothingResult.pdf"
+                , DESTINATION_FOLDER, "diff"));
         }
 
         private GridContainer CreateGridBoxWithText() {

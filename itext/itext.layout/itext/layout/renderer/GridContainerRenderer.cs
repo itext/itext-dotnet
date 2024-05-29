@@ -67,18 +67,12 @@ namespace iText.Layout.Renderer {
             ApplyMargins(actualBBox, false);
             Grid grid = ConstructGrid(this, actualBBox);
             GridContainerRenderer.GridLayoutResult layoutResult = LayoutGrid(layoutContext, actualBBox, grid);
-            //TODO DEVSIX-8329 improve nothing processing, consider checking for cause of nothing here?
-            //TODO DEVSIX-8329 improve forced placement logic
-            if (layoutResult.GetOverflowRenderers().IsEmpty() && layoutResult.GetSplitRenderers().IsEmpty()) {
+            if (layoutResult.GetOverflowRenderers().IsEmpty()) {
                 this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
                 return new LayoutResult(LayoutResult.FULL, this.occupiedArea, null, null);
             }
             else {
                 if (layoutResult.GetSplitRenderers().IsEmpty()) {
-                    if (true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
-                        this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
-                        return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
-                    }
                     IRenderer cause = this;
                     if (!layoutResult.GetCauseOfNothing().IsEmpty()) {
                         cause = layoutResult.GetCauseOfNothing()[0];
@@ -86,24 +80,18 @@ namespace iText.Layout.Renderer {
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, cause);
                 }
                 else {
-                    if (layoutResult.GetOverflowRenderers().IsEmpty()) {
-                        ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
-                            );
-                        if (continuousContainer != null) {
-                            continuousContainer.ReApplyProperties(this);
-                        }
-                        this.childRenderers.Clear();
-                        this.AddAllChildRenderers(layoutResult.GetSplitRenderers());
-                        this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
-                        return new LayoutResult(LayoutResult.FULL, this.occupiedArea, this, null);
-                    }
-                    else {
-                        this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, false);
-                        return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
-                            ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
-                    }
+                    this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, false);
+                    return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
+                        ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
                 }
             }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void AddChild(IRenderer renderer) {
+            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            renderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+            base.AddChild(renderer);
         }
 
         private AbstractRenderer CreateSplitRenderer(IList<IRenderer> children) {
@@ -119,6 +107,7 @@ namespace iText.Layout.Renderer {
         }
 
         private AbstractRenderer CreateOverflowRenderer(IList<IRenderer> children) {
+            // TODO DEVSIX-8340 - We put the original amount of rows into overflow container.
             iText.Layout.Renderer.GridContainerRenderer overflowRenderer = (iText.Layout.Renderer.GridContainerRenderer
                 )GetNextRenderer();
             overflowRenderer.isFirstLayout = false;
@@ -135,29 +124,33 @@ namespace iText.Layout.Renderer {
             , Grid grid) {
             GridContainerRenderer.GridLayoutResult layoutResult = new GridContainerRenderer.GridLayoutResult();
             EnsureTemplateValuesFit(grid, actualBBox);
-            //TODO DEVSIX-8329 improve forced placement logic, right now if we have a cell which could not be fitted on its
-            // area or returns nothing as layout result RootRenderer sets FORCED_PLACEMENT on this class instance.
-            // And basically every cell inherits this value and force placed, but we only need to force place cells
-            // which were not fitted originally.
             foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.ROW)) {
-                //If cell couldn't fit during cell layout area calculation than we need to put such cell straight to
-                //nothing result list
-                if (!cell.IsValueFitOnCellArea()) {
-                    layoutResult.GetOverflowRenderers().Add(cell.GetValue());
-                    layoutResult.GetCauseOfNothing().Add(cell.GetValue());
-                    continue;
-                }
-                //Calculate cell layout context by getting actual x and y on parent layout area for it
+                // Calculate cell layout context by getting actual x and y on parent layout area for it
                 LayoutContext cellContext = GetCellLayoutContext(layoutContext, actualBBox, cell);
-                //We need to check for forced placement here, because otherwise we would infinitely return partial result.
-                if (!true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT)) && !actualBBox.Contains(cellContext.GetArea
-                    ().GetBBox())) {
-                    layoutResult.GetOverflowRenderers().Add(cell.GetValue());
-                    continue;
-                }
                 IRenderer cellToRender = cell.GetValue();
-                cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA, true);
                 cellToRender.SetProperty(Property.COLLAPSING_MARGINS, false);
+                // Now set the height for the individual items
+                // We know cell height upfront and this way we tell the element what it can occupy
+                Rectangle cellBBox = cellContext.GetArea().GetBBox();
+                if (!cellToRender.HasProperty(Property.HEIGHT)) {
+                    Rectangle rectangleWithoutBordersMarginsPaddings = cellBBox.Clone();
+                    if (cellToRender is AbstractRenderer) {
+                        AbstractRenderer abstractCellRenderer = ((AbstractRenderer)cellToRender);
+                        // We subtract margins/borders/paddings because we should take into account that
+                        // borders/paddings/margins should also fit into a cell.
+                        if (AbstractRenderer.IsBorderBoxSizing(cellToRender)) {
+                            abstractCellRenderer.ApplyMargins(rectangleWithoutBordersMarginsPaddings, false);
+                        }
+                        else {
+                            abstractCellRenderer.ApplyMarginsBordersPaddings(rectangleWithoutBordersMarginsPaddings, false);
+                        }
+                    }
+                    cellToRender.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
+                        .GetHeight()));
+                }
+                // Adjust cell BBox to the remaining part of the layout bbox
+                // This way we can layout elements partially
+                cellBBox.SetHeight(cellBBox.GetTop() - actualBBox.GetBottom()).SetY(actualBBox.GetY());
                 LayoutResult cellResult = cellToRender.Layout(cellContext);
                 if (cellResult.GetStatus() == LayoutResult.NOTHING) {
                     layoutResult.GetOverflowRenderers().Add(cellToRender);
