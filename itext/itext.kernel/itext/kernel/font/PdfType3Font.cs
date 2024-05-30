@@ -432,6 +432,7 @@ namespace iText.Kernel.Font {
                 catch (Exception) {
                 }
             }
+            /*ignored*/
             foreach (PdfName glyphName in charProcsDic.KeySet()) {
                 int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
                 int code = -1;

@@ -57,8 +57,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_75 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_75() {
+        private sealed class _ContentProvider_77 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_77() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_75();
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_77();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -242,12 +242,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_376());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_378());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_376 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_376() {
+        private sealed class _ContentProvider_378 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_378() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -855,6 +855,58 @@ namespace iText.Kernel.Pdf.Canvas {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanvasStreamFlushedNoException() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfStream stream = new _PdfStream_1112();
+            stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                new PdfCanvas(stream, new PdfResources(), doc);
+            }
+            );
+        }
+
+        private sealed class _PdfStream_1112 : PdfStream {
+            public _PdfStream_1112() {
+                this.isFlushed = false;
+            }
+
+            private bool isFlushed;
+
+            public override bool IsFlushed() {
+                System.Console.Out.WriteLine("isFlushed: " + this.isFlushed);
+                if (this.isFlushed) {
+                    return true;
+                }
+                this.isFlushed = true;
+                return false;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
+            String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
+            ReaderProperties properties = new ReaderProperties();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1135();
+            handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
+            properties.SetMemoryLimitsAwareHandler(handler);
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
+            PdfPage page = document.GetPage(1);
+            NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => {
+                new PdfCanvas(page.GetLastContentStream(), page.GetResources(), page.GetDocument());
+            }
+            );
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_1135 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1135() {
+            }
+
+            public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
+                return true;
+            }
         }
 
         [NUnit.Framework.Test]

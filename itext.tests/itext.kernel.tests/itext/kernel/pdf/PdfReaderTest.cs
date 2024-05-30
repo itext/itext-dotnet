@@ -2497,6 +2497,30 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(PdfObject.STREAM, pdfDoc.GetPdfObject(5).GetObjectType());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void InitTagTreeStructureThrowsOOMIsCatched() {
+            FileInfo file = new FileInfo(SOURCE_FOLDER + "big_table_lot_of_mcrs.pdf");
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2822();
+            memoryLimitsAwareHandler.SetMaxSizeOfDecompressedPdfStreamsSum(100000);
+            NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => {
+                using (PdfReader reader = new PdfReader(file, new ReaderProperties().SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler
+                    ))) {
+                    using (PdfDocument document = new PdfDocument(reader)) {
+                    }
+                }
+            }
+            );
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_2822 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_2822() {
+            }
+
+            public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
+                return true;
+            }
+        }
+
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("b"), new PdfName("c"));

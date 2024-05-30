@@ -144,6 +144,14 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CompareXmpThrows() {
+            CompareTool compareTool = new CompareTool();
+            String outPdf = sourceFolder + "simple_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
+            NUnit.Framework.Assert.AreEqual("XMP parsing failure!", compareTool.CompareXmp(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GsEnvironmentVariableSpecifiedIncorrectlyTest() {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
@@ -252,7 +260,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T1233382286(this);
+            CompareTool compareTool = new _T1689272844(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -265,12 +273,12 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        internal class _T1233382286 : CompareTool {
+        internal class _T1689272844 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T1233382286(CompareToolTest _enclosing) {
+            internal _T1689272844(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

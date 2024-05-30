@@ -438,6 +438,7 @@ namespace iText.Kernel.Pdf {
                 catch (Exception) {
                 }
             }
+            // ignored
             return bytes;
         }
 
@@ -1465,6 +1466,9 @@ namespace iText.Kernel.Pdf {
             try {
                 PdfDictionary dic = (PdfDictionary)ReadObject(false);
                 return dic.Get(PdfName.Root, false) != null;
+            }
+            catch (MemoryLimitsAwareException e) {
+                throw;
             }
             catch (Exception) {
                 return false;

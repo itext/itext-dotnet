@@ -476,6 +476,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        //ignored
         [NUnit.Framework.Test]
         public virtual void CloseStream2() {
             FileStream fos = new FileStream(destinationFolder + "closeStream2.pdf", FileMode.Create);

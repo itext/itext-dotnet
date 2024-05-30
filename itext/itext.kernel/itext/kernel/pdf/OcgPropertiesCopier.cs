@@ -59,9 +59,9 @@ namespace iText.Kernel.Pdf {
                 iText.Kernel.Pdf.OcgPropertiesCopier.CopyDDictionary(fromOcgsToCopy, fromOcProperties.GetAsDictionary(PdfName
                     .D), toOcProperties, toDocument);
             }
-            catch (Exception ex) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, ex.ToString
-                    ()));
+            catch (Exception e) {
+                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, e.ToString(
+                    )));
             }
         }
 

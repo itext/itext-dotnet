@@ -1623,9 +1623,9 @@ namespace iText.Kernel.Pdf {
                 }
                 GetDocument().GetStructTreeRoot().SavePageStructParentIndexIfNeeded(this);
             }
-            catch (Exception ex) {
+            catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_FLUSHING_FAILED_IT_MIGHT_BE_CORRUPTED, 
-                    ex);
+                    e);
             }
         }
 

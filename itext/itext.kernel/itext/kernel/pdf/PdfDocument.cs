@@ -1263,9 +1263,9 @@ namespace iText.Kernel.Pdf {
                         }
                         toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
                     }
-                    catch (Exception ex) {
+                    catch (Exception e) {
                         throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_COPYING_FAILED_IT_MIGHT_BE_CORRUPTED_IN_ONE_OF_THE_DOCUMENTS
-                            , ex);
+                            , e);
                     }
                     if (copier is IPdfPageFormCopier) {
                         ((IPdfPageFormCopier)copier).RecreateAcroformToProcessCopiedFields(toDocument);
@@ -2386,11 +2386,14 @@ namespace iText.Kernel.Pdf {
                 structTreeRoot = new PdfStructTreeRoot(str, this);
                 structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
             }
-            catch (Exception ex) {
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception e) {
                 structTreeRoot = null;
                 structParentIndex = -1;
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
+                logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
             }
         }
 
@@ -2421,9 +2424,12 @@ namespace iText.Kernel.Pdf {
                     structTreeRoot.Flush();
                 }
             }
-            catch (Exception ex) {
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_FLUSHING_FAILED_IT_MIGHT_BE_CORRUPTED, 
-                    ex);
+                    e);
             }
         }
 
