@@ -49,7 +49,7 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String DOCUMENT_IS_NOT_COVERED = "Signature {0} doesn't cover entire document.";
 
-        internal const String CANNOT_VERIFY_TIMESTAMP = "Signature timestamp attribute cannot be verified";
+        internal const String CANNOT_VERIFY_TIMESTAMP = "Signature timestamp attribute cannot be verified.";
 
         internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
 
@@ -63,7 +63,7 @@ namespace iText.Signatures.Validation.V1 {
 
         private readonly SignatureValidationProperties properties;
 
-        private DateTime lastKnownPoE = (DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE;
+        private DateTime lastKnownPoE = DateTimeUtil.GetCurrentUtcTime();
 
         /// <summary>
         /// Create new instance of
@@ -127,7 +127,6 @@ namespace iText.Signatures.Validation.V1 {
                 return ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), pkcs7.GetCertificates(), pkcs7
                     .GetSigningCertificate());
             }
-            DateTime signingDate = DateTimeUtil.GetCurrentUtcTime();
             if (pkcs7.GetTimeStampTokenInfo() != null) {
                 try {
                     if (!pkcs7.VerifyTimestampImprint()) {
@@ -142,18 +141,31 @@ namespace iText.Signatures.Validation.V1 {
                 if (StopValidation(validationReport, baseValidationContext)) {
                     return validationReport;
                 }
-                IX509Certificate[] timestampCertificates = pkcs7.GetTimestampCertificates();
-                ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), timestampCertificates, (IX509Certificate
-                    )timestampCertificates[0]);
+                PdfPKCS7 timestampSignatureContainer = pkcs7.GetTimestampSignatureContainer();
+                try {
+                    if (!timestampSignatureContainer.VerifySignatureIntegrityAndAuthenticity()) {
+                        validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ReportItem.ReportItemStatus
+                            .INVALID));
+                    }
+                }
+                catch (AbstractGeneralSecurityException e) {
+                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
+                        .INVALID));
+                }
                 if (StopValidation(validationReport, baseValidationContext)) {
                     return validationReport;
                 }
-                signingDate = pkcs7.GetTimeStampDate().ToUniversalTime();
+                IX509Certificate[] timestampCertificates = timestampSignatureContainer.GetCertificates();
+                ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), timestampCertificates, timestampSignatureContainer
+                    .GetSigningCertificate());
+                if (StopValidation(validationReport, baseValidationContext)) {
+                    return validationReport;
+                }
             }
             IX509Certificate[] certificates = pkcs7.GetCertificates();
             certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificates));
             IX509Certificate signingCertificate = pkcs7.GetSigningCertificate();
-            return certificateChainValidator.Validate(validationReport, baseValidationContext, signingCertificate, signingDate
+            return certificateChainValidator.Validate(validationReport, baseValidationContext, signingCertificate, lastKnownPoE
                 );
         }
 
@@ -184,13 +196,9 @@ namespace iText.Signatures.Validation.V1 {
         private ValidationReport ValidateTimestampChain(ValidationReport validationReport, ITstInfo timeStampTokenInfo
             , IX509Certificate[] knownCerts, IX509Certificate signingCert) {
             certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
-            DateTime signingDate = lastKnownPoE;
-            if (signingDate == TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
-                signingDate = DateTimeUtil.GetCurrentUtcTime();
-            }
             ValidationReport tsValidationReport = new ValidationReport();
             certificateChainValidator.Validate(tsValidationReport, baseValidationContext.SetCertificateSource(CertificateSource
-                .TIMESTAMP), signingCert, signingDate);
+                .TIMESTAMP), signingCert, lastKnownPoE);
             validationReport.Merge(tsValidationReport);
             if (tsValidationReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
                 try {

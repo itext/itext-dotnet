@@ -175,6 +175,39 @@ namespace iText.Signatures.Validation.V1 {
                 ) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ValidateMultipleSignaturesUsingLastKnownPoETest() {
+            String trustedCertsFileName = CERTS_SRC + "trustedCerts.pem";
+            IX509Certificate[] trustedCerts = PemFileHelper.ReadFirstChain(trustedCertsFileName);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureSigningCertExpired.pdf"
+                ))) {
+                SignatureValidator signatureValidator = new ValidatorChainBuilder().WithTrustedCertificates(JavaUtil.ArraysAsList
+                    (trustedCerts)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator
+                    ();
+                ValidationReport report = signatureValidator.ValidateSignatures(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                    (4).HasNumberOfFailures(0).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                    ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "timestampSig1")).HasLogItem((l) =>
+                     l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
+                    , (p) => "Signature1")));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StopAfterTimestampChainValidationFailureTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDocWithTimestamp.pdf"))) {
+                SignatureValidator signatureValidator = new ValidatorChainBuilder().WithSignatureValidationProperties(new 
+                    SignatureValidationProperties().SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All
+                    (), false)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateSignatures(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                    ).HasNumberOfLogs(2).HasNumberOfFailures(1).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                    ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItem((l) => l.
+                    WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE
+                    )));
+            }
+        }
+
         private void AddRevDataClients() {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             String privateKeyName = CERTS_SRC + "rootCertKey.pem";
