@@ -26,73 +26,100 @@ namespace iText.Layout.Properties {
     /// grid-auto-columns/rows properties and the type it is measured in.
     /// </summary>
     public class GridValue {
-        /// <summary>The type of the value.</summary>
-        private GridValue.GridValueType type;
+        private static readonly iText.Layout.Properties.GridValue MIN_CONTENT_VALUE = new iText.Layout.Properties.GridValue
+            (GridValue.SizingValueType.MIN_CONTENT);
 
-        /// <summary>The flexible value.</summary>
-        private float? flex;
+        private static readonly iText.Layout.Properties.GridValue MAX_CONTENT_VALUE = new iText.Layout.Properties.GridValue
+            (GridValue.SizingValueType.MAX_CONTENT);
 
-        /// <summary>The sizing value.</summary>
-        private SizingValue sizingValue;
+        private static readonly iText.Layout.Properties.GridValue AUTO_VALUE = new iText.Layout.Properties.GridValue
+            (GridValue.SizingValueType.AUTO);
 
-        /// <summary>
-        /// Creates a new empty instance of
-        /// <see cref="GridValue"/>
-        /// class.
-        /// </summary>
+        private GridValue.SizingValueType type;
+
+        private float? value;
+
         private GridValue() {
         }
 
-        // do nothing
+        // Do nothing
+        private GridValue(GridValue.SizingValueType type) {
+            this.type = type;
+        }
+
         /// <summary>
         /// Creates an instance of
         /// <see cref="GridValue"/>
-        /// with
-        /// <see cref="SizingValue"/>
-        /// value.
+        /// with point value.
         /// </summary>
-        /// <param name="sizingValue">the sizing value</param>
+        /// <param name="value">the point value</param>
         /// <returns>the grid value instance</returns>
-        public static iText.Layout.Properties.GridValue CreateSizeValue(SizingValue sizingValue) {
+        public static iText.Layout.Properties.GridValue CreatePointValue(float value) {
             iText.Layout.Properties.GridValue result = new iText.Layout.Properties.GridValue();
-            result.sizingValue = sizingValue;
-            result.type = GridValue.GridValueType.SIZING;
+            result.type = GridValue.SizingValueType.POINT;
+            result.value = value;
             return result;
         }
 
         /// <summary>
         /// Creates an instance of
         /// <see cref="GridValue"/>
-        /// with
-        /// <see cref="UnitValue"/>
-        /// inside of
-        /// <see cref="SizingValue"/>
-        /// value.
+        /// with percent value.
         /// </summary>
-        /// <param name="unitValue">the unit value</param>
+        /// <param name="value">the percent value</param>
         /// <returns>the grid value instance</returns>
-        public static iText.Layout.Properties.GridValue CreateUnitValue(UnitValue unitValue) {
+        public static iText.Layout.Properties.GridValue CreatePercentValue(float value) {
             iText.Layout.Properties.GridValue result = new iText.Layout.Properties.GridValue();
-            result.sizingValue = SizingValue.CreateUnitValue(unitValue);
-            result.type = GridValue.GridValueType.SIZING;
+            result.type = GridValue.SizingValueType.PERCENT;
+            result.value = value;
             return result;
         }
 
         /// <summary>
         /// Creates an instance of
         /// <see cref="GridValue"/>
-        /// with flex value.
+        /// with min-content value.
         /// </summary>
-        /// <param name="flex">the flex value</param>
         /// <returns>the grid value instance</returns>
-        public static iText.Layout.Properties.GridValue CreateFlexValue(float flex) {
+        public static iText.Layout.Properties.GridValue CreateMinContentValue() {
+            return MIN_CONTENT_VALUE;
+        }
+
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="GridValue"/>
+        /// with max-content value.
+        /// </summary>
+        /// <returns>the grid value instance</returns>
+        public static iText.Layout.Properties.GridValue CreateMaxContentValue() {
+            return MAX_CONTENT_VALUE;
+        }
+
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="GridValue"/>
+        /// with auto value.
+        /// </summary>
+        /// <returns>the grid value instance</returns>
+        public static iText.Layout.Properties.GridValue CreateAutoValue() {
+            return AUTO_VALUE;
+        }
+
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="GridValue"/>
+        /// with flexible value.
+        /// </summary>
+        /// <param name="value">the flexible value</param>
+        /// <returns>the grid value instance</returns>
+        public static iText.Layout.Properties.GridValue CreateFlexValue(float value) {
             iText.Layout.Properties.GridValue result = new iText.Layout.Properties.GridValue();
-            result.flex = flex;
-            result.type = GridValue.GridValueType.FLEX;
+            result.type = GridValue.SizingValueType.FLEX;
+            result.value = value;
             return result;
         }
 
-        /// <summary>Checks whether the value is  absolute.</summary>
+        /// <summary>Checks whether the value is absolute.</summary>
         /// <returns>
         /// 
         /// <see langword="true"/>
@@ -100,59 +127,94 @@ namespace iText.Layout.Properties {
         /// <see langword="false"/>
         /// otherwise
         /// </returns>
-        public virtual bool IsAbsoluteValue() {
-            return type == GridValue.GridValueType.SIZING && sizingValue.IsAbsoluteValue();
+        public virtual bool IsPointValue() {
+            return type == GridValue.SizingValueType.POINT;
         }
 
-        /// <summary>Gets absolute value, if exists.</summary>
+        /// <summary>Checks whether the value is percent.</summary>
         /// <returns>
-        /// absolute value, or
-        /// <see langword="null"/>
-        /// if value is relative
+        /// 
+        /// <see langword="true"/>
+        /// if percent,
+        /// <see langword="false"/>
+        /// otherwise
         /// </returns>
-        public virtual float? GetAbsoluteValue() {
-            if (IsAbsoluteValue()) {
-                return sizingValue.GetAbsoluteValue();
-            }
-            return null;
+        public virtual bool IsPercentValue() {
+            return type == GridValue.SizingValueType.PERCENT;
         }
 
-        /// <summary>Gets type of value.</summary>
-        /// <returns>the type of the value</returns>
-        public virtual GridValue.GridValueType GetType() {
-            return type;
-        }
-
-        /// <summary>Gets the flex value.</summary>
+        /// <summary>Checks whether the value is auto.</summary>
         /// <returns>
-        /// the flex value of
-        /// <see langword="null"/>
-        /// if another value type is stored
+        /// 
+        /// <see langword="true"/>
+        /// if auto,
+        /// <see langword="false"/>
+        /// otherwise
         /// </returns>
-        public virtual float? GetFlexValue() {
-            return flex;
+        public virtual bool IsAutoValue() {
+            return type == GridValue.SizingValueType.AUTO;
         }
 
-        /// <summary>Gets the sizing value.</summary>
+        /// <summary>Checks whether the value is min-content.</summary>
         /// <returns>
-        /// the instance of
-        /// <see cref="SizingValue"/>
-        /// or
-        /// <see langword="null"/>
-        /// if another value type is stored
+        /// 
+        /// <see langword="true"/>
+        /// if min-content,
+        /// <see langword="false"/>
+        /// otherwise
         /// </returns>
-        public virtual SizingValue GetSizingValue() {
-            return sizingValue;
+        public virtual bool IsMinContentValue() {
+            return type == GridValue.SizingValueType.MIN_CONTENT;
         }
 
-        /// <summary>Enum of grid value types.</summary>
-        public enum GridValueType {
-            /// <summary>
-            /// Type which presents
-            /// <see cref="SizingValue"/>
-            /// value.
-            /// </summary>
-            SIZING,
+        /// <summary>Checks whether the value is max-content.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if max-content,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsMaxContentValue() {
+            return type == GridValue.SizingValueType.MAX_CONTENT;
+        }
+
+        /// <summary>Checks whether the value is flexible.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if flexible,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsFlexibleValue() {
+            return type == GridValue.SizingValueType.FLEX;
+        }
+
+        /// <summary>Gets value, if exists.</summary>
+        /// <returns>
+        /// the value, or
+        /// <see langword="null"/>
+        /// if there is no value
+        /// </returns>
+        public virtual float? GetValue() {
+            return value;
+        }
+
+        /// <summary>Enum of sizing value types.</summary>
+        private enum SizingValueType {
+            /// <summary>Type which presents absolute point value.</summary>
+            POINT,
+            /// <summary>Type which presents relative percent value.</summary>
+            PERCENT,
+            /// <summary>Type which presents relative auto value.</summary>
+            AUTO,
+            /// <summary>Type which presents relative min content value.</summary>
+            MIN_CONTENT,
+            /// <summary>Type which presents relative max content value.</summary>
+            MAX_CONTENT,
+            /// <summary>Type which presents relative fit content function value.</summary>
+            FIT_CONTENT,
             /// <summary>Type which presents relative flexible value.</summary>
             FLEX
         }

@@ -42,8 +42,6 @@ namespace iText.Layout.Renderer {
 
         private float minHeight = 0.0f;
 
-        private float minWidth = 0.0f;
-
         /// <summary>Creates a new grid instance.</summary>
         /// <param name="initialRowsCount">initial number of row for the grid</param>
         /// <param name="initialColumnsCount">initial number of columns for the grid</param>
@@ -59,8 +57,8 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <returns>resulting layout height of a grid.</returns>
         internal virtual float GetHeight() {
-            for (int i = rows.Length - 1; i >= 0; --i) {
-                for (int j = 0; j < rows[0].Length; ++j) {
+            for (int i = GetNumberOfRows() - 1; i >= 0; --i) {
+                for (int j = 0; j < GetNumberOfColumns(); ++j) {
                     if (rows[i][j] != null) {
                         return Math.Max(rows[i][j].GetLayoutArea().GetTop(), minHeight);
                     }
@@ -69,81 +67,50 @@ namespace iText.Layout.Renderer {
             return minHeight;
         }
 
-        /// <summary>Get min width of the grid, which is size of the grid covered by absolute template values.</summary>
-        /// <returns>min width of a grid.</returns>
-        internal virtual float GetMinWidth() {
-            return minWidth;
-        }
-
         /// <summary>Get internal matrix of cells.</summary>
         /// <returns>matrix of cells.</returns>
         internal virtual GridCell[][] GetRows() {
             return rows;
         }
 
-        /// <summary>Get any cell adjacent to the left of a given cell.</summary>
-        /// <remarks>
-        /// Get any cell adjacent to the left of a given cell.
-        /// If there is no a direct neighbor to the left, and other adjacent cells are wide cells and their column end
-        /// is bigger than the column start of a given cell, method will still return such a neighbor, though it's not
-        /// actually a neighbor to the left. But if there will be a neighbor before column start of such a cell method will
-        /// return such a neighbor.
-        /// </remarks>
-        /// <param name="value">cell for which to find a neighbor</param>
-        /// <returns>adjacent cell to the left if found one, null otherwise</returns>
-        internal virtual GridCell GetClosestLeftNeighbor(GridCell value) {
-            int x = value.GetColumnStart();
-            GridCell bigNeighbor = null;
-            for (int i = 1; i <= x; ++i) {
-                for (int j = 0; j < rows.Length; ++j) {
-                    if (rows[j][x - i] != null) {
-                        if (rows[j][x - i].GetColumnEnd() > x) {
-                            bigNeighbor = rows[j][x - i];
-                            continue;
-                        }
-                        return rows[j][x - i];
-                    }
-                }
-                if (bigNeighbor != null && bigNeighbor.GetColumnStart() == x - i) {
-                    return bigNeighbor;
-                }
-            }
-            return null;
+        /// <summary>Gets the current number of rows of grid.</summary>
+        /// <returns>the number of rows</returns>
+        internal virtual int GetNumberOfRows() {
+            return rows.Length;
+        }
+
+        /// <summary>Gets the current number of rows of grid.</summary>
+        /// <returns>the number of columns</returns>
+        internal virtual int GetNumberOfColumns() {
+            return rows[0].Length;
         }
 
         /// <summary>
-        /// Get any cell adjacent to the top of a given cell
-        /// If there is no a direct neighbor to the top, and other adjacent cells are tall cells and their row end
-        /// is bigger than the row start of a given cell, method will still return such a neighbor, though it's not
-        /// actually a neighbor to the top.
+        /// Gets unique cells in the specified row or column depends on passed
+        /// <see cref="GridOrder"/>.
         /// </summary>
-        /// <remarks>
-        /// Get any cell adjacent to the top of a given cell
-        /// If there is no a direct neighbor to the top, and other adjacent cells are tall cells and their row end
-        /// is bigger than the row start of a given cell, method will still return such a neighbor, though it's not
-        /// actually a neighbor to the top. But if there will be a neighbor before row start of such a cell method will
-        /// return such a neighbor.
-        /// </remarks>
-        /// <param name="value">cell for which to find a neighbor</param>
-        /// <returns>adjacent cell to the top if found one, null otherwise</returns>
-        internal virtual GridCell GetClosestTopNeighbor(GridCell value) {
-            int y = value.GetRowStart();
-            GridCell bigNeighbor = null;
-            for (int i = 1; i <= y; ++i) {
-                for (int j = 0; j < rows[0].Length; ++j) {
-                    if (rows[y - i][j] != null) {
-                        if (rows[y - i][j].GetRowEnd() > y) {
-                            bigNeighbor = rows[y - i][j];
-                            continue;
-                        }
-                        return rows[y - i][j];
+        /// <param name="order">the order which will be used to extract cells</param>
+        /// <param name="trackIndex">the track index from which cells will be extracted</param>
+        /// <returns>collection of unique cells in a row or column</returns>
+        internal virtual ICollection<GridCell> GetUniqueCellsInTrack(Grid.GridOrder order, int trackIndex) {
+            ICollection<GridCell> result = new LinkedHashSet<GridCell>();
+            if (Grid.GridOrder.COLUMN == order) {
+                foreach (GridCell[] row in rows) {
+                    GridCell cell = row[trackIndex];
+                    if (cell != null) {
+                        result.Add(cell);
                     }
                 }
-                if (bigNeighbor != null && bigNeighbor.GetRowStart() == y - i) {
-                    return bigNeighbor;
-                }
+                return result;
             }
-            return null;
+            else {
+                foreach (GridCell cell in rows[trackIndex]) {
+                    if (cell != null) {
+                        result.Add(cell);
+                    }
+                }
+                return result;
+            }
         }
 
         /// <summary>Get all unique cells in the grid.</summary>
@@ -161,8 +128,8 @@ namespace iText.Layout.Renderer {
         internal virtual ICollection<GridCell> GetUniqueGridCells(Grid.GridOrder iterationOrder) {
             ICollection<GridCell> result = new LinkedHashSet<GridCell>();
             if (Grid.GridOrder.COLUMN.Equals(iterationOrder)) {
-                for (int j = 0; j < rows[0].Length; ++j) {
-                    for (int i = 0; i < rows.Length; ++i) {
+                for (int j = 0; j < GetNumberOfColumns(); ++j) {
+                    for (int i = 0; i < GetNumberOfRows(); ++i) {
                         if (rows[i][j] != null) {
                             result.Add(rows[i][j]);
                         }
@@ -180,83 +147,6 @@ namespace iText.Layout.Renderer {
             return result;
         }
 
-        /// <summary>align all cells in the specified row.</summary>
-        /// <param name="row">row to iterate</param>
-        /// <param name="value">new pos on a grid at which row should end</param>
-        internal virtual void AlignRow(int row, float value) {
-            GridCell previousCell = null;
-            foreach (GridCell cell in rows[row]) {
-                if (cell == null) {
-                    continue;
-                }
-                // previousCell is used to avoid multiple area updating for items which spread through few cells
-                if (previousCell != cell && cell.GetLayoutArea().GetTop() < value) {
-                    cell.GetLayoutArea().SetHeight(value - cell.GetLayoutArea().GetY());
-                }
-                previousCell = cell;
-            }
-        }
-
-        /// <summary>align all cells in the specified column.</summary>
-        /// <param name="column">column to iterate</param>
-        /// <param name="value">new pos on a grid at which column should end</param>
-        internal virtual void AlignColumn(int column, float value) {
-            GridCell previousCell = null;
-            for (int i = 0; i < rows.Length; ++i) {
-                GridCell cell = rows[i][column];
-                if (cell == null) {
-                    continue;
-                }
-                // previousCell is used to avoid multiple area updating for items which spread through few cells
-                if (previousCell != cell && cell.GetLayoutArea().GetRight() < value) {
-                    cell.GetLayoutArea().SetWidth(value - cell.GetLayoutArea().GetX());
-                }
-                previousCell = cell;
-            }
-        }
-
-        /// <summary>Get max top (layout area y + height of a cell) in a row with index = y, for all elements in a row before given x.
-        ///     </summary>
-        /// <param name="y">index of a row to find max top value</param>
-        /// <param name="x">index of element in a row before which to search for max top value</param>
-        /// <returns>max top value, all cells which do not end in the given row are not counted.</returns>
-        internal virtual float GetMaxRowTop(int y, int x) {
-            GridCell[] row = rows[y];
-            float maxTop = 0.0f;
-            for (int i = 0; i < x; ++i) {
-                if (row[i] == null || row[i].GetLayoutArea() == null) {
-                    continue;
-                }
-                //process cells which end at the same row
-                if (row[i].GetLayoutArea().GetTop() > maxTop && row[i].GetRowEnd() == y + 1) {
-                    maxTop = row[i].GetLayoutArea().GetTop();
-                }
-            }
-            return maxTop;
-        }
-
-        /// <summary>
-        /// Get max right (layout area x + width of a cell) in a column with index = x,
-        /// for all elements in a column before given y.
-        /// </summary>
-        /// <param name="y">index of element in a column before which to search for max right value</param>
-        /// <param name="x">index of a column to find max right value</param>
-        /// <returns>max right value, all cells which do not end in the given column are not counted.</returns>
-        internal virtual float GetMaxColumnRight(int y, int x) {
-            float maxRight = 0.0f;
-            for (int i = 0; i < y; ++i) {
-                GridCell cell = rows[i][x];
-                if (cell == null || cell.GetLayoutArea() == null) {
-                    continue;
-                }
-                //process cells which ends in the same column
-                if (cell.GetLayoutArea().GetRight() > maxRight && cell.GetColumnEnd() == x + 1) {
-                    maxRight = cell.GetLayoutArea().GetRight();
-                }
-            }
-            return maxRight;
-        }
-
         /// <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
         /// <param name="cell">cell to and in the grid</param>
         internal virtual void AddCell(GridCell cell) {
@@ -272,21 +162,17 @@ namespace iText.Layout.Renderer {
             this.minHeight = minHeight;
         }
 
-        internal virtual void SetMinWidth(float minWidth) {
-            this.minWidth = minWidth;
-        }
-
         /// <summary>Resize grid if needed, so it would have given number of rows/columns.</summary>
         /// <param name="height">new grid height</param>
         /// <param name="width">new grid width</param>
         internal virtual void EnsureGridSize(int height, int width) {
-            if (height <= rows.Length && width <= rows[0].Length) {
+            if (height <= GetNumberOfRows() && width <= GetNumberOfColumns()) {
                 return;
             }
-            GridCell[][] resizedRows = height > rows.Length ? new GridCell[height][] : rows;
-            int gridWidth = Math.Max(width, rows[0].Length);
+            GridCell[][] resizedRows = height > GetNumberOfRows() ? new GridCell[height][] : rows;
+            int gridWidth = Math.Max(width, GetNumberOfColumns());
             for (int i = 0; i < resizedRows.Length; ++i) {
-                if (i < rows.Length) {
+                if (i < GetNumberOfRows()) {
                     if (width <= rows[i].Length) {
                         resizedRows[i] = rows[i];
                     }

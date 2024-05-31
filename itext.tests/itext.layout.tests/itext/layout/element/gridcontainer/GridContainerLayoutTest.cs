@@ -148,9 +148,8 @@ namespace iText.Layout.Element.Gridcontainer {
             GridContainer gridcontainer0 = new GridContainer();
             gridcontainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
             gridcontainer0.SetBackgroundColor(ColorConstants.RED);
-            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList(GridValue.CreateUnitValue
-                (new UnitValue(1, 150.0f)), GridValue.CreateUnitValue(new UnitValue(1, 150.0f)), GridValue.CreateUnitValue
-                (new UnitValue(1, 150.0f))));
+            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList(GridValue.CreatePointValue
+                (150.0f), GridValue.CreatePointValue(150.0f), GridValue.CreatePointValue(150.0f)));
             gridcontainer0.SetProperty(Property.COLUMN_GAP, 12.0f);
             document.Add(gridcontainer0);
             document.Close();
@@ -166,9 +165,8 @@ namespace iText.Layout.Element.Gridcontainer {
             Document document = new Document(pdfDocument);
             GridContainer gridcontainer0 = CreateGridBoxWithText();
             gridcontainer0.SetBackgroundColor(ColorConstants.MAGENTA);
-            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_ROWS, JavaUtil.ArraysAsList(GridValue.CreateUnitValue(new 
-                UnitValue(1, 500.0f)), GridValue.CreateUnitValue(new UnitValue(1, 500.0f)), GridValue.CreateUnitValue(
-                new UnitValue(1, 500.0f))));
+            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_ROWS, JavaUtil.ArraysAsList(GridValue.CreatePointValue(500.0f
+                ), GridValue.CreatePointValue(500.0f), GridValue.CreatePointValue(500.0f)));
             gridcontainer0.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"
                 )).SetHeight(150));
             document.Add(gridcontainer0);
@@ -195,9 +193,8 @@ namespace iText.Layout.Element.Gridcontainer {
         private GridContainer CreateGridBoxWithText() {
             GridContainer gridcontainer0 = new GridContainer();
             gridcontainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
-            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList(GridValue.CreateUnitValue
-                (new UnitValue(1, 150.0f)), GridValue.CreateUnitValue(new UnitValue(1, 150.0f)), GridValue.CreateUnitValue
-                (new UnitValue(1, 150.0f))));
+            gridcontainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList(GridValue.CreatePointValue
+                (150.0f), GridValue.CreatePointValue(150.0f), GridValue.CreatePointValue(150.0f)));
             gridcontainer0.SetProperty(Property.COLUMN_GAP, 12.0f);
             Div div1 = new Div();
             div1.SetBackgroundColor(ColorConstants.YELLOW);

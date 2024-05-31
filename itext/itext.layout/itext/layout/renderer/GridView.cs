@@ -115,9 +115,10 @@ namespace iText.Layout.Renderer {
         /// <param name="height">height of the cell</param>
         /// <returns>true if cell is fit, false otherwise</returns>
         internal virtual bool Fit(int width, int height) {
+            GridCell[][] rows = grid.GetRows();
             for (int i = cursor.x; i < cursor.x + width; ++i) {
                 for (int j = cursor.y; j < cursor.y + height; ++j) {
-                    if (grid.GetRows()[j][i] != null) {
+                    if (rows[j][i] != null) {
                         return false;
                     }
                 }

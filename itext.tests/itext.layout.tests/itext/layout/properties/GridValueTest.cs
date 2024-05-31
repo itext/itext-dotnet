@@ -26,33 +26,37 @@ namespace iText.Layout.Properties {
     [NUnit.Framework.Category("UnitTest")]
     public class GridValueTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void SizingValueTest() {
-            GridValue value = GridValue.CreateSizeValue(SizingValue.CreateUnitValue(UnitValue.CreatePointValue(1.3f)));
-            NUnit.Framework.Assert.AreEqual(GridValue.GridValueType.SIZING, value.GetType());
-            NUnit.Framework.Assert.AreEqual(1.3f, (float)value.GetAbsoluteValue(), 0.00001);
-            value = GridValue.CreateSizeValue(SizingValue.CreateUnitValue(UnitValue.CreatePercentValue(30)));
-            NUnit.Framework.Assert.AreEqual(GridValue.GridValueType.SIZING, value.GetType());
-            NUnit.Framework.Assert.IsNull(value.GetAbsoluteValue());
-            NUnit.Framework.Assert.AreEqual(30, value.GetSizingValue().GetUnitValue().GetValue(), 0.00001);
+        public virtual void UnitValueTest() {
+            GridValue value = GridValue.CreatePointValue(3.2f);
+            NUnit.Framework.Assert.IsTrue(value.IsPointValue());
+            NUnit.Framework.Assert.AreEqual(3.2f, value.GetValue(), 0.00001);
+            value = GridValue.CreatePercentValue(30f);
+            NUnit.Framework.Assert.IsTrue(value.IsPercentValue());
+            NUnit.Framework.Assert.AreEqual(30, value.GetValue(), 0.00001);
         }
 
         [NUnit.Framework.Test]
-        public virtual void UnitValueTest() {
-            GridValue value = GridValue.CreateUnitValue(UnitValue.CreatePointValue(1.3f));
-            NUnit.Framework.Assert.AreEqual(GridValue.GridValueType.SIZING, value.GetType());
-            NUnit.Framework.Assert.AreEqual(1.3f, (float)value.GetAbsoluteValue(), 0.00001);
-            value = GridValue.CreateUnitValue(UnitValue.CreatePercentValue(30));
-            NUnit.Framework.Assert.AreEqual(GridValue.GridValueType.SIZING, value.GetType());
-            NUnit.Framework.Assert.IsNull(value.GetAbsoluteValue());
-            NUnit.Framework.Assert.AreEqual(30, value.GetSizingValue().GetUnitValue().GetValue(), 0.00001);
+        public virtual void MinMaxContentTest() {
+            GridValue value = GridValue.CreateMinContentValue();
+            NUnit.Framework.Assert.IsTrue(value.IsMinContentValue());
+            NUnit.Framework.Assert.IsNull(value.GetValue());
+            value = GridValue.CreateMaxContentValue();
+            NUnit.Framework.Assert.IsTrue(value.IsMaxContentValue());
+            NUnit.Framework.Assert.IsNull(value.GetValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AutoTest() {
+            GridValue value = GridValue.CreateAutoValue();
+            NUnit.Framework.Assert.IsTrue(value.IsAutoValue());
+            NUnit.Framework.Assert.IsNull(value.GetValue());
         }
 
         [NUnit.Framework.Test]
         public virtual void FlexValueTest() {
             GridValue value = GridValue.CreateFlexValue(1.5f);
-            NUnit.Framework.Assert.AreEqual(GridValue.GridValueType.FLEX, value.GetType());
-            NUnit.Framework.Assert.IsNull(value.GetAbsoluteValue());
-            NUnit.Framework.Assert.AreEqual(1.5f, (float)value.GetFlexValue(), 0.00001);
+            NUnit.Framework.Assert.IsTrue(value.IsFlexibleValue());
+            NUnit.Framework.Assert.AreEqual(1.5f, (float)value.GetValue(), 0.00001);
         }
     }
 }

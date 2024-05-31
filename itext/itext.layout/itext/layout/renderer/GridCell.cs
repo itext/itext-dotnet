@@ -64,12 +64,39 @@ namespace iText.Layout.Renderer {
             return gridArea.GetTop();
         }
 
+        internal virtual int GetStart(Grid.GridOrder order) {
+            if (Grid.GridOrder.COLUMN == order) {
+                return GetColumnStart();
+            }
+            else {
+                return GetRowStart();
+            }
+        }
+
+        internal virtual int GetEnd(Grid.GridOrder order) {
+            if (Grid.GridOrder.COLUMN == order) {
+                return GetColumnEnd();
+            }
+            else {
+                return GetRowEnd();
+            }
+        }
+
         internal virtual int GetGridHeight() {
             return gridArea.GetHeight();
         }
 
         internal virtual int GetGridWidth() {
             return gridArea.GetWidth();
+        }
+
+        internal virtual int GetGridSpan(Grid.GridOrder order) {
+            if (Grid.GridOrder.COLUMN == order) {
+                return GetGridWidth();
+            }
+            else {
+                return GetGridHeight();
+            }
         }
 
         internal virtual IRenderer GetValue() {

@@ -20,7 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Kernel.Geom;
+using System;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -28,31 +28,6 @@ using iText.Test;
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("UnitTest")]
     public class GridUnitTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
-        public virtual void GetClosestTopNeighborTest() {
-            Grid grid = new Grid(3, 3, GridFlow.ROW);
-            grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
-            grid.AddCell(new GridCell(new TextRenderer(new Text("Three"))));
-            IRenderer value = new TextRenderer(new Text("Two"));
-            value.SetProperty(Property.GRID_COLUMN_START, 2);
-            value.SetProperty(Property.GRID_ROW_START, 2);
-            GridCell cell = new GridCell(value);
-            grid.AddCell(cell);
-            NUnit.Framework.Assert.AreEqual(grid.GetRows()[0][0], grid.GetClosestTopNeighbor(cell));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetClosestLeftNeighborTest() {
-            Grid grid = new Grid(3, 3, GridFlow.ROW);
-            grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
-            IRenderer value = new TextRenderer(new Text("Two"));
-            value.SetProperty(Property.GRID_COLUMN_START, 2);
-            value.SetProperty(Property.GRID_ROW_START, 2);
-            GridCell cell = new GridCell(value);
-            grid.AddCell(cell);
-            NUnit.Framework.Assert.AreEqual(grid.GetRows()[0][0], grid.GetClosestLeftNeighbor(cell));
-        }
-
         [NUnit.Framework.Test]
         public virtual void GetUniqueCellsTest() {
             Grid grid = new Grid(3, 3, GridFlow.ROW);
@@ -68,46 +43,51 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void IncreaseRowHeightTest() {
+        public virtual void GetUniqueCellsInColumnTest() {
             Grid grid = new Grid(3, 3, GridFlow.ROW);
-            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
-            cell1.SetLayoutArea(new Rectangle(50.0f, 50.0f));
-            GridCell cell2 = new GridCell(new TextRenderer(new Text("Two")));
-            cell2.SetLayoutArea(new Rectangle(50.0f, 50.0f));
-            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
-            cell3.SetLayoutArea(new Rectangle(50.0f, 50.0f));
-            grid.AddCell(cell1);
-            grid.AddCell(cell2);
-            grid.AddCell(cell3);
-            grid.AlignRow(0, 100.0f);
-            NUnit.Framework.Assert.AreEqual(100.0f, grid.GetRows()[0][0].GetLayoutArea().GetHeight(), 0.00001f);
-            NUnit.Framework.Assert.AreEqual(100.0f, grid.GetRows()[0][1].GetLayoutArea().GetHeight(), 0.00001f);
-            NUnit.Framework.Assert.AreEqual(100.0f, grid.GetRows()[0][2].GetLayoutArea().GetHeight(), 0.00001f);
+            grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
+            IRenderer twoRenderer = new TextRenderer(new Text("Two"));
+            twoRenderer.SetProperty(Property.GRID_ROW_START, 2);
+            twoRenderer.SetProperty(Property.GRID_ROW_END, 4);
+            GridCell cell = new GridCell(twoRenderer);
+            grid.AddCell(cell);
+            grid.AddCell(new GridCell(new TextRenderer(new Text("Three"))));
+            grid.AddCell(new GridCell(new TextRenderer(new Text("Four"))));
+            NUnit.Framework.Assert.AreEqual(1, grid.GetUniqueCellsInTrack(Grid.GridOrder.COLUMN, 1).Count);
         }
 
         [NUnit.Framework.Test]
-        public virtual void IncreaseColumnWidthTest() {
+        public virtual void InvalidColumnForGetColCellsTest() {
             Grid grid = new Grid(3, 3, GridFlow.ROW);
-            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
-            cell1.SetLayoutArea(new Rectangle(100.0f, 50.0f));
-            GridCell cell2 = new GridCell(new TextRenderer(new Text("Two")));
-            cell2.SetLayoutArea(new Rectangle(30.0f, 50.0f));
-            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
-            cell3.SetLayoutArea(new Rectangle(50.0f, 50.0f));
-            GridCell cell4 = new GridCell(new TextRenderer(new Text("Three")));
-            cell4.SetLayoutArea(new Rectangle(100.0f, 50.0f));
-            GridCell cell5 = new GridCell(new TextRenderer(new Text("Three")));
-            cell5.SetLayoutArea(new Rectangle(50.0f, 50.0f));
-            grid.AddCell(cell1);
-            grid.AddCell(cell2);
-            grid.AddCell(cell3);
-            grid.AddCell(cell4);
-            grid.AddCell(cell5);
-            grid.AlignColumn(1, 150.0f);
-            NUnit.Framework.Assert.AreEqual(100.0f, grid.GetRows()[0][0].GetLayoutArea().GetWidth(), 0.00001f);
-            NUnit.Framework.Assert.AreEqual(150.0f, grid.GetRows()[0][1].GetLayoutArea().GetWidth(), 0.00001f);
-            NUnit.Framework.Assert.AreEqual(150.0f, grid.GetRows()[1][1].GetLayoutArea().GetWidth(), 0.00001f);
-            NUnit.Framework.Assert.AreEqual(50.0f, grid.GetRows()[0][2].GetLayoutArea().GetWidth(), 0.00001f);
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
+                .COLUMN, 4));
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
+                .COLUMN, -1));
+            NUnit.Framework.Assert.DoesNotThrow(() => grid.GetUniqueCellsInTrack(Grid.GridOrder.COLUMN, 2));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetUniqueCellsInRowTest() {
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
+            grid.AddCell(new GridCell(new TextRenderer(new Text("One"))));
+            IRenderer twoRenderer = new TextRenderer(new Text("Two"));
+            twoRenderer.SetProperty(Property.GRID_COLUMN_START, 2);
+            twoRenderer.SetProperty(Property.GRID_COLUMN_END, 4);
+            GridCell cell = new GridCell(twoRenderer);
+            grid.AddCell(cell);
+            grid.AddCell(new GridCell(new TextRenderer(new Text("Three"))));
+            grid.AddCell(new GridCell(new TextRenderer(new Text("Four"))));
+            NUnit.Framework.Assert.AreEqual(2, grid.GetUniqueCellsInTrack(Grid.GridOrder.ROW, 0).Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidRowForGetRowCellsTest() {
+            Grid grid = new Grid(3, 3, GridFlow.ROW);
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
+                .ROW, 4));
+            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
+                .ROW, -1));
+            NUnit.Framework.Assert.DoesNotThrow(() => grid.GetUniqueCellsInTrack(Grid.GridOrder.ROW, 2));
         }
 
         [NUnit.Framework.Test]

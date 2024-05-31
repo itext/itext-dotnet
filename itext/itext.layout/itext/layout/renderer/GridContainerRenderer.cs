@@ -123,7 +123,6 @@ namespace iText.Layout.Renderer {
         private GridContainerRenderer.GridLayoutResult LayoutGrid(LayoutContext layoutContext, Rectangle actualBBox
             , Grid grid) {
             GridContainerRenderer.GridLayoutResult layoutResult = new GridContainerRenderer.GridLayoutResult();
-            EnsureTemplateValuesFit(grid, actualBBox);
             foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.ROW)) {
                 // Calculate cell layout context by getting actual x and y on parent layout area for it
                 LayoutContext cellContext = GetCellLayoutContext(layoutContext, actualBBox, cell);
@@ -165,12 +164,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             return layoutResult;
-        }
-
-        private void EnsureTemplateValuesFit(Grid grid, Rectangle actualBBox) {
-            if (grid.GetMinWidth() > actualBBox.GetWidth()) {
-                actualBBox.SetWidth(grid.GetMinWidth());
-            }
         }
 
         //Init cell layout context based on a parent context and calculated cell layout area from grid sizing algorithm.
@@ -251,58 +244,29 @@ namespace iText.Layout.Renderer {
         }
 
         //Grid layout algorithm is based on a https://drafts.csswg.org/css-grid/#layout-algorithm
-        //It's not a 1 to 1 implementation and Grid Sizing Algorithm differs a little bit
-        //TODO DEVSIX-8324 Left actualBBox parameter since it will be needed for fr and % calculations
-        // if it is inline-grid, than it won't be needed.
         private static Grid ConstructGrid(iText.Layout.Renderer.GridContainerRenderer renderer, Rectangle actualBBox
             ) {
             IList<GridValue> templateColumns = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS);
             IList<GridValue> templateRows = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS);
-            GridValue columnAutoWidth = renderer.GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS);
-            GridValue rowAutoHeight = renderer.GetProperty<GridValue>(Property.GRID_AUTO_ROWS);
-            float? columnGap = renderer.GetProperty<float?>(Property.COLUMN_GAP);
-            float? rowGap = renderer.GetProperty<float?>(Property.ROW_GAP);
             GridFlow flow = renderer.GetProperty<GridFlow?>(Property.GRID_FLOW) == null ? GridFlow.ROW : (GridFlow)(renderer
                 .GetProperty<GridFlow?>(Property.GRID_FLOW));
             foreach (IRenderer child in renderer.GetChildRenderers()) {
                 child.SetParent(renderer);
             }
+            // 8. Placing Grid Items
             Grid grid = Grid.Builder.ForItems(renderer.GetChildRenderers()).Columns(templateColumns == null ? 1 : templateColumns
                 .Count).Rows(templateRows == null ? 1 : templateRows.Count).Flow(flow).Build();
-            GridSizer gridSizer = new GridSizer(grid, templateRows, templateColumns, rowAutoHeight, columnAutoWidth, columnGap
-                , rowGap);
-            gridSizer.SizeCells();
-            //calculating explicit height to ensure that even empty rows which covered by template would be considered
-            //TODO DEVSIX-8324 improve those methods in future for working correctly with minmax/repeat/etc.
-            SetGridContainerMinimalHeight(grid, templateRows);
-            SetGridContainerMinimalWidth(grid, templateColumns);
+            GridValue columnAutoWidth = renderer.GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS);
+            GridValue rowAutoHeight = renderer.GetProperty<GridValue>(Property.GRID_AUTO_ROWS);
+            float? columnGapProp = renderer.GetProperty<float?>(Property.COLUMN_GAP);
+            float? rowGapProp = renderer.GetProperty<float?>(Property.ROW_GAP);
+            float columnGap = columnGapProp == null ? 0f : (float)columnGapProp;
+            float rowGap = rowGapProp == null ? 0f : (float)rowGapProp;
+            // 12. Grid Layout Algorithm
+            GridSizer gridSizer = new GridSizer(grid, templateColumns, templateRows, columnAutoWidth, rowAutoHeight, columnGap
+                , rowGap, actualBBox);
+            gridSizer.SizeGrid();
             return grid;
-        }
-
-        //This method calculates container minimal height, because if number of cells is not enough to fill all specified
-        //rows by template than we need to set the height of the container higher than it's actual occupied height.
-        private static void SetGridContainerMinimalHeight(Grid grid, IList<GridValue> templateRows) {
-            float explicitContainerHeight = 0.0f;
-            if (templateRows != null) {
-                foreach (GridValue template in templateRows) {
-                    if (template.IsAbsoluteValue()) {
-                        explicitContainerHeight += (float)template.GetAbsoluteValue();
-                    }
-                }
-            }
-            grid.SetMinHeight(explicitContainerHeight);
-        }
-
-        private static void SetGridContainerMinimalWidth(Grid grid, IList<GridValue> templateColumns) {
-            float explicitContainerWidth = 0.0f;
-            if (templateColumns != null) {
-                foreach (GridValue template in templateColumns) {
-                    if (template.IsAbsoluteValue()) {
-                        explicitContainerWidth += (float)template.GetAbsoluteValue();
-                    }
-                }
-            }
-            grid.SetMinWidth(explicitContainerWidth);
         }
 
         private sealed class GridLayoutResult {
