@@ -31,11 +31,13 @@ using iText.Forms.Fields;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1 {
-    /// <summary>Validator, which is responsible for document revisions validation according to doc-MDP rules.</summary>
-    internal class DocumentRevisionsValidator {
+    /// <summary>Validator, which is responsible for document revisions validation according to doc-MDP and field-MDP rules.
+    ///     </summary>
+    public class DocumentRevisionsValidator {
         internal const String DOC_MDP_CHECK = "DocMDP check.";
 
         internal const String FIELD_MDP_CHECK = "FieldMDP check.";
@@ -116,30 +118,38 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String UNRECOGNIZED_ACTION = "Signature field lock dictionary contains unrecognized " + "\"Action\" value \"{0}\". \"All\" will be used instead.";
 
+        private readonly ICollection<String> lockedFields = new HashSet<String>();
+
+        private readonly SignatureValidationProperties properties;
+
         private IMetaInfo metaInfo = new ValidationMetaInfo();
 
         private AccessPermissions accessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
 
         private AccessPermissions requestedAccessPermissions = AccessPermissions.UNSPECIFIED;
 
-        private readonly ICollection<String> lockedFields = new HashSet<String>();
-
-        private readonly PdfDocument document;
-
         private ICollection<PdfObject> checkedAnnots;
 
         private ICollection<PdfDictionary> newlyAddedFields;
 
-        internal DocumentRevisionsValidator(PdfDocument document) {
-            this.document = document;
+        /// <summary>
+        /// Creates new instance of
+        /// <see cref="DocumentRevisionsValidator"/>.
+        /// </summary>
+        /// <param name="chainBuilder">
+        /// See
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </param>
+        protected internal DocumentRevisionsValidator(ValidatorChainBuilder chainBuilder) {
+            this.properties = chainBuilder.GetProperties();
         }
 
         /// <summary>
         /// Sets the
         /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
-        /// that will be used during
+        /// that will be used during new
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// creation.
+        /// creations.
         /// </summary>
         /// <param name="metaInfo">meta info to set</param>
         /// <returns>
@@ -174,17 +184,19 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
-        internal virtual AccessPermissions GetAccessPermissions() {
-            return requestedAccessPermissions == AccessPermissions.UNSPECIFIED ? accessPermissions : requestedAccessPermissions;
-        }
-
         /// <summary>Validate all document revisions according to docMDP and fieldMDP transform methods.</summary>
+        /// <param name="context">the validation context in which to validate document revisions</param>
+        /// <param name="document">the document to be validated</param>
         /// <returns>
         /// 
         /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
         /// which contains detailed validation results.
         /// </returns>
-        public virtual ValidationReport ValidateAllDocumentRevisions() {
+        public virtual ValidationReport ValidateAllDocumentRevisions(ValidationContext context, PdfDocument document
+            ) {
+            ResetClassFields();
+            ValidationContext localContext = context.SetValidatorContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
+                );
             ValidationReport report = new ValidationReport();
             PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
             revisionsReader.SetEventCountingMetaInfo(metaInfo);
@@ -207,8 +219,8 @@ namespace iText.Signatures.Validation.V1 {
             bool signatureFound = false;
             bool certificationSignatureFound = false;
             PdfSignature currentSignature = signatureUtil.GetSignature(signatures[0]);
-            for (int i = 0; i < documentRevisions.Count - 1; i++) {
-                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0])) {
+            for (int i = 0; i < documentRevisions.Count; i++) {
+                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0], document)) {
                     signatureFound = true;
                     if (IsCertificationSignature(currentSignature)) {
                         if (certificationSignatureFound) {
@@ -223,7 +235,7 @@ namespace iText.Signatures.Validation.V1 {
                     UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(signatures[0]), report
                         );
                     UpdateApprovalSignatureFieldLock(documentRevisions[i], signatureUtil.GetSignatureFormFieldDictionary(signatures
-                        [0]), report);
+                        [0]), document, report);
                     signatures.JRemoveAt(0);
                     if (signatures.IsEmpty()) {
                         currentSignature = null;
@@ -232,8 +244,11 @@ namespace iText.Signatures.Validation.V1 {
                         currentSignature = signatureUtil.GetSignature(signatures[0]);
                     }
                 }
-                if (signatureFound) {
-                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], report);
+                if (signatureFound && i < documentRevisions.Count - 1) {
+                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], document, report, localContext);
+                }
+                if (StopValidation(report, localContext)) {
+                    break;
                 }
             }
             if (!signatureFound) {
@@ -243,13 +258,8 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
-        //
-        //
-        // Revisions validation util section:
-        //
-        //
         internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
-            , ValidationReport validationReport) {
+            , PdfDocument document, ValidationReport validationReport, ValidationContext context) {
             try {
                 using (Stream previousInputStream = CreateInputStreamFromRevision(document, previousRevision)) {
                     using (PdfReader previousReader = new PdfReader(previousInputStream).SetStrictnessLevel(PdfReader.StrictnessLevel
@@ -262,7 +272,7 @@ namespace iText.Signatures.Validation.V1 {
                                     using (PdfDocument documentWithRevision = new PdfDocument(currentReader, new DocumentProperties().SetEventCountingMetaInfo
                                         (metaInfo))) {
                                         ICollection<PdfIndirectReference> indirectReferences = currentRevision.GetModifiedObjects();
-                                        if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport)) {
+                                        if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport, context)) {
                                             return;
                                         }
                                         ICollection<PdfIndirectReference> currentAllowedReferences = CreateAllowedReferences(documentWithRevision);
@@ -307,12 +317,26 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
+        //
+        //
+        // Revisions validation util section:
+        //
+        //
+        internal virtual AccessPermissions GetAccessPermissions() {
+            return requestedAccessPermissions == AccessPermissions.UNSPECIFIED ? accessPermissions : requestedAccessPermissions;
+        }
+
         private static Stream CreateInputStreamFromRevision(PdfDocument originalDocument, DocumentRevision revision
             ) {
             RandomAccessFileOrArray raf = originalDocument.GetReader().GetSafeFile();
             WindowRandomAccessSource source = new WindowRandomAccessSource(raf.CreateSourceView(), 0, revision.GetEofOffset
                 ());
             return new RASInputStream(source);
+        }
+
+        private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
+            return !properties.GetContinueAfterFailure(validationContext) && result.GetValidationResult() == ValidationReport.ValidationResult
+                .INVALID;
         }
 
         private void UpdateApprovalSignatureAccessPermissions(PdfDictionary signatureField, ValidationReport report
@@ -354,8 +378,8 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private void UpdateApprovalSignatureFieldLock(DocumentRevision revision, PdfDictionary signatureField, ValidationReport
-             report) {
+        private void UpdateApprovalSignatureFieldLock(DocumentRevision revision, PdfDictionary signatureField, PdfDocument
+             document, ValidationReport report) {
             PdfDictionary fieldLock = signatureField.GetAsDictionary(PdfName.Lock);
             if (fieldLock == null || fieldLock.GetAsName(PdfName.Action) == null) {
                 return;
@@ -377,22 +401,22 @@ namespace iText.Signatures.Validation.V1 {
                     IList<String> excludedFields = JavaCollectionsUtil.EmptyList<String>();
                     if (fields != null) {
                         excludedFields = fields.SubList(0, fields.Size()).Select((field) => field is PdfString ? ((PdfString)field
-                            ).ToUnicodeString() : "").ToList();
+                            ).ToUnicodeString() : null).ToList();
                     }
-                    LockAllFormFields(revision, excludedFields, report);
+                    LockAllFormFields(revision, excludedFields, document, report);
                 }
                 else {
                     if (!PdfName.All.Equals(action)) {
                         report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(UNRECOGNIZED_ACTION, action.
                             GetValue()), ReportItem.ReportItemStatus.INVALID));
                     }
-                    LockAllFormFields(revision, JavaCollectionsUtil.EmptyList<String>(), report);
+                    LockAllFormFields(revision, JavaCollectionsUtil.EmptyList<String>(), document, report);
                 }
             }
         }
 
-        private void LockAllFormFields(DocumentRevision revision, IList<String> excludedFields, ValidationReport report
-            ) {
+        private void LockAllFormFields(DocumentRevision revision, IList<String> excludedFields, PdfDocument document
+            , ValidationReport report) {
             try {
                 using (Stream inputStream = CreateInputStreamFromRevision(document, revision)) {
                     using (PdfReader reader = new PdfReader(inputStream)) {
@@ -476,7 +500,7 @@ namespace iText.Signatures.Validation.V1 {
             return false;
         }
 
-        private bool RevisionContainsSignature(DocumentRevision revision, String signature) {
+        private bool RevisionContainsSignature(DocumentRevision revision, String signature, PdfDocument document) {
             try {
                 using (Stream inputStream = CreateInputStreamFromRevision(document, revision)) {
                     using (PdfReader reader = new PdfReader(inputStream)) {
@@ -493,13 +517,18 @@ namespace iText.Signatures.Validation.V1 {
             return false;
         }
 
+        private void ResetClassFields() {
+            lockedFields.Clear();
+            accessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
+        }
+
         //
         //
         // Compare catalogs section:
         //
         //
         private bool CompareCatalogs(PdfDocument documentWithoutRevision, PdfDocument documentWithRevision, ValidationReport
-             report) {
+             report, ValidationContext context) {
             PdfDictionary previousCatalog = documentWithoutRevision.GetCatalog().GetPdfObject();
             PdfDictionary currentCatalog = documentWithRevision.GetCatalog().GetPdfObject();
             PdfDictionary previousCatalogCopy = CopyCatalogEntriesToCompare(previousCatalog);
@@ -509,12 +538,32 @@ namespace iText.Signatures.Validation.V1 {
                     .INVALID));
                 return false;
             }
-            return CompareExtensions(previousCatalog.Get(PdfName.Extensions), currentCatalog.Get(PdfName.Extensions), 
-                report) && ComparePermissions(previousCatalog.Get(PdfName.Perms), currentCatalog.Get(PdfName.Perms), report
-                ) && CompareDss(previousCatalog.Get(PdfName.DSS), currentCatalog.Get(PdfName.DSS), report) && CompareAcroFormsWithFieldMDP
-                (documentWithoutRevision, documentWithRevision, report) && CompareAcroForms(previousCatalog.GetAsDictionary
-                (PdfName.AcroForm), currentCatalog.GetAsDictionary(PdfName.AcroForm), report) && ComparePages(previousCatalog
-                .GetAsDictionary(PdfName.Pages), currentCatalog.GetAsDictionary(PdfName.Pages), report);
+            bool result = CompareExtensions(previousCatalog.Get(PdfName.Extensions), currentCatalog.Get(PdfName.Extensions
+                ), report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && ComparePermissions(previousCatalog.Get(PdfName.Perms), currentCatalog.Get(PdfName.Perms
+                ), report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && CompareDss(previousCatalog.Get(PdfName.DSS), currentCatalog.Get(PdfName.DSS), report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && CompareAcroFormsWithFieldMDP(documentWithoutRevision, documentWithRevision, report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && CompareAcroForms(previousCatalog.GetAsDictionary(PdfName.AcroForm), currentCatalog.GetAsDictionary
+                (PdfName.AcroForm), report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && ComparePages(previousCatalog.GetAsDictionary(PdfName.Pages), currentCatalog.GetAsDictionary
+                (PdfName.Pages), report);
+            return result;
         }
 
         // Compare catalogs nested methods section:
@@ -534,12 +583,13 @@ namespace iText.Signatures.Validation.V1 {
             }
             PdfDictionary previousExtensionsDictionary = (PdfDictionary)previousExtensions;
             PdfDictionary currentExtensionsDictionary = (PdfDictionary)currentExtensions;
+            bool result = true;
             foreach (KeyValuePair<PdfName, PdfObject> previousExtension in previousExtensionsDictionary.EntrySet()) {
                 PdfDictionary currentExtension = currentExtensionsDictionary.GetAsDictionary(previousExtension.Key);
                 if (currentExtension == null) {
                     report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
                         .Key), ReportItem.ReportItemStatus.INVALID));
-                    return false;
+                    result = false;
                 }
                 else {
                     PdfDictionary currentExtensionCopy = new PdfDictionary(currentExtension);
@@ -550,7 +600,8 @@ namespace iText.Signatures.Validation.V1 {
                     if (!ComparePdfObjects(previousExtensionCopy, currentExtensionCopy)) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
                             .Key), ReportItem.ReportItemStatus.INVALID));
-                        return false;
+                        result = false;
+                        continue;
                     }
                     PdfNumber previousExtensionLevel = ((PdfDictionary)previousExtension.Value).GetAsNumber(PdfName.ExtensionLevel
                         );
@@ -559,12 +610,12 @@ namespace iText.Signatures.Validation.V1 {
                         if (currentExtensionLevel == null || previousExtensionLevel.IntValue() > currentExtensionLevel.IntValue()) {
                             report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(EXTENSION_LEVEL_DECREASED, previousExtension
                                 .Key), ReportItem.ReportItemStatus.INVALID));
-                            return false;
+                            result = false;
                         }
                     }
                 }
             }
-            return true;
+            return result;
         }
 
         private bool ComparePermissions(PdfObject previousPerms, PdfObject currentPerms, ValidationReport report) {
@@ -582,23 +633,24 @@ namespace iText.Signatures.Validation.V1 {
             }
             PdfDictionary previousPermsDictionary = (PdfDictionary)previousPerms;
             PdfDictionary currentPermsDictionary = (PdfDictionary)currentPerms;
+            bool result = true;
             foreach (KeyValuePair<PdfName, PdfObject> previousPermission in previousPermsDictionary.EntrySet()) {
                 PdfDictionary currentPermission = currentPermsDictionary.GetAsDictionary(previousPermission.Key);
                 if (currentPermission == null) {
                     report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(PERMISSION_REMOVED, previousPermission
                         .Key), ReportItem.ReportItemStatus.INVALID));
-                    return false;
+                    result = false;
                 }
                 else {
                     // Perms dictionary is the signature dictionary.
                     if (!CompareSignatureDictionaries(previousPermission.Value, currentPermission, report)) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(PERMISSION_REMOVED, previousPermission
                             .Key), ReportItem.ReportItemStatus.INVALID));
-                        return false;
+                        result = false;
                     }
                 }
             }
-            return true;
+            return result;
         }
 
         private bool CompareDss(PdfObject previousDss, PdfObject currentDss, ValidationReport report) {
@@ -624,6 +676,7 @@ namespace iText.Signatures.Validation.V1 {
                 // In this case FieldMDP makes no sense, because related changes are forbidden anyway.
                 return true;
             }
+            bool result = true;
             foreach (KeyValuePair<String, PdfFormField> previousField in previousAcroForm.GetAllFormFields()) {
                 if (lockedFields.Contains(previousField.Key)) {
                     // For locked form fields nothing can change,
@@ -632,15 +685,16 @@ namespace iText.Signatures.Validation.V1 {
                     if (currentFormField == null) {
                         report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_REMOVED, previousField
                             .Key), ReportItem.ReportItemStatus.INVALID));
-                        return false;
+                        result = false;
+                        continue;
                     }
                     if (!CompareFormFieldWithFieldMDP(previousField.Value.GetPdfObject(), currentFormField.GetPdfObject(), previousField
                         .Key, report)) {
-                        return false;
+                        result = false;
                     }
                 }
             }
-            return true;
+            return result;
         }
 
         private bool CompareFormFieldWithFieldMDP(PdfDictionary previousField, PdfDictionary currentField, String 

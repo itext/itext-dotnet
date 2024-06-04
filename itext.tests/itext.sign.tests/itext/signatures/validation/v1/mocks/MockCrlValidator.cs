@@ -24,10 +24,11 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Signatures.Validation.V1;
 using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
-namespace iText.Signatures.Validation.V1 {
+namespace iText.Signatures.Validation.V1.Mocks {
     public class MockCrlValidator : CRLValidator {
         public readonly IList<MockCrlValidator.CRLValidateCall> calls = new List<MockCrlValidator.CRLValidateCall>
             ();
@@ -36,7 +37,7 @@ namespace iText.Signatures.Validation.V1 {
 
         /// <summary>
         /// Creates new
-        /// <see cref="CRLValidator"/>
+        /// <see cref="iText.Signatures.Validation.V1.CRLValidator"/>
         /// instance.
         /// </summary>
         public MockCrlValidator()

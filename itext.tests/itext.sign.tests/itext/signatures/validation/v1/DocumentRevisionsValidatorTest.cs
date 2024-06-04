@@ -22,35 +22,70 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
+    [NUnit.Framework.TestFixtureSource("CreateParametersTestFixtureData")]
     public class DocumentRevisionsValidatorTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/DocumentRevisionsValidatorTest/";
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
+        private ValidatorChainBuilder builder;
+
+        private readonly ValidationContext validationContext = new ValidationContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
+            , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
+
+        private readonly bool continueValidationAfterFail;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
+        }
+
+        [NUnit.Framework.SetUp]
+        public virtual void SetUp() {
+            builder = new ValidatorChainBuilder();
+            builder.GetProperties().SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), continueValidationAfterFail
+                );
+        }
+
+        public DocumentRevisionsValidatorTest(Object continueValidationAfterFail) {
+            this.continueValidationAfterFail = (bool)continueValidationAfterFail;
+        }
+
+        public DocumentRevisionsValidatorTest(Object[] array)
+            : this(array[0]) {
+        }
+
+        public static IEnumerable<Object[]> CreateParameters() {
+            return JavaUtil.ArraysAsList(new Object[] { false }, new Object[] { true });
+        }
+
+        public static ICollection<NUnit.Framework.TestFixtureData> CreateParametersTestFixtureData() {
+            return CreateParameters().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleRevisionsDocumentLevel1Test() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Between these two revisions DSS and timestamp are added, which is allowed,
                 // but there is unused entry in the xref table, which is an itext signature generation artifact.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
@@ -58,7 +93,8 @@ namespace iText.Signatures.Validation.V1 {
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.UNEXPECTED_ENTRY_IN_XREF, (i) => 27).WithStatus
                     (ReportItem.ReportItemStatus.INVALID)));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], validationReport);
+                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], document, validationReport, validationContext
+                    );
                 // Between these two revisions only DSS is updated, which is allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ));
@@ -68,12 +104,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void HugeDocumentTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hugeDocument.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ));
             }
@@ -83,34 +120,39 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void ExtensionsModificationsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "extensionsModifications.pdf")
                 )) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], validationReport);
+                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.DEVELOPER_EXTENSION_REMOVED, (i) => PdfName.ESIC
                     ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[2], documentRevisions[3], validationReport);
+                validator.ValidateRevision(documentRevisions[2], documentRevisions[3], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.EXTENSION_LEVEL_DECREASED, (i) => PdfName.ESIC)
                     .WithStatus(ReportItem.ReportItemStatus.INVALID)));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[3], documentRevisions[4], validationReport);
+                validator.ValidateRevision(documentRevisions[3], documentRevisions[4], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.DEVELOPER_EXTENSION_REMOVED, (i) => PdfName.ESIC
                     ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[4], documentRevisions[5], validationReport);
+                validator.ValidateRevision(documentRevisions[4], documentRevisions[5], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.EXTENSIONS_REMOVED).WithStatus(ReportItem.ReportItemStatus
@@ -122,12 +164,13 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void CompletelyInvalidDocumentTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "completelyInvalidDocument.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.PAGES_MODIFIED).WithStatus(ReportItem.ReportItemStatus
@@ -139,12 +182,13 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void MakeFontDirectAndIndirectTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "makeFontDirectAndIndirect.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Adobe Acrobat doesn't complain about such change. We consider this incorrect.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -153,7 +197,8 @@ namespace iText.Signatures.Validation.V1 {
                     ).WithMessage(DocumentRevisionsValidator.NOT_ALLOWED_ACROFORM_CHANGES).WithStatus(ReportItem.ReportItemStatus
                     .INVALID)));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], validationReport);
+                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], document, validationReport, validationContext
+                    );
                 // Adobe Acrobat doesn't complain about such change. We consider this incorrect.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -167,12 +212,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void RandomEntryAddedTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryAdded.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Adobe Acrobat doesn't complain about such change. We consider this incorrect.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -185,12 +231,13 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RandomEntryWithoutUsageTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryWithoutUsage.pdf")
                 )) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Adobe Acrobat doesn't complain about such change. We consider this incorrect.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -202,12 +249,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void ChangeExistingFontTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "changeExistingFont.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus
@@ -219,12 +267,13 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void ChangeExistingFontAndAddAsDssTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "changeExistingFontAndAddAsDss.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Adobe Acrobat doesn't complain about such change. We consider this incorrect.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -236,12 +285,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void FillInFieldAtLevel1Test() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fillInField.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Between these two revisions forms were filled in, it is not allowed at docMDP level 1.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -255,22 +305,25 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void MultipleRevisionsDocumentLevel2Test() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument2.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Between these two revisions forms were filled in, it is allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ).HasNumberOfFailures(0).HasNumberOfLogs(0));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], validationReport);
+                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], document, validationReport, validationContext
+                    );
                 // Between these two revisions existing signature field was signed, it is allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ).HasNumberOfFailures(0).HasNumberOfLogs(0));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[2], documentRevisions[3], validationReport);
+                validator.ValidateRevision(documentRevisions[2], documentRevisions[3], document, validationReport, validationContext
+                    );
                 // Between these two revisions newly added signature field was signed, it is allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ).HasNumberOfFailures(0).HasNumberOfLogs(0));
@@ -280,13 +333,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void RemovePermissionsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removePermissions.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions /Perms key was removed, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -298,13 +351,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void RemoveDSSTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeDSS.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions /DSS key was removed, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -316,13 +369,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void RemoveAcroformTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeAcroform.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions /Acroform key was removed, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -334,13 +387,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void RemoveFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeField.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions field was removed, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -352,13 +405,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void RenameFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "renameField.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions field was renamed, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -371,13 +424,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void AddTextFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addTextField.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions new field was added, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -392,13 +445,13 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void AddUnsignedSignatureFieldTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addUnsignedSignatureField.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions new unsigned signature field was added, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -413,13 +466,13 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void BrokenSignatureFieldDictionaryTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "brokenSignatureFieldDictionary.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions signature value was replaced by text, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(3).HasNumberOfLogs(3).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -434,13 +487,13 @@ namespace iText.Signatures.Validation.V1 {
         [NUnit.Framework.Test]
         public virtual void ModifyPageAnnotsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifyPageAnnots.pdf"))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
-                    .Count - 1], validationReport);
+                    .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions circle annotation was added to the first page, it is not allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
@@ -453,17 +506,19 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void MultipleRevisionsDocumentLevel3Test() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument3.pdf"
                 ))) {
-                DocumentRevisionsValidator validator = new DocumentRevisionsValidator(document);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.ANNOTATION_MODIFICATION);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], validationReport);
+                validator.ValidateRevision(documentRevisions[0], documentRevisions[1], document, validationReport, validationContext
+                    );
                 // Between these two revisions annotations were added and deleted, text field was filled-in.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ).HasNumberOfFailures(0).HasNumberOfLogs(0));
                 validationReport = new ValidationReport();
-                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], validationReport);
+                validator.ValidateRevision(documentRevisions[1], documentRevisions[2], document, validationReport, validationContext
+                    );
                 // Between these two revisions existed annotations were modified, it is allowed.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
                     ).HasNumberOfFailures(0).HasNumberOfLogs(0));

@@ -42,6 +42,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private CRLValidator crlValidator;
 
+        private DocumentRevisionsValidator documentRevisionsValidator;
+
         /// <summary>
         /// Create a new
         /// <see cref="SignatureValidator"/>
@@ -56,6 +58,22 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>a new instance of a signature validator</returns>
         internal virtual SignatureValidator BuildSignatureValidator() {
             return new SignatureValidator(this);
+        }
+
+        /// <summary>
+        /// Create a bew
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance with the current configuration.
+        /// </summary>
+        /// <remarks>
+        /// Create a bew
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance with the current configuration.
+        /// This method can be used to create multiple validators.
+        /// </remarks>
+        /// <returns>a new instance of a document revisions validator</returns>
+        public virtual DocumentRevisionsValidator BuildDocumentRevisionsValidator() {
+            return new DocumentRevisionsValidator(this);
         }
 
         /// <summary>
@@ -115,6 +133,19 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>a new instance of a CRLValidator</returns>
         public virtual CRLValidator BuildCRLValidator() {
             return new CRLValidator(this);
+        }
+
+        /// <summary>
+        /// Use this instance of a
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// in the validation chain.
+        /// </summary>
+        /// <param name="documentRevisionsValidator">the document revisions validator instance to use</param>
+        /// <returns>the current ValidatorChainBuilder</returns>
+        public virtual ValidatorChainBuilder WithDocumentRevisionsValidator(DocumentRevisionsValidator documentRevisionsValidator
+            ) {
+            this.documentRevisionsValidator = documentRevisionsValidator;
+            return this;
         }
 
         /// <summary>
@@ -215,6 +246,23 @@ namespace iText.Signatures.Validation.V1 {
             ) {
             GetCertificateRetriever().SetTrustedCertificates(trustedCertificates);
             return this;
+        }
+
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance
+        /// </returns>
+        internal virtual DocumentRevisionsValidator GetDocumentRevisionsValidator() {
+            if (documentRevisionsValidator == null) {
+                documentRevisionsValidator = BuildDocumentRevisionsValidator();
+            }
+            return documentRevisionsValidator;
         }
 
         /// <summary>

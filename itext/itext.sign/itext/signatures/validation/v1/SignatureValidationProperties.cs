@@ -89,6 +89,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <summary>
         /// Sets the freshness setting for the specified validator,
         /// time based and certificate source contexts in milliseconds.
+        /// This parameter specifies how old revocation data can be, compared to validation time, in order to be trustworthy.
         /// </summary>
         /// <param name="validatorContexts">the validators for which to apply the setting</param>
         /// <param name="certificateSources">the certificate sources to</param>
@@ -115,7 +116,11 @@ namespace iText.Signatures.Validation.V1 {
                 (p) => p.GetContinueAfterFailure().GetValueOrDefault());
         }
 
-        /// <summary>Sets the Continue after failure setting for the provided context.</summary>
+        /// <summary>
+        /// Sets the Continue after failure setting for the provided context.
+        /// This parameter specifies if validation is expected to continue after first failure is encountered.
+        /// Only <see cref="ValidationResult#INVALID"/> is considered to be a failure.
+        /// </summary>
         /// <param name="validatorContexts">the validators for which to set the Continue after failure setting</param>
         /// <param name="certificateSources">the certificateSources for which to set the Continue after failure setting
         ///     </param>

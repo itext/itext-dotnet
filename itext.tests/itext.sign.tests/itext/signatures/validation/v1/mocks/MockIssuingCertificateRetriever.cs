@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures;
 
-namespace iText.Signatures.Validation.V1 {
+namespace iText.Signatures.Validation.V1.Mocks {
     public class MockIssuingCertificateRetriever : IssuingCertificateRetriever {
         public IList<IX509Certificate[]> retrieveMissingCertificatesCalls = new List<IX509Certificate[]>();
 

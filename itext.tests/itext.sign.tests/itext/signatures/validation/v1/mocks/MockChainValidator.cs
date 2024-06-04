@@ -23,17 +23,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Signatures.Validation.V1;
 using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
-namespace iText.Signatures.Validation.V1 {
+namespace iText.Signatures.Validation.V1.Mocks {
     public class MockChainValidator : CertificateChainValidator {
         public IList<MockChainValidator.ValidationCallBack> verificationCalls = new List<MockChainValidator.ValidationCallBack
             >();
 
         private Action<MockChainValidator.ValidationCallBack> onCallHandler;
 
-        internal MockChainValidator()
+        public MockChainValidator()
             : base(new ValidatorChainBuilder()) {
         }
 

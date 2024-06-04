@@ -24,10 +24,11 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures;
+using iText.Signatures.Validation.V1;
 using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
-namespace iText.Signatures.Validation.V1 {
+namespace iText.Signatures.Validation.V1.Mocks {
     public class MockRevocationDataValidator : RevocationDataValidator {
         public IList<ICrlClient> crlClientsAdded = new List<ICrlClient>();
 
@@ -38,10 +39,10 @@ namespace iText.Signatures.Validation.V1 {
 
         /// <summary>
         /// Creates new
-        /// <see cref="RevocationDataValidator"/>
+        /// <see cref="iText.Signatures.Validation.V1.RevocationDataValidator"/>
         /// instance to validate certificate revocation data.
         /// </summary>
-        internal MockRevocationDataValidator()
+        public MockRevocationDataValidator()
             : base(new ValidatorChainBuilder()) {
         }
 

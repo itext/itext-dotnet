@@ -33,6 +33,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.V1.Context;
+using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 

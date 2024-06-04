@@ -51,6 +51,12 @@ namespace iText.Signatures.Validation.V1.Context {
         /// </summary>
         CERTIFICATE_CHAIN_VALIDATOR,
         /// <summary>This value is expected to be used in SignatureValidator context.</summary>
-        SIGNATURE_VALIDATOR
+        SIGNATURE_VALIDATOR,
+        /// <summary>
+        /// This value is expected to be used in
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// context.
+        /// </summary>
+        DOCUMENT_REVISIONS_VALIDATOR
     }
 }

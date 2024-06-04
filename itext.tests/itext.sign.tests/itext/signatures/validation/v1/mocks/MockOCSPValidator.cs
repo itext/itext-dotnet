@@ -26,10 +26,11 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using iText.Signatures.Validation.V1;
 using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
-namespace iText.Signatures.Validation.V1 {
+namespace iText.Signatures.Validation.V1.Mocks {
     public class MockOCSPValidator : OCSPValidator {
         public readonly IList<MockOCSPValidator.OCSPValidatorCall> calls = new List<MockOCSPValidator.OCSPValidatorCall
             >();
@@ -38,7 +39,7 @@ namespace iText.Signatures.Validation.V1 {
 
         /// <summary>
         /// Creates new
-        /// <see cref="OCSPValidator"/>
+        /// <see cref="iText.Signatures.Validation.V1.OCSPValidator"/>
         /// instance.
         /// </summary>
         public MockOCSPValidator()

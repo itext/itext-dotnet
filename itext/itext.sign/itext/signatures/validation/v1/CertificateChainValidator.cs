@@ -68,7 +68,7 @@ namespace iText.Signatures.Validation.V1 {
         /// See
         /// <see cref="ValidatorChainBuilder"/>
         /// </param>
-        internal CertificateChainValidator(ValidatorChainBuilder builder) {
+        protected internal CertificateChainValidator(ValidatorChainBuilder builder) {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.revocationDataValidator = builder.GetRevocationDataValidator();
@@ -244,8 +244,8 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext context) {
-            return !properties.GetContinueAfterFailure(context) && result.GetValidationResult() != ValidationReport.ValidationResult
-                .VALID;
+            return !properties.GetContinueAfterFailure(context) && result.GetValidationResult() == ValidationReport.ValidationResult
+                .INVALID;
         }
 
         private void ValidateValidityPeriod(ValidationReport result, IX509Certificate certificate, DateTime validationDate

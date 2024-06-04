@@ -28,6 +28,7 @@ using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Extensions;
+using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 

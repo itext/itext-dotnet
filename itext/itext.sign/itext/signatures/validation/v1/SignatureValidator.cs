@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
@@ -59,14 +60,18 @@ namespace iText.Signatures.Validation.V1 {
 
         private readonly CertificateChainValidator certificateChainValidator;
 
+        private readonly DocumentRevisionsValidator documentRevisionsValidator;
+
         private readonly IssuingCertificateRetriever certificateRetriever;
 
         private readonly SignatureValidationProperties properties;
 
         private DateTime lastKnownPoE = DateTimeUtil.GetCurrentUtcTime();
 
+        private IMetaInfo metaInfo = new ValidationMetaInfo();
+
         /// <summary>
-        /// Create new instance of
+        /// Creates new instance of
         /// <see cref="SignatureValidator"/>.
         /// </summary>
         /// <param name="builder">
@@ -77,8 +82,28 @@ namespace iText.Signatures.Validation.V1 {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.certificateChainValidator = builder.GetCertificateChainValidator();
+            this.documentRevisionsValidator = builder.GetDocumentRevisionsValidator();
             this.baseValidationContext = new ValidationContext(ValidatorContext.SIGNATURE_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Commons.Actions.Contexts.IMetaInfo"/>
+        /// that will be used during new
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// creations.
+        /// </summary>
+        /// <param name="metaInfo">meta info to set</param>
+        /// <returns>
+        /// the same
+        /// <see cref="SignatureValidator"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Signatures.Validation.V1.SignatureValidator SetEventCountingMetaInfo(IMetaInfo metaInfo
+            ) {
+            this.metaInfo = metaInfo;
+            return this;
         }
 
         /// <summary>Validate all signatures in the document</summary>
@@ -90,14 +115,25 @@ namespace iText.Signatures.Validation.V1 {
         /// </returns>
         public virtual ValidationReport ValidateSignatures(PdfDocument document) {
             ValidationReport report = new ValidationReport();
+            documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
+            ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(baseValidationContext
+                , document);
+            report.Merge(revisionsValidationReport);
+            if (StopValidation(report, baseValidationContext)) {
+                return report;
+            }
             SignatureUtil util = new SignatureUtil(document);
             IList<String> signatureNames = util.GetSignatureNames();
             JavaCollectionsUtil.Reverse(signatureNames);
             foreach (String fieldName in signatureNames) {
                 try {
-                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName)))) {
+                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName)), new DocumentProperties
+                        ().SetEventCountingMetaInfo(metaInfo))) {
                         ValidationReport subReport = ValidateLatestSignature(doc);
                         report.Merge(subReport);
+                        if (StopValidation(report, baseValidationContext)) {
+                            return report;
+                        }
                     }
                 }
                 catch (System.IO.IOException e) {
@@ -235,8 +271,8 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
-            return !properties.GetContinueAfterFailure(validationContext) && result.GetValidationResult() != ValidationReport.ValidationResult
-                .VALID;
+            return !properties.GetContinueAfterFailure(validationContext) && result.GetValidationResult() == ValidationReport.ValidationResult
+                .INVALID;
         }
     }
 }

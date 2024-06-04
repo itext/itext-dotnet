@@ -92,6 +92,11 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
+        public virtual iText.Signatures.Validation.V1.AssertValidationReport HasLogItems(int count, Action<AssertValidationReport.AssertValidationReportLogItem
+            > c) {
+            return this.HasLogItems(count, count, c);
+        }
+
         public virtual iText.Signatures.Validation.V1.AssertValidationReport HasStatus(ValidationReport.ValidationResult
              expectedStatus) {
             chain.SetNext((new AssertValidationReport.StatusCheck(expectedStatus)));

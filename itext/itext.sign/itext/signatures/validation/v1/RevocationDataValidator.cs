@@ -75,7 +75,7 @@ namespace iText.Signatures.Validation.V1 {
         /// See
         /// <see cref="ValidatorChainBuilder"/>
         /// </param>
-        internal RevocationDataValidator(ValidatorChainBuilder builder) {
+        protected internal RevocationDataValidator(ValidatorChainBuilder builder) {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.ocspValidator = builder.GetOCSPValidator();

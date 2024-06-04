@@ -32,6 +32,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.V1.Context;
+using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
@@ -185,11 +186,13 @@ namespace iText.Signatures.Validation.V1 {
                     (trustedCerts)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator
                     ();
                 ValidationReport report = signatureValidator.ValidateSignatures(document);
-                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
-                    (4).HasNumberOfFailures(0).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                // Document contains invalid unused entry which is invalid according to DocumentRevisionsValidator.
+                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfLogs
+                    (5).HasNumberOfFailures(1).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
                     ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "timestampSig1")).HasLogItem((l) =>
                      l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
-                    , (p) => "Signature1")));
+                    , (p) => "Signature1")).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.UNEXPECTED_ENTRY_IN_XREF, (p) => "28")));
             }
         }
 
@@ -201,9 +204,9 @@ namespace iText.Signatures.Validation.V1 {
                     (), false)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator();
                 ValidationReport report = signatureValidator.ValidateSignatures(document);
                 AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
-                    ).HasNumberOfLogs(2).HasNumberOfFailures(1).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
-                    ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItem((l) => l.
-                    WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE
+                    ).HasNumberOfLogs(3).HasNumberOfFailures(2).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                    ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItems(2, (l) =>
+                     l.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE
                     )));
             }
         }

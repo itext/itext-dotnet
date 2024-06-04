@@ -34,6 +34,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.V1.Context;
+using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
@@ -58,6 +59,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private MockChainValidator mockCertificateChainValidator;
 
+        private MockDocumentRevisionsValidator mockDocumentRevisionsValidator;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
         }
@@ -67,9 +70,10 @@ namespace iText.Signatures.Validation.V1 {
             mockCertificateChainValidator = new MockChainValidator();
             parameters = new SignatureValidationProperties();
             mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
             builder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(mockCertificateRetriever).WithSignatureValidationProperties
                 (parameters).WithCertificateChainValidator(mockCertificateChainValidator).WithRevocationDataValidator(
-                new MockRevocationDataValidator());
+                new MockRevocationDataValidator()).WithDocumentRevisionsValidator(mockDocumentRevisionsValidator);
         }
 
         [NUnit.Framework.Test]
@@ -282,6 +286,18 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator();
                 report = signatureValidator.ValidateLatestSignature(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                (1).HasLogItem((al) => al.WithCheckName("test").WithMessage("test")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidRevisionsValidationLeadsToInvalidResultTest() {
+            mockDocumentRevisionsValidator.SetReportItemStatus(ReportItem.ReportItemStatus.INVALID);
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateSignatures(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
                 (1).HasLogItem((al) => al.WithCheckName("test").WithMessage("test")));

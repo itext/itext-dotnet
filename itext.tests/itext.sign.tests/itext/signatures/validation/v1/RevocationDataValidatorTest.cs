@@ -33,6 +33,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.V1.Context;
+using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
@@ -307,7 +308,7 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_398(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_401(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
@@ -315,8 +316,8 @@ namespace iText.Signatures.Validation.V1 {
                 ).WithMessage(RevocationDataValidator.NO_REVOCATION_DATA)));
         }
 
-        private sealed class _ICrlClient_398 : ICrlClient {
-            public _ICrlClient_398(byte[] crl) {
+        private sealed class _ICrlClient_401 : ICrlClient {
+            public _ICrlClient_401(byte[] crl) {
                 this.crl = crl;
             }
 

@@ -92,7 +92,7 @@ namespace iText.Signatures.Validation.V1 {
         /// See
         /// <see cref="ValidatorChainBuilder"/>
         /// </param>
-        internal CRLValidator(ValidatorChainBuilder builder) {
+        protected internal CRLValidator(ValidatorChainBuilder builder) {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.builder = builder;

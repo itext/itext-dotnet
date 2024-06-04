@@ -22,10 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Signatures.Validation.V1;
 using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Extensions;
 
-namespace iText.Signatures.Validation.V1 {
+namespace iText.Signatures.Validation.V1.Mocks {
     /// <summary>This mock class wrapper a real SignatureValidationProperties instance.</summary>
     /// <remarks>
     /// This mock class wrapper a real SignatureValidationProperties instance.
@@ -100,25 +101,25 @@ namespace iText.Signatures.Validation.V1 {
             return wrappedProperties.GetRevocationOnlineFetching(validationContext);
         }
 
-        public virtual iText.Signatures.Validation.V1.MockSignatureValidationProperties AddContinueAfterFailureResponse
+        public virtual iText.Signatures.Validation.V1.Mocks.MockSignatureValidationProperties AddContinueAfterFailureResponse
             (bool value) {
             continueAfterFailureResponses.Add(value);
             return this;
         }
 
-        public virtual iText.Signatures.Validation.V1.MockSignatureValidationProperties AddFreshnessResponse(TimeSpan
-             freshness) {
+        public virtual iText.Signatures.Validation.V1.Mocks.MockSignatureValidationProperties AddFreshnessResponse
+            (TimeSpan freshness) {
             freshnessResponses.Add(freshness);
             return this;
         }
 
-        public virtual iText.Signatures.Validation.V1.MockSignatureValidationProperties AddRequiredExtensionsResponses
+        public virtual iText.Signatures.Validation.V1.Mocks.MockSignatureValidationProperties AddRequiredExtensionsResponses
             (IList<CertificateExtension> requiredExtensions) {
             requiredExtensionsResponses.Add(requiredExtensions);
             return this;
         }
 
-        public virtual iText.Signatures.Validation.V1.MockSignatureValidationProperties AddRevocationOnlineFetchingResponse
+        public virtual iText.Signatures.Validation.V1.Mocks.MockSignatureValidationProperties AddRevocationOnlineFetchingResponse
             (SignatureValidationProperties.OnlineFetching value) {
             revocationOnlineFetchingResponses.Add(value);
             return this;
