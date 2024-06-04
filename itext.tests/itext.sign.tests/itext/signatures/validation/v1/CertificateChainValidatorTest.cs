@@ -88,8 +88,7 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert
                 ));
             certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
-            ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
-                );
+            validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME);
             NUnit.Framework.Assert.AreEqual(2, mockRevocationDataValidator.calls.Count);
             MockRevocationDataValidator.RevocationDataValidatorCall call1 = mockRevocationDataValidator.calls[0];
             NUnit.Framework.Assert.AreEqual(signingCert, call1.certificate);

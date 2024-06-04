@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
@@ -35,6 +36,9 @@ using iText.Signatures.Validation.V1.Report;
 namespace iText.Signatures.Validation.V1 {
     /// <summary>Class that allows you to validate a single OCSP response.</summary>
     public class OCSPValidator {
+        internal const String CERT_IS_EXPIRED = "Certificate is expired on {0}. Its revocation status could have been "
+             + "removed from the database, so the OCSP response status could be falsely valid.";
+
         internal const String CERT_IS_REVOKED = "Certificate status is revoked.";
 
         internal const String CERT_STATUS_IS_UNKNOWN = "Certificate status is unknown.";
@@ -140,6 +144,16 @@ namespace iText.Signatures.Validation.V1 {
             ICertStatus status = singleResp.GetCertStatus();
             IRevokedCertStatus revokedStatus = BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status);
             bool isStatusGood = BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(status);
+            // Check OCSP Archive Cutoff extension in case OCSP response was generated after the certificate is expired.
+            if (isStatusGood && certificate.GetNotAfter().Before(ocspResp.GetProducedAt())) {
+                DateTime startExpirationDate = GetArchiveCutoffExtension(ocspResp);
+                if (TimestampConstants.UNDEFINED_TIMESTAMP_DATE == startExpirationDate || certificate.GetNotAfter().Before
+                    (startExpirationDate)) {
+                    report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, MessageFormatUtil.Format(CERT_IS_EXPIRED
+                        , certificate.GetNotAfter()), ReportItem.ReportItemStatus.INDETERMINATE));
+                    return;
+                }
+            }
             if (isStatusGood || (revokedStatus != null && validationDate.Before(revokedStatus.GetRevocationTime()))) {
                 // Check if the OCSP response is genuine.
                 VerifyOcspResponder(report, localContext, ocspResp, (IX509Certificate)issuerCert);
@@ -227,6 +241,22 @@ namespace iText.Signatures.Validation.V1 {
                 report.AddReportItem(ReportItem.ReportItemStatus.INVALID == reportItem.GetStatus() ? reportItem.SetStatus(
                     ReportItem.ReportItemStatus.INDETERMINATE) : reportItem);
             }
+        }
+
+        private DateTime GetArchiveCutoffExtension(IBasicOcspResponse ocspResp) {
+            // OCSP containing this extension specifies the reliable revocation status of the certificate
+            // that expired after the date specified in the Archive Cutoff extension or at that date.
+            IAsn1Encodable archiveCutoff = ocspResp.GetExtensionParsedValue(BOUNCY_CASTLE_FACTORY.CreateOCSPObjectIdentifiers
+                ().GetIdPkixOcspArchiveCutoff());
+            if (!archiveCutoff.IsNull()) {
+                try {
+                    return BOUNCY_CASTLE_FACTORY.CreateASN1GeneralizedTime(archiveCutoff).GetDate();
+                }
+                catch (Exception) {
+                }
+            }
+            // Ignore exception.
+            return (DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE;
         }
     }
 }

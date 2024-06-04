@@ -118,7 +118,7 @@ namespace iText.Signatures.Validation.V1 {
 
         [NUnit.Framework.Test]
         public virtual void ValidateAuthorizedOCSPResponderFromTheTrustedStoreTest() {
-            ValidationReport report = ValidateOcspWithoutCertsTest(true);
+            ValidationReport report = ValidateOcspWithoutCertsTest();
             NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
         }
@@ -161,10 +161,7 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private ValidationReport ValidateTest(DateTime checkDate) {
-            return ValidateTest(checkDate, checkDate.AddDays(1), 0);
-        }
-
-        private ValidationReport ValidateTest(DateTime checkDate, DateTime thisUpdate, long freshness) {
+            DateTime thisUpdate = checkDate.AddDays(1);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetThisUpdate(DateTimeUtil.GetCalendar(thisUpdate));
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
@@ -174,38 +171,20 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
-                (freshness));
+                (0));
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
                 );
             return report;
         }
 
-        private ValidationReport ValidateRevokedTest(DateTime checkDate, DateTime revocationDate) {
-            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
-            builder.SetCertificateStatus(FACTORY.CreateRevokedStatus(revocationDate, FACTORY.CreateCRLReason().GetKeyCompromise
-                ()));
-            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
-            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
-                GetEncoded(checkCert, caCert, null)));
-            ValidationReport report = new ValidationReport();
-            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
-            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
-            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
-                );
-            return report;
-        }
-
-        private ValidationReport ValidateOcspWithoutCertsTest(bool addResponderToTrusted) {
+        private ValidationReport ValidateOcspWithoutCertsTest() {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetOcspCertsChain(new IX509Certificate[0]);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
                 GetEncoded(checkCert, caCert, null)));
             ValidationReport report = new ValidationReport();
-            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
-            if (addResponderToTrusted) {
-                certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(responderCert));
-            }
+            certificateRetriever.AddTrustedCertificates(JavaUtil.ArraysAsList(caCert, responderCert));
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
                 .TEST_DATE_TIME);
@@ -249,19 +228,6 @@ namespace iText.Signatures.Validation.V1 {
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
                 );
             return report;
-        }
-
-        private class TestIssuingCertificateRetriever : IssuingCertificateRetriever {
-            internal IX509Certificate issuerCertificate;
-
-            public TestIssuingCertificateRetriever(String issuerPath)
-                : base() {
-                this.issuerCertificate = PemFileHelper.ReadFirstChain(issuerPath)[0];
-            }
-
-            public override IX509Certificate RetrieveIssuerCertificate(IX509Certificate certificate) {
-                return issuerCertificate;
-            }
         }
     }
 }

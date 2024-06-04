@@ -23,10 +23,10 @@
 using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Asn1.Ocsp;
-using iText.Bouncycastle.Cert;
 using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.X509;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
@@ -120,6 +120,12 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
         /// <summary><inheritDoc/></summary>
         public DateTime GetProducedAt() {
             return GetBasicOcspResponse().TbsResponseData.ProducedAt.ToDateTime();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IAsn1Encodable GetExtensionParsedValue(IDerObjectIdentifier objectIdentifier) {
+            return new Asn1EncodableBC(GetBasicOcspResponse().TbsResponseData.ResponseExtensions
+                .GetExtensionParsedValue(((DerObjectIdentifierBC)objectIdentifier).GetDerObjectIdentifier()));
         }
     }
 }

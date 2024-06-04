@@ -29,10 +29,6 @@ using iText.Test;
 namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("UnitTest")]
     public class SignatureValidationPropertiesTest : ExtendedITextTest {
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-        }
-
         [NUnit.Framework.Test]
         public virtual void GetParametersValueForSpecificTest() {
             SignatureValidationProperties sut = new SignatureValidationProperties();

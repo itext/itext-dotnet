@@ -357,7 +357,7 @@ namespace iText.Signatures.Validation.V1 {
 
         private byte[] CreateCrl(IX509Certificate issuerCert, IPrivateKey issuerKey, DateTime issueDate, DateTime 
             nextUpdate, IX509Certificate revokedCert, DateTime revocationDate, int reason) {
-            TestCrlBuilder builder = new TestCrlBuilder(issuerCert, issuerKey);
+            TestCrlBuilder builder = new TestCrlBuilder(issuerCert, issuerKey, issueDate);
             if (nextUpdate != null) {
                 builder.SetNextUpdate(nextUpdate);
             }

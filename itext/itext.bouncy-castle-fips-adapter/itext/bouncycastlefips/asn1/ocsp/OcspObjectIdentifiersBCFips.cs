@@ -44,6 +44,9 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         private static readonly IDerObjectIdentifier ID_PKIX_OCSP_NOCHECK = new DerObjectIdentifierBCFips(OcspObjectIdentifiers
             .PkixOcspNocheck);
 
+        private static readonly IDerObjectIdentifier ID_PKIX_OCSP_ARCHIVE_CUTOFF = new DerObjectIdentifierBCFips(OcspObjectIdentifiers
+            .PkixOcspArchiveCutoff);
+
         private readonly OcspObjectIdentifiers ocspObjectIdentifiers;
 
         /// <summary>
@@ -91,6 +94,11 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         /// <summary><inheritDoc/></summary>
         public virtual IDerObjectIdentifier GetIdPkixOcspNoCheck() {
             return ID_PKIX_OCSP_NOCHECK;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerObjectIdentifier GetIdPkixOcspArchiveCutoff() {
+            return ID_PKIX_OCSP_ARCHIVE_CUTOFF;
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>

@@ -63,8 +63,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private SignatureValidationProperties parameters;
 
-        private ValidationContext baseContext = new ValidationContext(ValidatorContext.SIGNATURE_VALIDATOR, CertificateSource
-            .SIGNER_CERT, TimeBasedContext.PRESENT);
+        private readonly ValidationContext baseContext = new ValidationContext(ValidatorContext.SIGNATURE_VALIDATOR
+            , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
 
         private ValidatorChainBuilder validatorChainBuilder;
 
