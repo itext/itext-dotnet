@@ -29,39 +29,44 @@ namespace iText.Layout.Renderer {
     internal class GridCell {
         private readonly IRenderer value;
 
-        private readonly GridCell.IntRectangle gridArea;
+        private int gridX;
 
-        private Rectangle layoutArea = new Rectangle(0.0f, 0.0f, 0.0f, 0.0f);
+        private int gridY;
 
-        private bool isValueFitOnCellArea = true;
+        private readonly int spanColumn;
+
+        private readonly int spanRow;
+
+        private readonly Rectangle layoutArea = new Rectangle(0.0f, 0.0f, 0.0f, 0.0f);
 
         /// <summary>Create a grid cell and init value renderer position on a grid based on its properties.</summary>
         /// <param name="value">item renderer</param>
         internal GridCell(IRenderer value) {
             this.value = value;
-            int[] rowValues = InitRowColumnsValues(value.GetProperty<int?>(Property.GRID_ROW_START), value.GetProperty
-                <int?>(Property.GRID_ROW_END));
-            int height = rowValues[0] == 0 ? 1 : rowValues[1] - rowValues[0];
-            int[] columnValues = InitRowColumnsValues(value.GetProperty<int?>(Property.GRID_COLUMN_START), value.GetProperty
-                <int?>(Property.GRID_COLUMN_END));
-            int width = columnValues[0] == 0 ? 1 : columnValues[1] - columnValues[0];
-            gridArea = new GridCell.IntRectangle(columnValues[0] - 1, rowValues[0] - 1, width, height);
+            int[] rowPlacement = InitAxisPlacement(value.GetProperty<int?>(Property.GRID_ROW_START), value.GetProperty
+                <int?>(Property.GRID_ROW_END), value.GetProperty<int?>(Property.GRID_ROW_SPAN));
+            gridY = rowPlacement[0];
+            spanRow = rowPlacement[1];
+            int[] columnPlacement = InitAxisPlacement(value.GetProperty<int?>(Property.GRID_COLUMN_START), value.GetProperty
+                <int?>(Property.GRID_COLUMN_END), value.GetProperty<int?>(Property.GRID_COLUMN_SPAN));
+            gridX = columnPlacement[0];
+            spanColumn = columnPlacement[1];
         }
 
         internal virtual int GetColumnStart() {
-            return gridArea.GetLeft();
+            return gridX;
         }
 
         internal virtual int GetColumnEnd() {
-            return gridArea.GetRight();
+            return gridX + spanColumn;
         }
 
         internal virtual int GetRowStart() {
-            return gridArea.GetBottom();
+            return gridY;
         }
 
         internal virtual int GetRowEnd() {
-            return gridArea.GetTop();
+            return gridY + spanRow;
         }
 
         internal virtual int GetStart(Grid.GridOrder order) {
@@ -83,11 +88,11 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual int GetGridHeight() {
-            return gridArea.GetHeight();
+            return spanRow;
         }
 
         internal virtual int GetGridWidth() {
-            return gridArea.GetWidth();
+            return spanColumn;
         }
 
         internal virtual int GetGridSpan(Grid.GridOrder order) {
@@ -103,128 +108,68 @@ namespace iText.Layout.Renderer {
             return value;
         }
 
-        internal virtual bool IsValueFitOnCellArea() {
-            return isValueFitOnCellArea;
-        }
-
         internal virtual Rectangle GetLayoutArea() {
             return layoutArea;
         }
 
-        internal virtual GridCell.IntRectangle GetGridArea() {
-            return gridArea;
-        }
-
-        internal virtual void SetLayoutArea(Rectangle layoutArea) {
-            this.layoutArea = layoutArea;
-        }
-
-        internal virtual void SetValueFitOnCellArea(bool valueFitOnCellArea) {
-            isValueFitOnCellArea = valueFitOnCellArea;
-        }
-
         internal virtual void SetPos(int y, int x) {
-            this.gridArea.SetY(y);
-            this.gridArea.SetX(x);
+            this.gridY = y;
+            this.gridX = x;
         }
 
         /// <summary>
-        /// init row/column start/end value
+        /// Init axis placement values
         /// if start &gt; end values are swapped
-        /// if only start or end are specified - other value is initialized so cell would have height/width = 1
         /// </summary>
         /// <param name="start">x/y pos of cell on a grid</param>
         /// <param name="end">x/y + width/height pos of cell on a grid</param>
-        /// <returns>row/column start/end values as a pair, where first value is start, second is end</returns>
-        private int[] InitRowColumnsValues(int? start, int? end) {
-            int[] result = new int[] { 0, 0 };
+        /// <param name="span">vertical or horizontal span of the cell on a grid</param>
+        /// <returns>row/column start + vertical/horizontal span values as a pair, where first value is start, second is span
+        ///     </returns>
+        private int[] InitAxisPlacement(int? start, int? end, int? span) {
+            int[] result = new int[] { 0, 1 };
             if (start != null && end != null) {
-                result[0] = (int)start;
-                result[1] = (int)end;
-                if (start > end) {
-                    result[0] = (int)end;
-                    result[1] = (int)start;
+                int intStart = (int)start;
+                int intEnd = (int)end;
+                if (intStart < intEnd) {
+                    result[0] = intStart;
+                    result[1] = intEnd - intStart;
+                }
+                else {
+                    result[0] = intEnd;
+                    result[1] = intStart - intEnd;
                 }
             }
             else {
                 if (start != null) {
                     result[0] = (int)start;
-                    result[1] = (int)start + 1;
+                    if (span != null) {
+                        result[1] = (int)span;
+                    }
                 }
                 else {
+                    // span default value 1 was set up on the result array initialization
                     if (end != null) {
-                        result[0] = end <= 1 ? 1 : ((int)end) - 1;
-                        result[1] = end <= 1 ? 2 : (int)end;
+                        int intEnd = (int)end;
+                        if (span == null) {
+                            result[0] = end <= 1 ? 1 : ((int)end) - 1;
+                        }
+                        else {
+                            // span default value 1 was set up on the result array initialization
+                            int intSpan = (int)span;
+                            result[1] = intSpan;
+                            result[0] = Math.Max(intEnd - intSpan, 1);
+                        }
+                    }
+                    else {
+                        if (span != null) {
+                            result[1] = (int)span;
+                        }
                     }
                 }
             }
+            result[0] -= 1;
             return result;
-        }
-
-        /// <summary>This class represents an integer rectangle.</summary>
-        /// <remarks>
-        /// This class represents an integer rectangle.
-        /// x,y - represents a bottom left corner of this rectangle.
-        /// </remarks>
-        internal class IntRectangle {
-            private int x;
-
-            private int y;
-
-            private int width;
-
-            private int height;
-
-            public IntRectangle(int x, int y, int width, int height) {
-                this.x = x;
-                this.y = y;
-                this.width = width;
-                this.height = height;
-            }
-
-            public virtual int GetLeft() {
-                return x;
-            }
-
-            public virtual int GetRight() {
-                return x + width;
-            }
-
-            public virtual int GetTop() {
-                return y + height;
-            }
-
-            public virtual int GetBottom() {
-                return y;
-            }
-
-            public virtual int GetWidth() {
-                return width;
-            }
-
-            public virtual int GetHeight() {
-                return height;
-            }
-
-            public virtual void SetX(int x) {
-                this.x = x;
-            }
-
-            public virtual void SetY(int y) {
-                this.y = y;
-            }
-
-            public virtual void SetWidth(int width) {
-                this.width = width;
-            }
-
-            public virtual void SetHeight(int height) {
-                this.height = height;
-            }
-
-            public override String ToString() {
-                return "Rectangle: start(" + x + ',' + y + ") ," + width + 'x' + height;
-            }
         }
     }
 }

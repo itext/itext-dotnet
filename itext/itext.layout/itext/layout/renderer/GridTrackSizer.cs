@@ -479,7 +479,6 @@ namespace iText.Layout.Renderer {
                 LayoutResult inifiniteHeighLayoutResult = cell.GetValue().Layout(layoutContext);
                 if (inifiniteHeighLayoutResult.GetStatus() == LayoutResult.NOTHING || inifiniteHeighLayoutResult.GetStatus
                     () == LayoutResult.PARTIAL) {
-                    cell.SetValueFitOnCellArea(false);
                     return 0;
                 }
                 return inifiniteHeighLayoutResult.GetOccupiedArea().GetBBox().GetHeight();

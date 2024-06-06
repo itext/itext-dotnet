@@ -218,32 +218,5 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[2][1]);
             NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[0][2]);
         }
-
-        [NUnit.Framework.Test]
-        public virtual void ColumnWithTallAndWideCellPackingTest() {
-            Grid grid = new Grid(3, 3, GridFlow.COLUMN);
-            GridCell cell1 = new GridCell(new TextRenderer(new Text("One")));
-            GridCell tallCell = new GridCell(new TextRenderer(new Text("Two")));
-            tallCell.GetGridArea().SetHeight(2);
-            GridCell cell3 = new GridCell(new TextRenderer(new Text("Three")));
-            GridCell cell4 = new GridCell(new TextRenderer(new Text("Four")));
-            cell4.GetGridArea().SetWidth(2);
-            GridCell cell5 = new GridCell(new TextRenderer(new Text("Five")));
-            GridCell cell6 = new GridCell(new TextRenderer(new Text("Six")));
-            grid.AddCell(cell1);
-            grid.AddCell(tallCell);
-            grid.AddCell(cell3);
-            grid.AddCell(cell4);
-            grid.AddCell(cell5);
-            grid.AddCell(cell6);
-            NUnit.Framework.Assert.AreEqual(cell1, grid.GetRows()[0][0]);
-            NUnit.Framework.Assert.AreEqual(tallCell, grid.GetRows()[1][0]);
-            NUnit.Framework.Assert.AreEqual(tallCell, grid.GetRows()[2][0]);
-            NUnit.Framework.Assert.AreEqual(cell3, grid.GetRows()[0][1]);
-            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[1][1]);
-            NUnit.Framework.Assert.AreEqual(cell4, grid.GetRows()[1][2]);
-            NUnit.Framework.Assert.AreEqual(cell5, grid.GetRows()[2][1]);
-            NUnit.Framework.Assert.AreEqual(cell6, grid.GetRows()[0][2]);
-        }
     }
 }

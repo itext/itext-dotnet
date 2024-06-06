@@ -686,5 +686,56 @@ namespace iText.Layout.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ColumnSpanTest() {
+            String filename = DESTINATION_FOLDER + "columnSpanTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_columnSpanTest.pdf";
+            IList<GridValue> templateColumns = new List<GridValue>();
+            templateColumns.Add(GridValue.CreatePointValue(100.0f));
+            templateColumns.Add(GridValue.CreatePointValue(100.0f));
+            templateColumns.Add(GridValue.CreatePointValue(100.0f));
+            SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
+                Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
+                paragraph1.SetProperty(Property.GRID_COLUMN_START, 1);
+                paragraph1.SetProperty(Property.GRID_COLUMN_SPAN, 2);
+                grid.Add(paragraph1);
+                grid.Add(new Paragraph("Two").SetBorder(border));
+                grid.Add(new Paragraph("Three").SetBorder(border));
+                grid.Add(new Paragraph("Four").SetBorder(border));
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RowSpanTest() {
+            String filename = DESTINATION_FOLDER + "rowSpanTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_rowSpanTest.pdf";
+            IList<GridValue> template = new List<GridValue>();
+            template.Add(GridValue.CreatePointValue(100.0f));
+            template.Add(GridValue.CreatePointValue(100.0f));
+            template.Add(GridValue.CreatePointValue(100.0f));
+            SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);
+                grid.SetProperty(Property.GRID_TEMPLATE_ROWS, template);
+                Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
+                paragraph1.SetProperty(Property.GRID_ROW_SPAN, 2);
+                paragraph1.SetProperty(Property.GRID_ROW_END, 3);
+                grid.Add(paragraph1);
+                grid.Add(new Paragraph("Two").SetBorder(border));
+                grid.Add(new Paragraph("Three").SetBorder(border));
+                grid.Add(new Paragraph("Four").SetBorder(border));
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
     }
 }
