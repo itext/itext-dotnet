@@ -157,7 +157,6 @@ namespace iText.Layout.Element.Gridcontainer {
                 , DESTINATION_FOLDER, "diff"));
         }
 
-        // TODO DEVSIX-8340
         [NUnit.Framework.Test]
         public virtual void OverflowGridContainerTest() {
             String fileName = DESTINATION_FOLDER + "overflowGridContainer.pdf";

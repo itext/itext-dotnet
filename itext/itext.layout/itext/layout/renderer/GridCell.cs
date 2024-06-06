@@ -39,6 +39,9 @@ namespace iText.Layout.Renderer {
 
         private readonly Rectangle layoutArea = new Rectangle(0.0f, 0.0f, 0.0f, 0.0f);
 
+        /// <summary>Cached track sizes for rows to use them during split.</summary>
+        private float[] rowSizes;
+
         /// <summary>Create a grid cell and init value renderer position on a grid based on its properties.</summary>
         /// <param name="value">item renderer</param>
         internal GridCell(IRenderer value) {
@@ -115,6 +118,14 @@ namespace iText.Layout.Renderer {
         internal virtual void SetPos(int y, int x) {
             this.gridY = y;
             this.gridX = x;
+        }
+
+        internal virtual float[] GetRowSizes() {
+            return this.rowSizes;
+        }
+
+        internal virtual void SetRowSizes(float[] rowSizes) {
+            this.rowSizes = rowSizes;
         }
 
         /// <summary>

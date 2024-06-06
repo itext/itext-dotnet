@@ -88,9 +88,19 @@ namespace iText.Layout.Renderer {
                 }
                 cell.GetLayoutArea().SetY(y);
                 float cellHeight = 0.0f;
+                float[] rowSizes = new float[cell.GetRowEnd() - cell.GetRowStart()];
+                int rowSizesIdx = 0;
                 for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
+                    rowSizes[rowSizesIdx] = (float)rows[i];
+                    if (rowSizesIdx != 0) {
+                        // We take into account only top gap and not bottom one
+                        rowSizes[rowSizesIdx] += rowGap;
+                    }
+                    ++rowSizesIdx;
                     cellHeight += (float)rows[i];
                 }
+                // Preserve row sizes for split
+                cell.SetRowSizes(rowSizes);
                 cellHeight += (cell.GetGridHeight() - 1) * rowGap;
                 cell.GetLayoutArea().SetHeight(cellHeight);
             }

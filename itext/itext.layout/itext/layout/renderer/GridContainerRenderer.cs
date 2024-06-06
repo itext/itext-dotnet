@@ -30,7 +30,7 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for a grid.</summary>
-    public class GridContainerRenderer : DivRenderer {
+    public class GridContainerRenderer : BlockRenderer {
         private bool isFirstLayout = true;
 
         /// <summary>Creates a Grid renderer from its corresponding layout object.</summary>
@@ -91,7 +91,32 @@ namespace iText.Layout.Renderer {
         public override void AddChild(IRenderer renderer) {
             renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             renderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
-            base.AddChild(renderer);
+            renderer.SetProperty(Property.COLLAPSING_MARGINS, DetermineCollapsingMargins(renderer));
+            GridItemRenderer itemRenderer = new GridItemRenderer();
+            itemRenderer.SetProperty(Property.COLLAPSING_MARGINS, false);
+            itemRenderer.AddChild(renderer);
+            base.AddChild(itemRenderer);
+        }
+
+        /// <summary>Calculates collapsing margins value.</summary>
+        /// <remarks>
+        /// Calculates collapsing margins value. It's based on browser behavior.
+        /// Always returning true somehow also almost works.
+        /// </remarks>
+        private static bool? DetermineCollapsingMargins(IRenderer renderer) {
+            IRenderer currentRenderer = renderer;
+            while (!currentRenderer.GetChildRenderers().IsEmpty()) {
+                if (currentRenderer.GetChildRenderers().Count > 1) {
+                    return true;
+                }
+                else {
+                    currentRenderer = currentRenderer.GetChildRenderers()[0];
+                }
+            }
+            if (currentRenderer is TableRenderer) {
+                return true;
+            }
+            return false;
         }
 
         private AbstractRenderer CreateSplitRenderer(IList<IRenderer> children) {
@@ -107,13 +132,14 @@ namespace iText.Layout.Renderer {
         }
 
         private AbstractRenderer CreateOverflowRenderer(IList<IRenderer> children) {
-            // TODO DEVSIX-8340 - We put the original amount of rows into overflow container.
             iText.Layout.Renderer.GridContainerRenderer overflowRenderer = (iText.Layout.Renderer.GridContainerRenderer
                 )GetNextRenderer();
             overflowRenderer.isFirstLayout = false;
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
+            overflowRenderer.SetProperty(Property.GRID_TEMPLATE_ROWS, null);
+            overflowRenderer.SetProperty(Property.GRID_AUTO_ROWS, null);
             overflowRenderer.SetChildRenderers(children);
             ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
             return overflowRenderer;
@@ -123,47 +149,79 @@ namespace iText.Layout.Renderer {
         private GridContainerRenderer.GridLayoutResult LayoutGrid(LayoutContext layoutContext, Rectangle actualBBox
             , Grid grid) {
             GridContainerRenderer.GridLayoutResult layoutResult = new GridContainerRenderer.GridLayoutResult();
+            int notLayoutedRow = grid.GetNumberOfRows();
             foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.ROW)) {
                 // Calculate cell layout context by getting actual x and y on parent layout area for it
                 LayoutContext cellContext = GetCellLayoutContext(layoutContext, actualBBox, cell);
+                Rectangle cellBBox = cellContext.GetArea().GetBBox();
                 IRenderer cellToRender = cell.GetValue();
-                cellToRender.SetProperty(Property.COLLAPSING_MARGINS, false);
                 // Now set the height for the individual items
                 // We know cell height upfront and this way we tell the element what it can occupy
-                Rectangle cellBBox = cellContext.GetArea().GetBBox();
-                if (!cellToRender.HasProperty(Property.HEIGHT)) {
-                    Rectangle rectangleWithoutBordersMarginsPaddings = cellBBox.Clone();
-                    if (cellToRender is AbstractRenderer) {
-                        AbstractRenderer abstractCellRenderer = ((AbstractRenderer)cellToRender);
-                        // We subtract margins/borders/paddings because we should take into account that
-                        // borders/paddings/margins should also fit into a cell.
-                        if (AbstractRenderer.IsBorderBoxSizing(cellToRender)) {
-                            abstractCellRenderer.ApplyMargins(rectangleWithoutBordersMarginsPaddings, false);
-                        }
-                        else {
-                            abstractCellRenderer.ApplyMarginsBordersPaddings(rectangleWithoutBordersMarginsPaddings, false);
-                        }
-                    }
-                    cellToRender.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
-                        .GetHeight()));
-                }
+                float itemHeight = ((GridItemRenderer)cellToRender).CalculateHeight(cellBBox.GetHeight());
+                cellToRender.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(itemHeight));
                 // Adjust cell BBox to the remaining part of the layout bbox
                 // This way we can layout elements partially
                 cellBBox.SetHeight(cellBBox.GetTop() - actualBBox.GetBottom()).SetY(actualBBox.GetY());
+                cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA, true);
                 LayoutResult cellResult = cellToRender.Layout(cellContext);
-                if (cellResult.GetStatus() == LayoutResult.NOTHING) {
-                    layoutResult.GetOverflowRenderers().Add(cellToRender);
-                    layoutResult.GetCauseOfNothing().Add(cellResult.GetCauseOfNothing());
-                }
-                else {
-                    // PARTIAL + FULL result handling
-                    layoutResult.GetSplitRenderers().Add(cellToRender);
-                    if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
-                        layoutResult.GetOverflowRenderers().Add(cellResult.GetOverflowRenderer());
-                    }
+                notLayoutedRow = Math.Min(notLayoutedRow, ProcessLayoutResult(layoutResult, cell, cellResult));
+            }
+            foreach (IRenderer overflowRenderer in layoutResult.GetOverflowRenderers()) {
+                if (overflowRenderer.GetProperty<int?>(Property.GRID_ROW_START) != null) {
+                    overflowRenderer.SetProperty(Property.GRID_ROW_START, (int)overflowRenderer.GetProperty<int?>(Property.GRID_ROW_START
+                        ) - notLayoutedRow);
+                    overflowRenderer.SetProperty(Property.GRID_ROW_END, (int)overflowRenderer.GetProperty<int?>(Property.GRID_ROW_END
+                        ) - notLayoutedRow);
                 }
             }
             return layoutResult;
+        }
+
+        private static int ProcessLayoutResult(GridContainerRenderer.GridLayoutResult layoutResult, GridCell cell, 
+            LayoutResult cellResult) {
+            IRenderer cellToRenderer = cell.GetValue();
+            if (cellResult.GetStatus() == LayoutResult.NOTHING) {
+                cellToRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
+                cellToRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
+                cellToRenderer.SetProperty(Property.GRID_ROW_START, cell.GetRowStart() + 1);
+                cellToRenderer.SetProperty(Property.GRID_ROW_END, cell.GetRowEnd() + 1);
+                layoutResult.GetOverflowRenderers().Add(cellToRenderer);
+                layoutResult.GetCauseOfNothing().Add(cellResult.GetCauseOfNothing());
+                return cell.GetRowStart();
+            }
+            // PARTIAL + FULL result handling
+            layoutResult.GetSplitRenderers().Add(cellToRenderer);
+            if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
+                IRenderer overflowRenderer = cellResult.GetOverflowRenderer();
+                overflowRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
+                overflowRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
+                int rowStart = cell.GetRowStart() + 1;
+                int rowEnd = cell.GetRowEnd() + 1;
+                layoutResult.GetOverflowRenderers().Add(overflowRenderer);
+                // Now let's find out where we split exactly
+                float accumulatedRowSize = 0;
+                float layoutedHeight = cellResult.GetOccupiedArea().GetBBox().GetHeight();
+                int notLayoutedRow = rowStart - 1;
+                for (int i = 0; i < cell.GetRowSizes().Length; ++i) {
+                    accumulatedRowSize += cell.GetRowSizes()[i];
+                    if (accumulatedRowSize < layoutedHeight) {
+                        ++rowStart;
+                        ++notLayoutedRow;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                // We don't know what to do if rowStart is equal or more than rowEnd
+                // Let's not try to guess by just take the 1st available space in a column
+                // by leaving nulls for grid-row-start/end
+                if (rowEnd > rowStart) {
+                    overflowRenderer.SetProperty(Property.GRID_ROW_START, rowStart);
+                    overflowRenderer.SetProperty(Property.GRID_ROW_END, rowEnd);
+                }
+                return notLayoutedRow;
+            }
+            return int.MaxValue;
         }
 
         //Init cell layout context based on a parent context and calculated cell layout area from grid sizing algorithm.
@@ -187,10 +245,12 @@ namespace iText.Layout.Renderer {
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, Grid grid, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
             float totalHeight = UpdateOccupiedHeight(grid.GetHeight(), isFull);
-            area.GetBBox().SetHeight(totalHeight);
-            Rectangle initialBBox = layoutContext.GetArea().GetBBox();
-            area.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - area.GetBBox().GetHeight());
-            RecalculateHeightAndWidthAfterLayout(area.GetBBox(), isFull);
+            if (totalHeight < area.GetBBox().GetHeight() || isFull) {
+                area.GetBBox().SetHeight(totalHeight);
+                Rectangle initialBBox = layoutContext.GetArea().GetBBox();
+                area.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - area.GetBBox().GetHeight());
+                RecalculateHeightAndWidthAfterLayout(area.GetBBox(), isFull);
+            }
             return area;
         }
 
