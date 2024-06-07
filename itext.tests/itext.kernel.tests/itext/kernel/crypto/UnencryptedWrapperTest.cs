@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Font;
 using iText.Kernel.Logs;
@@ -101,7 +102,7 @@ namespace iText.Kernel.Crypto {
             PdfDocument document = new PdfDocument(new PdfReader(inPath));
             PdfEncryptedPayloadDocument encryptedDocument = document.GetEncryptedPayloadDocument();
             byte[] encryptedDocumentBytes = encryptedDocument.GetDocumentBytes();
-            FileStream fos = new FileStream(outPath, FileMode.Create);
+            Stream fos = FileUtil.GetFileOutputStream(outPath);
             fos.Write(encryptedDocumentBytes);
             fos.Dispose();
             document.Close();

@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -64,7 +63,7 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H
                 , "Puritan42"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, new String[] { "Puritan42" });
@@ -86,7 +85,7 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetFontFamily("Puritan 2.0", "FreeSans");
@@ -108,7 +107,7 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetFontFamily(JavaUtil.ArraysAsList("Puritan 2.0", "Noto Sans"));
@@ -130,7 +129,7 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, "'Puritan', \"FreeSans\"");
@@ -154,7 +153,7 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
             String s = "Hello мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetFontFamily("Puritan 2.0");
@@ -177,7 +176,7 @@ namespace iText.Layout {
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
             // The provided alias is incorrect. It'll be used as a font's family, but since the name is invalid, the font shouldn't be selected
             sel.GetFontSet().AddFont(StandardFonts.TIMES_BOLD, null, "Times-Roman Bold");
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Div div = new Div().SetFontFamily(StandardFonts.TIMES_ROMAN);
@@ -202,7 +201,7 @@ namespace iText.Layout {
             sel.GetFontSet().AddFont(StandardFonts.HELVETICA_BOLD);
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
             sel.GetFontSet().AddFont(StandardFonts.TIMES_BOLD);
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Div div = new Div().SetFontFamily(StandardFontFamilies.TIMES);
@@ -226,7 +225,7 @@ namespace iText.Layout {
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
             // correct alias
             sel.GetFontSet().AddFont(StandardFonts.TIMES_BOLD);
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Div div = new Div().SetFontFamily(StandardFontFamilies.TIMES);
@@ -247,7 +246,7 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             sel.AddStandardPdfFonts();
             String s = "Hello world!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Paragraph paragraph = new Paragraph(s);
@@ -368,7 +367,7 @@ namespace iText.Layout {
             provider.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, japaneseAlias);
             provider.AddFont(fontsFolder + "FreeSans.ttf");
             String s = "Hello world!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(provider);
             Paragraph paragraph = new Paragraph(new Text(s).SetBackgroundColor(ColorConstants.LIGHT_GRAY));
@@ -392,7 +391,7 @@ namespace iText.Layout {
                 RangeBuilder(1024, 1279).Create()));
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Size() == 2);
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
@@ -466,7 +465,7 @@ namespace iText.Layout {
                 , new RangeBuilder(1024, 1279).Create()));
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Size() == 2);
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, new String[] { "FontAlias" });
@@ -491,7 +490,7 @@ namespace iText.Layout {
                 ));
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Size() == 1);
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, new String[] { "FontAlias" });

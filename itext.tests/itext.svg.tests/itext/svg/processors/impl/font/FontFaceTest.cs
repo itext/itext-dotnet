@@ -265,8 +265,8 @@ namespace iText.Svg.Processors.Impl.Font {
             String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(sourceFolder + svgFile + ".svg"));
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
                 BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
-            ConvertToSinglePage(new FileStream(sourceFolder + svgFile + ".svg", FileMode.Open, FileAccess.Read), new FileStream
-                (destinationFolder + fileName + ".pdf", FileMode.Create), properties, writerprops);
+            ConvertToSinglePage(FileUtil.GetInputStreamForFile(sourceFolder + svgFile + ".svg"), FileUtil.GetFileOutputStream
+                (destinationFolder + fileName + ".pdf"), properties, writerprops);
             Compare(fileName, sourceFolder, destinationFolder);
         }
 

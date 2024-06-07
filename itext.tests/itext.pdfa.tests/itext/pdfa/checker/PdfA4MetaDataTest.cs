@@ -33,7 +33,6 @@ using iText.Pdfa.Exceptions;
 using iText.Test;
 
 namespace iText.Pdfa.Checker {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4MetaDataTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -518,8 +517,8 @@ namespace iText.Pdfa.Checker {
             String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                )));
             doc.AddNewPage();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithEmpty.xmp"));
             XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
@@ -539,8 +538,8 @@ namespace iText.Pdfa.Checker {
             String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                )));
             doc.AddNewPage();
             doc.GetPage(1).SetXmpMetadata(bytes);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
@@ -557,8 +556,8 @@ namespace iText.Pdfa.Checker {
             }
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
-                , "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )));
+                , "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"))
+                );
             doc.AddNewPage();
             consumer(doc);
             doc.Close();

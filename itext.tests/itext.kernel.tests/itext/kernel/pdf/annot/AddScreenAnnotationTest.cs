@@ -71,7 +71,7 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual void ScreenEmbeddedWavFromStreamTest() {
             String filename = destinationFolder + "screenEmbeddedWavFromStreamTest.pdf";
             String cmp = sourceFolder + "cmp_" + "screenEmbeddedWavFromStreamTest.pdf";
-            using (FileStream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read)) {
+            using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.wav")) {
                 using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, @is, null, "sample.wav", null, null);
                     AddPageWithScreenAnnotation(pdfDoc, spec);

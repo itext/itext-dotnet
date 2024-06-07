@@ -39,7 +39,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4TransparencyCheckTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -66,7 +65,7 @@ namespace iText.Pdfa {
                 .FORCE_EMBEDDED);
             PdfPage page1 = pdfDocument.AddNewPage();
             page1.AddOutputIntent(CreateOutputIntent());
-            FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
+            Stream streamGray = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "BlackWhite.icc");
             IccBased gray = new IccBased(streamGray, new float[] { 0.2f });
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState();
@@ -111,7 +110,7 @@ namespace iText.Pdfa {
                 .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
+            Stream streamGray = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "BlackWhite.icc");
             IccBased gray = new IccBased(streamGray, new float[] { 0.2f });
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -236,8 +235,8 @@ namespace iText.Pdfa {
         }
 
         private PdfOutputIntent CreateOutputIntent() {
-            return new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER
-                 + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read));
+            return new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm"));
         }
     }
 }

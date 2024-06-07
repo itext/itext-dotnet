@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Fields.Borders;
@@ -177,8 +177,8 @@ namespace iText.Forms.Form.Element {
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formButton.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
                 formButton.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
-                formButton.Add(new Image(new PdfImageXObject(ImageDataFactory.Create(StreamUtil.InputStreamToArray(new FileStream
-                    (imagePath, FileMode.Open, FileAccess.Read))))).SetWidth(98).SetHeight(98));
+                formButton.Add(new Image(new PdfImageXObject(ImageDataFactory.Create(StreamUtil.InputStreamToArray(FileUtil
+                    .GetInputStreamForFile(imagePath))))).SetWidth(98).SetHeight(98));
                 formButton.SetFontColor(ColorConstants.BLUE);
                 formButton.SetBackgroundColor(ColorConstants.YELLOW);
                 formButton.SetBorder(new SolidBorder(ColorConstants.GREEN, 1));

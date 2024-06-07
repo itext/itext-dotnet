@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Test;
 
@@ -33,7 +34,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void TestReadingJbigFromBytes() {
-            using (FileStream @is = new FileStream(SOURCE_FOLDER + "image.jb2", FileMode.Open, FileAccess.Read)) {
+            using (Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "image.jb2")) {
                 byte[] inputImage = StreamUtil.InputStreamToArray(@is);
                 ImageData imageData = ImageDataFactory.CreateJbig2(inputImage, 1);
                 NUnit.Framework.Assert.AreEqual(100, (int)imageData.GetHeight());
@@ -59,7 +60,7 @@ namespace iText.IO.Image {
         public virtual void TestCreatingJbigFromCommonMethodByUrlAndBytesProducesSameResult() {
             String imageFilePath = SOURCE_FOLDER + "image.jb2";
             ImageData imageDataFromUrl = ImageDataFactory.Create(UrlUtil.ToURL(imageFilePath));
-            using (FileStream fis = new FileStream(imageFilePath, FileMode.Open, FileAccess.Read)) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(imageFilePath)) {
                 byte[] imageBytes = StreamUtil.InputStreamToArray(fis);
                 ImageData imageDataFromBytes = ImageDataFactory.Create(imageBytes);
                 NUnit.Framework.Assert.AreEqual(imageDataFromBytes.GetData(), imageDataFromUrl.GetData());

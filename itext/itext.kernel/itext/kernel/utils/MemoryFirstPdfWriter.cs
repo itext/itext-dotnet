@@ -24,6 +24,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils {
@@ -75,7 +76,7 @@ namespace iText.Kernel.Utils {
         }
 
         internal virtual void Dump() {
-            FileStream fos = new FileStream(filePath, FileMode.Create);
+            Stream fos = FileUtil.GetFileOutputStream(filePath);
             outStream.WriteTo(fos);
             fos.Dispose();
         }

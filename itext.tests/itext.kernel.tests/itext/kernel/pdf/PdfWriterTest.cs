@@ -463,7 +463,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void CloseStream1() {
-            FileStream fos = new FileStream(destinationFolder + "closeStream1.pdf", FileMode.Create);
+            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + "closeStream1.pdf");
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.AddNewPage();
@@ -479,7 +479,7 @@ namespace iText.Kernel.Pdf {
         //ignored
         [NUnit.Framework.Test]
         public virtual void CloseStream2() {
-            FileStream fos = new FileStream(destinationFolder + "closeStream2.pdf", FileMode.Create);
+            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + "closeStream2.pdf");
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCloseStream(false);
             PdfDocument pdfDoc = new PdfDocument(writer);

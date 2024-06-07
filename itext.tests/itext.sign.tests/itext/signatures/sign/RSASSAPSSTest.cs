@@ -27,6 +27,7 @@ using iText.Bouncycastlefips.Security;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -178,7 +179,7 @@ namespace iText.Signatures.Sign {
         private void DoSign(String digestAlgo, String signatureAlgo, String outFile, IApplicableSignatureParams @params
             ) {
             // write to a file for easier inspection when debugging
-            using (FileStream fos = new FileStream(outFile, FileMode.Create)) {
+            using (FileStream fos = FileUtil.GetFileOutputStream(outFile)) {
                 IX509Certificate root = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "ca.crt"));
                 IX509Certificate signerCert = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "rsa.crt"));
                 IX509Certificate[] signChain = new IX509Certificate[] { signerCert, root };

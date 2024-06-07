@@ -75,8 +75,8 @@ namespace iText.Signatures.Sign {
                 .SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
             ltvVerification.Merge();
             document.Close();
-            PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), new FileStream(ltvTsFileName, FileMode.Create
-                ), new StampingProperties().UseAppendMode());
+            PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), FileUtil.GetFileOutputStream(ltvTsFileName),
+                new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig1");
             BasicCheckLtvDoc("ltvEnabledTsTest01.pdf", "timestampSig1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, compareFile));
@@ -101,7 +101,7 @@ namespace iText.Signatures.Sign {
             TestOcspClient testOcspClient = PrepareOcspClientForIssuer(intermediateCertP12FileName, caCertP12FileName);
             ICollection<ICrlClient> crlNotAvailableList = JavaUtil.ArraysAsList((ICrlClient)null, new _ICrlClient_129(
                 ));
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(ltvFileName), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, crlNotAvailableList, testOcspClient, testTsa, 0, PdfSigner.CryptoStandard
@@ -135,7 +135,7 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = PrepareSignatureHandler(signCertP12FileName);
             TestTsaClient testTsa = PrepareTsaClient(tsaCertP12FileName);
             TestCrlClient testCrlClient = PrepareCrlClientForIssuer(caCertP12FileName, intermediateCertP12FileName);
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(ltvFileName, FileMode.Create), 
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(ltvFileName), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, JavaCollectionsUtil.SingletonList<ICrlClient>(testCrlClient), null, testTsa
@@ -165,8 +165,8 @@ namespace iText.Signatures.Sign {
                 .SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES);
             ltvVerification.Merge();
             document.Close();
-            PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), new FileStream(ltvTsFileName, FileMode.Create
-                ), new StampingProperties().UseAppendMode());
+            PdfSigner signer = new PdfSigner(new PdfReader(ltvFileName), FileUtil.GetFileOutputStream(ltvTsFileName),
+                new StampingProperties().UseAppendMode());
             signer.Timestamp(testTsa, "timestampSig2");
             BasicCheckLtvDoc("secondLtvOriginalHasNoVriTs01.pdf", "timestampSig2");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(ltvTsFileName, compareFile));

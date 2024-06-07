@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Test;
 
@@ -67,37 +68,32 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void TestStreamUnknown() {
-            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".txt", FileMode.Open, FileAccess.Read), ImageType.
-                NONE);
+            TestStream(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".txt"), ImageType.NONE);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStreamGif() {
-            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".gif", FileMode.Open, FileAccess.Read), ImageType.
-                GIF);
+            TestStream(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".gif"), ImageType.GIF);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStreamJpeg() {
-            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".jpg", FileMode.Open, FileAccess.Read), ImageType.
-                JPEG);
+            TestStream(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".jpg"), ImageType.JPEG);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStreamTiff() {
-            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".tiff", FileMode.Open, FileAccess.Read), ImageType
-                .TIFF);
+            TestStream(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".tiff"), ImageType.TIFF);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStreamWmf() {
-            TestStream(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read), ImageType.
-                WMF);
+            TestStream(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".wmf"), ImageType.WMF);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStreamClosed() {
-            Stream stream = new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, FileAccess.Read);
+            Stream stream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".wmf");
             stream.Dispose();
             // A common exception is expected instead of com.itextpdf.io.exceptions.IOException, because in .NET
             // the thrown exception is different
@@ -106,32 +102,32 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void TestBytesUnknown() {
-            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".txt", FileMode.Open, 
-                FileAccess.Read)), ImageType.NONE);
+            TestBytes(StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".txt"
+                )), ImageType.NONE);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestBytesGif() {
-            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".gif", FileMode.Open, 
-                FileAccess.Read)), ImageType.GIF);
+            TestBytes(StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".gif"
+                )), ImageType.GIF);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestBytesJpeg() {
-            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".jpg", FileMode.Open, 
-                FileAccess.Read)), ImageType.JPEG);
+            TestBytes(StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".jpg"
+                )), ImageType.JPEG);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestBytesTiff() {
-            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".tiff", FileMode.Open
-                , FileAccess.Read)), ImageType.TIFF);
+            TestBytes(StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".tiff"
+                )), ImageType.TIFF);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestBytesWmf() {
-            TestBytes(StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + IMAGE_NAME + ".wmf", FileMode.Open, 
-                FileAccess.Read)), ImageType.WMF);
+            TestBytes(StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + IMAGE_NAME + ".wmf"
+                )), ImageType.WMF);
         }
 
         private static void TestURL(Uri location, ImageType expectedType) {

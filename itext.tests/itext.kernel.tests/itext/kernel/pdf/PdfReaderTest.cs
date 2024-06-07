@@ -1507,12 +1507,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasRebuiltXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasRebuiltXrefReader = new _PdfReader_1781(filename);
+            PdfReader hasRebuiltXrefReader = new _PdfReader_1779(filename);
             ReadingNotCompletedTest(hasRebuiltXrefReader);
         }
 
-        private sealed class _PdfReader_1781 : PdfReader {
-            public _PdfReader_1781(String baseArg1)
+        private sealed class _PdfReader_1779 : PdfReader {
+            public _PdfReader_1779(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1533,12 +1533,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasHybridXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasHybridXrefPdfReader = new _PdfReader_1804(filename);
+            PdfReader hasHybridXrefPdfReader = new _PdfReader_1802(filename);
             ReadingNotCompletedTest(hasHybridXrefPdfReader);
         }
 
-        private sealed class _PdfReader_1804 : PdfReader {
-            public _PdfReader_1804(String baseArg1)
+        private sealed class _PdfReader_1802 : PdfReader {
+            public _PdfReader_1802(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1558,12 +1558,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasXrefStmReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasXrefStmReader = new _PdfReader_1827(filename);
+            PdfReader hasXrefStmReader = new _PdfReader_1825(filename);
             ReadingNotCompletedTest(hasXrefStmReader);
         }
 
-        private sealed class _PdfReader_1827 : PdfReader {
-            public _PdfReader_1827(String baseArg1)
+        private sealed class _PdfReader_1825 : PdfReader {
+            public _PdfReader_1825(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1583,12 +1583,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void HasFixedXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader hasFixedXrefReader = new _PdfReader_1850(filename);
+            PdfReader hasFixedXrefReader = new _PdfReader_1848(filename);
             ReadingNotCompletedTest(hasFixedXrefReader);
         }
 
-        private sealed class _PdfReader_1850 : PdfReader {
-            public _PdfReader_1850(String baseArg1)
+        private sealed class _PdfReader_1848 : PdfReader {
+            public _PdfReader_1848(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1608,12 +1608,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetLastXrefReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getLastXrefReader = new _PdfReader_1873(filename);
+            PdfReader getLastXrefReader = new _PdfReader_1871(filename);
             ReadingNotCompletedTest(getLastXrefReader);
         }
 
-        private sealed class _PdfReader_1873 : PdfReader {
-            public _PdfReader_1873(String baseArg1)
+        private sealed class _PdfReader_1871 : PdfReader {
+            public _PdfReader_1871(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1634,12 +1634,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetPermissionsReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getPermissionsReader = new _PdfReader_1896(filename);
+            PdfReader getPermissionsReader = new _PdfReader_1894(filename);
             ReadingNotCompletedTest(getPermissionsReader);
         }
 
-        private sealed class _PdfReader_1896 : PdfReader {
-            public _PdfReader_1896(String baseArg1)
+        private sealed class _PdfReader_1894 : PdfReader {
+            public _PdfReader_1894(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1660,12 +1660,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void IsOpenedWithFullPReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader isOpenedWithFullPReader = new _PdfReader_1921(filename);
+            PdfReader isOpenedWithFullPReader = new _PdfReader_1919(filename);
             ReadingNotCompletedTest(isOpenedWithFullPReader);
         }
 
-        private sealed class _PdfReader_1921 : PdfReader {
-            public _PdfReader_1921(String baseArg1)
+        private sealed class _PdfReader_1919 : PdfReader {
+            public _PdfReader_1919(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1686,12 +1686,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetCryptoModeReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getCryptoModeReader = new _PdfReader_1944(filename);
+            PdfReader getCryptoModeReader = new _PdfReader_1942(filename);
             ReadingNotCompletedTest(getCryptoModeReader);
         }
 
-        private sealed class _PdfReader_1944 : PdfReader {
-            public _PdfReader_1944(String baseArg1)
+        private sealed class _PdfReader_1942 : PdfReader {
+            public _PdfReader_1942(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1712,12 +1712,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ComputeUserPasswordReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader computeUserPasswordReader = new _PdfReader_1969(filename);
+            PdfReader computeUserPasswordReader = new _PdfReader_1967(filename);
             ReadingNotCompletedTest(computeUserPasswordReader);
         }
 
-        private sealed class _PdfReader_1969 : PdfReader {
-            public _PdfReader_1969(String baseArg1)
+        private sealed class _PdfReader_1967 : PdfReader {
+            public _PdfReader_1967(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1738,12 +1738,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetOriginalFileIdReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getOriginalFileIdReader = new _PdfReader_1992(filename);
+            PdfReader getOriginalFileIdReader = new _PdfReader_1990(filename);
             ReadingNotCompletedTest(getOriginalFileIdReader);
         }
 
-        private sealed class _PdfReader_1992 : PdfReader {
-            public _PdfReader_1992(String baseArg1)
+        private sealed class _PdfReader_1990 : PdfReader {
+            public _PdfReader_1990(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1764,12 +1764,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetModifiedFileIdReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader getModifiedFileIdReader = new _PdfReader_2015(filename);
+            PdfReader getModifiedFileIdReader = new _PdfReader_2013(filename);
             ReadingNotCompletedTest(getModifiedFileIdReader);
         }
 
-        private sealed class _PdfReader_2015 : PdfReader {
-            public _PdfReader_2015(String baseArg1)
+        private sealed class _PdfReader_2013 : PdfReader {
+            public _PdfReader_2013(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1789,12 +1789,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void IsEncryptedReadingNotCompletedTest() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
-            PdfReader isEncryptedReader = new _PdfReader_2038(filename);
+            PdfReader isEncryptedReader = new _PdfReader_2036(filename);
             ReadingNotCompletedTest(isEncryptedReader);
         }
 
-        private sealed class _PdfReader_2038 : PdfReader {
-            public _PdfReader_2038(String baseArg1)
+        private sealed class _PdfReader_2036 : PdfReader {
+            public _PdfReader_2036(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -1852,7 +1852,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void NotCloseUserStreamTest() {
             String fileName = SOURCE_FOLDER + "emptyPdf.pdf";
-            using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pdfStream = FileUtil.GetInputStreamForFile(fileName)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().CreateSource(pdfStream);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(randomAccessSource
                     , new ReaderProperties()));
@@ -1992,7 +1992,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ReadRASInputStreamClosedTest() {
             String fileName = SOURCE_FOLDER + "hello.pdf";
-            using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pdfStream = FileUtil.GetInputStreamForFile(fileName)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(pdfStream);
                 RASInputStream rasInputStream = new RASInputStream(randomAccessSource);
                 randomAccessSource.Close();
@@ -2005,7 +2005,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ReadRASInputStreamTest() {
             String fileName = SOURCE_FOLDER + "hello.pdf";
-            using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pdfStream = FileUtil.GetInputStreamForFile(fileName)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(pdfStream);
                 RASInputStream rasInputStream = new RASInputStream(randomAccessSource);
                 using (PdfReader reader = new PdfReader(rasInputStream)) {
@@ -2020,7 +2020,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ReadRASInputStreamValidTest() {
             String fileName = SOURCE_FOLDER + "hello.pdf";
-            using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pdfStream = FileUtil.GetInputStreamForFile(fileName)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(pdfStream);
                 RASInputStream rasInputStream = new RASInputStream(randomAccessSource);
                 using (PdfReader reader = new PdfReader(rasInputStream)) {
@@ -2500,7 +2500,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void InitTagTreeStructureThrowsOOMIsCatched() {
             FileInfo file = new FileInfo(SOURCE_FOLDER + "big_table_lot_of_mcrs.pdf");
-            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2822();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2820();
             memoryLimitsAwareHandler.SetMaxSizeOfDecompressedPdfStreamsSum(100000);
             NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => {
                 using (PdfReader reader = new PdfReader(file, new ReaderProperties().SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler
@@ -2512,8 +2512,8 @@ namespace iText.Kernel.Pdf {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_2822 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_2822() {
+        private sealed class _MemoryLimitsAwareHandler_2820 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_2820() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

@@ -188,6 +188,16 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
         }
         
         [NUnit.Framework.Test]
+        public void UsualHtmlButWithGzExtensionTest() {
+            FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/simple.html.gz");
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, null);
+            
+            iText.StyledXmlParser.Jsoup.Nodes.Element form = doc.Select("#form").First();
+            NUnit.Framework.Assert.AreEqual(2, form.Children().Count);
+            NUnit.Framework.Assert.AreEqual("UTF-8", doc.OutputSettings().Charset().Name());
+        }
+        
+        [NUnit.Framework.Test]
     public void TestXwiki() {
         // https://github.com/jhy/jsoup/issues/1324
         // this tests that when in CharacterReader we hit a buffer while marked, we preserve the mark when buffered up and can rewind
@@ -208,7 +218,7 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
         // and the parse tree is correct.
         FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xwiki-edit.html.gz");
         iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser();
-        Document doc = Jsoup.Parse(new GZipStream(new FileStream(@in.FullName, FileMode.Open, FileAccess.Read), CompressionMode.Decompress), "UTF-8", "https://localhost/", parser.SetTrackErrors(100));
+        Document doc = Jsoup.Parse(new GZipStream(FileUtil.GetInputStreamForFile(@in.FullName), CompressionMode.Decompress), "UTF-8", "https://localhost/", parser.SetTrackErrors(100));
         ParseErrorList errors = parser.GetErrors();
 
         NUnit.Framework.Assert.AreEqual("XWiki Jetty HSQLDB 12.1-SNAPSHOT", doc.Select("#xwikiplatformversion").Text());
@@ -250,7 +260,7 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
         public static String GetFileAsString(FileInfo file) {
             byte[] bytes;
             if (file.Name.EndsWith(".gz")) {
-                Stream stream = new GZipStream(new FileStream(file.FullName, FileMode.Open, FileAccess.Read), System.IO.Compression.CompressionMode.Decompress);
+                Stream stream = new GZipStream(FileUtil.GetInputStreamForFile(file.FullName), System.IO.Compression.CompressionMode.Decompress);
                 ByteBuffer byteBuffer = DataUtil.ReadToByteBuffer(stream, 0);
                 bytes = ((byte[])byteBuffer.Array());
             }

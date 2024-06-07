@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -74,7 +75,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         [NUnit.Framework.Test]
         public virtual void TestSupplyParserToDataStream() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-test.xml");
-            Stream inStream = new FileStream(xmlFile.FullName, FileMode.Open, FileAccess.Read);
+            Stream inStream = FileUtil.GetInputStreamForFile(xmlFile);
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(inStream, null, "http://foo.com", iText.StyledXmlParser.Jsoup.Parser.Parser
                 .XmlParser());
             NUnit.Framework.Assert.AreEqual("<doc><val>One<val>Two</val>Three</val></doc>", TextUtil.StripNewlines(doc
@@ -132,7 +133,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         [NUnit.Framework.Test]
         public virtual void TestDetectCharsetEncodingDeclaration() {
             FileInfo xmlFile = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/xml-charset.xml");
-            Stream inStream = new FileStream(xmlFile.FullName, FileMode.Open, FileAccess.Read);
+            Stream inStream = FileUtil.GetInputStreamForFile(xmlFile);
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(inStream, null, "http://example.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
                 .XmlParser());
             NUnit.Framework.Assert.AreEqual("ISO-8859-1", doc.Charset().Name());

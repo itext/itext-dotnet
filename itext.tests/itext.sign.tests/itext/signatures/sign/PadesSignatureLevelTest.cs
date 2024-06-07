@@ -71,7 +71,7 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
@@ -118,7 +118,7 @@ namespace iText.Signatures.Sign {
             }
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), 
                 new StampingProperties().UseAppendMode());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");

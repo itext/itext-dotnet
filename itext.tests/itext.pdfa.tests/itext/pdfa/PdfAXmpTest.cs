@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -50,7 +51,7 @@ namespace iText.Pdfa {
         public virtual void KeywordsInfoTestPdfA1b() {
             String outFile = destinationFolder + "keywordsInfoTestPdfA1b.pdf";
             String cmpFile = cmpFolder + "cmp_keywordsInfoTestPdfA1b.pdf";
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(new PdfWriter(outFile), PdfAConformanceLevel.PDF_A_1B, outputIntent);
@@ -67,7 +68,7 @@ namespace iText.Pdfa {
         public virtual void KeywordsInfoTestPdfA2b() {
             String outFile = destinationFolder + "keywordsInfoTestPdfA2b.pdf";
             String cmpFile = cmpFolder + "cmp_keywordsInfoTestPdfA2b.pdf";
-            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(new PdfWriter(outFile), PdfAConformanceLevel.PDF_A_2B, outputIntent);
@@ -86,8 +87,7 @@ namespace iText.Pdfa {
             String cmpFile = cmpFolder + "cmp_saveAndReadDocumentWithCanonicalXmpMetadata.pdf";
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_2B;
             PdfOutputIntent outputIntent;
-            using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
                 outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
             }
             using (PdfADocument doc = new PdfADocument(new PdfWriter(outFile), conformanceLevel, outputIntent)) {
@@ -117,7 +117,7 @@ namespace iText.Pdfa {
         public virtual void TestPdfUAExtensionMetadata() {
             String outFile = destinationFolder + "testPdfUAExtensionMetadata.pdf";
             String cmpFile = cmpFolder + "cmp_testPdfUAExtensionMetadata.pdf";
-            using (FileStream fos = new FileStream(outFile, FileMode.Create)) {
+            using (Stream fos = FileUtil.GetFileOutputStream(outFile)) {
                 GeneratePdfAWithUA(fos);
             }
             CompareTool ct = new CompareTool();
@@ -140,8 +140,7 @@ namespace iText.Pdfa {
             WriterProperties wp = new WriterProperties().AddUAXmpMetadata();
             using (PdfWriter w = new PdfWriter(os, wp)) {
                 PdfOutputIntent outputIntent;
-                using (Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                    )) {
+                using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
                     outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
                 }
                 PdfDocument pdfDoc = new PdfADocument(w, PdfAConformanceLevel.PDF_A_2A, outputIntent).SetTagged();

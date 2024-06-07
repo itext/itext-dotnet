@@ -1091,7 +1091,7 @@ namespace iText.Kernel.Utils {
             using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf)) {
                 using (PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
                     ))) {
-                    using (FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create)) {
+                    using (Stream xmlOut = FileUtil.GetFileOutputStream(outXmlPath)) {
                         new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
                     }
                 }
@@ -1099,7 +1099,7 @@ namespace iText.Kernel.Utils {
             using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf)) {
                 using (PdfDocument docCmp = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
                     ))) {
-                    using (FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create)) {
+                    using (Stream xmlCmp = FileUtil.GetFileOutputStream(cmpXmlPath)) {
                         new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
                     }
                 }
@@ -1254,8 +1254,8 @@ namespace iText.Kernel.Utils {
                     (imageFiles[i].Name) + " ...");
                 System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": " + UrlUtil.GetNormalizedFileUriString
                     (imageFiles[i].Name) + " ...");
-                FileStream is1 = new FileStream(imageFiles[i].FullName, FileMode.Open, FileAccess.Read);
-                FileStream is2 = new FileStream(cmpImageFiles[i].FullName, FileMode.Open, FileAccess.Read);
+                Stream is1 = FileUtil.GetInputStreamForFile(imageFiles[i].FullName);
+                Stream is2 = FileUtil.GetInputStreamForFile(cmpImageFiles[i].FullName);
                 bool cmpResult = CompareStreams(is1, is2);
                 is1.Dispose();
                 is2.Dispose();
@@ -1414,8 +1414,8 @@ namespace iText.Kernel.Utils {
                             }
                             if (generateCompareByContentXmlReport) {
                                 String outPdfName = new FileInfo(outPdf).Name;
-                                FileStream xml = new FileStream(outPath + "/" + outPdfName.JSubstring(0, outPdfName.Length - 3) + "report.xml"
-                                    , FileMode.Create);
+                                Stream xml = FileUtil.GetFileOutputStream(outPath + "/" + outPdfName.JSubstring(0, outPdfName.Length - 3) 
+                                    + "report.xml");
                                 try {
                                     compareResult.WriteReportToXml(xml);
                                 }

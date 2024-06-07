@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
@@ -39,8 +39,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             String filename = sourceFolder + "disabled.html";
             CssPseudoClassDisabledSelectorItem item = CssPseudoClassDisabledSelectorItem.GetInstance();
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode documentNode = htmlParser.Parse(new FileStream(filename, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
+            IDocumentNode documentNode = htmlParser.Parse(FileUtil.GetInputStreamForFile(filename), "UTF-8");
             IElementNode disabledInput = new JsoupElementNode(((JsoupDocumentNode)documentNode).GetDocument().GetElementsByTag
                 ("input").First());
             IElementNode enabledInput = new JsoupElementNode(((JsoupDocumentNode)documentNode).GetDocument().GetElementsByTag

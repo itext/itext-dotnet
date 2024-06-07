@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -179,7 +180,7 @@ namespace iText.Svg.Renderers.Impl {
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest1.svg";
-            Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
+            Stream xmlStream = FileUtil.GetInputStreamForFile(sourceFolder + svgFilename);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
@@ -197,7 +198,7 @@ namespace iText.Svg.Renderers.Impl {
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest2.svg";
-            Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
+            Stream xmlStream = FileUtil.GetInputStreamForFile(sourceFolder + svgFilename);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
@@ -215,7 +216,7 @@ namespace iText.Svg.Renderers.Impl {
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest3.svg";
-            Stream xmlStream = new FileStream(sourceFolder + svgFilename, FileMode.Open, FileAccess.Read);
+            Stream xmlStream = FileUtil.GetInputStreamForFile(sourceFolder + svgFilename);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();

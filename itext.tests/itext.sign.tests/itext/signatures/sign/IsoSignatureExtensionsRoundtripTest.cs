@@ -231,7 +231,7 @@ namespace iText.Signatures.Sign {
             IX509Certificate signerCert2 = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, keySample2 + ".crt"));
             IX509Certificate[] signChain1 = new IX509Certificate[] { signerCert1, root };
             IX509Certificate[] signChain2 = new IX509Certificate[] { signerCert2, root };
-            using (Stream in1 = new FileStream(SOURCE_FILE, FileMode.Open, FileAccess.Read)) {
+            using (Stream in1 = FileUtil.GetInputStreamForFile(SOURCE_FILE)) {
                 IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, keySample1 + ".key.pem"));
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA3_256);
                 PdfSigner signer = new PdfSigner(new PdfReader(in1), baos1, new StampingProperties());
@@ -263,7 +263,7 @@ namespace iText.Signatures.Sign {
 
         private void DoSign(String keySampleName, String digestAlgo, String signatureAlgo, String outFile) {
             // write to a file for easier inspection when debugging
-            using (FileStream fos = new FileStream(outFile, FileMode.Create)) {
+            using (FileStream fos = FileUtil.GetFileOutputStream(outFile)) {
                 DoSign(keySampleName, digestAlgo, signatureAlgo, fos);
             }
         }

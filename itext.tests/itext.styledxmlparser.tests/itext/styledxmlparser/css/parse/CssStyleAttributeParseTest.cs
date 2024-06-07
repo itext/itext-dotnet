@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
@@ -38,7 +38,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         public virtual void StyleAttributeParseTest() {
             String fileName = SOURCE_FOLDER + "cssStyleAttributeParse.html";
             IXmlParser parser = new JsoupHtmlParser();
-            IDocumentNode document = parser.Parse(new FileStream(fileName, FileMode.Open, FileAccess.Read), "UTF-8");
+            IDocumentNode document = parser.Parse(FileUtil.GetInputStreamForFile(fileName), "UTF-8");
             IList<String> styleDeclarations = new List<String>();
             IList<String> expectStyleDeclarations = new List<String>();
             expectStyleDeclarations.Add("display:none;");

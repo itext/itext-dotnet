@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Pdfa.Exceptions;
 using iText.Test;
@@ -36,8 +37,7 @@ namespace iText.Pdfa {
         public virtual void CheckCadesSignatureTypeIsoConformance() {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             document.CheckIsoConformance(true, IsoKey.SIGNATURE_TYPE, null, null);
@@ -47,8 +47,7 @@ namespace iText.Pdfa {
         public virtual void CheckCMSSignatureTypeIsoConformance() {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.CheckIsoConformance

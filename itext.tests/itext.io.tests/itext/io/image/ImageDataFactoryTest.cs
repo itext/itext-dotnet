@@ -82,7 +82,7 @@ namespace iText.IO.Image {
 
         private void TestImageTypeSupport(Uri location, bool expectedResult) {
             NUnit.Framework.Assert.AreEqual(expectedResult, ImageDataFactory.IsSupportedType(location));
-            using (FileStream inputStream = new FileStream(location.PathAndQuery, FileMode.Open, FileAccess.Read)) {
+            using (Stream inputStream = UrlUtil.OpenStream(location)) {
                 NUnit.Framework.Assert.AreEqual(expectedResult, ImageDataFactory.IsSupportedType(StreamUtil.InputStreamToArray
                     (inputStream)));
             }

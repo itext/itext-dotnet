@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {
@@ -150,7 +151,7 @@ namespace iText.Forms.Xfdf {
         /// <summary>Writes info from XfdfObject to .xfdf file.</summary>
         /// <param name="filename">name of the target file.</param>
         public virtual void WriteToFile(String filename) {
-            using (Stream os = new FileStream(filename, FileMode.Create)) {
+            using (Stream os = FileUtil.GetFileOutputStream(filename)) {
                 WriteToFile(os);
             }
         }

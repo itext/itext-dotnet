@@ -21,8 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Commons.Datastructures;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -114,7 +114,7 @@ namespace iText.Layout {
         public virtual void BorderedLinkTest() {
             String outFileName = destinationFolder + "borderedLinkTest.pdf";
             String cmpFileName = sourceFolder + "cmp_borderedLinkTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
             Link link = new Link("Link with orange border", PdfAction.CreateURI("http://itextpdf.com"));
             link.SetBorder(new SolidBorder(ColorConstants.ORANGE, 5));

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.Test;
 
@@ -34,7 +35,7 @@ namespace iText.IO.Source {
         [NUnit.Framework.Test]
         public virtual void ReadRASInputStreamClosedTest() {
             String fileName = SOURCE_FILE;
-            using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pdfStream = FileUtil.GetInputStreamForFile(fileName)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(pdfStream);
                 RASInputStream rasInputStream = new RASInputStream(randomAccessSource);
                 IRandomAccessSource extractedRandomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(rasInputStream
@@ -55,7 +56,7 @@ namespace iText.IO.Source {
         [NUnit.Framework.Test]
         public virtual void ReadRASInputStreamTest() {
             String fileName = SOURCE_FILE;
-            using (Stream pdfStream = new FileStream(fileName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pdfStream = FileUtil.GetInputStreamForFile(fileName)) {
                 IRandomAccessSource randomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(pdfStream);
                 RASInputStream rasInputStream = new RASInputStream(randomAccessSource);
                 IRandomAccessSource extractedRandomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(rasInputStream

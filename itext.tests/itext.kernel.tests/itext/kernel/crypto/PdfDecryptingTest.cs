@@ -300,8 +300,7 @@ namespace iText.Kernel.Crypto {
         }
 
         private void DecryptWithCertificate(String fileName, String certificateName, IPrivateKey certificateKey) {
-            IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(new FileStream(CERTS_SRC + certificateName
-                , FileMode.Open, FileAccess.Read));
+            IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(CERTS_SRC + certificateName));
             ReaderProperties readerProperties = new ReaderProperties().SetPublicKeySecurityParams(certificate, certificateKey
                 );
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName, readerProperties)
@@ -312,7 +311,7 @@ namespace iText.Kernel.Crypto {
         }
 
         private IPrivateKey ReadPrivateKey(String privateKeyName) {
-            using (Stream pemFile = new FileStream(CERTS_SRC + privateKeyName, FileMode.Open, FileAccess.Read)) {
+            using (Stream pemFile = FileUtil.GetInputStreamForFile(CERTS_SRC + privateKeyName)) {
                 using (TextReader file = new StreamReader(pemFile))
                 {
                     IPemReader parser = BouncyCastleFactoryCreator.GetFactory().CreatePEMParser(file, "test".ToCharArray());

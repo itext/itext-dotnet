@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
@@ -40,7 +41,7 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void DefaultBehaviourTest() {
             String svgFile = sourceFolder + "RedCircle.svg";
-            Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
+            Stream svg = FileUtil.GetInputStreamForFile(svgFile);
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
             IBranchSvgNodeRenderer actual = (IBranchSvgNodeRenderer)new DefaultSvgProcessor().Process(root, null).GetRootRenderer
@@ -61,7 +62,7 @@ namespace iText.Svg.Processors {
         [NUnit.Framework.Test]
         public virtual void NamedObjectRectangleTest() {
             String svgFile = sourceFolder + "namedObjectRectangleTest.svg";
-            Stream svg = new FileStream(svgFile, FileMode.Open, FileAccess.Read);
+            Stream svg = FileUtil.GetInputStreamForFile(svgFile);
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
             ISvgProcessorResult processorResult = new DefaultSvgProcessor().Process(root, null);

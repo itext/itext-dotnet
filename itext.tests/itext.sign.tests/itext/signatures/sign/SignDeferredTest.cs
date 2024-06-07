@@ -25,6 +25,7 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -64,8 +65,7 @@ namespace iText.Signatures.Sign {
             PdfName subFilter = PdfName.Adbe_pkcs7_detached;
             int estimatedSize = 8192;
             PdfReader reader = new PdfReader(input);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(output, FileMode.Create), new StampingProperties()
-                );
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(output), new StampingProperties());
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
             appearance.SetLayer2Text("Signature field which signing is deferred.").SetPageRect(new Rectangle(36, 600, 
                 200, 100)).SetPageNumber(1);
@@ -129,7 +129,7 @@ namespace iText.Signatures.Sign {
                 );
             String sigFieldName = "DeferredSignature1";
             PdfDocument docToSign = new PdfDocument(new PdfReader(srcFileName));
-            FileStream outStream = new FileStream(outFileName, FileMode.Create);
+            Stream outStream = FileUtil.GetFileOutputStream(outFileName);
             PdfSigner.SignDeferred(docToSign, sigFieldName, outStream, extSigContainer);
             docToSign.Close();
             outStream.Dispose();
@@ -172,7 +172,7 @@ namespace iText.Signatures.Sign {
             SignDeferredTest.ReadySignatureSigner extSigContainer = new SignDeferredTest.ReadySignatureSigner(cmsSignature
                 );
             PdfDocument docToSign = new PdfDocument(new PdfReader(new MemoryStream(preSignedBytes)));
-            FileStream outStream = new FileStream(outFileName, FileMode.Create);
+            Stream outStream = FileUtil.GetFileOutputStream(outFileName);
             PdfSigner.SignDeferred(docToSign, sigFieldName, outStream, extSigContainer);
             docToSign.Close();
             outStream.Dispose();

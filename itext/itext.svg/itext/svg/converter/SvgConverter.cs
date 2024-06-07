@@ -584,8 +584,8 @@ namespace iText.Svg.Converter {
                     props = ConvertToSvgConverterProps(props, baseUri);
                 }
             }
-            using (FileStream fileInputStream = new FileStream(svgFile.FullName, FileMode.Open, FileAccess.Read)) {
-                using (FileStream fileOutputStream = new FileStream(pdfFile.FullName, FileMode.Create)) {
+            using (Stream fileInputStream = FileUtil.GetInputStreamForFile(svgFile.FullName)) {
+                using (Stream fileOutputStream = FileUtil.GetFileOutputStream(pdfFile.FullName)) {
                     CreatePdf(fileInputStream, fileOutputStream, props, writerProps);
                 }
             }

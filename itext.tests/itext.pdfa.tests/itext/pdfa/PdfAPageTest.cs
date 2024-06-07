@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -54,8 +54,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "checkThatFlushingPreventedWhenAddingElementToDocument.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfAPageTest.EndPageEventHandler eventHandler = new PdfAPageTest.EndPageEventHandler();
@@ -84,8 +84,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "checkThatFlushingPreventedWithFalseFlushResourcesContentStreams.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfAPageTest.EndPageEventHandler eventHandler = new PdfAPageTest.EndPageEventHandler();
@@ -107,8 +107,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "checkFlushingWhenPdfDocumentIsClosing.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfAPageTest.EndPageEventHandler eventHandler = new PdfAPageTest.EndPageEventHandler();
@@ -130,8 +130,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "checkFlushingWithTrueFlushResourcesContentStreams.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfAPageTest.EndPageEventHandler eventHandler = new PdfAPageTest.EndPageEventHandler();
@@ -153,8 +153,8 @@ namespace iText.Pdfa {
             String outPdf = destinationFolder + "checkFlushingOfCheckedPage.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfAPageTest.EndPageEventHandler eventHandler = new PdfAPageTest.EndPageEventHandler();

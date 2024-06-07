@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Fields.Properties;
@@ -46,7 +47,6 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFormFieldTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -63,11 +63,10 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfAButtonFieldTest() {
             PdfDocument pdf;
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             String file = "pdfAButtonField.pdf";
             String filename = DESTINATION_FOLDER + file;
-            pdf = new PdfADocument(new PdfWriter(new FileStream(filename, FileMode.Create)), PdfAConformanceLevel.PDF_A_1B
+            pdf = new PdfADocument(new PdfWriter(FileUtil.GetFileOutputStream(filename)), PdfAConformanceLevel.PDF_A_1B
                 , new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference", @is));
             PageSize pageSize = PageSize.LETTER;
             Document doc = new Document(pdf, pageSize);
@@ -111,8 +110,7 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1ButtonField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ButtonField.pdf";
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -134,8 +132,7 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1CheckBoxField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1CheckBoxField.pdf";
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -157,8 +154,7 @@ namespace iText.Pdfa {
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -184,8 +180,7 @@ namespace iText.Pdfa {
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
             PdfFont fontCJK = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
                 , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -209,8 +204,7 @@ namespace iText.Pdfa {
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ListField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -236,8 +230,7 @@ namespace iText.Pdfa {
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -258,8 +251,7 @@ namespace iText.Pdfa {
             String name = "pdfA1DocWithPdfA1RadioButtonField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1RadioButtonField.pdf";
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -290,8 +282,7 @@ namespace iText.Pdfa {
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             fontFreeSans.SetSubset(false);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -315,8 +306,7 @@ namespace iText.Pdfa {
             PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             fontFreeSans.SetSubset(false);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_1B;
             PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), conformanceLevel, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
@@ -335,8 +325,7 @@ namespace iText.Pdfa {
         public virtual void MergePdfADocWithFormTest() {
             String fileName = DESTINATION_FOLDER + "pdfADocWithTextFormField.pdf";
             String mergedDocFileName = DESTINATION_FOLDER + "mergedPdfADoc.pdf";
-            using (Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")) {
                 using (PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), PdfAConformanceLevel.PDF_A_1B, new 
                     PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference", @is))) {
                     using (Document doc = new Document(pdfDoc)) {
@@ -355,8 +344,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             PdfADocument pdfDocToMerge;
-            using (Stream is_1 = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream is_1 = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")) {
                 using (PdfDocument newDoc = new PdfDocument(new PdfReader(fileName))) {
                     pdfDocToMerge = new PdfADocument(new PdfWriter(mergedDocFileName).SetSmartMode(true), PdfAConformanceLevel
                         .PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference", is_1));
@@ -544,16 +532,16 @@ namespace iText.Pdfa {
                 .FORCE_EMBEDDED);
             PdfWriter writer = new PdfWriter(simplePdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                )));
             Document document = new Document(doc);
             document.Add(new InputField("inputfield1").SetFont(font).SetInteractive(true).SetValue("Hello there"));
             document.Add(new Paragraph("Hello there paragraph").SetFont(font));
             doc.Close();
             PdfWriter writer2 = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc2 = new PdfADocument(writer2, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", 
-                "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                )));
             PdfDocument docToCopy = new PdfDocument(new PdfReader(simplePdf));
             docToCopy.CopyPagesTo(1, 1, doc2, new PdfPageFormCopier());
             docToCopy.Close();
@@ -595,8 +583,8 @@ namespace iText.Pdfa {
         private void MakePdfDocument(String outPdf, String cmp, Action<Document> consumer) {
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
+                )));
             Document document = new Document(doc);
             consumer(document);
             doc.Close();

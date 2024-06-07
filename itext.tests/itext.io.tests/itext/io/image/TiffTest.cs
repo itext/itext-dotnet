@@ -39,8 +39,8 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenTiff1() {
-            byte[] imageBytes = StreamUtil.InputStreamToArray(new FileStream(SOURCE_FOLDER + "WP_20140410_001.tif", FileMode.Open
-                , FileAccess.Read));
+            byte[] imageBytes = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "WP_20140410_001.tif"
+                ));
             // Test a more specific entry point
             ImageData img = ImageDataFactory.CreateTiff(imageBytes, false, 1, false);
             NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);

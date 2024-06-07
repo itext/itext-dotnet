@@ -275,8 +275,8 @@ namespace iText.Signatures {
         public virtual void GetEncodedPkcs7WithRevocationInfoTest() {
             String hashAlgorithm = DigestAlgorithms.SHA256;
             PdfPKCS7 pkcs7 = new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest(), true);
-            pkcs7.GetSignedDataCRLs().Add(SignTestPortUtil.ParseCrlFromStream(new FileStream(SOURCE_FOLDER + "firstCrl.bin"
-                , FileMode.Open, FileAccess.Read)));
+            pkcs7.GetSignedDataCRLs().Add(SignTestPortUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "firstCrl.bin")));
             pkcs7.GetSignedDataOcsps().Add(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1InputStream
                 (File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "simpleOCSPResponse.bin"))).ReadObject()));
             byte[] bytes = pkcs7.GetEncodedPKCS7();

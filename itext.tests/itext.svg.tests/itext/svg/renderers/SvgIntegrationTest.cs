@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -50,7 +51,7 @@ namespace iText.Svg.Renderers {
                 0)))) {
                 doc.AddNewPage(size);
                 ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
-                SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
+                SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(svg), doc, 1, properties);
             }
         }
 
@@ -58,7 +59,7 @@ namespace iText.Svg.Renderers {
             PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
             doc.AddNewPage();
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
-            SvgConverter.DrawOnDocument(new FileStream(svg, FileMode.Open, FileAccess.Read), doc, 1, properties);
+            SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(svg), doc, 1, properties);
             return doc;
         }
 
@@ -104,15 +105,15 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName) {
-            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
-                (dest + fileName + ".pdf", FileMode.Create));
+            ConvertToSinglePage(FileUtil.GetInputStreamForFile(src + fileName + ".svg"), FileUtil.GetFileOutputStream(
+                dest + fileName + ".pdf"));
             Compare(fileName, src, dest);
         }
 
         public virtual void ConvertAndCompareSinglePage(String src, String dest, String fileName, ISvgConverterProperties
              properties) {
-            ConvertToSinglePage(new FileStream(src + fileName + ".svg", FileMode.Open, FileAccess.Read), new FileStream
-                (dest + fileName + ".pdf", FileMode.Create), properties);
+            ConvertToSinglePage(FileUtil.GetInputStreamForFile(src + fileName + ".svg"), FileUtil.GetFileOutputStream(
+                dest + fileName + ".pdf"), properties);
             Compare(fileName, src, dest);
         }
 

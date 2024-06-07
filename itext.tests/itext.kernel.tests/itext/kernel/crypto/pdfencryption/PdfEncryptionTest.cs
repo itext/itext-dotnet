@@ -27,6 +27,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Exceptions;
@@ -208,7 +209,7 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
                 ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), PemFileHelper.ReadPrivateKeyFromPemFile
-                (new FileStream(sourceFolder + "wrong.pem", FileMode.Open, FileAccess.Read), PRIVATE_KEY_PASS)))) {
+                (FileUtil.GetInputStreamForFile(sourceFolder + "wrong.pem"), PRIVATE_KEY_PASS)))) {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.BAD_CERTIFICATE_AND_KEY, e.Message);
             }
@@ -509,14 +510,14 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         public virtual IX509Certificate GetPublicCertificate(String path) {
-            FileStream @is = new FileStream(path, FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(path);
             return CryptoUtil.ReadPublicCertificate(@is);
         }
 
         public virtual IPrivateKey GetPrivateKey() {
             if (privateKey == null) {
-                privateKey = PemFileHelper.ReadPrivateKeyFromPemFile(new FileStream(PRIVATE_KEY, FileMode.Open, FileAccess.Read
-                    ), PRIVATE_KEY_PASS);
+                privateKey = PemFileHelper.ReadPrivateKeyFromPemFile(FileUtil.GetInputStreamForFile(PRIVATE_KEY), PRIVATE_KEY_PASS
+                    );
             }
             return privateKey;
         }

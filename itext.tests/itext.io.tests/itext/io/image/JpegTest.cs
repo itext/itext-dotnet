@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Test;
 
@@ -33,8 +34,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenJpeg1() {
-            using (FileStream fis = new FileStream(SOURCE_FOLDER + "WP_20140410_001.jpg", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "WP_20140410_001.jpg")) {
                 // Test this a more specific entry point
                 ImageData img = ImageDataFactory.CreateJpeg(StreamUtil.InputStreamToArray(fis));
                 NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);
@@ -54,8 +54,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void OpenJpeg3() {
-            using (FileStream fis = new FileStream(SOURCE_FOLDER + "WP_20140410_001_monochrome.jpg", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "WP_20140410_001_monochrome.jpg")) {
                 // Test this a more specific entry point
                 ImageData img = ImageDataFactory.Create(StreamUtil.InputStreamToArray(fis));
                 NUnit.Framework.Assert.AreEqual(2592, img.GetWidth(), 0);

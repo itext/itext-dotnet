@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -434,8 +435,8 @@ namespace iText.Kernel.Pdf {
             String source = SOURCE_FOLDER + "invalid_outline.pdf";
             String destination = DESTINATION_FOLDER + "invalid_outline.pdf";
             String cmp = SOURCE_FOLDER + "cmp_invalid_outline.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(new FileStream(source, FileMode.Open, FileAccess.Read
-                )), CompareTool.CreateTestPdfWriter(destination));
+            PdfDocument document = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(source)), CompareTool.
+                CreateTestPdfWriter(destination));
             document.RemovePage(4);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destination, cmp, DESTINATION_FOLDER, "diff_"

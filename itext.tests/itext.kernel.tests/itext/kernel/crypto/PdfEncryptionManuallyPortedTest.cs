@@ -27,6 +27,7 @@ using iText.Bouncycastlefips;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -236,8 +237,8 @@ namespace iText.Kernel.Crypto {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void OpenEncryptedDocWithWrongPrivateKey() {
             using (PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
-                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), PemFileHelper.ReadPrivateKeyFromPemFile(new 
-                FileStream(sourceFolder + "wrong.pem", FileMode.Open, FileAccess.Read), PRIVATE_KEY_PASS)))) {
+                ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), PemFileHelper.ReadPrivateKeyFromPemFile(
+                       FileUtil.GetInputStreamForFile(sourceFolder + "wrong.pem"), PRIVATE_KEY_PASS)))) {
                 if ("BCFIPS".Equals(FACTORY.GetProviderName()))
                 {
                     Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () => new PdfDocument(reader));
@@ -299,7 +300,7 @@ namespace iText.Kernel.Crypto {
         }
 
         public virtual IX509Certificate GetPublicCertificate(String path) {
-            FileStream @is = new FileStream(path, FileMode.Open, FileAccess.Read);
+            FileStream @is = FileUtil.GetInputStreamForFile(path);
             return CryptoUtil.ReadPublicCertificate(@is);
         }
 

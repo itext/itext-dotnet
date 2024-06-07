@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -38,7 +37,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -95,8 +93,8 @@ namespace iText.Signatures.Sign {
         public virtual void SigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfA2Document.pdf";
             String @out = destinationFolder + "signedPdfA2Document.pdf";
-            PdfReader reader = new PdfReader(new FileStream(src, FileMode.Open, FileAccess.Read));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(@out, FileMode.Create), new StampingProperties());
+            PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(src));
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(@out), new StampingProperties());
             signer.SetFieldLockDict(new PdfSigFieldLock());
             signer.SetCertificationLevel(PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
@@ -139,8 +137,8 @@ namespace iText.Signatures.Sign {
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";
             String @out = destinationFolder + "signedPdfADocument2.pdf";
-            PdfReader reader = new PdfReader(new FileStream(src, FileMode.Open, FileAccess.Read));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(@out, FileMode.Create), new StampingProperties());
+            PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(src));
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(@out), new StampingProperties());
             signer.SetFieldLockDict(new PdfSigFieldLock());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             int x = 36;
@@ -175,7 +173,7 @@ namespace iText.Signatures.Sign {
             if (isAppendMode) {
                 properties.UseAppendMode();
             }
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
             signer.SetCertificationLevel(certificationLevel);
             PdfFont font = PdfFontFactory.CreateFont(FONT, "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );

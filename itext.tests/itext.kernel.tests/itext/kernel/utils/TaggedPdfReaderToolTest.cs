@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -46,7 +47,7 @@ namespace iText.Kernel.Utils {
             String outXmlPath = DESTINATION_FOLDER + "outXml01.xml";
             String cmpXmlPath = SOURCE_FOLDER + "cmpXml01.xml";
             PdfReader reader = new PdfReader(SOURCE_FOLDER + filename);
-            using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
+            using (Stream outXml = FileUtil.GetFileOutputStream(outXmlPath)) {
                 using (PdfDocument document = new PdfDocument(reader)) {
                     TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
                     tool.SetRootTag("root");
@@ -65,7 +66,7 @@ namespace iText.Kernel.Utils {
             try {
                 PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
                 TaggedPdfReaderTool tool = new TaggedPdfReaderTool(pdfDocument);
-                using (FileStream outXml = new FileStream(outXmlPath, FileMode.Create)) {
+                using (Stream outXml = FileUtil.GetFileOutputStream(outXmlPath)) {
                     Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => tool.ConvertToXml(outXml, "UTF-8"
                         ));
                     NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_DOES_NOT_CONTAIN_STRUCT_TREE_ROOT, 

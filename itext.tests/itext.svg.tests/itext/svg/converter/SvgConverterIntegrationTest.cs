@@ -154,7 +154,7 @@ namespace iText.Svg.Converter {
             String output = destinationFolder + "pdfFromSvgFile.pdf";
             String cmp_file = sourceFolder + "cmp_pdfFromSvgFile.pdf";
             int pagenr = 1;
-            FileStream fis = new FileStream(sourceFolder + svg, FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + svg);
             SvgConverter.DrawOnDocument(fis, pdfDoc, pagenr);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
@@ -170,7 +170,7 @@ namespace iText.Svg.Converter {
             String output = destinationFolder + "addToExistingDoc.pdf";
             String cmp_file = sourceFolder + "cmp_addToExistingDoc.pdf";
             int pagenr = 1;
-            FileStream fis = new FileStream(sourceFolder + "minimal.svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + "minimal.svg");
             SvgConverter.DrawOnDocument(fis, pdfDoc, pagenr);
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp_file, destinationFolder, "diff_"
@@ -185,8 +185,8 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void TwoArgTest() {
             String name = "hello_world";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
-            FileStream fos = new FileStream(destinationFolder + name + ".pdf", FileMode.Create);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
+            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + name + ".pdf");
             SvgConverter.CreatePdf(fis, fos);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name + ".pdf", sourceFolder
                  + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
@@ -198,7 +198,7 @@ namespace iText.Svg.Converter {
             int x = 50;
             int y = 0;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -210,7 +210,7 @@ namespace iText.Svg.Converter {
             int x = 0;
             int y = 100;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -222,7 +222,7 @@ namespace iText.Svg.Converter {
             int x = 50;
             int y = 100;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -234,7 +234,7 @@ namespace iText.Svg.Converter {
             int x = -50;
             int y = 0;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -246,7 +246,7 @@ namespace iText.Svg.Converter {
             int x = 0;
             int y = -100;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -258,7 +258,7 @@ namespace iText.Svg.Converter {
             int x = -50;
             int y = -100;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -270,7 +270,7 @@ namespace iText.Svg.Converter {
             int x = -50;
             int y = -50;
             String destName = MessageFormatUtil.Format("{0}_{1}_{2}", name, x, y);
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             DrawOnSpecifiedPositionDocument(fis, destinationFolder + destName + ".pdf", x, y);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destName + ".pdf", sourceFolder
                  + "cmp_" + destName + ".pdf", destinationFolder, "diff_"));
@@ -295,7 +295,7 @@ namespace iText.Svg.Converter {
         public virtual void ConvertToXObjectStreamPdfDocumentConverterProps() {
             String name = "eclipse";
             String destName = "CTXO_" + name + "_StreamDocProps";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
@@ -310,9 +310,9 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void ConvertToImageStreamDocument() {
             String name = "eclipse";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             String destName = "CTI_" + name + "_StreamDocument";
-            FileStream fos = new FileStream(destinationFolder + destName + ".pdf", FileMode.Create);
+            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + destName + ".pdf");
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fos, new WriterProperties().SetCompressionLevel(0)
                 ));
             Image image = SvgConverter.ConvertToImage(fis, pdfDocument);
@@ -326,9 +326,9 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void ConvertToImageStreamDocumentConverterProperties() {
             String name = "eclipse";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             String destName = "CTI_" + name + "_StreamDocumentProps";
-            FileStream fos = new FileStream(destinationFolder + destName + ".pdf", FileMode.Create);
+            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + destName + ".pdf");
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fos, new WriterProperties().SetCompressionLevel(0)
                 ));
             ISvgConverterProperties props = new SvgConverterProperties();
@@ -369,7 +369,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnPageStreamPage() {
             String name = "eclipse";
             String destName = "DOP_" + name + "_StreamPdfPage";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             SvgConverter.DrawOnPage(fis, page);
@@ -382,7 +382,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnPageStreamPageConverterProperties() {
             String name = "eclipse";
             String destName = "DOP_" + name + "_StreamPdfPageConverterProperties";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
@@ -408,7 +408,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnDocumentStringPdfDocumentIntConverterProperties() {
             String name = "eclipse";
             String destName = "DOD_" + name + "_StringPdfDocumentIntProps";
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
             doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
@@ -461,7 +461,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             String destName = "DOC_" + name + "_StreamCanvas";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             SvgConverter.DrawOnCanvas(fis, canvas);
             doc.Close();
@@ -474,7 +474,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             String destName = "DOC_" + name + "_StreamCanvasProps";
             PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + destName + ".pdf"));
-            FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read);
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnCanvas(fis, canvas, props);
@@ -507,7 +507,7 @@ namespace iText.Svg.Converter {
             ISvgProcessorResult expected = new SvgProcessorResult(map, root, new SvgProcessorContext(new SvgConverterProperties
                 ()));
             String name = "minimal";
-            using (FileStream fis = new FileStream(sourceFolder + name + ".svg", FileMode.Open, FileAccess.Read)) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg")) {
                 ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
                 NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
                     .GetAttributeMapCopy());

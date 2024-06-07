@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Parse;
@@ -46,9 +46,8 @@ namespace iText.StyledXmlParser.Css {
             String htmlFileName = sourceFolder + "html01.html";
             String cssFileName = sourceFolder + "css01.css";
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode document = htmlParser.Parse(new FileStream(htmlFileName, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
-            CssStyleSheet css = CssStyleSheetParser.Parse(new FileStream(cssFileName, FileMode.Open, FileAccess.Read));
+            IDocumentNode document = htmlParser.Parse(FileUtil.GetInputStreamForFile(htmlFileName), "UTF-8");
+            CssStyleSheet css = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFileName));
             MediaDeviceDescription deviceDescription = new MediaDeviceDescription("all");
             IElementNode element = new JsoupElementNode(((JsoupDocumentNode)document).GetDocument().GetElementsByTag("p"
                 ).First());
@@ -62,9 +61,8 @@ namespace iText.StyledXmlParser.Css {
             String htmlFileName = sourceFolder + "html02.html";
             String cssFileName = sourceFolder + "css02.css";
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode document = htmlParser.Parse(new FileStream(htmlFileName, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
-            CssStyleSheet css = CssStyleSheetParser.Parse(new FileStream(cssFileName, FileMode.Open, FileAccess.Read));
+            IDocumentNode document = htmlParser.Parse(FileUtil.GetInputStreamForFile(htmlFileName), "UTF-8");
+            CssStyleSheet css = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFileName));
             MediaDeviceDescription deviceDescription = new MediaDeviceDescription("all");
             IElementNode element = new JsoupElementNode(((JsoupDocumentNode)document).GetDocument().GetElementsByTag("p"
                 ).First());
@@ -79,9 +77,8 @@ namespace iText.StyledXmlParser.Css {
             String htmlFileName = sourceFolder + "html03.html";
             String cssFileName = sourceFolder + "css03.css";
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode document = htmlParser.Parse(new FileStream(htmlFileName, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
-            CssStyleSheet css = CssStyleSheetParser.Parse(new FileStream(cssFileName, FileMode.Open, FileAccess.Read));
+            IDocumentNode document = htmlParser.Parse(FileUtil.GetInputStreamForFile(htmlFileName), "UTF-8");
+            CssStyleSheet css = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFileName));
             MediaDeviceDescription deviceDescription = new MediaDeviceDescription("all");
             IElementNode element = new JsoupElementNode(((JsoupDocumentNode)document).GetDocument().GetElementsByTag("p"
                 ).First());
@@ -96,9 +93,8 @@ namespace iText.StyledXmlParser.Css {
             String htmlFileName = sourceFolder + "html04.html";
             String cssFileName = sourceFolder + "css04.css";
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode document = htmlParser.Parse(new FileStream(htmlFileName, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
-            CssStyleSheet css = CssStyleSheetParser.Parse(new FileStream(cssFileName, FileMode.Open, FileAccess.Read));
+            IDocumentNode document = htmlParser.Parse(FileUtil.GetInputStreamForFile(htmlFileName), "UTF-8");
+            CssStyleSheet css = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFileName));
             MediaDeviceDescription deviceDescription = new MediaDeviceDescription("all");
             IElementNode element = new JsoupElementNode(((JsoupDocumentNode)document).GetDocument().GetElementsByTag("p"
                 ).First());
@@ -112,9 +108,8 @@ namespace iText.StyledXmlParser.Css {
             String htmlFileName = sourceFolder + "html05.html";
             String cssFileName = sourceFolder + "css05.css";
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode document = htmlParser.Parse(new FileStream(htmlFileName, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
-            CssStyleSheet css = CssStyleSheetParser.Parse(new FileStream(cssFileName, FileMode.Open, FileAccess.Read));
+            IDocumentNode document = htmlParser.Parse(FileUtil.GetInputStreamForFile(htmlFileName), "UTF-8");
+            CssStyleSheet css = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFileName));
             MediaDeviceDescription deviceDescription = new MediaDeviceDescription("all");
             IElementNode element = new JsoupElementNode(((JsoupDocumentNode)document).GetDocument().GetElementsByTag("p"
                 ).First());
@@ -128,9 +123,8 @@ namespace iText.StyledXmlParser.Css {
             String htmlFileName = sourceFolder + "html06.html";
             String cssFileName = sourceFolder + "css06.css";
             IXmlParser htmlParser = new JsoupHtmlParser();
-            IDocumentNode document = htmlParser.Parse(new FileStream(htmlFileName, FileMode.Open, FileAccess.Read), "UTF-8"
-                );
-            CssStyleSheet css = CssStyleSheetParser.Parse(new FileStream(cssFileName, FileMode.Open, FileAccess.Read));
+            IDocumentNode document = htmlParser.Parse(FileUtil.GetInputStreamForFile(htmlFileName), "UTF-8");
+            CssStyleSheet css = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFileName));
             MediaDeviceDescription deviceDescription = new MediaDeviceDescription("all");
             IElementNode element = new JsoupElementNode(((JsoupDocumentNode)document).GetDocument().GetElementsByTag("p"
                 ).First());

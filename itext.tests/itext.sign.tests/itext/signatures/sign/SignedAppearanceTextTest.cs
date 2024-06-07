@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -49,7 +48,6 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class SignedAppearanceTextTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
@@ -189,7 +187,7 @@ namespace iText.Signatures.Sign {
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0);
             String icmProfile = PDFA_FOLDER + "sRGB Color Space Profile.icm";
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , new FileStream(icmProfile, FileMode.Open, FileAccess.Read));
+                , FileUtil.GetInputStreamForFile(icmProfile));
             PdfDocument document = new PdfADocument(new PdfWriter(filename, writerProperties), PdfAConformanceLevel.PDF_A_4
                 , outputIntent);
             Document doc = new Document(document);
@@ -254,7 +252,7 @@ namespace iText.Signatures.Sign {
             Rectangle rectangleForNewField, SignatureFieldAppearance appearance) {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName(name);
             signer.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);

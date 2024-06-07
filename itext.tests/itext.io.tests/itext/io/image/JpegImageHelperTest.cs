@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Test;
 using iText.Test.Attributes;
@@ -36,8 +37,7 @@ namespace iText.IO.Image {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED, LogLevel
              = LogLevelConstants.ERROR)]
         public virtual void AttemptToSetInvalidIccProfileToImageTest() {
-            using (FileStream fis = new FileStream(SOURCE_FOLDER + "WP_20140410_001.jpg", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "WP_20140410_001.jpg")) {
                 ImageData img = ImageDataFactory.CreateJpeg(StreamUtil.InputStreamToArray(fis));
                 int size = 100;
                 // Instantiate new byte[size][] instead new byte[size][size] necessary for autoporting
@@ -54,8 +54,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void AttemptToSetNullIccProfileToImageTest() {
-            using (FileStream fis = new FileStream(SOURCE_FOLDER + "WP_20140410_001.jpg", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "WP_20140410_001.jpg")) {
                 byte[][] icc = new byte[][] { null, null };
                 ImageData img = ImageDataFactory.CreateJpeg(StreamUtil.InputStreamToArray(fis));
                 NUnit.Framework.Assert.DoesNotThrow(() => JpegImageHelper.AttemptToSetIccProfileToImage(icc, img));

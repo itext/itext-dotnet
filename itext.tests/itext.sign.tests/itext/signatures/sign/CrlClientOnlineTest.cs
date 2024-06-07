@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -79,8 +80,8 @@ namespace iText.Signatures.Sign {
         [LogMessage("Checking certificate: ", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Skipped CRL url (malformed): test", LogLevel = LogLevelConstants.INFO)]
         public virtual void CheckCrlCertWithMalformedUrlTest() {
-            IX509Certificate chain = CryptoUtil.ReadPublicCertificate(new FileStream(certWithMalformedUrl, FileMode.Open
-                , FileAccess.Read));
+            IX509Certificate chain = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(certWithMalformedUrl
+                ));
             CrlClientOnline crlClientOnline = new CrlClientOnline(new IX509Certificate[] { chain });
             NUnit.Framework.Assert.AreEqual(0, crlClientOnline.GetUrlsSize());
         }
@@ -89,8 +90,8 @@ namespace iText.Signatures.Sign {
         [LogMessage("Checking certificate: ", LogLevel = LogLevelConstants.INFO)]
         [LogMessage("Added CRL url: http://www.example.com/crl/test.crl", LogLevel = LogLevelConstants.INFO)]
         public virtual void CheckCrlCertWithCorrectUrlTest() {
-            IX509Certificate chain = CryptoUtil.ReadPublicCertificate(new FileStream(certWithCorrectUrl, FileMode.Open
-                , FileAccess.Read));
+            IX509Certificate chain = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(certWithCorrectUrl
+                ));
             CrlClientOnline crlClientOnline = new CrlClientOnline(new IX509Certificate[] { chain });
             NUnit.Framework.Assert.AreEqual(1, crlClientOnline.GetUrlsSize());
         }
@@ -118,14 +119,14 @@ namespace iText.Signatures.Sign {
         [LogMessage("Checking CRL: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
         [LogMessage("Added CRL found at: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
         public virtual void UnreachableSeveralCrlDistributionPointsFromTheCertChainTest() {
-            CrlClientOnline crlClientOnline = new _CrlClientOnline_153();
+            CrlClientOnline crlClientOnline = new _CrlClientOnline_152();
             IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(chainWithSeveralUrls)[1];
             ICollection<byte[]> bytes = crlClientOnline.GetEncoded(checkCert, null);
             NUnit.Framework.Assert.AreEqual(3, bytes.Count);
         }
 
-        private sealed class _CrlClientOnline_153 : CrlClientOnline {
-            public _CrlClientOnline_153() {
+        private sealed class _CrlClientOnline_152 : CrlClientOnline {
+            public _CrlClientOnline_152() {
             }
 
             protected internal override Stream GetCrlResponse(IX509Certificate cert, Uri url) {

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
@@ -207,8 +208,8 @@ namespace iText.Layout.Hyphenation {
             // try the raw XML file
             String name = key + ".xml";
             try {
-                Stream fis = new FileStream(searchDirectory + System.IO.Path.DirectorySeparatorChar + name, FileMode.Open, 
-                    FileAccess.Read);
+                Stream fis = FileUtil.GetInputStreamForFile(searchDirectory + System.IO.Path.DirectorySeparatorChar + name
+                    );
                 return GetHyphenationTree(fis, name);
             }
             catch (System.IO.IOException ioe) {

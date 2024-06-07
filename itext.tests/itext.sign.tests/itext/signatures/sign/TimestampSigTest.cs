@@ -65,7 +65,7 @@ namespace iText.Signatures.Sign {
             String outFileName = destinationFolder + "timestampTest01.pdf";
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), 
                 new StampingProperties());
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.Timestamp(testTsa, "timestampSig1");

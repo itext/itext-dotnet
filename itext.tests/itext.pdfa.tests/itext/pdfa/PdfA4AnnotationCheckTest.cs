@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Geom;
@@ -35,7 +34,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4AnnotationCheckTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -153,8 +151,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, CreateOutputIntent())) {
                 PdfPage page = doc.AddNewPage();
-                PdfStream stream3D = new PdfStream(doc, new FileStream(CMP_FOLDER + "teapot.u3d", FileMode.Open, FileAccess.Read
-                    ));
+                PdfStream stream3D = new PdfStream(doc, FileUtil.GetInputStreamForFile(CMP_FOLDER + "teapot.u3d"));
                 stream3D.Put(PdfName.Type, PdfName._3D);
                 stream3D.Put(PdfName.Subtype, new PdfName("U3D"));
                 stream3D.SetCompressionLevel(CompressionConstants.UNDEFINED_COMPRESSION);
@@ -397,8 +394,8 @@ namespace iText.Pdfa {
         }
 
         private PdfOutputIntent CreateOutputIntent() {
-            return new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER
-                 + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read));
+            return new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile
+                (SOURCE_FOLDER + "sRGB Color Space Profile.icm"));
         }
 
         private sealed class PdfProjectionAnnotation : PdfAnnotation {
