@@ -261,7 +261,7 @@ namespace iText.Signatures.Validation.V1 {
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
-                ((al) => al.WithCheckName(SignatureValidator.CERTS_FROM_DSS).WithExceptionCauseType(typeof(AbstractGeneralSecurityException
+                ((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithExceptionCauseType(typeof(AbstractGeneralSecurityException
                 ))));
         }
 
@@ -323,17 +323,24 @@ namespace iText.Signatures.Validation.V1 {
                 DateTime date3 = TimeTestUtil.TEST_DATE_TIME.AddDays(20);
                 // 2 signatures with timestamp
                 // 3 document timestamps
-                NUnit.Framework.Assert.AreEqual(7, mockCertificateChainValidator.verificationCalls.Count);
-                NUnit.Framework.Assert.IsTrue(mockCertificateChainValidator.verificationCalls.Any((c) => c.certificate.GetSerialNumber
-                    ().ToString().Equals("1491571297") && c.checkDate.Equals(date3)));
-                NUnit.Framework.Assert.IsTrue(mockCertificateChainValidator.verificationCalls.Any((c) => c.certificate.GetSerialNumber
-                    ().ToString().Equals("1491571297") && c.checkDate.Equals(date2)));
-                NUnit.Framework.Assert.IsTrue(mockCertificateChainValidator.verificationCalls.Any((c) => c.certificate.GetSerialNumber
-                    ().ToString().Equals("1491571297") && c.checkDate.Equals(date1)));
-                NUnit.Framework.Assert.IsTrue(mockCertificateChainValidator.verificationCalls.Any((c) => c.certificate.GetSerialNumber
-                    ().ToString().Equals("1550593058") && c.checkDate.Equals(date2)));
-                NUnit.Framework.Assert.IsTrue(mockCertificateChainValidator.verificationCalls.Any((c) => c.certificate.GetSerialNumber
-                    ().ToString().Equals("1701704311986") && c.checkDate.Equals(date1)));
+                IList<MockChainValidator.ValidationCallBack> verificationCalls = mockCertificateChainValidator.verificationCalls;
+                NUnit.Framework.Assert.AreEqual(7, verificationCalls.Count);
+                NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, verificationCalls[0].context.GetTimeBasedContext
+                    ());
+                for (int i = 1; i < verificationCalls.Count; ++i) {
+                    NUnit.Framework.Assert.AreEqual(TimeBasedContext.HISTORICAL, verificationCalls[i].context.GetTimeBasedContext
+                        ());
+                }
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1491571297") && c.checkDate.Equals(date3)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1491571297") && c.checkDate.Equals(date2)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1491571297") && c.checkDate.Equals(date1)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1550593058") && c.checkDate.Equals(date2)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1701704311986") && c.checkDate.Equals(date1)));
             }
         }
     }

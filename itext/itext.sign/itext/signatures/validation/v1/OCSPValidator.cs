@@ -92,8 +92,24 @@ namespace iText.Signatures.Validation.V1 {
         /// <param name="singleResp">single response to check</param>
         /// <param name="ocspResp">basic OCSP response which contains single response to check</param>
         /// <param name="validationDate">validation date to check for</param>
+        [System.ObsoleteAttribute(@"starting from 8.0.5. TODO DEVSIX-8398 To be removed.")]
         public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate) {
+            Validate(report, context, certificate, singleResp, ocspResp, validationDate, DateTimeUtil.GetCurrentUtcTime
+                ());
+        }
+
+        /// <summary>Validates a certificate against single OCSP Response.</summary>
+        /// <param name="report">to store all the chain verification results</param>
+        /// <param name="context">the context in which to perform the validation</param>
+        /// <param name="certificate">the certificate to check for</param>
+        /// <param name="singleResp">single response to check</param>
+        /// <param name="ocspResp">basic OCSP response which contains single response to check</param>
+        /// <param name="validationDate">validation date to check for</param>
+        /// <param name="responseGenerationDate">trusted date at which response is generated</param>
+        public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
+            , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate, DateTime responseGenerationDate
+            ) {
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.OCSP_VALIDATOR);
             if (CertificateUtil.IsSelfSigned(certificate)) {
                 report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, RevocationDataValidator.SELF_SIGNED_CERTIFICATE
@@ -124,10 +140,10 @@ namespace iText.Signatures.Validation.V1 {
             }
             // So, since the issuer name and serial number identify a unique certificate, we found the single response
             // for the provided certificate.
-            // Check that thisUpdate >= (validationDate - freshness).
             TimeSpan freshness = properties.GetFreshness(localContext);
-            if (singleResp.GetThisUpdate().Before(DateTimeUtil.AddMillisToDate(validationDate, -(long)freshness.TotalMilliseconds
-                ))) {
+            // Check that thisUpdate + freshness < validation.
+            if (DateTimeUtil.AddMillisToDate(singleResp.GetThisUpdate(), (long)freshness.TotalMilliseconds).Before(validationDate
+                )) {
                 report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, MessageFormatUtil.Format(FRESHNESS_CHECK
                     , singleResp.GetThisUpdate(), validationDate, freshness), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
@@ -156,7 +172,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             if (isStatusGood || (revokedStatus != null && validationDate.Before(revokedStatus.GetRevocationTime()))) {
                 // Check if the OCSP response is genuine.
-                VerifyOcspResponder(report, localContext, ocspResp, (IX509Certificate)issuerCert);
+                VerifyOcspResponder(report, localContext, ocspResp, (IX509Certificate)issuerCert, responseGenerationDate);
                 if (!isStatusGood) {
                     report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, MessageFormatUtil.Format(SignLogMessageConstant
                         .VALID_CERTIFICATE_IS_REVOKED, revokedStatus.GetRevocationTime()), ReportItem.ReportItemStatus.INFO));
@@ -189,7 +205,7 @@ namespace iText.Signatures.Validation.V1 {
         /// </param>
         /// <param name="issuerCert">the issuer of the certificate for which the OCSP is checked</param>
         private void VerifyOcspResponder(ValidationReport report, ValidationContext context, IBasicOcspResponse ocspResp
-            , IX509Certificate issuerCert) {
+            , IX509Certificate issuerCert, DateTime responseGenerationDate) {
             ValidationContext localContext = context.SetCertificateSource(CertificateSource.OCSP_ISSUER);
             ValidationReport responderReport = new ValidationReport();
             // OCSP response might be signed by the issuer certificate or
@@ -225,18 +241,23 @@ namespace iText.Signatures.Validation.V1 {
                     }
                     // Validating of the ocsp signer's certificate (responderCert) described in the
                     // RFC6960 4.2.2.2.1. Revocation Checking of an Authorized Responder.
-                    builder.GetCertificateChainValidator().Validate(responderReport, localContext, responderCert, ocspResp.GetProducedAt
-                        ());
-                    AddResponderValidationReport(report, responderReport);
-                    return;
+                    builder.GetCertificateChainValidator().Validate(responderReport, localContext, responderCert, responseGenerationDate
+                        );
+                }
+                else {
+                    builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
+                        .TRUSTED), responderCert, responseGenerationDate);
                 }
             }
-            builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
-                .TRUSTED), responderCert, ocspResp.GetProducedAt());
+            else {
+                builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
+                    .CERT_ISSUER), responderCert, responseGenerationDate);
+            }
             AddResponderValidationReport(report, responderReport);
         }
 
-        private void AddResponderValidationReport(ValidationReport report, ValidationReport responderReport) {
+        private static void AddResponderValidationReport(ValidationReport report, ValidationReport responderReport
+            ) {
             foreach (ReportItem reportItem in responderReport.GetLogs()) {
                 report.AddReportItem(ReportItem.ReportItemStatus.INVALID == reportItem.GetStatus() ? reportItem.SetStatus(
                     ReportItem.ReportItemStatus.INDETERMINATE) : reportItem);

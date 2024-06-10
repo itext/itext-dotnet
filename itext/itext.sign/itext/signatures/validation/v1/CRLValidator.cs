@@ -65,10 +65,6 @@ namespace iText.Signatures.Validation.V1 {
 
         internal const String UPDATE_DATE_BEFORE_CHECK_DATE = "nextUpdate: {0} of CRLResponse is before validation date {1}.";
 
-        internal const String NEXT_UPDATE_VALIDATION = "Using crl nextUpdate date as validation date.";
-
-        internal const String THIS_UPDATE_VALIDATION = "Using crl thisUpdate date as validation date.";
-
         // All reasons without unspecified.
         internal const int ALL_REASONS = 32895;
 
@@ -104,18 +100,31 @@ namespace iText.Signatures.Validation.V1 {
         /// <param name="certificate">the certificate to check against CRL response</param>
         /// <param name="crl">the crl response to be validated</param>
         /// <param name="validationDate">validation date to check for</param>
+        [System.ObsoleteAttribute(@"starting from 8.0.5. TODO DEVSIX-8398 To be removed.")]
         public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , IX509Crl crl, DateTime validationDate) {
+            Validate(report, context, certificate, crl, validationDate, DateTimeUtil.GetCurrentUtcTime());
+        }
+
+        /// <summary>Validates a certificate against Certificate Revocation List (CRL) Responses.</summary>
+        /// <param name="report">to store all the chain verification results</param>
+        /// <param name="context">the context in which to perform the validation</param>
+        /// <param name="certificate">the certificate to check against CRL response</param>
+        /// <param name="crl">the crl response to be validated</param>
+        /// <param name="validationDate">validation date to check for</param>
+        /// <param name="responseGenerationDate">trusted date at which response is generated</param>
+        public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
+            , IX509Crl crl, DateTime validationDate, DateTime responseGenerationDate) {
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.CRL_VALIDATOR);
             if (CertificateUtil.IsSelfSigned(certificate)) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, RevocationDataValidator.SELF_SIGNED_CERTIFICATE
                     , ReportItem.ReportItemStatus.INFO));
                 return;
             }
-            // Check that thisUpdate >= (validationDate - freshness).
             TimeSpan freshness = properties.GetFreshness(localContext);
-            if (crl.GetThisUpdate().Before(DateTimeUtil.AddMillisToDate(validationDate, -(long)freshness.TotalMilliseconds
-                ))) {
+            // Check that thisUpdate + freshness < validation.
+            if (DateTimeUtil.AddMillisToDate(crl.GetThisUpdate(), (long)freshness.TotalMilliseconds).Before(validationDate
+                )) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, MessageFormatUtil.Format(FRESHNESS_CHECK
                     , crl.GetThisUpdate(), validationDate, freshness), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
@@ -163,14 +172,9 @@ namespace iText.Signatures.Validation.V1 {
             int? reasonsMask = checkedReasonsMask.Get(certificate);
             if (reasonsMask != null) {
                 interimReasonsMask |= (int)reasonsMask;
-                // Verify that interim_reasons_mask includes one or more reasons that are not included in the reasons_mask.
-                if (interimReasonsMask == reasonsMask) {
-                    report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, SAME_REASONS_CHECK, ReportItem.ReportItemStatus
-                        .INFO));
-                }
             }
             // Verify the CRL issuer.
-            VerifyCrlIntegrity(report, localContext, certificate, crl);
+            VerifyCrlIntegrity(report, localContext, certificate, crl, responseGenerationDate);
             // Check the status of the certificate.
             VerifyRevocation(report, certificate, validationDate, crl);
             if (report.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
@@ -259,7 +263,7 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private void VerifyCrlIntegrity(ValidationReport report, ValidationContext context, IX509Certificate certificate
-            , IX509Crl crl) {
+            , IX509Crl crl, DateTime responseGenerationDate) {
             IX509Certificate[] certs = certificateRetriever.GetCrlIssuerCertificates(crl);
             if (certs.Length == 0) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NOT_FOUND, ReportItem.ReportItemStatus
@@ -272,6 +276,7 @@ namespace iText.Signatures.Validation.V1 {
             if (!crlIssuerRoot.Equals(subjectRoot)) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NO_COMMON_ROOT, ReportItem.ReportItemStatus
                     .INDETERMINATE));
+                return;
             }
             try {
                 crl.Verify(crlIssuer.GetPublicKey());
@@ -281,26 +286,24 @@ namespace iText.Signatures.Validation.V1 {
                     .INDETERMINATE));
                 return;
             }
-            // Ideally this date should be the date this response was retrieved from the server.
-            DateTime crlIssuerDate;
-            if (TimestampConstants.UNDEFINED_TIMESTAMP_DATE != crl.GetNextUpdate()) {
-                crlIssuerDate = crl.GetNextUpdate();
-                report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, NEXT_UPDATE_VALIDATION
-                    , ReportItem.ReportItemStatus.INFO));
-            }
-            else {
-                crlIssuerDate = crl.GetThisUpdate();
-                report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, THIS_UPDATE_VALIDATION
-                    , ReportItem.ReportItemStatus.INFO));
-            }
-            builder.GetCertificateChainValidator().Validate(report, context.SetCertificateSource(CertificateSource.CRL_ISSUER
-                ), (IX509Certificate)crlIssuer, crlIssuerDate);
+            ValidationReport responderReport = new ValidationReport();
+            builder.GetCertificateChainValidator().Validate(responderReport, context.SetCertificateSource(CertificateSource
+                .CRL_ISSUER), (IX509Certificate)crlIssuer, responseGenerationDate);
+            AddResponderValidationReport(report, responderReport);
         }
 
         private IX509Certificate GetRoot(IX509Certificate cert) {
             IX509Certificate[] chain = certificateRetriever.RetrieveMissingCertificates(new IX509Certificate[] { cert }
                 );
             return chain[chain.Length - 1];
+        }
+
+        private static void AddResponderValidationReport(ValidationReport report, ValidationReport responderReport
+            ) {
+            foreach (ReportItem reportItem in responderReport.GetLogs()) {
+                report.AddReportItem(ReportItem.ReportItemStatus.INVALID == reportItem.GetStatus() ? reportItem.SetStatus(
+                    ReportItem.ReportItemStatus.INDETERMINATE) : reportItem);
+            }
         }
     }
 }

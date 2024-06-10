@@ -147,6 +147,13 @@ namespace iText.Signatures {
             return SignUtils.ParseCrlFromStream(input);
         }
 
+        /// <summary>Parses a CRL from bytes.</summary>
+        /// <param name="crlBytes">the bytes holding the unparsed CRL</param>
+        /// <returns>the parsed CRL object.</returns>
+        public static IX509Crl ParseCrlFromBytes(byte[] crlBytes) {
+            return SignUtils.ParseCrlFromStream(new MemoryStream(crlBytes));
+        }
+
         /// <summary>Retrieves the URL for the issuer certificate for the given CRL.</summary>
         /// <param name="crl">the CRL response</param>
         /// <returns>the URL or null.</returns>

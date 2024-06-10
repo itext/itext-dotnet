@@ -1258,8 +1258,8 @@ namespace iText.Signatures.Validation.V1 {
             if (pdfObject1.GetType() != pdfObject2.GetType()) {
                 return false;
             }
-            // We don't allow objects to be direct and indirect.
-            // Acrobat however allows it, but such change can invalidate the document.
+            // We don't allow objects to change from being direct to indirect and vice versa.
+            // Acrobat allows it, but such change can invalidate the document.
             if (pdfObject1.GetIndirectReference() == null ^ pdfObject2.GetIndirectReference() == null) {
                 return false;
             }
@@ -1603,10 +1603,10 @@ namespace iText.Signatures.Validation.V1 {
                 }
                 allowedReferences.Add(arrayEntry.GetIndirectReference());
                 if (arrayEntry is PdfDictionary) {
-                    AddAllNestedDictionaryEntries(allowedReferences, pdfArray.GetAsDictionary(i));
+                    AddAllNestedDictionaryEntries(allowedReferences, (PdfDictionary)arrayEntry);
                 }
                 if (arrayEntry is PdfArray) {
-                    AddAllNestedArrayEntries(allowedReferences, pdfArray.GetAsArray(i));
+                    AddAllNestedArrayEntries(allowedReferences, (PdfArray)arrayEntry);
                 }
             }
         }

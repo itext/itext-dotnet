@@ -64,9 +64,9 @@ namespace iText.Signatures.Testutils.Client {
                 }
                 bytes = builder.MakeOcspResponse(SignTestPortUtil.GenerateOcspRequestWithNonce(id).GetEncoded());
             }
-            catch (Exception ignored) {
-                if (ignored is Exception) {
-                    throw (Exception)ignored;
+            catch (Exception e) {
+                if (e is Exception) {
+                    throw (Exception)e;
                 }
             }
             return bytes;

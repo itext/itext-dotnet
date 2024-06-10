@@ -46,8 +46,6 @@ namespace iText.Signatures.Validation.V1 {
 
         private static readonly char[] KEY_PASSWORD = "testpassphrase".ToCharArray();
 
-        private CRLValidator validator;
-
         private MockChainValidator mockChainValidator;
 
         private IX509Certificate crlIssuerCert;
@@ -60,6 +58,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private IssuingCertificateRetriever certificateRetriever;
 
+        private ValidatorChainBuilder validatorChainBuilder;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void SetUpOnce() {
         }
@@ -69,9 +69,8 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever = new IssuingCertificateRetriever();
             SignatureValidationProperties parameters = new SignatureValidationProperties();
             mockChainValidator = new MockChainValidator();
-            ValidatorChainBuilder builder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever
-                ).WithSignatureValidationProperties(parameters).WithCertificateChainValidator(mockChainValidator);
-            validator = new CRLValidator(builder);
+            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).
+                WithSignatureValidationProperties(parameters).WithCertificateChainValidator(mockChainValidator);
         }
 
         [NUnit.Framework.Test]
@@ -205,6 +204,7 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report = new ValidationReport();
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
+            CRLValidator validator = validatorChainBuilder.GetCRLValidator();
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
                 (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
@@ -228,13 +228,12 @@ namespace iText.Signatures.Validation.V1 {
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             // Validate full CRL.
-            validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile
-                (fullCrlPath)), TimeTestUtil.TEST_DATE_TIME);
+            validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
+                (FileUtil.GetInputStreamForFile(fullCrlPath)), TimeTestUtil.TEST_DATE_TIME);
             // Validate CRL with onlySomeReasons.
-            validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
-                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
-            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
-                ((al) => al.WithMessage(CRLValidator.SAME_REASONS_CHECK)));
+            validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
+                (new MemoryStream(builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
         [NUnit.Framework.Test]
@@ -251,8 +250,8 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report = new ValidationReport();
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
-            validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
-                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+            validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
+                (new MemoryStream(builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
                 ((la) => la.WithCertificate(signCert).WithCheckName(CRLValidator.CRL_CHECK).WithMessage(CRLValidator.CERTIFICATE_IS_UNREVOKED
                 )));
@@ -276,8 +275,8 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report = new ValidationReport();
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
-            validator.Validate(report, context, cert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream(builder
-                .MakeCrl())), checkDate);
+            validatorChainBuilder.GetCRLValidator().Validate(report, context, cert, (IX509Crl)CertificateUtil.ParseCrlFromStream
+                (new MemoryStream(builder.MakeCrl())), checkDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithStatus(ReportItem.ReportItemStatus.INDETERMINATE).WithCertificate(cert).WithMessage
                 (CRLValidator.ONLY_SOME_REASONS_CHECKED)));
@@ -327,6 +326,17 @@ namespace iText.Signatures.Validation.V1 {
                 (0));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ProvidedTimeIsUsedForResponderValidation() {
+            RetrieveTestResources("happyPath");
+            byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
+                TEST_DATE_TIME.AddDays(+5));
+            mockChainValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeTestUtil.TEST_DATE_TIME, c.checkDate
+                ));
+            ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
         private ValidationReport CheckCrlScope(String crlPath) {
             String root = SOURCE_FOLDER + "issuingDistributionPointTest/root.pem";
             String sign = SOURCE_FOLDER + "issuingDistributionPointTest/sign.pem";
@@ -336,8 +346,8 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report = new ValidationReport();
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
-            validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile
-                (crlPath)), TimeTestUtil.TEST_DATE_TIME);
+            validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
+                (FileUtil.GetInputStreamForFile(crlPath)), TimeTestUtil.TEST_DATE_TIME);
             return report;
         }
 
@@ -377,8 +387,8 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport result = new ValidationReport();
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
-            validator.Validate(result, context, certificateUnderTest, (IX509Crl)CertificateUtil.ParseCrlFromStream(new 
-                MemoryStream(encodedCrl)), testDate);
+            validatorChainBuilder.GetCRLValidator().Validate(result, context, certificateUnderTest, (IX509Crl)CertificateUtil
+                .ParseCrlFromStream(new MemoryStream(encodedCrl)), testDate, testDate);
             return result;
         }
     }

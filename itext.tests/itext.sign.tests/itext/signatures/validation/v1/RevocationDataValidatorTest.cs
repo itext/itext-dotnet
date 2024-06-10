@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -178,8 +179,7 @@ namespace iText.Signatures.Validation.V1 {
             builder1.SetNextUpdate(checkDate.AddDays(-2));
             TestCrlClientWrapper crlClient1 = new TestCrlClientWrapper(new TestCrlClient().AddBuilderForCertIssuer(builder1
                 ));
-            DateTime thisUpdate2 = checkDate;
-            TestCrlBuilder builder2 = new TestCrlBuilder(caCert, caPrivateKey, thisUpdate2);
+            TestCrlBuilder builder2 = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             builder2.SetNextUpdate(checkDate);
             TestCrlClientWrapper crlClient2 = new TestCrlClientWrapper(new TestCrlClient().AddBuilderForCertIssuer(builder2
                 ));
@@ -308,21 +308,26 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_401(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_409(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
-                ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
-                .CRL_PARSING_ERROR)).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK
-                ).WithMessage(RevocationDataValidator.NO_REVOCATION_DATA)));
+                ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(MessageFormatUtil
+                .Format(RevocationDataValidator.CANNOT_PARSE_CRL, "Test crl client."))).HasLogItem((la) => la.WithCheckName
+                (RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator.NO_REVOCATION_DATA
+                )));
         }
 
-        private sealed class _ICrlClient_401 : ICrlClient {
-            public _ICrlClient_401(byte[] crl) {
+        private sealed class _ICrlClient_409 : ICrlClient {
+            public _ICrlClient_409(byte[] crl) {
                 this.crl = crl;
             }
 
             public ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
                 return JavaCollectionsUtil.SingletonList(crl);
+            }
+
+            public override String ToString() {
+                return "Test crl client.";
             }
 
             private readonly byte[] crl;
@@ -397,6 +402,148 @@ namespace iText.Signatures.Validation.V1 {
             NUnit.Framework.Assert.AreEqual(ocspClient3.GetCalls()[0].response, mockOCSPValidator.calls[0].ocspResp);
             NUnit.Framework.Assert.AreEqual(crlClient.GetCalls()[0].responses[0], mockCrlValidator.calls[1].crl);
             NUnit.Framework.Assert.AreEqual(crlClient.GetCalls()[0].responses[1], mockCrlValidator.calls[0].crl);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResponsesFromValidationClientArePassedTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime ocspGeneration = checkDate.AddDays(2);
+            // Here we check that proper generation time was set.
+            mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(ocspGeneration, c.responseGenerationDate
+                ));
+            DateTime crlGeneration = checkDate.AddDays(3);
+            // Here we check that proper generation time was set.
+            mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(crlGeneration, c.responseGenerationDate));
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
+            ValidationOcspClient ocspClient = new _ValidationOcspClient_526();
+            TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
+                , caCert, null);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspResponseBytes
+                ));
+            ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
+            validator.AddOcspClient(ocspClient);
+            ValidationCrlClient crlClient = new _ValidationCrlClient_541();
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
+            byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
+                (checkCert, null))[0];
+            crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlResponseBytes), crlGeneration, TimeBasedContext
+                .HISTORICAL);
+            validator.AddCrlClient(crlClient);
+            validator.Validate(report, baseContext, checkCert, checkDate);
+        }
+
+        private sealed class _ValidationOcspClient_526 : ValidationOcspClient {
+            public _ValidationOcspClient_526() {
+            }
+
+            public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
+                NUnit.Framework.Assert.Fail("This method shall not be called");
+                return null;
+            }
+        }
+
+        private sealed class _ValidationCrlClient_541 : ValidationCrlClient {
+            public _ValidationCrlClient_541() {
+            }
+
+            public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
+                NUnit.Framework.Assert.Fail("This method shall not be called");
+                return null;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TimeBasedContextProperlySetValidationClientsTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.HISTORICAL, c.context.GetTimeBasedContext
+                ()));
+            mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.HISTORICAL, c.context.GetTimeBasedContext
+                ()));
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
+            ValidationOcspClient ocspClient = new ValidationOcspClient();
+            TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
+                , caCert, null);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspResponseBytes
+                ));
+            ocspClient.AddResponse(basicOCSPResp, checkDate, TimeBasedContext.HISTORICAL);
+            validator.AddOcspClient(ocspClient);
+            ValidationCrlClient crlClient = new ValidationCrlClient();
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
+            byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
+                (checkCert, null))[0];
+            crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlResponseBytes), checkDate, TimeBasedContext
+                .HISTORICAL);
+            validator.AddCrlClient(crlClient);
+            validator.Validate(report, baseContext, checkCert, checkDate);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TimeBasedContextProperlySetRandomClientsTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, c.context.GetTimeBasedContext
+                ()));
+            mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, c.context.GetTimeBasedContext
+                ()));
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
+            TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            validator.AddOcspClient(new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder));
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
+            validator.AddCrlClient(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder));
+            validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TimeBasedContextProperlySetOnlineClientsTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, c.context.GetTimeBasedContext
+                ()));
+            mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, c.context.GetTimeBasedContext
+                ()));
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
+            TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_620(testOcspClient, null);
+            validator.AddOcspClient(ocspClient);
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
+            TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
+            CrlClientOnline crlClient = new _CrlClientOnline_630(testCrlClient);
+            validator.AddCrlClient(crlClient);
+            validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
+                );
+        }
+
+        private sealed class _OcspClientBouncyCastle_620 : OcspClientBouncyCastle {
+            public _OcspClientBouncyCastle_620(TestOcspClient testOcspClient, OCSPVerifier baseArg1)
+                : base(baseArg1) {
+                this.testOcspClient = testOcspClient;
+            }
+
+            public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate rootCert, String url) {
+                return testOcspClient.GetEncoded(checkCert, rootCert, url);
+            }
+
+            private readonly TestOcspClient testOcspClient;
+        }
+
+        private sealed class _CrlClientOnline_630 : CrlClientOnline {
+            public _CrlClientOnline_630(TestCrlClient testCrlClient) {
+                this.testCrlClient = testCrlClient;
+            }
+
+            public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
+                return testCrlClient.GetEncoded(checkCert, url);
+            }
+
+            private readonly TestCrlClient testCrlClient;
         }
     }
 }

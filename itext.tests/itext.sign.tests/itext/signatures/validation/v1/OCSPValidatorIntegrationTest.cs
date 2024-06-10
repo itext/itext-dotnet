@@ -99,7 +99,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void ValidateAuthorizedOCSPResponderWithOcspTest() {
             ValidationReport report = VerifyResponderWithOcsp(false);
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItems(2
-                , 2, (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+                , (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => ((CertificateReportItem)l).GetCertificate().GetSubjectDN())).HasStatus(ValidationReport.ValidationResult
                 .VALID));
         }
@@ -134,7 +134,7 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, TimeTestUtil
-                .TEST_DATE_TIME);
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasStatus(ValidationReport.ValidationResult
                 .VALID));
         }
@@ -153,7 +153,7 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
-                .TEST_DATE_TIME);
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasLogItem((al) => al.WithCheckName
                 (CertificateChainValidator.EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, 
                 (l) => OID.X509Extensions.EXTENDED_KEY_USAGE)).HasStatus(ValidationReport.ValidationResult.INDETERMINATE
@@ -173,7 +173,7 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (0));
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
-                );
+                , checkDate);
             return report;
         }
 
@@ -187,7 +187,7 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever.AddTrustedCertificates(JavaUtil.ArraysAsList(caCert, responderCert));
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
-                .TEST_DATE_TIME);
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             return report;
         }
 
@@ -226,7 +226,7 @@ namespace iText.Signatures.Validation.V1 {
             validatorChainBuilder.GetRevocationDataValidator().AddOcspClient(ocspClient2);
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
-                );
+                , checkDate);
             return report;
         }
     }

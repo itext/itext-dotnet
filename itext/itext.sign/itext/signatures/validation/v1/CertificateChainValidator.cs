@@ -185,6 +185,11 @@ namespace iText.Signatures.Validation.V1 {
 
         private bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate certificate
             ) {
+            if (CertificateSource.TRUSTED == context.GetCertificateSource()) {
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_TRUSTED
+                    , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INFO));
+                return true;
+            }
             TrustedCertificatesStore store = certificateRetriever.GetTrustedCertificatesStore();
             if (store.IsCertificateGenerallyTrusted(certificate)) {
                 // Certificate is trusted for everything.

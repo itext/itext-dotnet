@@ -40,10 +40,10 @@ namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class SignatureValidatorIntegrationTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/SignatureValidatorTest/certs/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/SignatureValidatorIntegrationTest/certs/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/SignatureValidatorTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/SignatureValidatorIntegrationTest/";
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -80,8 +80,64 @@ namespace iText.Signatures.Validation.V1 {
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
-                (3, 3, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK)
-                .WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())));
+                (3, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage
+                (CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortValidityCertsWithOcspTest() {
+            String rootCertName = CERTS_SRC + "short_validity_root_cert.pem";
+            String tsRootCertName = CERTS_SRC + "ts_root_cert.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertName)[0];
+            IX509Certificate tsRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(tsRootCertName)[0];
+            // We need to set infinite freshness for first timestamp validation. Otherwise, test will fail.
+            builder.GetProperties().SetFreshness(ValidatorContexts.Of(ValidatorContext.OCSP_VALIDATOR), CertificateSources
+                .Of(CertificateSource.TIMESTAMP), TimeBasedContexts.Of(TimeBasedContext.PRESENT), TimeSpan.FromDays(999999
+                ));
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "shortValidityCertsWithOcsp.pdf"
+                ))) {
+                certificateRetriever.SetTrustedCertificates(JavaUtil.ArraysAsList(rootCert, tsRootCert));
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateSignatures(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                .UNEXPECTED_ENTRY_IN_XREF, (i) => 30)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (i) => "timestampSig1")).HasLogItem((al) =>
+                 al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
+                , (i) => "Signature1")).HasLogItems(2, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator
+                .CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN
+                ())).HasLogItems(4, (al) => al.WithCertificate(tsRootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                ).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => tsRootCert.GetSubjectDN())));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortValidityCertsWithCrlTest() {
+            String rootCertName = CERTS_SRC + "short_validity_root_cert.pem";
+            String tsRootCertName = CERTS_SRC + "ts_root_cert.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertName)[0];
+            IX509Certificate tsRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(tsRootCertName)[0];
+            // We need to set infinite freshness for first timestamp validation. Otherwise, test will fail.
+            builder.GetProperties().SetFreshness(ValidatorContexts.Of(ValidatorContext.CRL_VALIDATOR), CertificateSources
+                .Of(CertificateSource.TIMESTAMP), TimeBasedContexts.Of(TimeBasedContext.PRESENT), TimeSpan.FromDays(999999
+                ));
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "shortValidityCertsWithCrl.pdf"
+                ))) {
+                certificateRetriever.SetTrustedCertificates(JavaUtil.ArraysAsList(rootCert, tsRootCert));
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateSignatures(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                .UNEXPECTED_ENTRY_IN_XREF, (i) => 32)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (i) => "timestampSig1")).HasLogItem((al) =>
+                 al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
+                , (i) => "Signature1")).HasLogItems(2, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator
+                .CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN
+                ())).HasLogItems(4, (al) => al.WithCertificate(tsRootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                ).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => tsRootCert.GetSubjectDN())));
         }
 
         [NUnit.Framework.Test]
@@ -108,7 +164,7 @@ namespace iText.Signatures.Validation.V1 {
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItems(2
-                , 2, (la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+                , (la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
@@ -150,7 +206,7 @@ namespace iText.Signatures.Validation.V1 {
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
-                (3, 3, (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+                (3, (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 

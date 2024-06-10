@@ -45,9 +45,9 @@ namespace iText.Signatures.Validation.V1.Mocks {
         }
 
         public override void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
-            , IX509Crl crl, DateTime validationDate) {
+            , IX509Crl crl, DateTime validationDate, DateTime responseGenerationDate) {
             MockCrlValidator.CRLValidateCall call = new MockCrlValidator.CRLValidateCall(report, context, certificate, 
-                crl, validationDate);
+                crl, validationDate, responseGenerationDate);
             calls.Add(call);
             if (onCallHandler != null) {
                 onCallHandler(calls[calls.Count - 1]);
@@ -71,13 +71,16 @@ namespace iText.Signatures.Validation.V1.Mocks {
 
             public readonly DateTime validationDate;
 
+            public readonly DateTime responseGenerationDate;
+
             public CRLValidateCall(ValidationReport report, ValidationContext context, IX509Certificate certificate, IX509Crl
-                 crl, DateTime validationDate) {
+                 crl, DateTime validationDate, DateTime responseGenerationDate) {
                 this.report = report;
                 this.context = context;
                 this.certificate = certificate;
                 this.crl = crl;
                 this.validationDate = validationDate;
+                this.responseGenerationDate = responseGenerationDate;
             }
         }
     }

@@ -47,9 +47,10 @@ namespace iText.Signatures.Validation.V1.Mocks {
         }
 
         public override void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
-            , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate) {
+            , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate, DateTime responseGenerationDate
+            ) {
             MockOCSPValidator.OCSPValidatorCall call = new MockOCSPValidator.OCSPValidatorCall(report, context, certificate
-                , singleResp, ocspResp, validationDate);
+                , singleResp, ocspResp, validationDate, responseGenerationDate);
             calls.Add(call);
             if (onCallHandler != null) {
                 onCallHandler(call);
@@ -75,14 +76,18 @@ namespace iText.Signatures.Validation.V1.Mocks {
 
             public readonly DateTime validationDate;
 
+            public readonly DateTime responseGenerationDate;
+
             public OCSPValidatorCall(ValidationReport report, ValidationContext context, IX509Certificate certificate, 
-                ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate) {
+                ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate, DateTime responseGenerationDate
+                ) {
                 this.report = report;
                 this.context = context;
                 this.certificate = certificate;
                 this.singleResp = singleResp;
                 this.ocspResp = ocspResp;
                 this.validationDate = validationDate;
+                this.responseGenerationDate = responseGenerationDate;
             }
         }
     }

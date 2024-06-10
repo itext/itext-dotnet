@@ -36,7 +36,7 @@ namespace iText.Signatures.Validation.V1 {
 
         public static readonly TimeSpan DEFAULT_FRESHNESS_PRESENT_CRL = TimeSpan.FromDays(30);
 
-        public static readonly TimeSpan DEFAULT_FRESHNESS_PRESENT_OCSP = TimeSpan.FromDays(24);
+        public static readonly TimeSpan DEFAULT_FRESHNESS_PRESENT_OCSP = TimeSpan.FromDays(30);
 
         public static readonly TimeSpan DEFAULT_FRESHNESS_HISTORICAL = TimeSpan.FromMinutes(1);
 
@@ -173,8 +173,17 @@ namespace iText.Signatures.Validation.V1 {
                 .GetCertificateSource(), validationContext.GetTimeBasedContext(), (p) => p.GetRequiredExtensions());
         }
 
-        internal iText.Signatures.Validation.V1.SignatureValidationProperties SetRequiredExtensions(CertificateSources
-             certificateSources, IList<CertificateExtension> requiredExtensions) {
+        /// <summary>
+        /// Set list of extensions which are required to be set to a certificate depending on certificate source.
+        /// <para />
+        /// By default, required extensions are set to be compliant with common validation norms.
+        /// Changing those can result in falsely positive validation result.
+        /// </summary>
+        /// <param name="certificateSources"><see cref="CertificateSource"/> for extensions to be present</param>
+        /// <param name="requiredExtensions">list of required <see cref="CertificateExtension"/></param>
+        /// <returns>this same <see cref="SignatureValidationProperties"/> instance</returns>
+        public iText.Signatures.Validation.V1.SignatureValidationProperties SetRequiredExtensions(CertificateSources
+            certificateSources, IList<CertificateExtension> requiredExtensions) {
             // make a defensive copy of  requiredExtensions and already wrap it with unmodifiableList so that we don't have
             // to do this every time it is retrieved. Now we are protected against changes in th passed list and from
             // changes in the returned list
