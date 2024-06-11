@@ -128,6 +128,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private AccessPermissions requestedAccessPermissions = AccessPermissions.UNSPECIFIED;
 
+        private ReportItem.ReportItemStatus unexpectedXrefChangesStatus = ReportItem.ReportItemStatus.INFO;
+
         private ICollection<PdfObject> checkedAnnots;
 
         private ICollection<PdfDictionary> newlyAddedFields;
@@ -181,6 +183,31 @@ namespace iText.Signatures.Validation.V1 {
         public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetAccessPermissions(AccessPermissions
              accessPermissions) {
             this.requestedAccessPermissions = accessPermissions;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the status to be used for the report items produced during docMDP validation in case revision contains
+        /// unexpected changes in the XREF table.
+        /// </summary>
+        /// <remarks>
+        /// Set the status to be used for the report items produced during docMDP validation in case revision contains
+        /// unexpected changes in the XREF table. Default value is
+        /// <see cref="iText.Signatures.Validation.V1.Report.ReportItem.ReportItemStatus.INFO"/>.
+        /// </remarks>
+        /// <param name="status">
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.Report.ReportItem.ReportItemStatus"/>
+        /// to be used in case of unexpected changes in the XREF table
+        /// </param>
+        /// <returns>
+        /// the same
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetUnexpectedXrefChangesStatus(ReportItem.ReportItemStatus
+             status) {
+            this.unexpectedXrefChangesStatus = status;
             return this;
         }
 
@@ -293,14 +320,14 @@ namespace iText.Signatures.Validation.V1 {
                                                 if (!IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument && !referenceAllowedToBeRemoved
                                                     ) {
                                                     validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(OBJECT_REMOVED, indirectReference
-                                                        .GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
+                                                        .GetObjNumber()), unexpectedXrefChangesStatus));
                                                 }
                                             }
                                             else {
                                                 if (!CheckAllowedReferences(currentAllowedReferences, previousAllowedReferences, indirectReference, documentWithoutRevision
-                                                    )) {
+                                                    ) && !IsAllowedStreamObj(indirectReference, documentWithRevision)) {
                                                     validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_ENTRY_IN_XREF
-                                                        , indirectReference.GetObjNumber()), ReportItem.ReportItemStatus.INVALID));
+                                                        , indirectReference.GetObjNumber()), unexpectedXrefChangesStatus));
                                                 }
                                             }
                                         }
@@ -1372,6 +1399,15 @@ namespace iText.Signatures.Validation.V1 {
                     return documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) == null || previousAllowedReferences
                         .Any((reference) => IsSameReference(reference, indirectReference));
                 }
+            }
+            return false;
+        }
+
+        private bool IsAllowedStreamObj(PdfIndirectReference indirectReference, PdfDocument document) {
+            PdfObject pdfObject = document.GetPdfObject(indirectReference.GetObjNumber());
+            if (pdfObject is PdfStream) {
+                PdfName type = ((PdfStream)pdfObject).GetAsName(PdfName.Type);
+                return PdfName.XRef.Equals(type) || PdfName.ObjStm.Equals(type);
             }
             return false;
         }

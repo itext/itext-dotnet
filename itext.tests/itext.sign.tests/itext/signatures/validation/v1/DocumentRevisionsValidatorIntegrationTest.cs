@@ -411,5 +411,43 @@ namespace iText.Signatures.Validation.V1 {
                     ));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void FullCompressionModeLevel1Test() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionModeLevel1.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.NO_CHANGES_PERMITTED, validator.GetAccessPermissions());
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0).HasNumberOfLogs(0));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FullCompressionModeLevel2Test() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionModeLevel2.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
+                    ());
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0).HasNumberOfLogs(0));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FullCompressionModeLevel3Test() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionModeLevel3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
+                    ));
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0).HasNumberOfLogs(0));
+            }
+        }
     }
 }

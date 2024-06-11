@@ -186,13 +186,14 @@ namespace iText.Signatures.Validation.V1 {
                     (trustedCerts)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator
                     ();
                 ValidationReport report = signatureValidator.ValidateSignatures(document);
-                // Document contains invalid unused entry which is invalid according to DocumentRevisionsValidator.
-                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfLogs
-                    (5).HasNumberOfFailures(1).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                    (5).HasNumberOfFailures(0).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
                     ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "timestampSig1")).HasLogItem((l) =>
                      l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
-                    , (p) => "Signature1")).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
-                    (DocumentRevisionsValidator.UNEXPECTED_ENTRY_IN_XREF, (p) => "28")));
+                    , (p) => "Signature1"))
+                                // Document contains unused unexpected entry.
+                                .HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .UNEXPECTED_ENTRY_IN_XREF, (p) => "28").WithStatus(ReportItem.ReportItemStatus.INFO)));
             }
         }
 

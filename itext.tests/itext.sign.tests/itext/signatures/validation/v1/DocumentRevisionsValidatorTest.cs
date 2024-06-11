@@ -88,10 +88,10 @@ namespace iText.Signatures.Validation.V1 {
                     );
                 // Between these two revisions DSS and timestamp are added, which is allowed,
                 // but there is unused entry in the xref table, which is an itext signature generation artifact.
-                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
-                    ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
+                    ).HasNumberOfFailures(0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.UNEXPECTED_ENTRY_IN_XREF, (i) => 27).WithStatus
-                    (ReportItem.ReportItemStatus.INVALID)));
+                    (ReportItem.ReportItemStatus.INFO)));
                 validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[1], documentRevisions[2], document, validationReport, validationContext
                     );
@@ -231,8 +231,8 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void RandomEntryWithoutUsageTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryWithoutUsage.pdf")
                 )) {
-                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
-                validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator().SetAccessPermissions(AccessPermissions
+                    .NO_CHANGES_PERMITTED).SetUnexpectedXrefChangesStatus(ReportItem.ReportItemStatus.INVALID);
                 PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
                 IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
                 ValidationReport validationReport = new ValidationReport();
