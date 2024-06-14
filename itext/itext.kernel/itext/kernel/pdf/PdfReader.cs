@@ -379,6 +379,9 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
+            if (stream == null) {
+                throw new PdfException(KernelExceptionMessageConstant.UNABLE_TO_READ_STREAM_BYTES);
+            }
             PdfName type = stream.GetAsName(PdfName.Type);
             if (!PdfName.XRef.Equals(type) && !PdfName.ObjStm.Equals(type)) {
                 CheckPdfStreamLength(stream);
@@ -812,6 +815,9 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual void ReadObjectStream(PdfStream objectStream) {
+            if (objectStream == null) {
+                throw new PdfException(KernelExceptionMessageConstant.UNABLE_TO_READ_OBJECT_STREAM);
+            }
             int objectStreamNumber = objectStream.GetIndirectReference().GetObjNumber();
             int first = objectStream.GetAsNumber(PdfName.First).IntValue();
             int n = objectStream.GetAsNumber(PdfName.N).IntValue();
@@ -1568,6 +1574,10 @@ namespace iText.Kernel.Pdf {
                 if (reference.GetObjStreamNumber() > 0) {
                     PdfStream objectStream = (PdfStream)pdfDocument.GetXref().Get(reference.GetObjStreamNumber()).GetRefersTo(
                         false);
+                    if (objectStream == null) {
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_OBJECT_STREAM_NUMBER
+                            , reference.GetObjNumber(), reference.GetObjStreamNumber(), reference.GetIndex()));
+                    }
                     ReadObjectStream(objectStream);
                     return reference.refersTo;
                 }

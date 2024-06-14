@@ -613,6 +613,12 @@ namespace iText.Kernel.Exceptions {
         public const String XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET = "Pdf document is to large to " + "use normal cross reference table. Use cross reference streams instead. To enable feature use com.itextpdf"
              + ".kernel.pdf.WriterProperties#setFullCompressionMode(true). ";
 
+        public const String UNABLE_TO_READ_OBJECT_STREAM = "Unable to read object stream.";
+
+        public const String UNABLE_TO_READ_STREAM_BYTES = "Unable to read stream bytes because stream is null.";
+
+        public const String INVALID_OBJECT_STREAM_NUMBER = "Unable to read object {0} with object stream " + "number {1} and index {2} from object stream.";
+
         private KernelExceptionMessageConstant() {
         }
     }
