@@ -32,6 +32,7 @@ namespace iText.Forms.Form.Renderer {
     /// for a single line of text content in a form field.
     /// </summary>
     public abstract class AbstractOneLineTextFieldRenderer : AbstractTextFieldRenderer {
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="AbstractOneLineTextFieldRenderer"/>
@@ -41,7 +42,9 @@ namespace iText.Forms.Form.Renderer {
         internal AbstractOneLineTextFieldRenderer(IFormField modelElement)
             : base(modelElement) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Crops the content lines.</summary>
         /// <param name="lines">a list of lines</param>
         /// <param name="bBox">the bounding box</param>
@@ -49,6 +52,7 @@ namespace iText.Forms.Form.Renderer {
             AdjustNumberOfContentLines(lines, bBox, 1);
             UpdateParagraphHeight();
         }
+//\endcond
 
         /// <summary>Updates the paragraph height.</summary>
         private void UpdateParagraphHeight() {
@@ -71,6 +75,7 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets the content height.</summary>
         /// <param name="flatRenderer">the flat renderer</param>
         /// <param name="height">the height</param>
@@ -81,5 +86,6 @@ namespace iText.Forms.Form.Renderer {
             bBox.SetHeight(height);
             flatRenderer.Move(0, -dy);
         }
+//\endcond
     }
 }

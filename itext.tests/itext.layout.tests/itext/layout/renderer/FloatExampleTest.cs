@@ -218,12 +218,19 @@ namespace iText.Layout.Renderer {
         }
 
         private class ImageProperties {
+//\cond DO_NOT_DOCUMENT
             internal FloatPropertyValue? floatPropertyValue;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ClearPropertyValue? clearPropertyValue;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal HorizontalAlignment? horizontalAlignment;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ImageProperties(FloatExampleTest _enclosing, FloatPropertyValue? floatPropertyValue, ClearPropertyValue?
                  clearPropertyValue, HorizontalAlignment? horizontalAlignment) {
                 this._enclosing = _enclosing;
@@ -231,6 +238,7 @@ namespace iText.Layout.Renderer {
                 this.clearPropertyValue = clearPropertyValue;
                 this.horizontalAlignment = horizontalAlignment;
             }
+//\endcond
 
             public override String ToString() {
                 return "float=" + this.floatPropertyValue + ", clear=" + this.clearPropertyValue + ", horiz_align=" + this

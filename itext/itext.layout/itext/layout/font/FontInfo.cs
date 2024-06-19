@@ -106,6 +106,7 @@ namespace iText.Layout.Font {
             return Create(fontProgram, encoding, alias, null);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding, String alias, Range range
             ) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontName);
@@ -117,7 +118,9 @@ namespace iText.Layout.Font {
             return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor, range, alias
                 ) : null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding, String alias, Range
              range) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
@@ -129,6 +132,7 @@ namespace iText.Layout.Font {
             return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor, range, 
                 alias) : null;
         }
+//\endcond
 
         public FontProgramDescriptor GetDescriptor() {
             return descriptor;

@@ -28,6 +28,7 @@ using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 
 namespace iText.Svg.Renderers.Factories {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Contains the mapping of the default implementations, provided by this project for the standard SVG
     /// tags as defined in the SVG Specification.
@@ -39,6 +40,7 @@ namespace iText.Svg.Renderers.Factories {
 
         private static readonly String TEXT_LEAF_LC = SvgConstants.Tags.TEXT_LEAF.ToLowerInvariant();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="DefaultSvgNodeRendererMapper"/>
@@ -46,6 +48,7 @@ namespace iText.Svg.Renderers.Factories {
         /// </summary>
         internal DefaultSvgNodeRendererMapper() {
         }
+//\endcond
 
         private static readonly IDictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator> mapping;
 
@@ -132,18 +135,23 @@ namespace iText.Svg.Renderers.Factories {
             ignored = JavaCollectionsUtil.UnmodifiableCollection(ignoredTags);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the default SVG tags mapping.</summary>
         /// <returns>the default SVG tags mapping</returns>
         internal virtual IDictionary<String, DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator> GetMapping() {
             return mapping;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the default ignored SVG tags.</summary>
         /// <returns>default ignored SVG tags</returns>
         internal virtual ICollection<String> GetIgnoredTags() {
             return ignored;
         }
+//\endcond
 
         public delegate ISvgNodeRenderer ISvgNodeRendererCreator();
     }
+//\endcond
 }

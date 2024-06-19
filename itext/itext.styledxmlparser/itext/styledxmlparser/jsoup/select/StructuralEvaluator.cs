@@ -24,17 +24,23 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Base structural evaluator.</summary>
     internal abstract class StructuralEvaluator : Evaluator {
+//\cond DO_NOT_DOCUMENT
         internal Evaluator evaluator;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class Root : Evaluator {
             public override bool Matches(iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  element) {
                 return root == element;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class Has : StructuralEvaluator {
             public Has(Evaluator evaluator) {
                 this.evaluator = evaluator;
@@ -54,7 +60,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 return MessageFormatUtil.Format(":has({0})", evaluator);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class Not : StructuralEvaluator {
             public Not(Evaluator evaluator) {
                 this.evaluator = evaluator;
@@ -69,7 +77,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 return MessageFormatUtil.Format(":not({0})", evaluator);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class Parent : StructuralEvaluator {
             public Parent(Evaluator evaluator) {
                 this.evaluator = evaluator;
@@ -98,7 +108,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 return MessageFormatUtil.Format("{0} ", evaluator);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class ImmediateParent : StructuralEvaluator {
             public ImmediateParent(Evaluator evaluator) {
                 this.evaluator = evaluator;
@@ -118,7 +130,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 return MessageFormatUtil.Format("{0} > ", evaluator);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class PreviousSibling : StructuralEvaluator {
             public PreviousSibling(Evaluator evaluator) {
                 this.evaluator = evaluator;
@@ -143,7 +157,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 return MessageFormatUtil.Format("{0} ~ ", evaluator);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class ImmediatePreviousSibling : StructuralEvaluator {
             public ImmediatePreviousSibling(Evaluator evaluator) {
                 this.evaluator = evaluator;
@@ -162,5 +178,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 return MessageFormatUtil.Format("{0} + ", evaluator);
             }
         }
+//\endcond
     }
+//\endcond
 }

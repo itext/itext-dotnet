@@ -172,12 +172,15 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+//\cond DO_NOT_DOCUMENT
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         internal class EndPageEventHandler : iText.Kernel.Events.IEventHandler {
             private int counter = 0;
 
+//\cond DO_NOT_DOCUMENT
             internal EndPageEventHandler() {
             }
+//\endcond
 
             public virtual int GetCounter() {
                 return counter;
@@ -187,5 +190,6 @@ namespace iText.Pdfa {
                 counter++;
             }
         }
+//\endcond
     }
 }

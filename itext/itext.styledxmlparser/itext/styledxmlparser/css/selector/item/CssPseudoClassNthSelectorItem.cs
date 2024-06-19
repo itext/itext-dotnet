@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNthSelectorItem : CssPseudoClassChildSelectorItem {
         /// <summary>The nth A.</summary>
         private int nthA;
@@ -32,10 +33,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         /// <summary>The nth B.</summary>
         private int nthB;
 
+//\cond DO_NOT_DOCUMENT
         internal CssPseudoClassNthSelectorItem(String pseudoClass, String arguments)
             : base(pseudoClass, arguments) {
             GetNthArguments();
         }
+//\endcond
 
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {
@@ -117,4 +120,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
         }
     }
+//\endcond
 }

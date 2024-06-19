@@ -25,6 +25,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     // 12.1. Grid Sizing Algorithm
     internal class GridSizer {
         private readonly Grid grid;
@@ -43,6 +44,7 @@ namespace iText.Layout.Renderer {
 
         private readonly Rectangle actualBBox;
 
+//\cond DO_NOT_DOCUMENT
         internal GridSizer(Grid grid, IList<GridValue> templateColumns, IList<GridValue> templateRows, GridValue columnAutoWidth
             , GridValue rowAutoHeight, float columnGap, float rowGap, Rectangle actualBBox) {
             this.grid = grid;
@@ -54,6 +56,7 @@ namespace iText.Layout.Renderer {
             this.rowGap = rowGap;
             this.actualBBox = actualBBox;
         }
+//\endcond
 
         public virtual void SizeGrid() {
             // 1. First, the track sizing algorithm is used to resolve the sizes of the grid columns.
@@ -146,4 +149,5 @@ namespace iText.Layout.Renderer {
             }
         }
     }
+//\endcond
 }

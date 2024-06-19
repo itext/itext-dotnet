@@ -591,6 +591,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
             return value.StartsWith("#") && !iText.Commons.Utils.Matcher.Match(SPACE_PATTERN, value).Find();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Attributes GetEnforcedAttributes(String tagName) {
             Attributes attrs = new Attributes();
             Safelist.TagName tag = Safelist.TagName.ValueOf(tagName);
@@ -602,55 +603,83 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
             }
             return attrs;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // named types for config. All just hold strings, but here for my sanity.
         internal class TagName : Safelist.TypedValue {
+//\cond DO_NOT_DOCUMENT
             internal TagName(String value)
                 : base(value) {
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static Safelist.TagName ValueOf(String value) {
                 return new Safelist.TagName(value);
             }
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class AttributeKey : Safelist.TypedValue {
+//\cond DO_NOT_DOCUMENT
             internal AttributeKey(String value)
                 : base(value) {
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static Safelist.AttributeKey ValueOf(String value) {
                 return new Safelist.AttributeKey(value);
             }
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class AttributeValue : Safelist.TypedValue {
+//\cond DO_NOT_DOCUMENT
             internal AttributeValue(String value)
                 : base(value) {
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static Safelist.AttributeValue ValueOf(String value) {
                 return new Safelist.AttributeValue(value);
             }
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class Protocol : Safelist.TypedValue {
+//\cond DO_NOT_DOCUMENT
             internal Protocol(String value)
                 : base(value) {
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static Safelist.Protocol ValueOf(String value) {
                 return new Safelist.Protocol(value);
             }
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract class TypedValue {
             private String value;
 
+//\cond DO_NOT_DOCUMENT
             internal TypedValue(String value) {
                 Validate.NotNull(value);
                 this.value = value;
             }
+//\endcond
 
             public override int GetHashCode() {
                 int prime = 31;
@@ -682,5 +711,6 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
                 return value;
             }
         }
+//\endcond
     }
 }

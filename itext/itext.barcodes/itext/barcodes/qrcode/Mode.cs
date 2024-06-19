@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>See ISO 18004:2006, 6.4.1, Tables 2 and 3.</summary>
     /// <remarks>
     /// See ISO 18004:2006, 6.4.1, Tables 2 and 3. This enum encapsulates the various modes in which
@@ -163,4 +164,5 @@ namespace iText.Barcodes.Qrcode {
             return name;
         }
     }
+//\endcond
 }

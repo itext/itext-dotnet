@@ -69,7 +69,9 @@ namespace iText.Kernel.Pdf {
 
         private long memoryUsedForCurrentPdfStreamDecompression = 0;
 
+//\cond DO_NOT_DOCUMENT
         internal bool considerCurrentPdfStream = false;
+//\endcond
 
         /// <summary>
         /// Creates a
@@ -248,6 +250,7 @@ namespace iText.Kernel.Pdf {
             return documentSizeInMb * MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Considers the number of bytes which are occupied by the decompressed pdf stream.</summary>
         /// <remarks>
         /// Considers the number of bytes which are occupied by the decompressed pdf stream.
@@ -271,7 +274,9 @@ namespace iText.Kernel.Pdf {
             }
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Begins handling of current pdf stream decompression.</summary>
         /// <returns>
         /// this
@@ -283,7 +288,9 @@ namespace iText.Kernel.Pdf {
             considerCurrentPdfStream = true;
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Ends handling of current pdf stream decompression.</summary>
         /// <remarks>
         /// Ends handling of current pdf stream decompression.
@@ -305,10 +312,13 @@ namespace iText.Kernel.Pdf {
             considerCurrentPdfStream = false;
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual long GetAllMemoryUsedForDecompression() {
             return allMemoryUsedForDecompression;
         }
+//\endcond
 
         private static long CalculateDefaultParameter(long documentSize, int scale, long min) {
             long result = documentSize * scale;

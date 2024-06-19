@@ -27,13 +27,16 @@ using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNotSelectorItem : CssPseudoClassSelectorItem {
         private ICssSelector argumentsSelector;
 
+//\cond DO_NOT_DOCUMENT
         internal CssPseudoClassNotSelectorItem(ICssSelector argumentsSelector)
             : base(CommonCssConstants.NOT, argumentsSelector.ToString()) {
             this.argumentsSelector = argumentsSelector;
         }
+//\endcond
 
         public virtual IList<ICssSelectorItem> GetArgumentsSelector() {
             return CssSelectorParser.ParseSelectorItems(arguments);
@@ -46,4 +49,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return !argumentsSelector.Matches(node);
         }
     }
+//\endcond
 }

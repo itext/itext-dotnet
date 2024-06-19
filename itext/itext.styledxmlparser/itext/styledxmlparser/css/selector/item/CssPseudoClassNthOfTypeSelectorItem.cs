@@ -26,6 +26,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNthOfTypeSelectorItem : CssPseudoClassNthSelectorItem {
         public CssPseudoClassNthOfTypeSelectorItem(String arguments)
             : base(CommonCssConstants.NTH_OF_TYPE, arguments) {
@@ -39,4 +40,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return !children.IsEmpty() && ResolveNth(node, children);
         }
     }
+//\endcond
 }

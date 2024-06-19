@@ -150,7 +150,9 @@ namespace iText.Layout.Renderer {
                 this.expectedPage = 5;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int expectedPage;
+//\endcond
 
             public override LayoutArea GetOccupiedArea() {
                 return new LayoutArea(this.expectedPage++, new Rectangle(50, 50));
@@ -177,7 +179,9 @@ namespace iText.Layout.Renderer {
                 this.expectedPage = 5;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int expectedPage;
+//\endcond
 
             public override LayoutArea GetOccupiedArea() {
                 return new LayoutArea(this.expectedPage--, new Rectangle(50, 50));

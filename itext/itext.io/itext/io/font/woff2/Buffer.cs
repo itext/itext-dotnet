@@ -20,6 +20,7 @@ using System;
 using iText.IO.Exceptions;
 
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // -----------------------------------------------------------------------------
     // Buffer helper class
     //
@@ -101,4 +102,5 @@ namespace iText.IO.Font.Woff2 {
             return result;
         }
     }
+//\endcond
 }

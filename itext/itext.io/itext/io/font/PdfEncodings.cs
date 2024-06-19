@@ -137,6 +137,7 @@ namespace iText.IO.Font {
             char)239, (char)240, (char)241, (char)242, (char)243, (char)244, (char)245, (char)246, (char)247, (char
             )248, (char)249, (char)250, (char)251, (char)252, (char)253, (char)254, (char)255 };
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly int[] standardEncoding = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36, 37, 38, 8217, 40, 41, 42, 43, 44
             , 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 
@@ -148,6 +149,7 @@ namespace iText.IO.Font {
             , 0, 191, 0, 96, 180, 710, 732, 175, 728, 729, 168, 0, 730, 184, 0, 733, 731, 711, 8212, 0, 0, 0, 0, 0
             , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 198, 0, 170, 0, 0, 0, 0, 321, 216, 338, 186, 0, 0, 0, 0, 0, 230, 0, 
             0, 0, 305, 0, 0, 322, 248, 339, 223, 0, 0, 0, 0 };
+//\endcond
 
         private static readonly IntHashtable winansi = new IntHashtable();
 
@@ -574,6 +576,7 @@ namespace iText.IO.Font {
 
             private readonly char[] byteToChar;
 
+//\cond DO_NOT_DOCUMENT
             internal SymbolConversion(bool symbol) {
                 if (symbol) {
                     translation = t1;
@@ -584,6 +587,7 @@ namespace iText.IO.Font {
                     byteToChar = table2;
                 }
             }
+//\endcond
 
             public virtual byte[] CharToByte(String text, String encoding) {
                 char[] cc = text.ToCharArray();

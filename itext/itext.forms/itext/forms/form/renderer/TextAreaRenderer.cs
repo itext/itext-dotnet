@@ -197,6 +197,7 @@ namespace iText.Forms.Form.Renderer {
             return base.SetMinMaxWidthBasedOnFixedWidth(minMaxWidth);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override IRenderer CreateParagraphRenderer(String defaultValue) {
             if (String.IsNullOrEmpty(defaultValue) && null != ((TextArea)modelElement).GetPlaceholder() && !((TextArea
                 )modelElement).GetPlaceholder().IsEmpty()) {
@@ -206,6 +207,7 @@ namespace iText.Forms.Form.Renderer {
             flatRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
             return flatRenderer;
         }
+//\endcond
 
         private void CropContentLines(IList<LineRenderer> lines, Rectangle bBox) {
             float? height = RetrieveHeight();

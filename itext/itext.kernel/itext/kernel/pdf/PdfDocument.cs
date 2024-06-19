@@ -62,8 +62,10 @@ namespace iText.Kernel.Pdf {
 
         protected internal readonly StampingProperties properties;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
+//\endcond
 
         private readonly IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference
             , PdfFont>();
@@ -131,12 +133,16 @@ namespace iText.Kernel.Pdf {
 
         protected internal TagStructureContext tagStructureContext;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
         internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
             , byte[]>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Handler which will be used for decompression of pdf streams.</summary>
         internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+//\endcond
 
         /// <summary>Default page size.</summary>
         /// <remarks>
@@ -2397,23 +2403,31 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsDocumentFont(PdfIndirectReference indRef) {
             return indRef != null && documentFonts.ContainsKey(indRef);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
             return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool HasAcroForm() {
             return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
         }
+//\endcond
 
         private void TryFlushTagStructure(bool isAppendMode) {
             try {

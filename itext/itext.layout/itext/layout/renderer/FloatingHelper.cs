@@ -34,15 +34,19 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class FloatingHelper {
         private FloatingHelper() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void AdjustLineAreaAccordingToFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
             ) {
             AdjustLayoutBoxAccordingToFloats(floatRendererAreas, layoutBox, null, 0, null);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float AdjustLayoutBoxAccordingToFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
             , float? boxWidth, float clearHeightCorrection, MarginsCollapseHandler marginsCollapseHandler) {
             float topShift = clearHeightCorrection;
@@ -84,7 +88,9 @@ namespace iText.Layout.Renderer {
             ApplyClearance(layoutBox, marginsCollapseHandler, topShift, false);
             return topShift;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float? CalculateLineShiftUnderFloats(IList<Rectangle> floatRendererAreas, Rectangle layoutBox
             ) {
             IList<Rectangle> boxesAtYLevel = GetBoxesAtYLevel(floatRendererAreas, layoutBox.GetTop());
@@ -111,7 +117,9 @@ namespace iText.Layout.Renderer {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AdjustFloatedTableLayoutBox(TableRenderer tableRenderer, Rectangle layoutBox, float tableWidth
             , IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue) {
             tableRenderer.SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
@@ -129,7 +137,9 @@ namespace iText.Layout.Renderer {
             AdjustBlockAreaAccordingToFloatRenderers(floatRendererAreas, layoutBox, tableWidth + margins[1].GetValue()
                  + margins[3].GetValue(), FloatPropertyValue.LEFT.Equals(floatPropertyValue));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float? AdjustFloatedBlockLayoutBox(AbstractRenderer renderer, Rectangle parentBBox, float?
              blockWidth, IList<Rectangle> floatRendererAreas, FloatPropertyValue? floatPropertyValue, OverflowPropertyValue?
              overflowX) {
@@ -158,6 +168,7 @@ namespace iText.Layout.Renderer {
                 .LEFT.Equals(floatPropertyValue));
             return blockWidth;
         }
+//\endcond
 
         // Float boxes shall be ordered by addition; No zero-width boxes shall be in the list.
         private static void AdjustBlockAreaAccordingToFloatRenderers(IList<Rectangle> floatRendererAreas, Rectangle
@@ -209,6 +220,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void RemoveFloatsAboveRendererBottom(IList<Rectangle> floatRendererAreas, IRenderer renderer
             ) {
             if (!IsRendererFloating(renderer)) {
@@ -220,13 +232,17 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static LayoutArea AdjustResultOccupiedAreaForFloatAndClear(IRenderer renderer, IList<Rectangle> floatRendererAreas
             , Rectangle parentBBox, float clearHeightCorrection, bool marginsCollapsingEnabled) {
             return AdjustResultOccupiedAreaForFloatAndClear(renderer, floatRendererAreas, parentBBox, clearHeightCorrection
                 , 0, marginsCollapsingEnabled);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static LayoutArea AdjustResultOccupiedAreaForFloatAndClear(IRenderer renderer, IList<Rectangle> floatRendererAreas
             , Rectangle parentBBox, float clearHeightCorrection, float bfcHeightCorrection, bool marginsCollapsingEnabled
             ) {
@@ -254,14 +270,18 @@ namespace iText.Layout.Renderer {
             }
             return editedArea;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, IRenderer renderer
             , ICollection<Rectangle> nonChildFloatingRendererAreas) {
             Rectangle commonRectangle = IncludeChildFloatsInOccupiedArea(floatRendererAreas, renderer.GetOccupiedArea(
                 ).GetBBox(), nonChildFloatingRendererAreas);
             renderer.GetOccupiedArea().SetBBox(commonRectangle);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static Rectangle IncludeChildFloatsInOccupiedArea(IList<Rectangle> floatRendererAreas, Rectangle 
             occupiedAreaBbox, ICollection<Rectangle> nonChildFloatingRendererAreas) {
             foreach (Rectangle floatBox in floatRendererAreas) {
@@ -274,7 +294,9 @@ namespace iText.Layout.Renderer {
             }
             return occupiedAreaBbox;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static MinMaxWidth CalculateMinMaxWidthForFloat(AbstractRenderer renderer, FloatPropertyValue? floatPropertyVal
             ) {
             bool floatPropIsRendererOwn = renderer.HasOwnProperty(Property.FLOAT);
@@ -288,7 +310,9 @@ namespace iText.Layout.Renderer {
             }
             return kidMinMaxWidth;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float CalculateClearHeightCorrection(IRenderer renderer, IList<Rectangle> floatRendererAreas
             , Rectangle parentBBox) {
             ClearPropertyValue? clearPropertyValue = renderer.GetProperty<ClearPropertyValue?>(Property.CLEAR);
@@ -308,7 +332,9 @@ namespace iText.Layout.Renderer {
             }
             return clearHeightCorrection;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float AdjustBlockFormattingContextLayoutBox(BlockRenderer renderer, IList<Rectangle> floatRendererAreas
             , Rectangle parentBBox, float blockWidth, float clearHeightCorrection) {
             if (floatRendererAreas.IsEmpty() || !BlockFormattingContextUtil.IsRendererCreateBfc(renderer) && !(renderer
@@ -341,7 +367,9 @@ namespace iText.Layout.Renderer {
             }
             return 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void ApplyClearance(Rectangle layoutBox, MarginsCollapseHandler marginsCollapseHandler, float
              clearHeightAdjustment, bool isFloat) {
             if (clearHeightAdjustment <= 0) {
@@ -354,18 +382,24 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler.ApplyClearance(clearHeightAdjustment);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsRendererFloating(IRenderer renderer) {
             return IsRendererFloating(renderer, renderer.GetProperty<FloatPropertyValue?>(Property.FLOAT));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsRendererFloating(IRenderer renderer, FloatPropertyValue? kidFloatPropertyVal) {
             int? position = renderer.GetProperty<int?>(Property.POSITION);
             bool notAbsolutePos = position == null || position != LayoutPosition.ABSOLUTE;
             return notAbsolutePos && kidFloatPropertyVal != null && !kidFloatPropertyVal.Equals(FloatPropertyValue.NONE
                 );
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsClearanceApplied(IList<IRenderer> floatingRenderers, ClearPropertyValue? clearPropertyValue
             ) {
             if (clearPropertyValue == null || clearPropertyValue.Equals(ClearPropertyValue.NONE)) {
@@ -381,7 +415,9 @@ namespace iText.Layout.Renderer {
             }
             return false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void RemoveParentArtifactsOnPageSplitIfOnlyFloatsOverflow(IRenderer overflowRenderer) {
             overflowRenderer.SetProperty(Property.BACKGROUND, null);
             overflowRenderer.SetProperty(Property.BACKGROUND_IMAGE, null);
@@ -402,6 +438,7 @@ namespace iText.Layout.Renderer {
             overflowRenderer.SetProperty(Property.PADDING_TOP, UnitValue.CreatePointValue(0));
             overflowRenderer.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(0));
         }
+//\endcond
 
         private static void AdjustBoxForFloatRight(Rectangle layoutBox, float blockWidth) {
             layoutBox.SetX(layoutBox.GetRight() - blockWidth);
@@ -459,4 +496,5 @@ namespace iText.Layout.Renderer {
             return lowestFloatBottom;
         }
     }
+//\endcond
 }

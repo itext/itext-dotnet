@@ -62,11 +62,13 @@ namespace iText.Signatures.Validation.V1.Context {
             this.timeBasedContext = timeBasedContext;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal ValidationContext(ValidatorContext validatorContext, CertificateSource certificateSource, TimeBasedContext
              timeBasedContext, iText.Signatures.Validation.V1.Context.ValidationContext previousValidationContext)
             : this(validatorContext, certificateSource, timeBasedContext) {
             this.previousValidationContext = previousValidationContext;
         }
+//\endcond
 
         /// <summary>Get previous validation context instance, from which this instance was created.</summary>
         /// <returns>

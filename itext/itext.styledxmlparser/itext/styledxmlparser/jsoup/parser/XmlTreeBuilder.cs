@@ -43,9 +43,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     /// <c>Document xmlDoc = Jsoup.parse(html, baseUrl, Parser.xmlParser());</c>
     /// </remarks>
     public class XmlTreeBuilder : TreeBuilder {
+//\cond DO_NOT_DOCUMENT
         internal override ParseSettings DefaultSettings() {
             return ParseSettings.preserveCase;
         }
+//\endcond
 
         protected internal override void InitialiseParse(TextReader input, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
@@ -56,18 +58,24 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 ).PrettyPrint(false);
         }
 
+//\cond DO_NOT_DOCUMENT
         // as XML, we don't understand what whitespace is significant or not
         internal virtual Document Parse(TextReader input, String baseUri) {
             return Parse(input, baseUri, new iText.StyledXmlParser.Jsoup.Parser.Parser(this));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Document Parse(String input, String baseUri) {
             return Parse(new StringReader(input), baseUri, new iText.StyledXmlParser.Jsoup.Parser.Parser(this));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override TreeBuilder NewInstance() {
             return new XmlTreeBuilder();
         }
+//\endcond
 
         protected internal override bool Process(Token token) {
             // start tag, end tag, doctype, comment, character, eof
@@ -114,6 +122,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             CurrentElement().AppendChild(node);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual iText.StyledXmlParser.Jsoup.Nodes.Element Insert(Token.StartTag startTag) {
             iText.StyledXmlParser.Jsoup.Parser.Tag tag = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf(startTag.Name(
                 ), settings);
@@ -134,7 +143,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
             return el;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Insert(Token.Comment commentToken) {
             Comment comment = new Comment(commentToken.GetData());
             iText.StyledXmlParser.Jsoup.Nodes.Node insert = comment;
@@ -149,18 +160,23 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
             InsertNode(insert);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Insert(Token.Character token) {
             String data = token.GetData();
             InsertNode(token.IsCData() ? new CDataNode(data) : new TextNode(data));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Insert(Token.Doctype d) {
             DocumentType doctypeNode = new DocumentType(settings.NormalizeTag(d.GetName()), d.GetPublicIdentifier(), d
                 .GetSystemIdentifier());
             doctypeNode.SetPubSysKey(d.GetPubSysKey());
             InsertNode(doctypeNode);
         }
+//\endcond
 
         /// <summary>If the stack contains an element with this tag's name, pop up the stack to remove the first occurrence.
         ///     </summary>
@@ -192,16 +208,20 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String inputFragment, String 
             baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser parser) {
             InitialiseParse(new StringReader(inputFragment), baseUri, parser);
             RunParser();
             return doc.ChildNodes();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String inputFragment, iText.StyledXmlParser.Jsoup.Nodes.Element
              context, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser parser) {
             return ParseFragment(inputFragment, baseUri, parser);
         }
+//\endcond
     }
 }

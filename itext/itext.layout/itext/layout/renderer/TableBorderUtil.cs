@@ -27,6 +27,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal sealed class TableBorderUtil {
         private TableBorderUtil() {
         }
@@ -97,4 +98,5 @@ namespace iText.Layout.Renderer {
             return borderList;
         }
     }
+//\endcond
 }

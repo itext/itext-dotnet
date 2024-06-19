@@ -124,10 +124,12 @@ namespace iText.Layout.Renderer {
             return symbolRenderer;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static Object GetListItemOrListProperty(IRenderer listItem, IRenderer list, int propertyId) {
             return listItem.HasProperty(propertyId) ? listItem.GetProperty<Object>(propertyId) : list.GetProperty<Object
                 >(propertyId);
         }
+//\endcond
 
         private IRenderer CreateListSymbolRenderer(int index, IRenderer renderer) {
             Object defaultListSymbol = GetListItemOrListProperty(renderer, this, Property.LIST_SYMBOL);

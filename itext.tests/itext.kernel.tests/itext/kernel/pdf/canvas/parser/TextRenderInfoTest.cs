@@ -107,7 +107,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         private class TextPositionEventListener : IEventListener {
+//\cond DO_NOT_DOCUMENT
             internal IList<LineSegment> lineSegments = new List<LineSegment>();
+//\endcond
 
             public virtual void EventOccurred(IEventData data, EventType type) {
                 if (type.Equals(EventType.RENDER_TEXT)) {

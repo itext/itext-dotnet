@@ -71,7 +71,9 @@ namespace iText.Layout.Renderer {
         ///     </remarks>
         protected internal bool isOriginalNonSplitRenderer = true;
 
+//\cond DO_NOT_DOCUMENT
         internal TableBorders bordersHandler;
+//\endcond
 
         private float[] columnWidths = null;
 
@@ -196,9 +198,11 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Table GetTable() {
             return (Table)GetModelElement();
         }
+//\endcond
 
         private void InitializeHeaderAndFooter(bool isFirstOnThePage) {
             Table table = (Table)GetModelElement();
@@ -1974,6 +1978,7 @@ namespace iText.Layout.Renderer {
             overflowRows.GetCell(targetOverflowRowIndex[col] - row, col).occupiedArea = cellOccupiedArea;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ApplyMarginsAndPaddingsAndCalculateColumnWidths(Rectangle layoutBox) {
             UnitValue[] margins = GetMargins();
             if (!margins[1].IsPointValue()) {
@@ -2000,5 +2005,6 @@ namespace iText.Layout.Renderer {
             CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue
                 () - paddings[3].GetValue());
         }
+//\endcond
     }
 }

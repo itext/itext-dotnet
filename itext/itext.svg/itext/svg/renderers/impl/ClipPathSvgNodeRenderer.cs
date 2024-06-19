@@ -47,8 +47,10 @@ namespace iText.Svg.Renderers.Impl {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void PreDraw(SvgDrawContext context) {
         }
+//\endcond
 
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();

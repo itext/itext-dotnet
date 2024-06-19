@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Commons.Actions.Contexts;
 
 namespace iText.Signatures.Validation.V1 {
+//\cond DO_NOT_DOCUMENT
     internal class ValidationMetaInfo : IMetaInfo {
     }
+//\endcond
 }

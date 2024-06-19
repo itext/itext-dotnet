@@ -25,25 +25,36 @@ using System.Collections;
 using System.Text;
 
 namespace iText.Layout.Hyphenation {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// An object that iterates over the
     /// <see cref="TernaryTree"/>.
     /// </summary>
     internal class TernaryTreeIterator : IEnumerator {
+//\cond DO_NOT_DOCUMENT
         /// <summary>current node index</summary>
         internal int cur;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>current key</summary>
         internal String curkey;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal TernaryTree tt;
+//\endcond
 
         private class Item {
+//\cond DO_NOT_DOCUMENT
             /// <summary>parent</summary>
             internal char parent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>child</summary>
             internal char child;
+//\endcond
 
             /// <summary>default constructor</summary>
             public Item(TernaryTreeIterator _enclosing) {
@@ -75,11 +86,15 @@ namespace iText.Layout.Hyphenation {
             private readonly TernaryTreeIterator _enclosing;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Node stack</summary>
         internal Stack ns;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>key stack implemented with a StringBuffer</summary>
         internal StringBuilder ks;
+//\endcond
 
         /// <summary>default constructor</summary>
         public TernaryTreeIterator(TernaryTree tt) {
@@ -216,4 +231,5 @@ namespace iText.Layout.Hyphenation {
             return 0;
         }
     }
+//\endcond
 }

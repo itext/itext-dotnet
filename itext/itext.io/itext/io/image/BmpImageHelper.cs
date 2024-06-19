@@ -27,54 +27,97 @@ using iText.IO.Exceptions;
 using iText.IO.Font;
 
 namespace iText.IO.Image {
+//\cond DO_NOT_DOCUMENT
     internal sealed class BmpImageHelper {
         private class BmpParameters {
             public BmpParameters(BmpImageData image) {
                 this.image = image;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal BmpImageData image;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int width;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int height;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<String, Object> additional;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // BMP variables
             internal Stream inputStream;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long bitmapFileSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long bitmapOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long compression;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long imageSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] palette;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int imageType;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int numBands;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool isBottomUp;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int bitsPerPixel;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int redMask;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int greenMask;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int blueMask;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int alphaMask;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<String, Object> properties = new Dictionary<String, Object>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long xPelsPerMeter;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long yPelsPerMeter;
+//\endcond
         }
 
         // BMP Image types
@@ -1270,4 +1313,5 @@ namespace iText.IO.Image {
             return ReadInt(stream);
         }
     }
+//\endcond
 }

@@ -21,10 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.StyledXmlParser.Css.Parse.Syntax {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Interface for all parser state implementations.</summary>
     internal interface IParserState {
         /// <summary>Process a character.</summary>
         /// <param name="ch">the character</param>
         void Process(char ch);
     }
+//\endcond
 }

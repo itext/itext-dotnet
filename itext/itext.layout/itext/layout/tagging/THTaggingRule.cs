@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Exceptions;
 
 namespace iText.Layout.Tagging {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Used to automatically add scope attribute to TH cells.</summary>
     /// <remarks>
     /// Used to automatically add scope attribute to TH cells.
@@ -40,6 +41,7 @@ namespace iText.Layout.Tagging {
     /// If the scope attribute is present with the value "None", it will be removed.
     /// </remarks>
     internal class THTaggingRule : ITaggingRule {
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="THTaggingRule"/>
@@ -48,6 +50,7 @@ namespace iText.Layout.Tagging {
         internal THTaggingRule()
             : base() {
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public virtual bool OnTagFinish(LayoutTaggingHelper taggingHelper, TaggingHintKey taggingHintKey) {
@@ -79,4 +82,5 @@ namespace iText.Layout.Tagging {
             return true;
         }
     }
+//\endcond
 }

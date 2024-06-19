@@ -33,11 +33,13 @@ namespace iText.Layout.Font {
 
         private IList<Range.SubRange> ranges = new List<Range.SubRange>();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Default Range instance.</summary>
         /// <returns>Range that contains any integer</returns>
         internal static Range GetFullRange() {
             return fullRangeSingleton;
         }
+//\endcond
 
         /// <summary>Default constructor with empty range.</summary>
         public RangeBuilder() {

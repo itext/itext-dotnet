@@ -24,21 +24,29 @@ using iText.Kernel.Colors;
 using iText.Layout.Borders;
 
 namespace iText.Forms.Fields.Borders {
+//\cond DO_NOT_DOCUMENT
     internal abstract class AbstractFormBorder : Border {
+//\cond DO_NOT_DOCUMENT
         /// <summary>The form underline border.</summary>
         /// <seealso cref="UnderlineBorder"/>
         internal const int FORM_UNDERLINE = 1001;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The form beveled border.</summary>
         /// <seealso cref="BeveledBorder"/>
         internal const int FORM_BEVELED = 1002;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The form inset border.</summary>
         /// <seealso cref="InsetBorder"/>
         internal const int FORM_INSET = 1003;
+//\endcond
 
         protected internal AbstractFormBorder(Color color, float width)
             : base(color, width) {
         }
     }
+//\endcond
 }

@@ -29,6 +29,7 @@ using iText.IO.Font.Otf;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
+//\cond DO_NOT_DOCUMENT
     internal class DocType1Font : Type1Font, IDocFontProgram {
         private PdfStream fontFile;
 
@@ -42,6 +43,7 @@ namespace iText.Kernel.Font {
             : base(fontName) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static Type1Font CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
              toUnicode) {
             String baseFont = GetBaseFont(fontDictionary);
@@ -59,7 +61,9 @@ namespace iText.Kernel.Font {
             InitializeGlyphs(fontDictionary, fontEncoding, toUnicode, fontProgram);
             return fontProgram;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void InitializeGlyphs(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
              toUnicode, iText.Kernel.Font.DocType1Font fontProgram) {
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
@@ -91,7 +95,9 @@ namespace iText.Kernel.Font {
                 fontProgram.avgWidth /= glyphsWithWidths;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static String GetBaseFont(PdfDictionary fontDictionary) {
             PdfName baseFontName = fontDictionary.GetAsName(PdfName.BaseFont);
             if (baseFontName == null) {
@@ -99,7 +105,9 @@ namespace iText.Kernel.Font {
             }
             return baseFontName.GetValue();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static Type1Font GetType1Font(String baseFont) {
             try {
                 //if there are no font modifiers, cached font could be used,
@@ -110,6 +118,7 @@ namespace iText.Kernel.Font {
                 return null;
             }
         }
+//\endcond
 
         public virtual PdfStream GetFontFile() {
             return fontFile;
@@ -134,6 +143,7 @@ namespace iText.Kernel.Font {
             return missingWidth;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
@@ -237,5 +247,7 @@ namespace iText.Kernel.Font {
                 }
             }
         }
+//\endcond
     }
+//\endcond
 }

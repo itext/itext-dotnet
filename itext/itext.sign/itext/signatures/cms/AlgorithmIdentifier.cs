@@ -49,6 +49,7 @@ namespace iText.Signatures.Cms {
             this.parameters = parameters;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates an Algorithm identifier structure with parameters.</summary>
         /// <param name="asnStruct">asn1 encodable to retrieve algorithm identifier</param>
         internal AlgorithmIdentifier(IAsn1Encodable asnStruct) {
@@ -62,6 +63,7 @@ namespace iText.Signatures.Cms {
                 parameters = null;
             }
         }
+//\endcond
 
         /// <summary>Return the OID of the algorithm.</summary>
         /// <returns>the OID of the algorithm.</returns>
@@ -75,6 +77,7 @@ namespace iText.Signatures.Cms {
             return parameters;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IAsn1Sequence GetAsASN1Sequence() {
             IAsn1EncodableVector algorithmV = BC_FACTORY.CreateASN1EncodableVector();
             algorithmV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(algorithm));
@@ -83,5 +86,6 @@ namespace iText.Signatures.Cms {
             }
             return BC_FACTORY.CreateDERSequence(algorithmV);
         }
+//\endcond
     }
 }

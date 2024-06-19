@@ -208,14 +208,20 @@ namespace iText.StyledXmlParser.Css.Font {
             /// <summary>The Constant FormatGroup.</summary>
             public const int FormatGroup = 9;
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>The font format.</summary>
             internal readonly CssFontFace.FontFormat format;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>The source path.</summary>
             internal readonly String src;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Indicates if the font is local.</summary>
             internal readonly bool isLocal;
+//\endcond
 
             public virtual CssFontFace.FontFormat GetFormat() {
                 return format;

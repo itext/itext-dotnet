@@ -27,6 +27,7 @@ using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Actions.Producer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Class is used to populate <c>copyrightTo</c> placeholder.</summary>
     /// <remarks>
     /// Class is used to populate <c>copyrightTo</c> placeholder. The resulting string is a
@@ -71,4 +72,5 @@ namespace iText.Commons.Actions.Producer {
             return latestYear.ToString();
         }
     }
+//\endcond
 }

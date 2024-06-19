@@ -28,6 +28,7 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     // 12.3. Track Sizing Algorithm
     internal class GridTrackSizer {
         private const float EPSILON = 0.001f;
@@ -42,6 +43,7 @@ namespace iText.Layout.Renderer {
 
         private readonly ICollection<GridCell> cachedUniqueGridCells;
 
+//\cond DO_NOT_DOCUMENT
         internal GridTrackSizer(Grid grid, IList<GridValue> values, float gap, float availableSpace, Grid.GridOrder
              order) {
             this.grid = grid;
@@ -67,7 +69,9 @@ namespace iText.Layout.Renderer {
             this.availableSpace = availableSpace - ((values.Count - 1) * gap);
             this.order = order;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IList<float> SizeTracks() {
             // First step (12.4. Initialize Track Sizes)
             InitializeTrackSizes();
@@ -85,6 +89,7 @@ namespace iText.Layout.Renderer {
             }
             return result;
         }
+//\endcond
 
         private void MaximizeTracks() {
             float? freeSpace = GetFreeSpace();
@@ -487,12 +492,19 @@ namespace iText.Layout.Renderer {
         }
 
         private class Track {
+//\cond DO_NOT_DOCUMENT
             internal float baseSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // consider -1 as an infinity value
             internal float growthLimit;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal GridValue value;
+//\endcond
         }
     }
+//\endcond
 }

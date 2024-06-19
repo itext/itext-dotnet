@@ -213,7 +213,9 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 this.i = 0;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int i;
+//\endcond
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
                 if (node.NodeName().Equals("p")) {

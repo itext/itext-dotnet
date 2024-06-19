@@ -30,17 +30,21 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {
+//\cond DO_NOT_DOCUMENT
     internal class XfdfWriter {
         private Stream outputStream;
 
         private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Xfdf.XfdfWriter));
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a XfdfWriter for output stream specified.</summary>
         /// <param name="outputStream">A stream to write xfdf file into.</param>
         internal XfdfWriter(Stream outputStream) {
             this.outputStream = outputStream;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Writes data from
         /// <see cref="XfdfObject"/>
@@ -54,7 +58,9 @@ namespace iText.Forms.Xfdf {
         internal virtual void Write(XfdfObject xfdfObject) {
             this.WriteDom(xfdfObject);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AddField(FieldObject fieldObject, XmlElement parentElement, XmlDocument document, IList
             <FieldObject> fieldList) {
             IList<FieldObject> childrenFields = FindChildrenFields(fieldObject, fieldList);
@@ -77,6 +83,7 @@ namespace iText.Forms.Xfdf {
             }
             parentElement.AppendChild(field);
         }
+//\endcond
 
         private void WriteDom(XfdfObject xfdfObject) {
             XmlDocument document = XfdfFileUtils.CreateNewXfdfDocument();
@@ -434,4 +441,5 @@ namespace iText.Forms.Xfdf {
             annot.AppendChild(popup);
         }
     }
+//\endcond
 }

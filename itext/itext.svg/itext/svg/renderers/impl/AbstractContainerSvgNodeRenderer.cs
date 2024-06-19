@@ -40,6 +40,7 @@ namespace iText.Svg.Renderers.Impl {
             base.DoDraw(context);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculate the viewport based on the context.</summary>
         /// <param name="context">the SVG draw context</param>
         /// <returns>the viewport that applies to this renderer</returns>
@@ -70,5 +71,6 @@ namespace iText.Svg.Renderers.Impl {
             }
             return new Rectangle(portX, portY, portWidth, portHeight);
         }
+//\endcond
     }
 }

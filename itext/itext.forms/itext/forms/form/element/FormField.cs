@@ -42,6 +42,7 @@ namespace iText.Forms.Form.Element {
         /// <summary>The tag properties.</summary>
         protected internal DefaultAccessibilityProperties tagProperties;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Instantiates a new
         /// <see cref="FormField{T}"/>
@@ -54,6 +55,7 @@ namespace iText.Forms.Form.Element {
             }
             this.id = id;
         }
+//\endcond
 
         /// <summary>Sets the form field's width and height.</summary>
         /// <param name="size">form field's width and height.</param>

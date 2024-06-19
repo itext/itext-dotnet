@@ -24,15 +24,18 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class SerializedObjectContent {
         private readonly byte[] serializedContent;
 
         private readonly int hash;
 
+//\cond DO_NOT_DOCUMENT
         internal SerializedObjectContent(byte[] serializedContent) {
             this.serializedContent = serializedContent;
             this.hash = CalculateHash(serializedContent);
         }
+//\endcond
 
         public override bool Equals(Object obj) {
             return obj is iText.Kernel.Pdf.SerializedObjectContent && GetHashCode() == obj.GetHashCode() && JavaUtil.ArraysEquals
@@ -52,4 +55,5 @@ namespace iText.Kernel.Pdf {
             return hash;
         }
     }
+//\endcond
 }

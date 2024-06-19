@@ -75,13 +75,17 @@ namespace iText.IO.Font {
             : this(new OpenTypeParser(ttf)) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal TrueTypeFont(String ttcPath, int ttcIndex)
             : this(new OpenTypeParser(ttcPath, ttcIndex)) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal TrueTypeFont(byte[] ttc, int ttcIndex)
             : this(new OpenTypeParser(ttc, ttcIndex)) {
         }
+//\endcond
 
         public override bool HasKernPairs() {
             return kerning.Size() > 0;

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Empty
     /// <see cref="IIssuingCertificateRetriever"/>
@@ -74,4 +75,5 @@ namespace iText.Signatures {
         }
         // Do nothing.
     }
+//\endcond
 }

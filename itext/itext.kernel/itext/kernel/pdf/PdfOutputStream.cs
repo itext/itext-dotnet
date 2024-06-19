@@ -119,6 +119,7 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Writes corresponding amount of bytes from a given long</summary>
         /// <param name="bytes">a source of bytes, must be &gt;= 0</param>
         /// <param name="size">expected amount of bytes</param>
@@ -128,7 +129,9 @@ namespace iText.Kernel.Pdf {
                 Write((byte)(bytes >> 8 * size & 0xff));
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Writes corresponding amount of bytes from a given int</summary>
         /// <param name="bytes">a source of bytes, must be &gt;= 0</param>
         /// <param name="size">expected amount of bytes</param>
@@ -136,6 +139,7 @@ namespace iText.Kernel.Pdf {
             //safe convert to long, despite sign.
             Write(bytes & 0xFFFFFFFFL, size);
         }
+//\endcond
 
         private void Write(PdfArray pdfArray) {
             WriteByte('[');

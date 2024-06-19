@@ -116,6 +116,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             return inlineImageAsStreamObject;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="colorSpaceName">the name of the color space. If null, a bi-tonal (black and white) color space is assumed.
         ///     </param>
         /// <returns>the components per pixel for the specified color space</returns>
@@ -152,6 +153,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             throw new InlineImageParsingUtils.InlineImageParseException(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE
                 ).SetMessageParams(colorSpaceName);
         }
+//\endcond
 
         /// <summary>Parses the next inline image dictionary from the parser.</summary>
         /// <remarks>

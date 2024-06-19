@@ -24,6 +24,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
+//\cond DO_NOT_DOCUMENT
     internal class InteriorColorUtil {
         private InteriorColorUtil() {
         }
@@ -80,4 +81,5 @@ namespace iText.Kernel.Pdf.Annot {
             }
         }
     }
+//\endcond
 }

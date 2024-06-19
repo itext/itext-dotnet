@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Helper class that groups a block of databytes with its corresponding block of error correction block
     ///     </summary>
     internal sealed class BlockPair {
@@ -28,10 +29,12 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly ByteArray errorCorrectionBytes;
 
+//\cond DO_NOT_DOCUMENT
         internal BlockPair(ByteArray data, ByteArray errorCorrection) {
             dataBytes = data;
             errorCorrectionBytes = errorCorrection;
         }
+//\endcond
 
         /// <returns>data block of the pair</returns>
         public ByteArray GetDataBytes() {
@@ -43,4 +46,5 @@ namespace iText.Barcodes.Qrcode {
             return errorCorrectionBytes;
         }
     }
+//\endcond
 }

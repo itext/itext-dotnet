@@ -62,9 +62,11 @@ namespace iText.IO.Image {
                 return colorProfile;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal virtual void SetColorProfile(byte[] colorProfile) {
                 this.colorProfile = colorProfile;
             }
+//\endcond
         }
 
         protected internal Jpeg2000ImageData.Parameters parameters;

@@ -31,6 +31,7 @@ using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+//\cond DO_NOT_DOCUMENT
     internal class JpegImageHelper {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JpegImageHelper));
 
@@ -114,6 +115,7 @@ namespace iText.IO.Image {
             UpdateAttributes(image);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void AttemptToSetIccProfileToImage(byte[][] icc, ImageData image) {
             if (icc != null) {
                 int total = 0;
@@ -138,6 +140,7 @@ namespace iText.IO.Image {
                 }
             }
         }
+//\endcond
 
         private static void UpdateAttributes(ImageData image) {
             image.filter = "DCTDecode";
@@ -385,4 +388,5 @@ namespace iText.IO.Image {
             return NOT_A_MARKER;
         }
     }
+//\endcond
 }

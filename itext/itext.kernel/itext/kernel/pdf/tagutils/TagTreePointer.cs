@@ -114,10 +114,12 @@ namespace iText.Kernel.Pdf.Tagutils {
             this.currentNamespace = tagPointer.currentNamespace;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal TagTreePointer(PdfStructElem structElem, PdfDocument document) {
             tagStructureContext = document.GetTagStructureContext();
             SetCurrentStructElem(structElem);
         }
+//\endcond
 
         /// <summary>
         /// Sets a page which content will be tagged with this instance of
@@ -977,6 +979,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             return GetCurrentStructElem().GetPdfObject().Equals(otherPointer.GetCurrentStructElem().GetPdfObject());
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int CreateNextMcidForStructElem(PdfStructElem elem, int index) {
             ThrowExceptionIfCurrentPageIsNotInited();
             PdfMcr mcr;
@@ -992,7 +995,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             elem.AddKid(index, mcr);
             return mcr.GetMcid();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetCurrentStructElem(PdfStructElem structElem) {
             if (structElem.GetParent() == null) {
                 throw new PdfException(KernelExceptionMessageConstant.STRUCTURE_ELEMENT_SHALL_CONTAIN_PARENT_OBJECT);
@@ -1000,7 +1005,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             currentStructElem = structElem;
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfStructElem GetCurrentStructElem() {
             if (currentStructElem.IsFlushed()) {
                 throw new PdfException(KernelExceptionMessageConstant.TAG_TREE_POINTER_IS_IN_INVALID_STATE_IT_POINTS_AT_FLUSHED_ELEMENT_USE_MOVE_TO_ROOT
@@ -1014,6 +1021,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             return currentStructElem;
         }
+//\endcond
 
         /// <summary>Applies properties to the current tag.</summary>
         /// <remarks>

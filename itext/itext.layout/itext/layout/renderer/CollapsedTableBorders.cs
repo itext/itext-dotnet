@@ -30,6 +30,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class CollapsedTableBorders : TableBorders {
         /// <summary>
         /// Horizontal borders to be collapsed with
@@ -647,6 +648,7 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         // endregion
         /// <summary>
         /// Returns the
@@ -687,6 +689,7 @@ namespace iText.Layout.Renderer {
             }
             return crossingBorders;
         }
+//\endcond
 
         /// <summary>
         /// A comparison function to compare two
@@ -761,4 +764,5 @@ namespace iText.Layout.Renderer {
             return strict ? comparisonResult > 0 : comparisonResult >= 0;
         }
     }
+//\endcond
 }

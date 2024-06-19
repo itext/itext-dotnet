@@ -66,6 +66,7 @@ namespace iText.StyledXmlParser.Css {
             this.expression = expression;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Resolves css property aliases.</summary>
         /// <remarks>
         /// Resolves css property aliases.
@@ -79,5 +80,6 @@ namespace iText.StyledXmlParser.Css {
             }
             return normalizedCssProperty;
         }
+//\endcond
     }
 }

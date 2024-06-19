@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     internal sealed class MaskUtil {
         private MaskUtil() {
         }
@@ -238,4 +239,5 @@ namespace iText.Barcodes.Qrcode {
             return penalty;
         }
     }
+//\endcond
 }

@@ -51,12 +51,14 @@ namespace iText.Layout.Font {
         private Range() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal Range(IList<Range.SubRange> ranges) {
             if (ranges.Count == 0) {
                 throw new ArgumentException("Ranges shall not be empty");
             }
             this.ranges = NormalizeSubRanges(ranges);
         }
+//\endcond
 
         /// <summary>Binary search over ordered segments.</summary>
         /// <param name="n">numeric character reference based on the character's Unicode code point</param>
@@ -130,15 +132,22 @@ namespace iText.Layout.Font {
             return union.ToArray(new Range.SubRange[0]);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class SubRange : IComparable<Range.SubRange> {
+//\cond DO_NOT_DOCUMENT
             internal int low;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int high;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal SubRange(int low, int high) {
                 this.low = low;
                 this.high = high;
             }
+//\endcond
 
             public virtual int CompareTo(Range.SubRange o) {
                 return low - o.low;
@@ -173,11 +182,15 @@ namespace iText.Layout.Font {
                 return "(" + low + "; " + high + ')';
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class FullRange : Range {
+//\cond DO_NOT_DOCUMENT
             internal FullRange()
                 : base() {
             }
+//\endcond
 
             public override bool Contains(int uni) {
                 return true;
@@ -195,5 +208,6 @@ namespace iText.Layout.Font {
                 return "[FullRange]";
             }
         }
+//\endcond
     }
 }

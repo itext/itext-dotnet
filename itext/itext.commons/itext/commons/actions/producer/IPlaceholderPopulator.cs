@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Actions.Confirmations;
 
 namespace iText.Commons.Actions.Producer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Interface for placeholder population.</summary>
     internal interface IPlaceholderPopulator {
         /// <summary>
@@ -37,4 +38,5 @@ namespace iText.Commons.Actions.Producer {
         /// <returns>value for placeholder replacement</returns>
         String Populate(IList<ConfirmedEventWrapper> events, String parameter);
     }
+//\endcond
 }

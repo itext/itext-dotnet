@@ -59,6 +59,7 @@ namespace iText.Signatures.Cms {
         public EncapsulatedContentInfo() {
         }
 
+//\cond DO_NOT_DOCUMENT
         // Empty constructor.
         internal EncapsulatedContentInfo(IAsn1Sequence lencapContentInfo) {
             IDerObjectIdentifier eContentTypeOid = BC_FACTORY.CreateASN1ObjectIdentifier(lencapContentInfo.GetObjectAt
@@ -73,6 +74,7 @@ namespace iText.Signatures.Cms {
             }
             eContentType = eContentTypeOid.GetId();
         }
+//\endcond
 
         /// <summary>Returns the contenttype oid.</summary>
         /// <returns>the contenttype oid.</returns>

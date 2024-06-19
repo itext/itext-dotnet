@@ -25,6 +25,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassLastOfTypeSelectorItem : CssPseudoClassChildSelectorItem {
         private static readonly iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassLastOfTypeSelectorItem instance
              = new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassLastOfTypeSelectorItem();
@@ -45,4 +46,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return !children.IsEmpty() && node.Equals(children[children.Count - 1]);
         }
     }
+//\endcond
 }

@@ -273,6 +273,7 @@ namespace iText.Svg.Renderers.Impl {
             return shapes;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Processes the
         /// <see cref="iText.Svg.SvgConstants.Attributes.D"/>
@@ -316,6 +317,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             return shapes;
         }
+//\endcond
 
         private static String[] Concatenate(String[] first, String[] second) {
             String[] arr = new String[first.Length + second.Length];
@@ -324,10 +326,13 @@ namespace iText.Svg.Renderers.Impl {
             return arr;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool ContainsInvalidAttributes(String attributes) {
             return iText.Commons.Utils.Matcher.Match(INVALID_REGEX_PATTERN, attributes).Find();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual ICollection<String> ParsePathOperations() {
             ICollection<String> result = new List<String>();
             String pathString = attributesAndStyles.Get(SvgConstants.Attributes.D);
@@ -351,7 +356,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Iterate over the input string and separate numbers from each other with space chars</summary>
         internal virtual String SeparateDecimalPoints(String input) {
             // If a space or minus sign is found reset
@@ -387,7 +394,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             return res.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets an array of strings representing operators with their arguments, e.g. {"M 100 100", "L 300 100", "L200,
         /// 300", "z"}
@@ -395,6 +404,7 @@ namespace iText.Svg.Renderers.Impl {
         internal static String[] SplitPathStringIntoOperators(String path) {
             return iText.Commons.Utils.StringUtil.Split(SPLIT_PATTERN, path);
         }
+//\endcond
 
         private static bool EndsWithNonWhitespace(StringBuilder sb) {
             return sb.Length > 0 && !iText.IO.Util.TextUtil.IsWhiteSpace(sb[sb.Length - 1]);

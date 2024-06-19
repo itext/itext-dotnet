@@ -16,6 +16,7 @@
 using System;
 
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // Common definition for WOFF2 encoding/decoding
     // Helpers common across multiple parts of woff2
     internal class Woff2Common {
@@ -103,4 +104,5 @@ namespace iText.IO.Font.Woff2 {
             return checksum;
         }
     }
+//\endcond
 }

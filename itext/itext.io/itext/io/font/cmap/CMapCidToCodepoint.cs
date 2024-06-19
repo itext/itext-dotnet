@@ -32,12 +32,14 @@ namespace iText.IO.Font.Cmap {
 
         private readonly IList<byte[]> codeSpaceRanges = new List<byte[]>();
 
+//\cond DO_NOT_DOCUMENT
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
                 byte[] ser = DecodeStringToByte(mark);
                 map.Put((int)code.GetValue(), ser);
             }
         }
+//\endcond
 
         public virtual byte[] Lookup(int cid) {
             byte[] ser = map.Get(cid);
@@ -76,9 +78,11 @@ namespace iText.IO.Font.Cmap {
             return codeSpaceRanges;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void AddCodeSpaceRange(byte[] low, byte[] high) {
             codeSpaceRanges.Add(low);
             codeSpaceRanges.Add(high);
         }
+//\endcond
     }
 }

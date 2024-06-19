@@ -30,14 +30,22 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfPrimitivesTest : ExtendedITextTest {
+//\cond DO_NOT_DOCUMENT
         internal static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfPrimitivesTest/";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly PdfName TestArray = new PdfName("TestArray");
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int DefaultArraySize = 64;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int PageCount = 1000;
+//\endcond
 
         public class RandomString {
             private static readonly char[] symbols;

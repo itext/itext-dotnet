@@ -42,6 +42,7 @@ namespace iText.Layout.Tagging {
 
         private TagTreePointer tagPointer;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Instantiate a new
         /// <see cref="TaggingHintKey"/>
@@ -58,6 +59,7 @@ namespace iText.Layout.Tagging {
             this.elem = elem;
             this.elementBasedFinishingOnly = createdElementBased;
         }
+//\endcond
 
         /// <summary>Get accessible element.</summary>
         /// <returns>the accessible element.</returns>
@@ -81,13 +83,16 @@ namespace iText.Layout.Tagging {
             this.tagPointer = tag;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal AccessibilityProperties GetAccessibilityProperties() {
             if (elem == null) {
                 return null;
             }
             return elem.GetAccessibilityProperties();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Retrieve hint key finished flag.</summary>
         /// <returns>
         /// 
@@ -99,12 +104,16 @@ namespace iText.Layout.Tagging {
         internal bool IsFinished() {
             return isFinished;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set finished flag for hint key instance.</summary>
         internal void SetFinished() {
             this.isFinished = true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Retrieve information whether this hint key is artifact or not.</summary>
         /// <returns>
         /// 
@@ -116,24 +125,32 @@ namespace iText.Layout.Tagging {
         internal bool IsArtifact() {
             return isArtifact;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Specify that hint key instance corresponds to artifact.</summary>
         internal void SetArtifact() {
             this.isArtifact = true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get overridden role.</summary>
         /// <returns>the overridden role.</returns>
         internal String GetOverriddenRole() {
             return overriddenRole;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the overridden role.</summary>
         /// <param name="overriddenRole">overridden role.</param>
         internal void SetOverriddenRole(String overriddenRole) {
             this.overriddenRole = overriddenRole;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieve information whether the element backed by this hint key implements
         /// <see cref="iText.Layout.Element.IElement"/>.
@@ -147,5 +164,6 @@ namespace iText.Layout.Tagging {
         internal bool IsElementBasedFinishingOnly() {
             return elementBasedFinishingOnly;
         }
+//\endcond
     }
 }

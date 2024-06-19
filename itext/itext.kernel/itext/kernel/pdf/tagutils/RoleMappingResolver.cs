@@ -25,15 +25,18 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
+//\cond DO_NOT_DOCUMENT
     internal class RoleMappingResolver : IRoleMappingResolver {
         private PdfName currRole;
 
         private PdfDictionary roleMap;
 
+//\cond DO_NOT_DOCUMENT
         internal RoleMappingResolver(String role, PdfDocument document) {
             this.currRole = PdfStructTreeRoot.ConvertRoleToPdfName(role);
             this.roleMap = document.GetStructTreeRoot().GetRoleMap();
         }
+//\endcond
 
         public virtual String GetRole() {
             return currRole.GetValue();
@@ -60,4 +63,5 @@ namespace iText.Kernel.Pdf.Tagutils {
             return true;
         }
     }
+//\endcond
 }

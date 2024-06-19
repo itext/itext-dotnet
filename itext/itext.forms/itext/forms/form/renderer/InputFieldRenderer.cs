@@ -76,6 +76,7 @@ namespace iText.Forms.Form.Renderer {
                 ) : (bool)password;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override IRenderer CreateParagraphRenderer(String defaultValue) {
             if (String.IsNullOrEmpty(defaultValue) && null != ((InputField)modelElement).GetPlaceholder() && !((InputField
@@ -86,6 +87,7 @@ namespace iText.Forms.Form.Renderer {
             flatRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
             return flatRenderer;
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         protected internal override void AdjustFieldLayout(LayoutContext layoutContext) {

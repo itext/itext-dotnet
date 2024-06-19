@@ -55,6 +55,7 @@ namespace iText.Kernel.Font {
             return newFontName.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static CMapToUnicode ProcessToUnicode(PdfObject toUnicode) {
             CMapToUnicode cMapToUnicode = null;
             if (toUnicode is PdfStream) {
@@ -76,7 +77,9 @@ namespace iText.Kernel.Font {
             }
             return cMapToUnicode;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static CMapToUnicode ParseUniversalToUnicodeCMap(String ordering) {
             if (!UNIVERSAL_CMAP_ORDERINGS.Contains(ordering)) {
                 return null;
@@ -92,7 +95,9 @@ namespace iText.Kernel.Font {
             }
             return cMapToUnicode;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static CMapToUnicode GetToUnicodeFromUniMap(String uniMap) {
             if (uniMap == null) {
                 return null;
@@ -113,11 +118,15 @@ namespace iText.Kernel.Font {
                 return toUnicode;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static String CreateRandomFontName() {
             return GetRandomFontPrefix(7).ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first, int missingWidth) {
             int[] res = new int[256];
             JavaUtil.Fill(res, missingWidth);
@@ -132,7 +141,9 @@ namespace iText.Kernel.Font {
             }
             return res;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static IntHashtable ConvertCompositeWidthsArray(PdfArray widthsArray) {
             IntHashtable res = new IntHashtable();
             if (widthsArray == null) {
@@ -158,6 +169,7 @@ namespace iText.Kernel.Font {
             }
             return res;
         }
+//\endcond
 
         private static StringBuilder GetRandomFontPrefix(int length) {
             StringBuilder stringBuilder = new StringBuilder();

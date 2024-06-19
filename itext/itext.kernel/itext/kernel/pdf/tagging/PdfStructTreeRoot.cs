@@ -568,10 +568,13 @@ namespace iText.Kernel.Pdf.Tagging {
             return this.idTree;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual ParentTreeHandler GetParentTreeHandler() {
             return parentTreeHandler;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddKidObject(int index, PdfDictionary structElem) {
             if (index == -1) {
                 GetKidsObject().Add(structElem);
@@ -588,6 +591,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             SetModified();
         }
+//\endcond
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;

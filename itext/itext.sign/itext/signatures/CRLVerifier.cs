@@ -38,8 +38,10 @@ namespace iText.Signatures {
         protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CRLVerifier
             ));
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The list of CRLs to check for revocation date.</summary>
         internal IList<IX509Crl> crls;
+//\endcond
 
         /// <summary>Creates a CRLVerifier instance.</summary>
         /// <param name="verifier">the next verifier in the chain</param>

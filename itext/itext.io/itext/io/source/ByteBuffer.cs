@@ -151,6 +151,7 @@ namespace iText.IO.Source {
             return true;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Fill
         /// <c>ByteBuffer</c>
@@ -177,7 +178,9 @@ namespace iText.IO.Source {
             count++;
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Fill
         /// <c>ByteBuffer</c>
@@ -204,5 +207,6 @@ namespace iText.IO.Source {
             count += b.Length;
             return this;
         }
+//\endcond
     }
 }

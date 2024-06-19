@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 
 namespace iText.Forms.Fields.Borders {
+//\cond DO_NOT_DOCUMENT
     internal class UnderlineBorder : AbstractFormBorder {
         public UnderlineBorder(Color color, float width)
             : base(color, width) {
@@ -59,4 +60,5 @@ namespace iText.Forms.Fields.Borders {
             return AbstractFormBorder.FORM_UNDERLINE;
         }
     }
+//\endcond
 }

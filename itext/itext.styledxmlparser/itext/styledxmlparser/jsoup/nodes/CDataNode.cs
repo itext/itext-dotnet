@@ -41,10 +41,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return GetWholeText();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             accum.Append("<![CDATA[").Append(GetWholeText());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
             try {
                 accum.Append("]]>");
@@ -53,6 +56,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 throw new UncheckedIOException(e);
             }
         }
+//\endcond
 
         public override Object Clone() {
             return (iText.StyledXmlParser.Jsoup.Nodes.CDataNode)base.Clone();

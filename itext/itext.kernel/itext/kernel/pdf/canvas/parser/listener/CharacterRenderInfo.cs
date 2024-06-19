@@ -31,6 +31,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     public class CharacterRenderInfo : TextChunk {
         private Rectangle boundingBox;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// This method converts a
         /// <see cref="System.Collections.IList{E}"/>
@@ -80,6 +81,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             ret.text = sb.ToString();
             return ret;
         }
+//\endcond
 
         private static void PutCharsWithIndex(String seq, int index, IDictionary<int, int?> indexMap, StringBuilder
              sb) {
@@ -117,10 +119,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 ());
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class StringConversionInfo {
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<int, int?> indexMap;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal String text;
+//\endcond
         }
+//\endcond
     }
 }

@@ -52,9 +52,13 @@ namespace iText.Kernel.Pdf {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfFontTest/";
 
+//\cond DO_NOT_DOCUMENT
         internal const String author = "Alexander Chingarev";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String creator = "iText";
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

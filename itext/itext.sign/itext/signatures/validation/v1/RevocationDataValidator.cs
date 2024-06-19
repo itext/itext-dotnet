@@ -38,20 +38,34 @@ using iText.Signatures.Validation.V1.Report;
 namespace iText.Signatures.Validation.V1 {
     /// <summary>Class that allows you to fetch and validate revocation data for the certificate.</summary>
     public class RevocationDataValidator {
+//\cond DO_NOT_DOCUMENT
         internal const String REVOCATION_DATA_CHECK = "Revocation data check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String NO_REVOCATION_DATA = "Certificate revocation status cannot be checked: " + "no revocation data available or the status cannot be determined.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String SELF_SIGNED_CERTIFICATE = "Certificate is self-signed. Revocation data check will be skipped.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String TRUSTED_OCSP_RESPONDER = "Authorized OCSP Responder certificate has id-pkix-ocsp-nocheck "
              + "extension so it is trusted by the definition and no revocation checking is performed.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String VALIDITY_ASSURED = "Certificate is trusted due to validity assured - short term extension.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_PARSE_OCSP = "OCSP response from \"{0}\" OCSP client cannot be parsed.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_PARSE_CRL = "CRL response from \"{0}\" CRL client cannot be parsed.";
+//\endcond
 
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
@@ -314,13 +328,21 @@ namespace iText.Signatures.Validation.V1 {
 
         /// <summary>Class which contains validation related information about single OCSP response.</summary>
         public class OcspResponseValidationInfo {
+//\cond DO_NOT_DOCUMENT
             internal readonly ISingleResponse singleResp;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly IBasicOcspResponse basicOCSPResp;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly DateTime trustedGenerationDate;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly TimeBasedContext timeBasedContext;
+//\endcond
 
             /// <summary>Creates validation related information about single OCSP response.</summary>
             /// <param name="singleResp">
@@ -354,11 +376,17 @@ namespace iText.Signatures.Validation.V1 {
 
         /// <summary>Class which contains validation related information about CRL response.</summary>
         public class CrlValidationInfo {
+//\cond DO_NOT_DOCUMENT
             internal readonly IX509Crl crl;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly DateTime trustedGenerationDate;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly TimeBasedContext timeBasedContext;
+//\endcond
 
             /// <summary>Creates validation related information about CRL response.</summary>
             /// <param name="crl">

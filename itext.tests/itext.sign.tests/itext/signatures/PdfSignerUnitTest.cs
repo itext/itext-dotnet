@@ -447,17 +447,21 @@ namespace iText.Signatures {
             return outputStream.ToArray();
         }
 
+//\cond DO_NOT_DOCUMENT
         // Android-Conversion-Skip-Block-End
         internal class ExtendedPdfSignatureFormField : PdfSignatureFormField {
             public ExtendedPdfSignatureFormField(PdfWidgetAnnotation widgetAnnotation, PdfDocument document)
                 : base(widgetAnnotation, document) {
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class DummySignatureEvent : PdfSigner.ISignatureEvent {
             public virtual void GetSignatureDictionary(PdfSignature sig) {
             }
             // Do nothing.
         }
+//\endcond
     }
 }

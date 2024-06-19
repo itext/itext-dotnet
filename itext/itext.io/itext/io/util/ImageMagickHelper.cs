@@ -41,10 +41,14 @@ namespace iText.IO.Util {
         ///     </summary>
         public const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE = "ITEXT_MAGICK_COMPARE_EXEC";
 
+//\cond DO_NOT_DOCUMENT
         [Obsolete]
         internal const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY = "compareExec";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String MAGICK_COMPARE_KEYWORD = "ImageMagick Studio LLC";
+//\endcond
 
         private const String TEMP_FILE_PREFIX = "itext_im_io_temp";
 
@@ -213,6 +217,7 @@ namespace iText.IO.Util {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool ValidateFuzziness(String fuzziness) {
             if (null == fuzziness) {
                 return true;
@@ -228,6 +233,7 @@ namespace iText.IO.Util {
                 }
             }
         }
+//\endcond
 
         private static long ParseImageMagickProcessOutput(String processOutput) {
             if (null == processOutput) {

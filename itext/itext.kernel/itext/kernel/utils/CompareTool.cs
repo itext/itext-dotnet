@@ -124,10 +124,12 @@ namespace iText.Kernel.Utils {
         public CompareTool() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal CompareTool(String gsExec, String compareExec) {
             this.gsExec = gsExec;
             this.compareExec = compareExec;
         }
+//\endcond
 
         /// <summary>
         /// Create
@@ -1153,10 +1155,12 @@ namespace iText.Kernel.Utils {
             return convertedInfo;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String ConvertProducerLine(String producer) {
             return iText.Commons.Utils.StringUtil.ReplaceAll(iText.Commons.Utils.StringUtil.ReplaceAll(producer, VERSION_REGEXP
                 , VERSION_REPLACEMENT), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
         }
+//\endcond
 
         private void Init(String outPdf, String cmpPdf) {
             this.outPdf = outPdf;

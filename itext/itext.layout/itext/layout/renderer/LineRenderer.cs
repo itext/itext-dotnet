@@ -51,9 +51,13 @@ namespace iText.Layout.Renderer {
         // bidi levels
         protected internal byte[] levels;
 
+//\cond DO_NOT_DOCUMENT
         internal float maxTextAscent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float maxTextDescent;
+//\endcond
 
         private float maxBlockAscent;
 
@@ -880,6 +884,7 @@ namespace iText.Layout.Renderer {
             return result.GetMinMaxWidth();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool HasChildRendererInHtmlMode() {
             foreach (IRenderer childRenderer in GetChildRenderers()) {
                 if (RenderingMode.HTML_MODE.Equals(childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
@@ -888,7 +893,9 @@ namespace iText.Layout.Renderer {
             }
             return false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetTopLeadingIndent(Leading leading) {
             switch (leading.GetLeadingType()) {
                 case Leading.FIXED: {
@@ -920,7 +927,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetBottomLeadingIndent(Leading leading) {
             switch (leading.GetLeadingType()) {
                 case Leading.FIXED: {
@@ -952,7 +961,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static LineRenderer.LineSplitIntoGlyphsData SplitLineIntoGlyphs(LineRenderer toSplit) {
             LineRenderer.LineSplitIntoGlyphsData result = new LineRenderer.LineSplitIntoGlyphsData();
             bool newLineFound = false;
@@ -978,7 +989,9 @@ namespace iText.Layout.Renderer {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void Reorder(LineRenderer toProcess, LineRenderer.LineSplitIntoGlyphsData splitLineIntoGlyphsResult
             , int[] newOrder) {
             // Insert non-text renderers
@@ -1011,7 +1024,9 @@ namespace iText.Layout.Renderer {
                 newRenderer.line.SetGlyphs(replacementGlyphs);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AdjustChildPositionsAfterReordering(IList<IRenderer> children, float initialXPos) {
             float currentXPos = initialXPos;
             foreach (IRenderer child in children) {
@@ -1049,6 +1064,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         private LineRenderer[] SplitNotFittingFloat(int childPos, LayoutResult childResult) {
             LineRenderer[] split = Split();
@@ -1217,6 +1233,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Trim first child text renderers.</summary>
         /// <returns>total number of trimmed glyphs.</returns>
         internal virtual int TrimFirst() {
@@ -1246,6 +1263,7 @@ namespace iText.Layout.Renderer {
             }
             return totalNumberOfTrimmedGlyphs;
         }
+//\endcond
 
         /// <summary>Apply OTF features and return the last(!) base direction of child renderer</summary>
         /// <returns>the last(!) base direction of child renderer.</returns>
@@ -1262,16 +1280,21 @@ namespace iText.Layout.Renderer {
             return baseDirection;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsChildFloating(IRenderer childRenderer) {
             FloatPropertyValue? kidFloatPropertyVal = childRenderer.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             return childRenderer is AbstractRenderer && FloatingHelper.IsRendererFloating(childRenderer, kidFloatPropertyVal
                 );
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsInlineBlockChild(IRenderer child) {
             return child is BlockRenderer || child is TableRenderer;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if the word that's been split when has been layouted on this line can fit the next line without splitting.
         ///     </summary>
         /// <param name="childRenderer">the childRenderer containing the split word</param>
@@ -1312,7 +1335,9 @@ namespace iText.Layout.Renderer {
             }
             return newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Extracts ascender and descender of an already layouted
         /// <see cref="IRenderer">childRenderer</see>.
@@ -1365,7 +1390,9 @@ namespace iText.Layout.Renderer {
             }
             return new float[] { childAscent, childDescent };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Updates
         /// <see cref="maxAscent"/>
@@ -1437,7 +1464,9 @@ namespace iText.Layout.Renderer {
             this.maxTextDescent = maxTextDescentUpdated;
             return new float[] { this.maxAscent, this.maxDescent };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Update
         /// <see cref="maxAscent"/>
@@ -1490,6 +1519,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         private void UpdateBidiLevels(int totalNumberOfTrimmedGlyphs, BaseDirection? baseDirection) {
             if (totalNumberOfTrimmedGlyphs != 0 && levels != null) {
@@ -1608,15 +1638,25 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class LineAscentDescentState {
+//\cond DO_NOT_DOCUMENT
             internal float maxAscent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float maxDescent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float maxTextAscent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float maxTextDescent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal LineAscentDescentState(float maxAscent, float maxDescent, float maxTextAscent, float maxTextDescent
                 ) {
                 this.maxAscent = maxAscent;
@@ -1624,8 +1664,11 @@ namespace iText.Layout.Renderer {
                 this.maxTextAscent = maxTextAscent;
                 this.maxTextDescent = maxTextDescent;
             }
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class LineSplitIntoGlyphsData {
             private readonly IList<LineRenderer.RendererGlyph> lineGlyphs;
 
@@ -1668,5 +1711,6 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
     }
 }

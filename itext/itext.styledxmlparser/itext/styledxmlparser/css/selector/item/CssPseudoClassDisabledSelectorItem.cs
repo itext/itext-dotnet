@@ -24,6 +24,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassDisabledSelectorItem : CssPseudoClassSelectorItem {
         private static readonly iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassDisabledSelectorItem instance
              = new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassDisabledSelectorItem();
@@ -43,4 +44,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return null != ((IElementNode)node).GetAttribute(CommonCssConstants.DISABLED);
         }
     }
+//\endcond
 }

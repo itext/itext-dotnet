@@ -26,7 +26,9 @@ using iText.Test;
 namespace iText.Layout.Properties {
     [NUnit.Framework.Category("UnitTest")]
     public class BackgroundUnitTest : ExtendedITextTest {
+//\cond DO_NOT_DOCUMENT
         internal const float EPS = 0.00001f;
+//\endcond
 
         [NUnit.Framework.Test]
         public virtual void BackgroundConstructorWithClipTest() {

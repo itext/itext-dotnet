@@ -38,7 +38,9 @@ namespace iText.Svg.Renderers.Path.Impl {
     /// However, float comparison is used instead of double comparison, because close coordinates can be considered equal.
     /// </remarks>
     public class EllipticalCurveTo : AbstractPathShape {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 7;
+//\endcond
 
         private Point startPoint;
 
@@ -134,6 +136,7 @@ namespace iText.Svg.Renderers.Path.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>This convenience method rotates a given set of points around a given point</summary>
         /// <param name="list">the input list</param>
         /// <param name="rotation">the rotation angle, in radians</param>
@@ -155,10 +158,13 @@ namespace iText.Svg.Renderers.Path.Impl {
             }
             return list;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String[] GetCoordinates() {
             return coordinates;
         }
+//\endcond
 
         private static void DrawCurve(PdfCanvas canvas, Point cp1, Point cp2, Point end) {
             canvas.CurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
@@ -175,6 +181,7 @@ namespace iText.Svg.Renderers.Path.Impl {
             return result;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts between two types of definitions of an arc:
         /// The input is an arc defined by two points and the two semi-axes of the ellipse.
@@ -189,21 +196,32 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>.
         /// </remarks>
         internal class EllipseArc {
+//\cond DO_NOT_DOCUMENT
             internal readonly Point ll;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly Point ur;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly double startAng;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal readonly double extent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal EllipseArc(Point center, double a, double b, double startAng, double extent) {
                 ll = new Point(center.x - a, center.y - b);
                 ur = new Point(center.x + a, center.y + b);
                 this.startAng = startAng;
                 this.extent = extent;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static EllipticalCurveTo.EllipseArc GetEllipse(Point start, Point end, double a, double b, bool sweep
                 , bool largeArc) {
                 double r1 = (start.x - end.x) / (-2.0 * a);
@@ -238,7 +256,9 @@ namespace iText.Svg.Renderers.Path.Impl {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.COULD_NOT_DETERMINE_MIDDLE_POINT_OF_ELLIPTICAL_ARC
                     );
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static EllipticalCurveTo.EllipseArc CalculatePossibleMiddle(Point start, Point end, double a, double
                  b, double startToCenterAngle, bool sweep, bool largeArc) {
                 double x0 = start.x - a * Math.Cos(startToCenterAngle);
@@ -310,7 +330,9 @@ namespace iText.Svg.Renderers.Path.Impl {
                 }
                 return null;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static double CalculateAngle(Point pt, Point center, double a, double b) {
                 double result = Math.Pow(((pt.x - center.x) / a), 2.0) + Math.Pow(((pt.y - center.y) / b), 2.0);
                 double cos = (pt.x - center.x) / a;
@@ -325,11 +347,15 @@ namespace iText.Svg.Renderers.Path.Impl {
                 }
                 return result;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static double ToDegrees(double radians) {
                 return radians * 180.0 / Math.PI;
             }
+//\endcond
         }
+//\endcond
 
         public override Rectangle GetPathShapeRectangle(Point lastPoint) {
             double[] points = GetEllipticalArcMinMaxPoints(lastPoint.GetX(), lastPoint.GetY(), GetCoordinate(0), GetCoordinate

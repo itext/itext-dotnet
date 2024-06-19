@@ -755,6 +755,7 @@ namespace iText.Kernel.Utils {
             return markup;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class CustomPdfAnnotationFlattenFactory : PdfAnnotationFlattenFactory {
             public override IAnnotationFlattener GetAnnotationFlattenWorker(PdfName name) {
                 if (PdfName.Link.Equals(name)) {
@@ -773,5 +774,6 @@ namespace iText.Kernel.Utils {
                 }
             }
         }
+//\endcond
     }
 }

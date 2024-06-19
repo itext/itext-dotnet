@@ -30,6 +30,7 @@ using iText.Layout.Borders;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal abstract class TableBorders {
         /// <summary>Horizontal borders of the table.</summary>
         /// <remarks>
@@ -452,4 +453,5 @@ namespace iText.Layout.Renderer {
             }
         }
     }
+//\endcond
 }

@@ -106,12 +106,15 @@ namespace iText.Commons.Actions {
                 ));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class TestAbstractITextConfigurationEvent : AbstractITextConfigurationEvent {
             protected internal override void DoAction() {
             }
             // Empty method.
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class TestAbstractProductProcessITextEvent : AbstractProductProcessITextEvent {
             public TestAbstractProductProcessITextEvent()
                 : base(new SequenceId(), new ProductData("test public product name", "test product name", "test version", 
@@ -122,7 +125,9 @@ namespace iText.Commons.Actions {
                 return "test event type";
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class TestITextProductEventProcessor : ITextProductEventProcessor {
             public virtual void OnEvent(AbstractProductProcessITextEvent @event) {
             }
@@ -140,5 +145,6 @@ namespace iText.Commons.Actions {
                 return "test producer";
             }
         }
+//\endcond
     }
 }

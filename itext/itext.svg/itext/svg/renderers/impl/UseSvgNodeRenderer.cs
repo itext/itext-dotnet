@@ -91,8 +91,10 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void PostDraw(SvgDrawContext context) {
         }
+//\endcond
 
         private bool IsValidHref(String name) {
             return name.StartsWith("#");

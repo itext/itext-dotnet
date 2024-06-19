@@ -116,12 +116,15 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
 
         /// <summary>Iterates the input and copies trusted nodes (tags, attributes, text) into the destination.</summary>
         private sealed class CleaningVisitor : NodeVisitor {
+//\cond DO_NOT_DOCUMENT
             internal int numDiscarded = 0;
+//\endcond
 
             private readonly iText.StyledXmlParser.Jsoup.Nodes.Element root;
 
             private iText.StyledXmlParser.Jsoup.Nodes.Element destination;
 
+//\cond DO_NOT_DOCUMENT
             // current element to append nodes to
             internal CleaningVisitor(Cleaner _enclosing, iText.StyledXmlParser.Jsoup.Nodes.Element root, iText.StyledXmlParser.Jsoup.Nodes.Element
                  destination) {
@@ -129,6 +132,7 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
                 this.root = root;
                 this.destination = destination;
             }
+//\endcond
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node source, int depth) {
                 if (source is iText.StyledXmlParser.Jsoup.Nodes.Element) {
@@ -207,14 +211,20 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
         }
 
         private class ElementMeta {
+//\cond DO_NOT_DOCUMENT
             internal iText.StyledXmlParser.Jsoup.Nodes.Element el;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int numAttribsDiscarded;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ElementMeta(iText.StyledXmlParser.Jsoup.Nodes.Element el, int numAttribsDiscarded) {
                 this.el = el;
                 this.numAttribsDiscarded = numAttribsDiscarded;
             }
+//\endcond
         }
     }
 }

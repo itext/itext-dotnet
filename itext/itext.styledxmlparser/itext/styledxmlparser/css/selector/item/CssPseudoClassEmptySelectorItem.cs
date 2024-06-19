@@ -25,6 +25,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassEmptySelectorItem : CssPseudoClassSelectorItem {
         private static readonly iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassEmptySelectorItem instance = 
             new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassEmptySelectorItem();
@@ -52,4 +53,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return true;
         }
     }
+//\endcond
 }

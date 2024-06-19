@@ -59,10 +59,12 @@ namespace iText.Commons.Actions {
             return true;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Obtains stored meta info associated with the event.</summary>
         /// <returns>meta info</returns>
         internal virtual IMetaInfo GetMetaInfo() {
             return metaInfo;
         }
+//\endcond
     }
 }

@@ -70,14 +70,20 @@ namespace iText.Kernel.Numbering {
         }
 
         private class GeorgianDigit {
+//\cond DO_NOT_DOCUMENT
             internal char digit;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int value;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal GeorgianDigit(char digit, int value) {
                 this.digit = digit;
                 this.value = value;
             }
+//\endcond
         }
     }
 }

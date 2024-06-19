@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Utility class for calculate background image width and height.</summary>
     internal sealed class BackgroundSizeCalculationUtil {
         private const int PERCENT_100 = 100;
@@ -160,4 +161,5 @@ namespace iText.Layout.Renderer {
             }
         }
     }
+//\endcond
 }

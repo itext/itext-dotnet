@@ -51,6 +51,7 @@ namespace iText.Kernel.Font {
             subtype = fontDictionary.GetAsName(PdfName.Subtype);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
              toUnicode) {
             iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
@@ -83,7 +84,9 @@ namespace iText.Kernel.Font {
             }
             return fontProgram;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static int GetDefaultWithOfFont(PdfDictionary fontDictionary, PdfDictionary fontDescriptor) {
             int defaultWidth;
             if (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) {
@@ -99,7 +102,9 @@ namespace iText.Kernel.Font {
             }
             return defaultWidth;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, CMapToUnicode toUnicode) {
             iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
             PdfDictionary fontDescriptor = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
@@ -123,6 +128,7 @@ namespace iText.Kernel.Font {
             }
             return fontProgram;
         }
+//\endcond
 
         public virtual PdfStream GetFontFile() {
             return fontFile;
@@ -147,6 +153,7 @@ namespace iText.Kernel.Font {
             return missingWidth;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void FillFontDescriptor(iText.Kernel.Font.DocTrueTypeFont font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
                 ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
@@ -249,6 +256,7 @@ namespace iText.Kernel.Font {
                 }
             }
         }
+//\endcond
 
         private void RegisterGlyph(int cid, int width, char[] unicode) {
             Glyph glyph = new Glyph(cid, width, unicode);

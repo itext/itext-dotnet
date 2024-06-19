@@ -559,6 +559,7 @@ namespace iText.IO.Font {
             fontRegisterProvider.ClearRegisteredFontFamilies();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] ReadFontBytesFromPath(String path) {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
                 (path));
@@ -571,5 +572,6 @@ namespace iText.IO.Font {
             raf.ReadFully(buf);
             return buf;
         }
+//\endcond
     }
 }

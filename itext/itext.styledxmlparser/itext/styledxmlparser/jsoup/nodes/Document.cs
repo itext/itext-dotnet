@@ -541,7 +541,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private readonly ThreadLocal<System.Text.Encoding> encoderThreadLocal = new ThreadLocal<System.Text.Encoding
             >();
 
+//\cond DO_NOT_DOCUMENT
         internal Entities.CoreCharset coreCharset;
+//\endcond
 
         private bool prettyPrint = true;
 
@@ -614,17 +616,21 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual System.Text.Encoding PrepareEncoder() {
             System.Text.Encoding encoder = iText.IO.Util.TextUtil.NewEncoder(charset);
             encoderThreadLocal.Value = encoder;
             coreCharset = Entities.GetCoreCharsetByName(encoder.Name());
             return encoder;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual System.Text.Encoding Encoder() {
             System.Text.Encoding encoder = encoderThreadLocal.Value;
             return encoder != null ? encoder : PrepareEncoder();
         }
+//\endcond
 
         /// <summary>Get the document's current output syntax.</summary>
         /// <returns>current syntax</returns>

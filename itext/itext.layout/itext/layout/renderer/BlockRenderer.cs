@@ -560,20 +560,27 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void RecalculateOccupiedAreaAfterChildLayout(Rectangle resultBBox, float? blockMaxHeight) {
             occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer childRenderer, Rectangle layoutBox
             , MarginsCollapseHandler marginsCollapseHandler) {
             return marginsCollapseHandler.StartChildMarginsHandling(childRenderer, layoutBox);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer
             , Rectangle initialLayoutBox) {
             return layoutBox;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual AbstractRenderer[] CreateSplitAndOverflowRenderers(int childPos, int layoutStatus, LayoutResult
              childResult, IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IList<IRenderer> waitingOverflowFloatRenderers
             ) {
@@ -599,6 +606,7 @@ namespace iText.Layout.Renderer {
             }
             return new AbstractRenderer[] { splitRenderer, overflowRenderer };
         }
+//\endcond
 
         /// <summary>
         /// This method applies vertical alignment for the occupied area
@@ -816,10 +824,13 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool StopLayoutingChildrenIfChildResultNotFull(LayoutResult returnResult) {
             return true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual LayoutResult ProcessNotFullChildResult(LayoutContext layoutContext, IDictionary<int, IRenderer
             > waitingFloatsSplitRenderers, IList<IRenderer> waitingOverflowFloatRenderers, bool wasHeightClipped, 
             IList<Rectangle> floatRendererAreas, bool marginsCollapsingEnabled, float clearHeightCorrection, Border
@@ -897,19 +908,25 @@ namespace iText.Layout.Renderer {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void DecreaseLayoutBoxAfterChildPlacement(Rectangle layoutBox, LayoutResult result, IRenderer
              childRenderer) {
             layoutBox.SetHeight(result.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CorrectFixedLayout(Rectangle layoutBox) {
             if (IsFixedLayout()) {
                 float y = (float)this.GetPropertyAsFloat(Property.BOTTOM);
                 Move(0, y - occupiedArea.GetBBox().GetY());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ApplyWidth(Rectangle parentBBox, float? blockWidth, OverflowPropertyValue? overflowX
             ) {
             // maxWidth has already taken in attention in blockWidth,
@@ -927,7 +944,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool ApplyMaxHeight(Rectangle parentBBox, float? blockMaxHeight, MarginsCollapseHandler marginsCollapseHandler
             , bool isCellRenderer, bool wasParentsHeightClipped, OverflowPropertyValue? overflowY) {
             if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (IsOverflowFit(overflowY)))) {
@@ -944,7 +963,9 @@ namespace iText.Layout.Renderer {
             parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
             return wasHeightClipped;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual AbstractRenderer ApplyMinHeight(OverflowPropertyValue? overflowY, Rectangle layoutBox) {
             AbstractRenderer overflowRenderer = null;
             float? blockMinHeight = RetrieveMinHeight();
@@ -981,7 +1002,9 @@ namespace iText.Layout.Renderer {
             }
             return overflowRenderer;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
             if (IsOverflowFit(overflowX)) {
                 return;
@@ -991,7 +1014,9 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().SetX(layoutBox.GetX()).SetWidth(layoutBox.GetWidth());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void FixOccupiedAreaIfOverflowedY(OverflowPropertyValue? overflowY, Rectangle layoutBox) {
             if (IsOverflowFit(overflowY)) {
                 return;
@@ -1001,6 +1026,7 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveUp(difference).DecreaseHeight(difference);
             }
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public override MinMaxWidth GetMinMaxWidth() {
@@ -1060,6 +1086,7 @@ namespace iText.Layout.Renderer {
             return minMaxWidth;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void HandleForcedPlacement(bool anythingPlaced) {
             // We placed something meaning that we don't need this property anymore while processing other children
             // to do not force place them
@@ -1067,6 +1094,7 @@ namespace iText.Layout.Renderer {
                 DeleteOwnProperty(Property.FORCED_PLACEMENT);
             }
         }
+//\endcond
 
         private bool IsAnythingOccupied() {
             return !(occupiedArea.GetBBox().GetHeight() < EPS);

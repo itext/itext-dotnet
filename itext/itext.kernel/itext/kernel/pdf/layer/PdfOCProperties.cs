@@ -45,7 +45,9 @@ namespace iText.Kernel.Pdf.Layer {
     /// must be indirect.
     /// </remarks>
     public class PdfOCProperties : PdfObjectWrapper<PdfDictionary> {
+//\cond DO_NOT_DOCUMENT
         internal const String OC_CONFIG_NAME_PATTERN = "OCConfigName";
+//\endcond
 
         private IList<PdfLayer> layers = new List<PdfLayer>();
 

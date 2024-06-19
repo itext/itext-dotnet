@@ -142,49 +142,66 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             return styleSheet;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Appends a character to the buffer.</summary>
         /// <param name="ch">the character</param>
         internal void AppendToBuffer(char ch) {
             buffer.Append(ch);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the contents of the buffer.</summary>
         /// <returns>the buffer contents</returns>
         internal String GetBufferContents() {
             return buffer.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Resets the buffer.</summary>
         internal void ResetBuffer() {
             buffer.Length = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the previous active state.</summary>
         internal void EnterPreviousActiveState() {
             SetState(previousActiveState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the comment start state.</summary>
         internal void EnterCommentStartState() {
             SaveActiveState();
             SetState(commentStartState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the comment end state.</summary>
         internal void EnterCommentEndState() {
             SetState(commendEndState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the comment inner state.</summary>
         internal void EnterCommentInnerState() {
             SetState(commendInnerState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the rule state.</summary>
         internal void EnterRuleState() {
             SetState(ruleState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the unknown state if nested blocks are finished.</summary>
         internal void EnterUnknownStateIfNestedBlocksFinished() {
             if (nestedAtRules.Count == 0) {
@@ -194,7 +211,9 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
                 EnterRuleStateBasedOnItsType();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the rule state, based on whether the current state is unsupported or conditional.</summary>
         internal void EnterRuleStateBasedOnItsType() {
             if (CurrentAtRuleIsConditionalGroupRule()) {
@@ -204,33 +223,45 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
                 EnterAtRuleBlockState();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the unknown state.</summary>
         internal void EnterUnknownState() {
             SetState(unknownState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the At-rule block state.</summary>
         internal void EnterAtRuleBlockState() {
             SetState(atRuleBlockState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the conditional group At-rule block state.</summary>
         internal void EnterConditionalGroupAtRuleBlockState() {
             SetState(conditionalGroupAtRuleBlockState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Enter the properties state.</summary>
         internal void EnterPropertiesState() {
             SetState(propertiesState);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Store the current selector.</summary>
         internal void StoreCurrentSelector() {
             currentSelector = buffer.ToString();
             buffer.Length = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Store the current properties.</summary>
         internal void StoreCurrentProperties() {
             if (isCurrentRuleSupported) {
@@ -239,7 +270,9 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             currentSelector = null;
             buffer.Length = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Store the current properties without selector.</summary>
         internal void StoreCurrentPropertiesWithoutSelector() {
             if (isCurrentRuleSupported) {
@@ -247,7 +280,9 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             }
             buffer.Length = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Store the semicolon At-rule.</summary>
         internal void StoreSemicolonAtRule() {
             if (isCurrentRuleSupported) {
@@ -255,7 +290,9 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             }
             buffer.Length = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Finish the At-rule block.</summary>
         internal void FinishAtRuleBlock() {
             IList<CssDeclaration> storedProps = storedPropertiesWithoutSelector.Pop();
@@ -269,7 +306,9 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             isCurrentRuleSupported = IsCurrentRuleSupported();
             buffer.Length = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Push the block preceding At-rule.</summary>
         internal void PushBlockPrecedingAtRule() {
             nestedAtRules.Push(CssNestedAtRuleFactory.CreateNestedRule(buffer.ToString()));
@@ -277,6 +316,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             isCurrentRuleSupported = IsCurrentRuleSupported();
             buffer.Length = 0;
         }
+//\endcond
 
         /// <summary>Save the active state.</summary>
         private void SaveActiveState() {

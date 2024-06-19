@@ -30,6 +30,7 @@ using iText.Commons.Utils;
 namespace iText.Commons.Actions.Processors {
     /// <summary>Defines a default strategy of product event processing.</summary>
     public class DefaultITextProductEventProcessor : AbstractITextProductEventProcessor {
+//\cond DO_NOT_DOCUMENT
         internal static readonly byte[] MESSAGE_FOR_LOGGING = Convert.FromBase64String("WW91IGFyZSB1c2luZyBpVGV4dCB1bmRlciB0aGUgQUdQTC4KCklmIHRoaXMgaXMgeW9"
              + "1ciBpbnRlbnRpb24sIHlvdSBoYXZlIHB1Ymxpc2hlZCB5b3VyIG93biBzb3VyY2UgY2" + "9kZSBhcyBBR1BMIHNvZnR3YXJlIHRvby4KUGxlYXNlIGxldCB1cyBrbm93IHdoZXJlI"
              + "HRvIGZpbmQgeW91ciBzb3VyY2UgY29kZSBieSBzZW5kaW5nIGEgbWFpbCB0byBhZ3Bs" + "QGFwcnlzZS5jb20KV2UnZCBiZSBob25vcmVkIHRvIGFkZCBpdCB0byBvdXIgbGlzdCB"
@@ -38,6 +39,7 @@ namespace iText.Commons.Actions.Processors {
              + "gY2FzZSwgcGxlYXNlIGNvbnRhY3QgdXMgYnkgZmlsbGluZyBvdXQgdGhpcyBmb3JtOi" + "BodHRwOi8vaXRleHRwZGYuY29tL3NhbGVzCklmIHlvdSBhcmUgYSBjdXN0b21lciwgd"
              + "2UnbGwgZXhwbGFpbiBob3cgdG8gaW5zdGFsbCB5b3VyIGxpY2Vuc2Uga2V5IHRvIGF2" + "b2lkIHRoaXMgbWVzc2FnZS4KSWYgeW91J3JlIG5vdCBhIGN1c3RvbWVyLCB3ZSdsbCB"
              + "leHBsYWluIHRoZSBiZW5lZml0cyBvZiBiZWNvbWluZyBhIGN1c3RvbWVyLg==");
+//\endcond
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Processors.DefaultITextProductEventProcessor
             ));
@@ -89,8 +91,10 @@ namespace iText.Commons.Actions.Processors {
             return "AGPL";
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual long AcquireRepeatLevel(int lvl) {
             return REPEAT[lvl];
         }
+//\endcond
     }
 }

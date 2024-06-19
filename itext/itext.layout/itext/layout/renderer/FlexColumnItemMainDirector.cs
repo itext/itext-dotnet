@@ -24,9 +24,12 @@ using System.Collections.Generic;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal abstract class FlexColumnItemMainDirector : IFlexItemMainDirector {
+//\cond DO_NOT_DOCUMENT
         internal FlexColumnItemMainDirector() {
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<IRenderer> ApplyDirection(IList<IList<FlexItemInfo>> lines) {
@@ -46,4 +49,5 @@ namespace iText.Layout.Renderer {
         public abstract void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> arg1, JustifyContent arg2
             , float arg3);
     }
+//\endcond
 }

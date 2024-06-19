@@ -516,17 +516,29 @@ namespace iText.Layout {
         }
 
         private class HtmlRoles {
+//\cond DO_NOT_DOCUMENT
             internal static String h1 = "h1";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static String p = "p";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static String img = "img";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static String ul = "ul";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static String center = "center";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static String span = "span";
+//\endcond
         }
 
         private void AddSimpleContentToDoc(Document document, Paragraph p2) {

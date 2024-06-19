@@ -1346,13 +1346,16 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void UpdateFontAndFontSize(PdfFont font, float fontSize) {
             base.UpdateFontAndFontSize(font, fontSize);
             foreach (AbstractPdfFormField child in childFields) {
                 child.UpdateFontAndFontSize(font, fontSize);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static String OptionsArrayToString(PdfArray options) {
             if (options == null || options.IsEmpty()) {
                 return "";
@@ -1378,7 +1381,9 @@ namespace iText.Forms.Fields {
             sb.DeleteCharAt(sb.Length - 1);
             return sb.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a field to the children of the current field.</summary>
         /// <param name="kid">the field, which should become a child.</param>
         /// <returns>the kid itself.</returns>
@@ -1387,7 +1392,9 @@ namespace iText.Forms.Fields {
             this.childFields.Add(kid);
             return kid;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Replaces /Kids value with passed kids dictionaries, and keeps old flashed fields there.</summary>
         /// <remarks>
         /// Replaces /Kids value with passed kids dictionaries, and keeps old flashed fields there.
@@ -1415,6 +1422,7 @@ namespace iText.Forms.Fields {
             }
             Put(PdfName.Kids, kidsValues);
         }
+//\endcond
 
         private static PdfString GenerateDefaultAppearance(PdfName font, float fontSize, Color textColor) {
             System.Diagnostics.Debug.Assert(font != null);

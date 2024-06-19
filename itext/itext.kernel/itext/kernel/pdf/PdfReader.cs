@@ -167,10 +167,12 @@ namespace iText.Kernel.Pdf {
             : this(file.FullName, properties) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal PdfReader(IRandomAccessSource byteSource, ReaderProperties properties, bool closeStream) {
             this.properties = properties;
             this.tokens = GetOffsetTokeniser(byteSource, closeStream);
         }
+//\endcond
 
         /// <summary>
         /// Close
@@ -1514,13 +1516,17 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsMemorySavingMode() {
             return memorySavingMode;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetXrefProcessor(PdfReader.XrefProcessor xrefProcessor) {
             this.xrefProcessor = xrefProcessor;
         }
+//\endcond
 
         private void ProcessArrayReadError() {
             String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.Commons.Utils.JavaUtil.GetStringForBytes
@@ -1788,9 +1794,11 @@ namespace iText.Kernel.Pdf {
 
             private readonly int levelValue;
 
+//\cond DO_NOT_DOCUMENT
             internal StrictnessLevel(int levelValue) {
                 this.levelValue = levelValue;
             }
+//\endcond
 
             /// <summary>
             /// Checks whether the current instance represents more strict reading level than
@@ -1817,8 +1825,10 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Class containing a callback which is called on every xref table reading.</summary>
         internal class XrefProcessor {
+//\cond DO_NOT_DOCUMENT
             /// <summary>Process xref table.</summary>
             /// <param name="xrefTable">
             /// 
@@ -1832,8 +1842,10 @@ namespace iText.Kernel.Pdf {
             /// </param>
             internal virtual void ProcessXref(PdfXrefTable xrefTable, PdfTokenizer tokenizer) {
             }
+//\endcond
             // Do nothing.
         }
+//\endcond
 
         void System.IDisposable.Dispose() {
             Close();

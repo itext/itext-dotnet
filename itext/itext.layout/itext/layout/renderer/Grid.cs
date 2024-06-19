@@ -28,6 +28,7 @@ using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>This class represents a grid of elements.</summary>
     /// <remarks>
     /// This class represents a grid of elements.
@@ -42,6 +43,7 @@ namespace iText.Layout.Renderer {
 
         private float minHeight = 0.0f;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new grid instance.</summary>
         /// <param name="initialRowsCount">initial number of row for the grid</param>
         /// <param name="initialColumnsCount">initial number of columns for the grid</param>
@@ -50,7 +52,9 @@ namespace iText.Layout.Renderer {
             cellPlacementHelper = new Grid.CellPlacementHelper(this, flow);
             EnsureGridSize(initialRowsCount, initialColumnsCount);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Get resulting layout height of the grid, if it's less than explicit (minimal) height of the grid
         /// return the explicit one.
@@ -66,25 +70,33 @@ namespace iText.Layout.Renderer {
             }
             return minHeight;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get internal matrix of cells.</summary>
         /// <returns>matrix of cells.</returns>
         internal virtual GridCell[][] GetRows() {
             return rows;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current number of rows of grid.</summary>
         /// <returns>the number of rows</returns>
         internal virtual int GetNumberOfRows() {
             return rows.Length;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current number of rows of grid.</summary>
         /// <returns>the number of columns</returns>
         internal virtual int GetNumberOfColumns() {
             return rows[0].Length;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets unique cells in the specified row or column depends on passed
         /// <see cref="GridOrder"/>.
@@ -112,7 +124,9 @@ namespace iText.Layout.Renderer {
                 return result;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get all unique cells in the grid.</summary>
         /// <remarks>
         /// Get all unique cells in the grid.
@@ -146,7 +160,9 @@ namespace iText.Layout.Renderer {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
         /// <param name="cell">cell to and in the grid</param>
         internal virtual void AddCell(GridCell cell) {
@@ -157,11 +173,15 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetMinHeight(float minHeight) {
             this.minHeight = minHeight;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Resize grid if needed, so it would have given number of rows/columns.</summary>
         /// <param name="height">new grid height</param>
         /// <param name="width">new grid width</param>
@@ -189,12 +209,14 @@ namespace iText.Layout.Renderer {
             }
             rows = resizedRows;
         }
+//\endcond
 
         internal enum GridOrder {
             ROW,
             COLUMN
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>This class is used to properly initialize starting values for grid.</summary>
         internal sealed class Builder {
             private int columnCount;
@@ -208,6 +230,7 @@ namespace iText.Layout.Renderer {
             private Builder() {
             }
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Get grid builder for list of values.</summary>
             /// <param name="values">values to layout on grid</param>
             /// <returns>new grid builder instance</returns>
@@ -216,6 +239,7 @@ namespace iText.Layout.Renderer {
                 builder.cells = values.Select((val) => new GridCell(val)).ToList();
                 return builder;
             }
+//\endcond
 
             /// <summary>
             /// Set number of columns for a grid, the result will be either a provided one or if some elements
@@ -282,13 +306,16 @@ namespace iText.Layout.Renderer {
                 return initialRowsCount;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal static IComparer<GridCell> GetOrderingFunctionForFlow(GridFlow flow) {
                 if (GridFlow.COLUMN.Equals(flow) || GridFlow.COLUMN_DENSE.Equals(flow)) {
                     return new Grid.ColumnCellComparator();
                 }
                 return new Grid.RowCellComparator();
             }
+//\endcond
         }
+//\endcond
 
         /// <summary>
         /// This comparator sorts cells so ones with both fixed row and column positions would go first,
@@ -354,11 +381,14 @@ namespace iText.Layout.Renderer {
 
             private readonly Grid grid;
 
+//\cond DO_NOT_DOCUMENT
             internal CellPlacementHelper(Grid grid, GridFlow flow) {
                 this.view = new GridView(grid, flow);
                 this.grid = grid;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Place cell on grid and resize grid if needed.</summary>
             /// <param name="cell">cell to place on a grid.</param>
             internal virtual void Fit(GridCell cell) {
@@ -392,6 +422,8 @@ namespace iText.Layout.Renderer {
                     view.IncreaseDefaultAxis();
                 }
             }
+//\endcond
         }
     }
+//\endcond
 }

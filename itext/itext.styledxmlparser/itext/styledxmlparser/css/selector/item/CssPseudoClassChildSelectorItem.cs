@@ -26,7 +26,9 @@ using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassChildSelectorItem : CssPseudoClassSelectorItem {
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="CssPseudoClassSelectorItem"/>
@@ -36,11 +38,15 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         internal CssPseudoClassChildSelectorItem(String pseudoClass)
             : base(pseudoClass) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal CssPseudoClassChildSelectorItem(String pseudoClass, String arguments)
             : base(pseudoClass, arguments) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the all the siblings of a child node.</summary>
         /// <param name="node">the child node</param>
         /// <returns>the sibling nodes</returns>
@@ -58,7 +64,9 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
             return JavaCollectionsUtil.EmptyList<INode>();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets all siblings of a child node with the type of a child node.</summary>
         /// <param name="node">the child node</param>
         /// <returns>the sibling nodes with the type of a child node</returns>
@@ -76,5 +84,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
             return JavaCollectionsUtil.EmptyList<INode>();
         }
+//\endcond
     }
+//\endcond
 }

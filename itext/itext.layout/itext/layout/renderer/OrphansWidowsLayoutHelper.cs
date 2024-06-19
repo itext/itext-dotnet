@@ -28,10 +28,12 @@ using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class OrphansWidowsLayoutHelper {
         private OrphansWidowsLayoutHelper() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static LayoutResult OrphansWidowsAwareLayout(ParagraphRenderer renderer, LayoutContext context, ParagraphOrphansControl
              orphansControl, ParagraphWidowsControl widowsControl) {
             OrphansWidowsLayoutHelper.OrphansWidowsLayoutAttempt layoutAttempt = AttemptLayout(renderer, context, context
@@ -115,6 +117,7 @@ namespace iText.Layout.Renderer {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, renderer);
             }
         }
+//\endcond
 
         private static OrphansWidowsLayoutHelper.OrphansWidowsLayoutAttempt AttemptLayout(ParagraphRenderer renderer
             , LayoutContext originalContext, LayoutArea attemptArea) {
@@ -144,9 +147,14 @@ namespace iText.Layout.Renderer {
         }
 
         private class OrphansWidowsLayoutAttempt {
+//\cond DO_NOT_DOCUMENT
             internal LayoutContext attemptContext;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal LayoutResult attemptResult;
+//\endcond
         }
     }
+//\endcond
 }

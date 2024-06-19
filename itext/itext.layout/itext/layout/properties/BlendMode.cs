@@ -78,9 +78,11 @@ namespace iText.Layout.Properties {
         // Standard nonseparable blend modes
         private readonly PdfName pdfRepresentation;
 
+//\cond DO_NOT_DOCUMENT
         internal BlendMode(PdfName pdfRepresentation) {
             this.pdfRepresentation = pdfRepresentation;
         }
+//\endcond
 
         /// <summary>Get the pdf representation of the current blend mode.</summary>
         /// <returns>

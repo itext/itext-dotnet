@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// This class contains utility methods for performing mathematical operations over
     /// the Galois Field GF(256).
@@ -77,14 +78,19 @@ namespace iText.Barcodes.Qrcode {
             one = new GF256Poly(this, new int[] { 1 });
         }
 
+//\cond DO_NOT_DOCUMENT
         internal GF256Poly GetZero() {
             return zero;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal GF256Poly GetOne() {
             return one;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the monomial representing coefficient * x^degree</returns>
         internal GF256Poly BuildMonomial(int degree, int coefficient) {
             if (degree < 0) {
@@ -97,18 +103,24 @@ namespace iText.Barcodes.Qrcode {
             coefficients[0] = coefficient;
             return new GF256Poly(this, coefficients);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Implements both addition and subtraction -- they are the same in GF(256).</summary>
         /// <returns>sum/difference of a and b</returns>
         internal static int AddOrSubtract(int a, int b) {
             return a ^ b;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>2 to the power of a in GF(256)</returns>
         internal int Exp(int a) {
             return expTable[a];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>base 2 log of a in GF(256)</returns>
         internal int Log(int a) {
             if (a == 0) {
@@ -116,7 +128,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return logTable[a];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>multiplicative inverse of a</returns>
         internal int Inverse(int a) {
             if (a == 0) {
@@ -124,7 +138,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return expTable[255 - logTable[a]];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="a"/>
         /// <param name="b"/>
         /// <returns>product of a and b in GF(256)</returns>
@@ -140,5 +156,7 @@ namespace iText.Barcodes.Qrcode {
             }
             return expTable[(logTable[a] + logTable[b]) % 255];
         }
+//\endcond
     }
+//\endcond
 }

@@ -28,16 +28,20 @@ namespace iText.Commons.Actions.Sequence {
     public abstract class AbstractIdentifiableElement {
         private SequenceId sequenceId;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Obtains an identifier if it was set.</summary>
         /// <returns>identifier</returns>
         internal virtual SequenceId GetSequenceId() {
             return sequenceId;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets an identifier.</summary>
         /// <param name="sequenceId">is a new identifier for the element</param>
         internal virtual void SetSequenceId(SequenceId sequenceId) {
             this.sequenceId = sequenceId;
         }
+//\endcond
     }
 }

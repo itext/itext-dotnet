@@ -31,6 +31,7 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
 
 namespace iText.Kernel.Pdf.Xobject {
+//\cond DO_NOT_DOCUMENT
     internal class ImagePdfBytesInfo {
         private static readonly String TIFFTAG_SOFTWARE_VALUE = "iText\u00ae " + ITextCoreProductData.GetInstance(
             ).GetVersion() + " \u00a9" + ITextCoreProductData.GetInstance().GetSinceCopyrightYear() + "-" + ITextCoreProductData
@@ -266,4 +267,5 @@ namespace iText.Kernel.Pdf.Xobject {
             }
         }
     }
+//\endcond
 }

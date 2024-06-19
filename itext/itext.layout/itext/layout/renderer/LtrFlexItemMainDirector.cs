@@ -24,10 +24,13 @@ using System.Collections.Generic;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>This class is responsible for left to right placement of flex items.</summary>
     internal class LtrFlexItemMainDirector : IFlexItemMainDirector {
+//\cond DO_NOT_DOCUMENT
         internal LtrFlexItemMainDirector() {
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<IRenderer> ApplyDirection(IList<IList<FlexItemInfo>> lines) {
@@ -75,4 +78,5 @@ namespace iText.Layout.Renderer {
         }
         // We don't need to do anything in these cases
     }
+//\endcond
 }

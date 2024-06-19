@@ -25,6 +25,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 
 namespace iText.IO.Source {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// A RandomAccessSource that is based on a set of underlying sources,
     /// treating the sources as if they were a contiguous block of data.
@@ -202,17 +203,25 @@ namespace iText.IO.Source {
 
         /// <summary>Used to track each source, along with useful meta data</summary>
         private class SourceEntry {
+//\cond DO_NOT_DOCUMENT
             /// <summary>The underlying source</summary>
             internal readonly IRandomAccessSource source;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>The first byte (in the coordinates of the GroupedRandomAccessSource) that this source contains</summary>
             internal readonly long firstByte;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>The last byte (in the coordinates of the GroupedRandomAccessSource) that this source contains</summary>
             internal readonly long lastByte;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>The index of this source in the GroupedRandomAccessSource</summary>
             internal readonly int index;
+//\endcond
 
             /// <summary>Standard constructor</summary>
             /// <param name="index">the index</param>
@@ -234,4 +243,5 @@ namespace iText.IO.Source {
             }
         }
     }
+//\endcond
 }

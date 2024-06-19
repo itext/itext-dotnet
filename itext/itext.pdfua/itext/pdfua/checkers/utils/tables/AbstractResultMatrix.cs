@@ -29,6 +29,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Class that represents a matrix of cells in a table.</summary>
     /// <remarks>
     /// Class that represents a matrix of cells in a table.
@@ -115,13 +116,21 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             SetCell(row, rowSpan, 0, this.cols, arr, value);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal abstract IList<byte[]> GetHeaders(T cell);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract String GetScope(T cell);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract byte[] GetElementId(T cell);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract String GetRole(T cell);
+//\endcond
 
         private void ValidateTableCells(ICollection<String> knownIds, IList<bool> scopeMatrix, bool hasUnknownHeaders
             ) {
@@ -223,4 +232,5 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             return arr;
         }
     }
+//\endcond
 }

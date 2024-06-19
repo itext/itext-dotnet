@@ -610,11 +610,14 @@ namespace iText.Signatures {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PerformTimestamping(PdfDocument document, Stream outputStream, ITSAClient tsaClient) {
             PdfSigner timestampSigner = new PdfSigner(document, outputStream, tempOutputStream, tempFile);
             timestampSigner.Timestamp(tsaClient, timestampSignatureName);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfSigner CreatePdfSigner(SignerProperties signerProperties, bool isFinal) {
             String tempFilePath = null;
             if (temporaryDirectoryPath != null) {
@@ -623,7 +626,9 @@ namespace iText.Signatures {
             return new PdfSigner(reader, isFinal ? outputStream : CreateOutputStream(), tempFilePath, stampingProperties
                 , signerProperties);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames, LtvVerification.RevocationDataNecessity
              revocationDataNecessity) {
             LtvVerification ltvVerification = new LtvVerification(pdfDocument).SetRevocationDataNecessity(revocationDataNecessity
@@ -634,13 +639,17 @@ namespace iText.Signatures {
             }
             ltvVerification.Merge();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void DeleteTempFiles() {
             foreach (FileInfo tempFile in tempFiles) {
                 tempFile.Delete();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Stream CreateOutputStream() {
             if (temporaryDirectoryPath != null) {
                 return FileUtil.GetFileOutputStream(GetNextTempFile());
@@ -648,14 +657,18 @@ namespace iText.Signatures {
             tempOutputStream = new MemoryStream();
             return tempOutputStream;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Stream CreateInputStream() {
             if (temporaryDirectoryPath != null) {
                 return FileUtil.GetInputStreamForFile(tempFile);
             }
             return new MemoryStream(tempOutputStream.ToArray());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CreateRevocationClients(IX509Certificate signingCert, bool clientsRequired) {
             if (crlClient == null && ocspClient == null && clientsRequired) {
                 IX509Certificate signingCertificate = (IX509Certificate)signingCert;
@@ -671,6 +684,7 @@ namespace iText.Signatures {
                 ocspClient = new OcspClientBouncyCastle(null);
             }
         }
+//\endcond
 
         private void PerformSignDetached(SignerProperties signerProperties, bool isFinal, IExternalSignature externalSignature
             , IX509Certificate[] chain, ITSAClient tsaClient) {

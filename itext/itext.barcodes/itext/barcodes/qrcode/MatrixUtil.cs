@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Barcodes.Exceptions;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     internal sealed class MatrixUtil {
         private MatrixUtil() {
         }
@@ -579,4 +580,5 @@ namespace iText.Barcodes.Qrcode {
             }
         }
     }
+//\endcond
 }

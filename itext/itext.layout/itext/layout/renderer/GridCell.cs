@@ -25,6 +25,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>This class represents a cell in a grid.</summary>
     internal class GridCell {
         private readonly IRenderer value;
@@ -42,6 +43,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Cached track sizes for rows to use them during split.</summary>
         private float[] rowSizes;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a grid cell and init value renderer position on a grid based on its properties.</summary>
         /// <param name="value">item renderer</param>
         internal GridCell(IRenderer value) {
@@ -55,23 +57,33 @@ namespace iText.Layout.Renderer {
             gridX = columnPlacement[0];
             spanColumn = columnPlacement[1];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetColumnStart() {
             return gridX;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetColumnEnd() {
             return gridX + spanColumn;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetRowStart() {
             return gridY;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetRowEnd() {
             return gridY + spanRow;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetStart(Grid.GridOrder order) {
             if (Grid.GridOrder.COLUMN == order) {
                 return GetColumnStart();
@@ -80,7 +92,9 @@ namespace iText.Layout.Renderer {
                 return GetRowStart();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetEnd(Grid.GridOrder order) {
             if (Grid.GridOrder.COLUMN == order) {
                 return GetColumnEnd();
@@ -89,15 +103,21 @@ namespace iText.Layout.Renderer {
                 return GetRowEnd();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetGridHeight() {
             return spanRow;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetGridWidth() {
             return spanColumn;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetGridSpan(Grid.GridOrder order) {
             if (Grid.GridOrder.COLUMN == order) {
                 return GetGridWidth();
@@ -106,27 +126,38 @@ namespace iText.Layout.Renderer {
                 return GetGridHeight();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IRenderer GetValue() {
             return value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Rectangle GetLayoutArea() {
             return layoutArea;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetPos(int y, int x) {
             this.gridY = y;
             this.gridX = x;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float[] GetRowSizes() {
             return this.rowSizes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetRowSizes(float[] rowSizes) {
             this.rowSizes = rowSizes;
         }
+//\endcond
 
         /// <summary>
         /// Init axis placement values
@@ -183,4 +214,5 @@ namespace iText.Layout.Renderer {
             return result;
         }
     }
+//\endcond
 }

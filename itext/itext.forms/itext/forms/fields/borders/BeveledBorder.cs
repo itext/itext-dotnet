@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 
 namespace iText.Forms.Fields.Borders {
+//\cond DO_NOT_DOCUMENT
     internal class BeveledBorder : AbstractFormBorder {
         private readonly Color backgroundColor;
 
@@ -100,4 +101,5 @@ namespace iText.Forms.Fields.Borders {
             }
         }
     }
+//\endcond
 }

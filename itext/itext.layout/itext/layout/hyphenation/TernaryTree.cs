@@ -107,11 +107,14 @@ namespace iText.Layout.Hyphenation {
         /// <summary>allocation size for arrays</summary>
         protected internal const int BLOCK_SIZE = 2048;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>default constructor</summary>
         internal TernaryTree() {
             Init();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal TernaryTree(iText.Layout.Hyphenation.TernaryTree tt) {
             this.root = tt.root;
             this.freenode = tt.freenode;
@@ -122,6 +125,7 @@ namespace iText.Layout.Hyphenation {
             this.sc = (char[])tt.sc.Clone();
             this.kv = new CharVector(tt.kv);
         }
+//\endcond
 
         /// <summary>initialize</summary>
         protected internal virtual void Init() {
@@ -571,13 +575,21 @@ namespace iText.Layout.Hyphenation {
         // PLEASE NOTE that this is a helper class that was added as a result of the file modification
         // and is not a part of the original file
         private class TreeInsertionParams {
+//\cond DO_NOT_DOCUMENT
             internal char p;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal char[] key;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int start;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal char val;
+//\endcond
 
             public TreeInsertionParams(char p, char[] key, int start, char val) {
                 this.p = p;

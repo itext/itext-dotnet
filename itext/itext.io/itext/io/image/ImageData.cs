@@ -313,6 +313,7 @@ namespace iText.IO.Image {
             return true;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Load data from URL.</summary>
         /// <remarks>
         /// Load data from URL. url must be not null.
@@ -326,6 +327,7 @@ namespace iText.IO.Image {
             raf.Close();
             data = stream.ToArray();
         }
+//\endcond
 
         /// <summary>Creates a new serial id.</summary>
         /// <returns>the new serialId</returns>

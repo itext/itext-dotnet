@@ -24,13 +24,17 @@ using System;
 using iText.Commons.Bouncycastle;
 
 namespace iText.Bouncycastle {
+//\cond DO_NOT_DOCUMENT
     internal class BouncyCastleTestConstantsFactory : IBouncyCastleTestConstantsFactory {
+//\cond DO_NOT_DOCUMENT
         internal BouncyCastleTestConstantsFactory() {
         }
+//\endcond
 
         // Empty constructor.
         public virtual String GetCertificateInfoTestConst() {
             return "corrupted stream - out of bounds length found: 8 >= 6";
         }
     }
+//\endcond
 }

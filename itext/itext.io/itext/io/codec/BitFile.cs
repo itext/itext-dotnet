@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.IO;
 
 namespace iText.IO.Codec {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Came from GIFEncoder initially.</summary>
     /// <remarks>
     /// Came from GIFEncoder initially.
@@ -30,17 +31,27 @@ namespace iText.IO.Codec {
     /// which breakup the compressed data stream for GIF.
     /// </remarks>
     internal class BitFile {
+//\cond DO_NOT_DOCUMENT
         internal Stream output;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal byte[] buffer;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int index;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // bits left at current index that are avail.
         internal int bitsLeft;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>note this also indicates gif format BITFile.</summary>
         internal bool blocks = false;
+//\endcond
 
         /// <param name="output">destination for output data</param>
         /// <param name="blocks">GIF LZW requires block counts for output data</param>
@@ -127,4 +138,5 @@ namespace iText.IO.Codec {
             while (numbits != 0);
         }
     }
+//\endcond
 }

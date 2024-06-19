@@ -21,6 +21,7 @@ using iText.IO.Codec.Brotli.Dec;
 using iText.IO.Exceptions;
 
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // Library for converting WOFF2 format font files to their TTF versions.
     internal class Woff2Dec {
         // simple glyph flags
@@ -110,15 +111,21 @@ namespace iText.IO.Font.Woff2 {
 
         // Accumulates metadata as we rebuild the font
         private class RebuildMetadata {
+//\cond DO_NOT_DOCUMENT
             internal int header_checksum;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // set by writeHeaders
             internal Woff2Dec.Woff2FontInfo[] font_infos;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // checksums for tables that have been written.
             // (tag, src_offset) => checksum. Need both because 0-length loca.
             internal IDictionary<Woff2Dec.TableChecksumInfo, int?> checksums = new Dictionary<Woff2Dec.TableChecksumInfo
                 , int?>();
+//\endcond
         }
 
         private class TableChecksumInfo {
@@ -1200,4 +1207,5 @@ namespace iText.IO.Font.Woff2 {
             }
         }
     }
+//\endcond
 }

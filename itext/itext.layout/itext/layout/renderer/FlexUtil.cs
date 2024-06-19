@@ -32,6 +32,7 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal sealed class FlexUtil {
         private const float EPSILON = 0.0001F;
 
@@ -148,12 +149,15 @@ namespace iText.Layout.Renderer {
             return layoutTable;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsColumnDirection(FlexContainerRenderer renderer) {
             FlexDirectionPropertyValue flexDir = (FlexDirectionPropertyValue)renderer.GetProperty<FlexDirectionPropertyValue?
                 >(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.ROW);
             return FlexDirectionPropertyValue.COLUMN == flexDir || FlexDirectionPropertyValue.COLUMN_REVERSE == flexDir;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float GetMainSize(FlexContainerRenderer renderer, Rectangle layoutBox) {
             bool isColumnDirection = IsColumnDirection(renderer);
             float layoutBoxMainSize;
@@ -187,6 +191,7 @@ namespace iText.Layout.Renderer {
             }
             return (float)mainSize;
         }
+//\endcond
 
         private static float? ResolveUnitValue(FlexContainerRenderer renderer, int property, float baseValue) {
             UnitValue value = renderer.GetPropertyAsUnitValue(property);
@@ -206,6 +211,7 @@ namespace iText.Layout.Renderer {
                 , isColumnDirection ? renderer.RetrieveMaxWidth(layoutBox.GetWidth()) : renderer.RetrieveMaxHeight() };
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(IList<FlexUtil.FlexItemCalculationInfo
             > flexItemCalculationInfos, float crossSize, bool isColumnDirection) {
             foreach (FlexUtil.FlexItemCalculationInfo info in flexItemCalculationInfos) {
@@ -256,7 +262,9 @@ namespace iText.Layout.Renderer {
                 info.mainSize = info.hypotheticalMainSize;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Note: We assume that it was resolved on some upper level
         // 4. Determine the main size of the flex container
         internal static IList<IList<FlexUtil.FlexItemCalculationInfo>> CollectFlexItemsIntoFlexLines(IList<FlexUtil.FlexItemCalculationInfo
@@ -296,7 +304,9 @@ namespace iText.Layout.Renderer {
             }
             return lines;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void ResolveFlexibleLengths(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float mainSize
             ) {
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
@@ -404,6 +414,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         // 9.5. Main-Axis Alignment
         // 12. Distribute any remaining free space.
@@ -437,6 +448,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void DetermineHypotheticalCrossSizeForFlexItems(IList<IList<FlexUtil.FlexItemCalculationInfo
             >> lines, bool isColumnDirection, float crossSize) {
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
@@ -445,6 +457,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         private static void DetermineHypotheticalCrossSizeForFlexItem(FlexUtil.FlexItemCalculationInfo info, bool 
             isColumnDirection, float crossSize) {
@@ -489,6 +502,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static IList<float> CalculateColumnDirectionCrossSizes(IList<IList<FlexItemInfo>> lines) {
             IList<float> lineCrossSizes = new List<float>();
             foreach (IList<FlexItemInfo> line in lines) {
@@ -504,7 +518,9 @@ namespace iText.Layout.Renderer {
             }
             return lineCrossSizes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static IList<float> CalculateCrossSizeOfEachFlexLine(IList<IList<FlexUtil.FlexItemCalculationInfo
             >> lines, float? minCrossSize, float? crossSize, float? maxCrossSize) {
             bool isSingleLine = lines.Count == 1;
@@ -546,7 +562,9 @@ namespace iText.Layout.Renderer {
             }
             return lineCrossSizes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void HandleAlignContentStretch(FlexContainerRenderer flexContainerRenderer, IList<IList<FlexUtil.FlexItemCalculationInfo
             >> lines, float? crossSize, IList<float> lineCrossSizes, Rectangle layoutBox) {
             AlignmentPropertyValue alignContent = (AlignmentPropertyValue)flexContainerRenderer.GetProperty<AlignmentPropertyValue?
@@ -578,7 +596,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void DetermineUsedCrossSizeOfEachFlexItem(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines
             , IList<float> lineCrossSizes, FlexContainerRenderer flexContainerRenderer) {
             bool isColumnDirection = IsColumnDirection(flexContainerRenderer);
@@ -621,6 +641,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         private static float? RetrieveMaxHeightForMainDirection(AbstractRenderer renderer) {
             float? maxHeight = renderer.RetrieveMaxHeight();
@@ -806,9 +827,11 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsZero(float value) {
             return Math.Abs(value) < EPSILON;
         }
+//\endcond
 
         private static IList<FlexUtil.FlexItemCalculationInfo> CreateFlexItemCalculationInfos(FlexContainerRenderer
              flexContainerRenderer, float flexContainerMainSize, float crossSize) {
@@ -939,45 +962,84 @@ namespace iText.Layout.Renderer {
             return result.GetStatus() == LayoutResult.NOTHING ? 0 : result.GetOccupiedArea().GetBBox().GetHeight();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class FlexItemCalculationInfo {
+//\cond DO_NOT_DOCUMENT
             internal AbstractRenderer renderer;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float flexBasis;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float flexShrink;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float flexGrow;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float minContent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float maxContent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float mainSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float crossSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float xShift;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float yShift;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // Calculation-related fields
             internal float scaledFlexShrinkFactor;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool isFrozen = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool isMinViolated = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool isMaxViolated = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float flexBaseSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float hypotheticalMainSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float hypotheticalCrossSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool flexBasisContent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool isColumnDirection;
+//\endcond
 
             public FlexItemCalculationInfo(AbstractRenderer renderer, float flexBasis, float flexGrow, float flexShrink
                 , float areaMainSize, bool flexBasisContent, bool isColumnDirection, float crossSize) {
@@ -1008,25 +1070,33 @@ namespace iText.Layout.Renderer {
                     )) : new Rectangle(xShift, yShift, GetOuterMainSize(mainSize), GetOuterCrossSize(crossSize));
             }
 
+//\cond DO_NOT_DOCUMENT
             internal virtual float GetOuterMainSize(float size) {
                 return isColumnDirection ? renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), true).GetHeight() : 
                     renderer.ApplyMarginsBordersPaddings(new Rectangle(size, 0), true).GetWidth();
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual float GetInnerMainSize(float size) {
                 return isColumnDirection ? renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), false).GetHeight()
                      : renderer.ApplyMarginsBordersPaddings(new Rectangle(size, 0), false).GetWidth();
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual float GetOuterCrossSize(float size) {
                 return isColumnDirection ? renderer.ApplyMarginsBordersPaddings(new Rectangle(size, 0), true).GetWidth() : 
                     renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), true).GetHeight();
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual float GetInnerCrossSize(float size) {
                 return isColumnDirection ? renderer.ApplyMarginsBordersPaddings(new Rectangle(size, 0), false).GetWidth() : 
                     renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), false).GetHeight();
             }
+//\endcond
 
             private float CalculateMinContentAuto(float flexContainerMainSize, float crossSize) {
                 // Automatic Minimum Size of Flex Items https://www.w3.org/TR/css-flexbox-1/#content-based-minimum-size
@@ -1159,5 +1229,7 @@ namespace iText.Layout.Renderer {
                      renderer.GetAspectRatio()));
             }
         }
+//\endcond
     }
+//\endcond
 }

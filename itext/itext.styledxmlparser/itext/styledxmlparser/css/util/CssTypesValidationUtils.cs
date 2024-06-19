@@ -260,6 +260,7 @@ namespace iText.StyledXmlParser.Css.Util {
             return IsNumericZeroValue(value) || IsMetricZeroValue(value) || IsRelativeZeroValue(value);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsMetricZeroValue(String valueArgument) {
             String value = valueArgument;
             if (value == null) {
@@ -276,11 +277,15 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             return false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsNumericZeroValue(String value) {
             return value != null && (value.Matches("^[-+]?0$") || value.Matches("^[-+]?\\.0$"));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsRelativeZeroValue(String valueArgument) {
             String value = valueArgument;
             if (value == null) {
@@ -297,5 +302,6 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             return false;
         }
+//\endcond
     }
 }

@@ -50,6 +50,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>The flat renderer.</summary>
         protected internal IRenderer flatRenderer;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="AbstractFormFieldRenderer"/>
@@ -59,6 +60,7 @@ namespace iText.Forms.Form.Renderer {
         internal AbstractFormFieldRenderer(IFormField modelElement)
             : base(modelElement) {
         }
+//\endcond
 
         /// <summary>Checks if form fields need to be flattened.</summary>
         /// <returns>true, if fields need to be flattened.</returns>

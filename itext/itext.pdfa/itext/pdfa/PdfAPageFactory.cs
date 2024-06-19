@@ -24,6 +24,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfa {
+//\cond DO_NOT_DOCUMENT
     internal class PdfAPageFactory : IPdfPageFactory {
         public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
             return new PdfAPage(pdfObject);
@@ -33,4 +34,5 @@ namespace iText.Pdfa {
             return new PdfAPage(pdfDocument, pageSize);
         }
     }
+//\endcond
 }

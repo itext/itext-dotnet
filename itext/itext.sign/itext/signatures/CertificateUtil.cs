@@ -381,6 +381,7 @@ namespace iText.Signatures {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if the certificate is signed by provided issuer certificate.</summary>
         /// <param name="subjectCertificate">a certificate to check</param>
         /// <param name="issuerCertificate">an issuer certificate to check</param>
@@ -389,6 +390,7 @@ namespace iText.Signatures {
             ) {
             return subjectCertificate.GetIssuerDN().Equals(issuerCertificate.GetSubjectDN());
         }
+//\endcond
 
         /// <summary>Checks if the certificate is self-signed.</summary>
         /// <param name="certificate">a certificate to check</param>

@@ -26,11 +26,14 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Wrapper renderer around grid item.</summary>
     /// <remarks>Wrapper renderer around grid item. It's expected there is always exactly 1 child renderer.</remarks>
     internal class GridItemRenderer : BlockRenderer {
+//\cond DO_NOT_DOCUMENT
         /// <summary>A renderer to wrap.</summary>
         internal AbstractRenderer renderer;
+//\endcond
 
         /// <summary>Flag saying that we updated height of the renderer we wrap.</summary>
         /// <remarks>
@@ -39,9 +42,11 @@ namespace iText.Layout.Renderer {
         /// </remarks>
         private bool heightSet = false;
 
+//\cond DO_NOT_DOCUMENT
         internal GridItemRenderer()
             : base(new Div()) {
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
@@ -110,6 +115,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override void UpdateHeightsOnSplit(float usedHeight, bool wasHeightClipped, AbstractRenderer splitRenderer
             , AbstractRenderer overflowRenderer, bool enlargeOccupiedAreaOnHeightWasClipped) {
@@ -120,13 +126,17 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.childRenderers[0].DeleteOwnProperty(Property.HEIGHT);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override void AddChildRenderer(IRenderer child) {
             this.renderer = (AbstractRenderer)child;
             base.AddChildRenderer(child);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float CalculateHeight(float initialHeight) {
             // We subtract margins/borders/paddings because we should take into account that
             // borders/paddings/margins should also fit into a cell.
@@ -139,5 +149,7 @@ namespace iText.Layout.Renderer {
             }
             return rectangle.GetHeight();
         }
+//\endcond
     }
+//\endcond
 }

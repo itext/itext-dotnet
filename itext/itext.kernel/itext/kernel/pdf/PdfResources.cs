@@ -586,11 +586,13 @@ namespace iText.Kernel.Pdf {
             return false;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfName AddResource<T>(PdfObjectWrapper<T> resource, PdfResources.ResourceNameGenerator nameGen
             )
             where T : PdfObject {
             return AddResource(resource.GetPdfObject(), nameGen);
         }
+//\endcond
 
         protected internal virtual void AddResource(PdfObject resource, PdfName resType, PdfName resName) {
             if (resType.Equals(PdfName.XObject)) {
@@ -617,6 +619,7 @@ namespace iText.Kernel.Pdf {
             SetModified();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen) {
             PdfName resName = GetResourceName(resource);
             if (resName == null) {
@@ -625,6 +628,7 @@ namespace iText.Kernel.Pdf {
             }
             return resName;
         }
+//\endcond
 
         protected internal virtual void BuildResources(PdfDictionary dictionary) {
             foreach (PdfName resourceType in dictionary.KeySet()) {
@@ -663,6 +667,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Represents a resource name generator.</summary>
         /// <remarks>
         /// Represents a resource name generator. The generator takes into account
@@ -767,5 +772,6 @@ namespace iText.Kernel.Pdf {
                 return newName;
             }
         }
+//\endcond
     }
 }

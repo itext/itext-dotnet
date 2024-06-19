@@ -27,12 +27,14 @@ using iText.IO.Source;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class SmartModePdfObjectsSerializer {
         private IMessageDigest sha512;
 
         private Dictionary<SerializedObjectContent, PdfIndirectReference> serializedContentToObj = new Dictionary<
             SerializedObjectContent, PdfIndirectReference>();
 
+//\cond DO_NOT_DOCUMENT
         internal SmartModePdfObjectsSerializer() {
             try {
                 sha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512");
@@ -41,6 +43,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(e);
             }
         }
+//\endcond
 
         public virtual void SaveSerializedObject(SerializedObjectContent serializedContent, PdfIndirectReference objectReference
             ) {
@@ -179,4 +182,5 @@ namespace iText.Kernel.Pdf {
         private class SelfReferenceException : Exception {
         }
     }
+//\endcond
 }

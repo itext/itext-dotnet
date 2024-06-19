@@ -106,7 +106,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 ++counter[0];
@@ -174,7 +176,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 ++counter[0];
@@ -242,7 +246,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 ++counter[0];
@@ -310,7 +316,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 ++counter[0];
@@ -375,7 +383,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {
@@ -439,7 +449,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {
@@ -485,7 +497,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {
@@ -534,7 +548,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {
@@ -623,7 +639,9 @@ namespace iText.Layout.Renderer {
                 this.@object = null;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal PdfXObject @object;
+//\endcond
 
             public override PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, Rectangle rect) {
                 if (this.@object == xObject) {

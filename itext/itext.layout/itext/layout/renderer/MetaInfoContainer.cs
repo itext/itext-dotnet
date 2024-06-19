@@ -33,10 +33,12 @@ namespace iText.Layout.Renderer {
             this.metaInfo = metaInfo;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Return the IMetaInfo object.</summary>
         /// <returns>returns IMetaInfo</returns>
         internal virtual IMetaInfo GetMetaInfo() {
             return metaInfo;
         }
+//\endcond
     }
 }

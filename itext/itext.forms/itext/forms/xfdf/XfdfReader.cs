@@ -32,12 +32,14 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 
 namespace iText.Forms.Xfdf {
+//\cond DO_NOT_DOCUMENT
     internal class XfdfReader {
         private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(XfdfReader));
 
         private readonly IDictionary<AnnotObject, PdfTextAnnotation> annotationsWithInReplyTo = new Dictionary<AnnotObject
             , PdfTextAnnotation>();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Merges existing XfdfObject into pdf document associated with it.</summary>
         /// <param name="xfdfObject">The object to be merged.</param>
         /// <param name="pdfDocument">The associated pdf document.</param>
@@ -63,6 +65,7 @@ namespace iText.Forms.Xfdf {
                 MergeAnnotations(xfdfObject.GetAnnots(), pdfDocument);
             }
         }
+//\endcond
 
         /// <summary>
         /// Merges existing FieldsObject and children FieldObject entities into the form of the pdf document
@@ -426,4 +429,5 @@ namespace iText.Forms.Xfdf {
             }
         }
     }
+//\endcond
 }

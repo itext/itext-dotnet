@@ -71,6 +71,7 @@ namespace iText.Commons.Actions.Processors {
                 : base("test product") {
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override long AcquireRepeatLevel(int lvl) {
                 switch (lvl) {
                     case 0: {
@@ -87,6 +88,7 @@ namespace iText.Commons.Actions.Processors {
                 }
                 return 0;
             }
+//\endcond
         }
     }
 }

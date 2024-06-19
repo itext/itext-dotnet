@@ -28,32 +28,50 @@ namespace iText.IO.Codec {
     /// buffer of data to be compressed.
     /// </summary>
     public class LZWCompressor {
+//\cond DO_NOT_DOCUMENT
         /// <summary>base underlying code size of data being compressed 8 for TIFF, 1 to 8 for GIF</summary>
         internal int codeSize_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>reserved clear code based on code size</summary>
         internal int clearCode_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>reserved end of data code based on code size</summary>
         internal int endOfInfo_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>current number bits output for each code</summary>
         internal int numBits_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>limit at which current number of bits code size has to be increased</summary>
         internal int limit_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>the prefix code which represents the predecessor string to current input point</summary>
         internal short prefix_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>output destination for bit codes</summary>
         internal BitFile bf_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>general purpose LZW string table</summary>
         internal LZWStringTable lzss_;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>modify the limits of the code values in LZW encoding due to TIFF bug / feature</summary>
         internal bool tiffFudge_;
+//\endcond
 
         /// <param name="outputStream">destination for compressed data</param>
         /// <param name="codeSize">the initial code size for the LZW compressor</param>

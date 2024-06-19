@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Commons.Actions.Processors;
 
 namespace iText.Commons.Actions {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Helper class which allow to change used product processor factory instance.</summary>
     internal sealed class ProductProcessorFactoryKeeper {
         private static readonly IProductProcessorFactory DEFAULT_FACTORY = new DefaultProductProcessorFactory();
@@ -32,22 +33,29 @@ namespace iText.Commons.Actions {
         private ProductProcessorFactoryKeeper() {
         }
 
+//\cond DO_NOT_DOCUMENT
         // do nothing
         /// <summary>Sets product processor factory instance.</summary>
         /// <param name="productProcessorFactory">the instance to be set</param>
         internal static void SetProductProcessorFactory(IProductProcessorFactory productProcessorFactory) {
             iText.Commons.Actions.ProductProcessorFactoryKeeper.productProcessorFactory = productProcessorFactory;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Restores default factory.</summary>
         internal static void RestoreDefaultProductProcessorFactory() {
             iText.Commons.Actions.ProductProcessorFactoryKeeper.productProcessorFactory = DEFAULT_FACTORY;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets reporting product processor factory instance.</summary>
         /// <returns>the product processor factory instance</returns>
         internal static IProductProcessorFactory GetProductProcessorFactory() {
             return productProcessorFactory;
         }
+//\endcond
     }
+//\endcond
 }

@@ -87,6 +87,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return tailNode;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             bool prettyPrint = @out.PrettyPrint();
             if (prettyPrint && ((SiblingIndex() == 0 && parentNode is iText.StyledXmlParser.Jsoup.Nodes.Element && ((iText.StyledXmlParser.Jsoup.Nodes.Element
@@ -99,9 +100,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             bool stripWhite = prettyPrint && parentNode is Document;
             Entities.Escape(accum, CoreValue(), @out, false, normaliseWhite, stripWhite);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
         }
+//\endcond
 
         public override String ToString() {
             return OuterHtml();
@@ -119,17 +123,23 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return new iText.StyledXmlParser.Jsoup.Nodes.TextNode(text);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static String NormaliseWhitespace(String text) {
             text = iText.StyledXmlParser.Jsoup.Internal.StringUtil.NormaliseWhitespace(text);
             return text;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static String StripLeadingWhitespace(String text) {
             return text.ReplaceFirst("^\\s+", "");
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool LastCharIsWhitespace(StringBuilder sb) {
             return sb.Length != 0 && sb[sb.Length - 1] == ' ';
         }
+//\endcond
     }
 }

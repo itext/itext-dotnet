@@ -143,13 +143,21 @@ namespace iText.Layout {
         }
 
         private class ImageProperties {
+//\cond DO_NOT_DOCUMENT
             internal FloatPropertyValue? floatPropertyValue;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ClearPropertyValue? clearPropertyValue;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal HorizontalAlignment? horizontalAlignment;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal UnitValue width;
+//\endcond
 
             public ImageProperties(FloatPropertyValue? floatPropertyValue, ClearPropertyValue? clearPropertyValue, HorizontalAlignment?
                  horizontalAlignment, UnitValue width) {

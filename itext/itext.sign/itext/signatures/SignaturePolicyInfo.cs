@@ -113,6 +113,7 @@ namespace iText.Signatures {
             return policyUri;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual ISignaturePolicyIdentifier ToSignaturePolicyIdentifier() {
             String algId = DigestAlgorithms.GetAllowedDigest(this.policyDigestAlgorithm);
             if (algId == null || String.IsNullOrEmpty(algId)) {
@@ -131,5 +132,6 @@ namespace iText.Signatures {
                 );
             return FACTORY.CreateSignaturePolicyIdentifier(signaturePolicyId);
         }
+//\endcond
     }
 }

@@ -24,7 +24,9 @@ using System;
 using iText.IO.Font.Constants;
 
 namespace iText.Layout.Font {
+//\cond DO_NOT_DOCUMENT
     internal sealed class FontCharacteristicsUtils {
+//\cond DO_NOT_DOCUMENT
         internal static short NormalizeFontWeight(short fw) {
             fw = (short)((fw / 100) * 100);
             if (fw < FontWeights.THIN) {
@@ -35,7 +37,9 @@ namespace iText.Layout.Font {
             }
             return fw;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static short ParseFontWeight(String fw) {
             if (fw == null || fw.Length == 0) {
                 return -1;
@@ -61,5 +65,7 @@ namespace iText.Layout.Font {
                 }
             }
         }
+//\endcond
     }
+//\endcond
 }

@@ -415,7 +415,9 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private class TestIssuingCertificateRetriever : IssuingCertificateRetriever {
+//\cond DO_NOT_DOCUMENT
             internal IX509Certificate issuerCertificate;
+//\endcond
 
             public TestIssuingCertificateRetriever(String issuerPath)
                 : base() {

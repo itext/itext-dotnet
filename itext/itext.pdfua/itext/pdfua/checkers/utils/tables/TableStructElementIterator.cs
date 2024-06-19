@@ -31,7 +31,9 @@ using iText.Pdfua.Checkers.Utils;
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Creates an iterator to iterate over the table structures.</summary>
     public class TableStructElementIterator : ITableIterator<PdfStructElem> {
+//\cond DO_NOT_DOCUMENT
         internal readonly PdfUAValidationContext context;
+//\endcond
 
         private readonly IList<PdfStructElem> all = new List<PdfStructElem>();
 

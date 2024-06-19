@@ -1216,6 +1216,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(strat.GetResultantText().Contains("TEXT TO STAMP"));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void VerifyPdfPagesCount(PdfObject root) {
             if (root.GetObjectType() == PdfObject.INDIRECT_REFERENCE) {
                 root = ((PdfIndirectReference)root).GetRefersTo();
@@ -1238,7 +1239,9 @@ namespace iText.Kernel.Pdf {
                 VerifyPdfPagesCount(kids);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class WatermarkEventHandler : iText.Kernel.Events.IEventHandler {
             public virtual void HandleEvent(Event @event) {
                 PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
@@ -1251,5 +1254,6 @@ namespace iText.Kernel.Pdf {
                 }
             }
         }
+//\endcond
     }
 }

@@ -79,8 +79,10 @@ namespace iText.Kernel.Crypto.Pdfencryption {
 
         private IPrivateKey privateKey;
 
+//\cond DO_NOT_DOCUMENT
         internal PdfEncryptionTestUtils encryptionUtil = new PdfEncryptionTestUtils(destinationFolder, sourceFolder
             );
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

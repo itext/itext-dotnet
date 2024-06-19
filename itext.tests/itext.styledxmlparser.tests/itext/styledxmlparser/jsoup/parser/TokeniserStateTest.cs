@@ -30,9 +30,13 @@ using iText.Test;
 namespace iText.StyledXmlParser.Jsoup.Parser {
     [NUnit.Framework.Category("UnitTest")]
     public class TokeniserStateTest : ExtendedITextTest {
+//\cond DO_NOT_DOCUMENT
         internal readonly char[] whiteSpace = new char[] { '\t', '\n', '\r', '\f', ' ' };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal readonly char[] quote = new char[] { '\'', '"' };
+//\endcond
 
         [NUnit.Framework.Test]
         public virtual void EnsureSearchArraysAreSorted() {

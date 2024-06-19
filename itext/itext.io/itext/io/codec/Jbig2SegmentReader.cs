@@ -267,6 +267,7 @@ namespace iText.IO.Codec {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s) {
             int ptr = (int)ra.GetPosition();
             //TODO DEVSIX-6406 7.2.7 not supported
@@ -291,7 +292,9 @@ namespace iText.IO.Codec {
                 p.pageBitmapHeight = page_bitmap_height;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Jbig2SegmentReader.Jbig2Segment ReadHeader() {
             int ptr = (int)ra.GetPosition();
             // 7.2.1
@@ -397,7 +400,9 @@ namespace iText.IO.Codec {
             s.headerData = header_data;
             return s;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ReadFileHeader() {
             ra.Seek(0);
             byte[] idstring = new byte[8];
@@ -419,6 +424,7 @@ namespace iText.IO.Codec {
                 this.number_of_pages = ra.ReadInt();
             }
         }
+//\endcond
 
         public virtual int NumberOfPages() {
             return pages.Count;

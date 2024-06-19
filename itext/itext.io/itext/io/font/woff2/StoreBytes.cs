@@ -14,6 +14,7 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // Helper functions for storing integer values into byte streams.
     // No bounds checking is performed, that is the responsibility of the caller.
     internal class StoreBytes {
@@ -31,4 +32,5 @@ namespace iText.IO.Font.Woff2 {
             return offset + 2;
         }
     }
+//\endcond
 }

@@ -29,17 +29,29 @@ namespace iText.Commons.Actions.Data {
     /// related to iText commons module.
     /// </summary>
     public sealed class CommonsProductData {
+//\cond DO_NOT_DOCUMENT
         internal const String COMMONS_PUBLIC_PRODUCT_NAME = "Commons";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String COMMONS_PRODUCT_NAME = "commons";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String COMMONS_VERSION = "8.0.5-SNAPSHOT";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String MINIMAL_COMPATIBLE_LICENSEKEY_VERSION = "4.1.0";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int COMMONS_COPYRIGHT_SINCE = 2000;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int COMMONS_COPYRIGHT_TO = 2024;
+//\endcond
 
         private static readonly ProductData COMMONS_PRODUCT_DATA = new ProductData(COMMONS_PUBLIC_PRODUCT_NAME, COMMONS_PRODUCT_NAME
             , COMMONS_VERSION, MINIMAL_COMPATIBLE_LICENSEKEY_VERSION, COMMONS_COPYRIGHT_SINCE, COMMONS_COPYRIGHT_TO

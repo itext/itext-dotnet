@@ -135,8 +135,11 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class TwoColumnParagraphRenderer : ParagraphRenderer {
+//\cond DO_NOT_DOCUMENT
             internal int oneColumnPage = -1;
+//\endcond
 
             public TwoColumnParagraphRenderer(Paragraph modelElement)
                 : base(modelElement) {
@@ -168,5 +171,6 @@ namespace iText.Layout {
                 return new PreLayoutTest.TwoColumnParagraphRenderer((Paragraph)modelElement, oneColumnPage);
             }
         }
+//\endcond
     }
 }

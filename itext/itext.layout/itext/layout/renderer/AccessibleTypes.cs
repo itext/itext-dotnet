@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// This class is used to identify standard structure role type based only on it's name for the sake of applying
     /// standard structure attributes.
@@ -55,23 +56,41 @@ namespace iText.Layout.Renderer {
     /// practical examples of utilizing standard structure attributes.
     /// </remarks>
     internal class AccessibleTypes {
+//\cond DO_NOT_DOCUMENT
         internal static int Unknown = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static int Grouping = 1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static int BlockLevel = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static int InlineLevel = 3;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static int Illustration = 4;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static ICollection<String> groupingRoles = new HashSet<String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static ICollection<String> blockLevelRoles = new HashSet<String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static ICollection<String> inlineLevelRoles = new HashSet<String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static ICollection<String> illustrationRoles = new HashSet<String>();
+//\endcond
 
         static AccessibleTypes() {
             // Some tag roles are not in any of the sets that define types. Some - because we don't want to write any accessibility
@@ -138,6 +157,7 @@ namespace iText.Layout.Renderer {
             illustrationRoles.Add(StandardRoles.FORM);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Identifies standard structure role type based only on it's name.</summary>
         /// <remarks>
         /// Identifies standard structure role type based only on it's name. The return types might be one of the constants:
@@ -183,5 +203,7 @@ namespace iText.Layout.Renderer {
             }
             return Unknown;
         }
+//\endcond
     }
+//\endcond
 }

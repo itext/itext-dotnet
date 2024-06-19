@@ -38,85 +38,159 @@ namespace iText.Signatures.Validation.V1 {
     /// <summary>Validator, which is responsible for document revisions validation according to doc-MDP and field-MDP rules.
     ///     </summary>
     public class DocumentRevisionsValidator {
+//\cond DO_NOT_DOCUMENT
         internal const String DOC_MDP_CHECK = "DocMDP check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String FIELD_MDP_CHECK = "FieldMDP check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ACCESS_PERMISSIONS_ADDED = "Access permissions level specified for \"{0}\" approval signature "
              + "is higher than previous one specified. These access permissions will be ignored.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ACROFORM_REMOVED = "AcroForm dictionary was removed from catalog.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ANNOTATIONS_MODIFIED = "Field annotations were removed, added or unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String DEVELOPER_EXTENSION_REMOVED = "Developer extension \"{0}\" dictionary was removed or unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String DIRECT_OBJECT = "{0} must be an indirect reference.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String DOCUMENT_WITHOUT_SIGNATURES = "Document doesn't contain any signatures.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String DSS_REMOVED = "DSS dictionary was removed from catalog.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EXTENSIONS_REMOVED = "Extensions dictionary was removed from the catalog.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EXTENSIONS_TYPE = "Developer extensions must be a dictionary.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EXTENSION_LEVEL_DECREASED = "Extension level number in developer extension \"{0}\" dictionary was decreased.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String FIELD_NOT_DICTIONARY = "Form field \"{0}\" or one of its widgets is not a dictionary. It will not be validated.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String FIELD_REMOVED = "Form field {0} was removed or unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_KIDS_REMOVED = "Kids were removed from locked form field \"{0}\" .";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_MODIFIED = "Locked form field \"{0}\" or one of its widgets was modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_REMOVED = "Locked form field \"{0}\" was removed from the document.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String NOT_ALLOWED_ACROFORM_CHANGES = "PDF document AcroForm contains changes other than " 
             + "document timestamp (docMDP level >= 1), form fill-in and digital signatures (docMDP level >= 2), " 
             + "adding or editing annotations (docMDP level 3), which are not allowed.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String NOT_ALLOWED_CATALOG_CHANGES = "PDF document catalog contains changes other than " + 
             "DSS dictionary and DTS addition (docMDP level >= 1), " + "form fill-in and digital signatures (docMDP level >= 2), "
              + "adding or editing annotations (docMDP level 3).";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String OBJECT_REMOVED = "Object \"{0}\", which is not allowed to be removed, was removed from the document through XREF table.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String PAGES_MODIFIED = "Pages structure was unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String PAGE_ANNOTATIONS_MODIFIED = "Page annotations were unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String PAGE_MODIFIED = "Page was unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String PERMISSIONS_REMOVED = "Permissions dictionary was removed from the catalog.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String PERMISSIONS_TYPE = "Permissions must be a dictionary.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String PERMISSION_REMOVED = "Permission \"{0}\" dictionary was removed or unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String REFERENCE_REMOVED = "Signature reference dictionary was removed or unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String REVISIONS_READING_EXCEPTION = "IOException occurred during document revisions reading.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String SIGNATURE_MODIFIED = "Signature {0} was unexpectedly modified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String SIGNATURE_REVISION_NOT_FOUND = "Not possible to identify document revision corresponding to the first signature in the document.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String TOO_MANY_CERTIFICATION_SIGNATURES = "Document contains more than one certification signature.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String UNEXPECTED_ENTRY_IN_XREF = "New PDF document revision contains unexpected entry \"{0}\" in XREF table.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String UNEXPECTED_FORM_FIELD = "New PDF document revision contains unexpected form field \"{0}\".";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String UNKNOWN_ACCESS_PERMISSIONS = "Access permissions level number specified for \"{0}\" signature "
              + "is undefined. Default level 2 will be used instead.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String UNRECOGNIZED_ACTION = "Signature field lock dictionary contains unrecognized " + "\"Action\" value \"{0}\". \"All\" will be used instead.";
+//\endcond
 
         private readonly ICollection<String> lockedFields = new HashSet<String>();
 
@@ -285,6 +359,7 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
             , PdfDocument document, ValidationReport validationReport, ValidationContext context) {
             try {
@@ -343,7 +418,9 @@ namespace iText.Signatures.Validation.V1 {
                     .INDETERMINATE));
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //
         //
         // Revisions validation util section:
@@ -352,6 +429,7 @@ namespace iText.Signatures.Validation.V1 {
         internal virtual AccessPermissions GetAccessPermissions() {
             return requestedAccessPermissions == AccessPermissions.UNSPECIFIED ? accessPermissions : requestedAccessPermissions;
         }
+//\endcond
 
         private static Stream CreateInputStreamFromRevision(PdfDocument originalDocument, DocumentRevision revision
             ) {

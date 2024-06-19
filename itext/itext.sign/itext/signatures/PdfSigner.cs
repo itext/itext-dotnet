@@ -210,6 +210,7 @@ namespace iText.Signatures {
             appearance.SetSignDate(signDate);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal PdfSigner(PdfDocument document, Stream outputStream, MemoryStream temporaryOS, FileInfo tempFile) {
             if (tempFile == null) {
                 this.temporaryOS = temporaryOS;
@@ -224,6 +225,7 @@ namespace iText.Signatures {
             this.appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
             this.appearance.SetSignDate(this.signDate);
         }
+//\endcond
 
         /// <summary>
         /// Initialize new
@@ -1434,6 +1436,7 @@ namespace iText.Signatures {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfSignature CreateSignatureDictionary(bool includeDate) {
             PdfSignature dic = new PdfSignature();
             dic.SetReason(GetReason());
@@ -1446,6 +1449,7 @@ namespace iText.Signatures {
             // time-stamp will over-rule this
             return dic;
         }
+//\endcond
 
         private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {
             SignatureFieldAppearance formFieldElement = appearance.GetSignatureAppearance();
@@ -1480,6 +1484,7 @@ namespace iText.Signatures {
             void GetSignatureDictionary(PdfSignature sig);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class SignatureApplier {
             private readonly PdfDocument document;
 
@@ -1539,6 +1544,7 @@ namespace iText.Signatures {
                 return new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
             }
         }
+//\endcond
 
         internal delegate byte[] ISignatureDataProvider(PdfSigner.SignatureApplier applier);
     }

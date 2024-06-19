@@ -48,8 +48,10 @@ namespace iText.Commons.Actions.Contexts {
             INSTANCE = local;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal ContextManager() {
         }
+//\endcond
 
         /// <summary>Gets the singleton instance of this class.</summary>
         /// <returns>
@@ -95,6 +97,7 @@ namespace iText.Commons.Actions.Contexts {
             return GetNamespaceMapping(GetRecognisedNamespace(className));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String GetRecognisedNamespace(String className) {
             if (className != null) {
                 String normalizedClassName = Normalize(className);
@@ -109,12 +112,15 @@ namespace iText.Commons.Actions.Contexts {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void UnregisterContext(ICollection<String> namespaces) {
             foreach (String @namespace in namespaces) {
                 contextMappings.JRemove(Normalize(@namespace));
             }
         }
+//\endcond
 
         private IContext GetNamespaceMapping(String @namespace) {
             if (@namespace != null) {
@@ -123,12 +129,14 @@ namespace iText.Commons.Actions.Contexts {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void RegisterGenericContext(ICollection<String> namespaces, ICollection<String> products) {
             GenericContext context = new GenericContext(products);
             foreach (String @namespace in namespaces) {
                 contextMappings.Put(Normalize(@namespace), context);
             }
         }
+//\endcond
 
         private static String Normalize(String @namespace) {
             // Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces

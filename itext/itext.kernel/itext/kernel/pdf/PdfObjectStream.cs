@@ -25,6 +25,7 @@ using iText.IO.Source;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class PdfObjectStream : PdfStream {
         /// <summary>Max number of objects in object stream.</summary>
         public const int MAX_OBJ_STREAM_SIZE = 200;
@@ -40,6 +41,7 @@ namespace iText.Kernel.Pdf {
             indexStream = new PdfOutputStream(new ByteArrayOutputStream());
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.</summary>
         /// <remarks>
         /// This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.
@@ -53,6 +55,7 @@ namespace iText.Kernel.Pdf {
             ((ByteArrayOutputStream)indexStream.GetOutputStream()).JReset();
             prev.ReleaseContent(true);
         }
+//\endcond
 
         private PdfObjectStream(PdfDocument doc, Stream outputStream)
             : base(outputStream) {
@@ -103,4 +106,5 @@ namespace iText.Kernel.Pdf {
             }
         }
     }
+//\endcond
 }

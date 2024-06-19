@@ -14,6 +14,7 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Output interface for the woff2 decoding.</summary>
     /// <remarks>
     /// Output interface for the woff2 decoding.
@@ -33,4 +34,5 @@ namespace iText.IO.Font.Woff2 {
 
         int Size();
     }
+//\endcond
 }

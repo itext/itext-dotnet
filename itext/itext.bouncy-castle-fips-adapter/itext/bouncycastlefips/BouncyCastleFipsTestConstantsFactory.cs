@@ -24,13 +24,17 @@ using System;
 using iText.Commons.Bouncycastle;
 
 namespace iText.Bouncycastlefips {
+//\cond DO_NOT_DOCUMENT
     internal class BouncyCastleFipsTestConstantsFactory : IBouncyCastleTestConstantsFactory {
+//\cond DO_NOT_DOCUMENT
         internal BouncyCastleFipsTestConstantsFactory() {
         }
+//\endcond
 
         // Empty constructor.
         public virtual String GetCertificateInfoTestConst() {
             return "DEF length 8 object truncated by 4";
         }
     }
+//\endcond
 }

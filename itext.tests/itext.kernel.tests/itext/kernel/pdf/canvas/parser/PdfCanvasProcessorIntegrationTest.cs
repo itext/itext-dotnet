@@ -209,6 +209,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 }
             }
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Get the last encountered PathRenderInfo, then clears the internal buffer</summary>
             /// <returns>the PathRenderInfo object that was encountered when processing the last path rendering operation</returns>
             internal virtual PathRenderInfo GetEncounteredPath() {
@@ -222,6 +223,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 content.Clear();
                 return (PathRenderInfo)eventData;
             }
+//\endcond
 
             public virtual ICollection<EventType> GetSupportedEvents() {
                 return null;
@@ -240,8 +242,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class RecordFirstImageEventListener : IEventListener {
             private ImageRenderInfo imageRenderInfo = null;
 
+//\cond DO_NOT_DOCUMENT
             internal RecordFirstImageEventListener() {
             }
+//\endcond
 
             public virtual void EventOccurred(IEventData data, EventType type) {
                 switch (type) {
@@ -268,9 +272,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
             private StringBuilder sb;
 
+//\cond DO_NOT_DOCUMENT
             internal RecordEveryHighLevelEventListener(StringBuilder outStream) {
                 this.sb = outStream;
             }
+//\endcond
 
             public virtual void EventOccurred(IEventData data, EventType type) {
                 switch (type) {
@@ -330,9 +336,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class RecordEveryTextRenderEvent : IEventListener {
             private IDictionary<String, Object> map;
 
+//\cond DO_NOT_DOCUMENT
             internal RecordEveryTextRenderEvent(IDictionary<String, Object> map) {
                 this.map = map;
             }
+//\endcond
 
             public virtual void EventOccurred(IEventData data, EventType type) {
                 if (data is TextRenderInfo) {

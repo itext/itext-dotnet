@@ -593,14 +593,18 @@ namespace iText.Layout.Font {
             return fonts.Count;
         }
 
+//\cond DO_NOT_DOCUMENT
         //region Internal members
         internal long GetId() {
             return id;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal FontProgram GetFontProgram(FontInfo fontInfo) {
             return fontPrograms.Get(fontInfo);
         }
+//\endcond
         //endregion
     }
 }

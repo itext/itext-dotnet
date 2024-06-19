@@ -52,8 +52,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         private WeakReference shadowChildrenRef;
 
+//\cond DO_NOT_DOCUMENT
         // points to child elements shadowed from node children
         internal IList<iText.StyledXmlParser.Jsoup.Nodes.Node> childNodes;
+//\endcond
 
         private iText.StyledXmlParser.Jsoup.Nodes.Attributes attributes;
 
@@ -354,6 +356,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return new Elements(ChildElementsList());
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Maintains a shadow copy of this element's child elements.</summary>
         /// <remarks>Maintains a shadow copy of this element's child elements. If the nodelist is changed, this cache is invalidated.
         ///     </remarks>
@@ -379,12 +382,15 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
             return children;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Clears the cached shadow child elements.</summary>
         internal override void NodelistChanged() {
             base.NodelistChanged();
             shadowChildrenRef = null;
         }
+//\endcond
 
         /// <summary>Get this element's child text nodes.</summary>
         /// <remarks>
@@ -1505,6 +1511,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool PreserveWhitespace(iText.StyledXmlParser.Jsoup.Nodes.Node node) {
             // looks only at this element and five levels up, to prevent recursion & needless stack searches
             if (node is iText.StyledXmlParser.Jsoup.Nodes.Element) {
@@ -1521,6 +1528,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
             return false;
         }
+//\endcond
 
         /// <summary>Set the text of this element.</summary>
         /// <remarks>
@@ -1792,6 +1800,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             if (@out.PrettyPrint() && IsFormatAsBlock(@out) && !IsInlineable(@out)) {
                 if (accum is StringBuilder) {
@@ -1821,7 +1830,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 accum.Append('>');
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
             if (!(childNodes.IsEmpty() && tag.IsSelfClosing())) {
                 if (@out.PrettyPrint() && (!childNodes.IsEmpty() && (tag.FormatAsBlock() || (@out.Outline() && (childNodes
@@ -1831,6 +1842,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                 accum.Append("</").Append(TagName()).Append('>');
             }
         }
+//\endcond
 
         /// <summary>Retrieves the element's inner HTML.</summary>
         /// <remarks>
@@ -1925,10 +1937,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private sealed class NodeList : ChangeNotifyingArrayList<iText.StyledXmlParser.Jsoup.Nodes.Node> {
             private readonly iText.StyledXmlParser.Jsoup.Nodes.Element owner;
 
+//\cond DO_NOT_DOCUMENT
             internal NodeList(iText.StyledXmlParser.Jsoup.Nodes.Element owner, int initialCapacity)
                 : base(initialCapacity) {
                 this.owner = owner;
             }
+//\endcond
 
             public override void OnContentsChanged() {
                 owner.NodelistChanged();
@@ -1949,9 +1963,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private sealed class TextNodeVisitor : NodeVisitor {
             private StringBuilder accum;
 
+//\cond DO_NOT_DOCUMENT
             internal TextNodeVisitor(StringBuilder accum) {
                 this.accum = accum;
             }
+//\endcond
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
                 if (node is TextNode) {
@@ -1984,9 +2000,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         private sealed class WholeTextNodeVisitor : NodeVisitor {
             private StringBuilder accum;
 
+//\cond DO_NOT_DOCUMENT
             internal WholeTextNodeVisitor(StringBuilder accum) {
                 this.accum = accum;
             }
+//\endcond
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
                 if (node is TextNode) {

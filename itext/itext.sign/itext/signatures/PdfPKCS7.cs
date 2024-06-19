@@ -1206,8 +1206,10 @@ namespace iText.Signatures {
 
         private ICollection<IX509Certificate> timestampCerts;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>All the X.509 certificates used for the main signature.</summary>
         internal ICollection<IX509Certificate> signCerts;
+//\endcond
 
         /// <summary>The X.509 certificate that is used to sign the digest.</summary>
         private IX509Certificate signCert;
@@ -1301,6 +1303,7 @@ namespace iText.Signatures {
             return signedDataCrls;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Helper method that tries to construct the CRLs.</summary>
         internal virtual void FindCRL(IAsn1Sequence seq) {
             try {
@@ -1315,11 +1318,14 @@ namespace iText.Signatures {
             catch (Exception) {
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // ignore
         // Online Certificate Status Protocol
         /// <summary>BouncyCastle IBasicOCSPResponse</summary>
         internal IBasicOcspResponse basicResp;
+//\endcond
 
         private readonly ICollection<IBasicOcspResponse> signedDataOcsps = new List<IBasicOcspResponse>();
 

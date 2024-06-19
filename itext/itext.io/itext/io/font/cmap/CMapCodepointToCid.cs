@@ -43,6 +43,7 @@ namespace iText.IO.Font.Cmap {
             map = reverseMap.GetReversMap();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
                 byte[] ser = DecodeStringToByte(mark);
@@ -54,6 +55,7 @@ namespace iText.IO.Font.Cmap {
                 map.Put(byteCode, (int)code.GetValue());
             }
         }
+//\endcond
 
         public virtual int Lookup(int codepoint) {
             return this.map.Get(codepoint);

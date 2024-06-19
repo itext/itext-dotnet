@@ -17,6 +17,7 @@ using System;
 using iText.IO.Exceptions;
 
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Fixed memory block for woff2 out.</summary>
     internal class Woff2MemoryOut : Woff2Out {
         private byte[] buf_;
@@ -47,4 +48,5 @@ namespace iText.IO.Font.Woff2 {
             return offset_;
         }
     }
+//\endcond
 }

@@ -158,6 +158,7 @@ namespace iText.Signatures {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets an OCSP response object using BouncyCastle.</summary>
         /// <param name="checkCert">to certificate to check</param>
         /// <param name="rootCert">the parent certificate</param>
@@ -184,6 +185,7 @@ namespace iText.Signatures {
             Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
             return @in == null ? null : BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
         }
+//\endcond
 
         /// <summary>
         /// Create OCSP request and get the response for this request, represented as

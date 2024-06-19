@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
+//\cond DO_NOT_DOCUMENT
     internal class BorderStyleUtil {
         private BorderStyleUtil() {
         }
@@ -87,4 +88,5 @@ namespace iText.Kernel.Pdf.Annot {
             return bs;
         }
     }
+//\endcond
 }

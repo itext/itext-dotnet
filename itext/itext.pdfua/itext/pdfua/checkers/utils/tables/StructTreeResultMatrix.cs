@@ -27,6 +27,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
+//\cond DO_NOT_DOCUMENT
     /// <summary>The result matrix to validate PDF UA1 tables based on the TagTreeStructure of the document.</summary>
     internal class StructTreeResultMatrix : AbstractResultMatrix<PdfStructElem> {
         /// <summary>
@@ -40,6 +41,7 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             : base(new TableStructElementIterator(elem, context)) {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override IList<byte[]> GetHeaders(PdfStructElem cell) {
             PdfObject @object = cell.GetAttributes(false);
@@ -67,7 +69,9 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             }
             return list;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override String GetScope(PdfStructElem cell) {
             PdfObject @object = cell.GetAttributes(false);
@@ -92,7 +96,9 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override byte[] GetElementId(PdfStructElem cell) {
             if (cell == null) {
@@ -103,10 +109,14 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             }
             return cell.GetStructureElementId().GetValueBytes();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override String GetRole(PdfStructElem cell) {
             return ((TableStructElementIterator)iterator).context.ResolveToStandardRole(cell);
         }
+//\endcond
     }
+//\endcond
 }

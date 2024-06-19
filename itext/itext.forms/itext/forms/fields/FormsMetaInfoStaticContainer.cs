@@ -53,6 +53,7 @@ namespace iText.Forms.Fields {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets meta info which was set previously.</summary>
         /// <remarks>
         /// Gets meta info which was set previously.
@@ -63,5 +64,6 @@ namespace iText.Forms.Fields {
         internal static MetaInfoContainer GetMetaInfoForLayout() {
             return metaInfoForLayout.Value;
         }
+//\endcond
     }
 }

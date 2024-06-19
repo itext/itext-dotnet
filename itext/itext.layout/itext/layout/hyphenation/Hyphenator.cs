@@ -46,11 +46,17 @@ namespace iText.Layout.Hyphenation {
 
         protected internal String country;
 
+//\cond DO_NOT_DOCUMENT
         internal int leftMin;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int rightMin;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal IDictionary<String, String> hyphPathNames;
+//\endcond
 
         /// <summary>Creates a new hyphenator.</summary>
         /// <param name="lang">the language</param>

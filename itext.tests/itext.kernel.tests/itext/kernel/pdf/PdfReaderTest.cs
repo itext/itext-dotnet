@@ -44,14 +44,22 @@ namespace iText.Kernel.Pdf {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfReaderTest/";
 
+//\cond DO_NOT_DOCUMENT
         internal const String author = "Alexander Chingarev";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String creator = "iText 6";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String title = "Empty iText 6 Document";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly byte[] USER_PASSWORD = "Hello".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
             );
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

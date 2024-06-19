@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils {
+//\cond DO_NOT_DOCUMENT
     /// <summary>PdfWriter implementation which allows to create documents in memory and dump them on disk on purpose.
     ///     </summary>
     /// <remarks>
@@ -44,9 +45,11 @@ namespace iText.Kernel.Utils {
 
         private MemoryStream outStream;
 
+//\cond DO_NOT_DOCUMENT
         internal MemoryFirstPdfWriter(String filename, WriterProperties properties)
             : this(filename, iText.Kernel.Utils.MemoryFirstPdfWriter.CreateBAOutputStream(), properties) {
         }
+//\endcond
 
         private MemoryFirstPdfWriter(String filename, MemoryStream outputStream, WriterProperties properties)
             : base(outputStream, properties) {
@@ -60,10 +63,13 @@ namespace iText.Kernel.Utils {
             iText.Kernel.Utils.MemoryFirstPdfWriter.waitingStreams.Put(filename, this);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static iText.Kernel.Utils.MemoryFirstPdfWriter Get(String filename) {
             return iText.Kernel.Utils.MemoryFirstPdfWriter.waitingStreams.Get(filename);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void Cleanup(String path) {
             if (path == null) {
                 throw new ArgumentException("Provided path is null");
@@ -74,19 +80,25 @@ namespace iText.Kernel.Utils {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Dump() {
             Stream fos = FileUtil.GetFileOutputStream(filePath);
             outStream.WriteTo(fos);
             fos.Dispose();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual MemoryStream GetBAOutputStream() {
             return outStream;
         }
+//\endcond
 
         private static MemoryStream CreateBAOutputStream() {
             return new MemoryStream();
         }
     }
+//\endcond
 }

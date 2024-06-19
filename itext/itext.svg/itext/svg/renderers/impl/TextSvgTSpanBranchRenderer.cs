@@ -93,6 +93,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         // This method is used to follow q/Q store/restore approach. If some graphics characteristics
         // have been updated while processing this renderer's children, they are restored.
         internal virtual void ApplyGSDifference(PdfCanvas currentCanvas, CanvasGraphicsState savedGs) {
@@ -124,6 +125,7 @@ namespace iText.Svg.Renderers.Impl {
                 currentCanvas.SetExtGState(extGState);
             }
         }
+//\endcond
 
         private static bool FloatsAreEqual(float first, float second) {
             return Math.Abs(first - second) < EPS;

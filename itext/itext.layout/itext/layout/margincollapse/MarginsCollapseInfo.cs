@@ -46,6 +46,7 @@ namespace iText.Layout.Margincollapse {
 
         private bool clearanceApplied;
 
+//\cond DO_NOT_DOCUMENT
         internal MarginsCollapseInfo() {
             this.ignoreOwnMarginTop = false;
             this.ignoreOwnMarginBottom = false;
@@ -58,7 +59,9 @@ namespace iText.Layout.Margincollapse {
             this.usedBufferSpaceOnBottom = 0;
             this.clearanceApplied = false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal MarginsCollapseInfo(bool ignoreOwnMarginTop, bool ignoreOwnMarginBottom, MarginsCollapse collapseBefore
             , MarginsCollapse collapseAfter) {
             this.ignoreOwnMarginTop = ignoreOwnMarginTop;
@@ -72,6 +75,7 @@ namespace iText.Layout.Margincollapse {
             this.usedBufferSpaceOnBottom = 0;
             this.clearanceApplied = false;
         }
+//\endcond
 
         public virtual void CopyTo(iText.Layout.Margincollapse.MarginsCollapseInfo destInfo) {
             destInfo.ignoreOwnMarginTop = this.ignoreOwnMarginTop;
@@ -120,80 +124,118 @@ namespace iText.Layout.Margincollapse {
             originalInstance.SetClearanceApplied(processedCopy.clearanceApplied);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual MarginsCollapse GetCollapseBefore() {
             return this.collapseBefore;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual MarginsCollapse GetCollapseAfter() {
             return collapseAfter;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetCollapseAfter(MarginsCollapse collapseAfter) {
             this.collapseAfter = collapseAfter;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual MarginsCollapse GetOwnCollapseAfter() {
             return ownCollapseAfter;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetOwnCollapseAfter(MarginsCollapse marginsCollapse) {
             this.ownCollapseAfter = marginsCollapse;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetSelfCollapsing(bool selfCollapsing) {
             isSelfCollapsing = selfCollapsing;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsSelfCollapsing() {
             return isSelfCollapsing;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsIgnoreOwnMarginTop() {
             return ignoreOwnMarginTop;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsIgnoreOwnMarginBottom() {
             return ignoreOwnMarginBottom;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetBufferSpaceOnTop() {
             return bufferSpaceOnTop;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetBufferSpaceOnTop(float bufferSpaceOnTop) {
             this.bufferSpaceOnTop = bufferSpaceOnTop;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetBufferSpaceOnBottom() {
             return bufferSpaceOnBottom;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetBufferSpaceOnBottom(float bufferSpaceOnBottom) {
             this.bufferSpaceOnBottom = bufferSpaceOnBottom;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetUsedBufferSpaceOnTop() {
             return usedBufferSpaceOnTop;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetUsedBufferSpaceOnTop(float usedBufferSpaceOnTop) {
             this.usedBufferSpaceOnTop = usedBufferSpaceOnTop;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetUsedBufferSpaceOnBottom() {
             return usedBufferSpaceOnBottom;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetUsedBufferSpaceOnBottom(float usedBufferSpaceOnBottom) {
             this.usedBufferSpaceOnBottom = usedBufferSpaceOnBottom;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsClearanceApplied() {
             return clearanceApplied;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetClearanceApplied(bool clearanceApplied) {
             this.clearanceApplied = clearanceApplied;
         }
+//\endcond
     }
 }

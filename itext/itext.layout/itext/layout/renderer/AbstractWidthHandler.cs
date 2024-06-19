@@ -24,7 +24,9 @@ using iText.Layout.Minmaxwidth;
 
 namespace iText.Layout.Renderer {
     public abstract class AbstractWidthHandler {
+//\cond DO_NOT_DOCUMENT
         internal MinMaxWidth minMaxWidth;
+//\endcond
 
         public AbstractWidthHandler(MinMaxWidth minMaxWidth) {
             this.minMaxWidth = minMaxWidth;

@@ -39,11 +39,17 @@ namespace iText.Layout {
 
         public const String cmpPrefix = "cmp_";
 
+//\cond DO_NOT_DOCUMENT
         internal String fileName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal String outFileName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal String cmpFileName;
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

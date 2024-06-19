@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace iText.Layout.Font {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Key for
     /// <see cref="FontSelector"/>
@@ -36,10 +37,12 @@ namespace iText.Layout.Font {
 
         private FontCharacteristics fc;
 
+//\cond DO_NOT_DOCUMENT
         internal FontSelectorKey(IList<String> fontFamilies, FontCharacteristics fc) {
             this.fontFamilies = new List<String>(fontFamilies);
             this.fc = fc;
         }
+//\endcond
 
         public override bool Equals(Object o) {
             if (this == o) {
@@ -59,4 +62,5 @@ namespace iText.Layout.Font {
             return result;
         }
     }
+//\endcond
 }

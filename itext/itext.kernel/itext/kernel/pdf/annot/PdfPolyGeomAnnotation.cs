@@ -28,10 +28,12 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
     public abstract class PdfPolyGeomAnnotation : PdfMarkupAnnotation {
+//\cond DO_NOT_DOCUMENT
         internal PdfPolyGeomAnnotation(Rectangle rect, float[] vertices)
             : base(rect) {
             SetVertices(vertices);
         }
+//\endcond
 
         /// <summary>
         /// Instantiates a new

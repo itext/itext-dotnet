@@ -110,6 +110,7 @@ namespace iText.IO.Codec {
 
         private readonly Object Lock = new Object();
 
+//\cond DO_NOT_DOCUMENT
         internal static int[] table1 = new int[] { 0x00, 
                 // 0 bits are left in first byte - SHOULD NOT HAPPEN
                 0x01, 
@@ -127,7 +128,9 @@ namespace iText.IO.Codec {
                 0x7f, 
                 // 7 bits are left in first byte
                 0xff };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // 8 bits are left in first byte
         internal static int[] table2 = new int[] { 0x00, 
                 // 0
@@ -146,7 +149,9 @@ namespace iText.IO.Codec {
                 0xfe, 
                 // 7
                 0xff };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // 8
         // Table to be used when fillOrder = 2, for flipping bytes.
         internal static byte[] flipTable = new byte[] { (byte)0x00, (byte)0x80, (byte)0x40, (byte)0xc0, (byte)0x20
@@ -180,7 +185,9 @@ namespace iText.IO.Codec {
             0x57, (byte)0xd7, (byte)0x37, (byte)0xb7, (byte)0x77, (byte)0xf7, (byte)0x0f, (byte)0x8f, (byte)0x4f, 
             (byte)0xcf, (byte)0x2f, (byte)0xaf, (byte)0x6f, (byte)0xef, (byte)0x1f, (byte)0x9f, (byte)0x5f, (byte)
             0xdf, (byte)0x3f, (byte)0xbf, (byte)0x7f, (byte)0xff };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // The main 10 bit white runs lookup table
         internal static short[] white = new short[] { 
                 // 0 - 7
@@ -439,6 +446,7 @@ namespace iText.IO.Codec {
                 232, 232, 232, 232, 232, 232, 232, 232, 
                 // 1016 - 1023
                 232, 232, 232, 232, 232, 232, 232, 232 };
+//\endcond
 
         // Additional make up codes for both White and Black runs
         //    static short[] additionalMakeup = {
@@ -451,16 +459,21 @@ namespace iText.IO.Codec {
         public static short[] additionalMakeup = new short[] { 28679, 28679, 31752, -32759, -31735, -30711, -29687
             , -28663, 29703, 29703, 30727, 30727, -27639, -26615, -25591, -24567 };
 
+//\cond DO_NOT_DOCUMENT
         // Initial black run look up table, uses the first 4 bits of a code
         internal static short[] initBlack = new short[] { 
                 // 0 - 7
                 3226, 6412, 200, 168, 38, 38, 134, 134, 
                 // 8 - 15
                 100, 100, 100, 100, 68, 68, 68, 68 };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //
         internal static short[] twoBitBlack = new short[] { 292, 260, 226, 226 };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // 0 - 3
         // Main black run table, using the last 9 bits of possible 13 bit code
         internal static short[] black = new short[] { 
@@ -592,7 +605,9 @@ namespace iText.IO.Codec {
                 390, 390, 390, 390, 390, 390, 390, 390, 
                 // 504 - 511
                 390, 390, 390, 390, 390, 390, 390, 390 };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] twoDCodes = new byte[] { 
                 // 0 - 7
                 80, 88, 23, 71, 30, 30, 62, 62, 
@@ -626,6 +641,7 @@ namespace iText.IO.Codec {
                 41, 41, 41, 41, 41, 41, 41, 41, 
                 // 120 - 127
                 41, 41, 41, 41, 41, 41, 41, 41 };
+//\endcond
 
         public TIFFFaxDecompressor() {
         }

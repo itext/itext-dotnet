@@ -337,12 +337,16 @@ namespace iText.Kernel.Pdf {
             return AddXmpMetadata();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsStandardEncryptionUsed() {
             return encryptionProperties.IsStandardEncryptionUsed();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsPublicKeyEncryptionUsed() {
             return encryptionProperties.IsPublicKeyEncryptionUsed();
         }
+//\endcond
     }
 }

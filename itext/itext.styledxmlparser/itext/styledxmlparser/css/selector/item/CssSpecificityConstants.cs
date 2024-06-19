@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Class that bundles some CSS specificity constants.</summary>
     internal sealed class CssSpecificityConstants {
         /// <summary>
@@ -40,4 +41,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         /// <summary>The Constant ELEMENT_SPECIFICITY.</summary>
         public const int ELEMENT_SPECIFICITY = 1;
     }
+//\endcond
 }

@@ -31,25 +31,33 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         private readonly int maxSize;
 
+//\cond DO_NOT_DOCUMENT
         internal ParseErrorList(int initialCapacity, int maxSize)
             : base(initialCapacity) {
             this.initialCapacity = initialCapacity;
             this.maxSize = maxSize;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a new ParseErrorList with the same settings, but no errors in the list</summary>
         /// <param name="copy">initial and max size details to copy</param>
         internal ParseErrorList(iText.StyledXmlParser.Jsoup.Parser.ParseErrorList copy)
             : this(copy.initialCapacity, copy.maxSize) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool CanAddError() {
             return Count < maxSize;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetMaxSize() {
             return maxSize;
         }
+//\endcond
 
         public static iText.StyledXmlParser.Jsoup.Parser.ParseErrorList NoTracking() {
             return new iText.StyledXmlParser.Jsoup.Parser.ParseErrorList(0, 0);

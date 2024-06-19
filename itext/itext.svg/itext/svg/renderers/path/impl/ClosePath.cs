@@ -25,7 +25,9 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements closePath(Z) attribute of SVG's path element</summary>
     public class ClosePath : LineTo {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 0;
+//\endcond
 
         public ClosePath()
             : this(false) {

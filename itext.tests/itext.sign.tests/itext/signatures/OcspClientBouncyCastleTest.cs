@@ -207,6 +207,7 @@ namespace iText.Signatures {
                 testOcspBuilder = testBuilder;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override IOcspResponse GetOcspResponse(IX509Certificate chCert, IX509Certificate rCert, String url
                 ) {
                 try {
@@ -221,6 +222,7 @@ namespace iText.Signatures {
                     throw BOUNCY_CASTLE_FACTORY.CreateAbstractOCSPException(e);
                 }
             }
+//\endcond
         }
     }
 }

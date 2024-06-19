@@ -29,14 +29,19 @@ namespace iText.Pdfa.Checker {
         private PdfACheckerTestUtils() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfString GetLongString(int length) {
             return new PdfString(GetLongPlainString(length));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfName GetLongName(int length) {
             return new PdfName(GetLongPlainString(length));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfArray GetLongArray(int length) {
             PdfArray array = new PdfArray();
             for (int i = 0; i < length; i++) {
@@ -44,7 +49,9 @@ namespace iText.Pdfa.Checker {
             }
             return array;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfDictionary GetLongDictionary(int length) {
             PdfDictionary dict = new PdfDictionary();
             for (int i = 0; i < length; i++) {
@@ -52,7 +59,9 @@ namespace iText.Pdfa.Checker {
             }
             return dict;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfStream GetStreamWithLongDictionary(int length) {
             PdfStream stream = new PdfStream("Hello, world!".GetBytes());
             for (int i = 0; i < length; i++) {
@@ -60,7 +69,9 @@ namespace iText.Pdfa.Checker {
             }
             return stream;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static String GetStreamWithValue(PdfObject @object) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfOutputStream stream = new PdfOutputStream(baos);
@@ -68,6 +79,7 @@ namespace iText.Pdfa.Checker {
             return "q\n" + "BT\n" + "/F1 12 Tf\n" + "36 787.96 Td\n" + iText.Commons.Utils.JavaUtil.GetStringForBytes(
                 baos.ToArray()) + " Tj\n" + "ET\n" + "Q";
         }
+//\endcond
 
         private static String GetLongPlainString(int length) {
             char charToFill = 'A';

@@ -41,9 +41,11 @@ namespace iText.Signatures.Cms {
     public class CMSContainer {
         private static readonly IBouncyCastleFactory BC_FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Collection to store revocation info other than OCSP and CRL responses, e.g. SCVP Request and Response.
         ///     </summary>
         internal readonly ICollection<IAsn1Sequence> otherRevocationInfo = new List<IAsn1Sequence>();
+//\endcond
 
         /// <summary>Optional.</summary>
         /// <remarks>

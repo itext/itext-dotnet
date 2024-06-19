@@ -76,12 +76,16 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.AreEqual(PdfName.Code, handler.nodes[6].GetRole());
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class TestHandler : ITagTreeIteratorHandler {
+//\cond DO_NOT_DOCUMENT
             internal readonly IList<IStructureNode> nodes = new List<IStructureNode>();
+//\endcond
 
             public virtual void NextElement(IStructureNode elem) {
                 nodes.Add(elem);
             }
         }
+//\endcond
     }
 }

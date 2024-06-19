@@ -678,6 +678,7 @@ namespace iText.Pdfa {
             return inputs;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class PdfAButtonFieldTestRenderer : ParagraphRenderer {
             private PdfButtonFormField _group;
 
@@ -716,5 +717,6 @@ namespace iText.Pdfa {
                 return new PdfAFormFieldTest.PdfAButtonFieldTestRenderer((Paragraph)modelElement, _group, _value);
             }
         }
+//\endcond
     }
 }

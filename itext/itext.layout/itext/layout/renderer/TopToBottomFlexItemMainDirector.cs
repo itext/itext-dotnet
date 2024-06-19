@@ -24,9 +24,12 @@ using System.Collections.Generic;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class TopToBottomFlexItemMainDirector : FlexColumnItemMainDirector {
+//\cond DO_NOT_DOCUMENT
         internal TopToBottomFlexItemMainDirector() {
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public override void ApplyDirectionForLine<T>(IList<T> renderers) {
@@ -63,4 +66,5 @@ namespace iText.Layout.Renderer {
         }
         // We don't need to do anything in these cases
     }
+//\endcond
 }

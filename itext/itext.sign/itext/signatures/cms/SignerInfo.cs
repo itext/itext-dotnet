@@ -372,6 +372,7 @@ namespace iText.Signatures.Cms {
             return GetAsDerSequence(false);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Serializes the SignerInfo structure and makes the signed attributes readonly.</summary>
         /// <remarks>
         /// Serializes the SignerInfo structure and makes the signed attributes readonly.
@@ -432,6 +433,7 @@ namespace iText.Signatures.Cms {
             }
             return BC_FACTORY.CreateDERSequence(signerInfoV);
         }
+//\endcond
 
         private void ProcessSubjectKeyIdentifierSignerCertificate(IAsn1Encodable asnStruct, ICollection<IX509Certificate
             > certificates) {

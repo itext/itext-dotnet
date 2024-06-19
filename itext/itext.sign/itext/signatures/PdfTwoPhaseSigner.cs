@@ -180,8 +180,10 @@ namespace iText.Signatures {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfSigner CreatePdfSigner(SignerProperties signerProperties) {
             return new PdfSigner(reader, outputStream, null, stampingProperties, signerProperties);
         }
+//\endcond
     }
 }

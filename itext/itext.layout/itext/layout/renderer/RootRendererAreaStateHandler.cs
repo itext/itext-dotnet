@@ -25,6 +25,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Layout;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class RootRendererAreaStateHandler {
         private RootLayoutArea storedPreviousArea;
 
@@ -67,4 +68,5 @@ namespace iText.Layout.Renderer {
             return this;
         }
     }
+//\endcond
 }

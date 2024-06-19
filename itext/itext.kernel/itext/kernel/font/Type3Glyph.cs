@@ -51,6 +51,7 @@ namespace iText.Kernel.Font {
 
         private bool isColor = false;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a Type3Glyph canvas with a new Content Stream.</summary>
         /// <param name="pdfDocument">the document that this canvas is created for</param>
         internal Type3Glyph(PdfDocument pdfDocument, float wx, float llx, float lly, float urx, float ury, bool isColor
@@ -58,7 +59,9 @@ namespace iText.Kernel.Font {
             : base((PdfStream)new PdfStream().MakeIndirect(pdfDocument), null, pdfDocument) {
             WriteMetrics(wx, llx, lly, urx, ury, isColor);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a Type3Glyph canvas with a non-empty Content Stream.</summary>
         /// <param name="pdfStream">
         /// 
@@ -76,6 +79,7 @@ namespace iText.Kernel.Font {
                 FillBBFromBytes(pdfStream.GetBytes());
             }
         }
+//\endcond
 
         public float GetWx() {
             return wx;

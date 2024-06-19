@@ -31,7 +31,9 @@ using iText.Svg.Exceptions;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements quadratic Bezier curveTo(Q) attribute of SVG's path element</summary>
     public class QuadraticCurveTo : AbstractPathShape, IControlPointCurve {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 4;
+//\endcond
 
         public QuadraticCurveTo()
             : this(false) {

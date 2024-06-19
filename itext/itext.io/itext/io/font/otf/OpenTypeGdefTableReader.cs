@@ -24,11 +24,17 @@ using iText.IO.Source;
 
 namespace iText.IO.Font.Otf {
     public class OpenTypeGdefTableReader {
+//\cond DO_NOT_DOCUMENT
         internal const int FLAG_IGNORE_BASE = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FLAG_IGNORE_LIGATURE = 4;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FLAG_IGNORE_MARK = 8;
+//\endcond
 
         private readonly int tableLocation;
 

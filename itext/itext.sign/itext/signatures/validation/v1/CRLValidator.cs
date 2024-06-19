@@ -38,35 +38,63 @@ namespace iText.Signatures.Validation.V1 {
     /// <summary>Class that allows you to validate a certificate against a Certificate Revocation List (CRL) Response.
     ///     </summary>
     public class CRLValidator {
+//\cond DO_NOT_DOCUMENT
         internal const String CRL_CHECK = "CRL response check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ATTRIBUTE_CERTS_ASSERTED = "The onlyContainsAttributeCerts is asserted. Conforming CRLs "
              + "issuers MUST set the onlyContainsAttributeCerts boolean to FALSE.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_IS_EXPIRED = "Certificate is expired on {0} and could have been removed from the CRL.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_IS_UNREVOKED = "The certificate was unrevoked.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE = "Certificate isn't in the current CRL scope.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_REVOKED = "Certificate was revoked by {0} on {1}.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CRL_ISSUER_NOT_FOUND = "Unable to validate CRL response: no issuer certificate found.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CRL_ISSUER_NO_COMMON_ROOT = "The CRL issuer does not share the root of the inspected certificate.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CRL_INVALID = "CRL response is invalid.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String FRESHNESS_CHECK = "CRL response is not fresh enough: " + "this update: {0}, validation date: {1}, freshness: {2}.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ONLY_SOME_REASONS_CHECKED = "Revocation status cannot be determined since " + "not all reason codes are covered by the current CRL.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String SAME_REASONS_CHECK = "CRLs that cover the same reason codes were already verified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String UPDATE_DATE_BEFORE_CHECK_DATE = "nextUpdate: {0} of CRLResponse is before validation date {1}.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // All reasons without unspecified.
         internal const int ALL_REASONS = 32895;
+//\endcond
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

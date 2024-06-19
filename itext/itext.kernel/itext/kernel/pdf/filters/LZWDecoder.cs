@@ -27,25 +27,45 @@ using iText.Kernel.Exceptions;
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>A class for performing LZW decoding.</summary>
     public class LZWDecoder {
+//\cond DO_NOT_DOCUMENT
         internal byte[][] stringTable;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal byte[] data = null;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal Stream uncompData;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int tableIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bitsToGet = 9;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bytePointer;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bitPointer;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int nextData = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int nextBits = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int[] andTable = new int[] { 511, 1023, 2047, 4095 };
+//\endcond
 
         /// <summary>Creates an LZWDecoder instance.</summary>
         public LZWDecoder() {

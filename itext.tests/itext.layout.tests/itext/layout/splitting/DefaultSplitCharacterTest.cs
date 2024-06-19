@@ -27,7 +27,9 @@ using iText.Test;
 namespace iText.Layout.Splitting {
     [NUnit.Framework.Category("UnitTest")]
     public class DefaultSplitCharacterTest : ExtendedITextTest {
+//\cond DO_NOT_DOCUMENT
         internal static IList<Glyph> glyphs = new List<Glyph>();
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {

@@ -91,9 +91,11 @@ namespace iText.Kernel.Pdf {
             return documentRevisions;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class RevisionsXrefProcessor : PdfReader.XrefProcessor {
             private readonly IList<DocumentRevision> documentRevisions = new List<DocumentRevision>();
 
+//\cond DO_NOT_DOCUMENT
             internal override void ProcessXref(PdfXrefTable xrefTable, PdfTokenizer tokenizer) {
                 ICollection<PdfIndirectReference> modifiedObjects = new HashSet<PdfIndirectReference>();
                 for (int i = 0; i < xrefTable.Size(); ++i) {
@@ -105,10 +107,14 @@ namespace iText.Kernel.Pdf {
                 documentRevisions.Add(new DocumentRevision(eofOffset, modifiedObjects));
                 xrefTable.ClearAllReferences();
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual IList<DocumentRevision> GetDocumentRevisions() {
                 return documentRevisions;
             }
+//\endcond
         }
+//\endcond
     }
 }

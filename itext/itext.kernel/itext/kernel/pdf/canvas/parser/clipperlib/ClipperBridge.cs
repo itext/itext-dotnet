@@ -423,6 +423,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
                 )))), PolyType.SUBJECT, false);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void AddContour(Path path, IList<IntPoint> contour, bool close) {
             IList<Point> floatContour = ConvertToFloatPoints(contour);
             Point point = floatContour[0];
@@ -435,5 +436,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
                 path.CloseSubpath();
             }
         }
+//\endcond
     }
 }

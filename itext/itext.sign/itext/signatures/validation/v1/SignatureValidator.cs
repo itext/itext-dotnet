@@ -37,27 +37,46 @@ using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1 {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Validator class, which is expected to be used for signatures validation.</summary>
     internal class SignatureValidator {
         public const String VALIDATING_SIGNATURE_NAME = "Validating signature {0}";
 
+//\cond DO_NOT_DOCUMENT
         internal const String TIMESTAMP_VERIFICATION = "Timestamp verification check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String SIGNATURE_VERIFICATION = "Signature verification check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_PARSE_CERT_FROM_DSS = "Certificate {0} stored in DSS dictionary cannot be parsed.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_PARSE_OCSP_FROM_DSS = "OCSP response {0} stored in DSS dictionary cannot be parsed.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_PARSE_CRL_FROM_DSS = "CRL {0} stored in DSS dictionary cannot be parsed.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_VERIFY_SIGNATURE = "Signature {0} cannot be mathematically verified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String DOCUMENT_IS_NOT_COVERED = "Signature {0} doesn't cover entire document.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_VERIFY_TIMESTAMP = "Signature timestamp attribute cannot be verified.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
+//\endcond
 
         private const String TIMESTAMP_EXTRACTION_FAILED = "Unable to extract timestamp from timestamp signature";
 
@@ -83,6 +102,7 @@ namespace iText.Signatures.Validation.V1 {
 
         private readonly ValidationCrlClient validationCrlClient = new ValidationCrlClient();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates new instance of
         /// <see cref="SignatureValidator"/>.
@@ -99,6 +119,7 @@ namespace iText.Signatures.Validation.V1 {
             builder.GetRevocationDataValidator().AddOcspClient(validationOcspClient);
             builder.GetRevocationDataValidator().AddCrlClient(validationCrlClient);
         }
+//\endcond
 
         /// <summary>
         /// Sets the
@@ -157,6 +178,7 @@ namespace iText.Signatures.Validation.V1 {
             return report;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual ValidationReport ValidateLatestSignature(PdfDocument document) {
             ValidationReport validationReport = new ValidationReport();
             UpdateValidationOcspClient(validationReport, validationContext, document);
@@ -228,6 +250,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             return validationReport.Merge(signatureReport);
         }
+//\endcond
 
         private PdfPKCS7 MathematicallyVerifySignature(ValidationReport validationReport, PdfDocument document) {
             SignatureUtil signatureUtil = new SignatureUtil(document);
@@ -348,4 +371,5 @@ namespace iText.Signatures.Validation.V1 {
                 .INVALID;
         }
     }
+//\endcond
 }

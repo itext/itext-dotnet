@@ -70,7 +70,9 @@ namespace iText.Kernel.Utils {
                 this.partNumber = 1;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int partNumber;
+//\endcond
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
@@ -103,7 +105,9 @@ namespace iText.Kernel.Utils {
                 this.partNumber = 1;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int partNumber;
+//\endcond
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
@@ -154,7 +158,9 @@ namespace iText.Kernel.Utils {
                 this.partNumber = 1;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int partNumber;
+//\endcond
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
@@ -193,7 +199,9 @@ namespace iText.Kernel.Utils {
                 this.partNumber = 1;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int partNumber;
+//\endcond
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
@@ -243,7 +251,9 @@ namespace iText.Kernel.Utils {
                 this.partNumber = 1;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal int partNumber;
+//\endcond
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {

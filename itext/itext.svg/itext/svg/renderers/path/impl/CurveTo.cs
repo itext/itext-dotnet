@@ -31,7 +31,9 @@ using iText.Svg.Exceptions;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements curveTo(C) attribute of SVG's path element</summary>
     public class CurveTo : AbstractPathShape, IControlPointCurve {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 6;
+//\endcond
 
         private static double ZERO_EPSILON = 1e-12;
 

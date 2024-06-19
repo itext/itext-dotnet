@@ -95,28 +95,46 @@ namespace iText.Kernel.Geom {
         /// </remarks>
         public const int TYPE_MASK_ROTATION = TYPE_QUADRANT_ROTATION | TYPE_GENERAL_ROTATION;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The <c>TYPE_UNKNOWN</c> is an initial type value.</summary>
         internal const int TYPE_UNKNOWN = -1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The min value equivalent to zero.</summary>
         /// <remarks>The min value equivalent to zero. If absolute value less then ZERO it considered as zero.</remarks>
         internal const double ZERO = 1E-10;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The values of transformation matrix</summary>
         internal double m00;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal double m10;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal double m01;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal double m11;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal double m02;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal double m12;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The transformation <c>type</c></summary>
         internal int type;
+//\endcond
 
         public AffineTransform() {
             type = TYPE_IDENTITY;
@@ -494,6 +512,7 @@ namespace iText.Kernel.Geom {
             Concatenate(iText.Kernel.Geom.AffineTransform.GetRotateInstance(angle, px, py));
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Multiply matrix of two AffineTransform objects</summary>
         /// <param name="t1">- the AffineTransform object is a multiplicand</param>
         /// <param name="t2">- the AffineTransform object is a multiplier</param>
@@ -504,6 +523,7 @@ namespace iText.Kernel.Geom {
                  t2.m11, t1.m01 * t2.m00 + t1.m11 * t2.m01, t1.m01 * t2.m10 + t1.m11 * t2.m11, t1.m02 * t2.m00 + t1.m12
                  * t2.m01 + t2.m02, t1.m02 * t2.m10 + t1.m12 * t2.m11 + t2.m12);
         }
+//\endcond
 
         public virtual void Concatenate(iText.Kernel.Geom.AffineTransform t) {
             SetTransform(Multiply(t, this));

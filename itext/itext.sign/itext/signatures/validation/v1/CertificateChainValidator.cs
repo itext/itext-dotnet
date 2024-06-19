@@ -33,26 +33,46 @@ using iText.Signatures.Validation.V1.Report;
 namespace iText.Signatures.Validation.V1 {
     /// <summary>Validator class, which is expected to be used for certificates chain validation.</summary>
     public class CertificateChainValidator {
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_CHECK = "Certificate check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String VALIDITY_CHECK = "Certificate validity period check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EXTENSIONS_CHECK = "Required certificate extensions check.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_TRUSTED = "Certificate {0} is trusted, revocation data checks are not required.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT = "Certificate {0} is trusted for {1}, " +
              "but it is not used in this context. Validation will continue as usual.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EXTENSION_MISSING = "Required extension {0} is missing or incorrect.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ISSUER_MISSING = "Certificate {0} isn't trusted and issuer certificate isn't provided.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EXPIRED_CERTIFICATE = "Certificate {0} is expired.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String NOT_YET_VALID_CERTIFICATE = "Certificate {0} is not yet valid.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ISSUER_CANNOT_BE_VERIFIED = "Issuer certificate {0} for subject certificate {1} cannot be mathematically verified.";
+//\endcond
 
         private readonly SignatureValidationProperties properties;
 

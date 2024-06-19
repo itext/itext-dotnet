@@ -49,35 +49,65 @@ using iText.IO.Exceptions;
 namespace iText.IO.Codec {
     /// <summary>A class for performing LZW decoding.</summary>
     public class TIFFLZWDecoder {
+//\cond DO_NOT_DOCUMENT
         internal byte[][] stringTable;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal byte[] data = null;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal byte[] uncompData;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int tableIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bitsToGet = 9;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bytePointer;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bitPointer;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int dstIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int w;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int h;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int predictor;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int samplesPerPixel;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int nextData = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int nextBits = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int[] andTable = new int[] { 511, 1023, 2047, 4095 };
+//\endcond
 
         public TIFFLZWDecoder(int w, int predictor, int samplesPerPixel) {
             this.w = w;

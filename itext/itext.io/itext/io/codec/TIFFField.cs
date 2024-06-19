@@ -96,21 +96,31 @@ namespace iText.IO.Codec {
         /// <summary>Flag for 64 bit IEEE doubles.</summary>
         public const int TIFF_DOUBLE = 12;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The tag number.</summary>
         internal int tag;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The tag type.</summary>
         internal int type;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The number of data items present in the field.</summary>
         internal int count;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The field data.</summary>
         internal Object data;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The default constructor.</summary>
         internal TIFFField() {
         }
+//\endcond
 
         /// <summary>Constructs a TIFFField with arbitrary data.</summary>
         /// <remarks>

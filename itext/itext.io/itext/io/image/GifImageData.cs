@@ -78,6 +78,7 @@ namespace iText.IO.Image {
             frames.Add(frame);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Load data by URL.</summary>
         /// <remarks>
         /// Load data by URL. url must be not null.
@@ -97,5 +98,6 @@ namespace iText.IO.Image {
                 }
             }
         }
+//\endcond
     }
 }

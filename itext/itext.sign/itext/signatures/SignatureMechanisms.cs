@@ -40,14 +40,22 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Maps IDs of signature algorithms with its human-readable name.</summary>
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly IDictionary<String, String> rsaOidsByDigest = new Dictionary<String, String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly IDictionary<String, String> dsaOidsByDigest = new Dictionary<String, String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly IDictionary<String, String> ecdsaOidsByDigest = new Dictionary<String, String>();
+//\endcond
 
         static SignatureMechanisms() {
             algorithmNames.Put("1.2.840.113549.1.1.1", "RSA");

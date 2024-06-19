@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Function;
 namespace iText.Kernel.Pdf.Colorspace {
     /// <summary>The abstract PdfShading class that represents the Shading Dictionary PDF object.</summary>
     public abstract class PdfShading : PdfObjectWrapper<PdfDictionary> {
+//\cond DO_NOT_DOCUMENT
         /// <summary>constants of shading type (see ISO-320001 Table 78)</summary>
         internal sealed class ShadingType {
             /// <summary>The int value of function-based shading type</summary>
@@ -54,6 +55,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             private ShadingType() {
             }
         }
+//\endcond
 
         /// <summary>
         /// Creates the

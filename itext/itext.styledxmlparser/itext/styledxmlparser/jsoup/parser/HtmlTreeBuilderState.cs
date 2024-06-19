@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
+//\cond DO_NOT_DOCUMENT
     /// <summary>The Tree Builder's current state.</summary>
     /// <remarks>The Tree Builder's current state. Each state embodies the processing for the state, and transitions to other states.
     ///     </remarks>
@@ -77,7 +78,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         private static readonly String nullString = '\u0000'.ToString();
 
+//\cond DO_NOT_DOCUMENT
         internal abstract bool Process(Token t, HtmlTreeBuilder tb);
+//\endcond
 
         private static bool IsWhitespace(Token t) {
             if (t.IsCharacter()) {
@@ -105,111 +108,190 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             tb.Insert(startTag);
         }
 
+//\cond DO_NOT_DOCUMENT
         // lists of tags to search through
         internal sealed class Constants {
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InHeadEmpty = new String[] { "base", "basefont", "bgsound", "command", "link"
                  };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InHeadRaw = new String[] { "noframes", "style" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InHeadEnd = new String[] { "body", "br", "html" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] AfterHeadBody = new String[] { "body", "html" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] BeforeHtmlToHead = new String[] { "body", "br", "head", "html" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InHeadNoScriptHead = new String[] { "basefont", "bgsound", "link", "meta"
                 , "noframes", "style" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartToHead = new String[] { "base", "basefont", "bgsound", "command"
                 , "link", "meta", "noframes", "script", "style", "title" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartPClosers = new String[] { "address", "article", "aside", "blockquote"
                 , "center", "details", "dir", "div", "dl", "fieldset", "figcaption", "figure", "footer", "header", "hgroup"
                 , "menu", "nav", "ol", "p", "section", "summary", "ul" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] Headings = new String[] { "h1", "h2", "h3", "h4", "h5", "h6" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartLiBreakers = new String[] { "address", "div", "p" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] DdDt = new String[] { "dd", "dt" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] Formatters = new String[] { "b", "big", "code", "em", "font", "i", "s", 
                 "small", "strike", "strong", "tt", "u" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartApplets = new String[] { "applet", "marquee", "object" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartEmptyFormatters = new String[] { "area", "br", "embed", "img"
                 , "keygen", "wbr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartMedia = new String[] { "param", "source", "track" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartInputAttribs = new String[] { "action", "name", "prompt" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyStartDrop = new String[] { "caption", "col", "colgroup", "frame", 
                 "head", "tbody", "td", "tfoot", "th", "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyEndClosers = new String[] { "address", "article", "aside", "blockquote"
                 , "button", "center", "details", "dir", "div", "dl", "fieldset", "figcaption", "figure", "footer", "header"
                 , "hgroup", "listing", "menu", "nav", "ol", "pre", "section", "summary", "ul" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyEndAdoptionFormatters = new String[] { "a", "b", "big", "code", "em"
                 , "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InBodyEndTableFosters = new String[] { "table", "tbody", "tfoot", "thead"
                 , "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableToBody = new String[] { "tbody", "tfoot", "thead" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableAddBody = new String[] { "td", "th", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableToHead = new String[] { "script", "style" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InCellNames = new String[] { "td", "th" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InCellBody = new String[] { "body", "caption", "col", "colgroup", "html"
                  };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InCellTable = new String[] { "table", "tbody", "tfoot", "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InCellCol = new String[] { "caption", "col", "colgroup", "tbody", "td", 
                 "tfoot", "th", "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableEndErr = new String[] { "body", "caption", "col", "colgroup", "html"
                 , "tbody", "td", "tfoot", "th", "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableFoster = new String[] { "table", "tbody", "tfoot", "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableBodyExit = new String[] { "caption", "col", "colgroup", "tbody", 
                 "tfoot", "thead" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableBodyEndIgnore = new String[] { "body", "caption", "col", "colgroup"
                 , "html", "td", "th", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InRowMissing = new String[] { "caption", "col", "colgroup", "tbody", "tfoot"
                 , "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InRowIgnore = new String[] { "body", "caption", "col", "colgroup", "html"
                 , "td", "th" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InSelectEnd = new String[] { "input", "keygen", "textarea" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InSelecTableEnd = new String[] { "caption", "table", "tbody", "td", "tfoot"
                 , "th", "thead", "tr" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InTableEndIgnore = new String[] { "tbody", "tfoot", "thead" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InHeadNoscriptIgnore = new String[] { "head", "noscript" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal static readonly String[] InCaptionIgnore = new String[] { "body", "col", "colgroup", "html", "tbody"
                 , "td", "tfoot", "th", "thead", "tr" };
+//\endcond
         }
+//\endcond
 
         private sealed class InitialBS : HtmlTreeBuilderState {
             public override String ToString() {
                 return "Initial";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     return true;
@@ -240,6 +322,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 // re-process token
                 return true;
             }
+//\endcond
         }
 
         private sealed class BeforeHtmlBS : HtmlTreeBuilderState {
@@ -247,6 +330,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeHtml";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsDoctype()) {
                     tb.Error(this);
@@ -286,6 +370,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 tb.InsertStartTag("html");
@@ -299,6 +384,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeHead";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -347,6 +433,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class InHeadBS : HtmlTreeBuilderState {
@@ -354,6 +441,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InHead";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -458,6 +546,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, TreeBuilder tb) {
                 tb.ProcessEndTag("head");
@@ -470,6 +559,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InHeadNoscript";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsDoctype()) {
                     tb.Error(this);
@@ -508,6 +598,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 // note that this deviates from spec, which is to pop out of noscript and reprocess in head:
@@ -524,6 +615,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterHead";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -596,6 +688,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 tb.ProcessStartTag("body");
@@ -609,6 +702,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InBody";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 switch (t.type) {
                     case iText.StyledXmlParser.Jsoup.Parser.TokenType.Character: {
@@ -657,6 +751,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool InBodyStartTag(Token t, HtmlTreeBuilder tb) {
                 Token.StartTag startTag = t.AsStartTag();
@@ -1270,6 +1365,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return true;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal bool AnyOtherEndTag(Token t, HtmlTreeBuilder tb) {
                 String name = t.AsEndTag().normalName;
                 // case insensitive search - goal is to preserve output case, not for the parse to be case sensitive
@@ -1293,6 +1389,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             // Adoption Agency Algorithm.
             private bool InBodyEndTagAdoption(Token t, HtmlTreeBuilder tb) {
@@ -1424,6 +1521,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "Text";
             }
 
+//\cond DO_NOT_DOCUMENT
             // in script, style etc. normally treated as data tags
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsCharacter()) {
@@ -1447,6 +1545,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class InTableBS : HtmlTreeBuilderState {
@@ -1454,6 +1553,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InTable";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsCharacter()) {
                     tb.NewPendingTableCharacters();
@@ -1592,7 +1692,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 // stops parsing
                 return AnythingElse(t, tb);
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 tb.Error(this);
                 bool processed;
@@ -1607,6 +1709,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return processed;
             }
+//\endcond
         }
 
         private sealed class InTableTextBS : HtmlTreeBuilderState {
@@ -1614,6 +1717,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InTableText";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.type == iText.StyledXmlParser.Jsoup.Parser.TokenType.Character) {
                     Token.Character c = t.AsCharacter();
@@ -1652,6 +1756,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class InCaptionBS : HtmlTreeBuilderState {
@@ -1659,6 +1764,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InCaption";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsEndTag() && t.AsEndTag().NormalName().Equals("caption")) {
                     Token.EndTag endTag = t.AsEndTag();
@@ -1700,6 +1806,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class InColumnGroupBS : HtmlTreeBuilderState {
@@ -1707,6 +1814,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InColumnGroup";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -1778,6 +1886,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, TreeBuilder tb) {
                 bool processed = tb.ProcessEndTag("colgroup");
@@ -1794,6 +1903,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InTableBody";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 String name;
                 switch (t.type) {
@@ -1869,6 +1979,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool ExitTableBody(Token t, HtmlTreeBuilder tb) {
                 if (!(tb.InTableScope("tbody") || tb.InTableScope("thead") || tb.InScope("tfoot"))) {
@@ -1892,6 +2003,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InRow";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsStartTag()) {
                     Token.StartTag startTag = t.AsStartTag();
@@ -1968,6 +2080,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 return tb.Process(t, InTable);
@@ -1989,6 +2102,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InCell";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsEndTag()) {
                     Token.EndTag endTag = t.AsEndTag();
@@ -2047,6 +2161,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 return tb.Process(t, InBody);
@@ -2068,6 +2183,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InSelect";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 String name;
                 switch (t.type) {
@@ -2208,6 +2324,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
 
             private bool AnythingElse(Token t, HtmlTreeBuilder tb) {
                 tb.Error(this);
@@ -2220,6 +2337,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InSelectInTable";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsStartTag() && iText.StyledXmlParser.Jsoup.Internal.StringUtil.InSorted(t.AsStartTag().NormalName()
                     , HtmlTreeBuilderState.Constants.InSelecTableEnd)) {
@@ -2244,6 +2362,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterBodyBS : HtmlTreeBuilderState {
@@ -2251,6 +2370,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterBody";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -2296,6 +2416,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class InFrameSetBS : HtmlTreeBuilderState {
@@ -2303,6 +2424,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "InFrameset";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -2376,6 +2498,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class AfterFrameSetBS : HtmlTreeBuilderState {
@@ -2383,6 +2506,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterFrameset";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (IsWhitespace(t)) {
                     tb.Insert(t.AsCharacter());
@@ -2424,6 +2548,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class AfterAfterBodyBS : HtmlTreeBuilderState {
@@ -2431,6 +2556,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterAfterBody";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsComment()) {
                     tb.Insert(t.AsComment());
@@ -2461,6 +2587,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class AfterAfterFrameSetBS : HtmlTreeBuilderState {
@@ -2468,6 +2595,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterAfterFrameset";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 if (t.IsComment()) {
                     tb.Insert(t.AsComment());
@@ -2493,6 +2621,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 }
                 return true;
             }
+//\endcond
         }
 
         private sealed class ForeignContentBS : HtmlTreeBuilderState {
@@ -2500,9 +2629,12 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ForeignContent";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override bool Process(Token t, HtmlTreeBuilder tb) {
                 return true;
             }
+//\endcond
         }
     }
+//\endcond
 }

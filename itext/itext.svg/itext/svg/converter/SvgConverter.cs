@@ -1048,6 +1048,7 @@ namespace iText.Svg.Converter {
             Draw(pdfForm, canvas, 0, 0);
         }
 
+//\cond DO_NOT_DOCUMENT
         /*
         * This method is kept private, because there is little purpose in exposing it.
         */
@@ -1055,6 +1056,7 @@ namespace iText.Svg.Converter {
             canvas.AddXObjectAt(pdfForm, x + (pdfForm.GetBBox() == null ? 0 : pdfForm.GetBBox().GetAsNumber(0).FloatValue
                 ()), y + (pdfForm.GetBBox() == null ? 0 : pdfForm.GetBBox().GetAsNumber(1).FloatValue()));
         }
+//\endcond
 
         /// <summary>
         /// This method draws a NodeRenderer tree to a canvas that is tied to the
@@ -1375,6 +1377,7 @@ namespace iText.Svg.Converter {
             return res;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static ResourceResolver GetResourceResolver(ISvgProcessorResult processorResult, ISvgConverterProperties
              props) {
             if (processorResult is SvgProcessorResult) {
@@ -1382,6 +1385,7 @@ namespace iText.Svg.Converter {
             }
             return CreateResourceResolver(props);
         }
+//\endcond
 
         /// <summary>
         /// Tries to extract charset from

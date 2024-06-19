@@ -26,9 +26,12 @@ using iText.Layout.Element;
 using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Class that iterates over the cells of a table.</summary>
     internal sealed class TableCellIterator : ITableIterator<Cell> {
+//\cond DO_NOT_DOCUMENT
         internal readonly PdfUAValidationContext context;
+//\endcond
 
         private IList<IElement> children;
 
@@ -155,4 +158,5 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             return this.location;
         }
     }
+//\endcond
 }

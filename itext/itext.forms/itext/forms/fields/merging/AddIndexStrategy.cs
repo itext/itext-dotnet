@@ -76,6 +76,7 @@ namespace iText.Forms.Fields.Merging {
             return true;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetNextIndex(String name) {
             String normalizedName = iText.Commons.Utils.StringUtil.ReplaceAll(name, this.regexString, "");
             int? count = countMap.Get(normalizedName);
@@ -86,5 +87,6 @@ namespace iText.Forms.Fields.Merging {
             countMap.Put(normalizedName, count);
             return (int)count;
         }
+//\endcond
     }
 }

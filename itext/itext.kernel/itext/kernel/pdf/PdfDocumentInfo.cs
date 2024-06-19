@@ -26,11 +26,14 @@ using iText.IO.Font;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentInfo {
+//\cond DO_NOT_DOCUMENT
         internal static readonly PdfName[] PDF20_DEPRECATED_KEYS = new PdfName[] { PdfName.Title, PdfName.Author, 
             PdfName.Subject, PdfName.Keywords, PdfName.Creator, PdfName.Producer, PdfName.Trapped };
+//\endcond
 
         private PdfDictionary infoDictionary;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a PdfDocumentInfo based on the passed PdfDictionary.</summary>
         /// <param name="pdfObject">PdfDictionary containing PdfDocumentInfo</param>
         internal PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument) {
@@ -39,12 +42,15 @@ namespace iText.Kernel.Pdf {
                 infoDictionary.MakeIndirect(pdfDocument);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a default, empty PdfDocumentInfo and link it to the passed PdfDocument</summary>
         /// <param name="pdfDocument">document the info will belong to</param>
         internal PdfDocumentInfo(PdfDocument pdfDocument)
             : this(new PdfDictionary(), pdfDocument) {
         }
+//\endcond
 
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTitle(String title) {
             return Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
@@ -150,15 +156,19 @@ namespace iText.Kernel.Pdf {
             return GetStringValue(new PdfName(key));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfDictionary GetPdfObject() {
             return infoDictionary;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual iText.Kernel.Pdf.PdfDocumentInfo Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             GetPdfObject().SetModified();
             return this;
         }
+//\endcond
 
         private String GetStringValue(PdfName name) {
             PdfString pdfString = infoDictionary.GetAsString(name);

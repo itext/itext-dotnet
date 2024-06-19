@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Barcodes.Exceptions;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     internal sealed class Encoder {
         // The original table is defined in the table 5 of JISX0510:2004 (p.19).
         private static readonly int[] ALPHANUMERIC_TABLE = new int[] { 
@@ -41,7 +42,9 @@ namespace iText.Barcodes.Qrcode {
                 // 0x50-0x5f
                 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1 };
 
+//\cond DO_NOT_DOCUMENT
         internal const String DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
+//\endcond
 
         private Encoder() {
         }
@@ -147,6 +150,7 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>
         /// the code point of the table used in alphanumeric mode or
         /// -1 if there is no corresponding code in the table.
@@ -157,6 +161,7 @@ namespace iText.Barcodes.Qrcode {
             }
             return -1;
         }
+//\endcond
 
         /// <summary>Choose the best mode by examining the content.</summary>
         /// <param name="content">content to examine</param>
@@ -284,6 +289,7 @@ namespace iText.Barcodes.Qrcode {
             throw new WriterException("Cannot find proper rs block info (input data too big?)");
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Terminate bits as described in 8.4.8 and 8.4.9 of JISX0510:2004 (p.24).</summary>
         internal static void TerminateBits(int numDataBytes, BitVector bits) {
             int capacity = numDataBytes << 3;
@@ -320,7 +326,9 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("Bits size does not equal capacity");
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get number of data bytes and number of error correction bytes for block id "blockID".</summary>
         /// <remarks>
         /// Get number of data bytes and number of error correction bytes for block id "blockID". Store
@@ -371,7 +379,9 @@ namespace iText.Barcodes.Qrcode {
                 numECBytesInBlock[0] = numEcBytesInGroup2;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Interleave "bits" with corresponding error correction bytes.</summary>
         /// <remarks>
         /// Interleave "bits" with corresponding error correction bytes. On success, store the result in
@@ -430,7 +440,9 @@ namespace iText.Barcodes.Qrcode {
                     );
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static ByteArray GenerateECBytes(ByteArray dataBytes, int numEcBytesInBlock) {
             int numDataBytes = dataBytes.Size();
             int[] toEncode = new int[numDataBytes + numEcBytesInBlock];
@@ -444,13 +456,17 @@ namespace iText.Barcodes.Qrcode {
             }
             return ecBytes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Append mode info.</summary>
         /// <remarks>Append mode info. On success, store the result in "bits".</remarks>
         internal static void AppendModeInfo(Mode mode, BitVector bits) {
             bits.AppendBits(mode.GetBits(), 4);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Append length info.</summary>
         /// <remarks>Append length info. On success, store the result in "bits".</remarks>
         internal static void AppendLengthInfo(int numLetters, int version, Mode mode, BitVector bits) {
@@ -460,7 +476,9 @@ namespace iText.Barcodes.Qrcode {
             }
             bits.AppendBits(numLetters, numBits);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Append "bytes" in "mode" mode (encoding) into "bits".</summary>
         /// <remarks>Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".</remarks>
         internal static void AppendBytes(String content, Mode mode, BitVector bits, String encoding) {
@@ -486,7 +504,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AppendNumericBytes(String content, BitVector bits) {
             int length = content.Length;
             int i = 0;
@@ -514,7 +534,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AppendAlphanumericBytes(String content, BitVector bits) {
             int length = content.Length;
             int i = 0;
@@ -539,7 +561,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void Append8BitBytes(String content, BitVector bits, String encoding) {
             byte[] bytes;
             try {
@@ -552,7 +576,9 @@ namespace iText.Barcodes.Qrcode {
                 bits.AppendBits(bytes[i], 8);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AppendKanjiBytes(String content, BitVector bits) {
             byte[] bytes;
             try {
@@ -582,6 +608,7 @@ namespace iText.Barcodes.Qrcode {
                 bits.AppendBits(encoded, 13);
             }
         }
+//\endcond
 
         private static void AppendECI(CharacterSetECI eci, BitVector bits) {
             bits.AppendBits(Mode.ECI.GetBits(), 4);
@@ -589,4 +616,5 @@ namespace iText.Barcodes.Qrcode {
             bits.AppendBits(eci.GetValue(), 8);
         }
     }
+//\endcond
 }

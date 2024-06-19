@@ -116,6 +116,7 @@ namespace iText.Kernel.Pdf.Function {
                 (bounds), ConvertFloatArrayToDoubleArray(encode)) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal PdfType3Function(PdfDictionary dict, IPdfFunctionFactory functionFactory)
             : base(dict) {
             this.functionFactory = functionFactory;
@@ -129,6 +130,7 @@ namespace iText.Kernel.Pdf.Function {
             PdfArray encodeArray = dict.GetAsArray(PdfName.Encode);
             encode = CheckAndGetEncode(encodeArray);
         }
+//\endcond
 
         /// <summary>(Required) An array of k 1-input functions that shall make up the stitching function.</summary>
         /// <remarks>

@@ -28,6 +28,7 @@ using iText.IO.Source;
 
 namespace iText.IO.Font {
     public class CFFFont {
+//\cond DO_NOT_DOCUMENT
         internal static readonly String[] operatorNames = new String[] { "version", "Notice", "FullName", "FamilyName"
             , "Weight", "FontBBox", "BlueValues", "OtherBlues", "FamilyBlues", "FamilyOtherBlues", "StdHW", "StdVW"
             , "UNKNOWN_12", "UniqueID", "XUID", "charset", "Encoding", "CharStrings", "Private", "Subrs", "defaultWidthX"
@@ -39,7 +40,9 @@ namespace iText.IO.Font {
             , "UNKNOWN_12_24", "UNKNOWN_12_25", "UNKNOWN_12_26", "UNKNOWN_12_27", "UNKNOWN_12_28", "UNKNOWN_12_29"
             , "ROS", "CIDFontVersion", "CIDFontRevision", "CIDFontType", "CIDCount", "UIDBase", "FDArray", "FDSelect"
             , "FontName" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly String[] standardStrings = new String[] { 
                 // Automatically generated from Appendix A of the CFF specification; do
                 
@@ -88,6 +91,7 @@ namespace iText.IO.Font {
             , "Ugravesmall", "Uacutesmall", "Ucircumflexsmall", "Udieresissmall", "Yacutesmall", "Thornsmall", "Ydieresissmall"
             , "001.000", "001.001", "001.002", "001.003", "Black", "Bold", "Book", "Light", "Medium", "Regular", "Roman"
             , "Semibold" };
+//\endcond
 
         //private String[] strings;
         public virtual String GetString(char sid) {
@@ -109,6 +113,7 @@ namespace iText.IO.Font {
             return s.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual char GetCard8() {
             try {
                 byte i = buf.ReadByte();
@@ -118,7 +123,9 @@ namespace iText.IO.Font {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual char GetCard16() {
             try {
                 return buf.ReadChar();
@@ -127,7 +134,9 @@ namespace iText.IO.Font {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetOffset(int offSize) {
             int offset = 0;
             for (int i = 0; i < offSize; i++) {
@@ -136,11 +145,15 @@ namespace iText.IO.Font {
             }
             return offset;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Seek(int offset) {
             buf.Seek(offset);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual short GetShort() {
             try {
                 return buf.ReadShort();
@@ -149,7 +162,9 @@ namespace iText.IO.Font {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetInt() {
             try {
                 return buf.ReadInt();
@@ -158,11 +173,15 @@ namespace iText.IO.Font {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetPosition() {
             return (int)buf.GetPosition();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // read the offsets in the next index
         // data structure, convert to global
         // offsets, and return them.
@@ -193,6 +212,7 @@ namespace iText.IO.Font {
             //nextIndexOffset = offsets[count];
             return offsets;
         }
+//\endcond
 
         protected internal String key;
 
@@ -635,7 +655,9 @@ namespace iText.IO.Font {
         /// It is used to mark an offset and to set the offset list item.
         /// </remarks>
         protected internal sealed class MarkerItem : CFFFont.Item {
+//\cond DO_NOT_DOCUMENT
             internal CFFFont.OffsetItem p;
+//\endcond
 
             public MarkerItem(CFFFont.OffsetItem pointerToMarker) {
                 p = pointerToMarker;
@@ -1040,7 +1062,9 @@ namespace iText.IO.Font {
         // Changed from private to protected by Ygal&Oren
         protected internal CFFFont.Font[] fonts;
 
+//\cond DO_NOT_DOCUMENT
         internal RandomAccessSourceFactory rasFactory = new RandomAccessSourceFactory();
+//\endcond
 
         public CFFFont(byte[] cff) {
             //System.err.println("CFF: nStdString = "+standardStrings.length);
@@ -1190,6 +1214,7 @@ namespace iText.IO.Font {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         //System.err.println("CFF: done");
         // ADDED BY Oren & Ygal
         internal virtual void ReadEncoding(int nextIndexOffset) {
@@ -1197,5 +1222,6 @@ namespace iText.IO.Font {
             Seek(nextIndexOffset);
             format = GetCard8();
         }
+//\endcond
     }
 }

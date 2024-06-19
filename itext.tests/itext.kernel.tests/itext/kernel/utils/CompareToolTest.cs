@@ -273,6 +273,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class _T1689272844 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
@@ -284,6 +285,7 @@ namespace iText.Kernel.Utils {
 
             private readonly CompareToolTest _enclosing;
         }
+//\endcond
 
         [NUnit.Framework.Test]
         public virtual void MemoryFirstWriterNoFileTest() {

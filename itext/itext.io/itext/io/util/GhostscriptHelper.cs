@@ -43,10 +43,14 @@ namespace iText.IO.Util {
         /// <summary>The name of the environment variable with the command to execute Ghostscript operations.</summary>
         public const String GHOSTSCRIPT_ENVIRONMENT_VARIABLE = "ITEXT_GS_EXEC";
 
+//\cond DO_NOT_DOCUMENT
         [Obsolete]
         internal const String GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY = "gsExec";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String GHOSTSCRIPT_KEYWORD = "GPL Ghostscript";
+//\endcond
 
         private const String TEMP_FILE_PREFIX = "itext_gs_io_temp";
 
@@ -200,15 +204,20 @@ namespace iText.IO.Util {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool ValidatePageList(String pageList) {
             return null == pageList || iText.Commons.Utils.Matcher.Match(PAGE_LIST_REGEX, pageList).Matches();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool ValidateImageFilePattern(String imageFilePattern) {
             return null != imageFilePattern && !String.IsNullOrEmpty(imageFilePattern.Trim()) && !imageFilePattern.Contains
                 ("%");
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static String FormatImageNumber(int pageNumber) {
             StringBuilder stringBuilder = new StringBuilder();
             int zeroFiller = pageNumber;
@@ -219,5 +228,6 @@ namespace iText.IO.Util {
             stringBuilder.Append(pageNumber);
             return stringBuilder.ToString();
         }
+//\endcond
     }
 }

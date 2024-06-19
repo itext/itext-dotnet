@@ -39,11 +39,15 @@ using iText.Test.Pdfa;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFontTest : ExtendedITextTest {
+//\cond DO_NOT_DOCUMENT
         internal static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/pdfa/PdfAFontTest/";
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

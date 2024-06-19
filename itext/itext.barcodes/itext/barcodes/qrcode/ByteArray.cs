@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>This class implements an array of unsigned bytes.</summary>
     internal sealed class ByteArray {
         private const int INITIAL_SIZE = 32;
@@ -111,4 +112,5 @@ namespace iText.Barcodes.Qrcode {
             }
         }
     }
+//\endcond
 }

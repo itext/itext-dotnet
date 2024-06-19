@@ -24,6 +24,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfua {
+//\cond DO_NOT_DOCUMENT
     internal class PdfUAPageFactory : IPdfPageFactory {
         public PdfUAPageFactory() {
         }
@@ -56,4 +57,5 @@ namespace iText.Pdfua {
             return new PdfUAPage(pdfDocument, pageSize);
         }
     }
+//\endcond
 }

@@ -41,7 +41,9 @@ namespace iText.Kernel.Pdf {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfFontCacheTest/";
 
+//\cond DO_NOT_DOCUMENT
         internal const String pangramme = "Amazingly few discotheques provide jukeboxes " + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

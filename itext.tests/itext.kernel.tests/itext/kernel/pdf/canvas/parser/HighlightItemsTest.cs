@@ -262,6 +262,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             pdfDocument.Close();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class MyEventListener : IEventListener {
             private IList<Rectangle> rectangles = new List<Rectangle>();
 
@@ -290,7 +291,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 rectangles.Clear();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class MyCharacterEventListener : HighlightItemsTest.MyEventListener {
             public override void EventOccurred(IEventData data, EventType type) {
                 if (type == EventType.RENDER_TEXT) {
@@ -301,5 +304,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 }
             }
         }
+//\endcond
     }
 }

@@ -3070,10 +3070,12 @@ namespace iText.Layout {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
             }
         }
+//\endcond
     }
 }

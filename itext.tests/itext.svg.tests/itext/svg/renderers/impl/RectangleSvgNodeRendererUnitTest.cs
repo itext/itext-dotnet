@@ -27,7 +27,9 @@ namespace iText.Svg.Renderers.Impl {
     public class RectangleSvgNodeRendererUnitTest : ExtendedITextTest {
         private const float EPSILON = 0.00001f;
 
+//\cond DO_NOT_DOCUMENT
         internal RectangleSvgNodeRenderer renderer;
+//\endcond
 
         [NUnit.Framework.SetUp]
         public virtual void Setup() {

@@ -27,7 +27,9 @@ using iText.IO.Util;
 
 namespace iText.IO.Source {
     public sealed class ByteUtils {
+//\cond DO_NOT_DOCUMENT
         internal static bool HighPrecision = false;
+//\endcond
 
         private static readonly byte[] bytes = new byte[] { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100
             , 101, 102 };
@@ -88,6 +90,7 @@ namespace iText.IO.Source {
             return GetIsoBytes(d, null);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] GetIsoBytes(int n, ByteBuffer buffer) {
             bool negative = false;
             if (n < 0) {
@@ -105,11 +108,15 @@ namespace iText.IO.Source {
             }
             return buffer == null ? buf.GetInternalBuffer() : null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] GetIsoBytes(double d, ByteBuffer buffer) {
             return GetIsoBytes(d, buffer, HighPrecision);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] GetIsoBytes(double d, ByteBuffer buffer, bool highPrecision) {
             if (highPrecision) {
                 if (Math.Abs(d) < 0.000001) {
@@ -273,6 +280,7 @@ namespace iText.IO.Source {
             }
             return buffer == null ? buf.GetInternalBuffer() : null;
         }
+//\endcond
 
         private static int LongSize(long l) {
             long m = 10;

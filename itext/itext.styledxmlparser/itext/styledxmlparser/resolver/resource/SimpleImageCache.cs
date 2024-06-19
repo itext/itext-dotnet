@@ -26,6 +26,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Simple implementation of an image cache.</summary>
     internal class SimpleImageCache {
         /// <summary>The cache mapping a source path to an Image XObject.</summary>
@@ -37,6 +38,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>The capacity of the cache.</summary>
         private int capacity;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="SimpleImageCache"/>
@@ -45,7 +47,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         internal SimpleImageCache() {
             this.capacity = 100;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="SimpleImageCache"/>
@@ -58,7 +62,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
             this.capacity = capacity;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds an image to the cache.</summary>
         /// <param name="src">the source path</param>
         /// <param name="imageXObject">the image XObject to be cached</param>
@@ -69,7 +75,9 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             EnsureCapacity();
             cache.Put(src, imageXObject);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets an image from the cache.</summary>
         /// <param name="src">the source path</param>
         /// <returns>the image XObject</returns>
@@ -83,18 +91,23 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
             return cache.Get(src);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the size of the cache.</summary>
         /// <returns>the cache size</returns>
         internal virtual int Size() {
             return cache.Count;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Resets the cache.</summary>
         internal virtual void Reset() {
             cache.Clear();
             imagesFrequency.Clear();
         }
+//\endcond
 
         /// <summary>
         /// Ensures the capacity of the cache by removing the least important images
@@ -121,4 +134,5 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
         }
     }
+//\endcond
 }

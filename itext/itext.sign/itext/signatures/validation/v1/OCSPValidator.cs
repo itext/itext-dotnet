@@ -36,30 +36,52 @@ using iText.Signatures.Validation.V1.Report;
 namespace iText.Signatures.Validation.V1 {
     /// <summary>Class that allows you to validate a single OCSP response.</summary>
     public class OCSPValidator {
+//\cond DO_NOT_DOCUMENT
         internal const String CERT_IS_EXPIRED = "Certificate is expired on {0}. Its revocation status could have been "
              + "removed from the database, so the OCSP response status could be falsely valid.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERT_IS_REVOKED = "Certificate status is revoked.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String CERT_STATUS_IS_UNKNOWN = "Certificate status is unknown.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String INVALID_OCSP = "OCSP response is invalid.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String ISSUERS_DO_NOT_MATCH = "OCSP: Issuers don't match.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String FRESHNESS_CHECK = "OCSP response is not fresh enough: " + "this update: {0}, validation date: {1}, freshness: {2}.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String OCSP_COULD_NOT_BE_VERIFIED = "OCSP response could not be verified: " + "it does not contain responder in the certificate chain and response is not signed "
              + "by issuer certificate or any from the trusted store.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String OCSP_IS_NO_LONGER_VALID = "OCSP is no longer valid: {0} after {1}";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String SERIAL_NUMBERS_DO_NOT_MATCH = "OCSP: Serial numbers don't match.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String UNABLE_TO_CHECK_IF_ISSUERS_MATCH = "OCSP response could not be verified: unable to check"
              + " if issuers match.";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String OCSP_CHECK = "OCSP response check.";
+//\endcond
 
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

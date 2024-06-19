@@ -24,6 +24,7 @@ using System;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>This class represents a view on a grid, which returns cells one by one in a specified order.</summary>
     /// <remarks>
     /// This class represents a view on a grid, which returns cells one by one in a specified order.
@@ -46,6 +47,7 @@ namespace iText.Layout.Renderer {
 
         private int bottomMargin;
 
+//\cond DO_NOT_DOCUMENT
         internal GridView(Grid grid, GridFlow iterationOrder) {
             this.iterationOrder = (GridFlow.COLUMN.Equals(iterationOrder) || GridFlow.COLUMN_DENSE.Equals(iterationOrder
                 )) ? Grid.GridOrder.COLUMN : Grid.GridOrder.ROW;
@@ -53,6 +55,7 @@ namespace iText.Layout.Renderer {
                 (iterationOrder));
             this.grid = grid;
         }
+//\endcond
 
         public virtual bool HasNext() {
             return cursor.y < grid.GetRows().Length - bottomMargin && cursor.x < grid.GetRows()[0].Length - rightMargin
@@ -86,6 +89,7 @@ namespace iText.Layout.Renderer {
             return new GridView.Pos(cursor);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Resets grid view and sets it up for processing new element
         /// If sparse algorithm is used then x and y positions on a grid are not reset.
@@ -105,7 +109,9 @@ namespace iText.Layout.Renderer {
             this.hasNext = true;
             return new GridView.Pos(cursor);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Try to fit cell at the current position.</summary>
         /// <remarks>
         /// Try to fit cell at the current position.
@@ -127,7 +133,9 @@ namespace iText.Layout.Renderer {
             ResetCursorIfIntersectingCellIsPlaced();
             return true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Reset cursor to the start of a grid if placed a cell, which intersects current flow axis.</summary>
         /// <remarks>
         /// Reset cursor to the start of a grid if placed a cell, which intersects current flow axis.
@@ -140,7 +148,9 @@ namespace iText.Layout.Renderer {
                 this.cursor.Reset();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Increase cursor in current flow axis</summary>
         /// <param name="cellSizes">cell width and height values</param>
         internal virtual void IncreaseDefaultCursor(GridView.Pos cellSizes) {
@@ -153,7 +163,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void IncreaseDefaultAxis() {
             if (restrictYGrow) {
                 grid.EnsureGridSize(-1, grid.GetRows()[0].Length + 1);
@@ -175,7 +187,9 @@ namespace iText.Layout.Renderer {
             }
             hasNext = true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Determines if current grid view can be iterated.</summary>
         /// <returns>
         /// 
@@ -187,7 +201,9 @@ namespace iText.Layout.Renderer {
         internal virtual bool IsFixed() {
             return restrictXGrow && restrictYGrow;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Represents position on a grid.</summary>
         internal class Pos {
             /// <summary>column index.</summary>
@@ -219,7 +235,9 @@ namespace iText.Layout.Renderer {
                 return y;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Represents a placement cursor.</summary>
         internal class Cursor : GridView.Pos {
             //Determines whether to use "dense" or "sparse" packing algorithm
@@ -296,5 +314,7 @@ namespace iText.Layout.Renderer {
                 this.y = 0;
             }
         }
+//\endcond
     }
+//\endcond
 }

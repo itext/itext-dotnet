@@ -30,6 +30,7 @@ using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Internal helper class which is used to effectively build parent tree and also find marked content references:
     /// for specified page, by MCID or by struct parent index.
@@ -53,6 +54,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private int maxStructParentIndex = -1;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Init ParentTreeHandler.</summary>
         /// <remarks>Init ParentTreeHandler. On init the parent tree is read and stored in this instance.</remarks>
         internal ParentTreeHandler(PdfStructTreeRoot structTreeRoot) {
@@ -62,6 +64,7 @@ namespace iText.Kernel.Pdf.Tagging {
             RegisterAllMcrs();
             pageToStructParentsInd = new Dictionary<PdfIndirectReference, int?>();
         }
+//\endcond
 
         /// <summary>Gets a list of all marked content references on the page.</summary>
         public virtual ParentTreeHandler.PageMcrsContainer GetPageMarkedContentReferences(PdfPage page) {
@@ -392,31 +395,45 @@ namespace iText.Kernel.Pdf.Tagging {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class PageMcrsContainer {
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<int, PdfMcr> objRefs;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal SortedDictionary<int, PdfMcr> pageContentStreams;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /*
             * Keys of this map are indirect references to XObjects contained in page's resources,
             * values are the mcrs contained in the corresponding XObject streams, stored as mappings "MCID-number to PdfMcr".
             */
             internal IDictionary<PdfIndirectReference, SortedDictionary<int, PdfMcr>> pageResourceXObjects;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal PageMcrsContainer() {
                 objRefs = new LinkedDictionary<int, PdfMcr>();
                 pageContentStreams = new SortedDictionary<int, PdfMcr>();
                 pageResourceXObjects = new LinkedDictionary<PdfIndirectReference, SortedDictionary<int, PdfMcr>>();
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual void PutObjectReferenceMcr(int structParentIndex, PdfMcr mcr) {
                 objRefs.Put(structParentIndex, mcr);
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual void PutPageContentStreamMcr(int mcid, PdfMcr mcr) {
                 pageContentStreams.Put(mcid, mcr);
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual void PutXObjectMcr(PdfIndirectReference xObjectIndRef, PdfMcr mcr) {
                 SortedDictionary<int, PdfMcr> xObjectMcrs = pageResourceXObjects.Get(xObjectIndRef);
                 if (xObjectMcrs == null) {
@@ -425,20 +442,28 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 pageResourceXObjects.Get(xObjectIndRef).Put(mcr.GetMcid(), mcr);
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual SortedDictionary<int, PdfMcr> GetPageContentStreamsMcrs() {
                 return pageContentStreams;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual IDictionary<int, PdfMcr> GetObjRefs() {
                 return objRefs;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual IDictionary<PdfIndirectReference, SortedDictionary<int, PdfMcr>> GetPageResourceXObjects(
                 ) {
                 return pageResourceXObjects;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual ICollection<PdfMcr> GetAllMcrsAsCollection() {
                 ICollection<PdfMcr> collection = new List<PdfMcr>();
                 collection.AddAll(objRefs.Values);
@@ -448,6 +473,9 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 return collection;
             }
+//\endcond
         }
+//\endcond
     }
+//\endcond
 }

@@ -21,11 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Layout.Margincollapse {
+//\cond DO_NOT_DOCUMENT
     internal class MarginsCollapse {
         private float maxPositiveMargin = 0;
 
         private float minNegativeMargin = 0;
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void JoinMargin(float margin) {
             if (maxPositiveMargin < margin) {
                 maxPositiveMargin = margin;
@@ -36,15 +38,20 @@ namespace iText.Layout.Margincollapse {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void JoinMargin(MarginsCollapse marginsCollapse) {
             JoinMargin(marginsCollapse.maxPositiveMargin);
             JoinMargin(marginsCollapse.minNegativeMargin);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetCollapsedMarginsSize() {
             return maxPositiveMargin + minNegativeMargin;
         }
+//\endcond
 
         /// <summary>
         /// Creates a "deep copy" of this MarginsCollapse, meaning the object returned by this method will be independent
@@ -55,4 +62,5 @@ namespace iText.Layout.Margincollapse {
             return (iText.Layout.Margincollapse.MarginsCollapse) MemberwiseClone();
         }
     }
+//\endcond
 }

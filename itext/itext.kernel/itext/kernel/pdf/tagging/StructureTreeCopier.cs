@@ -29,6 +29,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Internal helper class which is used to copy, clone or move tag structure across documents.</summary>
     internal class StructureTreeCopier {
         private static IList<PdfName> ignoreKeysForCopy = new List<PdfName>();
@@ -478,11 +479,13 @@ namespace iText.Kernel.Pdf.Tagging {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool ShouldTableElementBeCopied(PdfDictionary obj, PdfDictionary parent) {
             PdfName role = obj.GetAsName(PdfName.S);
             return ((PdfName.TD.Equals(role) || PdfName.TH.Equals(role)) && PdfName.TR.Equals(parent.Get(PdfName.S))) 
                 || PdfName.TR.Equals(role);
         }
+//\endcond
 
         private static PdfDictionary CopyNamespaceDict(PdfDictionary srcNsDict, StructureTreeCopier.StructElemCopyingParams
              copyingParams) {
@@ -648,11 +651,17 @@ namespace iText.Kernel.Pdf.Tagging {
             return parents;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class LastClonedAncestor {
+//\cond DO_NOT_DOCUMENT
             internal PdfDictionary ancestor;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal PdfDictionary clone;
+//\endcond
         }
+//\endcond
 
         private class StructElemCopyingParams {
             private readonly ICollection<PdfObject> objectsToCopy;
@@ -718,4 +727,5 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
     }
+//\endcond
 }

@@ -30,7 +30,9 @@ using iText.Svg.Exceptions;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(L) attribute of SVG's path element</summary>
     public class LineTo : AbstractPathShape {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 2;
+//\endcond
 
         public LineTo()
             : this(false) {

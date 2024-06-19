@@ -44,6 +44,7 @@ namespace iText.Signatures.Validation.V1 {
 
         private DocumentRevisionsValidator documentRevisionsValidator;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Create a new
         /// <see cref="SignatureValidator"/>
@@ -59,6 +60,7 @@ namespace iText.Signatures.Validation.V1 {
         internal virtual SignatureValidator BuildSignatureValidator() {
             return new SignatureValidator(this);
         }
+//\endcond
 
         /// <summary>
         /// Create a bew
@@ -248,6 +250,7 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="DocumentRevisionsValidator"/>
@@ -264,7 +267,9 @@ namespace iText.Signatures.Validation.V1 {
             }
             return documentRevisionsValidator;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="CertificateChainValidator"/>
@@ -281,7 +286,9 @@ namespace iText.Signatures.Validation.V1 {
             }
             return certificateChainValidator;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="RevocationDataValidator"/>
@@ -298,7 +305,9 @@ namespace iText.Signatures.Validation.V1 {
             }
             return revocationDataValidator;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="CRLValidator"/>
@@ -315,7 +324,9 @@ namespace iText.Signatures.Validation.V1 {
             }
             return crlValidator;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="OCSPValidator"/>
@@ -332,6 +343,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             return ocspValidator;
         }
+//\endcond
 
         /// <summary>
         /// Retrieves the explicitly added or automatically created

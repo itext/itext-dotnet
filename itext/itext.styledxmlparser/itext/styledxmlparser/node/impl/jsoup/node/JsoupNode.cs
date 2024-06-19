@@ -41,8 +41,10 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         /// <summary>The child nodes.</summary>
         private IList<INode> childNodes = new List<INode>();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The parent node.</summary>
         internal INode parentNode;
+//\endcond
 
         /// <summary>
         /// Creates a new

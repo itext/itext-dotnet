@@ -995,6 +995,7 @@ namespace iText.Pdfa.Checker {
             CheckResources(appearanceStream.GetAsDictionary(PdfName.Resources), appearanceStream);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfDictionary GetPdfAOutputIntent(PdfArray outputIntents) {
             for (int i = 0; i < outputIntents.Size(); ++i) {
                 PdfName outputIntentSubtype = outputIntents.GetAsDictionary(i).GetAsName(PdfName.S);
@@ -1004,6 +1005,7 @@ namespace iText.Pdfa.Checker {
             }
             return null;
         }
+//\endcond
 
         private void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict, ICollection<PdfObject>
              checkedObjects) {

@@ -27,6 +27,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Selector;
 
 namespace iText.StyledXmlParser.Css.Page {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Class for a non standard
     /// <see cref="iText.StyledXmlParser.Css.CssRuleSet"/>.
@@ -65,4 +66,5 @@ namespace iText.StyledXmlParser.Css.Page {
             return sb.ToString();
         }
     }
+//\endcond
 }

@@ -530,9 +530,11 @@ namespace iText.Kernel.Pdf {
         }
 
         private class IgnoreTagStructurePdfDocument : PdfDocument {
+//\cond DO_NOT_DOCUMENT
             internal IgnoreTagStructurePdfDocument(PdfReader reader)
                 : base(reader) {
             }
+//\endcond
 
             protected internal override void TryInitTagStructure(PdfDictionary str) {
             }

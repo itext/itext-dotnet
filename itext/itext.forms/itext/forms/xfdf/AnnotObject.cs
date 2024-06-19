@@ -468,21 +468,28 @@ namespace iText.Forms.Xfdf {
             attributes.Add(attr);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds new attribute with given name and boolean value converted to string.</summary>
         internal virtual void AddAttribute(String name, bool value) {
             String valueString = value ? "yes" : "no";
             attributes.Add(new AttributeObject(name, valueString));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddAttribute(String name, float value) {
             attributes.Add(new AttributeObject(name, XfdfObjectUtils.ConvertFloatToString(value)));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddAttribute(String name, Rectangle value) {
             String stringValue = XfdfObjectUtils.ConvertRectToString(value);
             attributes.Add(new AttributeObject(name, stringValue));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds new attribute by given name and value.</summary>
         /// <remarks>Adds new attribute by given name and value. If required attribute is present, value of the attribute can't be null.
         ///     </remarks>
@@ -525,15 +532,20 @@ namespace iText.Forms.Xfdf {
             }
             attributes.Add(new AttributeObject(name, valueString));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddAttribute(String name, PdfObject valueObject) {
             AddAttribute(name, valueObject, false);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds page, required attribute of every annotation.</summary>
         internal virtual void AddFdfAttributes(int pageNumber) {
             this.AddAttribute(new AttributeObject(XfdfConstants.PAGE, pageNumber.ToString()));
         }
+//\endcond
 
         /// <summary>Gets Dest element, a child element of link, GoTo, GoToR elements.</summary>
         /// <remarks>
