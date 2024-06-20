@@ -141,6 +141,58 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         [NUnit.Framework.Test]
+        public virtual void RetrieveRevocationDataFromTheSignatureContainerTest() {
+            String rootCertName = CERTS_SRC + "rootRsa.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertName)[0];
+            // We need to set infinite freshness for the signature validation. Otherwise, test will fail.
+            builder.GetProperties().SetFreshness(ValidatorContexts.Of(ValidatorContext.OCSP_VALIDATOR, ValidatorContext
+                .CRL_VALIDATOR), CertificateSources.Of(CertificateSource.SIGNER_CERT), TimeBasedContexts.Of(TimeBasedContext
+                .PRESENT), TimeSpan.FromDays(999999));
+            ValidationReport report;
+            // Signature container stores OCSP response with indeterminate status and less fresh but valid CRL response.
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "revDataInTheSignatureContainer.pdf"
+                ))) {
+                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateSignatures(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                (4).HasNumberOfFailures(0).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (i) => "Signature1")).HasLogItem((al) => al
+                .WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERT_STATUS_IS_UNKNOWN).WithStatus(
+                ReportItem.ReportItemStatus.INFO)).HasLogItems(2, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator
+                .CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN
+                ())));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RetrieveRevocationDataStoredInTheSignerInfoTest() {
+            String rootCertName = CERTS_SRC + "rootRsa.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertName)[0];
+            // We need to set infinite freshness for the embedded timestamp validation. Otherwise, test will fail.
+            builder.GetProperties().SetFreshness(ValidatorContexts.Of(ValidatorContext.OCSP_VALIDATOR, ValidatorContext
+                .CRL_VALIDATOR), CertificateSources.Of(CertificateSource.TIMESTAMP), TimeBasedContexts.Of(TimeBasedContext
+                .PRESENT), TimeSpan.FromDays(999999)).SetFreshness(ValidatorContexts.Of(ValidatorContext.CRL_VALIDATOR
+                ), CertificateSources.Of(CertificateSource.SIGNER_CERT), TimeBasedContexts.Of(TimeBasedContext.HISTORICAL
+                ), TimeSpan.FromDays(2));
+            ValidationReport report;
+            // Signer info authenticated attributes store OCSP response with indeterminate status and valid CRL response.
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "revDataInTheSignerInfo.pdf"))
+                ) {
+                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                report = signatureValidator.ValidateSignatures(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                (6).HasNumberOfFailures(0).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (i) => "Signature1")).HasLogItem((al) => al
+                .WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERT_STATUS_IS_UNKNOWN).WithStatus(
+                ReportItem.ReportItemStatus.INFO)).HasLogItems(4, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator
+                .CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN
+                ())));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LatestSignatureIsTimestampTest() {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             String privateKeyName = CERTS_SRC + "rootCertKey.pem";

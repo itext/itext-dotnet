@@ -26,6 +26,7 @@ using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
@@ -181,72 +182,51 @@ namespace iText.Signatures.Validation.V1 {
 //\cond DO_NOT_DOCUMENT
         internal virtual ValidationReport ValidateLatestSignature(PdfDocument document) {
             ValidationReport validationReport = new ValidationReport();
-            UpdateValidationOcspClient(validationReport, validationContext, document);
-            UpdateValidationCrlClient(validationReport, validationContext, document);
             PdfPKCS7 pkcs7 = MathematicallyVerifySignature(validationReport, document);
+            UpdateValidationClients(pkcs7, validationReport, validationContext, document);
+            // We only retrieve not signed revocation data at the very beginning of signature processing.
+            RetrieveNotSignedRevocationInfoFromSignatureContainer(pkcs7, validationContext);
             if (StopValidation(validationReport, validationContext)) {
                 return validationReport;
             }
             IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, document);
             certificateRetriever.AddKnownCertificates(certificatesFromDss);
             if (pkcs7.IsTsp()) {
-                ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), pkcs7.GetCertificates(), pkcs7.GetSigningCertificate
-                    ());
-                UpdateValidationOcspClient(validationReport, validationContext, document);
-                UpdateValidationCrlClient(validationReport, validationContext, document);
+                ValidateTimestampChain(validationReport, pkcs7.GetCertificates(), pkcs7.GetSigningCertificate());
+                if (UpdateLastKnownPoE(validationReport, pkcs7.GetTimeStampTokenInfo())) {
+                    UpdateValidationClients(pkcs7, validationReport, validationContext, document);
+                }
                 return validationReport;
             }
+            bool isPoEUpdated = false;
             DateTime previousLastKnowPoE = lastKnownPoE;
             ValidationContext previousValidationContext = validationContext;
             if (pkcs7.GetTimeStampTokenInfo() != null) {
-                try {
-                    if (!pkcs7.VerifyTimestampImprint()) {
-                        validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ReportItem.ReportItemStatus
-                            .INVALID));
-                    }
+                ValidationReport tsValidationReport = ValidateEmbeddedTimestamp(pkcs7);
+                isPoEUpdated = UpdateLastKnownPoE(tsValidationReport, pkcs7.GetTimeStampTokenInfo());
+                if (isPoEUpdated) {
+                    PdfPKCS7 timestampSignatureContainer = pkcs7.GetTimestampSignatureContainer();
+                    RetrieveSignedRevocationInfoFromSignatureContainer(timestampSignatureContainer, validationContext);
+                    UpdateValidationClients(pkcs7, tsValidationReport, validationContext, document);
                 }
-                catch (AbstractGeneralSecurityException e) {
-                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
-                        .INVALID));
-                }
-                if (StopValidation(validationReport, validationContext)) {
-                    return validationReport;
-                }
-                PdfPKCS7 timestampSignatureContainer = pkcs7.GetTimestampSignatureContainer();
-                try {
-                    if (!timestampSignatureContainer.VerifySignatureIntegrityAndAuthenticity()) {
-                        validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ReportItem.ReportItemStatus
-                            .INVALID));
-                    }
-                }
-                catch (AbstractGeneralSecurityException e) {
-                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
-                        .INVALID));
-                }
-                if (StopValidation(validationReport, validationContext)) {
-                    return validationReport;
-                }
-                IX509Certificate[] timestampCertificates = timestampSignatureContainer.GetCertificates();
-                ValidateTimestampChain(validationReport, pkcs7.GetTimeStampTokenInfo(), timestampCertificates, timestampSignatureContainer
-                    .GetSigningCertificate());
-                if (StopValidation(validationReport, validationContext)) {
+                validationReport.Merge(tsValidationReport);
+                if (StopValidation(tsValidationReport, validationContext)) {
                     return validationReport;
                 }
             }
-            UpdateValidationOcspClient(validationReport, validationContext, document);
-            UpdateValidationCrlClient(validationReport, validationContext, document);
             IX509Certificate[] certificates = pkcs7.GetCertificates();
             certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificates));
             IX509Certificate signingCertificate = pkcs7.GetSigningCertificate();
             ValidationReport signatureReport = new ValidationReport();
             certificateChainValidator.Validate(signatureReport, validationContext, signingCertificate, lastKnownPoE);
-            if (signatureReport.GetValidationResult() != ValidationReport.ValidationResult.VALID) {
+            if (isPoEUpdated && signatureReport.GetValidationResult() != ValidationReport.ValidationResult.VALID) {
                 // We can only use PoE retrieved from timestamp attribute in case main signature validation is successful.
-                // That's why if the result is not valid, we set back lastKnownPoE value, validation context and DSS.
+                // That's why if the result is not valid, we set back lastKnownPoE value, validation context and rev data.
                 lastKnownPoE = previousLastKnowPoE;
                 validationContext = previousValidationContext;
-                UpdateValidationOcspClient(validationReport, validationContext, document);
-                UpdateValidationCrlClient(validationReport, validationContext, document);
+                PdfPKCS7 timestampSignatureContainer = pkcs7.GetTimestampSignatureContainer();
+                RetrieveSignedRevocationInfoFromSignatureContainer(timestampSignatureContainer, validationContext);
+                UpdateValidationClients(pkcs7, validationReport, validationContext, document);
             }
             return validationReport.Merge(signatureReport);
         }
@@ -276,29 +256,96 @@ namespace iText.Signatures.Validation.V1 {
             return pkcs7;
         }
 
-        private ValidationReport ValidateTimestampChain(ValidationReport validationReport, ITstInfo timeStampTokenInfo
-            , IX509Certificate[] knownCerts, IX509Certificate signingCert) {
-            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
+        private ValidationReport ValidateEmbeddedTimestamp(PdfPKCS7 pkcs7) {
             ValidationReport tsValidationReport = new ValidationReport();
-            certificateChainValidator.Validate(tsValidationReport, validationContext.SetCertificateSource(CertificateSource
+            try {
+                if (!pkcs7.VerifyTimestampImprint()) {
+                    tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ReportItem.ReportItemStatus
+                        .INVALID));
+                }
+            }
+            catch (AbstractGeneralSecurityException e) {
+                tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
+                    .INVALID));
+            }
+            if (StopValidation(tsValidationReport, validationContext)) {
+                return tsValidationReport;
+            }
+            PdfPKCS7 timestampSignatureContainer = pkcs7.GetTimestampSignatureContainer();
+            RetrieveSignedRevocationInfoFromSignatureContainer(timestampSignatureContainer, validationContext);
+            try {
+                if (!timestampSignatureContainer.VerifySignatureIntegrityAndAuthenticity()) {
+                    tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, ReportItem.ReportItemStatus
+                        .INVALID));
+                }
+            }
+            catch (AbstractGeneralSecurityException e) {
+                tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
+                    .INVALID));
+            }
+            if (StopValidation(tsValidationReport, validationContext)) {
+                return tsValidationReport;
+            }
+            IX509Certificate[] timestampCertificates = timestampSignatureContainer.GetCertificates();
+            ValidateTimestampChain(tsValidationReport, timestampCertificates, timestampSignatureContainer.GetSigningCertificate
+                ());
+            return tsValidationReport;
+        }
+
+        private void ValidateTimestampChain(ValidationReport validationReport, IX509Certificate[] knownCerts, IX509Certificate
+             signingCert) {
+            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
+            certificateChainValidator.Validate(validationReport, validationContext.SetCertificateSource(CertificateSource
                 .TIMESTAMP), signingCert, lastKnownPoE);
-            validationReport.Merge(tsValidationReport);
+        }
+
+        private bool UpdateLastKnownPoE(ValidationReport tsValidationReport, ITstInfo timeStampTokenInfo) {
             if (tsValidationReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
                 try {
                     lastKnownPoE = timeStampTokenInfo.GetGenTime();
                     if (validationContext.GetTimeBasedContext() == TimeBasedContext.PRESENT) {
                         validationContext = validationContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL);
                     }
+                    return true;
                 }
                 catch (Exception e) {
-                    validationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, TIMESTAMP_EXTRACTION_FAILED, e, ReportItem.ReportItemStatus
+                    tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, TIMESTAMP_EXTRACTION_FAILED, e, ReportItem.ReportItemStatus
                         .INDETERMINATE));
                 }
             }
-            return validationReport;
+            return false;
         }
 
-        private void UpdateValidationOcspClient(ValidationReport validationReport, ValidationContext context, PdfDocument
+        private void UpdateValidationClients(PdfPKCS7 pkcs7, ValidationReport validationReport, ValidationContext 
+            validationContext, PdfDocument document) {
+            RetrieveOcspResponsesFromDss(validationReport, validationContext, document);
+            RetrieveCrlResponsesFromDss(validationReport, validationContext, document);
+            RetrieveSignedRevocationInfoFromSignatureContainer(pkcs7, validationContext);
+        }
+
+        private void RetrieveSignedRevocationInfoFromSignatureContainer(PdfPKCS7 pkcs7, ValidationContext validationContext
+            ) {
+            if (pkcs7.GetCRLs() != null) {
+                foreach (IX509Crl crl in pkcs7.GetCRLs()) {
+                    validationCrlClient.AddCrl((IX509Crl)crl, lastKnownPoE, validationContext.GetTimeBasedContext());
+                }
+            }
+            if (pkcs7.GetOcsp() != null) {
+                validationOcspClient.AddResponse(pkcs7.GetOcsp(), lastKnownPoE, validationContext.GetTimeBasedContext());
+            }
+        }
+
+        private void RetrieveNotSignedRevocationInfoFromSignatureContainer(PdfPKCS7 pkcs7, ValidationContext validationContext
+            ) {
+            foreach (IX509Crl crl in pkcs7.GetSignedDataCRLs()) {
+                validationCrlClient.AddCrl((IX509Crl)crl, lastKnownPoE, validationContext.GetTimeBasedContext());
+            }
+            foreach (IBasicOcspResponse oscp in pkcs7.GetSignedDataOcsps()) {
+                validationOcspClient.AddResponse(oscp, lastKnownPoE, validationContext.GetTimeBasedContext());
+            }
+        }
+
+        private void RetrieveOcspResponsesFromDss(ValidationReport validationReport, ValidationContext context, PdfDocument
              document) {
             PdfDictionary dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             if (dss != null) {
@@ -323,7 +370,7 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private void UpdateValidationCrlClient(ValidationReport validationReport, ValidationContext context, PdfDocument
+        private void RetrieveCrlResponsesFromDss(ValidationReport validationReport, ValidationContext context, PdfDocument
              document) {
             PdfDictionary dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             if (dss != null) {
