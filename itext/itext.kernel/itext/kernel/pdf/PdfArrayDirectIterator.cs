@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
+    //\cond DO_NOT_DOCUMENT 
     internal class PdfArrayDirectIterator : IEnumerator<PdfObject>
     {
         private IEnumerator<PdfObject> parentEnumerator;
@@ -65,4 +66,5 @@ namespace iText.Kernel.Pdf {
             get { return Current; }
         }
     }
+   //\endcond 
 }

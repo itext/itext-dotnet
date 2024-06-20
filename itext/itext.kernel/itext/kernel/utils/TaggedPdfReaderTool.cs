@@ -339,9 +339,11 @@ namespace iText.Kernel.Utils {
                 return null;
             }
 
+            //\cond DO_NOT_DOCUMENT 
             internal MarkedContentEventListener(TaggedPdfReaderTool _enclosing) {
                 this._enclosing = _enclosing;
             }
+           //\endcond 
 
             private readonly TaggedPdfReaderTool _enclosing;
         }

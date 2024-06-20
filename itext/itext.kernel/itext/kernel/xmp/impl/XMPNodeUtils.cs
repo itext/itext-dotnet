@@ -39,6 +39,7 @@ namespace iText.Kernel.XMP.Impl
 	/// <since>Aug 28, 2006</since>
 	public sealed class XMPNodeUtils : XMPConst
 	{
+		//\cond DO_NOT_DOCUMENT	
 		internal const int CLT_NO_VALUES = 0;
 
 		internal const int CLT_SPECIFIC_MATCH = 1;
@@ -423,6 +424,7 @@ namespace iText.Kernel.XMP.Impl
 			}
 			return strValue != null ? Utils.RemoveControlChars(strValue) : null;
 		}
+		//\endcond	
 
 		/// <summary>
 		/// After processing by ExpandXPath, a step can be of certain forms described in documentation.

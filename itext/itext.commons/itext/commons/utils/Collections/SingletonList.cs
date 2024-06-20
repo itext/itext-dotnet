@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections
 {
+    //\cond DO_NOT_DOCUMENT 
     internal class SingletonList<T> : IList<T> {
         private readonly T element;
 
@@ -94,4 +95,5 @@ namespace iText.Commons.Utils.Collections
             set { throw new NotSupportedException("Collection is read-only."); }
         }
     }
+   //\endcond 
 }

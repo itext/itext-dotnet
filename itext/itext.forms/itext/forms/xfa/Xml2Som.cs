@@ -28,6 +28,7 @@ using System.Xml.Linq;
 
 namespace iText.Forms.Xfa
 {
+    //\cond DO_NOT_DOCUMENT		
 	/// <summary>A class for some basic SOM processing.</summary>
 	internal class Xml2Som
 	{
@@ -322,4 +323,5 @@ namespace iText.Forms.Xfa
 			this.inverseSearch = inverseSearch;
 		}
 	}
+	//\endcond	
 }

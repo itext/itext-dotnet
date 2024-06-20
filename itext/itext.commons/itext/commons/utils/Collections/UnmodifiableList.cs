@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections
 {
+	//\cond DO_NOT_DOCUMENT	
     internal class UnmodifiableList : IList {
         private IList _list;
 
@@ -94,4 +95,5 @@ namespace iText.Commons.Utils.Collections
 			return _list.GetEnumerator();
 		}
     }
+   //\endcond 
 }

@@ -268,6 +268,7 @@ namespace iText.Kernel.XMP.Impl
 		}
 	}
 
+	//\cond DO_NOT_DOCUMENT	
 	/// <since>22.08.2006</since>
 	internal class ParseState
 	{
@@ -359,4 +360,5 @@ namespace iText.Kernel.XMP.Impl
 			}
 		}
 	}
+	//\endcond	
 }

@@ -30,6 +30,7 @@ using iText.Commons.Utils.Collections;
 
 namespace iText.Commons
 {
+    //\cond DO_NOT_DOCUMENT
     internal static class EventsExtension
     {
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
@@ -241,4 +242,5 @@ namespace iText.Commons
 #endif
         }
     }
+    //\endcond
 }

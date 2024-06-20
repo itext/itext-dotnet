@@ -29,6 +29,7 @@ using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Resolver.Resource
 {
+    //\cond DO_NOT_DOCUMENT 
     internal class UriEncodeUtil
     {
 
@@ -270,4 +271,5 @@ namespace iText.StyledXmlParser.Resolver.Resource
             return (char)('a' - 10 + digit);
         }
     }
+   //\endcond 
 }

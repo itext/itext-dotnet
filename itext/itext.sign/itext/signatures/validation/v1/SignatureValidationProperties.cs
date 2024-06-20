@@ -194,6 +194,7 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
+        //\cond DO_NOT_DOCUMENT 
         /// <summary>This method executes the setter method for every combination of selected validators and certificateSources
         ///     </summary>
         /// <param name="validatorContexts">the validators to execute the setter on</param>
@@ -232,6 +233,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             return default;
         }
+        //\endcond 
 
         /// <summary>Enum representing possible online fetching permissions.</summary>
         public enum OnlineFetching {
@@ -243,6 +245,7 @@ namespace iText.Signatures.Validation.V1 {
             NEVER_FETCH
         }
 
+        //\cond DO_NOT_DOCUMENT 
         internal class ContextProperties {
             private TimeSpan freshness;
 
@@ -288,5 +291,6 @@ namespace iText.Signatures.Validation.V1 {
                 this.requiredExtensions = requiredExtensions;
             }
         }
+        //\endcond 
     }
 }

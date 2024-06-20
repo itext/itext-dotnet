@@ -212,10 +212,11 @@ namespace iText.Test {
         }
 
         public class RunnerParams {
+            //\cond DO_NOT_DOCUMENT 
             internal Type sampleType;
 
             internal String ignoreMessage;
-
+            //\endcond
             public override String ToString() {
                 return sampleType.FullName;
             }

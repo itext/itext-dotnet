@@ -43,6 +43,7 @@ using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
+    //\cond DO_NOT_DOCUMENT 
     internal sealed class SignUtils {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -286,4 +287,5 @@ namespace iText.Signatures {
             return FACTORY.CreateX509Certificate(data);
         }
     }
+   //\endcond 
 }

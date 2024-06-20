@@ -23,6 +23,7 @@
 using System;
 
 namespace Versions.Attributes {
+    //\cond DO_NOT_DOCUMENT 
     [AttributeUsage(AttributeTargets.Assembly)]
     internal class TypographyVersionAttribute : Attribute {
         internal string TypographyVersion { get; private set; }
@@ -31,4 +32,5 @@ namespace Versions.Attributes {
             this.TypographyVersion = typographyVersion;
         }
     }
+    //\endcond 
 }

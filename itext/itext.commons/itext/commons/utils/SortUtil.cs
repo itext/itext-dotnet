@@ -128,10 +128,12 @@ namespace iText.Commons.Utils {
             }
         }
 
+        //\cond DO_NOT_DOCUMENT
         internal class StringOrdinalComparator : IComparer<String> {
             public int Compare(String x, String y) {
                 return String.CompareOrdinal(x, y);
             }
         }
+        //\endcond
     }
 }

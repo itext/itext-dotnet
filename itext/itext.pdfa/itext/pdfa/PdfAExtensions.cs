@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Text;
 
 namespace iText.Pdfa {
+    //\cond DO_NOT_DOCUMENT 
     internal static class PdfAExtensions {
         public static void AddAll<T>(this IList<T> list, IEnumerable<T> c) {
             ((List<T>) list).AddRange(c);
@@ -86,4 +87,5 @@ namespace iText.Pdfa {
 #endif
         }
     }
+   //\endcond 
 }

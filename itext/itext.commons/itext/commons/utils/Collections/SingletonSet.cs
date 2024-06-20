@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace iText.Commons.Utils.Collections {
+    //\cond DO_NOT_DOCUMENT 
     internal class SingletonSet<T> : ISet<T> {
         private T element;
 
@@ -139,4 +140,5 @@ namespace iText.Commons.Utils.Collections {
             return one == null && another == null || one != null && one.Equals(another);
         }
     }
+   //\endcond 
 }

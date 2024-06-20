@@ -126,7 +126,7 @@ namespace iText.Commons.Utils {
 
             return errorsBuilder;
         }
-
+        //\cond DO_NOT_DOCUMENT 
         internal static void SetProcessStartInfo(Process proc, String exec, String @params) {
             SetProcessStartInfo(proc, exec, @params, null);
         }
@@ -209,5 +209,6 @@ namespace iText.Commons.Utils {
 
             return bre;
         }
+       //\endcond 
     }
 }

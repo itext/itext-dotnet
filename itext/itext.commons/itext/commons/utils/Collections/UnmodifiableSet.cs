@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections
 {
+    //\cond DO_NOT_DOCUMENT 
     internal class UnmodifiableSet<T> : ISet<T> {
         private ISet<T> _set;
 
@@ -113,4 +114,5 @@ namespace iText.Commons.Utils.Collections
             get { return true; }
         }
     }
+   //\endcond 
 }

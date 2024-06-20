@@ -24,6 +24,7 @@ using System;
 using System.IO;
 
 namespace iText.Kernel.Utils {
+	//\cond DO_NOT_DOCUMENT		
     internal class IdleOutputStream : Stream
 	{
 	    public override void Flush()
@@ -73,4 +74,5 @@ namespace iText.Kernel.Utils {
 
 	    public override long Position { get; set; }
 	}
+   //\endcond 
 }

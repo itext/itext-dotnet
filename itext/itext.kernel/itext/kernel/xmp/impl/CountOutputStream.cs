@@ -46,12 +46,14 @@ namespace iText.Kernel.XMP.Impl
 		/// the byte counter </summary>
 		private int bytesWritten;
 
+		//\cond DO_NOT_DOCUMENT	
 		/// <summary>
 		/// Constructor with providing the output stream to decorate. </summary>
 		/// <param name="output"> an <code>OutputStream</code> </param>
 		internal CountOutputStream(Stream output) {
 			this.output = output;
 		}
+		//\endcond	
 
 
 		/// <returns> the bytesWritten </returns>

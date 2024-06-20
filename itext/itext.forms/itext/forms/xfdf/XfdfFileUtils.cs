@@ -28,6 +28,7 @@ using iText.Kernel.Utils;
 
 namespace iText.Forms.Xfdf
 {
+    //\cond DO_NOT_DOCUMENT 
     internal sealed class XfdfFileUtils
     {
         private XfdfFileUtils()
@@ -66,4 +67,5 @@ namespace iText.Forms.Xfdf
             outputStream.Dispose();
         }
     }
+   //\endcond 
 }

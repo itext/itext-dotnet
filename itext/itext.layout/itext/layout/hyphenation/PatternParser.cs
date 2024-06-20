@@ -43,6 +43,7 @@ namespace iText.Layout.Hyphenation {
 
         private bool hasClasses;
 
+        //\cond DO_NOT_DOCUMENT 
         internal const int ELEM_CLASSES = 1;
 
         internal const int ELEM_EXCEPTIONS = 2;
@@ -50,7 +51,7 @@ namespace iText.Layout.Hyphenation {
         internal const int ELEM_PATTERNS = 3;
 
         internal const int ELEM_HYPHEN = 4;
-
+        //\endcond
         /// <summary>Construct a pattern parser.</summary>
         private PatternParser() {
             token = new StringBuilder();
@@ -226,10 +227,12 @@ namespace iText.Layout.Hyphenation {
             }
             return il.ToString();
         }
-
+    
+        //\cond DO_NOT_DOCUMENT 
         protected internal virtual void GetExternalClasses() {
             Parse(ResourceUtil.GetResourceStream(HyphenationConstants.HYPHENATION_DEFAULT_RESOURCE + "External.classes.xml"), "classes.xml");
         }
+       //\endcond 
 
         //
         // ContentHandler methods

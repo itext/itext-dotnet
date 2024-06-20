@@ -26,6 +26,7 @@ using System.Reflection;
 
 namespace iText.Kernel.Pdf
 {
+    //\cond DO_NOT_DOCUMENT 
 	internal static class PdfNameLoader
 	{
 		internal static IDictionary<String, PdfName> LoadNames()
@@ -46,4 +47,5 @@ namespace iText.Kernel.Pdf
 			return staticNames;
 		}
 	}
+	//\endcond	
 }

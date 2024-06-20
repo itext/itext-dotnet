@@ -1170,6 +1170,7 @@ namespace iText.Bouncycastle {
             return certificate.GetEndDateTime();
         }
 
+        //\cond DO_NOT_DOCUMENT
         internal class BouncyCastlePasswordFinder : IPasswordFinder {
             private readonly char[] password;
 
@@ -1181,5 +1182,6 @@ namespace iText.Bouncycastle {
                 return password;
             }
         }
+        //\endcond
     }
 }

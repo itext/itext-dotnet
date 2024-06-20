@@ -54,6 +54,7 @@ namespace iText.Kernel.XMP.Impl
 		{
 		}
 
+		//\cond DO_NOT_DOCUMENT	
 		// EMPTY
 		/// <summary>Normalizes a raw parsed XMPMeta-Object</summary>
 		/// <param name="xmp">the raw metadata object</param>
@@ -68,7 +69,8 @@ namespace iText.Kernel.XMP.Impl
 			DeleteEmptySchemas(tree);
 			return xmp;
 		}
-
+		//\endcond
+		
 		/// <summary>
 		/// Tweak old XMP: Move an instance ID from rdf:about to the
 		/// <em>xmpMM:InstanceID</em> property.
