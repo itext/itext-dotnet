@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Layout.Properties.Grid;
 using iText.Test;
 
 namespace iText.Layout.Properties {
@@ -27,36 +28,52 @@ namespace iText.Layout.Properties {
     public class GridValueTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void UnitValueTest() {
-            GridValue value = GridValue.CreatePointValue(3.2f);
-            NUnit.Framework.Assert.IsTrue(value.IsPointValue());
-            NUnit.Framework.Assert.AreEqual(3.2f, value.GetValue(), 0.00001);
-            value = GridValue.CreatePercentValue(30f);
-            NUnit.Framework.Assert.IsTrue(value.IsPercentValue());
-            NUnit.Framework.Assert.AreEqual(30, value.GetValue(), 0.00001);
+            LengthValue value = new PointValue(3.2f);
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.POINT);
+            NUnit.Framework.Assert.AreEqual(3.2f, (float)value.GetValue(), 0.00001);
+            value = new PercentValue(30f);
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.PERCENT);
+            NUnit.Framework.Assert.AreEqual(30, (float)value.GetValue(), 0.00001);
         }
 
         [NUnit.Framework.Test]
         public virtual void MinMaxContentTest() {
-            GridValue value = GridValue.CreateMinContentValue();
-            NUnit.Framework.Assert.IsTrue(value.IsMinContentValue());
-            NUnit.Framework.Assert.IsNull(value.GetValue());
-            value = GridValue.CreateMaxContentValue();
-            NUnit.Framework.Assert.IsTrue(value.IsMaxContentValue());
-            NUnit.Framework.Assert.IsNull(value.GetValue());
+            GridValue value = MinContentValue.VALUE;
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.MIN_CONTENT);
+            value = MaxContentValue.VALUE;
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.MAX_CONTENT);
         }
 
         [NUnit.Framework.Test]
         public virtual void AutoTest() {
-            GridValue value = GridValue.CreateAutoValue();
-            NUnit.Framework.Assert.IsTrue(value.IsAutoValue());
-            NUnit.Framework.Assert.IsNull(value.GetValue());
+            GridValue value = AutoValue.VALUE;
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.AUTO);
         }
 
         [NUnit.Framework.Test]
         public virtual void FlexValueTest() {
-            GridValue value = GridValue.CreateFlexValue(1.5f);
-            NUnit.Framework.Assert.IsTrue(value.IsFlexibleValue());
-            NUnit.Framework.Assert.AreEqual(1.5f, (float)value.GetValue(), 0.00001);
+            FlexValue value = new FlexValue(1.5f);
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.FLEX);
+            NUnit.Framework.Assert.AreEqual(1.5f, (float)value.GetFlex(), 0.00001);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FitContentTest() {
+            FitContentValue value = new FitContentValue(new PointValue(50.0f));
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.FIT_CONTENT);
+            NUnit.Framework.Assert.AreEqual(new PointValue(50.0f).GetValue(), value.GetLength().GetValue(), 0.00001);
+            value = new FitContentValue(UnitValue.CreatePercentValue(20.0f));
+            NUnit.Framework.Assert.AreEqual(new PercentValue(20.0f).GetValue(), value.GetLength().GetValue(), 0.00001);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MinMaxTest() {
+            MinMaxValue value = new MinMaxValue(new PointValue(50.0f), new FlexValue(2.0f));
+            NUnit.Framework.Assert.AreEqual(value.GetType(), TemplateValue.ValueType.MINMAX);
+            NUnit.Framework.Assert.AreEqual(new PointValue(50.0f).GetValue(), ((PointValue)value.GetMin()).GetValue(), 
+                0.00001);
+            NUnit.Framework.Assert.AreEqual(new FlexValue(2.0f).GetFlex(), ((FlexValue)value.GetMax()).GetFlex(), 0.00001
+                );
         }
     }
 }

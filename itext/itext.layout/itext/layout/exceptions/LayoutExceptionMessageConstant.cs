@@ -65,6 +65,10 @@ namespace iText.Layout.Exceptions {
 
         public const String TAGGING_HINTKEY_SHOULD_HAVE_ACCES = "TaggingHintKey should have accessibility properties";
 
+        public const String GRID_AUTO_REPEAT_CAN_BE_USED_ONLY_ONCE = "Automatic repetitions in the grid template are allowed only once per template.";
+
+        public const String GRID_AUTO_REPEAT_CANNOT_BE_COMBINED_WITH_INDEFINITE_SIZES = "Automatic repetitions in the grid template  cannot be combined with intrinsic or flexible sizes.";
+
         private LayoutExceptionMessageConstant() {
         }
     }

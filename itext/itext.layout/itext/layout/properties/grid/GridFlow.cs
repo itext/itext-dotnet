@@ -20,7 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Layout.Properties {
+using iText.Layout.Properties;
+
+namespace iText.Layout.Properties.Grid {
     /// <summary>
     /// A specialized enum containing potential property values for
     /// <see cref="Property.GRID_FLOW"/>.

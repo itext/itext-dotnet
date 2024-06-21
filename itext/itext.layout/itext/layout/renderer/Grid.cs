@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using iText.Commons.Utils;
 using iText.Layout.Exceptions;
-using iText.Layout.Properties;
+using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
@@ -39,43 +39,25 @@ namespace iText.Layout.Renderer {
     internal class Grid {
         private GridCell[][] rows = new GridCell[][] { new GridCell[1] };
 
-        private readonly Grid.CellPlacementHelper cellPlacementHelper;
-
-        private float minHeight = 0.0f;
+        //Using array list instead of array for .NET portability
+        private readonly IList<ICollection<GridCell>> uniqueCells = new List<ICollection<GridCell>>(2);
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new grid instance.</summary>
         /// <param name="initialRowsCount">initial number of row for the grid</param>
         /// <param name="initialColumnsCount">initial number of columns for the grid</param>
-        /// 
-        internal Grid(int initialRowsCount, int initialColumnsCount, GridFlow flow) {
-            cellPlacementHelper = new Grid.CellPlacementHelper(this, flow);
+        internal Grid(int initialRowsCount, int initialColumnsCount) {
             EnsureGridSize(initialRowsCount, initialColumnsCount);
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Get resulting layout height of the grid, if it's less than explicit (minimal) height of the grid
-        /// return the explicit one.
-        /// </summary>
-        /// <returns>resulting layout height of a grid.</returns>
-        internal virtual float GetHeight() {
-            for (int i = GetNumberOfRows() - 1; i >= 0; --i) {
-                for (int j = 0; j < GetNumberOfColumns(); ++j) {
-                    if (rows[i][j] != null) {
-                        return Math.Max(rows[i][j].GetLayoutArea().GetTop(), minHeight);
-                    }
-                }
-            }
-            return minHeight;
+            //Add GridOrder.ROW and GridOrder.COLUMN cache for unique cells, which is null initially
+            uniqueCells.Add(null);
+            uniqueCells.Add(null);
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Get internal matrix of cells.</summary>
         /// <returns>matrix of cells.</returns>
-        internal virtual GridCell[][] GetRows() {
+        internal GridCell[][] GetRows() {
             return rows;
         }
 //\endcond
@@ -83,7 +65,7 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current number of rows of grid.</summary>
         /// <returns>the number of rows</returns>
-        internal virtual int GetNumberOfRows() {
+        internal int GetNumberOfRows() {
             return rows.Length;
         }
 //\endcond
@@ -91,8 +73,8 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current number of rows of grid.</summary>
         /// <returns>the number of columns</returns>
-        internal virtual int GetNumberOfColumns() {
-            return rows[0].Length;
+        internal int GetNumberOfColumns() {
+            return rows.Length > 0 ? rows[0].Length : 0;
         }
 //\endcond
 
@@ -105,24 +87,27 @@ namespace iText.Layout.Renderer {
         /// <param name="trackIndex">the track index from which cells will be extracted</param>
         /// <returns>collection of unique cells in a row or column</returns>
         internal virtual ICollection<GridCell> GetUniqueCellsInTrack(Grid.GridOrder order, int trackIndex) {
-            ICollection<GridCell> result = new LinkedHashSet<GridCell>();
+            IList<GridCell> result = new List<GridCell>(order == Grid.GridOrder.ROW ? GetNumberOfRows() : GetNumberOfColumns
+                ());
+            GridCell previous = null;
             if (Grid.GridOrder.COLUMN == order) {
                 foreach (GridCell[] row in rows) {
-                    GridCell cell = row[trackIndex];
-                    if (cell != null) {
-                        result.Add(cell);
+                    GridCell current = row[trackIndex];
+                    if (current != null && current != previous) {
+                        previous = current;
+                        result.Add(current);
                     }
                 }
-                return result;
             }
             else {
-                foreach (GridCell cell in rows[trackIndex]) {
-                    if (cell != null) {
-                        result.Add(cell);
+                foreach (GridCell current in rows[trackIndex]) {
+                    if (current != null && current != previous) {
+                        previous = current;
+                        result.Add(current);
                     }
                 }
-                return result;
             }
+            return result;
         }
 //\endcond
 
@@ -133,6 +118,7 @@ namespace iText.Layout.Renderer {
         /// Internally big cells (height * width &gt; 1) are stored in multiple quantities
         /// For example, cell with height = 2 and width = 2 will have 4 instances on a grid (width * height) to simplify
         /// internal grid processing. This method counts such cells as one and returns a list of unique cells.
+        /// The result is cached since grid can't be changed after creation.
         /// </remarks>
         /// <param name="iterationOrder">
         /// if {GridOrder.ROW} the order of cells is from left to right, top to bottom
@@ -141,6 +127,9 @@ namespace iText.Layout.Renderer {
         /// <returns>collection of unique grid cells.</returns>
         internal virtual ICollection<GridCell> GetUniqueGridCells(Grid.GridOrder iterationOrder) {
             ICollection<GridCell> result = new LinkedHashSet<GridCell>();
+            if (uniqueCells[(int)(iterationOrder)] != null) {
+                return uniqueCells[(int)(iterationOrder)];
+            }
             if (Grid.GridOrder.COLUMN.Equals(iterationOrder)) {
                 for (int j = 0; j < GetNumberOfColumns(); ++j) {
                     for (int i = 0; i < GetNumberOfRows(); ++i) {
@@ -149,8 +138,10 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
+                uniqueCells[(int)(iterationOrder)] = result;
                 return result;
             }
+            // GridOrder.ROW
             foreach (GridCell[] cellsRow in rows) {
                 foreach (GridCell cell in cellsRow) {
                     if (cell != null) {
@@ -158,26 +149,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            uniqueCells[(int)(iterationOrder)] = result;
             return result;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
-        /// <param name="cell">cell to and in the grid</param>
-        internal virtual void AddCell(GridCell cell) {
-            cellPlacementHelper.Fit(cell);
-            for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
-                for (int j = cell.GetColumnStart(); j < cell.GetColumnEnd(); ++j) {
-                    rows[i][j] = cell;
-                }
-            }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual void SetMinHeight(float minHeight) {
-            this.minHeight = minHeight;
         }
 //\endcond
 
@@ -210,6 +183,89 @@ namespace iText.Layout.Renderer {
             rows = resizedRows;
         }
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Deletes all null rows/columns depending on the given values.</summary>
+        /// <remarks>
+        /// Deletes all null rows/columns depending on the given values.
+        /// If resulting grid size is less than provided minSize than some null lines will be preserved.
+        /// </remarks>
+        /// <param name="order">
+        /// which null lines to remove -
+        /// <see cref="GridOrder.ROW"/>
+        /// to remove rows
+        /// <see cref="GridOrder.COLUMN"/>
+        /// to remove columns
+        /// </param>
+        /// <param name="minSize">minimal size of the resulting grid</param>
+        /// <returns>the number of left lines in given order</returns>
+        internal virtual int CollapseNullLines(Grid.GridOrder order, int minSize) {
+            int nullLinesStart = DetermineNullLinesStart(order);
+            if (nullLinesStart == -1) {
+                return Grid.GridOrder.ROW.Equals(order) ? GetNumberOfRows() : GetNumberOfColumns();
+            }
+            else {
+                nullLinesStart = Math.Max(minSize, nullLinesStart);
+            }
+            int rowsNumber = Grid.GridOrder.ROW.Equals(order) ? nullLinesStart : GetNumberOfRows();
+            int colsNumber = Grid.GridOrder.COLUMN.Equals(order) ? nullLinesStart : GetNumberOfColumns();
+            GridCell[][] shrankGrid = new GridCell[rowsNumber][];
+            for (int i = 0; i < shrankGrid.Length; ++i) {
+                shrankGrid[i] = new GridCell[colsNumber];
+            }
+            for (int i = 0; i < shrankGrid.Length; ++i) {
+                Array.Copy(rows[i], 0, shrankGrid[i], 0, shrankGrid[0].Length);
+            }
+            rows = shrankGrid;
+            return Grid.GridOrder.ROW.Equals(order) ? GetNumberOfRows() : GetNumberOfColumns();
+        }
+//\endcond
+
+        /// <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
+        /// <param name="cell">cell to and in the grid</param>
+        private void AddCell(GridCell cell) {
+            for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
+                for (int j = cell.GetColumnStart(); j < cell.GetColumnEnd(); ++j) {
+                    rows[i][j] = cell;
+                }
+            }
+        }
+
+        private int DetermineNullLinesStart(Grid.GridOrder order) {
+            if (Grid.GridOrder.ROW.Equals(order)) {
+                for (int i = 0; i < GetNumberOfRows(); ++i) {
+                    bool isNull = true;
+                    for (int j = 0; j < GetNumberOfColumns(); ++j) {
+                        if (GetRows()[i][j] != null) {
+                            isNull = false;
+                            break;
+                        }
+                    }
+                    if (isNull) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            else {
+                if (Grid.GridOrder.COLUMN.Equals(order)) {
+                    for (int j = 0; j < GetNumberOfColumns(); ++j) {
+                        bool isNull = true;
+                        for (int i = 0; i < GetNumberOfRows(); ++i) {
+                            if (GetRows()[i][j] != null) {
+                                isNull = false;
+                                break;
+                            }
+                        }
+                        if (isNull) {
+                            return j;
+                        }
+                    }
+                    return -1;
+                }
+            }
+            return -1;
+        }
 
         internal enum GridOrder {
             ROW,
@@ -278,9 +334,11 @@ namespace iText.Layout.Renderer {
             /// <c>Grid</c>
             /// instance.
             /// </returns>
-            public Grid Build() {
-                Grid grid = new Grid(rowCount, columnCount, flow);
+            public iText.Layout.Renderer.Grid Build() {
+                iText.Layout.Renderer.Grid grid = new iText.Layout.Renderer.Grid(rowCount, columnCount);
+                Grid.CellPlacementHelper cellPlacementHelper = new Grid.CellPlacementHelper(grid, flow);
                 foreach (GridCell cell in cells) {
+                    cellPlacementHelper.Fit(cell);
                     grid.AddCell(cell);
                 }
                 return grid;
@@ -379,10 +437,10 @@ namespace iText.Layout.Renderer {
         private class CellPlacementHelper {
             private readonly GridView view;
 
-            private readonly Grid grid;
+            private readonly iText.Layout.Renderer.Grid grid;
 
 //\cond DO_NOT_DOCUMENT
-            internal CellPlacementHelper(Grid grid, GridFlow flow) {
+            internal CellPlacementHelper(iText.Layout.Renderer.Grid grid, GridFlow flow) {
                 this.view = new GridView(grid, flow);
                 this.grid = grid;
             }

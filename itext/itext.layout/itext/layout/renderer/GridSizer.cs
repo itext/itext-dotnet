@@ -20,13 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
-using iText.Layout.Properties;
+using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
     // 12.1. Grid Sizing Algorithm
+    /// <summary>Class representing grid sizing algorithm.</summary>
     internal class GridSizer {
         private readonly Grid grid;
 
@@ -44,9 +46,21 @@ namespace iText.Layout.Renderer {
 
         private readonly Rectangle actualBBox;
 
+        private float containerHeight;
+
 //\cond DO_NOT_DOCUMENT
-        internal GridSizer(Grid grid, IList<GridValue> templateColumns, IList<GridValue> templateRows, GridValue columnAutoWidth
-            , GridValue rowAutoHeight, float columnGap, float rowGap, Rectangle actualBBox) {
+        /// <summary>Creates new grid sizer instance.</summary>
+        /// <param name="grid">grid to size</param>
+        /// <param name="templateColumns">template values for columns</param>
+        /// <param name="templateRows">template values for rows</param>
+        /// <param name="columnAutoWidth">value which used to size columns out of template range</param>
+        /// <param name="rowAutoHeight">value which used to size rows out of template range</param>
+        /// <param name="columnGap">gap size between columns</param>
+        /// <param name="rowGap">gap size between rows</param>
+        /// <param name="actualBBox">actual bbox which restricts sizing algorithm</param>
+        internal GridSizer(iText.Layout.Renderer.Grid grid, IList<GridValue> templateColumns, IList<GridValue> templateRows
+            , GridValue columnAutoWidth, GridValue rowAutoHeight, float columnGap, float rowGap, Rectangle actualBBox
+            ) {
             this.grid = grid;
             this.templateColumns = templateColumns;
             this.templateRows = templateRows;
@@ -58,11 +72,23 @@ namespace iText.Layout.Renderer {
         }
 //\endcond
 
+        /// <summary>Resolves grid track sizes.</summary>
         public virtual void SizeGrid() {
             // 1. First, the track sizing algorithm is used to resolve the sizes of the grid columns.
             ResolveGridColumns();
             // 2. Next, the track sizing algorithm resolves the sizes of the grid rows.
             ResolveGridRows();
+        }
+
+        /// <summary>Gets grid container height.</summary>
+        /// <remarks>
+        /// Gets grid container height.
+        /// Use this method only after calling
+        /// <see cref="SizeGrid()"/>.
+        /// </remarks>
+        /// <returns>grid container height covered by row template</returns>
+        public virtual float GetContainerHeight() {
+            return containerHeight;
         }
 
         private void ResolveGridRows() {
@@ -76,13 +102,14 @@ namespace iText.Layout.Renderer {
                         rowsValues.Add(rowAutoHeight);
                     }
                     else {
-                        rowsValues.Add(GridValue.CreateAutoValue());
+                        rowsValues.Add(AutoValue.VALUE);
                     }
                 }
             }
-            // TODO DEVSIX-8384 during grid sizing algorithm take into account grid container constraints
-            GridTrackSizer gridTrackSizer = new GridTrackSizer(grid, rowsValues, rowGap, -1, Grid.GridOrder.ROW);
-            IList<float> rows = gridTrackSizer.SizeTracks();
+            GridTrackSizer gridTrackSizer = new GridTrackSizer(grid, rowsValues, rowGap, actualBBox.GetHeight(), Grid.GridOrder
+                .ROW);
+            GridTrackSizer.TrackSizingResult result = gridTrackSizer.SizeTracks();
+            IList<float> rows = result.GetTrackSizesAndExpandPercents(rowsValues);
             foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.ROW)) {
                 float y = 0.0f;
                 for (int currentRow = 0; currentRow < cell.GetRowStart(); ++currentRow) {
@@ -102,17 +129,41 @@ namespace iText.Layout.Renderer {
                     ++rowSizesIdx;
                     cellHeight += (float)rows[i];
                 }
-                // Preserve row sizes for split
+                //Preserve row sizes for split
                 cell.SetRowSizes(rowSizes);
                 cellHeight += (cell.GetGridHeight() - 1) * rowGap;
                 cell.GetLayoutArea().SetHeight(cellHeight);
             }
-            // calculating explicit height to ensure that even empty rows which covered by template would be considered
+            containerHeight = CalculateGridOccupiedHeight(result.GetTrackSizes());
+        }
+
+        /// <summary>Calculate grid container occupied area based on original (non-expanded percentages) track sizes.</summary>
+        /// <param name="originalSizes">original track sizes</param>
+        /// <returns>grid container occupied area</returns>
+        private float CalculateGridOccupiedHeight(IList<float> originalSizes) {
+            // Calculate explicit height to ensure that even empty rows which covered by template would be considered
             float minHeight = 0.0f;
-            foreach (float? row in rows) {
-                minHeight += (float)row;
+            for (int i = 0; i < (templateRows == null ? 0 : templateRows.Count); ++i) {
+                minHeight += (float)originalSizes[i];
             }
-            grid.SetMinHeight(minHeight);
+            float maxHeight = Sum(originalSizes);
+            // Add gaps
+            minHeight += (grid.GetNumberOfRows() - 1) * rowGap;
+            maxHeight += (grid.GetNumberOfRows() - 1) * rowGap;
+            float occupiedHeight = 0.0f;
+            ICollection<GridCell> cells = grid.GetUniqueGridCells(Grid.GridOrder.ROW);
+            foreach (GridCell cell in cells) {
+                occupiedHeight = Math.Max(occupiedHeight, cell.GetLayoutArea().GetTop());
+            }
+            return Math.Max(Math.Min(maxHeight, occupiedHeight), minHeight);
+        }
+
+        private float Sum(IList<float> trackSizes) {
+            float sum = 0.0f;
+            foreach (float? size in trackSizes) {
+                sum += (float)size;
+            }
+            return sum;
         }
 
         private void ResolveGridColumns() {
@@ -126,13 +177,13 @@ namespace iText.Layout.Renderer {
                         colsValues.Add(columnAutoWidth);
                     }
                     else {
-                        colsValues.Add(GridValue.CreateFlexValue(1f));
+                        colsValues.Add(new FlexValue(1f));
                     }
                 }
             }
             GridTrackSizer gridTrackSizer = new GridTrackSizer(grid, colsValues, columnGap, actualBBox.GetWidth(), Grid.GridOrder
                 .COLUMN);
-            IList<float> columns = gridTrackSizer.SizeTracks();
+            IList<float> columns = gridTrackSizer.SizeTracks().GetTrackSizesAndExpandPercents(colsValues);
             foreach (GridCell cell in grid.GetUniqueGridCells(Grid.GridOrder.COLUMN)) {
                 float x = 0.0f;
                 for (int currentColumn = 0; currentColumn < cell.GetColumnStart(); ++currentColumn) {

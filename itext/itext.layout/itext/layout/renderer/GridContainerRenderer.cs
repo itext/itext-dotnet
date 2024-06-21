@@ -27,11 +27,14 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for a grid.</summary>
     public class GridContainerRenderer : BlockRenderer {
         private bool isFirstLayout = true;
+
+        private float containerHeight = 0.0f;
 
         /// <summary>Creates a Grid renderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -52,9 +55,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            //TODO DEVSIX-8331 enable continuous container, right now its not working properly out of the box because
-            // we don't need to enable it for every element in a grid, probably only to those which get
-            // split by a page
+            //TODO DEVSIX-8331 enable continuous container
             //this.setProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER, Boolean.TRUE);
             Rectangle actualBBox = layoutContext.GetArea().GetBBox().Clone();
             float? blockWidth = RetrieveWidth(actualBBox.GetWidth());
@@ -65,7 +66,13 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(actualBBox, false);
             ApplyBorderBox(actualBBox, false);
             ApplyMargins(actualBBox, false);
-            Grid grid = ConstructGrid(this, actualBBox);
+            float? blockHeight = RetrieveHeight();
+            if (blockHeight != null && (float)blockHeight < actualBBox.GetHeight()) {
+                actualBBox.SetY(actualBBox.GetY() + actualBBox.GetHeight() - (float)blockHeight);
+                actualBBox.SetHeight((float)blockHeight);
+            }
+            Grid grid = ConstructGrid(this, new Rectangle(actualBBox.GetWidth(), blockHeight == null ? -1 : actualBBox
+                .GetHeight()));
             GridContainerRenderer.GridLayoutResult layoutResult = LayoutGrid(layoutContext, actualBBox, grid);
             if (layoutResult.GetOverflowRenderers().IsEmpty()) {
                 this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
@@ -73,10 +80,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (layoutResult.GetSplitRenderers().IsEmpty()) {
-                    IRenderer cause = this;
-                    if (!layoutResult.GetCauseOfNothing().IsEmpty()) {
-                        cause = layoutResult.GetCauseOfNothing()[0];
-                    }
+                    IRenderer cause = layoutResult.GetCauseOfNothing() == null ? this : layoutResult.GetCauseOfNothing();
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, cause);
                 }
                 else {
@@ -160,7 +164,7 @@ namespace iText.Layout.Renderer {
                 float itemHeight = ((GridItemRenderer)cellToRender).CalculateHeight(cellBBox.GetHeight());
                 cellToRender.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(itemHeight));
                 // Adjust cell BBox to the remaining part of the layout bbox
-                // This way we can layout elements partially
+                // This way we can lay out elements partially
                 cellBBox.SetHeight(cellBBox.GetTop() - actualBBox.GetBottom()).SetY(actualBBox.GetY());
                 cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA, true);
                 LayoutResult cellResult = cellToRender.Layout(cellContext);
@@ -186,7 +190,7 @@ namespace iText.Layout.Renderer {
                 cellToRenderer.SetProperty(Property.GRID_ROW_START, cell.GetRowStart() + 1);
                 cellToRenderer.SetProperty(Property.GRID_ROW_END, cell.GetRowEnd() + 1);
                 layoutResult.GetOverflowRenderers().Add(cellToRenderer);
-                layoutResult.GetCauseOfNothing().Add(cellResult.GetCauseOfNothing());
+                layoutResult.SetCauseOfNothing(cellResult.GetCauseOfNothing());
                 return cell.GetRowStart();
             }
             // PARTIAL + FULL result handling
@@ -241,10 +245,10 @@ namespace iText.Layout.Renderer {
                 (), layoutContext.IsClippedHeight());
         }
 
-        //calculate grid container occupied area based on its width/height properties and cell layout areas
+        // Calculate grid container occupied area based on its width/height properties and cell layout areas
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, Grid grid, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
-            float totalHeight = UpdateOccupiedHeight(grid.GetHeight(), isFull);
+            float totalHeight = UpdateOccupiedHeight(containerHeight, isFull);
             if (totalHeight < area.GetBBox().GetHeight() || isFull) {
                 area.GetBBox().SetHeight(totalHeight);
                 Rectangle initialBBox = layoutContext.GetArea().GetBBox();
@@ -254,6 +258,7 @@ namespace iText.Layout.Renderer {
             return area;
         }
 
+        // Recalculate height/width after grid sizing and re-apply height/width properties
         private void RecalculateHeightAndWidthAfterLayout(Rectangle bBox, bool isFull) {
             float? height = RetrieveHeight();
             if (height != null) {
@@ -303,29 +308,46 @@ namespace iText.Layout.Renderer {
             return 0F;
         }
 
-        //Grid layout algorithm is based on a https://drafts.csswg.org/css-grid/#layout-algorithm
+        // Grid layout algorithm is based on a https://drafts.csswg.org/css-grid/#layout-algorithm
+        // This method creates grid, positions items on it and sizes grid tracks
         private static Grid ConstructGrid(iText.Layout.Renderer.GridContainerRenderer renderer, Rectangle actualBBox
             ) {
-            IList<GridValue> templateColumns = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_COLUMNS);
-            IList<GridValue> templateRows = renderer.GetProperty<IList<GridValue>>(Property.GRID_TEMPLATE_ROWS);
+            float? columnGapProp = renderer.GetProperty<float?>(Property.COLUMN_GAP);
+            float? rowGapProp = renderer.GetProperty<float?>(Property.ROW_GAP);
+            float columnGap = columnGapProp == null ? 0f : (float)columnGapProp;
+            float rowGap = rowGapProp == null ? 0f : (float)rowGapProp;
+            // Resolving repeats
+            GridTemplateResolver rowRepeatResolver = new GridTemplateResolver(actualBBox.GetHeight(), rowGap);
+            GridTemplateResolver columnRepeatResolver = new GridTemplateResolver(actualBBox.GetWidth(), columnGap);
+            IList<GridValue> templateRows = rowRepeatResolver.ResolveTemplate(renderer.GetProperty<IList<TemplateValue
+                >>(Property.GRID_TEMPLATE_ROWS));
+            IList<GridValue> templateColumns = columnRepeatResolver.ResolveTemplate(renderer.GetProperty<IList<TemplateValue
+                >>(Property.GRID_TEMPLATE_COLUMNS));
             GridFlow flow = renderer.GetProperty<GridFlow?>(Property.GRID_FLOW) == null ? GridFlow.ROW : (GridFlow)(renderer
                 .GetProperty<GridFlow?>(Property.GRID_FLOW));
             foreach (IRenderer child in renderer.GetChildRenderers()) {
                 child.SetParent(renderer);
             }
             // 8. Placing Grid Items
-            Grid grid = Grid.Builder.ForItems(renderer.GetChildRenderers()).Columns(templateColumns == null ? 1 : templateColumns
-                .Count).Rows(templateRows == null ? 1 : templateRows.Count).Flow(flow).Build();
+            iText.Layout.Renderer.Grid grid = Grid.Builder.ForItems(renderer.GetChildRenderers()).Columns(templateColumns
+                 == null ? 1 : templateColumns.Count).Rows(templateRows == null ? 1 : templateRows.Count).Flow(flow).Build
+                ();
+            // Collapse any empty repeated tracks if auto-fit was used
+            if (rowRepeatResolver.IsCollapseNullLines()) {
+                templateRows = rowRepeatResolver.ShrinkTemplatesToFitSize(grid.CollapseNullLines(Grid.GridOrder.ROW, rowRepeatResolver
+                    .GetFixedValuesCount()));
+            }
+            if (columnRepeatResolver.IsCollapseNullLines()) {
+                templateColumns = columnRepeatResolver.ShrinkTemplatesToFitSize(grid.CollapseNullLines(Grid.GridOrder.COLUMN
+                    , columnRepeatResolver.GetFixedValuesCount()));
+            }
+            // 12. Grid Layout Algorithm
             GridValue columnAutoWidth = renderer.GetProperty<GridValue>(Property.GRID_AUTO_COLUMNS);
             GridValue rowAutoHeight = renderer.GetProperty<GridValue>(Property.GRID_AUTO_ROWS);
-            float? columnGapProp = renderer.GetProperty<float?>(Property.COLUMN_GAP);
-            float? rowGapProp = renderer.GetProperty<float?>(Property.ROW_GAP);
-            float columnGap = columnGapProp == null ? 0f : (float)columnGapProp;
-            float rowGap = rowGapProp == null ? 0f : (float)rowGapProp;
-            // 12. Grid Layout Algorithm
             GridSizer gridSizer = new GridSizer(grid, templateColumns, templateRows, columnAutoWidth, rowAutoHeight, columnGap
                 , rowGap, actualBBox);
             gridSizer.SizeGrid();
+            renderer.containerHeight = gridSizer.GetContainerHeight();
             return grid;
         }
 
@@ -334,7 +356,7 @@ namespace iText.Layout.Renderer {
 
             private readonly IList<IRenderer> overflowRenderers = new List<IRenderer>();
 
-            private readonly IList<IRenderer> causeOfNothing = new List<IRenderer>();
+            private IRenderer causeOfNothing;
 
             public GridLayoutResult() {
             }
@@ -348,7 +370,11 @@ namespace iText.Layout.Renderer {
                 return overflowRenderers;
             }
 
-            public IList<IRenderer> GetCauseOfNothing() {
+            public void SetCauseOfNothing(IRenderer causeOfNothing) {
+                this.causeOfNothing = causeOfNothing;
+            }
+
+            public IRenderer GetCauseOfNothing() {
                 return causeOfNothing;
             }
         }

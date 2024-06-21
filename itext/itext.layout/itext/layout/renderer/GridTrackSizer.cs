@@ -26,29 +26,37 @@ using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
     // 12.3. Track Sizing Algorithm
+    /// <summary>Class representing a track sizing algorithm.</summary>
     internal class GridTrackSizer {
-        private const float EPSILON = 0.001f;
-
         private readonly Grid grid;
 
         private readonly IList<GridTrackSizer.Track> tracks;
+
+        private readonly float gap;
 
         private readonly float availableSpace;
 
         private readonly Grid.GridOrder order;
 
-        private readonly ICollection<GridCell> cachedUniqueGridCells;
+        private readonly ICollection<int> percentValueIndexes = new HashSet<int>();
 
 //\cond DO_NOT_DOCUMENT
+        /// <summary>Create a track sizing algorithm for given template.</summary>
+        /// <param name="grid">grid to process</param>
+        /// <param name="values">template values</param>
+        /// <param name="gap">gap between tracks</param>
+        /// <param name="availableSpace">space to fit tracks on</param>
+        /// <param name="order">grid order</param>
         internal GridTrackSizer(Grid grid, IList<GridValue> values, float gap, float availableSpace, Grid.GridOrder
              order) {
             this.grid = grid;
-            // Cache the result of the getUniqueGridCells to speed up calculations
-            this.cachedUniqueGridCells = grid.GetUniqueGridCells(order);
+            this.availableSpace = availableSpace;
+            this.gap = gap;
             tracks = new List<GridTrackSizer.Track>(values.Count);
             foreach (GridValue value in values) {
                 GridTrackSizer.Track track = new GridTrackSizer.Track();
@@ -56,23 +64,32 @@ namespace iText.Layout.Renderer {
                 tracks.Add(track);
             }
             if (availableSpace < 0) {
-                foreach (GridTrackSizer.Track track in tracks) {
-                    if (track.value.IsPercentValue()) {
+                for (int i = 0; i < tracks.Count; ++i) {
+                    GridTrackSizer.Track track = tracks[i];
+                    if (track.value.GetType() == TemplateValue.ValueType.PERCENT) {
                         // 7.2.1. Track Sizes: If the size of the grid container depends on the
                         // size of its tracks, then the <percentage> must be treated as auto
-                        track.value = GridValue.CreateAutoValue();
+                        percentValueIndexes.Add(i);
+                        track.value = AutoValue.VALUE;
+                    }
+                    if (track.value.GetType() == TemplateValue.ValueType.FIT_CONTENT && ((FitContentValue)track.value).GetLength
+                        ().GetType() == TemplateValue.ValueType.PERCENT) {
+                        // "7.2.1. Track Sizes: If the size of the grid container depends on the
+                        // size of its tracks, then the <percentage> must be treated as auto"
+                        // for fit content this means, that formula becomes max(auto-minimum, auto-maximum) = auto
+                        track.value = AutoValue.VALUE;
                     }
                 }
             }
-            // Grid sizing algorithm says "Gutters are treated as empty fixed-size tracks for the purpose of the algorithm."
-            // But relative gaps haven't supported yet, it is why to make algorithm simpler, available space just reduced by gaps.
-            this.availableSpace = availableSpace - ((values.Count - 1) * gap);
             this.order = order;
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual IList<float> SizeTracks() {
+        /// <summary>Resolves template values and auto-values to point values.</summary>
+        /// <returns>list of points, representing track sizes with expanded percentages in case of inline calculation.
+        ///     </returns>
+        internal virtual GridTrackSizer.TrackSizingResult SizeTracks() {
             // First step (12.4. Initialize Track Sizes)
             InitializeTrackSizes();
             // Second step (12.5. Resolve Intrinsic Track Sizes)
@@ -83,19 +100,15 @@ namespace iText.Layout.Renderer {
             ExpandFlexibleTracks();
             // Fifth step (12.8. Stretch auto Tracks)
             // Skip for now
-            IList<float> result = new List<float>(tracks.Count);
-            foreach (GridTrackSizer.Track track in tracks) {
-                result.Add(track.baseSize);
-            }
-            return result;
+            return new GridTrackSizer.TrackSizingResult(tracks, gap, percentValueIndexes);
         }
 //\endcond
 
         private void MaximizeTracks() {
-            float? freeSpace = GetFreeSpace();
-            if (freeSpace != null) {
+            float freeSpace = GetFreeSpace();
+            if (availableSpace > 0) {
                 float leftSpace = (float)freeSpace;
-                while (leftSpace > EPSILON) {
+                while (leftSpace > 0.0f) {
                     int unfrozenTracks = 0;
                     foreach (GridTrackSizer.Track track in tracks) {
                         if (JavaUtil.FloatCompare(track.baseSize, track.growthLimit) < 0) {
@@ -127,7 +140,7 @@ namespace iText.Layout.Renderer {
         private void ExpandFlexibleTracks() {
             bool thereIsFlexibleTrack = false;
             foreach (GridTrackSizer.Track track in tracks) {
-                if (track.value.IsFlexibleValue()) {
+                if (track.value.GetType() == TemplateValue.ValueType.FLEX) {
                     thereIsFlexibleTrack = true;
                     break;
                 }
@@ -136,40 +149,41 @@ namespace iText.Layout.Renderer {
                 return;
             }
             float frSize = 0;
-            if (availableSpace >= 0) {
+            if (availableSpace > 0.0f) {
                 // If the free space is zero or if sizing the grid container under a min-content constraint:
                 float freeSpace = (float)GetFreeSpace();
-                if (freeSpace < EPSILON) {
+                if (freeSpace < 0.0f) {
                     return;
                 }
                 // Otherwise, if the free space is a definite length:
-                frSize = FindFrSize(tracks, availableSpace);
+                frSize = FindFrSize(tracks, GetAvailableSpaceForSizing());
             }
             else {
                 // Otherwise, if the free space is an indefinite length:
                 foreach (GridTrackSizer.Track track in tracks) {
-                    if (track.value.IsFlexibleValue()) {
-                        frSize = Math.Max(frSize, (float)(track.baseSize / track.value.GetValue()));
+                    if (track.value.GetType() == TemplateValue.ValueType.FLEX) {
+                        frSize = Math.Max(frSize, track.baseSize / ((FlexValue)track.value).GetFlex());
                     }
                 }
-                foreach (GridCell cell in cachedUniqueGridCells) {
+                foreach (GridCell cell in grid.GetUniqueGridCells(order)) {
                     bool atLeastOneFlexTrack = false;
                     IList<GridTrackSizer.Track> affectedTracks = GetAffectedTracks(cell);
                     foreach (GridTrackSizer.Track track in affectedTracks) {
-                        if (track.value.IsFlexibleValue()) {
+                        if (track.value.GetType() == TemplateValue.ValueType.FLEX) {
                             atLeastOneFlexTrack = true;
+                            break;
                         }
                     }
                     if (!atLeastOneFlexTrack) {
                         continue;
                     }
-                    float maxContribution = CalculateMaxContribution(cell, order);
+                    float maxContribution = CalculateMinMaxContribution(cell, false);
                     frSize = Math.Max(frSize, FindFrSize(affectedTracks, maxContribution));
                 }
             }
             foreach (GridTrackSizer.Track track in tracks) {
-                if (track.value.IsFlexibleValue()) {
-                    float newBaseSize = frSize * (float)track.value.GetValue();
+                if (track.value.GetType() == TemplateValue.ValueType.FLEX) {
+                    float newBaseSize = frSize * ((FlexValue)track.value).GetFlex();
                     if (newBaseSize > track.baseSize) {
                         track.baseSize = newBaseSize;
                     }
@@ -185,11 +199,14 @@ namespace iText.Layout.Renderer {
             return affectedTracks;
         }
 
-        private float? GetFreeSpace() {
-            if (availableSpace < 0) {
-                return null;
-            }
-            float freeSpace = availableSpace;
+        private float GetAvailableSpaceForSizing() {
+            // Grid sizing algorithm says "Gutters are treated as empty fixed-size tracks for the purpose of the algorithm."
+            // But relative gaps haven't supported yet, it is why to make algorithm simpler, available space just reduced by gaps.
+            return availableSpace - ((tracks.Count - 1) * gap);
+        }
+
+        private float GetFreeSpace() {
+            float freeSpace = GetAvailableSpaceForSizing();
             foreach (GridTrackSizer.Track track in tracks) {
                 freeSpace -= track.baseSize;
             }
@@ -197,7 +214,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static float FindFrSize(IList<GridTrackSizer.Track> affectedTracks, float spaceToFill) {
-            // 12.7.1. Find the Size of an fr
+            // 12.7.1. Find the Size of an 'fr'
             float frSize = 0;
             bool allFlexTracksSatisfied = false;
             bool[] ignoreTracks = new bool[affectedTracks.Count];
@@ -206,8 +223,8 @@ namespace iText.Layout.Renderer {
                 float flexFactorSum = 0;
                 for (int i = 0; i < affectedTracks.Count; i++) {
                     GridTrackSizer.Track track = affectedTracks[i];
-                    if (track.value.IsFlexibleValue() && !ignoreTracks[i]) {
-                        flexFactorSum += (float)track.value.GetValue();
+                    if (track.value.GetType() == TemplateValue.ValueType.FLEX && !ignoreTracks[i]) {
+                        flexFactorSum += ((FlexValue)track.value).GetFlex();
                     }
                     else {
                         leftoverSpace -= track.baseSize;
@@ -218,11 +235,10 @@ namespace iText.Layout.Renderer {
                 allFlexTracksSatisfied = true;
                 for (int i = 0; i < affectedTracks.Count; i++) {
                     GridTrackSizer.Track track = affectedTracks[i];
-                    if (track.value.IsFlexibleValue() && !ignoreTracks[i]) {
-                        if (hyphFrSize * track.value.GetValue() < track.baseSize) {
-                            ignoreTracks[i] = true;
-                            allFlexTracksSatisfied = false;
-                        }
+                    if (track.value.GetType() == TemplateValue.ValueType.FLEX && !ignoreTracks[i] && hyphFrSize * ((FlexValue)
+                        track.value).GetFlex() < track.baseSize) {
+                        ignoreTracks[i] = true;
+                        allFlexTracksSatisfied = false;
                     }
                 }
                 if (allFlexTracksSatisfied) {
@@ -238,18 +254,20 @@ namespace iText.Layout.Renderer {
             // 2. Size tracks to fit non-spanning items.
             for (int i = 0; i < tracks.Count; i++) {
                 GridTrackSizer.Track track = tracks[i];
-                // TODO DEVSIX-8384 percent value can be resolvable for height if height of grid container is specified
-                if (track.value.IsPointValue() || track.value.IsPercentValue()) {
-                    continue;
+                GridValue minTrackSizingValue = track.value;
+                GridValue maxTrackSizingValue = track.value;
+                if (track.value.GetType() == TemplateValue.ValueType.MINMAX) {
+                    minTrackSizingValue = ((MinMaxValue)track.value).GetMin();
+                    maxTrackSizingValue = ((MinMaxValue)track.value).GetMax();
                 }
                 ICollection<GridCell> cells = grid.GetUniqueCellsInTrack(order, i);
                 // -> For max-content minimums:
-                if (track.value.IsMaxContentValue()) {
+                if (minTrackSizingValue.GetType() == TemplateValue.ValueType.MAX_CONTENT) {
                     float maxContribution = 0;
                     foreach (GridCell cell in cells) {
                         // non-spanning items only
                         if (cell.GetGridSpan(order) == 1) {
-                            float contribution = CalculateMaxContribution(cell, order);
+                            float contribution = CalculateMinMaxContribution(cell, false);
                             maxContribution = Math.Max(maxContribution, contribution);
                         }
                     }
@@ -257,60 +275,68 @@ namespace iText.Layout.Renderer {
                 }
                 // -> For min-content minimums:
                 // -> For auto minimums: (also the case if track specified by fr value)
-                if (track.value.IsAutoValue() || track.value.IsFlexibleValue() || track.value.IsMinContentValue()) {
+                if (minTrackSizingValue.GetType() == TemplateValue.ValueType.AUTO || minTrackSizingValue.GetType() == TemplateValue.ValueType
+                    .FLEX || minTrackSizingValue.GetType() == TemplateValue.ValueType.MIN_CONTENT || minTrackSizingValue.GetType
+                    () == TemplateValue.ValueType.FIT_CONTENT) {
                     float maxContribution = 0;
                     foreach (GridCell cell in cells) {
                         // non-spanning items only
                         if (cell.GetGridSpan(order) == 1) {
-                            float contribution = CalculateMinContribution(cell, order);
+                            float contribution = CalculateMinMaxContribution(cell, true);
                             maxContribution = Math.Max(maxContribution, contribution);
                         }
                     }
                     track.baseSize = maxContribution;
                 }
                 // -> For min-content maximums:
-                if (track.value.IsMinContentValue() && track.baseSize > EPSILON) {
+                if (maxTrackSizingValue.GetType() == TemplateValue.ValueType.MIN_CONTENT && track.baseSize > 0.0f) {
                     track.growthLimit = track.baseSize;
                 }
                 // -> For max-content maximums:
                 // Treat auto as max-content for max track sizing function
-                if (track.value.IsAutoValue() || track.value.IsMaxContentValue()) {
+                if (maxTrackSizingValue.GetType() == TemplateValue.ValueType.AUTO || maxTrackSizingValue.GetType() == TemplateValue.ValueType
+                    .MAX_CONTENT || maxTrackSizingValue.GetType() == TemplateValue.ValueType.FIT_CONTENT) {
                     float maxContribution = 0;
                     foreach (GridCell cell in cells) {
                         // non-spanning items only
                         if (cell.GetGridSpan(order) == 1) {
-                            float contribution = CalculateMaxContribution(cell, order);
+                            float contribution = CalculateMinMaxContribution(cell, false);
                             maxContribution = Math.Max(maxContribution, contribution);
                         }
                     }
-                    if (maxContribution > EPSILON) {
+                    if (maxContribution > 0.0f) {
                         track.growthLimit = maxContribution;
+                        if (maxTrackSizingValue.GetType() == TemplateValue.ValueType.FIT_CONTENT) {
+                            //For fit-content() maximums, furthermore clamp this growth limit by the fit-content() argument.
+                            float maxSize = ((FitContentValue)maxTrackSizingValue).GetMaxSizeForSpace(availableSpace);
+                            track.growthLimit = Math.Min(track.growthLimit, maxSize);
+                        }
                     }
                 }
                 // if a track’s growth limit is now less than its base size
-                if (track.growthLimit > 0 && track.baseSize > EPSILON && track.baseSize > track.growthLimit) {
+                if (track.growthLimit > 0.0f && track.baseSize > 0.0f && track.baseSize > track.growthLimit) {
                     track.growthLimit = track.baseSize;
                 }
             }
             // 3. Increase sizes to accommodate spanning items crossing content-sized tracks.
             int maxSpanCell = 0;
-            foreach (GridCell cell in cachedUniqueGridCells) {
+            foreach (GridCell cell in grid.GetUniqueGridCells(order)) {
                 maxSpanCell = Math.Max(maxSpanCell, cell.GetGridSpan(order));
             }
             for (int span = 2; span <= maxSpanCell; span++) {
-                foreach (GridCell cell in cachedUniqueGridCells) {
+                foreach (GridCell cell in grid.GetUniqueGridCells(order)) {
                     if (cell.GetGridSpan(order) == span) {
                         bool flexTracksExist = false;
                         IList<GridTrackSizer.Track> affectedTracks = GetAffectedTracks(cell);
                         foreach (GridTrackSizer.Track track in affectedTracks) {
-                            if (track.value.IsFlexibleValue()) {
+                            if (track.value.GetType() == TemplateValue.ValueType.FLEX) {
                                 flexTracksExist = true;
                             }
                         }
                         if (flexTracksExist) {
                             continue;
                         }
-                        float contribution = CalculateMinContribution(cell, order);
+                        float contribution = CalculateMinMaxContribution(cell, true);
                         // 3.1 For intrinsic minimums:
                         // 3.2 For content-based minimums:
                         // 3.3 For max-content minimums:
@@ -322,19 +348,17 @@ namespace iText.Layout.Renderer {
             // 3.5 For intrinsic maximums:
             // 3.6 For max-content maximums:
             // 4. Increase sizes to accommodate spanning items crossing flexible tracks:
-            foreach (GridCell cell in cachedUniqueGridCells) {
-                bool atLeastOneFlexTrack = false;
+            foreach (GridCell cell in grid.GetUniqueGridCells(order)) {
                 IList<GridTrackSizer.Track> affectedTracks = new List<GridTrackSizer.Track>();
                 for (int i = cell.GetStart(order); i < cell.GetEnd(order); i++) {
-                    if (tracks[i].value.IsFlexibleValue()) {
-                        atLeastOneFlexTrack = true;
+                    if (tracks[i].value.GetType() == TemplateValue.ValueType.FLEX) {
                         affectedTracks.Add(tracks[i]);
                     }
                 }
-                if (!atLeastOneFlexTrack) {
+                if (affectedTracks.IsEmpty()) {
                     continue;
                 }
-                float contribution = CalculateMinContribution(cell, order);
+                float contribution = CalculateMinMaxContribution(cell, true);
                 DistributeExtraSpaceWithFlexTracks(affectedTracks, contribution);
             }
             // 5. If any track still has an infinite growth limit
@@ -348,31 +372,21 @@ namespace iText.Layout.Renderer {
         private void DistributeExtraSpaceWithFlexTracks(IList<GridTrackSizer.Track> tracks, float sizeContribution
             ) {
             // 1. Find the space to distribute:
-            float trackSizes = 0;
-            float sumFraction = 0;
+            float trackSizes = 0.0f;
+            float sumFraction = 0.0f;
             foreach (GridTrackSizer.Track track in tracks) {
                 trackSizes += track.baseSize;
-                if (track.value.IsFlexibleValue()) {
-                    sumFraction += (float)track.value.GetValue();
-                }
+                sumFraction += ((FlexValue)track.value).GetFlex();
             }
-            float space = Math.Max(0, sizeContribution - trackSizes);
+            if (sumFraction < 1.0f) {
+                sumFraction = 1.0f;
+            }
+            float space = Math.Max(0.0f, sizeContribution - trackSizes);
+            float spacePerFraction = space / sumFraction;
             // 2. Distribute space up to limits:
-            while (space > EPSILON) {
-                float distributedSpace = space / sumFraction;
-                bool allFrozen = true;
-                foreach (GridTrackSizer.Track track in tracks) {
-                    if (track.value.IsFlexibleValue()) {
-                        float? added = DistributeSpaceToTrack(track, distributedSpace);
-                        if (added != null) {
-                            space -= (float)added;
-                            allFrozen = false;
-                        }
-                    }
-                }
-                if (allFrozen) {
-                    break;
-                }
+            // For flex values we know that they're can't be frozen so we can distribute all available space at once
+            foreach (GridTrackSizer.Track track in tracks) {
+                DistributeSpaceToTrack(track, spacePerFraction * ((FlexValue)track.value).GetFlex());
             }
         }
 
@@ -384,20 +398,30 @@ namespace iText.Layout.Renderer {
             float trackSizes = 0;
             int numberOfAffectedTracks = 0;
             foreach (GridTrackSizer.Track track in tracks) {
+                GridValue value = track.value;
+                if (track.value.GetType() == TemplateValue.ValueType.MINMAX) {
+                    value = affectsBase ? ((MinMaxValue)track.value).GetMin() : ((MinMaxValue)track.value).GetMax();
+                }
                 trackSizes += affectsBase ? track.baseSize : track.growthLimit;
-                if (!track.value.IsPointValue() && !track.value.IsPercentValue()) {
+                if (value.GetType() != TemplateValue.ValueType.POINT && value.GetType() != TemplateValue.ValueType.PERCENT
+                    ) {
                     numberOfAffectedTracks++;
                 }
             }
             float space = Math.Max(0, sizeContribution - trackSizes);
             // 2. Distribute space up to limits:
-            while (space > EPSILON) {
+            while (space > 0.0f) {
                 float distributedSpace = space / numberOfAffectedTracks;
                 bool allFrozen = true;
                 foreach (GridTrackSizer.Track track in tracks) {
-                    if (!track.value.IsPointValue() && !track.value.IsPercentValue()) {
-                        float? added = DistributeSpaceToTrack(track, distributedSpace);
-                        if (added != null) {
+                    GridValue value = track.value;
+                    if (track.value.GetType() == TemplateValue.ValueType.MINMAX) {
+                        value = affectsBase ? ((MinMaxValue)track.value).GetMin() : ((MinMaxValue)track.value).GetMax();
+                    }
+                    if (value.GetType() != TemplateValue.ValueType.POINT && value.GetType() != TemplateValue.ValueType.PERCENT
+                        ) {
+                        float added = DistributeSpaceToTrack(track, distributedSpace);
+                        if (added > 0) {
                             space -= (float)added;
                             allFrozen = false;
                         }
@@ -413,25 +437,49 @@ namespace iText.Layout.Renderer {
         // 4. Distribute space beyond limits: skipped
         private void InitializeTrackSizes() {
             foreach (GridTrackSizer.Track track in tracks) {
+                GridValue minTrackSizingValue = track.value;
+                GridValue maxTrackSizingValue = track.value;
+                if (track.value.GetType() == TemplateValue.ValueType.MINMAX) {
+                    minTrackSizingValue = ((MinMaxValue)track.value).GetMin();
+                    maxTrackSizingValue = ((MinMaxValue)track.value).GetMax();
+                }
                 // A fixed sizing function
-                // TODO DEVSIX-8384 percent value can be resolvable for height if height of grid container is specified
-                if (track.value.IsPointValue() || track.value.IsPercentValue()) {
-                    if (track.value.IsPointValue()) {
-                        track.baseSize = (float)track.value.GetValue();
+                if (minTrackSizingValue.GetType() == TemplateValue.ValueType.POINT || minTrackSizingValue.GetType() == TemplateValue.ValueType
+                    .PERCENT) {
+                    if (minTrackSizingValue.GetType() == TemplateValue.ValueType.POINT) {
+                        track.baseSize = ((LengthValue)minTrackSizingValue).GetValue();
                     }
                     else {
-                        track.baseSize = (float)track.value.GetValue() / 100 * availableSpace;
+                        track.baseSize = ((LengthValue)minTrackSizingValue).GetValue() / 100 * availableSpace;
                     }
-                    track.growthLimit = track.baseSize;
                 }
                 else {
                     track.baseSize = 0;
+                }
+                // A fixed sizing function
+                if (maxTrackSizingValue.GetType() == TemplateValue.ValueType.POINT || maxTrackSizingValue.GetType() == TemplateValue.ValueType
+                    .PERCENT) {
+                    if (maxTrackSizingValue.GetType() == TemplateValue.ValueType.POINT) {
+                        track.growthLimit = ((LengthValue)maxTrackSizingValue).GetValue();
+                    }
+                    else {
+                        track.growthLimit = ((LengthValue)maxTrackSizingValue).GetValue() / 100 * availableSpace;
+                    }
+                }
+                else {
                     track.growthLimit = -1;
                 }
             }
         }
 
-        private static float? DistributeSpaceToTrack(GridTrackSizer.Track track, float distributedSpace) {
+        /// <summary>
+        /// Distributes given space to track, if given space can't be fully distributed returns
+        /// as many space as was distributed.
+        /// </summary>
+        /// <param name="track">track to which distribute space</param>
+        /// <param name="distributedSpace">how much space to distribute</param>
+        /// <returns>how much space was distributed</returns>
+        private static float DistributeSpaceToTrack(GridTrackSizer.Track track, float distributedSpace) {
             if (track.growthLimit < 0 || distributedSpace + track.baseSize <= track.growthLimit) {
                 track.baseSize += distributedSpace;
                 return distributedSpace;
@@ -443,42 +491,26 @@ namespace iText.Layout.Renderer {
                     return addedToLimit;
                 }
             }
-            return null;
+            return -1.0f;
         }
 
-        private static float CalculateMinContribution(GridCell cell, Grid.GridOrder order) {
+        /// <summary>Calculate min or max contribution of a cell.</summary>
+        /// <param name="cell">cell to calculate contribution</param>
+        /// <param name="minTypeContribution">type of contribution: min if true, max otherwise</param>
+        /// <returns>contribution value</returns>
+        private float CalculateMinMaxContribution(GridCell cell, bool minTypeContribution) {
             if (Grid.GridOrder.COLUMN == order) {
                 if (cell.GetValue() is AbstractRenderer) {
                     AbstractRenderer abstractRenderer = (AbstractRenderer)cell.GetValue();
-                    return abstractRenderer.GetMinMaxWidth().GetMinWidth();
+                    return minTypeContribution ? abstractRenderer.GetMinMaxWidth().GetMinWidth() : abstractRenderer.GetMinMaxWidth
+                        ().GetMaxWidth();
                 }
             }
             else {
-                cell.GetValue().SetProperty(Property.FILL_AVAILABLE_AREA, false);
-                LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, new Rectangle(cell.GetLayoutArea().GetWidth
-                    (), AbstractRenderer.INF)));
-                LayoutResult inifiniteHeighLayoutResult = cell.GetValue().Layout(layoutContext);
-                if (inifiniteHeighLayoutResult.GetStatus() == LayoutResult.NOTHING || inifiniteHeighLayoutResult.GetStatus
-                    () == LayoutResult.PARTIAL) {
-                    return 0;
-                }
-                return inifiniteHeighLayoutResult.GetOccupiedArea().GetBBox().GetHeight();
-            }
-            return 0;
-        }
-
-        private static float CalculateMaxContribution(GridCell cell, Grid.GridOrder gridOrder) {
-            if (Grid.GridOrder.COLUMN == gridOrder) {
-                if (cell.GetValue() is AbstractRenderer) {
-                    AbstractRenderer abstractRenderer = (AbstractRenderer)cell.GetValue();
-                    return abstractRenderer.GetMinMaxWidth().GetMaxWidth();
-                }
-            }
-            else {
-                cell.GetValue().SetProperty(Property.FILL_AVAILABLE_AREA, false);
                 // https://drafts.csswg.org/css-sizing-3/#auto-box-sizes:
                 // min-content block size - For block containers, tables, and
                 // inline boxes, this is equivalent to the max-content block size.
+                cell.GetValue().SetProperty(Property.FILL_AVAILABLE_AREA, false);
                 LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, new Rectangle(cell.GetLayoutArea().GetWidth
                     (), AbstractRenderer.INF)));
                 LayoutResult inifiniteHeighLayoutResult = cell.GetValue().Layout(layoutContext);
@@ -491,7 +523,71 @@ namespace iText.Layout.Renderer {
             return 0;
         }
 
-        private class Track {
+//\cond DO_NOT_DOCUMENT
+        internal class TrackSizingResult {
+            private readonly IList<GridTrackSizer.Track> tracks;
+
+            private readonly ICollection<int> percentValueIndexes;
+
+            private readonly float gap;
+
+//\cond DO_NOT_DOCUMENT
+            internal TrackSizingResult(IList<GridTrackSizer.Track> tracks, float gap, ICollection<int> percentValueIndexes
+                ) {
+                this.tracks = tracks;
+                this.percentValueIndexes = percentValueIndexes;
+                this.gap = gap;
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            /// <summary>Get original track sizes which are were resolved during track sizing algorithm.</summary>
+            /// <remarks>
+            /// Get original track sizes which are were resolved during track sizing algorithm.
+            /// If result contains inline percentages those are not expanded/reduced and have a size equivalent
+            /// of AUTO.
+            /// </remarks>
+            /// <returns>original track sizes list</returns>
+            internal virtual IList<float> GetTrackSizes() {
+                IList<float> result = new List<float>(tracks.Count);
+                foreach (GridTrackSizer.Track track in tracks) {
+                    result.Add(track.baseSize);
+                }
+                return result;
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            /// <summary>Get expanded track sizes where inline percents are resolved against calculated grid area.</summary>
+            /// <param name="template">grid value template</param>
+            /// <returns>expanded track sizes list</returns>
+            internal virtual IList<float> GetTrackSizesAndExpandPercents(IList<GridValue> template) {
+                if (percentValueIndexes.IsEmpty()) {
+                    return GetTrackSizes();
+                }
+                // Resolve inline percentage values (7.2.1. Track Sizes)
+                float total = 0.0f;
+                foreach (GridTrackSizer.Track track in tracks) {
+                    total += track.baseSize;
+                }
+                total += ((tracks.Count - 1) * gap);
+                IList<float> expandedTrackSizes = new List<float>(tracks.Count);
+                for (int i = 0; i < tracks.Count; ++i) {
+                    if (percentValueIndexes.Contains(i)) {
+                        expandedTrackSizes.Add(((PercentValue)template[i]).GetValue() / 100 * total);
+                    }
+                    else {
+                        expandedTrackSizes.Add(tracks[i].baseSize);
+                    }
+                }
+                return expandedTrackSizes;
+            }
+//\endcond
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal class Track {
 //\cond DO_NOT_DOCUMENT
             internal float baseSize;
 //\endcond
@@ -505,6 +601,7 @@ namespace iText.Layout.Renderer {
             internal GridValue value;
 //\endcond
         }
+//\endcond
     }
 //\endcond
 }
