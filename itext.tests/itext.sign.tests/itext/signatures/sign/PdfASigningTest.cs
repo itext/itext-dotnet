@@ -37,6 +37,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

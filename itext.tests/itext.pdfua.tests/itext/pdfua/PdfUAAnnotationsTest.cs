@@ -46,6 +46,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUAAnnotationsTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -760,6 +761,7 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         private PdfTextAnnotation CreateRichTextAnnotation() {
             PdfTextAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 100, 100, 100));
             annot.SetContents("Rich media annot");
