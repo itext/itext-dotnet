@@ -141,9 +141,15 @@ namespace iText.Layout.Renderer {
                     // or as its minimum track sizing function otherwise
                     // if encountered intrinsic or flexible before, then it doesn't matter what to process
                     bool currentValue = containsIntrinsicOrFlexible;
-                    float length = ProcessValue(((MinMaxValue)value).GetMax());
+                    MinMaxValue minMaxValue = (MinMaxValue)value;
+                    if (minMaxValue.GetMin().GetType() == TemplateValue.ValueType.FLEX) {
+                        // A future level of CSS Grid spec may allow <flex> minimums, but not now
+                        throw new InvalidOperationException(LayoutExceptionMessageConstant.FLEXIBLE_ARENT_ALLOWED_AS_MINIMUM_IN_MINMAX
+                            );
+                    }
+                    float length = ProcessValue(minMaxValue.GetMax());
                     if (containsIntrinsicOrFlexible) {
-                        length = ProcessValue(((MinMaxValue)value).GetMin());
+                        length = ProcessValue(minMaxValue.GetMin());
                     }
                     containsIntrinsicOrFlexible = currentValue;
                     result.SetFreeze(false);

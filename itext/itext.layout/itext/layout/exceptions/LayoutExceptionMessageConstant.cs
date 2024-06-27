@@ -67,7 +67,9 @@ namespace iText.Layout.Exceptions {
 
         public const String GRID_AUTO_REPEAT_CAN_BE_USED_ONLY_ONCE = "Automatic repetitions in the grid template are allowed only once per template.";
 
-        public const String GRID_AUTO_REPEAT_CANNOT_BE_COMBINED_WITH_INDEFINITE_SIZES = "Automatic repetitions in the grid template  cannot be combined with intrinsic or flexible sizes.";
+        public const String GRID_AUTO_REPEAT_CANNOT_BE_COMBINED_WITH_INDEFINITE_SIZES = "Automatic repetitions in the grid template cannot be combined with intrinsic or flexible sizes.";
+
+        public const String FLEXIBLE_ARENT_ALLOWED_AS_MINIMUM_IN_MINMAX = "Flexible values aren't allowed as minimum in minmax grid function.";
 
         private LayoutExceptionMessageConstant() {
         }

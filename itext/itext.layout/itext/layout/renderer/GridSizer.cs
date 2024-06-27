@@ -177,7 +177,7 @@ namespace iText.Layout.Renderer {
                         colsValues.Add(columnAutoWidth);
                     }
                     else {
-                        colsValues.Add(new FlexValue(1f));
+                        colsValues.Add(AutoValue.VALUE);
                     }
                 }
             }
