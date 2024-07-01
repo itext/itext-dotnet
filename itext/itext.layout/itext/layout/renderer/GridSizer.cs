@@ -143,7 +143,7 @@ namespace iText.Layout.Renderer {
         private float CalculateGridOccupiedHeight(IList<float> originalSizes) {
             // Calculate explicit height to ensure that even empty rows which covered by template would be considered
             float minHeight = 0.0f;
-            for (int i = 0; i < (templateRows == null ? 0 : templateRows.Count); ++i) {
+            for (int i = 0; i < (templateRows == null ? 0 : Math.Min(templateRows.Count, originalSizes.Count)); ++i) {
                 minHeight += (float)originalSizes[i];
             }
             float maxHeight = Sum(originalSizes);

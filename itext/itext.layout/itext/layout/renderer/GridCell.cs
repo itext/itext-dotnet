@@ -178,8 +178,13 @@ namespace iText.Layout.Renderer {
                     result[1] = intEnd - intStart;
                 }
                 else {
-                    result[0] = intEnd;
-                    result[1] = intStart - intEnd;
+                    if (intStart == intEnd) {
+                        result[0] = intStart;
+                    }
+                    else {
+                        result[0] = intEnd;
+                        result[1] = intStart - intEnd;
+                    }
                 }
             }
             else {

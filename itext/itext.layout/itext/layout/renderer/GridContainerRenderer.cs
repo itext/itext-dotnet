@@ -75,7 +75,7 @@ namespace iText.Layout.Renderer {
                 .GetHeight()));
             GridContainerRenderer.GridLayoutResult layoutResult = LayoutGrid(layoutContext, actualBBox, grid);
             if (layoutResult.GetOverflowRenderers().IsEmpty()) {
-                this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, true);
+                this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, true);
                 return new LayoutResult(LayoutResult.FULL, this.occupiedArea, null, null);
             }
             else {
@@ -84,7 +84,7 @@ namespace iText.Layout.Renderer {
                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, cause);
                 }
                 else {
-                    this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, grid, false);
+                    this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, false);
                     return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
                         ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
                 }
@@ -246,7 +246,7 @@ namespace iText.Layout.Renderer {
         }
 
         // Calculate grid container occupied area based on its width/height properties and cell layout areas
-        private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, Grid grid, bool isFull) {
+        private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
             float totalHeight = UpdateOccupiedHeight(containerHeight, isFull);
             if (totalHeight < area.GetBBox().GetHeight() || isFull) {

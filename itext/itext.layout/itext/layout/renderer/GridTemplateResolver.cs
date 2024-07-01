@@ -51,7 +51,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Determines if auto-fit repeat was encountered during processing.</summary>
         /// <returns>true if auto-fit repeat was encountered, false otherwise</returns>
         internal virtual bool IsCollapseNullLines() {
-            return autoRepeatResolver != null;
+            return autoRepeatResolver != null && autoRepeatResolver.repeat.IsAutoFit();
         }
 //\endcond
 
