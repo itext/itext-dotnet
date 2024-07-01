@@ -28,6 +28,7 @@ using iText.Signatures;
 
 namespace iText.Signatures.Validation.V1.Extensions {
     /// <summary>Class representing "Basic Constraints" certificate extension.</summary>
+    [System.ObsoleteAttribute(@"since 8.0.5. To be removed.")]
     public class BasicConstraintsExtension : CertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

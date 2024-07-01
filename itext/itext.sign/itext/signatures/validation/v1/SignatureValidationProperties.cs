@@ -70,7 +70,7 @@ namespace iText.Signatures.Validation.V1 {
                 <CertificateExtension>(new KeyUsageExtension(KeyUsage.NON_REPUDIATION)));
             IList<CertificateExtension> certIssuerRequiredExtensions = new List<CertificateExtension>();
             certIssuerRequiredExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN));
-            certIssuerRequiredExtensions.Add(new BasicConstraintsExtension(true));
+            certIssuerRequiredExtensions.Add(new DynamicBasicConstraintsExtension());
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), certIssuerRequiredExtensions);
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.TIMESTAMP), JavaCollectionsUtil.SingletonList
                 <CertificateExtension>(new ExtendedKeyUsageExtension(JavaCollectionsUtil.SingletonList<String>(ExtendedKeyUsageExtension

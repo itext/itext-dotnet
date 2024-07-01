@@ -186,7 +186,8 @@ namespace iText.Signatures.Validation.V1 {
             IDistributionPoint distributionPoint = null;
             if (!issuingDistPoint.IsNull()) {
                 // Verify that certificate is in the CRL scope using IDP extension.
-                bool basicConstraintsCaAsserted = new BasicConstraintsExtension(true).ExistsInCertificate(certificate);
+                bool basicConstraintsCaAsserted = new DynamicBasicConstraintsExtension().WithCertificateChainSize(1).ExistsInCertificate
+                    (certificate);
                 if ((issuingDistPoint.OnlyContainsUserCerts() && basicConstraintsCaAsserted) || (issuingDistPoint.OnlyContainsCACerts
                     () && !basicConstraintsCaAsserted)) {
                     report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CERTIFICATE_IS_NOT_IN_THE_CRL_SCOPE
