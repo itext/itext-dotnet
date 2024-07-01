@@ -46,6 +46,8 @@ namespace iText.Kernel.Utils {
         protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags = new Dictionary<PdfDictionary
             , IDictionary<int, String>>();
 
+        private readonly ICollection<PdfObject> inspectedStructTreeElems = new HashSet<PdfObject>();
+
         /// <summary>
         /// Constructs a
         /// <see cref="TaggedPdfReaderTool"/>
@@ -118,6 +120,10 @@ namespace iText.Kernel.Utils {
             try {
                 if (kid is PdfStructElem) {
                     PdfStructElem structElemKid = (PdfStructElem)kid;
+                    if (inspectedStructTreeElems.Contains(structElemKid.GetPdfObject())) {
+                        return;
+                    }
+                    inspectedStructTreeElems.Add(structElemKid.GetPdfObject());
                     PdfName s = structElemKid.GetRole();
                     String tagN = s.GetValue();
                     String tag = FixTagName(tagN);

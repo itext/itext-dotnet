@@ -761,22 +761,19 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (MCR_MARKER.Equals(role)) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE);
             }
-            IList<IStructureNode> descendants = new List<IStructureNode>(GetCurrentStructElem().GetKids());
-            int k = 0;
-            for (int i = 0; i < descendants.Count; ++i) {
-                if (descendants[i] == null || descendants[i] is PdfMcr) {
-                    continue;
-                }
-                String descendantRole = descendants[i].GetRole().GetValue();
-                if (descendantRole.Equals(role) && k++ == n) {
-                    SetCurrentStructElem((PdfStructElem)descendants[i]);
-                    return this;
-                }
-                else {
-                    descendants.AddAll(descendants[i].GetKids());
-                }
+            TagTreePointer.RoleFinderHandler handler = new TagTreePointer.RoleFinderHandler(n, role);
+            TagTreePointer.TagTreeIteratorApproverWithStop approver = new TagTreePointer.TagTreeIteratorApproverWithStop
+                (handler);
+            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), approver, TagTreeIterator.TreeTraversalOrder
+                .PRE_ORDER);
+            iterator.AddHandler(handler);
+            iterator.Traverse();
+            PdfStructElem elem = handler.GetFoundElement();
+            if (elem == null) {
+                throw new PdfException(KernelExceptionMessageConstant.NO_KID_WITH_SUCH_ROLE);
             }
-            throw new PdfException(KernelExceptionMessageConstant.NO_KID_WITH_SUCH_ROLE);
+            SetCurrentStructElem(elem);
+            return this;
         }
 
         /// <summary>Gets current tag kids roles.</summary>
@@ -1129,6 +1126,52 @@ namespace iText.Kernel.Pdf.Tagutils {
         private void ThrowExceptionIfCurrentPageIsNotInited() {
             if (currentPage == null) {
                 throw new PdfException(KernelExceptionMessageConstant.PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE);
+            }
+        }
+
+        private class RoleFinderHandler : ITagTreeIteratorHandler {
+            private readonly int n;
+
+            private readonly String role;
+
+            private int foundIdx = 0;
+
+            private PdfStructElem foundElem;
+
+//\cond DO_NOT_DOCUMENT
+            internal RoleFinderHandler(int n, String role) {
+                this.n = n;
+                this.role = role;
+            }
+//\endcond
+
+            public virtual void NextElement(IStructureNode elem) {
+                if (foundElem != null) {
+                    return;
+                }
+                String descendantRole = elem.GetRole().GetValue();
+                if (descendantRole.Equals(role) && foundIdx++ == n) {
+                    foundElem = (PdfStructElem)elem;
+                }
+            }
+
+            public virtual PdfStructElem GetFoundElement() {
+                return foundElem;
+            }
+        }
+
+        [System.ObsoleteAttribute(@"change ITagTreeIteratorHandler#nextElement to return boolean showing whether the iteration should be continued. It will allow to get rid of this ugly workaround."
+            )]
+        private class TagTreeIteratorApproverWithStop : TagTreeIteratorAvoidDuplicatesApprover {
+            private readonly TagTreePointer.RoleFinderHandler handler;
+
+            public TagTreeIteratorApproverWithStop(TagTreePointer.RoleFinderHandler handler)
+                : base() {
+                this.handler = handler;
+            }
+
+            public override bool Approve(IStructureNode elem) {
+                return base.Approve(elem) && handler.GetFoundElement() == null;
             }
         }
     }

@@ -41,6 +41,28 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TagTreeIteratorApproverNull() {
+            String errorMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "approver"
+                );
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties()));
+            doc.SetTagged();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new TagTreeIterator(doc.GetStructTreeRoot
+                (), null, TagTreeIterator.TreeTraversalOrder.PRE_ORDER));
+            NUnit.Framework.Assert.AreEqual(e.Message, errorMessage);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TagTreeIteratorHandlerNull() {
+            String errorMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "handler"
+                );
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties()));
+            doc.SetTagged();
+            TagTreeIterator it = new TagTreeIterator(doc.GetStructTreeRoot());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => it.AddHandler(null));
+            NUnit.Framework.Assert.AreEqual(e.Message, errorMessage);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TraversalWithoutElements() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties()));
             doc.SetTagged();
@@ -74,6 +96,53 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.AreEqual(PdfName.Figure, handler.nodes[4].GetRole());
             NUnit.Framework.Assert.AreEqual(PdfName.Div, handler.nodes[5].GetRole());
             NUnit.Framework.Assert.AreEqual(PdfName.Code, handler.nodes[6].GetRole());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PostOrderTraversal() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties()));
+            doc.SetTagged();
+            TagTreePointer tp = new TagTreePointer(doc);
+            tp.AddTag(StandardRoles.DIV);
+            tp.AddTag(StandardRoles.P);
+            tp.AddTag(StandardRoles.FIGURE);
+            tp.MoveToParent();
+            tp.AddTag(StandardRoles.DIV);
+            tp.AddTag(StandardRoles.CODE);
+            TagTreeIterator iterator = new TagTreeIterator(doc.GetStructTreeRoot(), new TagTreeIteratorElementApprover
+                (), TagTreeIterator.TreeTraversalOrder.POST_ORDER);
+            TagTreeIteratorTest.TestHandler handler = new TagTreeIteratorTest.TestHandler();
+            iterator.AddHandler(handler);
+            iterator.Traverse();
+            NUnit.Framework.Assert.AreEqual(7, handler.nodes.Count);
+            NUnit.Framework.Assert.AreEqual(PdfName.Figure, handler.nodes[0].GetRole());
+            NUnit.Framework.Assert.AreEqual(PdfName.Code, handler.nodes[1].GetRole());
+            NUnit.Framework.Assert.AreEqual(PdfName.Div, handler.nodes[2].GetRole());
+            NUnit.Framework.Assert.AreEqual(PdfName.P, handler.nodes[3].GetRole());
+            NUnit.Framework.Assert.AreEqual(PdfName.Div, handler.nodes[4].GetRole());
+            NUnit.Framework.Assert.AreEqual(PdfName.Document, handler.nodes[5].GetRole());
+            NUnit.Framework.Assert.IsNull(handler.nodes[6].GetRole());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CyclicReferencesTraversal() {
+            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties()));
+            doc.SetTagged();
+            PdfStructElem kid1 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.P));
+            PdfStructElem kid2 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.DIV));
+            doc.GetStructTreeRoot().AddKid(kid1);
+            doc.GetStructTreeRoot().AddKid(kid2);
+            kid1.AddKid(kid2);
+            kid2.AddKid(kid1);
+            TagTreeIterator iterator = new TagTreeIterator(doc.GetStructTreeRoot(), new TagTreeIteratorAvoidDuplicatesApprover
+                (), TagTreeIterator.TreeTraversalOrder.POST_ORDER);
+            TagTreeIteratorTest.TestHandler handler = new TagTreeIteratorTest.TestHandler();
+            iterator.AddHandler(handler);
+            iterator.Traverse();
+            NUnit.Framework.Assert.AreEqual(3, handler.nodes.Count);
+            NUnit.Framework.Assert.AreEqual(PdfName.Div, handler.nodes[0].GetRole());
+            NUnit.Framework.Assert.AreEqual(PdfName.P, handler.nodes[1].GetRole());
+            NUnit.Framework.Assert.IsNull(handler.nodes[2].GetRole());
         }
 
 //\cond DO_NOT_DOCUMENT

@@ -130,6 +130,57 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.PAGE_ALREADY_FLUSHED, exception.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CyclicReferencesWhileLookingForRoleTest() {
+            PdfDocument doc = CreateTestDocument();
+            PdfStructElem kid1 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.P));
+            PdfStructElem kid2 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.DIV));
+            doc.GetStructTreeRoot().AddKid(kid1);
+            doc.GetStructTreeRoot().AddKid(kid2);
+            kid1.AddKid(kid2);
+            kid2.AddKid(kid1);
+            TagTreePointer pointer = new TagTreePointer(doc);
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pointer.MoveToKid(StandardRoles
+                .FIGURE));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.NO_KID_WITH_SUCH_ROLE, exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CyclicReferencesWhileFlushingTest() {
+            PdfDocument doc = CreateTestDocument();
+            PdfStructElem kid1 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.P));
+            PdfStructElem kid2 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.DIV));
+            doc.GetStructTreeRoot().AddKid(kid1);
+            doc.GetStructTreeRoot().AddKid(kid2);
+            kid1.AddKid(kid2);
+            kid2.AddKid(kid1);
+            TagTreePointer pointer = new TagTreePointer(doc);
+            pointer.MoveToKid(StandardRoles.P);
+            NUnit.Framework.Assert.DoesNotThrow(() => pointer.FlushTag());
+            NUnit.Framework.Assert.IsTrue(kid1.IsFlushed());
+            NUnit.Framework.Assert.IsTrue(kid2.IsFlushed());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CyclicReferencesWithWaitingObjectsWhileFlushingTest() {
+            PdfDocument doc = CreateTestDocument();
+            PdfStructElem kid1 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.P));
+            PdfStructElem kid2 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.DIV));
+            doc.GetStructTreeRoot().AddKid(kid1);
+            doc.GetStructTreeRoot().AddKid(kid2);
+            kid1.AddKid(kid2);
+            kid2.AddKid(kid1);
+            TagTreePointer pointer = new TagTreePointer(doc);
+            pointer.MoveToKid(StandardRoles.P);
+            WaitingTagsManager waitingTagsManager = pointer.GetContext().GetWaitingTagsManager();
+            Object pWaitingTagObj = new Object();
+            waitingTagsManager.AssignWaitingState(pointer, pWaitingTagObj);
+            pointer.MoveToParent().MoveToKid(StandardRoles.DIV);
+            NUnit.Framework.Assert.DoesNotThrow(() => pointer.FlushTag());
+            NUnit.Framework.Assert.IsFalse(kid1.IsFlushed());
+            NUnit.Framework.Assert.IsTrue(kid2.IsFlushed());
+        }
+
         private static PdfDocument CreateTestDocument() {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             pdfDoc.SetTagged();

@@ -25,6 +25,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Test;
 
 namespace iText.Kernel.Utils {
@@ -75,6 +76,28 @@ namespace iText.Kernel.Utils {
             }
             catch (System.IO.IOException) {
                 NUnit.Framework.Assert.Fail("IOException is not expected to be triggered");
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CyclicReferencesTest() {
+            String outXmlPath = DESTINATION_FOLDER + "cyclicReferences.xml";
+            String cmpXmlPath = SOURCE_FOLDER + "cmp_cyclicReferences.xml";
+            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            doc.SetTagged();
+            PdfStructElem kid1 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.P));
+            PdfStructElem kid2 = new PdfStructElem(doc, PdfStructTreeRoot.ConvertRoleToPdfName(StandardRoles.DIV));
+            doc.GetStructTreeRoot().AddKid(kid1);
+            doc.GetStructTreeRoot().AddKid(kid2);
+            kid1.AddKid(kid2);
+            kid2.AddKid(kid1);
+            TaggedPdfReaderTool tool = new TaggedPdfReaderTool(doc);
+            using (Stream outXml = FileUtil.GetFileOutputStream(outXmlPath)) {
+                tool.ConvertToXml(outXml, "UTF-8");
+            }
+            CompareTool compareTool = new CompareTool();
+            if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath)) {
+                NUnit.Framework.Assert.Fail("Resultant xml is different.");
             }
         }
     }

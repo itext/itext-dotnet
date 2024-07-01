@@ -222,12 +222,10 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (waitingTagToAssociatedObj.ContainsKey(elem.GetPdfObject())) {
                 return;
             }
-            foreach (IStructureNode kid in elem.GetKids()) {
-                if (kid is PdfStructElem) {
-                    FlushStructElementAndItKids((PdfStructElem)kid);
-                }
-            }
-            elem.Flush();
+            TagTreeIterator iterator = new TagTreeIterator(elem, new WaitingTagsManager.WaitingTagsApprover(waitingTagToAssociatedObj
+                .Keys), TagTreeIterator.TreeTraversalOrder.POST_ORDER);
+            iterator.AddHandler(new TagTreeIteratorFlusher());
+            iterator.Traverse();
         }
 
         private void RemoveWaitingStateAndFlushIfParentFlushed(PdfStructElem structElem) {
@@ -237,6 +235,20 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (parent is PdfStructElem && ((PdfStructElem)parent).IsFlushed()) {
                     FlushStructElementAndItKids(structElem);
                 }
+            }
+        }
+
+        private class WaitingTagsApprover : TagTreeIteratorAvoidDuplicatesApprover {
+            private readonly ICollection<PdfDictionary> waitingTags;
+
+            public WaitingTagsApprover(ICollection<PdfDictionary> waitingTags)
+                : base() {
+                this.waitingTags = waitingTags;
+            }
+
+            public override bool Approve(IStructureNode elem) {
+                return base.Approve(elem) && elem is PdfStructElem && (waitingTags == null || !waitingTags.Contains(((PdfStructElem
+                    )elem).GetPdfObject()));
             }
         }
     }
