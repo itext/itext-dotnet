@@ -267,12 +267,9 @@ namespace iText.Signatures {
             return rootStore;
         }
 
-        internal static void SetRSASSAPSSParamsWithMGF1(ISigner signature, String digestAlgoName, int saltLen, int trailerField)
-        {
-         //     var mgf1Spec = new MgfParameters() MGF1ParameterSpec(digestAlgoName);
-         //    PSSParameterSpec spec = new Pss  PSSParameterSpec(digestAlgoName, "MGF1", mgf1Spec, saltLen, trailerField);
-         // signature.  setParameter(spec);
-         }
+        internal static void SetRSASSAPSSParamsWithMGF1(ISigner signature, String digestAlgoName, int saltLen, int trailerField) {
+            signature.InitRsaPssSigner(digestAlgoName, saltLen, trailerField);
+        }
         
         internal static void UpdateVerifier(ISigner sig, byte[] digest) {
             sig.UpdateVerifier(digest);

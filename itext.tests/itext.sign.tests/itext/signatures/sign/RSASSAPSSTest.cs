@@ -65,7 +65,7 @@ namespace iText.Signatures.Sign {
             String cmpFileName = "cmp_simplePssSignature.pdf";
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName, 
@@ -91,7 +91,7 @@ namespace iText.Signatures.Sign {
 
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName,
@@ -116,7 +116,7 @@ namespace iText.Signatures.Sign {
             String outFileName = "simplePssSignatureSha384.pdf";
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName,
@@ -137,7 +137,7 @@ namespace iText.Signatures.Sign {
             String cmpFileName = "cmp_simplePssSignature.pdf";
             
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName, new RSASSAPSSMechanismParams(

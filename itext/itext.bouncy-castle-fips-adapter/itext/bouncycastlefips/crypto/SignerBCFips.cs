@@ -70,6 +70,12 @@ namespace iText.Bouncycastlefips.Crypto {
         }
 
         /// <summary><inheritDoc/></summary>
+        public void InitRsaPssSigner(string digestAlgoName, int saltLen, int trailerField) {
+            // Not supported yet
+            // Leave empty, we will throw in another place
+        }
+
+        /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
             if (digest != null) {
                 using (Stream digStream = digest.Stream) {
