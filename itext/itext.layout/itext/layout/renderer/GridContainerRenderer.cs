@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
-using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -35,6 +34,8 @@ namespace iText.Layout.Renderer {
         private bool isFirstLayout = true;
 
         private float containerHeight = 0.0f;
+
+        private float containerWidth = 0.0f;
 
         /// <summary>Creates a Grid renderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -59,13 +60,12 @@ namespace iText.Layout.Renderer {
             //this.setProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER, Boolean.TRUE);
             Rectangle actualBBox = layoutContext.GetArea().GetBBox().Clone();
             float? blockWidth = RetrieveWidth(actualBBox.GetWidth());
-            if (blockWidth != null) {
-                actualBBox.SetWidth((float)blockWidth);
-            }
             ContinuousContainer.SetupContinuousContainerIfNeeded(this);
             ApplyPaddings(actualBBox, false);
             ApplyBorderBox(actualBBox, false);
             ApplyMargins(actualBBox, false);
+            ApplyWidth(actualBBox, blockWidth, OverflowPropertyValue.VISIBLE);
+            containerWidth = actualBBox.GetWidth();
             float? blockHeight = RetrieveHeight();
             if (blockHeight != null && (float)blockHeight < actualBBox.GetHeight()) {
                 actualBBox.SetY(actualBBox.GetY() + actualBBox.GetHeight() - (float)blockHeight);
@@ -85,8 +85,8 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, false);
-                    return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
-                        ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
+                    return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, GridMulticolUtil.CreateSplitRenderer(layoutResult
+                        .GetSplitRenderers(), this), CreateOverflowRenderer(layoutResult.GetOverflowRenderers()));
                 }
             }
         }
@@ -121,18 +121,6 @@ namespace iText.Layout.Renderer {
                 return true;
             }
             return false;
-        }
-
-        private AbstractRenderer CreateSplitRenderer(IList<IRenderer> children) {
-            AbstractRenderer splitRenderer = (AbstractRenderer)GetNextRenderer();
-            splitRenderer.parent = parent;
-            splitRenderer.modelElement = modelElement;
-            splitRenderer.occupiedArea = occupiedArea;
-            splitRenderer.isLastRendererForModelElement = false;
-            splitRenderer.SetChildRenderers(children);
-            splitRenderer.AddAllProperties(GetOwnProperties());
-            ContinuousContainer.SetupContinuousContainerIfNeeded(splitRenderer);
-            return splitRenderer;
         }
 
         private AbstractRenderer CreateOverflowRenderer(IList<IRenderer> children) {
@@ -248,64 +236,24 @@ namespace iText.Layout.Renderer {
         // Calculate grid container occupied area based on its width/height properties and cell layout areas
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
-            float totalHeight = UpdateOccupiedHeight(containerHeight, isFull);
-            if (totalHeight < area.GetBBox().GetHeight() || isFull) {
-                area.GetBBox().SetHeight(totalHeight);
-                Rectangle initialBBox = layoutContext.GetArea().GetBBox();
-                area.GetBBox().SetY(initialBBox.GetY() + initialBBox.GetHeight() - area.GetBBox().GetHeight());
-                RecalculateHeightAndWidthAfterLayout(area.GetBBox(), isFull);
-            }
-            return area;
-        }
-
-        // Recalculate height/width after grid sizing and re-apply height/width properties
-        private void RecalculateHeightAndWidthAfterLayout(Rectangle bBox, bool isFull) {
-            float? height = RetrieveHeight();
-            if (height != null) {
-                height = UpdateOccupiedHeight((float)height, isFull);
-                float heightDelta = bBox.GetHeight() - (float)height;
-                bBox.MoveUp(heightDelta);
-                bBox.SetHeight((float)height);
-            }
-            float? blockWidth = RetrieveWidth(bBox.GetWidth());
-            if (blockWidth != null) {
-                bBox.SetWidth((float)blockWidth);
-            }
-        }
-
-        private float UpdateOccupiedHeight(float initialHeight, bool isFull) {
-            if (isFull) {
-                initialHeight += SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM);
-                initialHeight += SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM);
-                if (!this.HasOwnProperty(Property.BORDER) || this.GetProperty<Border>(Property.BORDER) == null) {
-                    initialHeight += SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM);
+            Rectangle areaBBox = area.GetBBox();
+            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(containerHeight, isFull, isFirstLayout, 
+                this);
+            if (totalContainerHeight < areaBBox.GetHeight() || isFull) {
+                float? height = RetrieveHeight();
+                if (height == null) {
+                    areaBBox.SetHeight(totalContainerHeight);
+                }
+                else {
+                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, isFirstLayout, this);
+                    areaBBox.SetHeight((float)height);
                 }
             }
-            initialHeight += SafelyRetrieveFloatProperty(Property.PADDING_TOP);
-            initialHeight += SafelyRetrieveFloatProperty(Property.MARGIN_TOP);
-            if (!this.HasOwnProperty(Property.BORDER) || this.GetProperty<Border>(Property.BORDER) == null) {
-                initialHeight += SafelyRetrieveFloatProperty(Property.BORDER_TOP);
-            }
-            // isFirstLayout is necessary to handle the case when grid container laid out on more
-            // than 2 pages, and on the last page layout result is full, but there is no bottom border
-            float TOP_AND_BOTTOM = isFull && isFirstLayout ? 2 : 1;
-            //If container laid out on more than 3 pages, then it is a page where there are no bottom and top borders
-            if (!isFull && !isFirstLayout) {
-                TOP_AND_BOTTOM = 0;
-            }
-            initialHeight += SafelyRetrieveFloatProperty(Property.BORDER) * TOP_AND_BOTTOM;
-            return initialHeight;
-        }
-
-        private float SafelyRetrieveFloatProperty(int property) {
-            Object value = this.GetProperty<Object>(property);
-            if (value is UnitValue) {
-                return ((UnitValue)value).GetValue();
-            }
-            if (value is Border) {
-                return ((Border)value).GetWidth();
-            }
-            return 0F;
+            Rectangle initialBBox = layoutContext.GetArea().GetBBox();
+            areaBBox.SetY(initialBBox.GetY() + initialBBox.GetHeight() - areaBBox.GetHeight());
+            float totalContainerWidth = GridMulticolUtil.UpdateOccupiedWidth(containerWidth, this);
+            areaBBox.SetWidth(totalContainerWidth);
+            return area;
         }
 
         // Grid layout algorithm is based on a https://drafts.csswg.org/css-grid/#layout-algorithm

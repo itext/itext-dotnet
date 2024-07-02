@@ -25,7 +25,7 @@ using iText.Test.Pdfa;
 using iText.Test.Utils;
 
 namespace iText.Test {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-File (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("UnitTest")]
     public class VeraPdfLoggerValidationTest : ExtendedITextTest {
 //\cond DO_NOT_DOCUMENT
@@ -51,7 +51,6 @@ namespace iText.Test {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + target));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckValidatorLogsWithWarningTest() {
             String source = "pdfA2b_checkValidatorLogsTest_with_warnings.pdf";
@@ -64,7 +63,6 @@ namespace iText.Test {
                  + target));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckValidatorLogsCleanupTest() {
             String fileNameWithWarnings = "pdfA2b_checkValidatorLogsTest_with_warnings.pdf";
@@ -76,13 +74,11 @@ namespace iText.Test {
                  + "WARNING: The Top DICT does not begin with ROS operator";
             NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
                  + fileNameWithWarnings));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             //We check that the logs are empty after the first check
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + fileNameWithoutWarnings
                 ));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckValidatorLogsForFileContainingErrorsTest() {
             String source = "pdfA2b_checkValidatorLogsTest_with_errors.pdf";
@@ -90,9 +86,7 @@ namespace iText.Test {
             FileUtil.Copy(SOURCE_FOLDER + source, DESTINATION_FOLDER + target);
             String expectedResponseForErrors = "VeraPDF verification failed. See verification results: file:";
             String result = new VeraPdfValidator().Validate(DESTINATION_FOLDER + target);
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android));
             NUnit.Framework.Assert.IsTrue(result.StartsWith(expectedResponseForErrors));
         }
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     }
 }
