@@ -76,10 +76,32 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String REVISIONS_RETRIEVAL_FAILED = "Wasn't possible to retrieve document revisions.";
+        internal const String TIMESTAMP_VERIFICATION_FAILED = "Unexpected exception occurred during mathematical verification of time stamp signature.";
 //\endcond
 
-        private const String TIMESTAMP_EXTRACTION_FAILED = "Unable to extract timestamp from timestamp signature";
+//\cond DO_NOT_DOCUMENT
+        internal const String REVISIONS_RETRIEVAL_FAILED = "Unexpected exception occurred during document revisions retrieval.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String TIMESTAMP_EXTRACTION_FAILED = "Unexpected exception occurred retrieving prove of existence from timestamp signature";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CHAIN_VALIDATION_FAILED = "Unexpected exception occurred during certificate chain validation.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFITICATE_VERIFICATION_FAILED = "Unexpected exception occurred during mathematical certificate verification.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String REVISIONS_VALIDATION_FAILED = "Unexpected exception occurred during revisions validation.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String ADD_KNOWN_CERTIFICATES_FAILED = "Unexpected exception occurred adding known certificates to certificate retriever.";
+//\endcond
 
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
@@ -150,10 +172,14 @@ namespace iText.Signatures.Validation.V1 {
         /// </returns>
         public virtual ValidationReport ValidateSignatures(PdfDocument document) {
             ValidationReport report = new ValidationReport();
-            documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
-            ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(validationContext
-                , document);
-            report.Merge(revisionsValidationReport);
+            SafeCalling.OnRuntimeExceptionLog(() => {
+                documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
+                ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(validationContext
+                    , document);
+                report.Merge(revisionsValidationReport);
+            }
+            , report, (e) => new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_VALIDATION_FAILED, e, ReportItem.ReportItemStatus
+                .INDETERMINATE));
             if (StopValidation(report, validationContext)) {
                 return report;
             }
@@ -175,6 +201,10 @@ namespace iText.Signatures.Validation.V1 {
                     report.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
                         .INDETERMINATE));
                 }
+                catch (Exception e) {
+                    report.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
             }
             return report;
         }
@@ -190,7 +220,9 @@ namespace iText.Signatures.Validation.V1 {
                 return validationReport;
             }
             IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, document);
-            certificateRetriever.AddKnownCertificates(certificatesFromDss);
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(certificatesFromDss), validationReport
+                , (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, ReportItem.ReportItemStatus
+                .INFO));
             if (pkcs7.IsTsp()) {
                 ValidateTimestampChain(validationReport, pkcs7.GetCertificates(), pkcs7.GetSigningCertificate());
                 if (UpdateLastKnownPoE(validationReport, pkcs7.GetTimeStampTokenInfo())) {
@@ -215,10 +247,14 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             IX509Certificate[] certificates = pkcs7.GetCertificates();
-            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificates));
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificates
+                )), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, 
+                ReportItem.ReportItemStatus.INFO));
             IX509Certificate signingCertificate = pkcs7.GetSigningCertificate();
             ValidationReport signatureReport = new ValidationReport();
-            certificateChainValidator.Validate(signatureReport, validationContext, signingCertificate, lastKnownPoE);
+            SafeCalling.OnExceptionLog(() => certificateChainValidator.Validate(signatureReport, validationContext, signingCertificate
+                , lastKnownPoE), validationReport, (e) => new CertificateReportItem(signingCertificate, SIGNATURE_VERIFICATION
+                , CHAIN_VALIDATION_FAILED, e, ReportItem.ReportItemStatus.INDETERMINATE));
             if (isPoEUpdated && signatureReport.GetValidationResult() != ValidationReport.ValidationResult.VALID) {
                 // We can only use PoE retrieved from timestamp attribute in case main signature validation is successful.
                 // That's why if the result is not valid, we set back lastKnownPoE value, validation context and rev data.
@@ -253,6 +289,10 @@ namespace iText.Signatures.Validation.V1 {
                 validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_VERIFY_SIGNATURE
                     , latestSignatureName), e, ReportItem.ReportItemStatus.INVALID));
             }
+            catch (Exception e) {
+                validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_VERIFY_SIGNATURE
+                    , latestSignatureName), e, ReportItem.ReportItemStatus.INVALID));
+            }
             return pkcs7;
         }
 
@@ -267,6 +307,10 @@ namespace iText.Signatures.Validation.V1 {
             catch (AbstractGeneralSecurityException e) {
                 tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
                     .INVALID));
+            }
+            catch (Exception e) {
+                tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION_FAILED, TIMESTAMP_VERIFICATION_FAILED
+                    , e, ReportItem.ReportItemStatus.INVALID));
             }
             if (StopValidation(tsValidationReport, validationContext)) {
                 return tsValidationReport;
@@ -283,6 +327,10 @@ namespace iText.Signatures.Validation.V1 {
                 tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION, CANNOT_VERIFY_TIMESTAMP, e, ReportItem.ReportItemStatus
                     .INVALID));
             }
+            catch (Exception e) {
+                tsValidationReport.AddReportItem(new ReportItem(TIMESTAMP_VERIFICATION_FAILED, TIMESTAMP_VERIFICATION_FAILED
+                    , e, ReportItem.ReportItemStatus.INVALID));
+            }
             if (StopValidation(tsValidationReport, validationContext)) {
                 return tsValidationReport;
             }
@@ -294,9 +342,17 @@ namespace iText.Signatures.Validation.V1 {
 
         private void ValidateTimestampChain(ValidationReport validationReport, IX509Certificate[] knownCerts, IX509Certificate
              signingCert) {
-            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
-            certificateChainValidator.Validate(validationReport, validationContext.SetCertificateSource(CertificateSource
-                .TIMESTAMP), signingCert, lastKnownPoE);
+            SafeCalling.OnExceptionLog(() => certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts
+                )), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, 
+                ReportItem.ReportItemStatus.INFO));
+            try {
+                certificateChainValidator.Validate(validationReport, validationContext.SetCertificateSource(CertificateSource
+                    .TIMESTAMP), signingCert, lastKnownPoE);
+            }
+            catch (Exception e) {
+                validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, CHAIN_VALIDATION_FAILED, e, ReportItem.ReportItemStatus
+                    .INFO));
+            }
         }
 
         private bool UpdateLastKnownPoE(ValidationReport tsValidationReport, ITstInfo timeStampTokenInfo) {
@@ -365,6 +421,10 @@ namespace iText.Signatures.Validation.V1 {
                             validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_PARSE_OCSP_FROM_DSS
                                 , ocspStream), e, ReportItem.ReportItemStatus.INFO));
                         }
+                        catch (Exception e) {
+                            validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_PARSE_OCSP_FROM_DSS
+                                , ocspStream), e, ReportItem.ReportItemStatus.INFO));
+                        }
                     }
                 }
             }
@@ -378,14 +438,10 @@ namespace iText.Signatures.Validation.V1 {
                 if (crls != null) {
                     for (int i = 0; i < crls.Size(); ++i) {
                         PdfStream crlStream = crls.GetAsStream(i);
-                        try {
-                            validationCrlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlStream.GetBytes()), lastKnownPoE
-                                , context.GetTimeBasedContext());
-                        }
-                        catch (Exception e) {
-                            validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_PARSE_CRL_FROM_DSS
-                                , crlStream), e, ReportItem.ReportItemStatus.INFO));
-                        }
+                        SafeCalling.OnExceptionLog(() => validationCrlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlStream
+                            .GetBytes()), lastKnownPoE, context.GetTimeBasedContext()), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION
+                            , MessageFormatUtil.Format(CANNOT_PARSE_CRL_FROM_DSS, crlStream), e, ReportItem.ReportItemStatus.INFO)
+                            );
                     }
                 }
             }
@@ -404,6 +460,10 @@ namespace iText.Signatures.Validation.V1 {
                             certificatesFromDss.Add(CertificateUtil.GenerateCertificate(new MemoryStream(certStream.GetBytes())));
                         }
                         catch (AbstractGeneralSecurityException e) {
+                            validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_PARSE_CERT_FROM_DSS
+                                , certStream), e, ReportItem.ReportItemStatus.INFO));
+                        }
+                        catch (Exception e) {
                             validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_PARSE_CERT_FROM_DSS
                                 , certStream), e, ReportItem.ReportItemStatus.INFO));
                         }

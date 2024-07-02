@@ -68,6 +68,14 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String CRL_ISSUER_REQUEST_FAILED = "Unable to validate CRL response: Unexpected exception occurred retrieving issuer certificate.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CRL_ISSUER_CHAIN_FAILED = "Unable to validate CRL response: Unexpected exception occurred validating issuer certificate.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String CRL_ISSUER_NO_COMMON_ROOT = "The CRL issuer does not share the root of the inspected certificate.";
 //\endcond
 
@@ -246,6 +254,8 @@ namespace iText.Signatures.Validation.V1 {
             }
             catch (System.IO.IOException) {
             }
+            catch (Exception) {
+            }
             // Ignore exception.
             return FACTORY.CreateIssuingDistributionPoint(issuingDistPointExtension);
         }
@@ -259,6 +269,8 @@ namespace iText.Signatures.Validation.V1 {
                     ().GetId());
             }
             catch (System.IO.IOException) {
+            }
+            catch (Exception) {
             }
             // Ignore exception.
             if (expiredCertsOnCRL != null) {
@@ -292,8 +304,16 @@ namespace iText.Signatures.Validation.V1 {
 
         private void VerifyCrlIntegrity(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , IX509Crl crl, DateTime responseGenerationDate) {
-            IX509Certificate[] certs = certificateRetriever.GetCrlIssuerCertificates(crl);
-            if (certs.Length == 0) {
+            IX509Certificate[] certs = null;
+            try {
+                certs = certificateRetriever.GetCrlIssuerCertificates(crl);
+            }
+            catch (Exception e) {
+                report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_REQUEST_FAILED, e, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+                return;
+            }
+            if (certs == null || certs.Length == 0) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NOT_FOUND, ReportItem.ReportItemStatus
                     .INDETERMINATE));
                 return;
@@ -306,17 +326,13 @@ namespace iText.Signatures.Validation.V1 {
                     .INDETERMINATE));
                 return;
             }
-            try {
-                crl.Verify(crlIssuer.GetPublicKey());
-            }
-            catch (Exception e) {
-                report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_INVALID, e, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-                return;
-            }
+            SafeCalling.OnExceptionLog(() => crl.Verify(crlIssuer.GetPublicKey()), report, (e) => new CertificateReportItem
+                (certificate, CRL_CHECK, CRL_INVALID, e, ReportItem.ReportItemStatus.INDETERMINATE));
             ValidationReport responderReport = new ValidationReport();
-            builder.GetCertificateChainValidator().Validate(responderReport, context.SetCertificateSource(CertificateSource
-                .CRL_ISSUER), (IX509Certificate)crlIssuer, responseGenerationDate);
+            SafeCalling.OnExceptionLog(() => builder.GetCertificateChainValidator().Validate(responderReport, context.
+                SetCertificateSource(CertificateSource.CRL_ISSUER), (IX509Certificate)crlIssuer, responseGenerationDate
+                ), report, (e) => new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_CHAIN_FAILED, e, ReportItem.ReportItemStatus
+                .INDETERMINATE));
             AddResponderValidationReport(report, responderReport);
         }
 

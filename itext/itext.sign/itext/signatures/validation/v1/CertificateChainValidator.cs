@@ -74,6 +74,26 @@ namespace iText.Signatures.Validation.V1 {
         internal const String ISSUER_CANNOT_BE_VERIFIED = "Issuer certificate {0} for subject certificate {1} cannot be mathematically verified.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String ISSUER_VERIFICATION_FAILED = "Unexpected exception occurred while verifying issuer certificate.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String ISSUER_RETRIEVAL_FAILED = "Unexpected exception occurred while retrieving certificate issuer from IssuingCertificateRetriever.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String TRUSTSTORE_RETRIEVAL_FAILED = "Unexpected exception occurred while retrieving trust store from IssuingCertificateRetriever.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String REVOCATION_VALIDATION_FAILED = "Unexpected exception occurred while validating certificate revocation.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String VALIDITY_PERIOD_CHECK_FAILED = "Unexpected exception occurred while validating certificate validity period.";
+//\endcond
+
         private readonly SignatureValidationProperties properties;
 
         private readonly IssuingCertificateRetriever certificateRetriever;
@@ -192,7 +212,9 @@ namespace iText.Signatures.Validation.V1 {
             if (StopValidation(result, localContext)) {
                 return result;
             }
-            if (CheckIfCertIsTrusted(result, localContext, certificate)) {
+            if (SafeCalling.OnExceptionLog(() => CheckIfCertIsTrusted(result, localContext, certificate), false, result
+                , (e) => new CertificateReportItem(certificate, CERTIFICATE_CHECK, TRUSTSTORE_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
+                .INFO))) {
                 return result;
             }
             ValidateRevocationData(result, localContext, certificate, validationDate);
@@ -286,6 +308,10 @@ namespace iText.Signatures.Validation.V1 {
                 result.AddReportItem(new CertificateReportItem(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(NOT_YET_VALID_CERTIFICATE
                     , certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID));
             }
+            catch (Exception e) {
+                result.AddReportItem(new CertificateReportItem(certificate, VALIDITY_CHECK, MessageFormatUtil.Format(VALIDITY_PERIOD_CHECK_FAILED
+                    , certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID));
+            }
         }
 
         private void ValidateRequiredExtensions(ValidationReport result, ValidationContext context, IX509Certificate
@@ -303,13 +329,22 @@ namespace iText.Signatures.Validation.V1 {
 
         private void ValidateRevocationData(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate) {
-            revocationDataValidator.Validate(report, context, certificate, validationDate);
+            SafeCalling.OnRuntimeExceptionLog(() => revocationDataValidator.Validate(report, context, certificate, validationDate
+                ), report, (e) => new CertificateReportItem(certificate, CERTIFICATE_CHECK, REVOCATION_VALIDATION_FAILED
+                , e, ReportItem.ReportItemStatus.INDETERMINATE));
         }
 
         private void ValidateChain(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate) {
-            IX509Certificate issuerCertificate = (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate(certificate
-                );
+            IX509Certificate issuerCertificate = null;
+            try {
+                issuerCertificate = (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate(certificate);
+            }
+            catch (Exception e) {
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, ISSUER_RETRIEVAL_FAILED, e, 
+                    ReportItem.ReportItemStatus.INDETERMINATE));
+                return;
+            }
             if (issuerCertificate == null) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_MISSING
                     , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INDETERMINATE));
@@ -320,6 +355,12 @@ namespace iText.Signatures.Validation.V1 {
             }
             catch (AbstractGeneralSecurityException e) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_CANNOT_BE_VERIFIED
+                    , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID
+                    ));
+                return;
+            }
+            catch (Exception e) {
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_VERIFICATION_FAILED
                     , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID
                     ));
                 return;

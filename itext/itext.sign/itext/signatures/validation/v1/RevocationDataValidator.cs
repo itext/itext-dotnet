@@ -28,7 +28,6 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
-using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Signatures;
@@ -60,11 +59,31 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String CANNOT_PARSE_OCSP = "OCSP response from \"{0}\" OCSP client cannot be parsed.";
+        internal const String CANNOT_PARSE_OCSP = "OCSP response from \"{0}\" OCSP response cannot be parsed.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String CANNOT_PARSE_CRL = "CRL response from \"{0}\" CRL client cannot be parsed.";
+        internal const String CANNOT_PARSE_CRL = "CRL response from \"{0}\" CRL response cannot be parsed.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String ISSUER_RETRIEVAL_FAILED = "Retrieval of the certificate issuer failed.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String OCSP_CLIENT_FAILURE = "Unexpected exception occurred in OCSP client \"{0}\".";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CRL_CLIENT_FAILURE = "Unexpected exception occurred in CRL client \"{0}\".";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String OCSP_VALIDATOR_FAILURE = "Unexpected exception occurred in OCSP validator.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CRL_VALIDATOR_FAILURE = "Unexpected exception occurred in CRL validator.";
 //\endcond
 
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
@@ -196,15 +215,18 @@ namespace iText.Signatures.Validation.V1 {
                 if (i < ocspResponses.Count && (j >= crlResponses.Count || ocspResponses[i].singleResp.GetThisUpdate().After
                     (crlResponses[j].crl.GetThisUpdate()))) {
                     RevocationDataValidator.OcspResponseValidationInfo validationInfo = ocspResponses[i];
-                    ocspValidator.Validate(revDataValidationReport, context.SetTimeBasedContext(validationInfo.timeBasedContext
-                        ), certificate, validationInfo.singleResp, validationInfo.basicOCSPResp, validationDate, validationInfo
-                        .trustedGenerationDate);
+                    SafeCalling.OnRuntimeExceptionLog(() => ocspValidator.Validate(revDataValidationReport, context.SetTimeBasedContext
+                        (validationInfo.timeBasedContext), certificate, validationInfo.singleResp, validationInfo.basicOCSPResp
+                        , validationDate, validationInfo.trustedGenerationDate), report, (e) => new CertificateReportItem(certificate
+                        , REVOCATION_DATA_CHECK, OCSP_VALIDATOR_FAILURE, e, ReportItem.ReportItemStatus.INFO));
                     i++;
                 }
                 else {
                     RevocationDataValidator.CrlValidationInfo validationInfo = crlResponses[j];
-                    crlValidator.Validate(revDataValidationReport, context.SetTimeBasedContext(validationInfo.timeBasedContext
-                        ), certificate, validationInfo.crl, validationDate, validationInfo.trustedGenerationDate);
+                    SafeCalling.OnRuntimeExceptionLog(() => crlValidator.Validate(revDataValidationReport, context.SetTimeBasedContext
+                        (validationInfo.timeBasedContext), certificate, validationInfo.crl, validationDate, validationInfo.trustedGenerationDate
+                        ), report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, CRL_VALIDATOR_FAILURE, 
+                        e, ReportItem.ReportItemStatus.INFO));
                     j++;
                 }
                 if (ValidationReport.ValidationResult.INDETERMINATE == revDataValidationReport.GetValidationResult()) {
@@ -229,6 +251,15 @@ namespace iText.Signatures.Validation.V1 {
              report, ValidationContext context, IX509Certificate certificate) {
             IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
                 >();
+            IX509Certificate issuerCert;
+            try {
+                issuerCert = (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate(certificate);
+            }
+            catch (Exception e) {
+                report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, ISSUER_RETRIEVAL_FAILED
+                    , e, ReportItem.ReportItemStatus.INDETERMINATE));
+                return ocspResponses;
+            }
             foreach (IOcspClient ocspClient in ocspClients) {
                 if (ocspClient is ValidationOcspClient) {
                     ValidationOcspClient validationOcspClient = (ValidationOcspClient)ocspClient;
@@ -239,8 +270,10 @@ namespace iText.Signatures.Validation.V1 {
                     }
                 }
                 else {
-                    byte[] basicOcspRespBytes = ocspClient.GetEncoded(certificate, (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate
-                        (certificate), null);
+                    byte[] basicOcspRespBytes = null;
+                    basicOcspRespBytes = SafeCalling.OnRuntimeExceptionLog(() => ocspClient.GetEncoded(certificate, issuerCert
+                        , null), null, report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil
+                        .Format(OCSP_CLIENT_FAILURE, ocspClient), e, ReportItem.ReportItemStatus.INFO));
                     if (basicOcspRespBytes != null) {
                         try {
                             IBasicOcspResponse basicOCSPResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1Primitive
@@ -252,6 +285,10 @@ namespace iText.Signatures.Validation.V1 {
                             report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
                                 ), e, ReportItem.ReportItemStatus.INFO));
                         }
+                        catch (Exception e) {
+                            report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
+                                ), e, ReportItem.ReportItemStatus.INFO));
+                        }
                     }
                 }
             }
@@ -259,10 +296,14 @@ namespace iText.Signatures.Validation.V1 {
                 .SetValidatorContext(ValidatorContext.OCSP_VALIDATOR));
             if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching || (SignatureValidationProperties.OnlineFetching
                 .FETCH_IF_NO_OTHER_DATA_AVAILABLE == onlineFetching && ocspResponses.IsEmpty())) {
-                IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle(null).GetBasicOCSPResp(certificate, (IX509Certificate
-                    )certificateRetriever.RetrieveIssuerCertificate(certificate), null);
-                FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                    );
+                SafeCalling.OnRuntimeExceptionLog(() => {
+                    IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle(null).GetBasicOCSPResp(certificate, issuerCert
+                        , null);
+                    FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                        );
+                }
+                , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
+                    , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
             }
             return ocspResponses;
         }
@@ -305,22 +346,15 @@ namespace iText.Signatures.Validation.V1 {
                 crlResponses.AddAll(validationCrlClient.GetCrls().Values);
             }
             else {
-                try {
-                    ICollection<byte[]> crlBytesCollection = crlClient.GetEncoded(certificate, null);
-                    foreach (byte[] crlBytes in crlBytesCollection) {
-                        try {
-                            crlResponses.Add(new RevocationDataValidator.CrlValidationInfo((IX509Crl)CertificateUtil.ParseCrlFromBytes
-                                (crlBytes), DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT));
-                        }
-                        catch (Exception) {
-                            report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
-                                (CANNOT_PARSE_CRL, crlClient), ReportItem.ReportItemStatus.INFO));
-                        }
-                    }
-                }
-                catch (AbstractGeneralSecurityException) {
-                    report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
-                        (CANNOT_PARSE_CRL, crlClient), ReportItem.ReportItemStatus.INFO));
+                ICollection<byte[]> crlBytesCollection = SafeCalling.OnExceptionLog(() => crlClient.GetEncoded(certificate
+                    , null), JavaCollectionsUtil.EmptyList<byte[]>(), report, (e) => new CertificateReportItem(certificate
+                    , REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CRL_CLIENT_FAILURE, crlClient), e, ReportItem.ReportItemStatus
+                    .INFO));
+                foreach (byte[] crlBytes in crlBytesCollection) {
+                    SafeCalling.OnExceptionLog(() => crlResponses.Add(new RevocationDataValidator.CrlValidationInfo((IX509Crl)
+                        CertificateUtil.ParseCrlFromBytes(crlBytes), DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                        )), report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
+                        (CANNOT_PARSE_CRL, crlClient), e, ReportItem.ReportItemStatus.INFO));
                 }
             }
             return crlResponses;

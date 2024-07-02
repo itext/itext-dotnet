@@ -164,6 +164,10 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String REVISIONS_RETRIEVAL_FAILED_UNEXPECTEDLY = "Unexpected exception while retrieving document revisions.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String SIGNATURE_MODIFIED = "Signature {0} was unexpectedly modified.";
 //\endcond
 
@@ -310,6 +314,11 @@ namespace iText.Signatures.Validation.V1 {
                     .INDETERMINATE));
                 return report;
             }
+            catch (Exception e) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_RETRIEVAL_FAILED_UNEXPECTEDLY, e, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+                return report;
+            }
             SignatureUtil signatureUtil = new SignatureUtil(document);
             IList<String> signatures = new List<String>(signatureUtil.GetSignatureNames());
             if (signatures.IsEmpty()) {
@@ -414,6 +423,10 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             catch (System.IO.IOException exception) {
+                validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+            }
+            catch (Exception exception) {
                 validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
                     .INDETERMINATE));
             }
@@ -543,6 +556,10 @@ namespace iText.Signatures.Validation.V1 {
                 report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
                     .INDETERMINATE));
             }
+            catch (Exception exception) {
+                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+            }
         }
 
         private void UpdateCertificationSignatureAccessPermissions(PdfSignature signature, ValidationReport report
@@ -619,6 +636,9 @@ namespace iText.Signatures.Validation.V1 {
             }
             catch (System.IO.IOException) {
             }
+            catch (Exception) {
+            }
+            //ignored
             return false;
         }
 

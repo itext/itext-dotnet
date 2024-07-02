@@ -67,6 +67,19 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String OCSP_RESPONDER_NOT_RETRIEVED = "OCSP response could not be verified: \" +\n" + "            \"Unexpected exception occurred retrieving responder.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String OCSP_RESPONDER_NOT_VERIFIED = "OCSP response could not be verified: \" +\n" + "            \" Unexpected exception occurred while validating responder certificate.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String OCSP_RESPONDER_TRUST_NOT_RETRIEVED = "OCSP response could not be verified: \" +\n" +
+             "            \"responder trust state could not be retrieved.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String OCSP_IS_NO_LONGER_VALID = "OCSP is no longer valid: {0} after {1}";
 //\endcond
 
@@ -75,8 +88,11 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String UNABLE_TO_CHECK_IF_ISSUERS_MATCH = "OCSP response could not be verified: unable to check"
-             + " if issuers match.";
+        internal const String UNABLE_TO_CHECK_IF_ISSUERS_MATCH = "OCSP response could not be verified: Unexpected exception occurred checking if issuers match.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String UNABLE_TO_RETRIEVE_ISSUER = "OCSP response could not be verified: Unexpected exception occurred while retrieving issuer";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -145,7 +161,15 @@ namespace iText.Signatures.Validation.V1 {
                     .INDETERMINATE));
                 return;
             }
-            IX509Certificate issuerCert = certificateRetriever.RetrieveIssuerCertificate(certificate);
+            IX509Certificate issuerCert;
+            try {
+                issuerCert = certificateRetriever.RetrieveIssuerCertificate(certificate);
+            }
+            catch (Exception e) {
+                report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, UNABLE_TO_RETRIEVE_ISSUER, e, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+                return;
+            }
             // Check if the issuer of the certID and signCert matches, i.e. check that issuerNameHash and issuerKeyHash
             // fields of the certID is the hash of the issuer's name and public key:
             try {
@@ -240,14 +264,30 @@ namespace iText.Signatures.Validation.V1 {
             // If the issuer certificate didn't sign the ocsp response, look for authorized ocsp responses
             // from the properties or from the certificate chain received with response.
             if (responderCert == null) {
-                responderCert = (IX509Certificate)certificateRetriever.RetrieveOCSPResponderCertificate(ocspResp);
+                try {
+                    responderCert = (IX509Certificate)certificateRetriever.RetrieveOCSPResponderCertificate(ocspResp);
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new CertificateReportItem(issuerCert, OCSP_CHECK, OCSP_RESPONDER_NOT_RETRIEVED, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                    return;
+                }
                 if (responderCert == null) {
                     report.AddReportItem(new CertificateReportItem(issuerCert, OCSP_CHECK, OCSP_COULD_NOT_BE_VERIFIED, ReportItem.ReportItemStatus
                         .INDETERMINATE));
                     return;
                 }
-                if (!certificateRetriever.IsCertificateTrusted(responderCert) && !certificateRetriever.GetTrustedCertificatesStore
-                    ().IsCertificateTrustedForOcsp(responderCert)) {
+                bool needsToBeSignedByIssuer = false;
+                try {
+                    needsToBeSignedByIssuer = (!certificateRetriever.IsCertificateTrusted(responderCert) && !certificateRetriever
+                        .GetTrustedCertificatesStore().IsCertificateTrustedForOcsp(responderCert));
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONDER_TRUST_NOT_RETRIEVED
+                        , e, ReportItem.ReportItemStatus.INDETERMINATE));
+                    return;
+                }
+                if (needsToBeSignedByIssuer) {
                     // RFC 6960 4.2.2.2. Authorized Responders:
                     // "Systems relying on OCSP responses MUST recognize a delegation certificate as being issued
                     // by the CA that issued the certificate in question only if the delegation certificate and the
@@ -263,17 +303,38 @@ namespace iText.Signatures.Validation.V1 {
                     }
                     // Validating of the ocsp signer's certificate (responderCert) described in the
                     // RFC6960 4.2.2.2.1. Revocation Checking of an Authorized Responder.
-                    builder.GetCertificateChainValidator().Validate(responderReport, localContext, responderCert, responseGenerationDate
-                        );
+                    try {
+                        builder.GetCertificateChainValidator().Validate(responderReport, localContext, responderCert, responseGenerationDate
+                            );
+                    }
+                    catch (Exception e) {
+                        report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONDER_NOT_VERIFIED, e, 
+                            ReportItem.ReportItemStatus.INDETERMINATE));
+                        return;
+                    }
                 }
                 else {
-                    builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
-                        .TRUSTED), responderCert, responseGenerationDate);
+                    try {
+                        builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
+                            .TRUSTED), responderCert, responseGenerationDate);
+                    }
+                    catch (Exception e) {
+                        report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONDER_NOT_VERIFIED, e, 
+                            ReportItem.ReportItemStatus.INDETERMINATE));
+                        return;
+                    }
                 }
             }
             else {
-                builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
-                    .CERT_ISSUER), responderCert, responseGenerationDate);
+                try {
+                    builder.GetCertificateChainValidator().Validate(responderReport, localContext.SetCertificateSource(CertificateSource
+                        .CERT_ISSUER), responderCert, responseGenerationDate);
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONDER_NOT_VERIFIED, e, 
+                        ReportItem.ReportItemStatus.INDETERMINATE));
+                    return;
+                }
             }
             AddResponderValidationReport(report, responderReport);
         }

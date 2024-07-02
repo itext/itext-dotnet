@@ -343,5 +343,115 @@ namespace iText.Signatures.Validation.V1 {
                     ("1701704311986") && c.checkDate.Equals(date1)));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureChainValidatorFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateChainValidator.OnCallDo((c) => {
+                    throw new Exception("Test chain validation failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.CHAIN_VALIDATION_FAILED
+                    )));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TimeStampChainValidatorFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
+            IX509Certificate signCert = (IX509Certificate)certificateChain[0];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateChainValidator.OnCallDo((c) => {
+                    throw new Exception("Test chain validation failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.CHAIN_VALIDATION_FAILED
+                    )));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverAddKnownCertificatesFromDSSFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithDss.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
+                    .ADD_KNOWN_CERTIFICATES_FAILED)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverAddKnownCertificatesFromSignatureFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
+                    .ADD_KNOWN_CERTIFICATES_FAILED)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverAddKnownCertificatesFromTimestampFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
+                    .ADD_KNOWN_CERTIFICATES_FAILED)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentRevisionValidatorFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockDocumentRevisionsValidator.OnCallDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                ValidationReport report = signatureValidator.ValidateSignatures(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.REVISIONS_VALIDATION_FAILED
+                    )));
+            }
+        }
     }
 }

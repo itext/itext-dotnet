@@ -308,7 +308,7 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_409(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_410(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(MessageFormatUtil
@@ -317,8 +317,8 @@ namespace iText.Signatures.Validation.V1 {
                 )));
         }
 
-        private sealed class _ICrlClient_409 : ICrlClient {
-            public _ICrlClient_409(byte[] crl) {
+        private sealed class _ICrlClient_410 : ICrlClient {
+            public _ICrlClient_410(byte[] crl) {
                 this.crl = crl;
             }
 
@@ -416,7 +416,7 @@ namespace iText.Signatures.Validation.V1 {
             mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(crlGeneration, c.responseGenerationDate));
             ValidationReport report = new ValidationReport();
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
-            ValidationOcspClient ocspClient = new _ValidationOcspClient_526();
+            ValidationOcspClient ocspClient = new _ValidationOcspClient_527();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
                 , caCert, null);
@@ -424,7 +424,7 @@ namespace iText.Signatures.Validation.V1 {
                 ));
             ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
             validator.AddOcspClient(ocspClient);
-            ValidationCrlClient crlClient = new _ValidationCrlClient_541();
+            ValidationCrlClient crlClient = new _ValidationCrlClient_542();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
@@ -434,8 +434,8 @@ namespace iText.Signatures.Validation.V1 {
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
 
-        private sealed class _ValidationOcspClient_526 : ValidationOcspClient {
-            public _ValidationOcspClient_526() {
+        private sealed class _ValidationOcspClient_527 : ValidationOcspClient {
+            public _ValidationOcspClient_527() {
             }
 
             public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
@@ -444,8 +444,8 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private sealed class _ValidationCrlClient_541 : ValidationCrlClient {
-            public _ValidationCrlClient_541() {
+        private sealed class _ValidationCrlClient_542 : ValidationCrlClient {
+            public _ValidationCrlClient_542() {
             }
 
             public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
@@ -511,18 +511,18 @@ namespace iText.Signatures.Validation.V1 {
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
-            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_620(testOcspClient, null);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_621(testOcspClient, null);
             validator.AddOcspClient(ocspClient);
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
-            CrlClientOnline crlClient = new _CrlClientOnline_630(testCrlClient);
+            CrlClientOnline crlClient = new _CrlClientOnline_631(testCrlClient);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
                 );
         }
 
-        private sealed class _OcspClientBouncyCastle_620 : OcspClientBouncyCastle {
-            public _OcspClientBouncyCastle_620(TestOcspClient testOcspClient, OCSPVerifier baseArg1)
+        private sealed class _OcspClientBouncyCastle_621 : OcspClientBouncyCastle {
+            public _OcspClientBouncyCastle_621(TestOcspClient testOcspClient, OCSPVerifier baseArg1)
                 : base(baseArg1) {
                 this.testOcspClient = testOcspClient;
             }
@@ -534,8 +534,8 @@ namespace iText.Signatures.Validation.V1 {
             private readonly TestOcspClient testOcspClient;
         }
 
-        private sealed class _CrlClientOnline_630 : CrlClientOnline {
-            public _CrlClientOnline_630(TestCrlClient testCrlClient) {
+        private sealed class _CrlClientOnline_631 : CrlClientOnline {
+            public _CrlClientOnline_631(TestCrlClient testCrlClient) {
                 this.testCrlClient = testCrlClient;
             }
 
@@ -544,6 +544,154 @@ namespace iText.Signatures.Validation.V1 {
             }
 
             private readonly TestCrlClient testCrlClient;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicOCSPValidatorFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate.AddDays(5));
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(5)));
+            builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(10)));
+            TestOcspClientWrapper ocspClient = new TestOcspClientWrapper(new TestOcspClient().AddBuilderForCertIssuer(
+                caCert, builder));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddFreshnessResponse(TimeSpan.FromDays(-2));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validator.AddOcspClient(ocspClient);
+            mockOCSPValidator.OnCallDo((c) => {
+                throw new Exception("Test OCSP client failure");
+            }
+            );
+            validator.Validate(report, baseContext, checkCert, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID)
+                        // the logitem from the OCSP valdiation should be copied to the final report
+                        .HasLogItem((l) => l.WithMessage(RevocationDataValidator.OCSP_VALIDATOR_FAILURE)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OCSPValidatorFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime revocationDate = checkDate.AddDays(-1);
+            TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
+            builder.SetNextUpdate(checkDate.AddDays(10));
+            builder.AddCrlEntry(checkCert, revocationDate, FACTORY.CreateCRLReason().GetKeyCompromise());
+            TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().AddBuilderForCertIssuer(builder
+                ));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddFreshnessResponse(TimeSpan.FromDays(0));
+            ReportItem reportItem = new ReportItem("validator", "message", ReportItem.ReportItemStatus.INFO);
+            mockCrlValidator.OnCallDo((c) => {
+                throw new Exception("Test OCSP client failure");
+            }
+            );
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator().AddCrlClient(crlClient
+                );
+            validator.Validate(report, baseContext, checkCert, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID)
+                        // the logitem from the OCSP valdiation should be copied to the final report
+                        .HasLogItem((l) => l.WithMessage(RevocationDataValidator.CRL_VALIDATOR_FAILURE)));
+        }
+
+        //certificateRetriever.retrieveIssuerCertificate
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverRetrieveIssuerCertificateFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate.AddDays(5));
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(5)));
+            builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(10)));
+            TestOcspClientWrapper ocspClient = new TestOcspClientWrapper(new TestOcspClient().AddBuilderForCertIssuer(
+                caCert, builder));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddFreshnessResponse(TimeSpan.FromDays(-2));
+            MockIssuingCertificateRetriever mockCertificateRetreiver = new MockIssuingCertificateRetriever(certificateRetriever
+                ).OnRetrieveIssuerCertificateDo((c) => {
+                throw new Exception("Test retrieveIssuerCertificate failure");
+            }
+            );
+            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetreiver);
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validator.AddOcspClient(ocspClient);
+            ReportItem reportItem = new ReportItem("validator", "message", ReportItem.ReportItemStatus.INFO);
+            mockOCSPValidator.OnCallDo((c) => c.report.AddReportItem(reportItem));
+            validator.Validate(report, baseContext, checkCert, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(RevocationDataValidator.ISSUER_RETRIEVAL_FAILED)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OcspClientGetEncodedFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate.AddDays(5));
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(5)));
+            builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(10)));
+            TestOcspClientWrapper ocspClient = new TestOcspClientWrapper(new TestOcspClient().AddBuilderForCertIssuer(
+                caCert, builder));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddFreshnessResponse(TimeSpan.FromDays(-2));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validator.AddOcspClient(ocspClient);
+            ReportItem reportItem = new ReportItem("validator", "message", ReportItem.ReportItemStatus.INFO);
+            mockOCSPValidator.OnCallDo((c) => c.report.AddReportItem(reportItem));
+            ocspClient.OnGetEncodedDo((c) => {
+                throw new Exception("Test onGetEncoded failure");
+            }
+            );
+            validator.Validate(report, baseContext, checkCert, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(RevocationDataValidator.OCSP_CLIENT_FAILURE, (p) => ocspClient)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlClientGetEncodedFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime revocationDate = checkDate.AddDays(-1);
+            TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
+            builder.SetNextUpdate(checkDate.AddDays(10));
+            builder.AddCrlEntry(checkCert, revocationDate, FACTORY.CreateCRLReason().GetKeyCompromise());
+            TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().AddBuilderForCertIssuer(builder
+                ));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddFreshnessResponse(TimeSpan.FromDays(0));
+            ReportItem reportItem = new ReportItem("validator", "message", ReportItem.ReportItemStatus.INFO);
+            mockCrlValidator.OnCallDo((c) => c.report.AddReportItem(reportItem));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator().AddCrlClient(crlClient
+                );
+            crlClient.OnGetEncodedDo((c) => {
+                throw new Exception("Test getEncoded failure");
+            }
+            );
+            validator.Validate(report, baseContext, checkCert, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(RevocationDataValidator.CRL_CLIENT_FAILURE, (p) => crlClient.ToString
+                ())));
         }
     }
 }

@@ -37,6 +37,12 @@ namespace iText.Signatures.Validation.V1.Mocks {
         public IList<MockRevocationDataValidator.RevocationDataValidatorCall> calls = new List<MockRevocationDataValidator.RevocationDataValidatorCall
             >();
 
+        private Action<MockRevocationDataValidator.RevocationDataValidatorCall> onValidateHandler;
+
+        private Action<ICrlClient> onAddCrlClientHandler;
+
+        private Action<IOcspClient> onAddOCSPClientHandler;
+
         /// <summary>
         /// Creates new
         /// <see cref="iText.Signatures.Validation.V1.RevocationDataValidator"/>
@@ -48,18 +54,46 @@ namespace iText.Signatures.Validation.V1.Mocks {
 
         public override RevocationDataValidator AddCrlClient(ICrlClient crlClient) {
             crlClientsAdded.Add(crlClient);
+            if (onAddCrlClientHandler != null) {
+                onAddCrlClientHandler(crlClient);
+            }
             return this;
         }
 
         public override RevocationDataValidator AddOcspClient(IOcspClient ocspClient) {
             ocspClientsAdded.Add(ocspClient);
+            if (onAddOCSPClientHandler != null) {
+                onAddOCSPClientHandler(ocspClient);
+            }
             return this;
         }
 
         public override void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate) {
-            calls.Add(new MockRevocationDataValidator.RevocationDataValidatorCall(report, context, certificate, validationDate
-                ));
+            MockRevocationDataValidator.RevocationDataValidatorCall call = new MockRevocationDataValidator.RevocationDataValidatorCall
+                (report, context, certificate, validationDate);
+            calls.Add(call);
+            if (onValidateHandler != null) {
+                onValidateHandler(call);
+            }
+        }
+
+        public virtual iText.Signatures.Validation.V1.Mocks.MockRevocationDataValidator OnValidateDo(Action<MockRevocationDataValidator.RevocationDataValidatorCall
+            > callBack) {
+            onValidateHandler = callBack;
+            return this;
+        }
+
+        public virtual iText.Signatures.Validation.V1.Mocks.MockRevocationDataValidator OnAddCerlClientDo(Action<ICrlClient
+            > callBack) {
+            onAddCrlClientHandler = callBack;
+            return this;
+        }
+
+        public virtual iText.Signatures.Validation.V1.Mocks.MockRevocationDataValidator OnAddOCSPClientDo(Action<IOcspClient
+            > callBack) {
+            onAddOCSPClientHandler = callBack;
+            return this;
         }
 
         public sealed class RevocationDataValidatorCall {

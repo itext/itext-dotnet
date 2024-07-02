@@ -327,6 +327,37 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverFailureTest() {
+            RetrieveTestResources("happyPath");
+            byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
+                TEST_DATE_TIME.AddDays(+5));
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            mockCertificateRetriever.OngetCrlIssuerCertificatesDo((c) => {
+                throw new Exception("just testing");
+            }
+            );
+            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithCRLValidator(new CRLValidator(validatorChainBuilder));
+            ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(CRLValidator.CRL_ISSUER_REQUEST_FAILED)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChainValidatorFailureTest() {
+            RetrieveTestResources("happyPath");
+            byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
+                TEST_DATE_TIME.AddDays(+5));
+            mockChainValidator.OnCallDo((c) => {
+                throw new Exception("Just testing");
+            }
+            );
+            ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(CRLValidator.CRL_ISSUER_CHAIN_FAILED)));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ProvidedTimeIsUsedForResponderValidation() {
             RetrieveTestResources("happyPath");
             byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.

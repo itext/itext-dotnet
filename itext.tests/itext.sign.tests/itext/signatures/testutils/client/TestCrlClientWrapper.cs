@@ -33,12 +33,21 @@ namespace iText.Signatures.Testutils.Client {
         private readonly IList<TestCrlClientWrapper.CrlClientCall> calls = new List<TestCrlClientWrapper.CrlClientCall
             >();
 
+        private Func<TestCrlClientWrapper.CrlClientCall, ICollection<byte[]>> onGetEncoded;
+
         public TestCrlClientWrapper(ICrlClient wrappedClient) {
             this.wrappedClient = wrappedClient;
         }
 
         public virtual ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
-            ICollection<byte[]> crlBytesCollection = wrappedClient.GetEncoded(checkCert, url);
+            TestCrlClientWrapper.CrlClientCall call = new TestCrlClientWrapper.CrlClientCall(checkCert, url);
+            ICollection<byte[]> crlBytesCollection;
+            if (onGetEncoded != null) {
+                crlBytesCollection = onGetEncoded.Invoke(call);
+            }
+            else {
+                crlBytesCollection = wrappedClient.GetEncoded(checkCert, url);
+            }
             IList<IX509Crl> crlResponses = new List<IX509Crl>();
             foreach (byte[] crlBytes in crlBytesCollection) {
                 try {
@@ -48,7 +57,8 @@ namespace iText.Signatures.Testutils.Client {
                     throw new Exception("Deserializing CRL response failed", e);
                 }
             }
-            calls.Add(new TestCrlClientWrapper.CrlClientCall(checkCert, url, crlResponses));
+            call.SetResponses(crlResponses);
+            calls.Add(call);
             return crlBytesCollection;
         }
 
@@ -56,17 +66,26 @@ namespace iText.Signatures.Testutils.Client {
             return calls;
         }
 
+        public virtual iText.Signatures.Testutils.Client.TestCrlClientWrapper OnGetEncodedDo(Func<TestCrlClientWrapper.CrlClientCall
+            , ICollection<byte[]>> callBack) {
+            onGetEncoded = callBack;
+            return this;
+        }
+
         public class CrlClientCall {
             public readonly IX509Certificate checkCert;
 
             public readonly String url;
 
-            public readonly IList<IX509Crl> responses;
+            public IList<IX509Crl> responses;
 
-            public CrlClientCall(IX509Certificate checkCert, String url, IList<IX509Crl> responses) {
+            public CrlClientCall(IX509Certificate checkCert, String url) {
                 this.checkCert = checkCert;
                 this.url = url;
-                this.responses = responses;
+            }
+
+            public virtual void SetResponses(IList<IX509Crl> crlResponses) {
+                responses = crlResponses;
             }
         }
     }

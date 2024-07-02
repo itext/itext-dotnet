@@ -82,15 +82,22 @@ namespace iText.Signatures.Validation.V1.Extensions {
         /// </returns>
         public override bool ExistsInCertificate(IX509Certificate certificate) {
             IList<String> providedExtendedKeyUsage = new List<string>();
-            try {
-                if (certificate.GetExtendedKeyUsage() == null) {
+            try
+            {
+                if (certificate.GetExtendedKeyUsage() == null)
+                {
                     return false;
                 }
-                foreach (string singleExtendedKeyUsage in certificate.GetExtendedKeyUsage()) {
+
+                foreach (string singleExtendedKeyUsage in certificate.GetExtendedKeyUsage())
+                {
                     providedExtendedKeyUsage.Add(singleExtendedKeyUsage);
                 }
             }
             catch (AbstractCertificateParsingException) {
+                return false;
+            }
+            catch (Exception) {
                 return false;
             }
             return providedExtendedKeyUsage.Contains(ANY_EXTENDED_KEY_USAGE_OID) || new HashSet<String>(providedExtendedKeyUsage

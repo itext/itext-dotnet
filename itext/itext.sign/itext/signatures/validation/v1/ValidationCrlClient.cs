@@ -82,6 +82,8 @@ namespace iText.Signatures.Validation.V1 {
                 }
                 catch (AbstractCrlException) {
                 }
+                catch (Exception) {
+                }
             }
             // Do nothing.
             return byteResponses;

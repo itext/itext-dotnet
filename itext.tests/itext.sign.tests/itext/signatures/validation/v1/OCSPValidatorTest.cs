@@ -379,6 +379,81 @@ namespace iText.Signatures.Validation.V1 {
                 (0).HasNumberOfLogs(0));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverRetrieveIssuerCertificateFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            mockCertificateRetriever.OnRetrieveIssuerCertificateDo((c) => {
+                throw new Exception("Test retrieveMissingCertificates failure");
+            }
+            );
+            ValidationReport report = ValidateTest(checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(OCSPValidator.UNABLE_TO_RETRIEVE_ISSUER)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverRetrieveOCSPResponderCertificateFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
+                );
+            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            mockCertificateRetriever.OnRetrieveOCSPResponderCertificateDo((c) => {
+                throw new Exception("Test retrieveMissingCertificates failure");
+            }
+            );
+            ValidationReport report = ValidateTest(checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(OCSPValidator.OCSP_RESPONDER_NOT_RETRIEVED)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverIsCertificateTrustedFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
+                );
+            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            mockCertificateRetriever.OnIsCertificateTrustedDo((c) => {
+                throw new Exception("Test isCertificateTrusted failure");
+            }
+            );
+            ValidationReport report = ValidateTest(checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(OCSPValidator.OCSP_RESPONDER_TRUST_NOT_RETRIEVED)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverIsCertificateTrustedForOcspFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
+                );
+            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            mockCertificateRetriever.OnIsCertificateTrustedDo((c) => false);
+            MockTrustedCertificatesStore mockTrustedStore = new MockTrustedCertificatesStore(certificateRetriever.GetTrustedCertificatesStore
+                ());
+            mockCertificateRetriever.OnGetTrustedCertificatesStoreDo(() => mockTrustedStore);
+            mockTrustedStore.OnIsCertificateTrustedForOcspDo((c) => {
+                throw new Exception("Test isCertificateTrustedForOcsp failure");
+            }
+            );
+            ValidationReport report = ValidateTest(checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(OCSPValidator.OCSP_RESPONDER_TRUST_NOT_RETRIEVED)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateChainValidationFailureTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            mockCertificateChainValidator.OnCallDo((c) => {
+                throw new Exception("Test chain validation failure");
+            }
+            );
+            ValidationReport report = ValidateTest(checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((l) => l.WithMessage(OCSPValidator.OCSP_RESPONDER_NOT_VERIFIED)));
+        }
+
         private ValidationReport ValidateTest(DateTime checkDate) {
             return ValidateTest(checkDate, checkDate.AddDays(1), 0);
         }

@@ -89,6 +89,9 @@ namespace iText.Signatures.Validation.V1 {
             catch (System.IO.IOException) {
                 return null;
             }
+            catch (Exception) {
+                return null;
+            }
         }
     }
 }

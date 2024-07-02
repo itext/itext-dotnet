@@ -165,6 +165,12 @@ namespace iText.Signatures.Cms {
             return signerCertificate;
         }
 
+        /// <summary>Gets the signature data.</summary>
+        /// <returns>the signature data.</returns>
+        public virtual byte[] GetSignatureData() {
+            return signatureData;
+        }
+
         /// <summary>Sets the certificate that is used to sign a document and adds it to the signed attributes.</summary>
         /// <param name="certificate">the certificate that is used to sign</param>
         /// <param name="digestAlgorithmOid">the oid of the digest algorithm to be added to the signed attributes</param>

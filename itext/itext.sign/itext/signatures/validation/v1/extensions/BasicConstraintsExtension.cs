@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -97,6 +98,9 @@ namespace iText.Signatures.Validation.V1.Extensions {
                 }
             }
             catch (System.IO.IOException) {
+                return false;
+            }
+            catch (Exception) {
                 return false;
             }
             if (pathLength >= 0) {

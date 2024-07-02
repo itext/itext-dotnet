@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Signatures.Validation.V1;
 using iText.Signatures.Validation.V1.Context;
@@ -27,7 +29,12 @@ using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1.Mocks {
     public class MockDocumentRevisionsValidator : DocumentRevisionsValidator {
+        public Action<MockDocumentRevisionsValidator.RevisionsValidatorCall> onCallHandler;
+
         private ReportItem.ReportItemStatus reportItemStatus = ReportItem.ReportItemStatus.INFO;
+
+        private IList<MockDocumentRevisionsValidator.RevisionsValidatorCall> calls = new List<MockDocumentRevisionsValidator.RevisionsValidatorCall
+            >();
 
         public MockDocumentRevisionsValidator()
             : base(new ValidatorChainBuilder()) {
@@ -35,6 +42,12 @@ namespace iText.Signatures.Validation.V1.Mocks {
 
         public override ValidationReport ValidateAllDocumentRevisions(ValidationContext context, PdfDocument document
             ) {
+            MockDocumentRevisionsValidator.RevisionsValidatorCall call = new MockDocumentRevisionsValidator.RevisionsValidatorCall
+                (context, document);
+            calls.Add(call);
+            if (onCallHandler != null) {
+                onCallHandler(call);
+            }
             ValidationReport report = new ValidationReport();
             if (reportItemStatus != ReportItem.ReportItemStatus.INFO) {
                 report.AddReportItem(new ReportItem("test", "test", reportItemStatus));
@@ -44,6 +57,21 @@ namespace iText.Signatures.Validation.V1.Mocks {
 
         public virtual void SetReportItemStatus(ReportItem.ReportItemStatus reportItemStatus) {
             this.reportItemStatus = reportItemStatus;
+        }
+
+        public virtual void OnCallDo(Action<MockDocumentRevisionsValidator.RevisionsValidatorCall> callback) {
+            onCallHandler = callback;
+        }
+
+        public class RevisionsValidatorCall {
+            public readonly ValidationContext context;
+
+            public readonly PdfDocument document;
+
+            public RevisionsValidatorCall(ValidationContext context, PdfDocument document) {
+                this.context = context;
+                this.document = document;
+            }
         }
     }
 }

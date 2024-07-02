@@ -38,16 +38,27 @@ namespace iText.Signatures.Testutils.Client {
 
         private readonly IOcspClient wrappedClient;
 
+        private Func<TestOcspClientWrapper.OcspClientCall, byte[]> onGetEncoded;
+
         public TestOcspClientWrapper(IOcspClient wrappedClient) {
             this.wrappedClient = wrappedClient;
         }
 
         public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
-            byte[] response = wrappedClient.GetEncoded(checkCert, issuerCert, url);
+            TestOcspClientWrapper.OcspClientCall call = new TestOcspClientWrapper.OcspClientCall(checkCert, issuerCert
+                , url);
+            byte[] response;
+            if (onGetEncoded != null) {
+                response = onGetEncoded.Invoke(call);
+            }
+            else {
+                response = wrappedClient.GetEncoded(checkCert, issuerCert, url);
+            }
             try {
                 IBasicOcspResponse basicOCSPResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1Primitive
                     (response));
-                calls.Add(new TestOcspClientWrapper.OcspClientCall(checkCert, issuerCert, url, basicOCSPResp));
+                call.SetResponce(basicOCSPResp);
+                calls.Add(call);
             }
             catch (System.IO.IOException e) {
                 throw new Exception("deserializing ocsp response failed", e);
@@ -59,6 +70,12 @@ namespace iText.Signatures.Testutils.Client {
             return calls;
         }
 
+        public virtual iText.Signatures.Testutils.Client.TestOcspClientWrapper OnGetEncodedDo(Func<TestOcspClientWrapper.OcspClientCall
+            , byte[]> callBack) {
+            onGetEncoded = callBack;
+            return this;
+        }
+
         public class OcspClientCall {
             public readonly IX509Certificate checkCert;
 
@@ -66,14 +83,16 @@ namespace iText.Signatures.Testutils.Client {
 
             public readonly String url;
 
-            public readonly IBasicOcspResponse response;
+            public IBasicOcspResponse response;
 
-            public OcspClientCall(IX509Certificate checkCert, IX509Certificate issuerCert, String url, IBasicOcspResponse
-                 response) {
+            public OcspClientCall(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
                 this.checkCert = checkCert;
                 this.issuerCert = issuerCert;
                 this.url = url;
-                this.response = response;
+            }
+
+            public virtual void SetResponce(IBasicOcspResponse basicOCSPResp) {
+                response = basicOCSPResp;
             }
         }
     }

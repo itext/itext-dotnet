@@ -101,6 +101,7 @@ namespace iText.Signatures.Validation.V1 {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator();
                 report = signatureValidator.ValidateSignatures(document);
             }
+            // ocsp validation date is wrong but why
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
                 ((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
                 .UNEXPECTED_ENTRY_IN_XREF, (i) => 30)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
