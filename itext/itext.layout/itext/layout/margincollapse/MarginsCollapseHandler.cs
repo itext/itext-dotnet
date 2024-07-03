@@ -455,7 +455,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static bool IsBlockElement(IRenderer renderer) {
-            return renderer is BlockRenderer || renderer is TableRenderer;
+            // GridContainerRenderer is inherited from BlockRenderer but only not to copy/paste some overloads.
+            // It doesn't use BlockRenderer#layout internally.
+            return (renderer is BlockRenderer || renderer is TableRenderer) && !(renderer is GridContainerRenderer);
         }
 
         private static bool HasHeightProp(IRenderer renderer) {

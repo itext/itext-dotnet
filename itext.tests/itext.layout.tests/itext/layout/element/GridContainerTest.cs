@@ -874,5 +874,20 @@ namespace iText.Layout.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginsCollapsingIssueTest() {
+            String filename = DESTINATION_FOLDER + "marginsCollapsingIssueTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_marginsCollapsingIssueTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                Div grid = new GridContainer().SetBackgroundColor(ColorConstants.BLUE);
+                grid.Add(new Paragraph("some grid text"));
+                Div div = new Div().SetBackgroundColor(ColorConstants.RED).Add(new Paragraph("some div text")).Add(grid);
+                div.SetProperty(Property.COLLAPSING_MARGINS, true);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
     }
 }
