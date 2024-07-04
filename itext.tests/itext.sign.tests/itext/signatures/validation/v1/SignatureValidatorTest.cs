@@ -98,7 +98,7 @@ namespace iText.Signatures.Validation.V1 {
                 parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
@@ -131,7 +131,7 @@ namespace iText.Signatures.Validation.V1 {
                 parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfLogs(2).HasNumberOfFailures(1).HasStatus(ValidationReport.ValidationResult
@@ -163,7 +163,7 @@ namespace iText.Signatures.Validation.V1 {
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2)).SetContinueAfterFailure(ValidatorContexts
                     .All(), CertificateSources.All(), false);
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfLogs(2).HasNumberOfFailures(1).HasStatus(ValidationReport.ValidationResult
@@ -182,7 +182,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithBrokenTimestamp.pdf"))
                 ) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasLogItems
@@ -198,7 +198,7 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDoc.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasLogItem
@@ -215,7 +215,7 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report;
             parameters.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDoc.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 report = signatureValidator.ValidateLatestSignature(document);
             }
@@ -237,7 +237,7 @@ namespace iText.Signatures.Validation.V1 {
             IX509Certificate signCert = (IX509Certificate)certificateChain[0];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithDss.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 signatureValidator.ValidateLatestSignature(document);
             }
             NUnit.Framework.Assert.AreEqual(2, mockCertificateRetriever.addKnownCertificatesCalls.Count);
@@ -257,7 +257,7 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithBrokenDss.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
@@ -271,7 +271,7 @@ namespace iText.Signatures.Validation.V1 {
                 .INDETERMINATE)));
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
@@ -284,7 +284,7 @@ namespace iText.Signatures.Validation.V1 {
                 .INVALID)));
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
@@ -296,8 +296,8 @@ namespace iText.Signatures.Validation.V1 {
             mockDocumentRevisionsValidator.SetReportItemStatus(ReportItem.ReportItemStatus.INVALID);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
-                report = signatureValidator.ValidateSignatures(document);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateSignatures();
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
                 (1).HasLogItem((al) => al.WithCheckName("test").WithMessage("test")));
@@ -307,8 +307,8 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void ValidateMultipleSignatures() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
                 ))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
-                ValidationReport report = signatureValidator.ValidateSignatures(document);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
                     (5).HasNumberOfFailures(0).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
                     ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItem((l) => l.
@@ -355,7 +355,7 @@ namespace iText.Signatures.Validation.V1 {
                     throw new Exception("Test chain validation failure");
                 }
                 );
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateLatestSignature(document);
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.CHAIN_VALIDATION_FAILED
                     )));
@@ -375,7 +375,7 @@ namespace iText.Signatures.Validation.V1 {
                     throw new Exception("Test chain validation failure");
                 }
                 );
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateLatestSignature(document);
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.CHAIN_VALIDATION_FAILED
                     )));
@@ -393,7 +393,7 @@ namespace iText.Signatures.Validation.V1 {
                     throw new Exception("Test add know certificates failure");
                 }
                 );
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateLatestSignature(document);
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
                     .ADD_KNOWN_CERTIFICATES_FAILED)));
@@ -411,7 +411,7 @@ namespace iText.Signatures.Validation.V1 {
                     throw new Exception("Test add know certificates failure");
                 }
                 );
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateLatestSignature(document);
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
                     .ADD_KNOWN_CERTIFICATES_FAILED)));
@@ -429,7 +429,7 @@ namespace iText.Signatures.Validation.V1 {
                     throw new Exception("Test add know certificates failure");
                 }
                 );
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateLatestSignature(document);
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
                     .ADD_KNOWN_CERTIFICATES_FAILED)));
@@ -447,8 +447,8 @@ namespace iText.Signatures.Validation.V1 {
                     throw new Exception("Test add know certificates failure");
                 }
                 );
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator();
-                ValidationReport report = signatureValidator.ValidateSignatures(document);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.REVISIONS_VALIDATION_FAILED
                     )));
             }

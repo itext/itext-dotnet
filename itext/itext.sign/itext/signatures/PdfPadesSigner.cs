@@ -681,7 +681,7 @@ namespace iText.Signatures {
                 crlClient = new CrlClientOnline();
             }
             if (ocspClient == null) {
-                ocspClient = new OcspClientBouncyCastle(null);
+                ocspClient = new OcspClientBouncyCastle();
             }
         }
 //\endcond

@@ -92,8 +92,8 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void SignatureValidatorSingleEventTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ))) {
-                SignatureValidator validator = builder.BuildSignatureValidator();
-                validator.ValidateSignatures(document);
+                SignatureValidator validator = builder.BuildSignatureValidator(document);
+                validator.ValidateSignatures();
             }
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
             NUnit.Framework.Assert.AreEqual(2, events.Count);
@@ -110,9 +110,9 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void SignatureValidatorZeroEventsTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ), new DocumentProperties().SetEventCountingMetaInfo(new ValidationMetaInfo()))) {
-                SignatureValidator validator = builder.BuildSignatureValidator();
+                SignatureValidator validator = builder.BuildSignatureValidator(document);
                 validator.SetEventCountingMetaInfo(new ValidationMetaInfo());
-                validator.ValidateSignatures(document);
+                validator.ValidateSignatures();
             }
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
             NUnit.Framework.Assert.AreEqual(0, events.Count);

@@ -115,6 +115,8 @@ namespace iText.Signatures.Validation.V1 {
             this.properties = builder.GetProperties();
             this.ocspValidator = builder.GetOCSPValidator();
             this.crlValidator = builder.GetCRLValidator();
+            this.crlClients.AddAll(this.properties.GetCrlClients());
+            this.ocspClients.AddAll(this.properties.GetOcspClients());
         }
 
         /// <summary>
@@ -297,8 +299,8 @@ namespace iText.Signatures.Validation.V1 {
             if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching || (SignatureValidationProperties.OnlineFetching
                 .FETCH_IF_NO_OTHER_DATA_AVAILABLE == onlineFetching && ocspResponses.IsEmpty())) {
                 SafeCalling.OnRuntimeExceptionLog(() => {
-                    IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle(null).GetBasicOCSPResp(certificate, issuerCert
-                        , null);
+                    IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
+                        null);
                     FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
                         );
                 }

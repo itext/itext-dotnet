@@ -126,8 +126,10 @@ namespace iText.Signatures.Validation.V1 {
         /// </param>
         /// <returns>
         /// same instance of
-        /// <see cref="CertificateChainValidator"/>
+        /// <see cref="CertificateChainValidator"/>.
         /// </returns>
+        [System.ObsoleteAttribute(@"in favour of either SignatureValidationProperties.AddCrlClient(iText.Signatures.ICrlClient) or RevocationDataValidator.AddCrlClient(iText.Signatures.ICrlClient) . TODO DEVSIX-8398 To be removed."
+            )]
         public virtual iText.Signatures.Validation.V1.CertificateChainValidator AddCrlClient(ICrlClient crlClient) {
             revocationDataValidator.AddCrlClient(crlClient);
             return this;
@@ -145,8 +147,10 @@ namespace iText.Signatures.Validation.V1 {
         /// </param>
         /// <returns>
         /// same instance of
-        /// <see cref="CertificateChainValidator"/>
+        /// <see cref="CertificateChainValidator"/>.
         /// </returns>
+        [System.ObsoleteAttribute(@"in favour of either SignatureValidationProperties.AddOcspClient(iText.Signatures.IOcspClient) or RevocationDataValidator.AddOcspClient(iText.Signatures.IOcspClient) . TODO DEVSIX-8398 To be removed."
+            )]
         public virtual iText.Signatures.Validation.V1.CertificateChainValidator AddOcspClient(IOcspClient ocpsClient
             ) {
             revocationDataValidator.AddOcspClient(ocpsClient);
@@ -169,7 +173,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// 
         /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
-        /// which contains detailed validation results
+        /// which contains detailed validation results.
         /// </returns>
         public virtual ValidationReport ValidateCertificate(ValidationContext context, IX509Certificate certificate
             , DateTime validationDate) {
@@ -202,7 +206,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// 
         /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
-        /// which contains both provided and new validation results
+        /// which contains both provided and new validation results.
         /// </returns>
         public virtual ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate
              certificate, DateTime validationDate) {

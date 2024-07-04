@@ -30,6 +30,8 @@ namespace iText.Signatures {
     /// succeeded using a specific CertificateVerifier and for a specific
     /// reason.
     /// </summary>
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.Report.ReportItem should be used instead."
+        )]
     public class VerificationOK {
         /// <summary>The certificate that was verified successfully.</summary>
         protected internal IX509Certificate certificate;

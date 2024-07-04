@@ -45,6 +45,8 @@ namespace iText.Signatures.Validation.V1 {
 
         private readonly Dictionary<ValidationContext, SignatureValidationProperties.ContextProperties> properties
              = new Dictionary<ValidationContext, SignatureValidationProperties.ContextProperties>();
+        private readonly IList<IOcspClient> ocspClients = new List<IOcspClient>();
+        private readonly IList<ICrlClient> crlClients = new List<ICrlClient>();
 
         /// <summary>
         /// Create <see cref="SignatureValidationProperties"/> with default values.
@@ -73,6 +75,9 @@ namespace iText.Signatures.Validation.V1 {
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.TIMESTAMP), JavaCollectionsUtil.SingletonList
                 <CertificateExtension>(new ExtendedKeyUsageExtension(JavaCollectionsUtil.SingletonList<String>(ExtendedKeyUsageExtension
                 .TIME_STAMPING))));
+            
+            ocspClients.Add(new ValidationOcspClient());
+            crlClients.Add(new ValidationCrlClient());
         }
 
         /// <summary>
@@ -191,6 +196,50 @@ namespace iText.Signatures.Validation.V1 {
                 >(requiredExtensions));
             SetParameterValueFor(ValidatorContexts.All().GetSet(), certificateSources.GetSet(), TimeBasedContexts.All(
                 ).GetSet(), (p) => p.SetRequiredExtensions(copy));
+            return this;
+        }
+
+        /// <summary>
+        /// Gets all ICrlClient instances which will be used to retrieve CRL responses during the validation.
+        /// </summary>
+        /// <returns>
+        /// all ICrlClient instances which will be used to retrieve CRL responses during the validation
+        /// </returns>
+        public virtual IList<ICrlClient> GetCrlClients() {
+            return JavaCollectionsUtil.UnmodifiableList(crlClients);
+        }
+
+        /// <summary>
+        /// Adds new ICrlClient instance which will be used to retrieve CRL responses during the validation.
+        /// </summary>
+        /// <param name="crlClient">
+        /// ICrlClient instance which will be used to retrieve CRL responses during the validation
+        /// </param>
+        /// <returns>this same SignatureValidationProperties instance</returns>
+        public SignatureValidationProperties AddCrlClient(ICrlClient crlClient) {
+            crlClients.Add(crlClient);
+            return this;
+        }
+
+        /// <summary>
+        /// Gets all IOcspClient instances which will be used to retrieve OCSP responses during the validation.
+        /// </summary>
+        /// <returns>
+        /// all IOcspClient instances which will be used to retrieve OCSP responses during the validation
+        /// </returns>
+        public virtual IList<IOcspClient> GetOcspClients() {
+            return JavaCollectionsUtil.UnmodifiableList(ocspClients);
+        }
+        
+        /// <summary>
+        /// Adds new IOcspClient instance which will be used to retrieve OCSP response during the validation.
+        /// </summary>
+        /// <param name="ocspClient">
+        /// IOcspClient instance which will be used to retrieve OCSP response during the validation
+        /// </param>
+        /// <returns>this same SignatureValidationProperties instance</returns>
+        public SignatureValidationProperties AddOcspClient(IOcspClient ocspClient) {
+            ocspClients.Add(ocspClient);
             return this;
         }
 

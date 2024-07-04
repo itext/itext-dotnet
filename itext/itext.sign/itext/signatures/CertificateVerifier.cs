@@ -35,6 +35,8 @@ namespace iText.Signatures {
     /// that is the next element in the chain of which the <c>verify()</c>
     /// method will be called.
     /// </remarks>
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.CertificateChainValidator should be used instead."
+        )]
     public class CertificateVerifier {
         /// <summary>The previous CertificateVerifier in the chain of verifiers.</summary>
         protected internal iText.Signatures.CertificateVerifier verifier;

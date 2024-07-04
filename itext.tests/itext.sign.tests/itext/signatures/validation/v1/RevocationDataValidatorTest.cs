@@ -511,7 +511,7 @@ namespace iText.Signatures.Validation.V1 {
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
-            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_621(testOcspClient, null);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_621(testOcspClient);
             validator.AddOcspClient(ocspClient);
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
@@ -522,8 +522,7 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         private sealed class _OcspClientBouncyCastle_621 : OcspClientBouncyCastle {
-            public _OcspClientBouncyCastle_621(TestOcspClient testOcspClient, OCSPVerifier baseArg1)
-                : base(baseArg1) {
+            public _OcspClientBouncyCastle_621(TestOcspClient testOcspClient) {
                 this.testOcspClient = testOcspClient;
             }
 

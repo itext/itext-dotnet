@@ -41,6 +41,8 @@ namespace iText.Signatures {
     /// Class that allows you to verify a certificate against
     /// one or more OCSP responses.
     /// </summary>
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.OCSPValidator should be used instead."
+        )]
     public class OCSPVerifier : RootStoreVerifier {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
@@ -333,8 +335,8 @@ namespace iText.Signatures {
                     }
                     // 2.2. Try to check responderCert for revocation using Authority Information Access for OCSP responses
                     // or CRL Distribution Points for CRL responses using default clients.
-                    IBasicOcspResponse responderOcspResp_1 = new OcspClientBouncyCastle(null).GetBasicOCSPResp(responderCert, 
-                        issuerCert, null);
+                    IBasicOcspResponse responderOcspResp_1 = new OcspClientBouncyCastle().GetBasicOCSPResp(responderCert, issuerCert
+                        , null);
                     if (VerifyOcsp(responderOcspResp_1, responderCert, issuerCert, ocspResp.GetProducedAt())) {
                         return;
                     }
@@ -407,7 +409,7 @@ namespace iText.Signatures {
             if (signCert == null && issuerCert == null) {
                 return null;
             }
-            OcspClientBouncyCastle ocsp = new OcspClientBouncyCastle(null);
+            OcspClientBouncyCastle ocsp = new OcspClientBouncyCastle();
             return ocsp.GetBasicOCSPResp(signCert, issuerCert, null);
         }
 

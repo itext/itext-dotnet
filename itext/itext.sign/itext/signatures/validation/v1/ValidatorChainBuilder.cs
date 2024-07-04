@@ -22,13 +22,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Kernel.Pdf;
 using iText.Signatures;
 
 namespace iText.Signatures.Validation.V1 {
-    /// <summary>
-    /// A builder class to construct all necessary parts of a validation chain
-    /// The builder can be reused to create multiple instances of a validator
-    /// </summary>
+    /// <summary>A builder class to construct all necessary parts of a validation chain.</summary>
+    /// <remarks>
+    /// A builder class to construct all necessary parts of a validation chain.
+    /// The builder can be reused to create multiple instances of a validator.
+    /// </remarks>
     public class ValidatorChainBuilder {
         private SignatureValidationProperties properties;
 
@@ -44,7 +46,6 @@ namespace iText.Signatures.Validation.V1 {
 
         private DocumentRevisionsValidator documentRevisionsValidator;
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Create a new
         /// <see cref="SignatureValidator"/>
@@ -56,11 +57,15 @@ namespace iText.Signatures.Validation.V1 {
         /// instance with the current configuration.
         /// This method can be used to create multiple validators.
         /// </remarks>
-        /// <returns>a new instance of a signature validator</returns>
-        internal virtual SignatureValidator BuildSignatureValidator() {
-            return new SignatureValidator(this);
+        /// <param name="document">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance which will be validated
+        /// </param>
+        /// <returns>a new instance of a signature validator.</returns>
+        public virtual SignatureValidator BuildSignatureValidator(PdfDocument document) {
+            return new SignatureValidator(document, this);
         }
-//\endcond
 
         /// <summary>
         /// Create a bew
@@ -73,7 +78,7 @@ namespace iText.Signatures.Validation.V1 {
         /// instance with the current configuration.
         /// This method can be used to create multiple validators.
         /// </remarks>
-        /// <returns>a new instance of a document revisions validator</returns>
+        /// <returns>a new instance of a document revisions validator.</returns>
         public virtual DocumentRevisionsValidator BuildDocumentRevisionsValidator() {
             return new DocumentRevisionsValidator(this);
         }
@@ -89,7 +94,7 @@ namespace iText.Signatures.Validation.V1 {
         /// instance.
         /// This method can be used to create multiple validators.
         /// </remarks>
-        /// <returns>a new instance of a CertificateChainValidator</returns>
+        /// <returns>a new instance of a CertificateChainValidator.</returns>
         public virtual CertificateChainValidator BuildCertificateChainValidator() {
             return new CertificateChainValidator(this);
         }
@@ -100,7 +105,7 @@ namespace iText.Signatures.Validation.V1 {
         /// instance
         /// This method can be used to create multiple validators.
         /// </summary>
-        /// <returns>a new instance of a RevocationDataValidator</returns>
+        /// <returns>a new instance of a RevocationDataValidator.</returns>
         public virtual RevocationDataValidator BuildRevocationDataValidator() {
             return new RevocationDataValidator(this);
         }
@@ -116,7 +121,7 @@ namespace iText.Signatures.Validation.V1 {
         /// instance.
         /// This method can be used to create multiple validators.
         /// </remarks>
-        /// <returns>a new instance of a OCSPValidator</returns>
+        /// <returns>a new instance of a OCSPValidator.</returns>
         public virtual OCSPValidator BuildOCSPValidator() {
             return new OCSPValidator(this);
         }
@@ -132,7 +137,7 @@ namespace iText.Signatures.Validation.V1 {
         /// instance.
         /// This method can be used to create multiple validators.
         /// </remarks>
-        /// <returns>a new instance of a CRLValidator</returns>
+        /// <returns>a new instance of a CRLValidator.</returns>
         public virtual CRLValidator BuildCRLValidator() {
             return new CRLValidator(this);
         }
@@ -143,7 +148,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="documentRevisionsValidator">the document revisions validator instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithDocumentRevisionsValidator(DocumentRevisionsValidator documentRevisionsValidator
             ) {
             this.documentRevisionsValidator = documentRevisionsValidator;
@@ -156,7 +161,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="crlValidator">the CRLValidator instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithCRLValidator(CRLValidator crlValidator) {
             this.crlValidator = crlValidator;
             return this;
@@ -168,7 +173,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="ocspValidator">the OCSPValidator instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithOCSPValidator(OCSPValidator ocspValidator) {
             this.ocspValidator = ocspValidator;
             return this;
@@ -180,7 +185,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="revocationDataValidator">the RevocationDataValidator instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithRevocationDataValidator(RevocationDataValidator revocationDataValidator
             ) {
             this.revocationDataValidator = revocationDataValidator;
@@ -193,7 +198,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="certificateChainValidator">the CertificateChainValidator instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithCertificateChainValidator(CertificateChainValidator certificateChainValidator
             ) {
             this.certificateChainValidator = certificateChainValidator;
@@ -206,7 +211,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="properties">the SignatureValidationProperties instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithSignatureValidationProperties(SignatureValidationProperties properties
             ) {
             this.properties = properties;
@@ -219,7 +224,7 @@ namespace iText.Signatures.Validation.V1 {
         /// in the validation chain.
         /// </summary>
         /// <param name="certificateRetriever">the IssuingCertificateRetriever instance to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithIssuingCertificateRetriever(IssuingCertificateRetriever certificateRetriever
             ) {
             this.certificateRetriever = certificateRetriever;
@@ -231,7 +236,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>.
         /// </summary>
         /// <param name="knownCertificates">the list of known certificates to add</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithKnownCertificates(ICollection<IX509Certificate> knownCertificates
             ) {
             GetCertificateRetriever().AddKnownCertificates(knownCertificates);
@@ -243,7 +248,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>.
         /// </summary>
         /// <param name="trustedCertificates">the list of trusted certificates to set</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithTrustedCertificates(ICollection<IX509Certificate> trustedCertificates
             ) {
             GetCertificateRetriever().SetTrustedCertificates(trustedCertificates);
@@ -259,7 +264,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="DocumentRevisionsValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         internal virtual DocumentRevisionsValidator GetDocumentRevisionsValidator() {
             if (documentRevisionsValidator == null) {
@@ -278,7 +283,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="CertificateChainValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         internal virtual CertificateChainValidator GetCertificateChainValidator() {
             if (certificateChainValidator == null) {
@@ -297,7 +302,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="RevocationDataValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         internal virtual RevocationDataValidator GetRevocationDataValidator() {
             if (revocationDataValidator == null) {
@@ -316,7 +321,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="CRLValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         internal virtual CRLValidator GetCRLValidator() {
             if (crlValidator == null) {
@@ -335,7 +340,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="OCSPValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         internal virtual OCSPValidator GetOCSPValidator() {
             if (ocspValidator == null) {
@@ -353,7 +358,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>
-        /// instance
+        /// instance.
         /// </returns>
         public virtual IssuingCertificateRetriever GetCertificateRetriever() {
             if (certificateRetriever == null) {
@@ -370,7 +375,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="SignatureValidationProperties"/>
-        /// instance
+        /// instance.
         /// </returns>
         public virtual SignatureValidationProperties GetProperties() {
             if (properties == null) {

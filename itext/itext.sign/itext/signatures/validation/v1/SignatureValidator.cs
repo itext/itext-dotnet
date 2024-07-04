@@ -38,9 +38,8 @@ using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Report;
 
 namespace iText.Signatures.Validation.V1 {
-//\cond DO_NOT_DOCUMENT
     /// <summary>Validator class, which is expected to be used for signatures validation.</summary>
-    internal class SignatureValidator {
+    public class SignatureValidator {
         public const String VALIDATING_SIGNATURE_NAME = "Validating signature {0}";
 
 //\cond DO_NOT_DOCUMENT
@@ -92,10 +91,6 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String CERTIFITICATE_VERIFICATION_FAILED = "Unexpected exception occurred during mathematical certificate verification.";
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal const String REVISIONS_VALIDATION_FAILED = "Unexpected exception occurred during revisions validation.";
 //\endcond
 
@@ -121,28 +116,33 @@ namespace iText.Signatures.Validation.V1 {
 
         private IMetaInfo metaInfo = new ValidationMetaInfo();
 
-        private readonly ValidationOcspClient validationOcspClient = new ValidationOcspClient();
+        private readonly PdfDocument originalDocument;
 
-        private readonly ValidationCrlClient validationCrlClient = new ValidationCrlClient();
+        private ValidationOcspClient validationOcspClient;
 
-//\cond DO_NOT_DOCUMENT
+        private ValidationCrlClient validationCrlClient;
+
         /// <summary>
         /// Creates new instance of
         /// <see cref="SignatureValidator"/>.
         /// </summary>
+        /// <param name="originalDocument">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance which will be validated
+        /// </param>
         /// <param name="builder">
-        /// See
+        /// see
         /// <see cref="ValidatorChainBuilder"/>
         /// </param>
-        internal SignatureValidator(ValidatorChainBuilder builder) {
+        protected internal SignatureValidator(PdfDocument originalDocument, ValidatorChainBuilder builder) {
+            this.originalDocument = originalDocument;
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.certificateChainValidator = builder.GetCertificateChainValidator();
             this.documentRevisionsValidator = builder.GetDocumentRevisionsValidator();
-            builder.GetRevocationDataValidator().AddOcspClient(validationOcspClient);
-            builder.GetRevocationDataValidator().AddCrlClient(validationCrlClient);
+            FindValidationClients();
         }
-//\endcond
 
         /// <summary>
         /// Sets the
@@ -163,19 +163,18 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
-        /// <summary>Validate all signatures in the document</summary>
-        /// <param name="document">the document to be validated</param>
+        /// <summary>Validate all signatures in the document.</summary>
         /// <returns>
         /// 
         /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
         /// which contains detailed validation results
         /// </returns>
-        public virtual ValidationReport ValidateSignatures(PdfDocument document) {
+        public virtual ValidationReport ValidateSignatures() {
             ValidationReport report = new ValidationReport();
             SafeCalling.OnRuntimeExceptionLog(() => {
                 documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
                 ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(validationContext
-                    , document);
+                    , originalDocument);
                 report.Merge(revisionsValidationReport);
             }
             , report, (e) => new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_VALIDATION_FAILED, e, ReportItem.ReportItemStatus
@@ -183,7 +182,7 @@ namespace iText.Signatures.Validation.V1 {
             if (StopValidation(report, validationContext)) {
                 return report;
             }
-            SignatureUtil util = new SignatureUtil(document);
+            SignatureUtil util = new SignatureUtil(originalDocument);
             IList<String> signatureNames = util.GetSignatureNames();
             JavaCollectionsUtil.Reverse(signatureNames);
             foreach (String fieldName in signatureNames) {
@@ -267,6 +266,21 @@ namespace iText.Signatures.Validation.V1 {
             return validationReport.Merge(signatureReport);
         }
 //\endcond
+
+        private void FindValidationClients() {
+            foreach (IOcspClient ocspClient in this.properties.GetOcspClients()) {
+                if (ocspClient.GetType() == typeof(ValidationOcspClient)) {
+                    validationOcspClient = (ValidationOcspClient)ocspClient;
+                    break;
+                }
+            }
+            foreach (ICrlClient crlClient in this.properties.GetCrlClients()) {
+                if (crlClient.GetType() == typeof(ValidationCrlClient)) {
+                    validationCrlClient = (ValidationCrlClient)crlClient;
+                    break;
+                }
+            }
+        }
 
         private PdfPKCS7 MathematicallyVerifySignature(ValidationReport validationReport, PdfDocument document) {
             SignatureUtil signatureUtil = new SignatureUtil(document);
@@ -478,5 +492,4 @@ namespace iText.Signatures.Validation.V1 {
                 .INVALID;
         }
     }
-//\endcond
 }

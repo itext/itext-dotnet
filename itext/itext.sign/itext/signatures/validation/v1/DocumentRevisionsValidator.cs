@@ -96,6 +96,10 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String LINEARIZED_NOT_SUPPORTED = "Linearized PDF documents are not supported by DocumentRevisionsValidator.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
 //\endcond
 
@@ -235,7 +239,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the same
         /// <see cref="DocumentRevisionsValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetEventCountingMetaInfo(IMetaInfo
              metaInfo) {
@@ -256,7 +260,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>
         /// the same
         /// <see cref="DocumentRevisionsValidator"/>
-        /// instance
+        /// instance.
         /// </returns>
         public virtual iText.Signatures.Validation.V1.DocumentRevisionsValidator SetAccessPermissions(AccessPermissions
              accessPermissions) {
@@ -330,7 +334,8 @@ namespace iText.Signatures.Validation.V1 {
             bool certificationSignatureFound = false;
             PdfSignature currentSignature = signatureUtil.GetSignature(signatures[0]);
             for (int i = 0; i < documentRevisions.Count; i++) {
-                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0], document)) {
+                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0], document, report
+                    )) {
                     signatureFound = true;
                     if (IsCertificationSignature(currentSignature)) {
                         if (certificationSignatureFound) {
@@ -370,68 +375,51 @@ namespace iText.Signatures.Validation.V1 {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
-            , PdfDocument document, ValidationReport validationReport, ValidationContext context) {
-            try {
-                using (Stream previousInputStream = CreateInputStreamFromRevision(document, previousRevision)) {
-                    using (PdfReader previousReader = new PdfReader(previousInputStream).SetStrictnessLevel(PdfReader.StrictnessLevel
-                        .CONSERVATIVE)) {
-                        using (PdfDocument documentWithoutRevision = new PdfDocument(previousReader, new DocumentProperties().SetEventCountingMetaInfo
-                            (metaInfo))) {
-                            using (Stream currentInputStream = CreateInputStreamFromRevision(document, currentRevision)) {
-                                using (PdfReader currentReader = new PdfReader(currentInputStream).SetStrictnessLevel(PdfReader.StrictnessLevel
-                                    .CONSERVATIVE)) {
-                                    using (PdfDocument documentWithRevision = new PdfDocument(currentReader, new DocumentProperties().SetEventCountingMetaInfo
-                                        (metaInfo))) {
-                                        ICollection<PdfIndirectReference> indirectReferences = currentRevision.GetModifiedObjects();
-                                        if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport, context)) {
-                                            return;
-                                        }
-                                        ICollection<PdfIndirectReference> currentAllowedReferences = CreateAllowedReferences(documentWithRevision);
-                                        ICollection<PdfIndirectReference> previousAllowedReferences = CreateAllowedReferences(documentWithoutRevision
-                                            );
-                                        foreach (PdfIndirectReference indirectReference in indirectReferences) {
-                                            if (indirectReference.IsFree()) {
-                                                // In this boolean flag we check that reference which is about to be removed is the one which
-                                                // changed in the new revision. For instance DSS reference was 5 0 obj and changed to be 6 0 obj.
-                                                // In this case and only in this case reference with obj number 5 can be safely removed.
-                                                bool referenceAllowedToBeRemoved = previousAllowedReferences.Any((reference) => reference != null && reference
-                                                    .GetObjNumber() == indirectReference.GetObjNumber()) && !currentAllowedReferences.Any((reference) => reference
-                                                     != null && reference.GetObjNumber() == indirectReference.GetObjNumber());
-                                                // If some reference wasn't in the previous document, it is safe to remove it,
-                                                // since it is not possible to introduce new reference and remove it at the same revision.
-                                                bool referenceWasInPrevDocument = documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) !=
-                                                     null;
-                                                if (!IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument && !referenceAllowedToBeRemoved
-                                                    ) {
-                                                    validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(OBJECT_REMOVED, indirectReference
-                                                        .GetObjNumber()), unexpectedXrefChangesStatus));
-                                                }
-                                            }
-                                            else {
-                                                if (!CheckAllowedReferences(currentAllowedReferences, previousAllowedReferences, indirectReference, documentWithoutRevision
-                                                    ) && !IsAllowedStreamObj(indirectReference, documentWithRevision)) {
-                                                    validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_ENTRY_IN_XREF
-                                                        , indirectReference.GetObjNumber()), unexpectedXrefChangesStatus));
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+            , PdfDocument originalDocument, ValidationReport validationReport, ValidationContext context) {
+            CreateDocumentAndPerformOperation(previousRevision, originalDocument, validationReport, (documentWithoutRevision
+                ) => CreateDocumentAndPerformOperation(currentRevision, originalDocument, validationReport, (documentWithRevision
+                ) => ValidateRevision(validationReport, context, documentWithoutRevision, documentWithRevision, currentRevision
+                )));
+        }
+//\endcond
+
+        private bool ValidateRevision(ValidationReport validationReport, ValidationContext context, PdfDocument documentWithoutRevision
+            , PdfDocument documentWithRevision, DocumentRevision currentRevision) {
+            ICollection<PdfIndirectReference> indirectReferences = currentRevision.GetModifiedObjects();
+            if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport, context)) {
+                return false;
+            }
+            ICollection<PdfIndirectReference> currentAllowedReferences = CreateAllowedReferences(documentWithRevision);
+            ICollection<PdfIndirectReference> previousAllowedReferences = CreateAllowedReferences(documentWithoutRevision
+                );
+            foreach (PdfIndirectReference indirectReference in indirectReferences) {
+                if (indirectReference.IsFree()) {
+                    // In this boolean flag we check that reference which is about to be removed is the one which
+                    // changed in the new revision. For instance DSS reference was 5 0 obj and changed to be 6 0 obj.
+                    // In this case and only in this case reference with obj number 5 can be safely removed.
+                    bool referenceAllowedToBeRemoved = previousAllowedReferences.Any((reference) => reference != null && reference
+                        .GetObjNumber() == indirectReference.GetObjNumber()) && !currentAllowedReferences.Any((reference) => reference
+                         != null && reference.GetObjNumber() == indirectReference.GetObjNumber());
+                    // If some reference wasn't in the previous document, it is safe to remove it,
+                    // since it is not possible to introduce new reference and remove it at the same revision.
+                    bool referenceWasInPrevDocument = documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) !=
+                         null;
+                    if (!IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument && !referenceAllowedToBeRemoved
+                        ) {
+                        validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(OBJECT_REMOVED, indirectReference
+                            .GetObjNumber()), unexpectedXrefChangesStatus));
+                    }
+                }
+                else {
+                    if (!CheckAllowedReferences(currentAllowedReferences, previousAllowedReferences, indirectReference, documentWithoutRevision
+                        ) && !IsAllowedStreamObj(indirectReference, documentWithRevision)) {
+                        validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(UNEXPECTED_ENTRY_IN_XREF
+                            , indirectReference.GetObjNumber()), unexpectedXrefChangesStatus));
                     }
                 }
             }
-            catch (System.IO.IOException exception) {
-                validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-            }
-            catch (Exception exception) {
-                validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-            }
+            return validationReport.GetValidationResult() == ValidationReport.ValidationResult.VALID;
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         //
@@ -450,6 +438,19 @@ namespace iText.Signatures.Validation.V1 {
             WindowRandomAccessSource source = new WindowRandomAccessSource(raf.CreateSourceView(), 0, revision.GetEofOffset
                 ());
             return new RASInputStream(source);
+        }
+
+        private static bool IsLinearizedPdf(PdfDocument originalDocument) {
+            for (int i = 0; i < originalDocument.GetNumberOfPdfObjects(); ++i) {
+                PdfObject @object = originalDocument.GetPdfObject(i);
+                if (@object is PdfDictionary) {
+                    PdfDictionary dictionary = (PdfDictionary)@object;
+                    if (dictionary.ContainsKey(new PdfName("Linearized"))) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
@@ -533,33 +534,20 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private void LockAllFormFields(DocumentRevision revision, IList<String> excludedFields, PdfDocument document
+        private void LockAllFormFields(DocumentRevision revision, IList<String> excludedFields, PdfDocument originalDocument
             , ValidationReport report) {
-            try {
-                using (Stream inputStream = CreateInputStreamFromRevision(document, revision)) {
-                    using (PdfReader reader = new PdfReader(inputStream)) {
-                        using (PdfDocument documentWithRevision = new PdfDocument(reader, new DocumentProperties().SetEventCountingMetaInfo
-                            (metaInfo))) {
-                            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(documentWithRevision, false);
-                            if (acroForm != null) {
-                                foreach (String fieldName in acroForm.GetAllFormFields().Keys) {
-                                    if (!excludedFields.Contains(fieldName)) {
-                                        lockedFields.Add(fieldName);
-                                    }
-                                }
-                            }
+            CreateDocumentAndPerformOperation(revision, originalDocument, report, (document) => {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, false);
+                if (acroForm != null) {
+                    foreach (String fieldName in acroForm.GetAllFormFields().Keys) {
+                        if (!excludedFields.Contains(fieldName)) {
+                            lockedFields.Add(fieldName);
                         }
                     }
                 }
+                return true;
             }
-            catch (System.IO.IOException exception) {
-                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-            }
-            catch (Exception exception) {
-                report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-            }
+            );
         }
 
         private void UpdateCertificationSignatureAccessPermissions(PdfSignature signature, ValidationReport report
@@ -622,24 +610,50 @@ namespace iText.Signatures.Validation.V1 {
             return false;
         }
 
-        private bool RevisionContainsSignature(DocumentRevision revision, String signature, PdfDocument document) {
+        private bool RevisionContainsSignature(DocumentRevision revision, String signature, PdfDocument originalDocument
+            , ValidationReport report) {
+            return CreateDocumentAndPerformOperation(revision, originalDocument, report, (document) => {
+                SignatureUtil signatureUtil = new SignatureUtil(document);
+                return signatureUtil.SignatureCoversWholeDocument(signature);
+            }
+            );
+        }
+
+        private bool CreateDocumentAndPerformOperation(DocumentRevision revision, PdfDocument originalDocument, ValidationReport
+             report, Func<PdfDocument, bool> operation) {
             try {
-                using (Stream inputStream = CreateInputStreamFromRevision(document, revision)) {
-                    using (PdfReader reader = new PdfReader(inputStream)) {
+                using (Stream inputStream = CreateInputStreamFromRevision(originalDocument, revision)) {
+                    using (PdfReader reader = new PdfReader(inputStream).SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE
+                        )) {
                         using (PdfDocument documentWithRevision = new PdfDocument(reader, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
-                            SignatureUtil signatureUtil = new SignatureUtil(documentWithRevision);
-                            return signatureUtil.SignatureCoversWholeDocument(signature);
+                            return (bool)operation.Invoke(documentWithRevision);
                         }
                     }
                 }
             }
-            catch (System.IO.IOException) {
+            catch (System.IO.IOException exception) {
+                if (IsLinearizedPdf(originalDocument)) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, LINEARIZED_NOT_SUPPORTED, exception, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                else {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                return false;
             }
-            catch (Exception) {
+            catch (Exception exception) {
+                if (IsLinearizedPdf(originalDocument)) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, LINEARIZED_NOT_SUPPORTED, exception, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                else {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                return false;
             }
-            //ignored
-            return false;
         }
 
         private void ResetClassFields() {
