@@ -423,6 +423,38 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
                 )))), PolyType.SUBJECT, false);
         }
 
+        /// <summary>
+        /// Calculates the width of the rectangle represented by the
+        /// <see cref="IntRect"/>
+        /// object.
+        /// </summary>
+        /// <param name="rect">
+        /// the
+        /// <see cref="IntRect"/>
+        /// object representing the rectangle.
+        /// </param>
+        /// <returns>the width of the rectangle.</returns>
+        public static float LongRectCalculateWidth(IntRect rect) {
+            return (float)(Math.Abs(rect.left - rect.right) / iText.Kernel.Pdf.Canvas.Parser.ClipperLib.ClipperBridge.
+                floatMultiplier);
+        }
+
+        /// <summary>
+        /// Calculates the height of the rectangle represented by the
+        /// <see cref="IntRect"/>
+        /// object.
+        /// </summary>
+        /// <param name="rect">
+        /// the
+        /// <see cref="IntRect"/>
+        /// object representing the rectangle.
+        /// </param>
+        /// <returns>the height of the rectangle.</returns>
+        public static float LongRectCalculateHeight(IntRect rect) {
+            return (float)(Math.Abs(rect.top - rect.bottom) / iText.Kernel.Pdf.Canvas.Parser.ClipperLib.ClipperBridge.
+                floatMultiplier);
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal static void AddContour(Path path, IList<IntPoint> contour, bool close) {
             IList<Point> floatContour = ConvertToFloatPoints(contour);
