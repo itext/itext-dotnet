@@ -204,7 +204,63 @@ namespace iText.Signatures.Validation.V1 {
             // Try to check responderCert for revocation using provided responder OCSP/CRL clients or
             // Authority Information Access for OCSP responses and CRL Distribution Points for CRL responses
             // using default clients.
-            ValidateRevocationData(report, localContext, certificate, validationDate, ocspResponses, crlResponses);
+            ValidationReport revDataValidationReport = new ValidationReport();
+            ValidateRevocationData(revDataValidationReport, localContext, certificate, validationDate, ocspResponses, 
+                crlResponses);
+            if (ValidationReport.ValidationResult.INDETERMINATE == revDataValidationReport.GetValidationResult()) {
+                IList<RevocationDataValidator.CrlValidationInfo> onlineCrlResponses = new List<RevocationDataValidator.CrlValidationInfo
+                    >();
+                IList<RevocationDataValidator.OcspResponseValidationInfo> onlineOcspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
+                    >();
+                TryToFetchRevInfoOnline(report, context, certificate, onlineCrlResponses, onlineOcspResponses);
+                if (!onlineCrlResponses.IsEmpty() || !onlineOcspResponses.IsEmpty()) {
+                    // Merge the report excluding NO_REVOCATION_DATA message.
+                    foreach (ReportItem reportItem in revDataValidationReport.GetLogs()) {
+                        if (!NO_REVOCATION_DATA.Equals(reportItem.GetMessage())) {
+                            report.AddReportItem(reportItem);
+                        }
+                    }
+                    ValidateRevocationData(report, localContext, certificate, validationDate, onlineOcspResponses, onlineCrlResponses
+                        );
+                    return;
+                }
+            }
+            report.Merge(revDataValidationReport);
+        }
+
+        private static void FillOcspResponses(IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses
+            , IBasicOcspResponse basicOCSPResp, DateTime generationDate, TimeBasedContext timeBasedContext) {
+            if (basicOCSPResp != null) {
+                // Getting the responses.
+                ISingleResponse[] singleResponses = basicOCSPResp.GetResponses();
+                foreach (ISingleResponse singleResponse in singleResponses) {
+                    ocspResponses.Add(new RevocationDataValidator.OcspResponseValidationInfo(singleResponse, basicOCSPResp, generationDate
+                        , timeBasedContext));
+                }
+            }
+        }
+
+        private static IList<RevocationDataValidator.CrlValidationInfo> RetrieveAllCRLResponsesUsingClient(ValidationReport
+             report, IX509Certificate certificate, ICrlClient crlClient) {
+            IList<RevocationDataValidator.CrlValidationInfo> crlResponses = new List<RevocationDataValidator.CrlValidationInfo
+                >();
+            if (crlClient is ValidationCrlClient) {
+                ValidationCrlClient validationCrlClient = (ValidationCrlClient)crlClient;
+                crlResponses.AddAll(validationCrlClient.GetCrls().Values);
+            }
+            else {
+                ICollection<byte[]> crlBytesCollection = SafeCalling.OnExceptionLog(() => crlClient.GetEncoded(certificate
+                    , null), JavaCollectionsUtil.EmptyList<byte[]>(), report, (e) => new CertificateReportItem(certificate
+                    , REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CRL_CLIENT_FAILURE, crlClient), e, ReportItem.ReportItemStatus
+                    .INFO));
+                foreach (byte[] crlBytes in crlBytesCollection) {
+                    SafeCalling.OnExceptionLog(() => crlResponses.Add(new RevocationDataValidator.CrlValidationInfo((IX509Crl)
+                        CertificateUtil.ParseCrlFromBytes(crlBytes), DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                        )), report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
+                        (CANNOT_PARSE_CRL, crlClient), e, ReportItem.ReportItemStatus.INFO));
+                }
+            }
+            return crlResponses;
         }
 
         private void ValidateRevocationData(ValidationReport report, ValidationContext context, IX509Certificate certificate
@@ -296,8 +352,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             SignatureValidationProperties.OnlineFetching onlineFetching = properties.GetRevocationOnlineFetching(context
                 .SetValidatorContext(ValidatorContext.OCSP_VALIDATOR));
-            if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching || (SignatureValidationProperties.OnlineFetching
-                .FETCH_IF_NO_OTHER_DATA_AVAILABLE == onlineFetching && ocspResponses.IsEmpty())) {
+            if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching) {
                 SafeCalling.OnRuntimeExceptionLog(() => {
                     IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
                         null);
@@ -317,49 +372,42 @@ namespace iText.Signatures.Validation.V1 {
             foreach (ICrlClient crlClient in crlClients) {
                 crlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, crlClient));
             }
-            SignatureValidationProperties.OnlineFetching onLineFetching = properties.GetRevocationOnlineFetching(context
+            SignatureValidationProperties.OnlineFetching onlineFetching = properties.GetRevocationOnlineFetching(context
                 .SetValidatorContext(ValidatorContext.CRL_VALIDATOR));
-            if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onLineFetching || (SignatureValidationProperties.OnlineFetching
-                .FETCH_IF_NO_OTHER_DATA_AVAILABLE == onLineFetching && crlResponses.IsEmpty())) {
+            if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching) {
                 crlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, new CrlClientOnline()));
             }
             // Sort all the CRL responses available based on the most recent revocation data.
             return crlResponses.Sorted((o1, o2) => o2.crl.GetThisUpdate().CompareTo(o1.crl.GetThisUpdate())).ToList();
         }
 
-        private static void FillOcspResponses(IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses
-            , IBasicOcspResponse basicOCSPResp, DateTime generationDate, TimeBasedContext timeBasedContext) {
-            if (basicOCSPResp != null) {
-                // Getting the responses.
-                ISingleResponse[] singleResponses = basicOCSPResp.GetResponses();
-                foreach (ISingleResponse singleResponse in singleResponses) {
-                    ocspResponses.Add(new RevocationDataValidator.OcspResponseValidationInfo(singleResponse, basicOCSPResp, generationDate
-                        , timeBasedContext));
+        private void TryToFetchRevInfoOnline(ValidationReport report, ValidationContext context, IX509Certificate 
+            certificate, IList<RevocationDataValidator.CrlValidationInfo> onlineCrlResponses, IList<RevocationDataValidator.OcspResponseValidationInfo
+            > onlineOcspResponses) {
+            SignatureValidationProperties.OnlineFetching crlOnlineFetching = properties.GetRevocationOnlineFetching(context
+                .SetValidatorContext(ValidatorContext.CRL_VALIDATOR));
+            if (SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE == crlOnlineFetching) {
+                // Sort all the CRL responses available based on the most recent revocation data.
+                onlineCrlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, new CrlClientOnline()).Sorted
+                    ((o1, o2) => o2.crl.GetThisUpdate().CompareTo(o1.crl.GetThisUpdate())).ToList());
+            }
+            SignatureValidationProperties.OnlineFetching ocspOnlineFetching = properties.GetRevocationOnlineFetching(context
+                .SetValidatorContext(ValidatorContext.OCSP_VALIDATOR));
+            if (SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE == ocspOnlineFetching) {
+                SafeCalling.OnRuntimeExceptionLog(() => {
+                    IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, (IX509Certificate
+                        )certificateRetriever.RetrieveIssuerCertificate(certificate), null);
+                    IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
+                        >();
+                    FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                        );
+                    // Sort all the OCSP responses available based on the most recent revocation data.
+                    onlineOcspResponses.AddAll(ocspResponses.Sorted((o1, o2) => o2.singleResp.GetThisUpdate().CompareTo(o1.singleResp
+                        .GetThisUpdate())).ToList());
                 }
+                , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
+                    , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
             }
-        }
-
-        private static IList<RevocationDataValidator.CrlValidationInfo> RetrieveAllCRLResponsesUsingClient(ValidationReport
-             report, IX509Certificate certificate, ICrlClient crlClient) {
-            IList<RevocationDataValidator.CrlValidationInfo> crlResponses = new List<RevocationDataValidator.CrlValidationInfo
-                >();
-            if (crlClient is ValidationCrlClient) {
-                ValidationCrlClient validationCrlClient = (ValidationCrlClient)crlClient;
-                crlResponses.AddAll(validationCrlClient.GetCrls().Values);
-            }
-            else {
-                ICollection<byte[]> crlBytesCollection = SafeCalling.OnExceptionLog(() => crlClient.GetEncoded(certificate
-                    , null), JavaCollectionsUtil.EmptyList<byte[]>(), report, (e) => new CertificateReportItem(certificate
-                    , REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CRL_CLIENT_FAILURE, crlClient), e, ReportItem.ReportItemStatus
-                    .INFO));
-                foreach (byte[] crlBytes in crlBytesCollection) {
-                    SafeCalling.OnExceptionLog(() => crlResponses.Add(new RevocationDataValidator.CrlValidationInfo((IX509Crl)
-                        CertificateUtil.ParseCrlFromBytes(crlBytes), DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                        )), report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
-                        (CANNOT_PARSE_CRL, crlClient), e, ReportItem.ReportItemStatus.INFO));
-                }
-            }
-            return crlResponses;
         }
 
         /// <summary>Class which contains validation related information about single OCSP response.</summary>

@@ -37,6 +37,7 @@ using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
@@ -225,7 +226,9 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report = new ValidationReport();
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
-                ).AddFreshnessResponse(TimeSpan.FromDays(-2));
+                ).AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH).AddRevocationOnlineFetchingResponse
+                (SignatureValidationProperties.OnlineFetching.NEVER_FETCH).AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching
+                .NEVER_FETCH).AddFreshnessResponse(TimeSpan.FromDays(-2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator().AddOcspClient(ocspClient1
                 ).AddOcspClient(ocspClient2).AddOcspClient(ocspClient3);
             validator.Validate(report, baseContext, checkCert, checkDate);
@@ -259,7 +262,7 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NocheckExtensionShouldNotFurtherValdiateTest() {
+        public virtual void NocheckExtensionShouldNotFurtherValidateTest() {
             ValidationReport report = new ValidationReport();
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                 .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH);
@@ -285,11 +288,85 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TryFetchRevocationDataOnlineTest() {
-            ValidationReport report = new ValidationReport();
+        public virtual void DoNotFetchOcspOnlineIfCrlAvailableTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime thisUpdate = checkDate.AddDays(-2);
+            TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, thisUpdate);
+            builder.SetNextUpdate(checkDate.AddDays(2));
+            TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().AddBuilderForCertIssuer(builder
+                ));
+            mockOCSPValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("", "", ReportItem.ReportItemStatus
+                .INDETERMINATE)));
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                 .All(), SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE).SetFreshness(ValidatorContexts
                 .All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator().AddCrlClient(crlClient
+                );
+            ValidationReport report = new ValidationReport();
+            validator.Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(0));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DoNotFetchCrlOnlineIfOcspAvailableTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate);
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate));
+            builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(5)));
+            TestOcspClientWrapper ocspClient = new TestOcspClientWrapper(new TestOcspClient().AddBuilderForCertIssuer(
+                caCert, builder));
+            mockOCSPValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("", "", ReportItem.ReportItemStatus
+                .INFO)));
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
+                .All(), SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE).SetFreshness(ValidatorContexts
+                .All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator().AddOcspClient(ocspClient
+                );
+            ValidationReport report = new ValidationReport();
+            validator.Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(1));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage("Looking for CRL for certificate C=BY,O=iText,CN=iTextTestSignRsa", LogLevel = LogLevelConstants
+            .INFO)]
+        [LogMessage("Skipped CRL url: Passed url can not be null.", LogLevel = LogLevelConstants.INFO)]
+        public virtual void TryToFetchCrlOnlineIfOnlyIndeterminateOcspAvailableTest() {
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetProducedAt(checkDate);
+            builder.SetThisUpdate(DateTimeUtil.GetCalendar(checkDate));
+            builder.SetNextUpdate(DateTimeUtil.GetCalendar(checkDate.AddDays(5)));
+            TestOcspClientWrapper ocspClient = new TestOcspClientWrapper(new TestOcspClient().AddBuilderForCertIssuer(
+                caCert, builder));
+            mockOCSPValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("", "", ReportItem.ReportItemStatus
+                .INDETERMINATE)));
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            parameters.SetRevocationOnlineFetching(ValidatorContexts.Of(ValidatorContext.CRL_VALIDATOR), CertificateSources
+                .All(), TimeBasedContexts.All(), SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE
+                ).SetRevocationOnlineFetching(ValidatorContexts.Of(ValidatorContext.OCSP_VALIDATOR), CertificateSources
+                .All(), TimeBasedContexts.All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness
+                (ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator().AddOcspClient(ocspClient
+                );
+            ValidationReport report = new ValidationReport();
+            validator.Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItem((la) => la.WithStatus(ReportItem.ReportItemStatus
+                .INDETERMINATE).WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
+                .NO_REVOCATION_DATA)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TryFetchRevocationDataOnlineTest() {
+            ValidationReport report = new ValidationReport();
+            parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
+                .All(), SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH).SetFreshness(ValidatorContexts.All(
+                ), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
             validator.Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
@@ -308,7 +385,7 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_410(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_516(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(MessageFormatUtil
@@ -317,8 +394,8 @@ namespace iText.Signatures.Validation.V1 {
                 )));
         }
 
-        private sealed class _ICrlClient_410 : ICrlClient {
-            public _ICrlClient_410(byte[] crl) {
+        private sealed class _ICrlClient_516 : ICrlClient {
+            public _ICrlClient_516(byte[] crl) {
                 this.crl = crl;
             }
 
@@ -416,7 +493,7 @@ namespace iText.Signatures.Validation.V1 {
             mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(crlGeneration, c.responseGenerationDate));
             ValidationReport report = new ValidationReport();
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
-            ValidationOcspClient ocspClient = new _ValidationOcspClient_527();
+            ValidationOcspClient ocspClient = new _ValidationOcspClient_635();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
                 , caCert, null);
@@ -424,7 +501,7 @@ namespace iText.Signatures.Validation.V1 {
                 ));
             ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
             validator.AddOcspClient(ocspClient);
-            ValidationCrlClient crlClient = new _ValidationCrlClient_542();
+            ValidationCrlClient crlClient = new _ValidationCrlClient_650();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
@@ -434,8 +511,8 @@ namespace iText.Signatures.Validation.V1 {
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
 
-        private sealed class _ValidationOcspClient_527 : ValidationOcspClient {
-            public _ValidationOcspClient_527() {
+        private sealed class _ValidationOcspClient_635 : ValidationOcspClient {
+            public _ValidationOcspClient_635() {
             }
 
             public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
@@ -444,8 +521,8 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private sealed class _ValidationCrlClient_542 : ValidationCrlClient {
-            public _ValidationCrlClient_542() {
+        private sealed class _ValidationCrlClient_650 : ValidationCrlClient {
+            public _ValidationCrlClient_650() {
             }
 
             public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
@@ -511,18 +588,18 @@ namespace iText.Signatures.Validation.V1 {
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
-            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_621(testOcspClient);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_729(testOcspClient);
             validator.AddOcspClient(ocspClient);
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
-            CrlClientOnline crlClient = new _CrlClientOnline_631(testCrlClient);
+            CrlClientOnline crlClient = new _CrlClientOnline_739(testCrlClient);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
                 );
         }
 
-        private sealed class _OcspClientBouncyCastle_621 : OcspClientBouncyCastle {
-            public _OcspClientBouncyCastle_621(TestOcspClient testOcspClient) {
+        private sealed class _OcspClientBouncyCastle_729 : OcspClientBouncyCastle {
+            public _OcspClientBouncyCastle_729(TestOcspClient testOcspClient) {
                 this.testOcspClient = testOcspClient;
             }
 
@@ -533,8 +610,8 @@ namespace iText.Signatures.Validation.V1 {
             private readonly TestOcspClient testOcspClient;
         }
 
-        private sealed class _CrlClientOnline_631 : CrlClientOnline {
-            public _CrlClientOnline_631(TestCrlClient testCrlClient) {
+        private sealed class _CrlClientOnline_739 : CrlClientOnline {
+            public _CrlClientOnline_739(TestCrlClient testCrlClient) {
                 this.testCrlClient = testCrlClient;
             }
 
@@ -589,7 +666,6 @@ namespace iText.Signatures.Validation.V1 {
             mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
                 );
             mockParameters.AddFreshnessResponse(TimeSpan.FromDays(0));
-            ReportItem reportItem = new ReportItem("validator", "message", ReportItem.ReportItemStatus.INFO);
             mockCrlValidator.OnCallDo((c) => {
                 throw new Exception("Test OCSP client failure");
             }
@@ -649,6 +725,10 @@ namespace iText.Signatures.Validation.V1 {
                 );
             mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
                 );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
             mockParameters.AddFreshnessResponse(TimeSpan.FromDays(-2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
             validator.AddOcspClient(ocspClient);
@@ -674,6 +754,10 @@ namespace iText.Signatures.Validation.V1 {
                 ));
             ValidationReport report = new ValidationReport();
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
+            mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
+                );
             mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
                 );
             mockParameters.AddRevocationOnlineFetchingResponse(SignatureValidationProperties.OnlineFetching.NEVER_FETCH
