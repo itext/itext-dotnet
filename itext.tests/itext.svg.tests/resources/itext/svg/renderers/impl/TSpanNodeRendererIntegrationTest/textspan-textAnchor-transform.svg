@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="300"
+        height="600"
+        version="1.1">
+    <defs>
+        <g id="originLines">
+            <line x1="-1" y1="1" x2="1" y2="-1" stroke-width="0.2" stroke="blue"/>
+            <line x1="-1" y1="-1" x2="1" y2="1" stroke-width="0.2" stroke="blue"/>
+
+            <line x2="30" y2="10" stroke-width="0.2" stroke="blue"/>
+            <circle cx="30" cy="10" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="30" y2="20" stroke-width="0.2" stroke="blue"/>
+            <circle cx="30" cy="20" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="30" y2="30" stroke-width="0.2" stroke="blue"/>
+            <circle cx="30" cy="30" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="30" y2="40" stroke-width="0.2" stroke="blue"/>
+            <circle cx="30" cy="40" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+        </g>
+        <g id="verticalOriginLines">
+            <line x1="-1" y1="1" x2="1" y2="-1" stroke-width="0.2" stroke="blue"/>
+            <line x1="-1" y1="-1" x2="1" y2="1" stroke-width="0.2" stroke="blue"/>
+
+            <line x2="30" y2="10" stroke-width="0.2" stroke="blue"/>
+            <circle cx="30" cy="10" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="40" y2="30" stroke-width="0.2" stroke="blue"/>
+            <circle cx="40" cy="30" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="50" y2="50" stroke-width="0.2" stroke="blue"/>
+            <circle cx="50" cy="50" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="60" y2="70" stroke-width="0.2" stroke="blue"/>
+            <circle cx="60" cy="70" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+        </g>
+        <g id="doubleOriginLines">
+            <line x1="-1" y1="1" x2="1" y2="-1" stroke-width="0.2" stroke="blue"/>
+            <line x1="-1" y1="-1" x2="1" y2="1" stroke-width="0.2" stroke="blue"/>
+
+            <line x2="60" y2="20" stroke-width="0.2" stroke="blue"/>
+            <circle cx="60" cy="20" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="60" y2="40" stroke-width="0.2" stroke="blue"/>
+            <circle cx="60" cy="40" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="60" y2="60" stroke-width="0.2" stroke="blue"/>
+            <circle cx="60" cy="60" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+
+            <line x2="60" y2="80" stroke-width="0.2" stroke="blue"/>
+            <circle cx="60" cy="80" r="0.5" fill="none" stroke="blue" stroke-width="0.2"/>
+        </g>
+    </defs>
+    <rect width="300" height="600" stroke="red" fill="none"/>
+    <!-- On text elements -->
+    <g transform="translate(30,0)">
+        <use href="#originLines"/>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,10)">no text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,20)"
+              text-anchor="start">start text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,30)"
+              text-anchor="middle">middle text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,40)"
+              text-anchor="end">end text anchor
+        </text>
+    </g>
+    <!-- Text elements with rotational transformation -->
+    <g transform="translate(30,50)">
+        <use href="#verticalOriginLines"/>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,10) rotate(90)">no text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(40,30) rotate(90)"
+              text-anchor="start">start text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(50,50) rotate(90)"
+              text-anchor="middle">middle text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(60,70) rotate(90)"
+              text-anchor="end">end text anchor
+        </text>
+    </g>
+    <!-- Text elements with scaling transformation -->
+    <g transform="translate(30,150)">
+        <use href="#originLines"/>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,10) scale(0.5)">no text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,20) scale(0.5)"
+              text-anchor="start">start text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,30) scale(0.5)"
+              text-anchor="middle">middle text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,40) scale(0.5)"
+              text-anchor="end">end text anchor
+        </text>
+    </g>
+    <!-- Why not both? -->
+    <g transform="translate(30,200)">
+        <use href="#doubleOriginLines"/>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,10)"
+              x="30"
+              y="10">no text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,20)"
+              text-anchor="start"
+              x="30"
+              y="20">start text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,30)"
+              text-anchor="middle"
+              x="30"
+              y="30">middle text anchor
+        </text>
+        <text font-size="10" font-family="Arial"
+              transform="translate(30,40)"
+              text-anchor="end"
+              x="30"
+              y="40"
+              >end text anchor
+        </text>
+    </g>
+</svg>
