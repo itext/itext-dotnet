@@ -70,7 +70,14 @@ namespace iText.Layout.Renderer {
                 case Property.GRID_ROW_START:
                 case Property.GRID_ROW_END:
                 case Property.GRID_ROW_SPAN: {
-                    return renderer.GetProperty<T1>(key);
+                    T1 ownValue = this.GetOwnProperty<T1>(key);
+                    if (ownValue != null) {
+                        return ownValue;
+                    }
+                    else {
+                        return renderer.GetProperty<T1>(key);
+                    }
+                    goto default;
                 }
 
                 default: {
@@ -93,18 +100,18 @@ namespace iText.Layout.Renderer {
                     break;
                 }
 
-                case Property.FILL_AVAILABLE_AREA:
+                case Property.FILL_AVAILABLE_AREA: {
+                    renderer.SetProperty(property, value);
+                    break;
+                }
+
+                case Property.COLLAPSING_MARGINS:
                 case Property.GRID_COLUMN_START:
                 case Property.GRID_COLUMN_END:
                 case Property.GRID_COLUMN_SPAN:
                 case Property.GRID_ROW_START:
                 case Property.GRID_ROW_END:
                 case Property.GRID_ROW_SPAN: {
-                    renderer.SetProperty(property, value);
-                    break;
-                }
-
-                case Property.COLLAPSING_MARGINS: {
                     base.SetProperty(property, value);
                     break;
                 }

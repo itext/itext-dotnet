@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using iText.Commons.Utils;
-using iText.Layout.Exceptions;
 using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
@@ -41,6 +40,8 @@ namespace iText.Layout.Renderer {
 
         //Using array list instead of array for .NET portability
         private readonly IList<ICollection<GridCell>> uniqueCells = new List<ICollection<GridCell>>(2);
+
+        private readonly IList<GridCell> itemsWithoutPlace = new List<GridCell>();
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new grid instance.</summary>
@@ -138,6 +139,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
+                result.AddAll(itemsWithoutPlace);
                 uniqueCells[(int)(iterationOrder)] = result;
                 return result;
             }
@@ -149,6 +151,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            result.AddAll(itemsWithoutPlace);
             uniqueCells[(int)(iterationOrder)] = result;
             return result;
         }
@@ -224,10 +227,17 @@ namespace iText.Layout.Renderer {
         /// <summary>Add cell in the grid, checking that it would fit and initializing it bottom left corner (x, y).</summary>
         /// <param name="cell">cell to and in the grid</param>
         private void AddCell(GridCell cell) {
+            bool placeFound = false;
             for (int i = cell.GetRowStart(); i < cell.GetRowEnd(); ++i) {
                 for (int j = cell.GetColumnStart(); j < cell.GetColumnEnd(); ++j) {
-                    rows[i][j] = cell;
+                    if (rows[i][j] == null) {
+                        rows[i][j] = cell;
+                        placeFound = true;
+                    }
                 }
+            }
+            if (!placeFound) {
+                itemsWithoutPlace.Add(cell);
             }
         }
 
@@ -471,9 +481,10 @@ namespace iText.Layout.Renderer {
                         //Move grid view cursor
                         pos = view.Next();
                     }
-                    //If cell restricts both x and y position grow and can't be fitted on a grid, throw an excpetion
+                    // If cell restricts both x and y position grow and can't be fitted on a grid,
+                    // exit occupying fixed position
                     if (view.IsFixed()) {
-                        throw new ArgumentException(LayoutExceptionMessageConstant.INVALID_CELL_INDEXES);
+                        break;
                     }
                     //If cell was not fitted while iterating grid, then there is not enough space to fit it, and grid
                     //has to be resized

@@ -93,6 +93,9 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
+            // The grid's items are not affected by the 'float' and 'clear' properties.
+            // Still let clear them on renderer level not model element
+            renderer.SetProperty(Property.FLOAT, null);
             renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             renderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             renderer.SetProperty(Property.COLLAPSING_MARGINS, DetermineCollapsingMargins(renderer));
@@ -171,20 +174,19 @@ namespace iText.Layout.Renderer {
 
         private static int ProcessLayoutResult(GridContainerRenderer.GridLayoutResult layoutResult, GridCell cell, 
             LayoutResult cellResult) {
-            IRenderer cellToRenderer = cell.GetValue();
+            IRenderer overflowRenderer = cellResult.GetOverflowRenderer();
             if (cellResult.GetStatus() == LayoutResult.NOTHING) {
-                cellToRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
-                cellToRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
-                cellToRenderer.SetProperty(Property.GRID_ROW_START, cell.GetRowStart() + 1);
-                cellToRenderer.SetProperty(Property.GRID_ROW_END, cell.GetRowEnd() + 1);
-                layoutResult.GetOverflowRenderers().Add(cellToRenderer);
+                overflowRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
+                overflowRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
+                overflowRenderer.SetProperty(Property.GRID_ROW_START, cell.GetRowStart() + 1);
+                overflowRenderer.SetProperty(Property.GRID_ROW_END, cell.GetRowEnd() + 1);
+                layoutResult.GetOverflowRenderers().Add(overflowRenderer);
                 layoutResult.SetCauseOfNothing(cellResult.GetCauseOfNothing());
                 return cell.GetRowStart();
             }
             // PARTIAL + FULL result handling
-            layoutResult.GetSplitRenderers().Add(cellToRenderer);
+            layoutResult.GetSplitRenderers().Add(cell.GetValue());
             if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
-                IRenderer overflowRenderer = cellResult.GetOverflowRenderer();
                 overflowRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
                 overflowRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
                 int rowStart = cell.GetRowStart() + 1;

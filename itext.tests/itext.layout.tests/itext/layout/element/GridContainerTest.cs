@@ -28,7 +28,6 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
-using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Grid;
 using iText.Test;
@@ -344,12 +343,48 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        public virtual void OverlapWithExistingColumnTest() {
-            String filename = DESTINATION_FOLDER + "overlapWithExistingColumnTest.pdf";
+        public virtual void OverlapWithExistingItemTest() {
+            String filename = DESTINATION_FOLDER + "overlapWithExistingItemTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_overlapWithExistingItemTest.pdf";
             IList<TemplateValue> templateColumns = new List<TemplateValue>();
-            templateColumns.Add(new PointValue(100.0f));
-            templateColumns.Add(new PointValue(100.0f));
-            templateColumns.Add(new PointValue(100.0f));
+            templateColumns.Add(MinContentValue.VALUE);
+            templateColumns.Add(MinContentValue.VALUE);
+            templateColumns.Add(MinContentValue.VALUE);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
+                Paragraph paragraph1 = new Paragraph("Two");
+                paragraph1.SetProperty(Property.GRID_COLUMN_START, 1);
+                paragraph1.SetProperty(Property.GRID_COLUMN_END, 3);
+                paragraph1.SetProperty(Property.GRID_ROW_START, 1);
+                paragraph1.SetProperty(Property.GRID_ROW_END, 3);
+                paragraph1.SetBorder(border);
+                grid.Add(paragraph1);
+                grid.Add(new Paragraph("Three").SetBorder(border));
+                grid.Add(new Paragraph("Four").SetBorder(border));
+                grid.Add(new Paragraph("Five").SetBorder(border));
+                Paragraph paragraph2 = new Paragraph("One (long content)");
+                paragraph2.SetProperty(Property.GRID_COLUMN_START, 1);
+                paragraph2.SetProperty(Property.GRID_COLUMN_END, 2);
+                paragraph2.SetProperty(Property.GRID_ROW_START, 1);
+                paragraph2.SetProperty(Property.GRID_ROW_END, 2);
+                paragraph2.SetBorder(border);
+                grid.Add(paragraph2);
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CoverExistingItemTest() {
+            String filename = DESTINATION_FOLDER + "coverExistingItemTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_coverExistingItemTest.pdf";
+            IList<TemplateValue> templateColumns = new List<TemplateValue>();
+            templateColumns.Add(MinContentValue.VALUE);
+            templateColumns.Add(MinContentValue.VALUE);
+            templateColumns.Add(MinContentValue.VALUE);
             using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -364,16 +399,17 @@ namespace iText.Layout.Element {
                 grid.Add(new Paragraph("Three").SetBorder(border));
                 grid.Add(new Paragraph("Four").SetBorder(border));
                 grid.Add(new Paragraph("Five").SetBorder(border));
-                Paragraph paragraph2 = new Paragraph("One");
+                Paragraph paragraph2 = new Paragraph("One (long content)");
                 paragraph2.SetProperty(Property.GRID_COLUMN_START, 1);
                 paragraph2.SetProperty(Property.GRID_COLUMN_END, 3);
                 paragraph2.SetProperty(Property.GRID_ROW_START, 1);
                 paragraph2.SetProperty(Property.GRID_ROW_END, 3);
                 paragraph2.SetBorder(border);
                 grid.Add(paragraph2);
-                Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => document.Add(grid));
-                NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_CELL_INDEXES, e.Message);
+                document.Add(grid);
             }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
         }
 
         [NUnit.Framework.Test]
