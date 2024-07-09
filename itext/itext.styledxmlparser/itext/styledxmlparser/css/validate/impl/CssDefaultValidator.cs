@@ -85,14 +85,16 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
             defaultValidators.Put(CommonCssConstants.LINE_HEIGHT, new MultiTypeDeclarationValidator(new CssNumberValueValidator
                 (false), new CssLengthValueValidator(false), new CssPercentageValueValidator(false), normalValidator, 
                 inheritInitialUnsetValidator));
-            defaultValidators.Put(CommonCssConstants.COLUMN_GAP, new MultiTypeDeclarationValidator(new CssLengthValueValidator
-                (false), new CssPercentageValueValidator(false), normalValidator));
+            MultiTypeDeclarationValidator gapValidator = new MultiTypeDeclarationValidator(new CssLengthValueValidator
+                (false), new CssPercentageValueValidator(false), normalValidator, inheritInitialUnsetValidator);
+            defaultValidators.Put(CommonCssConstants.COLUMN_GAP, gapValidator);
+            defaultValidators.Put(CommonCssConstants.GRID_COLUMN_GAP, gapValidator);
             defaultValidators.Put(CommonCssConstants.COLUMN_WIDTH, new MultiTypeDeclarationValidator(new CssLengthValueValidator
                 (false), new CssPercentageValueValidator(false), new CssEnumValidator(CommonCssConstants.AUTO)));
             defaultValidators.Put(CommonCssConstants.COLUMN_COUNT, new MultiTypeDeclarationValidator(new CssIntegerNumberValueValidator
                 (false, false), new CssEnumValidator(CommonCssConstants.AUTO)));
-            defaultValidators.Put(CommonCssConstants.ROW_GAP, new MultiTypeDeclarationValidator(new CssLengthValueValidator
-                (false), new CssPercentageValueValidator(false), normalValidator, inheritInitialUnsetValidator));
+            defaultValidators.Put(CommonCssConstants.ROW_GAP, gapValidator);
+            defaultValidators.Put(CommonCssConstants.GRID_ROW_GAP, gapValidator);
             defaultValidators.Put(CommonCssConstants.FLEX_GROW, new MultiTypeDeclarationValidator(new CssNumberValueValidator
                 (false), inheritInitialUnsetValidator));
             defaultValidators.Put(CommonCssConstants.FLEX_SHRINK, new MultiTypeDeclarationValidator(new CssNumberValueValidator

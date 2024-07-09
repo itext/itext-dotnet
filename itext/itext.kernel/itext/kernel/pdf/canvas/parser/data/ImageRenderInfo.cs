@@ -96,7 +96,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="System.Drawing.Bitmap"/>
         /// with
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
-        /// ;
+        /// ;  // Android-Conversion-Skip-Line (java.awt library isn't available on Android)
         /// </description></item>
         /// </list>
         /// </remarks>

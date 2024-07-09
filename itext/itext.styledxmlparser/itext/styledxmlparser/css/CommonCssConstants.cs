@@ -331,11 +331,20 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant GRID_COLUMN_END.</summary>
         public const String GRID_COLUMN_END = "grid-column-end";
 
+        /// <summary>The Constant GRID_COLUMN_GAP.</summary>
+        public const String GRID_COLUMN_GAP = "grid-column-gap";
+
         /// <summary>The Constant GRID_COLUMN_START.</summary>
         public const String GRID_COLUMN_START = "grid-column-start";
 
+        /// <summary>The Constant GRID_GAP.</summary>
+        public const String GRID_GAP = "grid-gap";
+
         /// <summary>The Constant GRID_ROW_END.</summary>
         public const String GRID_ROW_END = "grid-row-end";
+
+        /// <summary>The Constant GRID_ROW_GAP.</summary>
+        public const String GRID_ROW_GAP = "grid-row-gap";
 
         /// <summary>The Constant GRID_ROW_START.</summary>
         public const String GRID_ROW_START = "grid-row-start";

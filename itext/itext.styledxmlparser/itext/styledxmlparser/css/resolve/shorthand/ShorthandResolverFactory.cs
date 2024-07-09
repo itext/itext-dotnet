@@ -52,7 +52,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             shorthandResolvers.Put(CommonCssConstants.TEXT_DECORATION, new TextDecorationShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.FLEX, new FlexShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.FLEX_FLOW, new FlexFlowShorthandResolver());
-            shorthandResolvers.Put(CommonCssConstants.GAP, new GapShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.GAP, new GapShorthandResolver(CommonCssConstants.GAP));
+            shorthandResolvers.Put(CommonCssConstants.GRID_GAP, new GapShorthandResolver(CommonCssConstants.GRID_GAP));
             shorthandResolvers.Put(CommonCssConstants.PLACE_ITEMS, new PlaceItemsShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.COLUMNS, new ColumnsShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.COLUMN_RULE, new ColumnRuleShortHandResolver());
