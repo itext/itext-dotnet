@@ -48,8 +48,8 @@ namespace iText.Signatures.Validation.V1 {
         /// <param name="defaultValue">The value to return when an exception is thrown</param>
         /// <param name="report">The report to add the ReportItem to</param>
         /// <param name="reportItemCreator">A callback to generate a ReportItem</param>
-        /// <returns>The returned value from the action</returns>
         /// <typeparam name="T"/>
+        /// <returns>The returned value from the action</returns>
         public static T OnExceptionLog<T>(Func<T> action, T defaultValue, ValidationReport report, Func<Exception, 
             ReportItem> reportItemCreator) {
             try {
@@ -80,8 +80,8 @@ namespace iText.Signatures.Validation.V1 {
         /// <param name="defaultValue">The value to return when an exception is thrown</param>
         /// <param name="report">The report to add the ReportItem to</param>
         /// <param name="reportItemCreator">A callback to generate a ReportItem</param>
-        /// <returns>The returned value from the action</returns>
         /// <typeparam name="T"/>
+        /// <returns>The returned value from the action</returns>
         public static T OnRuntimeExceptionLog<T>(Func<T> action, T defaultValue, ValidationReport report, Func<Exception
             , ReportItem> reportItemCreator) {
             try {

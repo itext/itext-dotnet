@@ -26,7 +26,7 @@ using iText.Commons.Bouncycastle.Crypto;
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
     public class AESCipherCBCnoPad {
-        private static ICipherCBCnoPad cipher;
+        private ICipherCBCnoPad cipher;
 
         /// <summary>Creates a new instance of AESCipher with CBC and no padding</summary>
         /// <param name="forEncryption">

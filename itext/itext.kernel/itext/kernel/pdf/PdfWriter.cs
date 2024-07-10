@@ -94,7 +94,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Indicates if to use full compression mode.</summary>
         /// <returns>true if to use full compression, false otherwise.</returns>
         public virtual bool IsFullCompression() {
-            return properties.isFullCompression != null ? (bool)properties.isFullCompression : false;
+            return properties.isFullCompression != null && (bool)properties.isFullCompression;
         }
 
         /// <summary>Gets default compression level for @see PdfStream.</summary>
