@@ -282,7 +282,7 @@ namespace iText.Layout.Renderer {
             }
             // 8. Placing Grid Items
             iText.Layout.Renderer.Grid grid = Grid.Builder.ForItems(renderer.GetChildRenderers()).Columns(templateColumns
-                 == null ? 1 : templateColumns.Count).Rows(templateRows == null ? 1 : templateRows.Count).Flow(flow).Build
+                 == null ? 0 : templateColumns.Count).Rows(templateRows == null ? 0 : templateRows.Count).Flow(flow).Build
                 ();
             // Collapse any empty repeated tracks if auto-fit was used
             if (rowRepeatResolver.IsCollapseNullLines()) {

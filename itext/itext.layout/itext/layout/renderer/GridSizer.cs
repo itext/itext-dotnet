@@ -94,8 +94,8 @@ namespace iText.Layout.Renderer {
         private void ResolveGridRows() {
             IList<GridValue> rowsValues = new List<GridValue>();
             for (int i = 0; i < grid.GetNumberOfRows(); i++) {
-                if (templateRows != null && i < templateRows.Count) {
-                    rowsValues.Add(templateRows[i]);
+                if (templateRows != null && i - grid.GetRowOffset() < templateRows.Count && i - grid.GetRowOffset() >= 0) {
+                    rowsValues.Add(templateRows[i - grid.GetRowOffset()]);
                 }
                 else {
                     if (rowAutoHeight != null) {
@@ -169,8 +169,9 @@ namespace iText.Layout.Renderer {
         private void ResolveGridColumns() {
             IList<GridValue> colsValues = new List<GridValue>();
             for (int i = 0; i < grid.GetNumberOfColumns(); i++) {
-                if (templateColumns != null && i < templateColumns.Count) {
-                    colsValues.Add(templateColumns[i]);
+                if (templateColumns != null && i - grid.GetColumnOffset() < templateColumns.Count && i - grid.GetColumnOffset
+                    () >= 0) {
+                    colsValues.Add(templateColumns[i - grid.GetColumnOffset()]);
                 }
                 else {
                     if (columnAutoWidth != null) {

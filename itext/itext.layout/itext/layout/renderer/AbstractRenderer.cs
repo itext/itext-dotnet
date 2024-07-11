@@ -2690,6 +2690,7 @@ namespace iText.Layout.Renderer {
                     resolvedMinHeight = Math.Min(resolvedMinHeight, currentMaxHeight.GetValue());
                 }
                 renderer.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue((float)resolvedMinHeight));
+                renderer.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue((float)resolvedMinHeight));
             }
         }
 

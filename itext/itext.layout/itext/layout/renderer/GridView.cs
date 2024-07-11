@@ -102,6 +102,16 @@ namespace iText.Layout.Renderer {
         internal virtual GridView.Pos Reset(int y, int x, int rightMargin, int bottomMargin) {
             this.cursor.SetY(y);
             this.cursor.SetX(x);
+            if (x == -1 && y == -1) {
+                if (rightMargin > grid.GetNumberOfColumns() - this.cursor.x + (Grid.GridOrder.COLUMN.Equals(iterationOrder
+                    ) ? 1 : 0)) {
+                    this.cursor.SetX(0);
+                }
+                if (bottomMargin > grid.GetNumberOfRows() - this.cursor.y + (Grid.GridOrder.ROW.Equals(iterationOrder) ? 1
+                     : 0)) {
+                    this.cursor.SetY(0);
+                }
+            }
             this.rightMargin = rightMargin - 1;
             this.bottomMargin = bottomMargin - 1;
             this.restrictXGrow = x != -1;
@@ -168,19 +178,19 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         internal virtual void IncreaseDefaultAxis() {
             if (restrictYGrow) {
-                grid.EnsureGridSize(-1, grid.GetRows()[0].Length + 1);
+                grid.Resize(-1, grid.GetRows()[0].Length + 1);
             }
             else {
                 if (restrictXGrow) {
-                    grid.EnsureGridSize(grid.GetRows().Length + 1, -1);
+                    grid.Resize(grid.GetRows().Length + 1, -1);
                 }
                 else {
                     if (Grid.GridOrder.ROW.Equals(iterationOrder)) {
-                        grid.EnsureGridSize(grid.GetRows().Length + 1, -1);
+                        grid.Resize(grid.GetRows().Length + 1, -1);
                     }
                     else {
                         if (Grid.GridOrder.COLUMN.Equals(iterationOrder)) {
-                            grid.EnsureGridSize(-1, grid.GetRows()[0].Length + 1);
+                            grid.Resize(-1, grid.GetRows()[0].Length + 1);
                         }
                     }
                 }

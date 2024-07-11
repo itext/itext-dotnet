@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using iText.Commons.Utils;
+using iText.Layout.Properties;
 using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
@@ -36,19 +37,45 @@ namespace iText.Layout.Renderer {
     /// width = height = 1.
     /// </remarks>
     internal class Grid {
+        /// <summary>Cells container.</summary>
         private GridCell[][] rows = new GridCell[][] { new GridCell[1] };
 
+        /// <summary>Row start offset, it is not zero only if there are cells with negative indexes.</summary>
+        /// <remarks>
+        /// Row start offset, it is not zero only if there are cells with negative indexes.
+        /// Such cells should not be covered by templates, so the offset represents row from which template values
+        /// should be considered.
+        /// </remarks>
+        private int rowOffset = 0;
+
+        /// <summary>Column start offset, it is not zero only if there are cells with negative indexes.</summary>
+        /// <remarks>
+        /// Column start offset, it is not zero only if there are cells with negative indexes.
+        /// Such cells should not be covered by templates, so the offset represents column from which template values
+        /// should be considered.
+        /// </remarks>
+        private int columnOffset = 0;
+
         //Using array list instead of array for .NET portability
+        /// <summary>Unique grid cells cached values.</summary>
+        /// <remarks>
+        /// Unique grid cells cached values. first value of array contains unique cells in order from left to right
+        /// and the second value contains cells in order from top to bottom.
+        /// </remarks>
         private readonly IList<ICollection<GridCell>> uniqueCells = new List<ICollection<GridCell>>(2);
 
         private readonly IList<GridCell> itemsWithoutPlace = new List<GridCell>();
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>Creates a new grid instance.</summary>
+        /// <summary>Creates new grid instance.</summary>
         /// <param name="initialRowsCount">initial number of row for the grid</param>
         /// <param name="initialColumnsCount">initial number of columns for the grid</param>
-        internal Grid(int initialRowsCount, int initialColumnsCount) {
-            EnsureGridSize(initialRowsCount, initialColumnsCount);
+        /// <param name="columnOffset">actual start(zero) position of columns, from where template should be applied</param>
+        /// <param name="rowOffset">actual start(zero) position of rows, from where template should be applied</param>
+        internal Grid(int initialRowsCount, int initialColumnsCount, int columnOffset, int rowOffset) {
+            Resize(initialRowsCount, initialColumnsCount);
+            this.columnOffset = columnOffset;
+            this.rowOffset = rowOffset;
             //Add GridOrder.ROW and GridOrder.COLUMN cache for unique cells, which is null initially
             uniqueCells.Add(null);
             uniqueCells.Add(null);
@@ -80,35 +107,18 @@ namespace iText.Layout.Renderer {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Gets unique cells in the specified row or column depends on passed
-        /// <see cref="GridOrder"/>.
-        /// </summary>
-        /// <param name="order">the order which will be used to extract cells</param>
-        /// <param name="trackIndex">the track index from which cells will be extracted</param>
-        /// <returns>collection of unique cells in a row or column</returns>
-        internal virtual ICollection<GridCell> GetUniqueCellsInTrack(Grid.GridOrder order, int trackIndex) {
-            IList<GridCell> result = new List<GridCell>(order == Grid.GridOrder.ROW ? GetNumberOfRows() : GetNumberOfColumns
-                ());
-            GridCell previous = null;
-            if (Grid.GridOrder.COLUMN == order) {
-                foreach (GridCell[] row in rows) {
-                    GridCell current = row[trackIndex];
-                    if (current != null && current != previous) {
-                        previous = current;
-                        result.Add(current);
-                    }
-                }
-            }
-            else {
-                foreach (GridCell current in rows[trackIndex]) {
-                    if (current != null && current != previous) {
-                        previous = current;
-                        result.Add(current);
-                    }
-                }
-            }
-            return result;
+        /// <summary>get row start offset or grid "zero row" position.</summary>
+        /// <returns>row start offset if there are negative indexes, 0 otherwise</returns>
+        internal virtual int GetRowOffset() {
+            return rowOffset;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>get column start offset or grid "zero column" position.</summary>
+        /// <returns>column start offset if there are negative indexes, 0 otherwise</returns>
+        internal virtual int GetColumnOffset() {
+            return columnOffset;
         }
 //\endcond
 
@@ -161,7 +171,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Resize grid if needed, so it would have given number of rows/columns.</summary>
         /// <param name="height">new grid height</param>
         /// <param name="width">new grid width</param>
-        internal virtual void EnsureGridSize(int height, int width) {
+        internal void Resize(int height, int width) {
             if (height <= GetNumberOfRows() && width <= GetNumberOfColumns()) {
                 return;
             }
@@ -285,13 +295,13 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         /// <summary>This class is used to properly initialize starting values for grid.</summary>
         internal sealed class Builder {
-            private int columnCount;
+            private int explicitColumnCount = 0;
 
-            private int rowCount;
+            private int explicitRowCount = 0;
 
             private GridFlow flow;
 
-            private IList<GridCell> cells;
+            private IList<IRenderer> values;
 
             private Builder() {
             }
@@ -302,7 +312,7 @@ namespace iText.Layout.Renderer {
             /// <returns>new grid builder instance</returns>
             internal static Grid.Builder ForItems(IList<IRenderer> values) {
                 Grid.Builder builder = new Grid.Builder();
-                builder.cells = values.Select((val) => new GridCell(val)).ToList();
+                builder.values = values;
                 return builder;
             }
 //\endcond
@@ -311,10 +321,10 @@ namespace iText.Layout.Renderer {
             /// Set number of columns for a grid, the result will be either a provided one or if some elements
             /// have a property defining more columns on a grid than provided value it will be set instead.
             /// </summary>
-            /// <param name="minColumnCount">min column count of a grid</param>
+            /// <param name="explicitColumnCount">explicit column count of a grid</param>
             /// <returns>current builder instance</returns>
-            public Grid.Builder Columns(int minColumnCount) {
-                columnCount = Math.Max(minColumnCount, CalculateInitialColumnsCount(cells));
+            public Grid.Builder Columns(int explicitColumnCount) {
+                this.explicitColumnCount = explicitColumnCount;
                 return this;
             }
 
@@ -322,10 +332,10 @@ namespace iText.Layout.Renderer {
             /// Set number of rows for a grid, the result will be either a provided one or if some elements
             /// have a property defining more rows on a grid than provided value it will be set instead.
             /// </summary>
-            /// <param name="minRowCount">min height of a grid</param>
+            /// <param name="explicitRowCount">explicit height of a grid</param>
             /// <returns>current builder instance</returns>
-            public Grid.Builder Rows(int minRowCount) {
-                rowCount = Math.Max(minRowCount, CalculateInitialRowsCount(cells));
+            public Grid.Builder Rows(int explicitRowCount) {
+                this.explicitRowCount = explicitRowCount;
                 return this;
             }
 
@@ -334,7 +344,6 @@ namespace iText.Layout.Renderer {
             /// <returns>current builder instance</returns>
             public Grid.Builder Flow(GridFlow flow) {
                 this.flow = flow;
-                JavaCollectionsUtil.Sort(cells, GetOrderingFunctionForFlow(flow));
                 return this;
             }
 
@@ -345,7 +354,49 @@ namespace iText.Layout.Renderer {
             /// instance.
             /// </returns>
             public iText.Layout.Renderer.Grid Build() {
-                iText.Layout.Renderer.Grid grid = new iText.Layout.Renderer.Grid(rowCount, columnCount);
+                //Those values are atomic, because primitive values stored on stack and can't be passed inside lambda
+                //and wrapper types are immutable, so have to use mutable analogue.
+                //Using long for .NET porting compatibility
+                //Those offset values represent start (zero row/column) of the grid.
+                //They are needed to correctly apply template values for grid cell afterwards, so items which are placed
+                //outside the explicit grid are not affected by template values.
+                AtomicLong rowOffset = new AtomicLong();
+                AtomicLong columnOffset = new AtomicLong();
+                IList<Grid.CssGridCell> cssCells = values.Select((val) => {
+                    Grid.CssGridCell cell = new Grid.CssGridCell(val, explicitColumnCount, explicitRowCount);
+                    rowOffset.Set(Math.Max(rowOffset.Get(), cell.offsetY));
+                    columnOffset.Set(Math.Max(columnOffset.Get(), cell.offsetX));
+                    return cell;
+                }
+                ).ToList();
+                IList<GridCell> cells = cssCells.Select((cssCell) => {
+                    int startY = -1;
+                    if (cssCell.startY < 0) {
+                        startY = cssCell.startY + (int)rowOffset.Get();
+                    }
+                    else {
+                        if (cssCell.startY > 0) {
+                            startY = cssCell.startY + (int)rowOffset.Get() - 1;
+                        }
+                    }
+                    int startX = -1;
+                    if (cssCell.startX < 0) {
+                        startX = cssCell.startX + (int)columnOffset.Get();
+                    }
+                    else {
+                        if (cssCell.startX > 0) {
+                            startX = cssCell.startX + (int)columnOffset.Get() - 1;
+                        }
+                    }
+                    return new GridCell(cssCell.value, startX, startY, cssCell.spanX, cssCell.spanY);
+                }
+                ).ToList();
+                JavaCollectionsUtil.Sort(cells, GetOrderingFunctionForFlow(flow));
+                int columnCount = Math.Max(explicitColumnCount + (int)columnOffset.Get(), CalculateInitialColumnsCount(cells
+                    ));
+                int rowCount = Math.Max(explicitRowCount + (int)rowOffset.Get(), CalculateInitialRowsCount(cells));
+                iText.Layout.Renderer.Grid grid = new iText.Layout.Renderer.Grid(rowCount, columnCount, (int)columnOffset.
+                    Get(), (int)rowOffset.Get());
                 Grid.CellPlacementHelper cellPlacementHelper = new Grid.CellPlacementHelper(grid, flow);
                 foreach (GridCell cell in cells) {
                     cellPlacementHelper.Fit(cell);
@@ -391,26 +442,20 @@ namespace iText.Layout.Renderer {
         /// </summary>
         private sealed class RowCellComparator : IComparer<GridCell> {
             public int Compare(GridCell lhs, GridCell rhs) {
-                int lhsModifiers = 0;
-                if (lhs.GetColumnStart() != -1 && lhs.GetRowStart() != -1) {
-                    lhsModifiers = 2;
-                }
-                else {
-                    if (lhs.GetRowStart() != -1) {
-                        lhsModifiers = 1;
-                    }
-                }
-                int rhsModifiers = 0;
-                if (rhs.GetColumnStart() != -1 && rhs.GetRowStart() != -1) {
-                    rhsModifiers = 2;
-                }
-                else {
-                    if (rhs.GetRowStart() != -1) {
-                        rhsModifiers = 1;
-                    }
-                }
                 //passing parameters in reversed order so ones with properties would come first
-                return JavaUtil.IntegerCompare(rhsModifiers, lhsModifiers);
+                return JavaUtil.IntegerCompare(CalculateModifiers(rhs), CalculateModifiers(lhs));
+            }
+
+            private int CalculateModifiers(GridCell value) {
+                if (value.GetColumnStart() != -1 && value.GetRowStart() != -1) {
+                    return 2;
+                }
+                else {
+                    if (value.GetRowStart() != -1) {
+                        return 1;
+                    }
+                }
+                return 0;
             }
         }
 
@@ -420,26 +465,142 @@ namespace iText.Layout.Renderer {
         /// </summary>
         private sealed class ColumnCellComparator : IComparer<GridCell> {
             public int Compare(GridCell lhs, GridCell rhs) {
-                int lhsModifiers = 0;
-                if (lhs.GetColumnStart() != -1 && lhs.GetRowStart() != -1) {
-                    lhsModifiers = 2;
-                }
-                else {
-                    if (lhs.GetColumnStart() != -1) {
-                        lhsModifiers = 1;
-                    }
-                }
-                int rhsModifiers = 0;
-                if (rhs.GetColumnStart() != -1 && rhs.GetRowStart() != -1) {
-                    rhsModifiers = 2;
-                }
-                else {
-                    if (rhs.GetColumnStart() != -1) {
-                        rhsModifiers = 1;
-                    }
-                }
                 //passing parameters in reversed order so ones with properties would come first
-                return JavaUtil.IntegerCompare(rhsModifiers, lhsModifiers);
+                return JavaUtil.IntegerCompare(CalculateModifiers(rhs), CalculateModifiers(lhs));
+            }
+
+            private int CalculateModifiers(GridCell value) {
+                if (value.GetColumnStart() != -1 && value.GetRowStart() != -1) {
+                    return 2;
+                }
+                else {
+                    if (value.GetColumnStart() != -1) {
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+        }
+
+        private class CssGridCell {
+//\cond DO_NOT_DOCUMENT
+            internal IRenderer value;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            // Cell position on css grid starts from 1, not 0. An integer value of zero means value is not explicitly
+            // defined, since according to https://www.w3.org/TR/css-grid-1/#line-placement
+            // an <integer> value of zero makes the declaration invalid and leads to the same behaviour if it wasn't
+            // specified at all.
+            internal int startX;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int spanX;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int offsetX;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int startY;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int spanY;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int offsetY;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal CssGridCell(IRenderer value, int templateSizeX, int templateSizeY) {
+                this.value = value;
+                int[] rowPlacement = InitAxisPlacement(value.GetProperty<int?>(Property.GRID_ROW_START), value.GetProperty
+                    <int?>(Property.GRID_ROW_END), value.GetProperty<int?>(Property.GRID_ROW_SPAN), templateSizeY);
+                startY = rowPlacement[0];
+                spanY = rowPlacement[1];
+                offsetY = rowPlacement[2];
+                int[] columnPlacement = InitAxisPlacement(value.GetProperty<int?>(Property.GRID_COLUMN_START), value.GetProperty
+                    <int?>(Property.GRID_COLUMN_END), value.GetProperty<int?>(Property.GRID_COLUMN_SPAN), templateSizeX);
+                startX = columnPlacement[0];
+                spanX = columnPlacement[1];
+                offsetX = columnPlacement[2];
+            }
+//\endcond
+
+            /// <summary>
+            /// Init axis placement values
+            /// if start &gt; end values are swapped
+            /// </summary>
+            /// <param name="startProperty">x/y pos of cell on a grid</param>
+            /// <param name="endProperty">x/y + width/height pos of cell on a grid</param>
+            /// <param name="spanProperty">vertical or horizontal span of the cell on a grid</param>
+            /// <returns>
+            /// array, where first value is column/row start, second is column/row span and third is an offset
+            /// to the opposite direction of current axis where cell should be placed.
+            /// </returns>
+            private static int[] InitAxisPlacement(int? startProperty, int? endProperty, int? spanProperty, int templateSize
+                ) {
+                int start = startProperty == null ? 0 : (int)startProperty;
+                int end = endProperty == null ? 0 : (int)endProperty;
+                int span = spanProperty == null ? 1 : (int)spanProperty;
+                //result[0] - start
+                //result[1] - span
+                //result[2] - offset in the opposite direction from the start of the grid where this cell should be placed
+                int[] result = new int[] { 0, span, 0 };
+                if (start < 0) {
+                    // Can't reach start == 0 after this block
+                    if (Math.Abs(start) <= templateSize + 1) {
+                        start++;
+                    }
+                    start = templateSize + start + 1;
+                }
+                if (end < 0) {
+                    // Can't reach end == 0 after this block
+                    if (Math.Abs(end) <= templateSize + 1) {
+                        end++;
+                    }
+                    end = templateSize + end + 1;
+                }
+                if (start != 0 && end != 0) {
+                    if (start < end) {
+                        result[0] = start;
+                        result[1] = end - start;
+                    }
+                    else {
+                        if (start == end) {
+                            result[0] = start;
+                        }
+                        else {
+                            result[0] = end;
+                            result[1] = start - end;
+                        }
+                    }
+                    if (start * end < 0) {
+                        result[1]--;
+                    }
+                }
+                else {
+                    if (start != 0) {
+                        result[0] = start;
+                    }
+                    else {
+                        if (end != 0) {
+                            start = end - span;
+                            if (start <= 0 && end > 0) {
+                                start--;
+                            }
+                            result[0] = start;
+                        }
+                    }
+                }
+                if (start < 0 || end < 0) {
+                    result[2] = Math.Abs(Math.Min(start, end));
+                }
+                return result;
             }
         }
 
@@ -461,7 +622,7 @@ namespace iText.Layout.Renderer {
             /// <param name="cell">cell to place on a grid.</param>
             internal virtual void Fit(GridCell cell) {
                 //resize the grid if needed to fit a cell into it
-                grid.EnsureGridSize(cell.GetRowEnd(), cell.GetColumnEnd());
+                grid.Resize(cell.GetRowEnd(), cell.GetColumnEnd());
                 bool result;
                 //reset grid view to process new cell
                 GridView.Pos pos = view.Reset(cell.GetRowStart(), cell.GetColumnStart(), cell.GetGridWidth(), cell.GetGridHeight

@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Commons.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -39,38 +38,6 @@ namespace iText.Layout.Renderer {
                 )), twoRenderer, new TextRenderer(new Text("Three")), new TextRenderer(new Text("Four")))).Columns(3).
                 Rows(3).Flow(GridFlow.ROW).Build();
             NUnit.Framework.Assert.AreEqual(4, grid.GetUniqueGridCells(Grid.GridOrder.ROW).Count);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetUniqueCellsInColumnAndRowTest() {
-            IRenderer twoRenderer = new TextRenderer(new Text("Two"));
-            twoRenderer.SetProperty(Property.GRID_ROW_START, 2);
-            twoRenderer.SetProperty(Property.GRID_ROW_END, 4);
-            iText.Layout.Renderer.Grid grid = Grid.Builder.ForItems(JavaUtil.ArraysAsList(new TextRenderer(new Text("One"
-                )), twoRenderer, new TextRenderer(new Text("Three")), new TextRenderer(new Text("Four")))).Columns(3).
-                Rows(3).Flow(GridFlow.ROW).Build();
-            NUnit.Framework.Assert.AreEqual(1, grid.GetUniqueCellsInTrack(Grid.GridOrder.COLUMN, 1).Count);
-            NUnit.Framework.Assert.AreEqual(3, grid.GetUniqueCellsInTrack(Grid.GridOrder.ROW, 0).Count);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void InvalidColumnForGetColCellsTest() {
-            iText.Layout.Renderer.Grid grid = new iText.Layout.Renderer.Grid(3, 3);
-            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
-                .COLUMN, 4));
-            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
-                .COLUMN, -1));
-            NUnit.Framework.Assert.DoesNotThrow(() => grid.GetUniqueCellsInTrack(Grid.GridOrder.COLUMN, 2));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void InvalidRowForGetRowCellsTest() {
-            iText.Layout.Renderer.Grid grid = new iText.Layout.Renderer.Grid(3, 3);
-            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
-                .ROW, 4));
-            NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => grid.GetUniqueCellsInTrack(Grid.GridOrder
-                .ROW, -1));
-            NUnit.Framework.Assert.DoesNotThrow(() => grid.GetUniqueCellsInTrack(Grid.GridOrder.ROW, 2));
         }
 
         [NUnit.Framework.Test]

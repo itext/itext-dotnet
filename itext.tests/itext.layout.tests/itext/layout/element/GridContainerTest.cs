@@ -68,6 +68,51 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BasicTwoColumnsTest() {
+            String filename = DESTINATION_FOLDER + "basicTwoColumnsTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_basicTwoColumnsTest.pdf";
+            IList<TemplateValue> templateColumns = new List<TemplateValue>();
+            templateColumns.Add(new PointValue(150.0f));
+            templateColumns.Add(new PointValue(150.0f));
+            SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
+                grid.Add(new Paragraph("One").SetBorder(border));
+                grid.Add(new Paragraph("Two").SetBorder(border));
+                Paragraph paragraph3 = new Paragraph("One").SetBorder(border);
+                paragraph3.SetProperty(Property.GRID_COLUMN_SPAN, 2);
+                grid.Add(paragraph3);
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicTwoRowsTest() {
+            String filename = DESTINATION_FOLDER + "basicTwoRowsTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_basicTwoRowsTest.pdf";
+            IList<TemplateValue> templateRows = new List<TemplateValue>();
+            templateRows.Add(new PointValue(150.0f));
+            templateRows.Add(new PointValue(150.0f));
+            SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_ROWS, templateRows);
+                grid.SetProperty(Property.GRID_FLOW, GridFlow.COLUMN);
+                grid.Add(new Paragraph("One").SetBorder(border));
+                grid.Add(new Paragraph("Two").SetBorder(border));
+                Paragraph paragraph3 = new Paragraph("One").SetBorder(border);
+                paragraph3.SetProperty(Property.GRID_ROW_SPAN, 2);
+                grid.Add(paragraph3);
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BasicAutoColumnsTest() {
             String filename = DESTINATION_FOLDER + "basicAutoColumnsTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicAutoColumnsTest.pdf";
@@ -125,6 +170,66 @@ namespace iText.Layout.Element {
                 paragraph3.SetProperty(Property.GRID_COLUMN_END, 4);
                 grid.Add(paragraph3);
                 grid.Add(new Paragraph("Four").SetBorder(border));
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicThreeColumnsOutOfBoundsWithNoCellsTest() {
+            String filename = DESTINATION_FOLDER + "basicThreeColumnsOutOfBoundsWithNoCellsTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsOutOfBoundsWithNoCellsTest.pdf";
+            IList<TemplateValue> templateColumns = new List<TemplateValue>();
+            templateColumns.Add(new PointValue(100.0f));
+            templateColumns.Add(new PointValue(100.0f));
+            templateColumns.Add(new PointValue(100.0f));
+            SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
+                Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
+                paragraph1.SetProperty(Property.GRID_COLUMN_START, -2);
+                paragraph1.SetProperty(Property.GRID_COLUMN_END, -1);
+                grid.Add(paragraph1);
+                grid.Add(new Paragraph("Two").SetBorder(border));
+                Paragraph paragraph3 = new Paragraph("Three").SetBorder(border);
+                paragraph3.SetProperty(Property.GRID_COLUMN_START, -4);
+                paragraph3.SetProperty(Property.GRID_COLUMN_END, 3);
+                grid.Add(paragraph3);
+                grid.Add(new Paragraph("Four").SetBorder(border));
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicThreeColumnsWithNegativeCustomColumnIndexesTest() {
+            String filename = DESTINATION_FOLDER + "basicThreeColumnsWithNegativeCustomColumnIndexesTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_basicThreeColumnsWithNegativeCustomColumnIndexesTest.pdf";
+            IList<TemplateValue> templateColumns = new List<TemplateValue>();
+            templateColumns.Add(new PointValue(100.0f));
+            templateColumns.Add(new PointValue(100.0f));
+            templateColumns.Add(new PointValue(100.0f));
+            SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
+                Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
+                paragraph1.SetProperty(Property.GRID_COLUMN_START, -2);
+                paragraph1.SetProperty(Property.GRID_COLUMN_END, -1);
+                grid.Add(paragraph1);
+                grid.Add(new Paragraph("Two").SetBorder(border));
+                Paragraph paragraph3 = new Paragraph("Three").SetBorder(border);
+                paragraph3.SetProperty(Property.GRID_COLUMN_START, -7);
+                paragraph3.SetProperty(Property.GRID_COLUMN_END, 3);
+                grid.Add(paragraph3);
+                grid.Add(new Paragraph("Four").SetBorder(border));
+                grid.Add(new Paragraph("Five").SetBorder(border));
+                grid.Add(new Paragraph("Six").SetBorder(border));
+                grid.Add(new Paragraph("Seven").SetBorder(border));
+                grid.Add(new Paragraph("Eight").SetBorder(border));
                 document.Add(grid);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
