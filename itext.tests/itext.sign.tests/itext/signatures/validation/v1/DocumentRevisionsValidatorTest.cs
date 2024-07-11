@@ -134,8 +134,8 @@ namespace iText.Signatures.Validation.V1 {
                     );
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
-                    .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.DEVELOPER_EXTENSION_REMOVED, (i) => PdfName.ESIC
-                    ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                    .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.BASE_VERSION_DECREASED, (i) => PdfName.ESIC).WithStatus
+                    (ReportItem.ReportItemStatus.INVALID)));
                 validationReport = new ValidationReport();
                 validator.ValidateRevision(documentRevisions[2], documentRevisions[3], document, validationReport, validationContext
                     );

@@ -161,7 +161,7 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(1381, thirdRevision.GetEofOffset());
                 DocumentRevision secondRevision = revisionsReader.GetAllRevisions()[1];
                 AssertResultingRevision(secondRevision, 1, 2, 3, 4, 5, 6, 7, 8);
-                NUnit.Framework.Assert.AreEqual(1550, secondRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(1381, secondRevision.GetEofOffset());
                 DocumentRevision firstRevision = revisionsReader.GetAllRevisions()[2];
                 AssertResultingRevision(firstRevision);
                 NUnit.Framework.Assert.AreEqual(1550, firstRevision.GetEofOffset());

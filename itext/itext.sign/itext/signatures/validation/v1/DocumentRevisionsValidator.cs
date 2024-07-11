@@ -60,6 +60,14 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String BASE_VERSION_DECREASED = "Base version number in developer extension \"{0}\" dictionary was decreased.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String BASE_VERSION_EXTENSION_NOT_PARSABLE = "Base version number in developer extension \"{0}\" dictionary is not parsable.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String DEVELOPER_EXTENSION_REMOVED = "Developer extension \"{0}\" dictionary was removed or unexpectedly modified.";
 //\endcond
 
@@ -132,6 +140,10 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String OUTLINES_MODIFIED = "Outlines entry in catalog dictionary was modified. " + "iText currently cannot identify if these modifications are allowed.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String PAGES_MODIFIED = "Pages structure was unexpectedly modified.";
 //\endcond
 
@@ -180,6 +192,30 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String STRUCT_TREE_CONTENT_MODIFIED = "Struct tree content element is unexpectedly modified.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String STRUCT_TREE_ELEMENT_MODIFIED = "Struct tree element is unexpectedly modified.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String STRUCT_TREE_ROOT_ADDED = "StructTreeRoot which contains not allowed entries was added to the catalog.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String STRUCT_TREE_ROOT_MODIFIED = "StructTreeRoot was unexpectedly modified.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String STRUCT_TREE_ROOT_NOT_DICT = "StructTreeRoot, which is not a dictionary, was modified.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String STRUCT_TREE_ROOT_REMOVED = "StructTreeRoot was removed from the catalog.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String TOO_MANY_CERTIFICATION_SIGNATURES = "Document contains more than one certification signature.";
 //\endcond
 
@@ -200,6 +236,11 @@ namespace iText.Signatures.Validation.V1 {
         internal const String UNRECOGNIZED_ACTION = "Signature field lock dictionary contains unrecognized " + "\"Action\" value \"{0}\". \"All\" will be used instead.";
 //\endcond
 
+        private const float EPS = 1e-5f;
+
+        private static readonly PdfDictionary DUMMY_STRUCT_TREE_ELEMENT = new PdfDictionary(JavaCollectionsUtil.SingletonMap
+            (PdfName.K, (PdfObject)new PdfArray()));
+
         private readonly ICollection<String> lockedFields = new HashSet<String>();
 
         private readonly SignatureValidationProperties properties;
@@ -215,6 +256,10 @@ namespace iText.Signatures.Validation.V1 {
         private ICollection<PdfObject> checkedAnnots;
 
         private ICollection<PdfDictionary> newlyAddedFields;
+
+        private ICollection<PdfDictionary> removedTaggedObjects;
+
+        private ICollection<PdfDictionary> addedTaggedObjects;
 
         /// <summary>
         /// Creates new instance of
@@ -453,6 +498,19 @@ namespace iText.Signatures.Validation.V1 {
             return false;
         }
 
+        private static bool IsStructTreeElement(PdfObject @object) {
+            if (@object is PdfDictionary) {
+                PdfDictionary objectDictionary = (PdfDictionary)@object;
+                PdfName type = objectDictionary.GetAsName(PdfName.Type);
+                return type == null || PdfName.StructElem.Equals(type);
+            }
+            return false;
+        }
+
+        private static PdfObject GetObjectFromStructTreeContent(PdfObject structTreeContent) {
+            return structTreeContent is PdfDictionary ? ((PdfDictionary)structTreeContent).Get(PdfName.Obj) : null;
+        }
+
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
             return !properties.GetContinueAfterFailure(validationContext) && result.GetValidationResult() == ValidationReport.ValidationResult
                 .INVALID;
@@ -519,8 +577,8 @@ namespace iText.Signatures.Validation.V1 {
                     PdfArray fields = fieldLock.GetAsArray(PdfName.Fields);
                     IList<String> excludedFields = JavaCollectionsUtil.EmptyList<String>();
                     if (fields != null) {
-                        excludedFields = fields.SubList(0, fields.Size()).Select((field) => field is PdfString ? ((PdfString)field
-                            ).ToUnicodeString() : null).ToList();
+                        excludedFields = fields.ToList().Select((field) => field is PdfString ? ((PdfString)field).ToUnicodeString
+                            () : null).ToList();
                     }
                     LockAllFormFields(revision, excludedFields, document, report);
                 }
@@ -672,6 +730,8 @@ namespace iText.Signatures.Validation.V1 {
             PdfDictionary currentCatalog = documentWithRevision.GetCatalog().GetPdfObject();
             PdfDictionary previousCatalogCopy = CopyCatalogEntriesToCompare(previousCatalog);
             PdfDictionary currentCatalogCopy = CopyCatalogEntriesToCompare(currentCatalog);
+            removedTaggedObjects = new HashSet<PdfDictionary>();
+            addedTaggedObjects = new HashSet<PdfDictionary>();
             if (!ComparePdfObjects(previousCatalogCopy, currentCatalogCopy)) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, NOT_ALLOWED_CATALOG_CHANGES, ReportItem.ReportItemStatus
                     .INVALID));
@@ -702,10 +762,237 @@ namespace iText.Signatures.Validation.V1 {
             }
             result = result && ComparePages(previousCatalog.GetAsDictionary(PdfName.Pages), currentCatalog.GetAsDictionary
                 (PdfName.Pages), report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && CompareStructTreeRoot(previousCatalog.Get(PdfName.StructTreeRoot), currentCatalog.Get(PdfName
+                .StructTreeRoot), report);
+            if (StopValidation(report, context)) {
+                return result;
+            }
+            result = result && CompareOutlines(previousCatalog.Get(PdfName.Outlines), currentCatalog.Get(PdfName.Outlines
+                ), report);
             return result;
         }
 
         // Compare catalogs nested methods section:
+        private bool CompareOutlines(PdfObject previousOutlines, PdfObject currentOutlines, ValidationReport report
+            ) {
+            if (!ComparePdfObjects(previousOutlines, currentOutlines)) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, OUTLINES_MODIFIED, ReportItem.ReportItemStatus.INDETERMINATE
+                    ));
+                return false;
+            }
+            return true;
+        }
+
+        private bool CompareStructTreeRoot(PdfObject previousStructTreeRoot, PdfObject currentStructTreeRoot, ValidationReport
+             report) {
+            if (previousStructTreeRoot == currentStructTreeRoot) {
+                return true;
+            }
+            if (!(previousStructTreeRoot is PdfDictionary) && currentStructTreeRoot is PdfDictionary) {
+                CompareStructTreeElementKids(DUMMY_STRUCT_TREE_ELEMENT, (PdfDictionary)currentStructTreeRoot, report);
+                if (addedTaggedObjects.Contains(currentStructTreeRoot)) {
+                    return true;
+                }
+                else {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ROOT_ADDED, ReportItem.ReportItemStatus.INVALID
+                        ));
+                    return false;
+                }
+            }
+            if (!(currentStructTreeRoot is PdfDictionary) && previousStructTreeRoot is PdfDictionary) {
+                CompareStructTreeElementKids((PdfDictionary)previousStructTreeRoot, DUMMY_STRUCT_TREE_ELEMENT, report);
+                if (removedTaggedObjects.Contains(previousStructTreeRoot)) {
+                    return true;
+                }
+                else {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ROOT_REMOVED, ReportItem.ReportItemStatus.INVALID
+                        ));
+                    return false;
+                }
+            }
+            if (!(previousStructTreeRoot is PdfDictionary)) {
+                if (ComparePdfObjects(previousStructTreeRoot, currentStructTreeRoot)) {
+                    return true;
+                }
+                else {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ROOT_NOT_DICT, ReportItem.ReportItemStatus.
+                        INVALID));
+                    return false;
+                }
+            }
+            PdfDictionary previousStructTreeRootDict = new PdfDictionary((PdfDictionary)previousStructTreeRoot);
+            PdfDictionary currentStructTreeRootDict = new PdfDictionary((PdfDictionary)currentStructTreeRoot);
+            // Here we remove entries which are allowed to be modified in any way. Those won't be compared.
+            previousStructTreeRootDict.Remove(PdfName.IDTree);
+            currentStructTreeRootDict.Remove(PdfName.IDTree);
+            previousStructTreeRootDict.Remove(PdfName.ParentTree);
+            currentStructTreeRootDict.Remove(PdfName.ParentTree);
+            previousStructTreeRootDict.Remove(PdfName.ParentTreeNextKey);
+            currentStructTreeRootDict.Remove(PdfName.ParentTreeNextKey);
+            // Here we remove actual content, which will be compared in a special manner.
+            previousStructTreeRootDict.Remove(PdfName.K);
+            currentStructTreeRootDict.Remove(PdfName.K);
+            // Everything else is expected to remain unmodified and compared directly.
+            if (!ComparePdfObjects(previousStructTreeRootDict, currentStructTreeRootDict)) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ROOT_MODIFIED, ReportItem.ReportItemStatus.
+                    INVALID));
+                return false;
+            }
+            if (CompareStructTreeElementKids((PdfDictionary)previousStructTreeRoot, (PdfDictionary)currentStructTreeRoot
+                , report)) {
+                return true;
+            }
+            else {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ROOT_MODIFIED, ReportItem.ReportItemStatus.
+                    INVALID));
+                return false;
+            }
+        }
+
+        private bool CompareStructTreeElementKids(PdfDictionary previousStructElement, PdfDictionary currentStructElement
+            , ValidationReport report) {
+            PdfArray previousKids;
+            if (previousStructElement.Get(PdfName.K) is PdfArray) {
+                previousKids = previousStructElement.GetAsArray(PdfName.K);
+            }
+            else {
+                previousKids = new PdfArray(previousStructElement.Get(PdfName.K));
+            }
+            PdfArray currentKids;
+            if (currentStructElement.Get(PdfName.K) is PdfArray) {
+                currentKids = currentStructElement.GetAsArray(PdfName.K);
+            }
+            else {
+                currentKids = new PdfArray(currentStructElement.Get(PdfName.K));
+            }
+            int i = 0;
+            int j = 0;
+            bool comparisonHappened = false;
+            while (i < previousKids.Size() || j < currentKids.Size()) {
+                PdfObject previousKid = i < previousKids.Size() ? previousKids.Get(i) : DUMMY_STRUCT_TREE_ELEMENT;
+                PdfObject currentKid = j < currentKids.Size() ? currentKids.Get(j) : DUMMY_STRUCT_TREE_ELEMENT;
+                if (!IsStructTreeElement(previousKid)) {
+                    PdfObject previousContentObject = GetObjectFromStructTreeContent(previousKid);
+                    if (previousContentObject != null && removedTaggedObjects.Contains(previousContentObject)) {
+                        i++;
+                        continue;
+                    }
+                }
+                if (!IsStructTreeElement(currentKid)) {
+                    PdfObject currentContentObject = GetObjectFromStructTreeContent(currentKid);
+                    if (currentContentObject != null && addedTaggedObjects.Contains(currentContentObject)) {
+                        j++;
+                        continue;
+                    }
+                }
+                if (IsStructTreeElement(previousKid) && IsStructTreeElement(currentKid)) {
+                    bool kidsComparisonResult = CompareStructTreeElementKids((PdfDictionary)previousKid, (PdfDictionary)currentKid
+                        , report);
+                    if (removedTaggedObjects.Contains(previousKid)) {
+                        i++;
+                        continue;
+                    }
+                    if (addedTaggedObjects.Contains(currentKid)) {
+                        j++;
+                        continue;
+                    }
+                    comparisonHappened = true;
+                    if (!kidsComparisonResult || !CompareStructTreeElements((PdfDictionary)previousKid, (PdfDictionary)currentKid
+                        , report)) {
+                        return false;
+                    }
+                }
+                else {
+                    if (!IsStructTreeElement(previousKid) && !IsStructTreeElement(currentKid)) {
+                        comparisonHappened = true;
+                        if (!CompareStructTreeContents(previousKid, currentKid, report)) {
+                            return false;
+                        }
+                    }
+                    else {
+                        if (IsStructTreeElement(previousKid)) {
+                            CompareStructTreeElementKids((PdfDictionary)previousKid, DUMMY_STRUCT_TREE_ELEMENT, report);
+                            if (removedTaggedObjects.Contains(previousKid)) {
+                                i++;
+                                continue;
+                            }
+                            return false;
+                        }
+                        else {
+                            CompareStructTreeElementKids(DUMMY_STRUCT_TREE_ELEMENT, (PdfDictionary)currentKid, report);
+                            if (addedTaggedObjects.Contains(currentKid)) {
+                                j++;
+                                continue;
+                            }
+                            return false;
+                        }
+                    }
+                }
+                i++;
+                j++;
+            }
+            if (!comparisonHappened && previousStructElement != DUMMY_STRUCT_TREE_ELEMENT) {
+                removedTaggedObjects.Add(previousStructElement);
+            }
+            if (!comparisonHappened && currentStructElement != DUMMY_STRUCT_TREE_ELEMENT) {
+                addedTaggedObjects.Add(currentStructElement);
+            }
+            return true;
+        }
+
+        private bool CompareStructTreeElements(PdfDictionary previousStructElement, PdfDictionary currentStructElement
+            , ValidationReport report) {
+            PdfDictionary previousStructElementCopy = new PdfDictionary(previousStructElement);
+            previousStructElementCopy.Remove(PdfName.K);
+            previousStructElementCopy.Remove(PdfName.P);
+            previousStructElementCopy.Remove(PdfName.Ref);
+            previousStructElementCopy.Remove(PdfName.Pg);
+            PdfDictionary currentStructElementCopy = new PdfDictionary(currentStructElement);
+            currentStructElementCopy.Remove(PdfName.K);
+            currentStructElementCopy.Remove(PdfName.P);
+            currentStructElementCopy.Remove(PdfName.Ref);
+            currentStructElementCopy.Remove(PdfName.Pg);
+            if (!ComparePdfObjects(previousStructElementCopy, currentStructElementCopy)) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ELEMENT_MODIFIED, ReportItem.ReportItemStatus
+                    .INVALID));
+                return false;
+            }
+            return CompareIndirectReferencesObjNums(previousStructElement.Get(PdfName.P), currentStructElement.Get(PdfName
+                .P), report, "Struct tree element parent entry") && CompareIndirectReferencesObjNums(previousStructElement
+                .Get(PdfName.Ref), currentStructElement.Get(PdfName.Ref), report, "Struct tree element ref entry") && 
+                CompareIndirectReferencesObjNums(previousStructElement.Get(PdfName.Pg), currentStructElement.Get(PdfName
+                .Pg), report, "Struct tree element page entry");
+        }
+
+        private bool CompareStructTreeContents(PdfObject previousStructTreeContent, PdfObject currentStructTreeContent
+            , ValidationReport report) {
+            if (previousStructTreeContent is PdfDictionary && currentStructTreeContent is PdfDictionary) {
+                PdfDictionary previousContentDictionary = (PdfDictionary)previousStructTreeContent;
+                PdfDictionary currentContentDictionary = (PdfDictionary)currentStructTreeContent;
+                PdfDictionary previousContentDictionaryCopy = new PdfDictionary(previousContentDictionary);
+                previousContentDictionaryCopy.Remove(PdfName.Pg);
+                previousContentDictionaryCopy.Remove(PdfName.Obj);
+                PdfDictionary currentContentDictionaryCopy = new PdfDictionary(currentContentDictionary);
+                currentContentDictionaryCopy.Remove(PdfName.Pg);
+                currentContentDictionaryCopy.Remove(PdfName.Obj);
+                if (!ComparePdfObjects(previousContentDictionaryCopy, currentContentDictionaryCopy)) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_CONTENT_MODIFIED, ReportItem.ReportItemStatus
+                        .INVALID));
+                    return false;
+                }
+                return CompareIndirectReferencesObjNums(previousContentDictionary.Get(PdfName.Pg), currentContentDictionary
+                    .Get(PdfName.Pg), report, "Object reference dictionary page entry") && CompareIndirectReferencesObjNums
+                    (previousContentDictionary.Get(PdfName.Obj), currentContentDictionary.Get(PdfName.Obj), report, "Object reference dictionary obj entry"
+                    );
+            }
+            else {
+                return ComparePdfObjects(previousStructTreeContent, currentStructTreeContent);
+            }
+        }
+
         private bool CompareExtensions(PdfObject previousExtensions, PdfObject currentExtensions, ValidationReport
              report) {
             if (previousExtensions == null || ComparePdfObjects(previousExtensions, currentExtensions)) {
@@ -733,9 +1020,11 @@ namespace iText.Signatures.Validation.V1 {
                 else {
                     PdfDictionary currentExtensionCopy = new PdfDictionary(currentExtension);
                     currentExtensionCopy.Remove(PdfName.ExtensionLevel);
+                    currentExtensionCopy.Remove(PdfName.BaseVersion);
                     PdfDictionary previousExtensionCopy = new PdfDictionary((PdfDictionary)previousExtension.Value);
                     previousExtensionCopy.Remove(PdfName.ExtensionLevel);
-                    // Apart from extension level dictionaries are expected to be equal.
+                    previousExtensionCopy.Remove(PdfName.BaseVersion);
+                    // Apart from extension level and base version dictionaries are expected to be equal.
                     if (!ComparePdfObjects(previousExtensionCopy, currentExtensionCopy)) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
                             .Key), ReportItem.ReportItemStatus.INVALID));
@@ -750,6 +1039,23 @@ namespace iText.Signatures.Validation.V1 {
                             report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(EXTENSION_LEVEL_DECREASED, previousExtension
                                 .Key), ReportItem.ReportItemStatus.INVALID));
                             result = false;
+                        }
+                    }
+                    PdfName previousBaseVersion = ((PdfDictionary)previousExtension.Value).GetAsName(PdfName.BaseVersion);
+                    PdfName currentBaseVersion = currentExtension.GetAsName(PdfName.BaseVersion);
+                    if (previousBaseVersion != null) {
+                        try {
+                            if (currentBaseVersion == null || Double.Parse(previousBaseVersion.GetValue(), System.Globalization.CultureInfo.InvariantCulture
+                                ) > Double.Parse(currentBaseVersion.GetValue(), System.Globalization.CultureInfo.InvariantCulture) + EPS
+                                ) {
+                                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(BASE_VERSION_DECREASED, previousExtension
+                                    .Key), ReportItem.ReportItemStatus.INVALID));
+                                result = false;
+                            }
+                        }
+                        catch (FormatException) {
+                            report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(BASE_VERSION_EXTENSION_NOT_PARSABLE
+                                , previousExtension.Key), ReportItem.ReportItemStatus.INVALID));
                         }
                     }
                 }
@@ -1161,26 +1467,57 @@ namespace iText.Signatures.Validation.V1 {
                     PdfDictionary previousPageCopy = new PdfDictionary(previousKid);
                     previousPageCopy.Remove(PdfName.Annots);
                     previousPageCopy.Remove(PdfName.Parent);
+                    previousPageCopy.Remove(PdfName.StructParents);
                     PdfDictionary currentPageCopy = new PdfDictionary(currentKid);
                     currentPageCopy.Remove(PdfName.Annots);
                     currentPageCopy.Remove(PdfName.Parent);
+                    currentPageCopy.Remove(PdfName.StructParents);
                     if (!ComparePdfObjects(previousPageCopy, currentPageCopy) || !CompareIndirectReferencesObjNums(previousKid
                         .Get(PdfName.Parent), currentKid.Get(PdfName.Parent), report, "Page parent")) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_MODIFIED, ReportItem.ReportItemStatus.INVALID));
                         return false;
                     }
-                    PdfArray prevAnnots = GetAnnotsNotAllowedToBeModified(previousKid);
-                    PdfArray currAnnots = GetAnnotsNotAllowedToBeModified(currentKid);
-                    if (!ComparePageAnnotations(prevAnnots, currAnnots, report)) {
+                    PdfArray prevNotModifiableAnnots = GetAnnotsNotAllowedToBeModified(previousKid);
+                    PdfArray currNotModifiableAnnots = GetAnnotsNotAllowedToBeModified(currentKid);
+                    if (!ComparePageAnnotations(prevNotModifiableAnnots, currNotModifiableAnnots, report)) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.
                             INVALID));
                         return false;
                     }
+                    CollectRemovedAndAddedAnnotations(previousKid.GetAsArray(PdfName.Annots), currentKid.GetAsArray(PdfName.Annots
+                        ));
                 }
             }
             return true;
         }
 
+        private void CollectRemovedAndAddedAnnotations(PdfArray previousAnnotations, PdfArray currentAnnotations) {
+            ValidationReport dummyReport = new ValidationReport();
+            IList<PdfDictionary> prevAnnots = new List<PdfDictionary>();
+            if (previousAnnotations != null) {
+                foreach (PdfObject annot in previousAnnotations) {
+                    if (annot is PdfDictionary) {
+                        prevAnnots.Add((PdfDictionary)annot);
+                    }
+                }
+            }
+            IList<PdfDictionary> currAnnots = new List<PdfDictionary>();
+            if (currentAnnotations != null) {
+                foreach (PdfObject annot in currentAnnotations) {
+                    if (annot is PdfDictionary) {
+                        currAnnots.Add((PdfDictionary)annot);
+                    }
+                }
+            }
+            // Each previous annotation which is not present in current annotations is considered to be removed.
+            removedTaggedObjects.AddAll(prevAnnots.Where((prevAnnot) => !currAnnots.Any((currAnnot) => ComparePageAnnotations
+                (prevAnnot, currAnnot, dummyReport))).ToList());
+            // Each current annotation which is not present in previous annotations is considered to be added.
+            addedTaggedObjects.AddAll(currAnnots.Where((currAnnot) => !prevAnnots.Any((prevAnnot) => ComparePageAnnotations
+                (prevAnnot, currAnnot, dummyReport))).ToList());
+        }
+
+        // Logic above additionally collects modified annotations as added and removed. This is expected.
         private bool ComparePageAnnotations(PdfArray prevAnnots, PdfArray currAnnots, ValidationReport report) {
             if (prevAnnots == null && currAnnots == null) {
                 return true;
@@ -1189,20 +1526,35 @@ namespace iText.Signatures.Validation.V1 {
                 return false;
             }
             for (int i = 0; i < prevAnnots.Size(); i++) {
-                PdfDictionary prevAnnot = new PdfDictionary(prevAnnots.GetAsDictionary(i));
-                prevAnnot.Remove(PdfName.P);
-                prevAnnot.Remove(PdfName.Parent);
-                PdfDictionary currAnnot = new PdfDictionary(currAnnots.GetAsDictionary(i));
-                currAnnot.Remove(PdfName.P);
-                currAnnot.Remove(PdfName.Parent);
-                if (!ComparePdfObjects(prevAnnot, currAnnot) || !CompareIndirectReferencesObjNums(prevAnnots.GetAsDictionary
-                    (i).Get(PdfName.P), currAnnots.GetAsDictionary(i).Get(PdfName.P), report, "Page object with which annotation is associated"
-                    ) || !CompareIndirectReferencesObjNums(prevAnnots.GetAsDictionary(i).Get(PdfName.Parent), currAnnots.GetAsDictionary
-                    (i).Get(PdfName.Parent), report, "Annotation parent")) {
+                PdfDictionary prevAnnot = prevAnnots.GetAsDictionary(i);
+                PdfDictionary currAnnot = currAnnots.GetAsDictionary(i);
+                if (!ComparePageAnnotations(prevAnnot, currAnnot, report)) {
                     return false;
                 }
             }
             return true;
+        }
+
+        private bool ComparePageAnnotations(PdfDictionary prevAnnot, PdfDictionary currAnnot, ValidationReport report
+            ) {
+            PdfDictionary prevAnnotCopy = new PdfDictionary(prevAnnot);
+            prevAnnotCopy.Remove(PdfName.P);
+            prevAnnotCopy.Remove(PdfName.Parent);
+            PdfDictionary currAnnotCopy = new PdfDictionary(currAnnot);
+            currAnnotCopy.Remove(PdfName.P);
+            currAnnotCopy.Remove(PdfName.Parent);
+            if (PdfName.Sig.Equals(currAnnot.GetAsName(PdfName.FT))) {
+                if (!CompareSignatureDictionaries(prevAnnot.Get(PdfName.V), currAnnot.Get(PdfName.V), report)) {
+                    return false;
+                }
+                else {
+                    prevAnnotCopy.Remove(PdfName.V);
+                    currAnnotCopy.Remove(PdfName.V);
+                }
+            }
+            return ComparePdfObjects(prevAnnotCopy, currAnnotCopy) && CompareIndirectReferencesObjNums(prevAnnot.Get(PdfName
+                .P), currAnnot.Get(PdfName.P), report, "Page object with which annotation is associated") && CompareIndirectReferencesObjNums
+                (prevAnnot.Get(PdfName.Parent), currAnnot.Get(PdfName.Parent), report, "Annotation parent");
         }
 
         // Compare catalogs util methods section:
@@ -1305,6 +1657,8 @@ namespace iText.Signatures.Validation.V1 {
             catalogCopy.Remove(PdfName.DSS);
             catalogCopy.Remove(PdfName.AcroForm);
             catalogCopy.Remove(PdfName.Pages);
+            catalogCopy.Remove(PdfName.StructTreeRoot);
+            catalogCopy.Remove(PdfName.Outlines);
             return catalogCopy;
         }
 
@@ -1352,15 +1706,17 @@ namespace iText.Signatures.Validation.V1 {
         //
         //
         private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2) {
-            return ComparePdfObjects(pdfObject1, pdfObject2, new HashSet<PdfObject>());
+            return ComparePdfObjects(pdfObject1, pdfObject2, new List<Pair<PdfObject, PdfObject>>());
         }
 
-        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, ICollection<PdfObject> visitedObjects
-            ) {
-            if (visitedObjects.Contains(pdfObject1)) {
-                return true;
+        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, IList<Pair<PdfObject, PdfObject
+            >> visitedObjects) {
+            foreach (Pair<PdfObject, PdfObject> pair in visitedObjects) {
+                if (pair.GetKey() == pdfObject1) {
+                    return pair.GetValue() == pdfObject2;
+                }
             }
-            visitedObjects.Add(pdfObject1);
+            visitedObjects.Add(new Pair<PdfObject, PdfObject>(pdfObject1, pdfObject2));
             if (Object.Equals(pdfObject1, pdfObject2)) {
                 return true;
             }
@@ -1408,7 +1764,7 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private static bool ComparePdfArrays(PdfArray array1, PdfArray array2, ICollection<PdfObject> visitedObjects
+        private static bool ComparePdfArrays(PdfArray array1, PdfArray array2, IList<Pair<PdfObject, PdfObject>> visitedObjects
             ) {
             if (array1.Size() != array2.Size()) {
                 return false;
@@ -1421,8 +1777,8 @@ namespace iText.Signatures.Validation.V1 {
             return true;
         }
 
-        private static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, ICollection
-            <PdfObject> visitedObjects) {
+        private static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, IList<Pair
+            <PdfObject, PdfObject>> visitedObjects) {
             ICollection<KeyValuePair<PdfName, PdfObject>> entrySet1 = dictionary1.EntrySet();
             ICollection<KeyValuePair<PdfName, PdfObject>> entrySet2 = dictionary2.EntrySet();
             if (entrySet1.Count != entrySet2.Count) {
@@ -1437,8 +1793,8 @@ namespace iText.Signatures.Validation.V1 {
             return true;
         }
 
-        private static bool ComparePdfStreams(PdfStream stream1, PdfStream stream2, ICollection<PdfObject> visitedObjects
-            ) {
+        private static bool ComparePdfStreams(PdfStream stream1, PdfStream stream2, IList<Pair<PdfObject, PdfObject
+            >> visitedObjects) {
             return JavaUtil.ArraysEquals(stream1.GetBytes(), stream2.GetBytes()) && ComparePdfDictionaries(stream1, stream2
                 , visitedObjects);
         }
@@ -1499,6 +1855,12 @@ namespace iText.Signatures.Validation.V1 {
             if (pagesDictionary != null) {
                 allowedReferences.Add(pagesDictionary.GetIndirectReference());
                 allowedReferences.AddAll(CreateAllowedPagesEntries(pagesDictionary));
+            }
+            PdfDictionary structTreeRoot = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot
+                );
+            if (structTreeRoot != null) {
+                allowedReferences.Add(structTreeRoot.GetIndirectReference());
+                allowedReferences.AddAll(CreateAllowedStructTreeRootEntries(structTreeRoot));
             }
             return allowedReferences;
         }
@@ -1584,6 +1946,82 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             return allowedReferences;
+        }
+
+        private ICollection<PdfIndirectReference> CreateAllowedStructTreeRootEntries(PdfDictionary structTreeRoot) {
+            ICollection<PdfIndirectReference> allowedReferences = new HashSet<PdfIndirectReference>();
+            PdfDictionary idTree = structTreeRoot.GetAsDictionary(PdfName.IDTree);
+            if (idTree != null) {
+                CreateAllowedTreeEntries(idTree, allowedReferences, PdfName.Names);
+            }
+            PdfDictionary parentTree = structTreeRoot.GetAsDictionary(PdfName.ParentTree);
+            if (parentTree != null) {
+                CreateAllowedTreeEntries(parentTree, allowedReferences, PdfName.Nums);
+            }
+            if (structTreeRoot.Get(PdfName.K) != null) {
+                allowedReferences.Add(structTreeRoot.Get(PdfName.K).GetIndirectReference());
+                CreateAllowedStructTreeRootKidsEntries(structTreeRoot.Get(PdfName.K), allowedReferences);
+            }
+            return allowedReferences;
+        }
+
+        private void CreateAllowedTreeEntries(PdfObject treeNode, ICollection<PdfIndirectReference> allowedReferences
+            , PdfName contentName) {
+            if (!(treeNode is PdfDictionary)) {
+                return;
+            }
+            PdfDictionary treeNodeDictionary = (PdfDictionary)treeNode;
+            allowedReferences.Add(treeNodeDictionary.GetIndirectReference());
+            PdfArray content = treeNodeDictionary.GetAsArray(contentName);
+            if (content != null) {
+                allowedReferences.Add(content.GetIndirectReference());
+                for (int i = 1; i < content.Size(); i += 2) {
+                    // This object can either be an array or actual content element.
+                    // We only add allowed reference in case of an array.
+                    PdfArray contentArray = content.GetAsArray(i);
+                    if (contentArray != null) {
+                        allowedReferences.Add(contentArray.GetIndirectReference());
+                    }
+                }
+            }
+            PdfArray kids = treeNodeDictionary.GetAsArray(PdfName.Kids);
+            if (kids != null) {
+                allowedReferences.Add(kids.GetIndirectReference());
+                foreach (PdfObject kid in kids) {
+                    CreateAllowedTreeEntries(kid, allowedReferences, contentName);
+                }
+            }
+        }
+
+        private void CreateAllowedStructTreeRootKidsEntries(PdfObject structTreeRootKids, ICollection<PdfIndirectReference
+            > allowedReferences) {
+            if (structTreeRootKids is PdfArray) {
+                allowedReferences.Add(structTreeRootKids.GetIndirectReference());
+                CreateAllowedStructTreeRootKidsEntries((PdfArray)structTreeRootKids, allowedReferences);
+            }
+            else {
+                CreateAllowedStructTreeRootKidsEntries(new PdfArray(structTreeRootKids), allowedReferences);
+            }
+        }
+
+        private void CreateAllowedStructTreeRootKidsEntries(PdfArray structTreeRootKids, ICollection<PdfIndirectReference
+            > allowedReferences) {
+            foreach (PdfObject kid in structTreeRootKids) {
+                if (kid != null) {
+                    allowedReferences.Add(kid.GetIndirectReference());
+                    if (IsStructTreeElement(kid)) {
+                        PdfDictionary structTreeElementCopy = new PdfDictionary((PdfDictionary)kid);
+                        PdfObject kids = structTreeElementCopy.Remove(PdfName.K);
+                        structTreeElementCopy.Remove(PdfName.P);
+                        structTreeElementCopy.Remove(PdfName.Ref);
+                        structTreeElementCopy.Remove(PdfName.Pg);
+                        AddAllNestedDictionaryEntries(allowedReferences, structTreeElementCopy);
+                        if (kids != null) {
+                            CreateAllowedStructTreeRootKidsEntries(kids, allowedReferences);
+                        }
+                    }
+                }
+            }
         }
 
         private ICollection<PdfIndirectReference> CreateAllowedPagesEntries(PdfDictionary pagesDictionary) {
