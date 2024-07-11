@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Geom;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 
@@ -150,6 +151,16 @@ namespace iText.Layout.Renderer {
             Rectangle rectangle = new Rectangle(0, 0, 0, initialHeight);
             if (AbstractRenderer.IsBorderBoxSizing(renderer)) {
                 renderer.ApplyMargins(rectangle, false);
+                // In BlockRenderer#layout, after applying continuous container, we call AbstractRenderer#retrieveMaxHeight,
+                // which calls AbstractRenderer#retrieveHeight where in case of BoxSizing we reduce the height for top
+                // padding and border. So to reduce the height for top + bottom border, padding and margin here we apply
+                // both top and bottom margin, but only bottom padding and border
+                UnitValue paddingBottom = renderer.GetProperty<UnitValue>(Property.PADDING_BOTTOM);
+                if (paddingBottom.IsPointValue()) {
+                    rectangle.DecreaseHeight(paddingBottom.GetValue());
+                }
+                Border borderBottom = renderer.GetBorders()[AbstractRenderer.BOTTOM_SIDE];
+                rectangle.DecreaseHeight(borderBottom.GetWidth());
             }
             else {
                 renderer.ApplyMarginsBordersPaddings(rectangle, false);

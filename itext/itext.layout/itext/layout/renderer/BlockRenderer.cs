@@ -408,8 +408,8 @@ namespace iText.Layout.Renderer {
             }
             ApplyVerticalAlignment();
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
-            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer_1);
             if (layoutResult_1 != LayoutResult.NOTHING) {
+                ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer_1);
                 LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                     (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, bfcHeightCorrection, marginsCollapsingEnabled
                     );
@@ -599,7 +599,9 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
             }
             overflowRenderer.childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
-            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
+            if (layoutStatus != LayoutResult.NOTHING) {
+                ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
+            }
             if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                 // Apply forced placement only on split renderer
                 overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);

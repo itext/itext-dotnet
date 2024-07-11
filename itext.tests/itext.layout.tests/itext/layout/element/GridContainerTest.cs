@@ -925,5 +925,105 @@ namespace iText.Layout.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void SplitPageTest() {
+            String filename = DESTINATION_FOLDER + "splitPageTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_splitPageTest.pdf";
+            IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
+            columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetWidth(420);
+                grid.SetBorder(new SolidBorder(20));
+                grid.SetPadding(20);
+                grid.SetMargin(20);
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, columnsTemplate);
+                grid.SetProperty(Property.COLUMN_GAP, 20.0f);
+                grid.Add(new Paragraph("One").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Two").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Tree").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Four").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Five").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Six").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Seven").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Eight").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Nine").SetBackgroundColor(ColorConstants.CYAN));
+                Div emptyDiv = new Div();
+                emptyDiv.SetHeight(640);
+                emptyDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                document.Add(emptyDiv);
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BorderBoxSizingTest() {
+            String filename = DESTINATION_FOLDER + "borderBoxSizingTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_borderBoxSizingTest.pdf";
+            IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
+            columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetWidth(420);
+                grid.SetBorder(new SolidBorder(20));
+                grid.SetPadding(20);
+                grid.SetMargin(20);
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, columnsTemplate);
+                grid.SetProperty(Property.COLUMN_GAP, 20.0f);
+                grid.Add(new Paragraph("One").SetBackgroundColor(ColorConstants.CYAN));
+                Paragraph two = new Paragraph("Two").SetBackgroundColor(ColorConstants.CYAN);
+                two.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                two.SetPadding(10);
+                two.SetMargin(10);
+                two.SetBorder(new SolidBorder(ColorConstants.BLUE, 10));
+                grid.Add(two);
+                grid.Add(new Paragraph("Tree").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Four").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Five").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Six").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Seven").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Eight").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Nine").SetBackgroundColor(ColorConstants.CYAN));
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginCollapsingTest() {
+            String filename = DESTINATION_FOLDER + "marginCollapsingTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_marginCollapsingTest.pdf";
+            IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
+            columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetWidth(420);
+                grid.SetBorder(new SolidBorder(20));
+                grid.SetPadding(20);
+                grid.SetMargin(20);
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, columnsTemplate);
+                grid.SetProperty(Property.COLUMN_GAP, 20.0f);
+                grid.Add(new Paragraph("One").SetBackgroundColor(ColorConstants.CYAN));
+                Div twoParent = new Div();
+                Paragraph two = new Paragraph("Two").SetBackgroundColor(ColorConstants.CYAN);
+                twoParent.Add(two);
+                twoParent.Add(new Div());
+                grid.Add(twoParent);
+                grid.Add(new Paragraph("Tree").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Four").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Five").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Six").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Seven").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Eight").SetBackgroundColor(ColorConstants.CYAN));
+                grid.Add(new Paragraph("Nine").SetBackgroundColor(ColorConstants.CYAN));
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
     }
 }

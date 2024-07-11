@@ -540,6 +540,12 @@ namespace iText.Layout.Margincollapse {
         private static void OverrideModelBottomMargin(IRenderer renderer, float collapsedMargins) {
             iText.Layout.Margincollapse.MarginsCollapseHandler.OverrideModelMargin(renderer, Property.MARGIN_BOTTOM, collapsedMargins
                 );
+            if (renderer.HasProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT)) {
+                ContinuousContainer continuousContainer = renderer.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
+                    );
+                continuousContainer.UpdateValueOfSavedProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(collapsedMargins
+                    ));
+            }
         }
 
         private static float DefineMarginValueForCollapse(IRenderer renderer, int property) {
