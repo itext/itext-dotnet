@@ -29,6 +29,7 @@ namespace iText.Layout.Hyphenation {
         /// <summary>post break string</summary>
         public String postBreak;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Construct a hyphen.</summary>
         /// <param name="pre">break string</param>
         /// <param name="no">break string</param>
@@ -38,7 +39,9 @@ namespace iText.Layout.Hyphenation {
             noBreak = no;
             postBreak = post;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Construct a hyphen.</summary>
         /// <param name="pre">break string</param>
         internal Hyphen(String pre) {
@@ -46,6 +49,7 @@ namespace iText.Layout.Hyphenation {
             noBreak = null;
             postBreak = null;
         }
+//\endcond
 
         /// <summary>
         /// <inheritDoc/>

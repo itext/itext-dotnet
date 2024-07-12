@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Forms.Xfa {
+//\cond DO_NOT_DOCUMENT
     /// <summary>A class to process "classic" fields.</summary>
     internal class AcroFieldsSearch : Xml2Som {
         private IDictionary<String, String> acroShort2LongName;
@@ -60,4 +61,5 @@ namespace iText.Forms.Xfa {
             this.acroShort2LongName = acroShort2LongName;
         }
     }
+//\endcond
 }

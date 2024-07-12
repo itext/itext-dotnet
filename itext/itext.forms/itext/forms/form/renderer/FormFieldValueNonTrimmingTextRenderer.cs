@@ -30,6 +30,7 @@ using iText.Layout.Layout;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Form.Renderer {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Custom implementation for rendering form field values.</summary>
     /// <remarks>
     /// Custom implementation for rendering form field values. It makes sure that text value
@@ -85,4 +86,5 @@ namespace iText.Forms.Form.Renderer {
             this.callTrimFirst = callTrimFirst;
         }
     }
+//\endcond
 }

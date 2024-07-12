@@ -549,13 +549,19 @@ namespace iText.Kernel.Pdf {
         }
 
         private class DeepFlushingContext {
+//\cond DO_NOT_DOCUMENT
             // null stands for every key to be in black list
             internal ICollection<PdfName> blackList;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // null stands for every key to be taking unconditional context
             internal IDictionary<PdfName, PageFlushingHelper.DeepFlushingContext> innerContexts;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal PageFlushingHelper.DeepFlushingContext unconditionalInnerContext;
+//\endcond
 
             public DeepFlushingContext(ICollection<PdfName> blackList, IDictionary<PdfName, PageFlushingHelper.DeepFlushingContext
                 > innerContexts) {

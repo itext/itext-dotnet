@@ -25,6 +25,7 @@ using iText.IO.Font;
 using iText.Kernel.Geom;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
+//\cond DO_NOT_DOCUMENT
     internal class TextChunkLocationDefaultImp : ITextChunkLocation {
         private const float DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION = 2;
 
@@ -159,10 +160,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return dist > GetCharSpaceWidth() / 2.0f;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool ContainsMark(ITextChunkLocation baseLocation, ITextChunkLocation markLocation) {
             return baseLocation.GetStartLocation().Get(Vector.I1) <= markLocation.GetStartLocation().Get(Vector.I1) &&
                  baseLocation.GetEndLocation().Get(Vector.I1) >= markLocation.GetEndLocation().Get(Vector.I1) && Math.
                 Abs(baseLocation.DistPerpendicular() - markLocation.DistPerpendicular()) <= DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION;
         }
+//\endcond
     }
+//\endcond
 }

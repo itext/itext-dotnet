@@ -27,7 +27,9 @@ using iText.IO.Font.Otf;
 namespace iText.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Coverage-based Chaining Context Glyph Substitution</summary>
     public class SubTableLookup6Format3 : ChainingContextualTable<ContextualSubstRule> {
+//\cond DO_NOT_DOCUMENT
         internal ContextualSubstRule substitutionRule;
+//\endcond
 
         public SubTableLookup6Format3(OpenTypeFontTableReader openReader, int lookupFlag, SubTableLookup6Format3.SubstRuleFormat3
              rule)
@@ -44,13 +46,21 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
         }
 
         public class SubstRuleFormat3 : ContextualSubstRule {
+//\cond DO_NOT_DOCUMENT
             internal IList<ICollection<int>> backtrackCoverages;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IList<ICollection<int>> inputCoverages;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IList<ICollection<int>> lookaheadCoverages;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal SubstLookupRecord[] substLookupRecords;
+//\endcond
 
             public SubstRuleFormat3(IList<ICollection<int>> backtrackCoverages, IList<ICollection<int>> inputCoverages
                 , IList<ICollection<int>> lookaheadCoverages, SubstLookupRecord[] substLookupRecords) {

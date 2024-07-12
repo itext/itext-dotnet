@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.StyledXmlParser.Css.Parse.Syntax {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// <see cref="IParserState"/>
     /// implementation for the block state.
@@ -29,6 +30,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// <summary>The state machine that parses the CSS.</summary>
         private CssParserStateController controller;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="BlockState"/>
@@ -38,6 +40,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         internal BlockState(CssParserStateController controller) {
             this.controller = controller;
         }
+//\endcond
 
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.css.parse.syntax.IParserState#process(char)
@@ -57,4 +60,5 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
             }
         }
     }
+//\endcond
 }

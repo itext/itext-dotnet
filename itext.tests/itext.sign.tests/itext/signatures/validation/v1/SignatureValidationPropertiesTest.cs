@@ -29,17 +29,13 @@ using iText.Test;
 namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("UnitTest")]
     public class SignatureValidationPropertiesTest : ExtendedITextTest {
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-        }
-
         [NUnit.Framework.Test]
         public virtual void GetParametersValueForSpecificTest() {
             SignatureValidationProperties sut = new SignatureValidationProperties();
             sut.SetParameterValueFor(ValidatorContexts.Of(ValidatorContext.OCSP_VALIDATOR, ValidatorContext.CRL_VALIDATOR
                 , ValidatorContext.SIGNATURE_VALIDATOR).GetSet(), CertificateSources.Of(CertificateSource.CRL_ISSUER, 
                 CertificateSource.SIGNER_CERT, CertificateSource.TIMESTAMP).GetSet(), TimeBasedContexts.Of(TimeBasedContext
-                .HISTORICAL).GetSet(), new SignatureValidationPropertiesTest.IncrementralFreshnessValueSetter(10, 1).GetAction
+                .HISTORICAL).GetSet(), new SignatureValidationPropertiesTest.IncrementalFreshnessValueSetter(10, 1).GetAction
                 ());
             // test the last value added
             NUnit.Framework.Assert.AreEqual(TimeSpan.FromDays(18), sut.GetParametersValueFor(ValidatorContext.SIGNATURE_VALIDATOR
@@ -59,7 +55,7 @@ namespace iText.Signatures.Validation.V1 {
             sut.SetParameterValueFor(ValidatorContexts.Of(ValidatorContext.OCSP_VALIDATOR, ValidatorContext.CRL_VALIDATOR
                 , ValidatorContext.SIGNATURE_VALIDATOR).GetSet(), CertificateSources.Of(CertificateSource.CRL_ISSUER, 
                 CertificateSource.SIGNER_CERT, CertificateSource.TIMESTAMP).GetSet(), TimeBasedContexts.Of(TimeBasedContext
-                .HISTORICAL).GetSet(), new SignatureValidationPropertiesTest.IncrementralFreshnessValueSetter(10, 1).GetAction
+                .HISTORICAL).GetSet(), new SignatureValidationPropertiesTest.IncrementalFreshnessValueSetter(10, 1).GetAction
                 ());
             // test the general default
             NUnit.Framework.Assert.AreEqual(SignatureValidationProperties.DEFAULT_FRESHNESS_PRESENT_OCSP, sut.GetParametersValueFor
@@ -143,12 +139,12 @@ namespace iText.Signatures.Validation.V1 {
                 .HISTORICAL)));
         }
 
-        private class IncrementralFreshnessValueSetter {
-            private int value;
-
+        private class IncrementalFreshnessValueSetter {
             private readonly int increment;
 
-            public IncrementralFreshnessValueSetter(int initialValue, int increment) {
+            private int value;
+
+            public IncrementalFreshnessValueSetter(int initialValue, int increment) {
                 this.value = initialValue;
                 this.increment = increment;
             }

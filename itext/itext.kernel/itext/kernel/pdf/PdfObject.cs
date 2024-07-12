@@ -590,6 +590,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool EqualContent(PdfObject obj1, PdfObject obj2) {
             PdfObject direct1 = obj1 != null && obj1.IsIndirectReference() ? ((PdfIndirectReference)obj1).GetRefersTo(
                 true) : obj1;
@@ -597,7 +598,9 @@ namespace iText.Kernel.Pdf {
                 true) : obj2;
             return direct1 != null && direct1.Equals(direct2);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Processes two cases of object copying:
         /// <list type="number">
@@ -637,7 +640,9 @@ namespace iText.Kernel.Pdf {
         internal virtual PdfObject ProcessCopying(PdfDocument documentTo, bool allowDuplicating) {
             return ProcessCopying(documentTo, allowDuplicating, NullCopyFilter.GetInstance());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Processes two cases of object copying:
         /// <list type="number">
@@ -698,5 +703,6 @@ namespace iText.Kernel.Pdf {
                 return obj.Clone();
             }
         }
+//\endcond
     }
 }

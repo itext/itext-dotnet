@@ -118,6 +118,7 @@ namespace iText.Kernel.Numbering {
             /// <summary>can the digit be used as a prefix</summary>
             public bool pre;
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Constructs a roman digit</summary>
             /// <param name="digit">the roman digit</param>
             /// <param name="value">the value</param>
@@ -127,6 +128,7 @@ namespace iText.Kernel.Numbering {
                 this.value = value;
                 this.pre = pre;
             }
+//\endcond
         }
     }
 }

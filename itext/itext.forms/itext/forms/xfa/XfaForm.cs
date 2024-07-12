@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -483,7 +484,7 @@ namespace iText.Forms.Xfa
 		/// <param name="readOnly">whether or not the resulting DOM document may be modified</param>
 		public virtual void FillXfaForm(FileInfo file, bool readOnly)
 		{
-			FillXfaForm(new FileStream(file.FullName, FileMode.Open, FileAccess.Read), readOnly);
+			FillXfaForm(FileUtil.GetInputStreamForFile(file), readOnly);
 		}
 
 		/// <summary>Replaces the XFA data under datasets/data.</summary>

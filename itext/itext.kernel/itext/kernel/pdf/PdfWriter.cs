@@ -40,12 +40,14 @@ namespace iText.Kernel.Pdf {
         //forewarned is forearmed
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Currently active object stream.</summary>
         /// <remarks>
         /// Currently active object stream.
         /// Objects are written to the object stream if fullCompression set to true.
         /// </remarks>
         internal PdfObjectStream objectStream = null;
+//\endcond
 
         /// <summary>Is used to avoid duplications on object copying.</summary>
         /// <remarks>
@@ -92,7 +94,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Indicates if to use full compression mode.</summary>
         /// <returns>true if to use full compression, false otherwise.</returns>
         public virtual bool IsFullCompression() {
-            return properties.isFullCompression != null ? (bool)properties.isFullCompression : false;
+            return properties.isFullCompression != null && (bool)properties.isFullCompression;
         }
 
         /// <summary>Gets default compression level for @see PdfStream.</summary>
@@ -368,6 +370,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current object stream.</summary>
         /// <returns>object stream.</returns>
         internal virtual PdfObjectStream GetObjectStream() {
@@ -385,7 +388,9 @@ namespace iText.Kernel.Pdf {
             }
             return objectStream;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Flush all copied objects.</summary>
         /// <param name="docId">id of the source document</param>
         internal virtual void FlushCopiedObjects(long docId) {
@@ -403,6 +408,7 @@ namespace iText.Kernel.Pdf {
                 copiedObjects.JRemove(ird);
             }
         }
+//\endcond
 
         private void MarkArrayContentToFlush(PdfArray array) {
             for (int i = 0; i < array.Size(); i++) {

@@ -330,6 +330,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String INVALID_OFFSET_FOR_THIS_OBJECT = "Invalid offset for object {0}.";
 
+        public const String INVALID_OBJECT_REFERENCE_TYPE = "Object reference has unsupported type, " + "supported types are dictionaries and streams";
+
         public const String INVALID_XREF_STREAM = "Invalid xref stream.";
 
         public const String INVALID_XREF_TABLE = "Invalid xref table.";
@@ -445,10 +447,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String STREAM_SHALL_END_WITH_ENDSTREAM = "Stream shall end with endstream keyword.";
 
-        [Obsolete]
-        public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = 
-                // Replaced with log message
-                "StructParent index not found in " + "tagged object.";
+        public const String STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT = "StructParent index not found in " + 
+            "tagged object.";
 
         public const String STRUCTURE_ELEMENT_IN_STRUCTURE_DESTINATION_SHALL_BE_AN_INDIRECT_OBJECT = "Structure " 
             + "element referenced by a structure destination shall be an indirect object.";
@@ -544,6 +544,8 @@ namespace iText.Kernel.Exceptions {
         public const String XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT = "Xref structure contains too many elements " 
             + "and may cause OOM exception. You can increase number of elements by setting custom " + "MemoryLimitsAwareHandler.";
 
+        public const String XOBJECT_STRUCT_PARENT_INDEX_MISSED = "XObject has no StructParents index in its stream.";
+
         public const String TOTAL_XOBJECT_SIZE_ONE_PAGE_EXCEEDED_THE_LIMIT = "Pdf contains too many xObject elements on a page "
              + "and may cause OOM exception. You can increase page size limit by setting custom " + "MemoryLimitsAwareHandler.";
 
@@ -610,6 +612,12 @@ namespace iText.Kernel.Exceptions {
 
         public const String XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET = "Pdf document is to large to " + "use normal cross reference table. Use cross reference streams instead. To enable feature use com.itextpdf"
              + ".kernel.pdf.WriterProperties#setFullCompressionMode(true). ";
+
+        public const String UNABLE_TO_READ_OBJECT_STREAM = "Unable to read object stream.";
+
+        public const String UNABLE_TO_READ_STREAM_BYTES = "Unable to read stream bytes because stream is null.";
+
+        public const String INVALID_OBJECT_STREAM_NUMBER = "Unable to read object {0} with object stream " + "number {1} and index {2} from object stream.";
 
         private KernelExceptionMessageConstant() {
         }

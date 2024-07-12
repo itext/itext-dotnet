@@ -28,7 +28,7 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Actions.Events {
     /// <summary>
-    /// An event allows to associated some
+    /// An event allows to associate some
     /// <see cref="iText.Commons.Actions.Sequence.SequenceId"/>
     /// with
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.

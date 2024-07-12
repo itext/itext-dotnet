@@ -93,7 +93,7 @@ namespace iText.Layout {
             List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string").Add("third string"
                 ).Add("fourth string");
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
-            table.AddCell(new Cell().Add(list).SetVerticalAlignment(VerticalAlignment.BOTTOM));
+            table.AddCell(new Cell().Add(list).SetVerticalAlignment(VerticalAlignment.BOTTOM).SetFontSize(10));
             document.Add(table);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

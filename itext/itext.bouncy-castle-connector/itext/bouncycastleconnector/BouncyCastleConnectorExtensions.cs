@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 
 namespace iText.Bouncycastleconnector {
+    //\cond DO_NOT_DOCUMENT
     internal static class BouncyCastleConnectorExtensions {
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
             TValue value = default(TValue);
@@ -39,4 +40,5 @@ namespace iText.Bouncycastleconnector {
             return oldVal;
         }
     }
+    //\endcond
 }

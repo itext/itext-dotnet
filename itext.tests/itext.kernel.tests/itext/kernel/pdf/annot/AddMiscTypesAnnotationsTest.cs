@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -532,8 +533,7 @@ namespace iText.Kernel.Pdf.Annot {
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "add3DAnnotation01.pdf"
                 ));
             Rectangle rect = new Rectangle(100, 400, 400, 400);
-            PdfStream stream3D = new PdfStream(pdfDoc, new FileStream(SOURCE_FOLDER + "teapot.u3d", FileMode.Open, FileAccess.Read
-                ));
+            PdfStream stream3D = new PdfStream(pdfDoc, FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "teapot.u3d"));
             stream3D.Put(PdfName.Type, new PdfName("3D"));
             stream3D.Put(PdfName.Subtype, new PdfName("U3D"));
             stream3D.SetCompressionLevel(CompressionConstants.UNDEFINED_COMPRESSION);

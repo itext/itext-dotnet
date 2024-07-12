@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -27,6 +28,7 @@ using iText.Signatures;
 
 namespace iText.Signatures.Validation.V1.Extensions {
     /// <summary>Class representing "Basic Constraints" certificate extension.</summary>
+    [System.ObsoleteAttribute(@"since 8.0.5. To be removed.")]
     public class BasicConstraintsExtension : CertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -97,6 +99,9 @@ namespace iText.Signatures.Validation.V1.Extensions {
                 }
             }
             catch (System.IO.IOException) {
+                return false;
+            }
+            catch (Exception) {
                 return false;
             }
             if (pathLength >= 0) {

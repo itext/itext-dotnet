@@ -24,6 +24,7 @@ using System;
 using System.Text;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// A QR code (short for "quick-response code") is a type of two-dimensional matrix barcode, invented in 1994, by
     /// Japanese company Denso Wave for labelling automobile parts.[1][2] A barcode is a machine-readable optical image that
@@ -282,4 +283,5 @@ namespace iText.Barcodes.Qrcode {
             return maskPattern >= 0 && maskPattern < NUM_MASK_PATTERNS;
         }
     }
+//\endcond
 }

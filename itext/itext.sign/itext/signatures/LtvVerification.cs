@@ -275,6 +275,7 @@ namespace iText.Signatures {
             return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpperInvariant();
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get the issuing certificate for a child certificate.</summary>
         /// <param name="cert">the certificate for which we search the parent</param>
         /// <param name="certs">an array with certificates that contains the parent</param>
@@ -296,6 +297,7 @@ namespace iText.Signatures {
             // do nothing
             return null;
         }
+//\endcond
 
         private void AddRevocationDataForChain(IX509Certificate signingCert, IX509Certificate[] certChain, IOcspClient
              ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, 

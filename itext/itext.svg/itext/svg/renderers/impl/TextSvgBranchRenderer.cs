@@ -75,10 +75,12 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void FillCopy(iText.Svg.Renderers.Impl.TextSvgBranchRenderer copy) {
             DeepCopyAttributesAndStyles(copy);
             DeepCopyChildren(copy);
         }
+//\endcond
 
         public void AddChild(ISvgTextNodeRenderer child) {
             // Final method, in order to disallow adding null
@@ -234,6 +236,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PerformRootTransformations(PdfCanvas currentCanvas, SvgDrawContext context) {
             // Current transformation matrix results in the character glyphs being mirrored, correct with inverse tf
             AffineTransform rootTf;
@@ -255,6 +258,7 @@ namespace iText.Svg.Renderers.Impl {
                 SvgTextUtil.ProcessWhiteSpace(this, true);
             }
         }
+//\endcond
 
         private void ResolveTextMove() {
             if (this.attributesAndStyles != null) {
@@ -286,6 +290,7 @@ namespace iText.Svg.Renderers.Impl {
             return provider.GetFontSelector(stringArrayList, fontCharacteristics, tempFonts).BestMatch();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ResolveFont(SvgDrawContext context) {
             FontProvider provider = context.GetFontProvider();
             FontSet tempFonts = context.GetTempFonts();
@@ -309,7 +314,9 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Return the font used in this text element.</summary>
         /// <remarks>
         /// Return the font used in this text element.
@@ -320,6 +327,7 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual PdfFont GetFont() {
             return font;
         }
+//\endcond
 
         private void ResolveTextPosition() {
             if (this.attributesAndStyles != null) {
@@ -343,6 +351,7 @@ namespace iText.Svg.Renderers.Impl {
             return result;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static AffineTransform GetTextTransform(float[][] absolutePositions, SvgDrawContext context) {
             AffineTransform tf = new AffineTransform();
             // If x is not specified, but y is, we need to correct for preceding text.
@@ -357,7 +366,9 @@ namespace iText.Svg.Renderers.Impl {
             tf.Concatenate(AffineTransform.GetTranslateInstance(absolutePositions[0][0], -absolutePositions[1][0]));
             return tf;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ApplyTextRenderingMode(PdfCanvas currentCanvas) {
             // Fill only is the default for text operation in PDF
             if (doStroke && doFill) {
@@ -373,6 +384,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+//\endcond
 
         private void DeepCopyChildren(iText.Svg.Renderers.Impl.TextSvgBranchRenderer deepCopy) {
             foreach (ISvgTextNodeRenderer child in children) {
@@ -382,6 +394,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetTextAnchorAlignmentCorrection(float childContentLength) {
             // Resolve text anchor
             // TODO DEVSIX-2631 properly resolve text-anchor by taking entire line into account, not only children of the current TextSvgBranchRenderer
@@ -404,5 +417,6 @@ namespace iText.Svg.Renderers.Impl {
             }
             return textAnchorXCorrection;
         }
+//\endcond
     }
 }

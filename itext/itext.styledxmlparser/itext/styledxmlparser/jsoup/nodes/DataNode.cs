@@ -51,13 +51,17 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             accum.Append(GetWholeData());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // data is not escaped in return from data nodes, so " in script, style is plain
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
         }
+//\endcond
 
         public override String ToString() {
             return OuterHtml();

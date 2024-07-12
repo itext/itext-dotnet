@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils {
+    /// <summary>Helper class to merge a number of existing documents into one.</summary>
     public class PdfMerger {
         private PdfDocument pdfDocument;
 

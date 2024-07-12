@@ -81,9 +81,9 @@ namespace iText.Pdfua.Checkers.Utils {
                 PdfDictionary @object = structElem.GetPdfObject();
                 PdfDictionary kids = @object.GetAsDictionary(PdfName.K);
                 // It's a dictionary in this particular case
-                if (kids != null && kids.Get(PdfName.Obj) != null && PdfName.Widget.Equals(kids.GetAsDictionary(PdfName.Obj
-                    ).GetAsName(PdfName.Subtype))) {
-                    return kids.GetAsDictionary(PdfName.Obj);
+                if (kids != null && kids.Get(PdfName.Obj) != null && PdfName.Widget.Equals(((PdfDictionary)kids.Get(PdfName
+                    .Obj)).GetAsName(PdfName.Subtype))) {
+                    return (PdfDictionary)kids.Get(PdfName.Obj);
                 }
                 return null;
             }

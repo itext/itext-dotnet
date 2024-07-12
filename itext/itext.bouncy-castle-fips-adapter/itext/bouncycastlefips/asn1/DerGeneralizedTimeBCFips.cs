@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using Org.BouncyCastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1;
 
@@ -49,6 +50,15 @@ namespace iText.Bouncycastlefips.Asn1 {
         /// </returns>
         public virtual DerGeneralizedTime GetDerGeneralizedTime() {
             return (DerGeneralizedTime)GetEncodable();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual DateTime GetDate() {
+            return GetDerGeneralizedTime().ToDateTime();
         }
     }
 }

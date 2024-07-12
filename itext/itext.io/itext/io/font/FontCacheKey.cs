@@ -44,9 +44,11 @@ namespace iText.IO.Font {
         private class FontCacheStringKey : FontCacheKey {
             private String fontName;
 
+//\cond DO_NOT_DOCUMENT
             internal FontCacheStringKey(String fontName) {
                 this.fontName = fontName;
             }
+//\endcond
 
             public override bool Equals(Object o) {
                 if (this == o) {
@@ -71,6 +73,7 @@ namespace iText.IO.Font {
 
             private int hashcode;
 
+//\cond DO_NOT_DOCUMENT
             internal FontCacheBytesKey(byte[] fontBytes) {
                 if (fontBytes != null) {
                     int maxBytesNum = 10000;
@@ -79,6 +82,7 @@ namespace iText.IO.Font {
                 }
                 this.hashcode = CalcHashCode();
             }
+//\endcond
 
             public override bool Equals(Object o) {
                 if (this == o) {
@@ -110,15 +114,19 @@ namespace iText.IO.Font {
 
             private int ttcIndex;
 
+//\cond DO_NOT_DOCUMENT
             internal FontCacheTtcKey(String fontName, int ttcIndex) {
                 this.ttcKey = new FontCacheKey.FontCacheStringKey(fontName);
                 this.ttcIndex = ttcIndex;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal FontCacheTtcKey(byte[] fontBytes, int ttcIndex) {
                 this.ttcKey = new FontCacheKey.FontCacheBytesKey(fontBytes);
                 this.ttcIndex = ttcIndex;
             }
+//\endcond
 
             public override bool Equals(Object o) {
                 if (this == o) {

@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
+//\cond DO_NOT_DOCUMENT
 namespace iText.Signatures {
     internal static class SignExtensions {
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
@@ -158,3 +158,4 @@ namespace iText.Signatures {
         }
     }
 }
+//\endcond

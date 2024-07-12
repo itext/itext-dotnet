@@ -77,6 +77,7 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual(2000, valueRecord.YPlacement);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class OpenTypeFontTableReaderTest : OpenTypeFontTableReader {
             protected internal OpenTypeFontTableReaderTest(OtfReadCommonTest _enclosing, RandomAccessFileOrArray rf, int
                  tableLocation, OpenTypeGdefTableReader gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
@@ -91,7 +92,9 @@ namespace iText.IO.Font.Otf {
 
             private readonly OtfReadCommonTest _enclosing;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class RandomAccesArrayTest : RandomAccessFileOrArray {
             /// <summary>Creates a RandomAccessFileOrArray that wraps the specified byte source.</summary>
             /// <remarks>
@@ -114,5 +117,6 @@ namespace iText.IO.Font.Otf {
 
             private readonly OtfReadCommonTest _enclosing;
         }
+//\endcond
     }
 }

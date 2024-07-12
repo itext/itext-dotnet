@@ -89,6 +89,7 @@ namespace iText.Kernel.XMP.Impl
 		/// <summary>this prefix is used for default namespaces</summary>
 		public const String DEFAULT_PREFIX = "_dflt";
 
+		//\cond DO_NOT_DOCUMENT		
 		/// <summary>The main parsing method.</summary>
 		/// <remarks>
 		/// The main parsing method. The XML tree is walked through from the root node and and XMP tree
@@ -122,6 +123,7 @@ namespace iText.Kernel.XMP.Impl
 				throw new XMPException("Invalid attributes of rdf:RDF element", XMPError.BADRDF);
 			}
 		}
+		//\endcond	
 
 		/// <summary>
 		/// 7.2.10 nodeElementList<br />

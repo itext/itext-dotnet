@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Layout.Tagging {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Implementation of the interface is used to create required children
     /// structure for the specified role.
@@ -42,4 +43,5 @@ namespace iText.Layout.Tagging {
         /// </returns>
         bool OnTagFinish(LayoutTaggingHelper taggingHelper, TaggingHintKey taggingHintKey);
     }
+//\endcond
 }

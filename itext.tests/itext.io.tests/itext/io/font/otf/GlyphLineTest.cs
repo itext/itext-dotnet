@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -57,8 +56,8 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestOtherLinesAddition() {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("Viva France!", font));
@@ -81,8 +80,8 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestAdditionWithActualText() {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             IList<Glyph> glyphs = ConstructGlyphListFromString("Viva France!", font);
@@ -101,8 +100,8 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestOtherLinesWithActualTextAddition() {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("France", font));
@@ -121,8 +120,8 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestOtherLinesWithActualTextAddition02() {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             GlyphLine containerLine = new GlyphLine(ConstructGlyphListFromString("France", font));
@@ -146,8 +145,8 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestContentReplacingWithNullActualText() {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             GlyphLine lineToBeReplaced = new GlyphLine(ConstructGlyphListFromString("Byelorussia", font));
@@ -162,8 +161,8 @@ namespace iText.IO.Font.Otf {
         public virtual void TestActualTextForSubstitutedGlyphProcessingInSubstituteOneToMany01() {
             String expectedActualTextForFirstGlyph = "0";
             String expectedActualTextForSecondGlyph = "A";
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             // no actual text for the second glyph is set - it should be created during substitution
@@ -182,8 +181,8 @@ namespace iText.IO.Font.Otf {
         [NUnit.Framework.Test]
         public virtual void TestActualTextForSubstitutedGlyphProcessingInSubstituteOneToMany02() {
             String expectedActualTextForFirstGlyph = "A";
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             GlyphLine line = new GlyphLine(ConstructGlyphListFromString("A", font));
@@ -197,8 +196,8 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestActualTextForSubstitutedGlyphProcessingInSubstituteOneToMany03() {
-            byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf", FileMode.Open, FileAccess.Read
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf"
                 ));
             TrueTypeFont font = new TrueTypeFont(ttf);
             // no actual text is set

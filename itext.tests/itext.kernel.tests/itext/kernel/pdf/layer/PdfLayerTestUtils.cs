@@ -29,7 +29,9 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Layer {
+//\cond DO_NOT_DOCUMENT
     internal class PdfLayerTestUtils {
+//\cond DO_NOT_DOCUMENT
         internal static void AddTextInsideLayer(IPdfOCG layer, PdfCanvas canvas, String text, float x, float y) {
             if (layer != null) {
                 canvas.BeginLayer(layer);
@@ -39,24 +41,32 @@ namespace iText.Kernel.Pdf.Layer {
                 canvas.EndLayer();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfLayer PrepareNewLayer() {
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             return new PdfLayer("layer1", dummyDoc);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfLayer PrepareLayerDesignIntent() {
             PdfLayer pdfLayer = PrepareNewLayer();
             pdfLayer.SetIntents(JavaCollectionsUtil.SingletonList(PdfName.Design));
             return pdfLayer;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfLayer PrepareLayerDesignAndCustomIntent(PdfName custom) {
             PdfLayer pdfLayer = PrepareNewLayer();
             pdfLayer.SetIntents(JavaUtil.ArraysAsList(PdfName.Design, custom));
             return pdfLayer;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void CompareLayers(String outPdf, String cmpPdf) {
             ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
             System.Console.Out.WriteLine();
@@ -68,5 +78,7 @@ namespace iText.Kernel.Pdf.Layer {
                 }
             }
         }
+//\endcond
     }
+//\endcond
 }

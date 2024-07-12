@@ -51,5 +51,13 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>OCSPObjectIdentifiers.id_pkix_ocsp_nocheck wrapper.</returns>
         IDerObjectIdentifier GetIdPkixOcspNoCheck();
+
+        /// <summary>
+        /// Gets
+        /// <c>id_pkix_ocsp_archive_cutoff</c>
+        /// constant for the wrapped OCSPObjectIdentifiers.
+        /// </summary>
+        /// <returns>OCSPObjectIdentifiers.id_pkix_ocsp_archive_cutoff wrapper.</returns>
+        IDerObjectIdentifier GetIdPkixOcspArchiveCutoff();
     }
 }

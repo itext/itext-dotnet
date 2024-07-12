@@ -76,7 +76,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>The operation permitted when the document is opened with the user password.</summary>
         public const int ALLOW_DEGRADED_PRINTING = 4;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Mask to separate the encryption type from the encryption mode.</summary>
         internal const int ENCRYPTION_MASK = 7;
+//\endcond
     }
 }

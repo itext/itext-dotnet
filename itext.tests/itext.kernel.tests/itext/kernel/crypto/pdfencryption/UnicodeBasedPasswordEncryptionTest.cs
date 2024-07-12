@@ -40,8 +40,10 @@ namespace iText.Kernel.Crypto.Pdfencryption {
 
         private static IDictionary<String, UnicodeBasedPasswordEncryptionTest.SaslPreparedString> nameToSaslPrepared;
 
+//\cond DO_NOT_DOCUMENT
         internal PdfEncryptionTestUtils encryptionUtil = new PdfEncryptionTestUtils(destinationFolder, sourceFolder
             );
+//\endcond
 
         static UnicodeBasedPasswordEncryptionTest() {
             // values are calculated with com.ibm.icu.text.StringPrep class in icu4j v58.2 lib
@@ -124,14 +126,20 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         
         */
         private class SaslPreparedString {
+//\cond DO_NOT_DOCUMENT
             internal String unicodeInputString;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal String preparedString;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal SaslPreparedString(String unicodeInputString, String preparedString) {
                 this.unicodeInputString = unicodeInputString;
                 this.preparedString = preparedString;
             }
+//\endcond
         }
 
         [NUnit.Framework.OneTimeSetUp]

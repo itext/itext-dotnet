@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections
 {
+    //\cond DO_NOT_DOCUMENT 
     internal class UnmodifiableCollection<T> : ICollection<T> {
         private ICollection<T> _collection;
 
@@ -69,4 +70,5 @@ namespace iText.Commons.Utils.Collections
             get { return true; }
         }
     }
+   //\endcond 
 }

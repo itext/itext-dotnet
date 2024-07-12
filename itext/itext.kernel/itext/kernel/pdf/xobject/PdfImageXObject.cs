@@ -670,9 +670,13 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         private class PngChromaticitiesHelper {
+//\cond DO_NOT_DOCUMENT
             internal float[] matrix = new float[9];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float[] wp = new float[3];
+//\endcond
 
             public virtual void ConstructMatrix(PngImageData pngImageData) {
                 PngChromaticities pngChromaticities = pngImageData.GetPngChromaticities();

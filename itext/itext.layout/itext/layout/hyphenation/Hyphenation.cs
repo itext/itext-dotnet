@@ -32,6 +32,7 @@ namespace iText.Layout.Hyphenation {
         /// <summary>number of hyphenation points in word</summary>
         private int len;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// rawWord as made of alternating strings and
         /// <see cref="Hyphen">Hyphen</see>
@@ -42,6 +43,7 @@ namespace iText.Layout.Hyphenation {
             hyphenPoints = points;
             len = points.Length;
         }
+//\endcond
 
         /// <returns>the number of hyphenation points in the word</returns>
         public virtual int Length() {

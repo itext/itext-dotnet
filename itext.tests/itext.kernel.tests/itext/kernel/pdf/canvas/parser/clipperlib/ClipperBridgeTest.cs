@@ -91,6 +91,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
                 .ROUND));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void LongRectWidthTest() {
+            IntRect longRect = new IntRect(14900000000000000L, 21275000000000000L, 71065802001953128L, 71075000000000000L
+                );
+            NUnit.Framework.Assert.AreEqual(561.658, ClipperBridge.LongRectCalculateWidth(longRect), 0.001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LongRectHeightTest() {
+            IntRect longRect = new IntRect(14900000000000000L, 21275000000000000L, 71065802001953128L, 71075000000000000L
+                );
+            NUnit.Framework.Assert.AreEqual(498, ClipperBridge.LongRectCalculateHeight(longRect), 0.001f);
+        }
+
         private bool AreShapesEqual(IShape expected, IShape actual) {
             if (expected == actual) {
                 return true;

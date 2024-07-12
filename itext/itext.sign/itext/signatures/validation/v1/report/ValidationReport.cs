@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using iText.Commons.Utils;
 
 namespace iText.Signatures.Validation.V1.Report {
@@ -110,8 +111,36 @@ namespace iText.Signatures.Validation.V1.Report {
             reportItems.Add(item);
         }
 
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
         public override String ToString() {
-            return "ValidationReport{" + "reportItems=" + reportItems + '}';
+            StringBuilder sb = new StringBuilder("ValidationReport{validationResult=");
+            sb.Append(GetValidationResult()).Append("\nreportItems=");
+            foreach (ReportItem i in reportItems) {
+                sb.Append(i).Append(", ");
+            }
+            sb.Append("}");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Merge all
+        /// <see cref="ReportItem"/>
+        /// objects from sub report into this one.
+        /// </summary>
+        /// <param name="subReport">report from which items will be merged</param>
+        /// <returns>
+        /// 
+        /// <see cref="ValidationReport"/>
+        /// the same updated validation report instance.
+        /// </returns>
+        public virtual iText.Signatures.Validation.V1.Report.ValidationReport Merge(iText.Signatures.Validation.V1.Report.ValidationReport
+             subReport) {
+            foreach (ReportItem item in subReport.GetLogs()) {
+                AddReportItem(item);
+            }
+            return this;
         }
 
         /// <summary>Enum representing possible validation results.</summary>

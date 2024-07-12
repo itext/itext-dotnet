@@ -140,6 +140,7 @@ namespace iText.Pdfa {
             : this(reader, writer, properties, false) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties, bool tolerant)
             : base(reader, writer, properties) {
             PdfAConformanceLevel conformanceLevel = reader.GetPdfAConformanceLevel();
@@ -154,6 +155,7 @@ namespace iText.Pdfa {
             }
             SetChecker(conformanceLevel);
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public override IConformanceLevel GetConformanceLevel() {
@@ -175,6 +177,7 @@ namespace iText.Pdfa {
             checker.SetPdfAOutputIntentColorSpace(GetCatalog().GetPdfObject());
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void LogThatPdfAPageFlushingWasNotPerformed() {
             if (!alreadyLoggedThatPageFlushingWasNotPerformed) {
                 alreadyLoggedThatPageFlushingWasNotPerformed = true;
@@ -183,6 +186,7 @@ namespace iText.Pdfa {
                     );
             }
         }
+//\endcond
 
         protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
             if (!isPdfADocument) {
@@ -371,9 +375,11 @@ namespace iText.Pdfa {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsClosing() {
             return isClosing;
         }
+//\endcond
 
         private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel) {
             PdfVersion version;

@@ -87,14 +87,15 @@ namespace iText.Commons.Actions.Producer {
         /// <see cref="iText.Commons.Actions.Confirmations.ConfirmedEventWrapper"/>
         /// or not.
         /// Format of the new producer line will be defined by the first event in the list.
-        /// Placeholder will be replaced and merged all together
+        /// Placeholder will be replaced and merged all together.
         /// </remarks>
         /// <param name="events">list of events registered for the document</param>
         /// <param name="oldProducer">
         /// old producer line. If <c>null</c> or empty, will be replaced
         /// with a new one. Otherwise new line will be attached with
         /// <c>modified using</c> prefix. If old producer line already contains
-        /// <c>modified using</c> substring, it will be overriden with a new one
+        /// <c>modified using itext</c> substring with the current version of itext at the end,
+        /// no changes will be made
         /// </param>
         /// <returns>modified producer line</returns>
         public static String ModifyProducer<_T0>(IList<_T0> events, String oldProducer)
@@ -116,7 +117,14 @@ namespace iText.Commons.Actions.Producer {
                 return newProducer;
             }
             else {
-                return oldProducer + MODIFIED_USING + newProducer;
+                //if the last time document was modified or created with the itext of the same version,
+                //then no changes occur.
+                if (oldProducer.Equals(newProducer) || oldProducer.EndsWith(MODIFIED_USING + newProducer)) {
+                    return oldProducer;
+                }
+                else {
+                    return oldProducer + MODIFIED_USING + newProducer;
+                }
             }
         }
 

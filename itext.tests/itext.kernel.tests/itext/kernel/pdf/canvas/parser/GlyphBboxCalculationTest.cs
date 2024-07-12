@@ -126,9 +126,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         private class CharacterPositionEventListener : ITextExtractionStrategy {
+//\cond DO_NOT_DOCUMENT
             internal float glyphWidth;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal TextRenderInfo firstTextRenderInfo;
+//\endcond
 
             public virtual String GetResultantText() {
                 return null;

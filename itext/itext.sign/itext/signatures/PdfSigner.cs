@@ -210,6 +210,7 @@ namespace iText.Signatures {
             appearance.SetSignDate(signDate);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal PdfSigner(PdfDocument document, Stream outputStream, MemoryStream temporaryOS, FileInfo tempFile) {
             if (tempFile == null) {
                 this.temporaryOS = temporaryOS;
@@ -224,7 +225,33 @@ namespace iText.Signatures {
             this.appearance = new PdfSignatureAppearance(document, new Rectangle(0, 0), 1);
             this.appearance.SetSignDate(this.signDate);
         }
+//\endcond
 
+        /// <summary>
+        /// Initialize new
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance by using provided parameters.
+        /// </summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// to be used as a reader in the new document
+        /// </param>
+        /// <param name="writer">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// to be used as a writer in the new document
+        /// </param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
+        /// to be provided in the new document
+        /// </param>
+        /// <returns>
+        /// new
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance
+        /// </returns>
         protected internal virtual PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
              properties) {
             return new PdfAAgnosticPdfDocument(reader, writer, properties);
@@ -302,6 +329,11 @@ namespace iText.Signatures {
         }
 
         /// <summary>Sets the document's certification level.</summary>
+        /// <remarks>
+        /// Sets the document's certification level.
+        /// This method overrides the value set by
+        /// <see cref="SetCertificationLevel(AccessPermissions)"/>.
+        /// </remarks>
         /// <param name="certificationLevel">
         /// a new certification level for a document.
         /// Possible values are: <list type="bullet">
@@ -321,6 +353,21 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SetCertificationLevel(int certificationLevel) {
             this.certificationLevel = certificationLevel;
+        }
+
+        /// <summary>Sets the document's certification level.</summary>
+        /// <remarks>
+        /// Sets the document's certification level.
+        /// This method overrides the value set by
+        /// <see cref="SetCertificationLevel(int)"/>.
+        /// </remarks>
+        /// <param name="accessPermissions">
+        /// 
+        /// <see cref="AccessPermissions"/>
+        /// enum which specifies which certification level shall be used
+        /// </param>
+        public virtual void SetCertificationLevel(AccessPermissions accessPermissions) {
+            this.certificationLevel = (int)(accessPermissions);
         }
 
         /// <summary>Gets the field name.</summary>
@@ -904,6 +951,15 @@ namespace iText.Signatures {
             return crlBytes.Count == 0 ? null : crlBytes;
         }
 
+        /// <summary>
+        /// Add developer extension to the current
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <param name="extension">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDeveloperExtension"/>
+        /// to be added
+        /// </param>
         protected internal virtual void AddDeveloperExtension(PdfDeveloperExtension extension) {
             document.GetCatalog().AddDeveloperExtension(extension);
         }
@@ -1281,6 +1337,14 @@ namespace iText.Signatures {
             types.Add(reference);
         }
 
+        /// <summary>Check if current document instance already contains certification or approval signatures.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if document contains certification or approval signatures,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         protected internal virtual bool DocumentContainsCertificationOrApprovalSignatures() {
             bool containsCertificationOrApprovalSignature = false;
             PdfDictionary urSignature = null;
@@ -1350,7 +1414,7 @@ namespace iText.Signatures {
                         throw new ArgumentException(SignExceptionMessageConstant.FIELD_ALREADY_SIGNED);
                     }
                     IList<PdfWidgetAnnotation> widgets = field.GetWidgets();
-                    if (widgets.Count > 0) {
+                    if (!widgets.IsEmpty()) {
                         PdfWidgetAnnotation widget = widgets[0];
                         SetPageRect(GetWidgetRectangle(widget));
                         SetPageNumber(GetWidgetPageNumber(widget));
@@ -1372,6 +1436,7 @@ namespace iText.Signatures {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfSignature CreateSignatureDictionary(bool includeDate) {
             PdfSignature dic = new PdfSignature();
             dic.SetReason(GetReason());
@@ -1384,6 +1449,7 @@ namespace iText.Signatures {
             // time-stamp will over-rule this
             return dic;
         }
+//\endcond
 
         private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {
             SignatureFieldAppearance formFieldElement = appearance.GetSignatureAppearance();
@@ -1418,6 +1484,7 @@ namespace iText.Signatures {
             void GetSignatureDictionary(PdfSignature sig);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class SignatureApplier {
             private readonly PdfDocument document;
 
@@ -1477,6 +1544,7 @@ namespace iText.Signatures {
                 return new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
             }
         }
+//\endcond
 
         internal delegate byte[] ISignatureDataProvider(PdfSigner.SignatureApplier applier);
     }

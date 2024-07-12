@@ -32,10 +32,12 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Forms.Xfdf {
+//\cond DO_NOT_DOCUMENT
     internal sealed class XfdfObjectUtils {
         private XfdfObjectUtils() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts a string containing 2 or 4 float values into a
         /// <see cref="iText.Kernel.Geom.Rectangle"/>.
@@ -70,7 +72,9 @@ namespace iText.Forms.Xfdf {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts a string containing 4 float values into a PdfArray, representing rectangle fringe.</summary>
         /// <remarks>
         /// Converts a string containing 4 float values into a PdfArray, representing rectangle fringe.
@@ -86,7 +90,9 @@ namespace iText.Forms.Xfdf {
             }
             return new PdfArray(fringe);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts a string containing float values into a PdfArray, representing a pattern of dashes and gaps to be used
         /// in drawing a dashed border.
@@ -99,7 +105,9 @@ namespace iText.Forms.Xfdf {
             }
             return new PdfArray(dashes);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts a PdfArray, representing a pattern of dashes and gaps to be used in drawing a dashed border,
         /// into a string containing float values.
@@ -116,7 +124,9 @@ namespace iText.Forms.Xfdf {
             dashes.Append(ConvertFloatToString(((PdfNumber)dashesArray.Get(dashesArray.Size() - 1)).FloatValue()));
             return new PdfString(dashes.ToString());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts a string containing justification value into an integer value representing a code specifying
         /// the form of quadding (justification).
@@ -130,7 +140,9 @@ namespace iText.Forms.Xfdf {
             }
             return PdfFreeTextAnnotation.LEFT_JUSTIFIED;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts an integer value representing a code specifying the form of quadding (justification) into a string
         /// containing justification value.
@@ -144,7 +156,9 @@ namespace iText.Forms.Xfdf {
             }
             return "left";
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts H key value in the link annotation dictionary to Highlight value of xfdf link annotation attribute.
         ///     </summary>
         internal static PdfName GetHighlightFullValue(PdfName highlightMode) {
@@ -173,7 +187,9 @@ namespace iText.Forms.Xfdf {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts style (S key value) in the pdf annotation dictionary to style value of xfdf annotation attribute.
         ///     </summary>
         internal static PdfName GetStyleFullValue(PdfName style) {
@@ -210,19 +226,25 @@ namespace iText.Forms.Xfdf {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts a Rectangle to a string containing 4 float values.</summary>
         internal static String ConvertRectToString(Rectangle rect) {
             return ConvertFloatToString(rect.GetX()) + ", " + ConvertFloatToString(rect.GetY()) + ", " + ConvertFloatToString
                 ((rect.GetX() + rect.GetWidth())) + ", " + ConvertFloatToString((rect.GetY() + rect.GetHeight()));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts float value to string with UTF-8 encoding.</summary>
         internal static String ConvertFloatToString(float coord) {
             return iText.Commons.Utils.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(coord), System.Text.Encoding.UTF8
                 );
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts a string containing 8*n float values into a float array, representing quadPoints.</summary>
         /// <remarks>
         /// Converts a string containing 8*n float values into a float array, representing quadPoints.
@@ -244,7 +266,9 @@ namespace iText.Forms.Xfdf {
             }
             return new float[0];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts a float array, representing quadPoints into a string containing 8*n float values.</summary>
         internal static String ConvertQuadPointsToCoordsString(float[] quadPoints) {
             StringBuilder stb = new StringBuilder(ConvertFloatToString(quadPoints[0]));
@@ -253,7 +277,9 @@ namespace iText.Forms.Xfdf {
             }
             return stb.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Converts a string containing a comma separated list of names of the flags into an integer representation
         /// of the flags.
@@ -284,7 +310,9 @@ namespace iText.Forms.Xfdf {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts an integer representation of the flags into a string with a comma separated list of names of the flags.
         ///     </summary>
         internal static String ConvertFlagsToString(PdfAnnotation pdfAnnotation) {
@@ -323,7 +351,9 @@ namespace iText.Forms.Xfdf {
             String result = stb.ToString();
             return result.Length > 0 ? result.JSubstring(0, result.Length - 1) : null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts an array of 3 floats into a hex string representing the rgb color.</summary>
         internal static String ConvertColorToString(float[] colors) {
             if (colors.Length == 3) {
@@ -332,7 +362,9 @@ namespace iText.Forms.Xfdf {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts a Color object into a hex string representing the rgb color.</summary>
         internal static String ConvertColorToString(Color color) {
             float[] colors = color.GetColorValue();
@@ -342,6 +374,7 @@ namespace iText.Forms.Xfdf {
             }
             return null;
         }
+//\endcond
 
         /// <summary>Converts float representation of the rgb color into a hex string representing the rgb color.</summary>
         private static String ConvertColorFloatToHex(float colorFloat) {
@@ -349,6 +382,7 @@ namespace iText.Forms.Xfdf {
             return result.Substring(result.Length - 2);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts string containing id from decimal to hexadecimal format.</summary>
         internal static String ConvertIdToHexString(String idString) {
             StringBuilder stb = new StringBuilder();
@@ -358,12 +392,16 @@ namespace iText.Forms.Xfdf {
             }
             return stb.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts string containing hex color code to Color object.</summary>
         internal static Color ConvertColorFromString(String hexColor) {
             return Color.MakeColor(new PdfDeviceCs.Rgb(), ConvertColorFloatsFromString(hexColor));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts string containing hex color code into an array of 3 integer values representing rgb color.
         ///     </summary>
         internal static float[] ConvertColorFloatsFromString(String colorHexString) {
@@ -376,7 +414,9 @@ namespace iText.Forms.Xfdf {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts an array of float vertices to string.</summary>
         internal static String ConvertVerticesToString(float[] vertices) {
             if (vertices.Length <= 0) {
@@ -389,7 +429,9 @@ namespace iText.Forms.Xfdf {
             }
             return stb.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts to string an array of floats representing the fringe.</summary>
         /// <remarks>
         /// Converts to string an array of floats representing the fringe.
@@ -406,7 +448,9 @@ namespace iText.Forms.Xfdf {
             }
             return stb.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Converts a string into an array of floats representing vertices.</summary>
         internal static float[] ConvertVerticesFromString(String verticesString) {
             String delims = ",;";
@@ -421,7 +465,9 @@ namespace iText.Forms.Xfdf {
             }
             return vertices;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns a string representation of the start point of the line (x_1, y_1) based on given line array.
         ///     </summary>
         /// <remarks>
@@ -435,7 +481,9 @@ namespace iText.Forms.Xfdf {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns a string representation of the end point of the line (x_2, y_2) based on given line array.
         ///     </summary>
         /// <remarks>
@@ -449,5 +497,7 @@ namespace iText.Forms.Xfdf {
             }
             return null;
         }
+//\endcond
     }
+//\endcond
 }

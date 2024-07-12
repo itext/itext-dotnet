@@ -71,11 +71,24 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ActionTest03() {
+            PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "actionTest03.pdf"
+                ), true);
+            String uri = "http://itextpdf.com/";
+            document.GetCatalog().SetOpenAction(PdfAction.CreateURI(new Uri(uri)));
+            NUnit.Framework.Assert.AreEqual(new PdfString(uri), document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName
+                .OpenAction).Get(PdfName.URI));
+            document.Close();
+            System.Console.Out.WriteLine(MessageFormatUtil.Format("Please open document {0} and make sure that you're automatically redirected to {1} site."
+                , destinationFolder + "actionTest01.pdf", "http://itextpdf.com"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SoundActionTest() {
             String fileName = "soundActionTest.pdf";
             PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
                 );
-            Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.aif");
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);
@@ -92,7 +105,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "soundActionWithRepeatFlagTest.pdf";
             PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
                 );
-            Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.aif");
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);
@@ -107,7 +120,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SoundActionWithToBigVolumeTest() {
             PdfDocument document = CreateDocument(new PdfWriter(new MemoryStream()), false);
-            Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.aif");
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);
@@ -127,7 +140,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SoundActionWithToLowVolumeTest() {
             PdfDocument document = CreateDocument(new PdfWriter(new MemoryStream()), false);
-            Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.aif");
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);
@@ -268,7 +281,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "soundAndNextJavaScriptActionTest.pdf";
             PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
                 );
-            Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.aif");
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);
@@ -287,7 +300,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "soundAndTwoNextJavaScriptActionTest.pdf";
             PdfDocument document = CreateDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName), false
                 );
-            Stream @is = new FileStream(sourceFolder + "sample.aif", FileMode.Open, FileAccess.Read);
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sample.aif");
             PdfStream sound1 = new PdfStream(document, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);

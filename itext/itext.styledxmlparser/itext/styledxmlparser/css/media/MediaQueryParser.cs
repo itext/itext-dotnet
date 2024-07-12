@@ -42,6 +42,7 @@ namespace iText.StyledXmlParser.Css.Media {
         private MediaQueryParser() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Parses a
         /// <see cref="System.String"/>
@@ -73,7 +74,9 @@ namespace iText.StyledXmlParser.Css.Media {
             }
             return mediaQueries;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Parses a
         /// <see cref="System.String"/>
@@ -117,6 +120,7 @@ namespace iText.StyledXmlParser.Css.Media {
             }
             return new MediaQuery(mediaType, mediaExpressions, only, not);
         }
+//\endcond
 
         /// <summary>
         /// Parses a

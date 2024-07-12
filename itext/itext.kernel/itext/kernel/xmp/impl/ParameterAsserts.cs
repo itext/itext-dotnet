@@ -31,6 +31,7 @@ using System;
 using iText.Kernel.XMP;
 
 namespace iText.Kernel.XMP.Impl {
+//\cond DO_NOT_DOCUMENT
     /// <since>11.08.2006</since>
     internal class ParameterAsserts : XMPConst {
         /// <summary>private constructor</summary>
@@ -117,4 +118,5 @@ namespace iText.Kernel.XMP.Impl {
             }
         }
     }
+//\endcond
 }

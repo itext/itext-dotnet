@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Test;
 
@@ -287,7 +288,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void SRGBImageTest() {
-            using (FileStream fis = new FileStream(sourceFolder + "sRGBImage.png", FileMode.Open, FileAccess.Read)) {
+            using (Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + "sRGBImage.png")) {
                 byte[] imageBytes = StreamUtil.InputStreamToArray(fis);
                 // Test a more specific entry point
                 ImageData img = ImageDataFactory.CreatePng(imageBytes);

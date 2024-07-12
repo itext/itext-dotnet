@@ -1586,21 +1586,26 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class CustomButtonFormField : PdfButtonFormField {
             private int counter = 0;
 
+//\cond DO_NOT_DOCUMENT
             internal CustomButtonFormField(PdfDocument pdfDocument, String formFieldName)
                 : base(pdfDocument) {
                 SetPushButton(true);
                 SetFieldName(formFieldName);
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal CustomButtonFormField(PdfWidgetAnnotation annotation, PdfDocument pdfDocument, String formFieldName
                 )
                 : base(annotation, pdfDocument) {
                 SetPushButton(true);
                 SetFieldName(formFieldName);
             }
+//\endcond
 
             public virtual int GetCounter() {
                 return counter;
@@ -1614,5 +1619,6 @@ namespace iText.Forms {
                 return isRegenerated;
             }
         }
+//\endcond
     }
 }

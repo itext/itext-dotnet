@@ -28,6 +28,7 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal sealed class TextSequenceWordWrapping {
         private const float OCCUPIED_AREA_RELAYOUT_EPS = 0.0001F;
 
@@ -473,6 +474,7 @@ namespace iText.Layout.Renderer {
             return shouldBreakLayouting;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static TextSequenceWordWrapping.SpecialScriptsContainingTextRendererSequenceInfo GetSpecialScriptsContainingTextRendererSequenceInfo
             (LineRenderer lineRenderer, int childPos) {
             StringBuilder sequentialTextContentBuilder = new StringBuilder();
@@ -497,7 +499,9 @@ namespace iText.Layout.Renderer {
             return new TextSequenceWordWrapping.SpecialScriptsContainingTextRendererSequenceInfo(numberOfSequentialTextRenderers
                 , sequentialTextContentBuilder.ToString(), indicesOfFloating);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void DistributePossibleBreakPointsOverSequentialTextRenderers(LineRenderer lineRenderer, int
              childPos, int numberOfSequentialTextRenderers, IList<int> possibleBreakPointsGlobal, IList<int> indicesOfFloating
             ) {
@@ -528,7 +532,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// This method defines how to proceed with a
         /// <see cref="TextRenderer"/>
@@ -601,7 +607,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float GetCurWidthRelayoutedTextSequenceDecrement(int childPos, int newChildPos, IDictionary
             <int, LayoutResult> textRendererLayoutResults) {
             float decrement = 0.0f;
@@ -616,6 +624,7 @@ namespace iText.Layout.Renderer {
             }
             return decrement;
         }
+//\endcond
 
         private static void UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(bool noSoftWrap, int
              childPos, LayoutResult layoutResult, AbstractWidthHandler widthHandler, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
@@ -717,6 +726,7 @@ namespace iText.Layout.Renderer {
             FORCED_SPLIT
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class MinMaxWidthOfTextRendererSequenceHelper {
             public float minWidthPreSequence;
 
@@ -731,7 +741,9 @@ namespace iText.Layout.Renderer {
                 this.anythingPlacedBeforeTextRendererSequence = anythingPlacedBeforeTextRendererSequence;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class LastFittingChildRendererData {
             public int childIndex;
 
@@ -742,7 +754,9 @@ namespace iText.Layout.Renderer {
                 this.childLayoutResult = childLayoutResult;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // numberOfSequentialTextRenderers - number of sequential TextRenderers containing special scripts,
         // plus number of ignored floating renderers occurring amidst the sequence;
         // sequentialTextContent - converted to String and concatenated TextRenderer#text-s;
@@ -752,7 +766,9 @@ namespace iText.Layout.Renderer {
 
             public String sequentialTextContent;
 
+//\cond DO_NOT_DOCUMENT
             internal IList<int> indicesOfFloating;
+//\endcond
 
             public SpecialScriptsContainingTextRendererSequenceInfo(int numberOfSequentialTextRenderers, String sequentialTextContent
                 , IList<int> indicesOfFloating) {
@@ -761,5 +777,7 @@ namespace iText.Layout.Renderer {
                 this.indicesOfFloating = indicesOfFloating;
             }
         }
+//\endcond
     }
+//\endcond
 }

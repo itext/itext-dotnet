@@ -27,7 +27,9 @@ using iText.Svg.Renderers;
 
 namespace iText.Svg.Dummy.Renderers.Impl {
     public class DummyBranchSvgNodeRenderer : DummySvgNodeRenderer, IBranchSvgNodeRenderer {
+//\cond DO_NOT_DOCUMENT
         internal IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
+//\endcond
 
         public DummyBranchSvgNodeRenderer(String name)
             : base(name) {

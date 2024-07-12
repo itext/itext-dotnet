@@ -256,6 +256,7 @@ namespace iText.Bouncycastlefips.Tsp {
 	        private EssCertID certID;
 	        private EssCertIDv2 certIDv2;
 
+	        //\cond DO_NOT_DOCUMENT
 	        internal CertID(EssCertID certID) {
 		        this.certID = certID;
 		        this.certIDv2 = null;
@@ -265,6 +266,7 @@ namespace iText.Bouncycastlefips.Tsp {
 		        this.certIDv2 = certID;
 		        this.certID = null;
 	        }
+	        //\endcond
 
 	        public string GetHashAlgorithmName() {
 		        if (certID != null)

@@ -43,6 +43,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>The font to be used for the text.</summary>
         protected internal PdfFont font;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="AbstractTextFieldRenderer"/>
@@ -52,7 +53,9 @@ namespace iText.Forms.Form.Renderer {
         internal AbstractTextFieldRenderer(IFormField modelElement)
             : base(modelElement) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a paragraph renderer.</summary>
         /// <param name="defaultValue">the default value</param>
         /// <returns>the renderer</returns>
@@ -65,7 +68,9 @@ namespace iText.Forms.Form.Renderer {
             text.SetNextRenderer(nextRenderer);
             return new Paragraph(text).SetMargin(0).CreateRendererSubTree();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Applies the default field properties.</summary>
         /// <param name="inputField">the input field</param>
         internal virtual void ApplyDefaultFieldProperties(PdfFormField inputField) {
@@ -81,12 +86,16 @@ namespace iText.Forms.Form.Renderer {
                 inputField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetHeightRowsBased(IList<LineRenderer> lines, Rectangle bBox, int rows) {
             float averageLineHeight = bBox.GetHeight() / lines.Count;
             return averageLineHeight * rows;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Updates the font.</summary>
         /// <param name="renderer">the renderer</param>
         internal virtual void UpdatePdfFont(ParagraphRenderer renderer) {
@@ -110,7 +119,9 @@ namespace iText.Forms.Form.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Approximates font size to fit occupied area if width anf height are specified.</summary>
         /// <param name="layoutContext">layout context that specifies layout area.</param>
         /// <param name="lFontSize">minimal font size value.</param>
@@ -135,7 +146,9 @@ namespace iText.Forms.Form.Renderer {
                 return CalculateFittingFontSize(flatRenderer, lFontSize, rFontSize, newLayoutContext, numberOfIterations);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float CalculateFittingFontSize(IRenderer renderer, float lFontSize, float rFontSize, LayoutContext
              newLayoutContext, int numberOfIterations) {
             for (int i = 0; i < numberOfIterations; i++) {
@@ -151,7 +164,9 @@ namespace iText.Forms.Form.Renderer {
             }
             return lFontSize;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // The width based on cols of textarea and size of input isn't affected by box sizing, so we emulate it here.
         internal virtual float UpdateHtmlColsSizeBasedWidth(float width) {
             if (BoxSizingPropertyValue.BORDER_BOX == this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING)) {
@@ -162,7 +177,9 @@ namespace iText.Forms.Form.Renderer {
             }
             return width;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adjust number of content lines.</summary>
         /// <param name="lines">the lines that need to be rendered</param>
         /// <param name="bBox">the bounding box</param>
@@ -173,7 +190,9 @@ namespace iText.Forms.Form.Renderer {
                 AdjustNumberOfContentLines(lines, bBox, rows, rowsHeight);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adjust number of content lines.</summary>
         /// <param name="lines">the lines that need to be rendered</param>
         /// <param name="bBox">the bounding box</param>
@@ -185,7 +204,9 @@ namespace iText.Forms.Form.Renderer {
                 AdjustNumberOfContentLines(lines, bBox, visibleLinesNumber, height);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the value of the lowest bottom coordinate for all field's children recursively.</summary>
         /// <returns>the lowest child bottom.</returns>
         internal virtual float GetLowestChildBottom(IRenderer renderer, float value) {
@@ -198,6 +219,7 @@ namespace iText.Forms.Form.Renderer {
             }
             return lowestChildBottom;
         }
+//\endcond
 
         private static void AdjustNumberOfContentLines(IList<LineRenderer> lines, Rectangle bBox, int linesNumber, 
             float height) {

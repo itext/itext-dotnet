@@ -75,11 +75,13 @@ namespace iText.Kernel.XMP.Impl
 
 		private const String RDF_EMPTY_STRUCT = "<rdf:Description/>";
 
+		//\cond DO_NOT_DOCUMENT	
 		/// <summary>a set of all rdf attribute qualifier</summary>
 		internal static readonly ICollection<String> RDF_ATTR_QUALIFIER = new HashSet<String
 			>(JavaUtil.ArraysAsList(XMPConst.XML_LANG, "rdf:resource",
 			"rdf:ID", "rdf:bagID", "rdf:nodeID"));
-
+		//\endcond
+		
 		/// <summary>the metadata object to be serialized.</summary>
 		private XMPMetaImpl xmp;
 

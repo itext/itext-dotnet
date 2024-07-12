@@ -456,7 +456,7 @@ namespace iText.Signatures {
 
         private static void ValidateOptionLevelInclusion(String crlUrl, LtvVerification.CertificateOption certificateOption
             , LtvVerification.Level level, LtvVerification.CertificateInclusion inclusion, bool expectedResult) {
-            IOcspClient ocsp = new OcspClientBouncyCastle(null);
+            IOcspClient ocsp = new OcspClientBouncyCastle();
             ICrlClient crl = null;
             if (null == crlUrl) {
                 crl = new CrlClientOnline();

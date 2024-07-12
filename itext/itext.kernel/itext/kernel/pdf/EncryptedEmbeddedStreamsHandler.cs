@@ -23,11 +23,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class EncryptedEmbeddedStreamsHandler {
         private readonly PdfDocument document;
 
         private readonly ICollection<PdfStream> embeddedStreams = new HashSet<PdfStream>();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates
         /// <see cref="EncryptedEmbeddedStreamsHandler"/>
@@ -41,7 +43,9 @@ namespace iText.Kernel.Pdf {
         internal EncryptedEmbeddedStreamsHandler(PdfDocument document) {
             this.document = document;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Stores all embedded streams present in the
         /// <see cref="PdfDocument"/>.
@@ -62,11 +66,15 @@ namespace iText.Kernel.Pdf {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void StoreEmbeddedStream(PdfStream embeddedStream) {
             embeddedStreams.Add(embeddedStream);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Checks, whether this
         /// <see cref="PdfStream"/>
@@ -77,6 +85,7 @@ namespace iText.Kernel.Pdf {
         internal virtual bool IsStreamStoredAsEmbedded(PdfStream stream) {
             return embeddedStreams.Contains(stream);
         }
+//\endcond
 
         private static PdfStream GetEmbeddedFileStreamFromDictionary(PdfDictionary dictionary) {
             PdfDictionary embeddedFileDictionary = dictionary.GetAsDictionary(PdfName.EF);
@@ -86,4 +95,5 @@ namespace iText.Kernel.Pdf {
             return null;
         }
     }
+//\endcond
 }

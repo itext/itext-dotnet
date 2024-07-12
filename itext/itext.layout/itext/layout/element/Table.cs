@@ -1189,11 +1189,15 @@ namespace iText.Layout.Element {
 
         /// <summary>A simple object which holds the row numbers of a section of a table.</summary>
         public class RowRange {
+//\cond DO_NOT_DOCUMENT
             // The start number of the row group, inclusive
             internal int startRow;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // The finish number of the row group, inclusive
             internal int finishRow;
+//\endcond
 
             /// <summary>
             /// Creates a

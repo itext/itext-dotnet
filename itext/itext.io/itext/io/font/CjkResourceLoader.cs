@@ -181,6 +181,7 @@ namespace iText.IO.Font {
             return ParseCmap(uniMap, new CMapCodepointToCid());
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void SetCmapLocation(CMapLocationResource cmapLocation) {
             iText.IO.Font.CjkResourceLoader.cmapLocation = cmapLocation;
             try {
@@ -189,6 +190,7 @@ namespace iText.IO.Font {
             catch (Exception) {
             }
         }
+//\endcond
 
         private static void LoadRegistry() {
             registryNames.Clear();

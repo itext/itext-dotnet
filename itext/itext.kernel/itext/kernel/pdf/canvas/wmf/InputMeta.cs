@@ -27,9 +27,13 @@ using iText.Kernel.Colors;
 namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Helper class to read nt, short, words, etc. from an InputStream.</summary>
     public class InputMeta {
+//\cond DO_NOT_DOCUMENT
         internal Stream @in;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int length;
+//\endcond
 
         /// <summary>Creates an InputMeta object.</summary>
         /// <param name="in">InputStream containing the WMF data</param>

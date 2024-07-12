@@ -26,6 +26,7 @@ using System.IO;
 using System.util.zlib;
 
 namespace iText.IO.Font {
+//\cond DO_NOT_DOCUMENT
     internal class WoffConverter {
         private const long woffSignature = 0x774F4646L;
 
@@ -187,19 +188,34 @@ namespace iText.IO.Font {
         }
 
         private class TableDirectory {
+//\cond DO_NOT_DOCUMENT
             internal byte[] tag = new byte[4];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long offset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long compLength;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] origLength = new byte[4];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal long origLengthVal;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] origChecksum = new byte[4];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int outOffset;
+//\endcond
         }
     }
+//\endcond
 }

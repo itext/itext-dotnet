@@ -35,6 +35,7 @@ namespace iText.Kernel.Font {
     /// <remarks>Note. For TrueType FontNames.getStyle() is the same to Subfamily(). So, we shouldn't add style to /BaseFont.
     ///     </remarks>
     public class PdfTrueTypeFont : PdfSimpleFont<TrueTypeFont> {
+//\cond DO_NOT_DOCUMENT
         internal PdfTrueTypeFont(TrueTypeFont ttf, String encoding, bool embedded)
             : base() {
             SetFontProgram(ttf);
@@ -54,7 +55,9 @@ namespace iText.Kernel.Font {
                 fontEncoding = FontEncoding.CreateFontEncoding(encoding);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal PdfTrueTypeFont(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
@@ -81,6 +84,7 @@ namespace iText.Kernel.Font {
             }
             embedded = fontProgram is IDocFontProgram && ((IDocFontProgram)fontProgram).GetFontFile() != null;
         }
+//\endcond
 
         public override Glyph GetGlyph(int unicode) {
             if (fontEncoding.CanEncode(unicode)) {

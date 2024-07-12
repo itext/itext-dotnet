@@ -27,6 +27,7 @@ using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
+//\cond DO_NOT_DOCUMENT
     internal class Jbig2ImageHelper {
         private byte[] globals;
 
@@ -83,4 +84,5 @@ namespace iText.IO.Image {
             }
         }
     }
+//\endcond
 }

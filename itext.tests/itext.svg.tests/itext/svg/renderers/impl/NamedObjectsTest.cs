@@ -20,7 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Converter;
 using iText.Svg.Processors;
@@ -34,9 +34,9 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED)]
         public virtual void AddNamedObject() {
-            INode parsedSvg = SvgConverter.Parse(new FileStream(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/NamedObjectsTest/names.svg", FileMode.Open
-                , FileAccess.Read));
+            INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(iText.Test.TestUtil.GetParentProjectDirectory
+                (NUnit.Framework.TestContext.CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/NamedObjectsTest/names.svg"
+                ));
             ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("name_svg") is SvgTagSvgNodeRenderer);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("name_rect") is RectangleSvgNodeRenderer);

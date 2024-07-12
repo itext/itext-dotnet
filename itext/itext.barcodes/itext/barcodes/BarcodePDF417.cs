@@ -1225,6 +1225,7 @@ namespace iText.Barcodes {
             return MAX_DATA_CODEWORDS + 2;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ByteCompaction(int start, int length) {
             int k;
             int j;
@@ -1245,7 +1246,9 @@ namespace iText.Barcodes {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void BreakString() {
             int textLength = code.Length;
             int lastP = 0;
@@ -1390,6 +1393,7 @@ namespace iText.Barcodes {
                 }
             }
         }
+//\endcond
 
         private void BasicNumberCompaction(byte[] input, int start, int length) {
             int ret = cwPtr;

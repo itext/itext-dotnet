@@ -27,6 +27,7 @@ using System.Xml.Linq;
 
 namespace iText.Forms.Xfa
 {
+	//\cond DO_NOT_DOCUMENT	
 	/// <summary>Processes the datasets section in the XFA form.</summary>
 	internal class Xml2SomDatasets : Xml2Som
 	{
@@ -161,4 +162,5 @@ namespace iText.Forms.Xfa
 			}
 		}
 	}
+	//\endcond	
 }

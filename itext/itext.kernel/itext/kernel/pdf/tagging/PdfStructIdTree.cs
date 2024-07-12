@@ -29,10 +29,13 @@ namespace iText.Kernel.Pdf.Tagging {
     /// This is an optional feature of tagged PDF documents.
     /// </remarks>
     public class PdfStructIdTree : GenericNameTree {
+//\cond DO_NOT_DOCUMENT
         internal PdfStructIdTree(PdfDocument pdfDoc)
             : base(pdfDoc) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Parse a structure element ID tree into its in-memory representation.</summary>
         /// <param name="pdfDoc">
         /// the associated
@@ -54,6 +57,7 @@ namespace iText.Kernel.Pdf.Tagging {
             structIdTree.SetItems(GenericNameTree.ReadTree(dict));
             return structIdTree;
         }
+//\endcond
 
         /// <summary>Retrieve a structure element by ID, if it has one.</summary>
         /// <param name="id">the ID of the structure element to retrieve</param>

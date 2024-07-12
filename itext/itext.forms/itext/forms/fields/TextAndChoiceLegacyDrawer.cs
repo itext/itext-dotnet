@@ -37,6 +37,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 
 namespace iText.Forms.Fields {
+//\cond DO_NOT_DOCUMENT
     internal sealed class TextAndChoiceLegacyDrawer {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.TextAndChoiceLegacyDrawer
             ));
@@ -44,6 +45,7 @@ namespace iText.Forms.Fields {
         private TextAndChoiceLegacyDrawer() {
         }
 
+//\cond DO_NOT_DOCUMENT
         //Empty constructor.
         internal static bool RegenerateTextAndChoiceField(PdfFormAnnotation formAnnotation) {
             String value = formAnnotation.parent.GetDisplayValue();
@@ -167,7 +169,9 @@ namespace iText.Forms.Fields {
             formAnnotation.Put(PdfName.AP, ap);
             return true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void DrawChoiceAppearance(PdfFormAnnotation formAnnotation, Rectangle rect, float fontSize
             , String value, PdfFormXObject appearance, int topIndex) {
             PdfStream stream = (PdfStream)new PdfStream().MakeIndirect(formAnnotation.GetDocument());
@@ -222,6 +226,7 @@ namespace iText.Forms.Fields {
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
+//\endcond
 
         private static void DrawCombTextAppearance(PdfFormAnnotation formAnnotation, Rectangle rect, PdfFont font, 
             float fontSize, String value, PdfFormXObject appearance) {
@@ -373,4 +378,5 @@ namespace iText.Forms.Fields {
             return Math.PI * angle / 180.0;
         }
     }
+//\endcond
 }

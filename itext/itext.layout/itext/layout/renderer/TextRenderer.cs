@@ -69,9 +69,13 @@ namespace iText.Layout.Renderer {
     public class TextRenderer : AbstractRenderer, ILeafElementRenderer {
         protected internal const float TEXT_SPACE_COEFF = FontProgram.UNITS_NORMALIZATION;
 
+//\cond DO_NOT_DOCUMENT
         internal const float TYPO_ASCENDER_SCALE_COEFF = 1.2f;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int UNDEFINED_FIRST_CHAR_TO_FORCE_OVERFLOW = int.MaxValue;
+//\endcond
 
         private const float ITALIC_ANGLE = 0.21256f;
 
@@ -975,6 +979,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float TrimLast() {
             float trimmedSpace = 0;
             if (line.end <= 0) {
@@ -1007,6 +1012,7 @@ namespace iText.Layout.Renderer {
             line.end = firstNonSpaceCharIndex + 1;
             return trimmedSpace;
         }
+//\endcond
 
         /// <summary>Gets the maximum offset above the base line that this Text extends to.</summary>
         /// <returns>
@@ -1170,21 +1176,27 @@ namespace iText.Layout.Renderer {
             return new float[] { ascender, descender };
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IList<int[]> GetReversedRanges() {
             return reversedRanges;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IList<int[]> InitReversedRanges() {
             if (reversedRanges == null) {
                 reversedRanges = new List<int[]>();
             }
             return reversedRanges;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual iText.Layout.Renderer.TextRenderer RemoveReversedRanges() {
             reversedRanges = null;
             return this;
         }
+//\endcond
 
         private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
             if (iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos)) {
@@ -1203,6 +1215,7 @@ namespace iText.Layout.Renderer {
             return font is PdfType0Font && font.GetFontProgram() is TrueTypeFont;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Analyzes/checks whether
         /// <see cref="text"/>
@@ -1278,27 +1291,38 @@ namespace iText.Layout.Renderer {
             specialScriptsWordBreakPoints = new List<int>();
             return false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetSpecialScriptsWordBreakPoints(IList<int> specialScriptsWordBreakPoints) {
             this.specialScriptsWordBreakPoints = specialScriptsWordBreakPoints;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IList<int> GetSpecialScriptsWordBreakPoints() {
             return this.specialScriptsWordBreakPoints;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetSpecialScriptFirstNotFittingIndex(int lastFittingIndex) {
             this.specialScriptFirstNotFittingIndex = lastFittingIndex;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual int GetSpecialScriptFirstNotFittingIndex() {
             return specialScriptFirstNotFittingIndex;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetIndexOfFirstCharacterToBeForcedToOverflow(int indexOfFirstCharacterToBeForcedToOverflow
             ) {
             this.indexOfFirstCharacterToBeForcedToOverflow = indexOfFirstCharacterToBeForcedToOverflow;
         }
+//\endcond
 
         protected internal override Rectangle GetBackgroundArea(Rectangle occupiedAreaWithMargins) {
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
@@ -1580,13 +1604,16 @@ namespace iText.Layout.Renderer {
             return copy;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
             int shift = NumberOfElementsLessThan(removedIds, range[0]);
             range[0] -= shift;
             shift = NumberOfElementsLessThanOrEqual(removedIds, range[1]);
             range[1] -= shift;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // if amongPresentOnly is true,
         // returns the index of lists's element which equals textStartBasedInitialOverflowTextPos
         // or -1 if textStartBasedInitialOverflowTextPos wasn't found in the list.
@@ -1616,13 +1643,17 @@ namespace iText.Layout.Renderer {
             }
             return -1;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool CodePointIsOfSpecialScript(int codePoint) {
             UnicodeScript? glyphScript = UnicodeScriptUtil.Of(codePoint);
             return UnicodeScript.THAI == glyphScript || UnicodeScript.KHMER == glyphScript || UnicodeScript.LAO == glyphScript
                  || UnicodeScript.MYANMAR == glyphScript;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override PdfFont ResolveFirstPdfFont(String[] font, FontProvider provider, FontCharacteristics fc
             , FontSet additionalFonts) {
             IFontSelectorStrategy strategy = provider.CreateFontSelectorStrategy(JavaUtil.ArraysAsList(font), fc, additionalFonts
@@ -1634,7 +1665,9 @@ namespace iText.Layout.Renderer {
             }
             return base.ResolveFirstPdfFont(font, provider, fc, additionalFonts);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Identifies two properties for the layouted text renderer text: start and end break possibilities.
         ///     </summary>
         /// <remarks>
@@ -1670,6 +1703,7 @@ namespace iText.Layout.Renderer {
                 return new bool[] { startsWithBreak, endsWithBreak };
             }
         }
+//\endcond
 
         private void DrawAndTagSingleUnderline(bool isTagged, Underline underline, TransparentColor fontStrokeColor
             , PdfCanvas canvas, float fontSize, float italicAngleTan) {
@@ -1899,14 +1933,20 @@ namespace iText.Layout.Renderer {
         }
 
         private class ScriptRange {
+//\cond DO_NOT_DOCUMENT
             internal UnicodeScript? script;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int rangeEnd;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ScriptRange(UnicodeScript? script, int rangeEnd) {
                 this.script = script;
                 this.rangeEnd = rangeEnd;
             }
+//\endcond
         }
 
         private sealed class CustomGlyphLineFilter : GlyphLine.IGlyphLineFilter {

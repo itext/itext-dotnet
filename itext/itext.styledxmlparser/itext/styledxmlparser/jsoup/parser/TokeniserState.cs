@@ -24,178 +24,321 @@ using System;
 using iText.StyledXmlParser.Jsoup.Nodes;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
+//\cond DO_NOT_DOCUMENT
     /// <summary>States and transition activations for the Tokeniser.</summary>
     internal abstract class TokeniserState {
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState Data = new TokeniserState.DataTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CharacterReferenceInData = new TokeniserState.CharacterReferenceInDataTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState Rcdata = new TokeniserState.RcDataTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CharacterReferenceInRcdata = new TokeniserState.CharacterReferenceInRcdataTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState Rawtext = new TokeniserState.RawTextTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptData = new TokeniserState.ScriptDataTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState PLAINTEXT = new TokeniserState.PlainTextTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState TagOpen = new TokeniserState.TagOpenTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState EndTagOpen = new TokeniserState.EndTagOpenTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState TagName = new TokeniserState.TagNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState RcdataLessthanSign = new TokeniserState.RcDataLessThanSignTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState RCDATAEndTagOpen = new TokeniserState.RcDataEndTagOpenTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState RCDATAEndTagName = new TokeniserState.RcDataEndTagNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState RawtextLessthanSign = new TokeniserState.RawTextLessThanSignTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState RawtextEndTagOpen = new TokeniserState.RawTextEndTagOpenTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState RawtextEndTagName = new TokeniserState.RawTextEndTagNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataLessthanSign = new TokeniserState.ScriptDataLessThanSignTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEndTagOpen = new TokeniserState.ScriptDataEndTagOpenTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEndTagName = new TokeniserState.ScriptDataEndTagNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapeStart = new TokeniserState.ScriptDataEscapeStartTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapeStartDash = new TokeniserState.ScriptDataEscapeStartDashTS(
             );
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscaped = new TokeniserState.ScriptDataEscapedTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapedDash = new TokeniserState.ScriptDataEscapedDashTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapedDashDash = new TokeniserState.ScriptDataEscapedDashDashTS(
             );
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapedLessthanSign = new TokeniserState.ScriptDataEscapedLessThanSignTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapedEndTagOpen = new TokeniserState.ScriptDataEscapedEndTagOpenTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataEscapedEndTagName = new TokeniserState.ScriptDataEscapedEndTagNameTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataDoubleEscapeStart = new TokeniserState.ScriptDataDoubleEscapeStartTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataDoubleEscaped = new TokeniserState.ScriptDataDoubleEscapedTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataDoubleEscapedDash = new TokeniserState.ScriptDataDoubleEscapedDashTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataDoubleEscapedDashDash = new TokeniserState.ScriptDataDoubleEscapedDashDashTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataDoubleEscapedLessthanSign = new TokeniserState.ScriptDataDoubleEscapedLessThanSignTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState ScriptDataDoubleEscapeEnd = new TokeniserState.ScriptDataDoubleEscapeEndTS(
             );
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BeforeAttributeName = new TokeniserState.BeforeAttributeNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AttributeName = new TokeniserState.AttributeNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AfterAttributeName = new TokeniserState.AfterAttributeNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BeforeAttributeValue = new TokeniserState.BeforeAttributeValueTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AttributeValue_doubleQuoted = new TokeniserState.AttributeValueDoubleQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AttributeValue_singleQuoted = new TokeniserState.AttributeValueSingleQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AttributeValue_unquoted = new TokeniserState.AttributeValueUnquotedTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // CharacterReferenceInAttributeValue state handled inline
         internal static TokeniserState AfterAttributeValue_quoted = new TokeniserState.AfterAttributeValueQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState SelfClosingStartTag = new TokeniserState.SelfClosingStartTagTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BogusComment = new TokeniserState.BogusCommentTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState MarkupDeclarationOpen = new TokeniserState.MarkupDeclarationOpenTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CommentStart = new TokeniserState.CommentStartTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CommentStartDash = new TokeniserState.CommentStartDashTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState Comment = new TokeniserState.CommentTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CommentEndDash = new TokeniserState.CommentEndDashTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CommentEnd = new TokeniserState.CommentEndTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CommentEndBang = new TokeniserState.CommentEndBangTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState Doctype = new TokeniserState.DocTypeTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BeforeDoctypeName = new TokeniserState.BeforeDocTypeNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState DoctypeName = new TokeniserState.DocTypeNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AfterDoctypeName = new TokeniserState.AfterDocTypeNameTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AfterDoctypePublicKeyword = new TokeniserState.AfterDocTypePublicKeywordTS(
             );
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BeforeDoctypePublicIdentifier = new TokeniserState.BeforeDocTypePublicIdentifierTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState DoctypePublicIdentifier_doubleQuoted = new TokeniserState.DocTypePublicIdentifierDoubleQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState DoctypePublicIdentifier_singleQuoted = new TokeniserState.DocTypePublicIdentifierSingleQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AfterDoctypePublicIdentifier = new TokeniserState.AfterDocTypePublicIdentifierTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BetweenDoctypePublicAndSystemIdentifiers = new TokeniserState.BetweenDocTypePublicAndSystemIdentifiersTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AfterDoctypeSystemKeyword = new TokeniserState.AfterDocTypeSystemKeywordTS(
             );
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BeforeDoctypeSystemIdentifier = new TokeniserState.BeforeDocTypeSystemIdentifierTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState DoctypeSystemIdentifier_doubleQuoted = new TokeniserState.DocTypeSystemIdentifierDoubleQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState DoctypeSystemIdentifier_singleQuoted = new TokeniserState.DocTypeSystemIdentifierSingleQuotedTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState AfterDoctypeSystemIdentifier = new TokeniserState.AfterDocTypeSystemIdentifierTS
             ();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState BogusDoctype = new TokeniserState.BogusDocTypeTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static TokeniserState CdataSection = new TokeniserState.CDataSectionTS();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract void Read(Tokeniser t, CharacterReader r);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const char nullChar = '\u0000';
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // char searches. must be sorted, used in inSorted. MUST update TokenisetStateTest if more arrays are added.
         internal static readonly char[] attributeNameCharsSorted = new char[] { nullChar, '\t', '\n', '\f', '\r', 
             ' ', '"', '\'', '/', '<', '=', '>' };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static readonly char[] attributeValueUnquoted = new char[] { nullChar, '\t', '\n', '\f', '\r', ' '
             , '"', '&', '\'', '<', '=', '>', '`' };
+//\endcond
 
         private const char replacementChar = Tokeniser.replacementChar;
 
@@ -346,6 +489,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "Data";
             }
 
+//\cond DO_NOT_DOCUMENT
             // in data state, gather characters until a character reference or tag is found
             internal override void Read(Tokeniser t, CharacterReader r) {
                 switch (r.Current()) {
@@ -378,6 +522,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CharacterReferenceInDataTS : TokeniserState {
@@ -385,10 +530,12 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CharacterReferenceInData";
             }
 
+//\cond DO_NOT_DOCUMENT
             // from & in data
             internal override void Read(Tokeniser t, CharacterReader r) {
                 ReadCharRef(t, Data);
             }
+//\endcond
         }
 
         private sealed class RcDataTS : TokeniserState {
@@ -396,6 +543,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "Rcdata";
             }
 
+//\cond DO_NOT_DOCUMENT
             /// handles data in title, textarea etc
             internal override void Read(Tokeniser t, CharacterReader r) {
                 switch (r.Current()) {
@@ -428,6 +576,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CharacterReferenceInRcdataTS : TokeniserState {
@@ -435,9 +584,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CharacterReferenceInRcdata";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 ReadCharRef(t, Rcdata);
             }
+//\endcond
         }
 
         private sealed class RawTextTS : TokeniserState {
@@ -445,9 +596,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "Rawtext";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 ReadRawData(t, r, this, RawtextLessthanSign);
             }
+//\endcond
         }
 
         private sealed class ScriptDataTS : TokeniserState {
@@ -455,9 +608,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptData";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 ReadRawData(t, r, this, ScriptDataLessthanSign);
             }
+//\endcond
         }
 
         private sealed class PlainTextTS : TokeniserState {
@@ -465,6 +620,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "PLAINTEXT";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 switch (r.Current()) {
                     case nullChar: {
@@ -486,6 +642,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class TagOpenTS : TokeniserState {
@@ -493,6 +650,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "TagOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             // from < in data
             internal override void Read(Tokeniser t, CharacterReader r) {
                 switch (r.Current()) {
@@ -527,6 +685,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class EndTagOpenTS : TokeniserState {
@@ -534,6 +693,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "EndTagOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.IsEmpty()) {
                     t.EofError(this);
@@ -558,6 +718,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class TagNameTS : TokeniserState {
@@ -565,6 +726,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "TagName";
             }
 
+//\cond DO_NOT_DOCUMENT
             // from < or </ in data, will have start or end tag pending
             internal override void Read(Tokeniser t, CharacterReader r) {
                 // previous TagOpen state did NOT consume, will have a letter char in current
@@ -622,6 +784,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class RcDataLessThanSignTS : TokeniserState {
@@ -629,6 +792,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "RcdataLessthanSign";
             }
 
+//\cond DO_NOT_DOCUMENT
             // from < in rcdata
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.Matches('/')) {
@@ -651,6 +815,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class RcDataEndTagOpenTS : TokeniserState {
@@ -658,6 +823,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "RCDATAEndTagOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateTagPending(false);
@@ -670,6 +836,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(Rcdata);
                 }
             }
+//\endcond
         }
 
         private sealed class RcDataEndTagNameTS : TokeniserState {
@@ -677,6 +844,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "RCDATAEndTagName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     String name = r.ConsumeLetterSequence();
@@ -727,6 +895,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
 
             private void AnythingElse(Tokeniser t, CharacterReader r) {
                 t.Emit("</");
@@ -741,6 +910,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "RawtextLessthanSign";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.Matches('/')) {
                     t.CreateTempBuffer();
@@ -751,6 +921,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(Rawtext);
                 }
             }
+//\endcond
         }
 
         private sealed class RawTextEndTagOpenTS : TokeniserState {
@@ -758,9 +929,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "RawtextEndTagOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 ReadEndTag(t, r, RawtextEndTagName, Rawtext);
             }
+//\endcond
         }
 
         private sealed class RawTextEndTagNameTS : TokeniserState {
@@ -768,9 +941,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "RawtextEndTagName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 HandleDataEndTag(t, r, Rawtext);
             }
+//\endcond
         }
 
         private sealed class ScriptDataLessThanSignTS : TokeniserState {
@@ -778,6 +953,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataLessthanSign";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 switch (r.Consume()) {
                     case '/': {
@@ -807,6 +983,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEndTagOpenTS : TokeniserState {
@@ -814,9 +991,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEndTagOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 ReadEndTag(t, r, ScriptDataEndTagName, ScriptData);
             }
+//\endcond
         }
 
         private sealed class ScriptDataEndTagNameTS : TokeniserState {
@@ -824,9 +1003,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEndTagName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 HandleDataEndTag(t, r, ScriptData);
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapeStartTS : TokeniserState {
@@ -834,6 +1015,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapeStart";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.Matches('-')) {
                     t.Emit('-');
@@ -843,6 +1025,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(ScriptData);
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapeStartDashTS : TokeniserState {
@@ -850,6 +1033,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapeStartDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.Matches('-')) {
                     t.Emit('-');
@@ -859,6 +1043,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(ScriptData);
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapedTS : TokeniserState {
@@ -866,6 +1051,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscaped";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.IsEmpty()) {
                     t.EofError(this);
@@ -898,6 +1084,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapedDashTS : TokeniserState {
@@ -905,6 +1092,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapedDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.IsEmpty()) {
                     t.EofError(this);
@@ -938,6 +1126,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapedDashDashTS : TokeniserState {
@@ -945,6 +1134,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapedDashDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.IsEmpty()) {
                     t.EofError(this);
@@ -983,6 +1173,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapedLessThanSignTS : TokeniserState {
@@ -990,6 +1181,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapedLessthanSign";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateTempBuffer();
@@ -1009,6 +1201,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapedEndTagOpenTS : TokeniserState {
@@ -1016,6 +1209,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapedEndTagOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateTagPending(false);
@@ -1028,6 +1222,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(ScriptDataEscaped);
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataEscapedEndTagNameTS : TokeniserState {
@@ -1035,9 +1230,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataEscapedEndTagName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 HandleDataEndTag(t, r, ScriptDataEscaped);
             }
+//\endcond
         }
 
         private sealed class ScriptDataDoubleEscapeStartTS : TokeniserState {
@@ -1045,9 +1242,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataDoubleEscapeStart";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 HandleDataDoubleEscapeTag(t, r, ScriptDataDoubleEscaped, ScriptDataEscaped);
             }
+//\endcond
         }
 
         private sealed class ScriptDataDoubleEscapedTS : TokeniserState {
@@ -1055,6 +1254,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataDoubleEscaped";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Current();
                 switch (c) {
@@ -1090,6 +1290,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataDoubleEscapedDashTS : TokeniserState {
@@ -1097,6 +1298,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataDoubleEscapedDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1132,6 +1334,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataDoubleEscapedDashDashTS : TokeniserState {
@@ -1139,6 +1342,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataDoubleEscapedDashDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1179,6 +1383,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataDoubleEscapedLessThanSignTS : TokeniserState {
@@ -1186,6 +1391,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataDoubleEscapedLessthanSign";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.Matches('/')) {
                     t.Emit('/');
@@ -1196,6 +1402,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(ScriptDataDoubleEscaped);
                 }
             }
+//\endcond
         }
 
         private sealed class ScriptDataDoubleEscapeEndTS : TokeniserState {
@@ -1203,9 +1410,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "ScriptDataDoubleEscapeEnd";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 HandleDataDoubleEscapeTag(t, r, ScriptDataEscaped, ScriptDataDoubleEscaped);
             }
+//\endcond
         }
 
         private sealed class BeforeAttributeNameTS : TokeniserState {
@@ -1213,6 +1422,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeAttributeName";
             }
 
+//\cond DO_NOT_DOCUMENT
             // from tagname <xxx
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
@@ -1279,6 +1489,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AttributeNameTS : TokeniserState {
@@ -1286,6 +1497,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AttributeName";
             }
 
+//\cond DO_NOT_DOCUMENT
             // from before attribute name
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String name = r.ConsumeToAnySorted(attributeNameCharsSorted);
@@ -1344,6 +1556,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterAttributeNameTS : TokeniserState {
@@ -1351,6 +1564,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterAttributeName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1411,6 +1625,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class BeforeAttributeValueTS : TokeniserState {
@@ -1418,6 +1633,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeAttributeValue";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1483,6 +1699,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AttributeValueDoubleQuotedTS : TokeniserState {
@@ -1490,6 +1707,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AttributeValue_doubleQuoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String value = r.ConsumeAttributeQuoted(false);
                 if (value.Length > 0) {
@@ -1535,6 +1753,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AttributeValueSingleQuotedTS : TokeniserState {
@@ -1542,6 +1761,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AttributeValue_singleQuoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String value = r.ConsumeAttributeQuoted(true);
                 if (value.Length > 0) {
@@ -1587,6 +1807,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AttributeValueUnquotedTS : TokeniserState {
@@ -1594,6 +1815,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AttributeValue_unquoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String value = r.ConsumeToAnySorted(attributeValueUnquoted);
                 if (value.Length > 0) {
@@ -1656,6 +1878,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterAttributeValueQuotedTS : TokeniserState {
@@ -1663,6 +1886,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterAttributeValue_quoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1700,6 +1924,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class SelfClosingStartTagTS : TokeniserState {
@@ -1707,6 +1932,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "SelfClosingStartTag";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1731,6 +1957,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class BogusCommentTS : TokeniserState {
@@ -1738,6 +1965,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BogusComment";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 // rewind to capture character that lead us here
                 r.Unconsume();
@@ -1748,6 +1976,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(Data);
                 }
             }
+//\endcond
         }
 
         private sealed class MarkupDeclarationOpenTS : TokeniserState {
@@ -1755,6 +1984,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "MarkupDeclarationOpen";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchConsume("--")) {
                     t.CreateCommentPending();
@@ -1779,6 +2009,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
             // advance so this character gets in bogus comment data's rewind
         }
 
@@ -1787,6 +2018,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CommentStart";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1823,6 +2055,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CommentStartDashTS : TokeniserState {
@@ -1830,6 +2063,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CommentStartDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1866,6 +2100,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CommentTS : TokeniserState {
@@ -1873,6 +2108,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "Comment";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Current();
                 switch (c) {
@@ -1901,6 +2137,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CommentEndDashTS : TokeniserState {
@@ -1908,6 +2145,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CommentEndDash";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1937,6 +2175,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CommentEndTS : TokeniserState {
@@ -1944,6 +2183,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CommentEnd";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -1987,6 +2227,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CommentEndBangTS : TokeniserState {
@@ -1994,6 +2235,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CommentEndBang";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2030,6 +2272,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class DocTypeTS : TokeniserState {
@@ -2037,6 +2280,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "Doctype";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2073,6 +2317,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class BeforeDocTypeNameTS : TokeniserState {
@@ -2080,6 +2325,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeDoctypeName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     t.CreateDoctypePending();
@@ -2122,6 +2368,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class DocTypeNameTS : TokeniserState {
@@ -2129,6 +2376,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "DoctypeName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.MatchesLetter()) {
                     String name = r.ConsumeLetterSequence();
@@ -2172,6 +2420,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterDocTypeNameTS : TokeniserState {
@@ -2179,6 +2428,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterDoctypeName";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 if (r.IsEmpty()) {
                     t.EofError(this);
@@ -2215,6 +2465,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterDocTypePublicKeywordTS : TokeniserState {
@@ -2222,6 +2473,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterDoctypePublicKeyword";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2272,6 +2524,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class BeforeDocTypePublicIdentifierTS : TokeniserState {
@@ -2279,6 +2532,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeDoctypePublicIdentifier";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2326,6 +2580,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class DocTypePublicIdentifierDoubleQuotedTS : TokeniserState {
@@ -2333,6 +2588,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "DoctypePublicIdentifier_doubleQuoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2369,6 +2625,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class DocTypePublicIdentifierSingleQuotedTS : TokeniserState {
@@ -2376,6 +2633,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "DoctypePublicIdentifier_singleQuoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2412,6 +2670,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterDocTypePublicIdentifierTS : TokeniserState {
@@ -2419,6 +2678,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterDoctypePublicIdentifier";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2467,6 +2727,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class BetweenDocTypePublicAndSystemIdentifiersTS : TokeniserState {
@@ -2474,6 +2735,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BetweenDoctypePublicAndSystemIdentifiers";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2521,6 +2783,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterDocTypeSystemKeywordTS : TokeniserState {
@@ -2528,6 +2791,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterDoctypeSystemKeyword";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2578,6 +2842,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class BeforeDocTypeSystemIdentifierTS : TokeniserState {
@@ -2585,6 +2850,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BeforeDoctypeSystemIdentifier";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2632,6 +2898,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class DocTypeSystemIdentifierDoubleQuotedTS : TokeniserState {
@@ -2639,6 +2906,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "DoctypeSystemIdentifier_doubleQuoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2675,6 +2943,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class DocTypeSystemIdentifierSingleQuotedTS : TokeniserState {
@@ -2682,6 +2951,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "DoctypeSystemIdentifier_singleQuoted";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2718,6 +2988,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class AfterDocTypeSystemIdentifierTS : TokeniserState {
@@ -2725,6 +2996,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "AfterDoctypeSystemIdentifier";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2757,6 +3029,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
             // NOT force quirks
         }
 
@@ -2765,6 +3038,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "BogusDoctype";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 char c = r.Consume();
                 switch (c) {
@@ -2786,6 +3060,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     }
                 }
             }
+//\endcond
         }
 
         private sealed class CDataSectionTS : TokeniserState {
@@ -2793,6 +3068,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 return "CdataSection";
             }
 
+//\cond DO_NOT_DOCUMENT
             internal override void Read(Tokeniser t, CharacterReader r) {
                 String data = r.ConsumeTo("]]>");
                 t.dataBuffer.Append(data);
@@ -2801,7 +3077,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                     t.Transition(Data);
                 }
             }
+//\endcond
             // otherwise, buffer underrun, stay in data section
         }
     }
+//\endcond
 }

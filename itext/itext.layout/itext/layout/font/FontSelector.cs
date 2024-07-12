@@ -86,10 +86,15 @@ namespace iText.Layout.Font {
         }
 
         private class PdfFontComparator : IComparer<FontInfo> {
+//\cond DO_NOT_DOCUMENT
             internal IList<String> fontFamilies;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IList<FontCharacteristics> fontStyles;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal PdfFontComparator(IList<String> fontFamilies, FontCharacteristics fc) {
                 this.fontFamilies = new List<String>();
                 this.fontStyles = new List<FontCharacteristics>();
@@ -104,6 +109,7 @@ namespace iText.Layout.Font {
                     this.fontStyles.Add(fc);
                 }
             }
+//\endcond
 
             public virtual int Compare(FontInfo o1, FontInfo o2) {
                 int res = 0;

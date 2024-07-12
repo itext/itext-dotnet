@@ -31,111 +31,212 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
+//\cond DO_NOT_DOCUMENT
     internal class OpenTypeParser : IDisposable {
         private const int HEAD_LOCA_FORMAT_OFFSET = 51;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The components of table 'head'.</summary>
         internal class HeaderTable {
+//\cond DO_NOT_DOCUMENT
             internal int flags;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int unitsPerEm;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short xMin;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short yMin;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short xMax;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short yMax;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int macStyle;
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The components of table 'hhea'.</summary>
         internal class HorizontalHeader {
+//\cond DO_NOT_DOCUMENT
             internal short Ascender;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short Descender;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short LineGap;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int advanceWidthMax;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short minLeftSideBearing;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short minRightSideBearing;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short xMaxExtent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short caretSlopeRise;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short caretSlopeRun;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int numberOfHMetrics;
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The components of table 'OS/2'.</summary>
         internal class WindowsMetrics {
+//\cond DO_NOT_DOCUMENT
             internal short xAvgCharWidth;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int usWeightClass;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int usWidthClass;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short fsType;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySubscriptXSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySubscriptYSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySubscriptXOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySubscriptYOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySuperscriptXSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySuperscriptYSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySuperscriptXOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short ySuperscriptYOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short yStrikeoutSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short yStrikeoutPosition;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short sFamilyClass;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] panose = new byte[10];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] achVendID = new byte[4];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int fsSelection;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int usFirstCharIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int usLastCharIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short sTypoAscender;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short sTypoDescender;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal short sTypoLineGap;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int usWinAscent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int usWinDescent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int ulCodePageRange1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int ulCodePageRange2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int sxHeight;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int sCapHeight;
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class PostTable {
+//\cond DO_NOT_DOCUMENT
             /// <summary>The italic angle.</summary>
             /// <remarks>
             /// The italic angle. It is usually extracted from the 'post' table or in it's
@@ -145,16 +246,26 @@ namespace iText.IO.Font {
             /// </pre>
             /// </remarks>
             internal float italicAngle;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int underlinePosition;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int underlineThickness;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary><c>true</c> if all the glyphs have the same width.</summary>
             internal bool isFixedPitch;
+//\endcond
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class CmapTable {
+//\cond DO_NOT_DOCUMENT
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 1.0.
@@ -165,7 +276,9 @@ namespace iText.IO.Font {
             /// </remarks>
             /// <seealso cref="FontProgram.UNITS_NORMALIZATION"/>
             internal IDictionary<int, int[]> cmap10;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>The map containing the code information for the table 'cmap', encoding 3.1 in Unicode.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 3.1 in Unicode.
@@ -176,11 +289,17 @@ namespace iText.IO.Font {
             /// </remarks>
             /// <seealso cref="FontProgram.UNITS_NORMALIZATION"/>
             internal IDictionary<int, int[]> cmap31;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<int, int[]> cmapExt;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool fontSpecific = false;
+//\endcond
         }
+//\endcond
 
         /// <summary>The file name.</summary>
         protected internal String fileName;
@@ -402,11 +521,13 @@ namespace iText.IO.Font {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
             TrueTypeFontSubset sb = new TrueTypeFontSubset(fileName, raf.CreateView(), glyphs, directoryOffset, subset
                 );
             return sb.Process();
         }
+//\endcond
 
         public virtual void Close() {
             if (raf != null) {
@@ -1130,4 +1251,5 @@ namespace iText.IO.Font {
             Close();
         }
     }
+//\endcond
 }

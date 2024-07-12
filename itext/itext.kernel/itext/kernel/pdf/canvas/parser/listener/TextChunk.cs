@@ -44,6 +44,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return location;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PrintDiagnostics() {
             System.Console.Out.WriteLine("Text (@" + location.GetStartLocation() + " -> " + location.GetEndLocation() 
                 + "): " + text);
@@ -51,9 +52,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             System.Console.Out.WriteLine("distPerpendicular: " + location.DistPerpendicular());
             System.Console.Out.WriteLine("distParallel: " + location.DistParallelStart());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool SameLine(iText.Kernel.Pdf.Canvas.Parser.Listener.TextChunk lastChunk) {
             return GetLocation().SameLine(lastChunk.GetLocation());
         }
+//\endcond
     }
 }

@@ -2268,11 +2268,14 @@ namespace iText.Kernel.Pdf.Canvas {
                     try {
                         stream.SetData(stream.GetBytes());
                     }
+                    catch (MemoryLimitsAwareException e) {
+                        throw;
+                    }
                     catch (Exception) {
                     }
                 }
             }
-            // ignore
+            // ignored
             return stream;
         }
 

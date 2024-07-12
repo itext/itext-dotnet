@@ -35,11 +35,15 @@ namespace iText.Signatures {
         /// an array of the fields that are involved.
         /// </summary>
         public class FieldLock {
+//\cond DO_NOT_DOCUMENT
             /// <summary>Can be /All, /Exclude or /Include</summary>
             internal PdfName action;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>An array of PdfString values with fieldnames</summary>
             internal PdfArray fields;
+//\endcond
 
             /// <summary>Creates a FieldLock instance.</summary>
             /// <param name="action">indicates the set of fields that should be locked</param>
@@ -70,17 +74,25 @@ namespace iText.Signatures {
             private readonly SignaturePermissions _enclosing;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Is the signature a cerification signature (true) or an approval signature (false)?</summary>
         internal bool certification = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Is form filling allowed by this signature?</summary>
         internal bool fillInAllowed = true;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Is adding annotations allowed by this signature?</summary>
         internal bool annotationsAllowed = true;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Does this signature lock specific fields?</summary>
         internal IList<SignaturePermissions.FieldLock> fieldLocks = new List<SignaturePermissions.FieldLock>();
+//\endcond
 
         /// <summary>
         /// Creates an object that can inform you about the type of signature

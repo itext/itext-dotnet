@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
+using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -93,7 +94,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.SetUp]
         public virtual void SetUpHandler() {
-            handler = new SignMetaInfoHandlingTest.StoreEventsHandler();
+            handler = new SignMetaInfoHandlingTest.StoreEventsHandler(UnknownContext.PERMISSIVE);
             EventManager.GetInstance().Register(handler);
         }
 
@@ -115,13 +116,9 @@ namespace iText.Signatures {
             // No confirmed events.
             NUnit.Framework.Assert.AreEqual(0, confirmedEvents.Count);
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
-            NUnit.Framework.Assert.AreEqual(1, events.Count);
-            NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, ((ITextCoreProductEvent)events[0]).GetEventType
-                ());
+            NUnit.Framework.Assert.AreEqual(0, events.Count);
         }
 
-        // ITextCoreProductEvent contains SignMetaInfo, but getter for the meta info is package-private.
         [NUnit.Framework.Test]
         public virtual void SignWithBaselineLTProfileEventHandlingTest() {
             ByteArrayOutputStream @out = new ByteArrayOutputStream();
@@ -135,7 +132,7 @@ namespace iText.Signatures {
             padesSigner.SetStampingProperties(new StampingProperties().UseAppendMode());
             padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
-            NUnit.Framework.Assert.AreEqual(3, events.Count);
+            NUnit.Framework.Assert.AreEqual(2, events.Count);
             NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
             ITextCoreProductEvent iTextCoreProductEvent = (ITextCoreProductEvent)events[0];
             NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, iTextCoreProductEvent.GetEventType());
@@ -143,12 +140,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(events[1] is ConfirmEvent);
             ConfirmEvent confirmEvent = (ConfirmEvent)events[1];
             NUnit.Framework.Assert.AreEqual(iTextCoreProductEvent, confirmEvent.GetConfirmedEvent());
-            NUnit.Framework.Assert.IsTrue(events[2] is ITextCoreProductEvent);
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, ((ITextCoreProductEvent)events[2]).GetEventType
-                ());
         }
 
-        // Second ITextCoreProductEvent contains SignMetaInfo (getter is package-private), so it is not confirmed.
         [NUnit.Framework.Test]
         public virtual void SignWithBaselineLTAProfileEventHandlingTest() {
             ByteArrayOutputStream @out = new ByteArrayOutputStream();
@@ -161,7 +154,7 @@ namespace iText.Signatures {
             padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient).SetTimestampSignatureName("timestampSig1");
             padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
-            NUnit.Framework.Assert.AreEqual(3, events.Count);
+            NUnit.Framework.Assert.AreEqual(2, events.Count);
             NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
             ITextCoreProductEvent iTextCoreProductEvent = (ITextCoreProductEvent)events[0];
             NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, iTextCoreProductEvent.GetEventType());
@@ -169,12 +162,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(events[1] is ConfirmEvent);
             ConfirmEvent confirmEvent = (ConfirmEvent)events[1];
             NUnit.Framework.Assert.AreEqual(iTextCoreProductEvent, confirmEvent.GetConfirmedEvent());
-            NUnit.Framework.Assert.IsTrue(events[2] is ITextCoreProductEvent);
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, ((ITextCoreProductEvent)events[2]).GetEventType
-                ());
         }
 
-        // Second ITextCoreProductEvent contains SignMetaInfo (getter is package-private), so it is not confirmed.
         [NUnit.Framework.Test]
         public virtual void SignCMSContainerWithBaselineLTProfileEventHandlingTest() {
             ByteArrayOutputStream @out = new ByteArrayOutputStream();
@@ -194,7 +183,7 @@ namespace iText.Signatures {
                     (preparedDoc.ToArray())), @out, "Signature1", container);
             }
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
-            NUnit.Framework.Assert.AreEqual(5, events.Count);
+            NUnit.Framework.Assert.AreEqual(4, events.Count);
             NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
             ITextCoreProductEvent iTextCoreProductEvent = (ITextCoreProductEvent)events[0];
             NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, iTextCoreProductEvent.GetEventType());
@@ -209,12 +198,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(events[3] is ConfirmEvent);
             confirmEvent = (ConfirmEvent)events[3];
             NUnit.Framework.Assert.AreEqual(iTextCoreProductEvent, confirmEvent.GetConfirmedEvent());
-            NUnit.Framework.Assert.IsTrue(events[4] is ITextCoreProductEvent);
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, ((ITextCoreProductEvent)events[4]).GetEventType
-                ());
         }
 
-        // Third ITextCoreProductEvent contains SignMetaInfo (getter is package-private), so it is not confirmed.
         [NUnit.Framework.Test]
         public virtual void SignCMSContainerWithBaselineLTAProfileEventHandlingTest() {
             ByteArrayOutputStream @out = new ByteArrayOutputStream();
@@ -234,7 +219,7 @@ namespace iText.Signatures {
                     (preparedDoc.ToArray())), @out, "Signature1", container);
             }
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
-            NUnit.Framework.Assert.AreEqual(5, events.Count);
+            NUnit.Framework.Assert.AreEqual(4, events.Count);
             NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
             ITextCoreProductEvent iTextCoreProductEvent = (ITextCoreProductEvent)events[0];
             NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, iTextCoreProductEvent.GetEventType());
@@ -249,12 +234,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsTrue(events[3] is ConfirmEvent);
             confirmEvent = (ConfirmEvent)events[3];
             NUnit.Framework.Assert.AreEqual(iTextCoreProductEvent, confirmEvent.GetConfirmedEvent());
-            NUnit.Framework.Assert.IsTrue(events[4] is ITextCoreProductEvent);
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, ((ITextCoreProductEvent)events[4]).GetEventType
-                ());
         }
 
-        // Third ITextCoreProductEvent contains SignMetaInfo (getter is package-private), so it is not confirmed.
         [NUnit.Framework.Test]
         public virtual void PassSignMetaInfoThroughStampingPropertiesTest() {
             ByteArrayOutputStream @out = new ByteArrayOutputStream();
@@ -269,16 +250,9 @@ namespace iText.Signatures {
                 (new SignMetaInfo()));
             padesSigner.SignWithBaselineLTProfile(signerProperties, signRsaChain, signRsaPrivateKey, testTsa);
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
-            NUnit.Framework.Assert.AreEqual(2, events.Count);
-            NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
-            ITextCoreProductEvent iTextCoreProductEvent = (ITextCoreProductEvent)events[0];
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, iTextCoreProductEvent.GetEventType());
-            NUnit.Framework.Assert.IsTrue(events[1] is ITextCoreProductEvent);
-            NUnit.Framework.Assert.AreEqual(ITextCoreProductEvent.PROCESS_PDF, ((ITextCoreProductEvent)events[1]).GetEventType
-                ());
+            NUnit.Framework.Assert.AreEqual(0, events.Count);
         }
 
-        // Both ITextCoreProductEvents contain SignMetaInfo, so they are both not confirmed.
         private class TestConfigurationEvent : AbstractITextConfigurationEvent {
             protected override void DoAction() {
                 throw new InvalidOperationException();
@@ -289,17 +263,19 @@ namespace iText.Signatures {
             }
         }
 
-        private class StoreEventsHandler : IEventHandler {
+        private class StoreEventsHandler : AbstractContextBasedEventHandler {
             private readonly IList<AbstractContextBasedITextEvent> events = new List<AbstractContextBasedITextEvent>();
+
+            protected internal StoreEventsHandler(IContext onUnknownContext)
+                : base(onUnknownContext) {
+            }
 
             public virtual IList<AbstractContextBasedITextEvent> GetEvents() {
                 return events;
             }
 
-            public virtual void OnEvent(IEvent @event) {
-                if (@event is AbstractContextBasedITextEvent) {
-                    events.Add((AbstractContextBasedITextEvent)@event);
-                }
+            protected override void OnAcceptedEvent(AbstractContextBasedITextEvent @event) {
+                events.Add(@event);
             }
         }
     }

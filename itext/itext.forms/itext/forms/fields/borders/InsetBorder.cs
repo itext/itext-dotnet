@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 
 namespace iText.Forms.Fields.Borders {
+//\cond DO_NOT_DOCUMENT
     internal class InsetBorder : AbstractFormBorder {
         public InsetBorder(Color color, float width)
             : base(color, width) {
@@ -77,4 +78,5 @@ namespace iText.Forms.Fields.Borders {
             return AbstractFormBorder.FORM_INSET;
         }
     }
+//\endcond
 }

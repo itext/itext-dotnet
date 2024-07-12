@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Layout.Minmaxwidth;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class SumSumWidthHandler : AbstractWidthHandler {
         public SumSumWidthHandler(MinMaxWidth minMaxWidth)
             : base(minMaxWidth) {
@@ -36,4 +37,5 @@ namespace iText.Layout.Renderer {
             minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + childMaxWidth);
         }
     }
+//\endcond
 }

@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Commons.Actions.Contexts;
 
 namespace iText.Signatures {
+//\cond DO_NOT_DOCUMENT
     internal class SignMetaInfo : IMetaInfo {
     }
+//\endcond
 }

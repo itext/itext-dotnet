@@ -309,9 +309,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         }
 
         private class TextChunkMarks {
+//\cond DO_NOT_DOCUMENT
             internal IList<TextChunk> preceding = new List<TextChunk>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IList<TextChunk> succeeding = new List<TextChunk>();
+//\endcond
         }
 
         private sealed class ITextChunkLocationStrategyImpl : LocationTextExtractionStrategy.ITextChunkLocationStrategy {

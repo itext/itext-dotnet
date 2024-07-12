@@ -89,12 +89,15 @@ namespace iText.Pdfua {
             return pdfPageFactory;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns if the document is in the closing state.</summary>
         /// <returns>true if the document is closing, false otherwise.</returns>
         internal virtual bool IsClosing() {
             return this.isClosing;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Warns the user that the page is being flushed.</summary>
         /// <remarks>
         /// Warns the user that the page is being flushed.
@@ -106,6 +109,7 @@ namespace iText.Pdfua {
                 warnedOnPageFlush = true;
             }
         }
+//\endcond
 
         /// <summary>Disables the warning for page flushing.</summary>
         public virtual void DisablePageFlushingWarning() {

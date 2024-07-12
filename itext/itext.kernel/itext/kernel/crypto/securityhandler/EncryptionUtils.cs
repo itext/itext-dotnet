@@ -37,6 +37,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
+    //\cond DO_NOT_DOCUMENT 
     internal sealed class EncryptionUtils {
         // 256-bit AES-CBC, PKCS#5 padding
         // Not ideal, but the best that the PDF standard allows.
@@ -142,4 +143,5 @@ namespace iText.Kernel.Crypto.Securityhandler {
             internal IAlgorithmIdentifier algorithmIdentifier;
         }
     }
+   //\endcond 
 }

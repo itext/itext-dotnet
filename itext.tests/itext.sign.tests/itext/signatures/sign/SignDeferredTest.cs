@@ -25,6 +25,7 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -64,8 +65,7 @@ namespace iText.Signatures.Sign {
             PdfName subFilter = PdfName.Adbe_pkcs7_detached;
             int estimatedSize = 8192;
             PdfReader reader = new PdfReader(input);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(output, FileMode.Create), new StampingProperties()
-                );
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(output), new StampingProperties());
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
             appearance.SetLayer2Text("Signature field which signing is deferred.").SetPageRect(new Rectangle(36, 600, 
                 200, 100)).SetPageNumber(1);
@@ -129,7 +129,7 @@ namespace iText.Signatures.Sign {
                 );
             String sigFieldName = "DeferredSignature1";
             PdfDocument docToSign = new PdfDocument(new PdfReader(srcFileName));
-            FileStream outStream = new FileStream(outFileName, FileMode.Create);
+            Stream outStream = FileUtil.GetFileOutputStream(outFileName);
             PdfSigner.SignDeferred(docToSign, sigFieldName, outStream, extSigContainer);
             docToSign.Close();
             outStream.Dispose();
@@ -172,7 +172,7 @@ namespace iText.Signatures.Sign {
             SignDeferredTest.ReadySignatureSigner extSigContainer = new SignDeferredTest.ReadySignatureSigner(cmsSignature
                 );
             PdfDocument docToSign = new PdfDocument(new PdfReader(new MemoryStream(preSignedBytes)));
-            FileStream outStream = new FileStream(outFileName, FileMode.Create);
+            Stream outStream = FileUtil.GetFileOutputStream(outFileName);
             PdfSigner.SignDeferred(docToSign, sigFieldName, outStream, extSigContainer);
             docToSign.Close();
             outStream.Dispose();
@@ -183,6 +183,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void ValidateTemplateForSignedDeferredResult(String output, String sigFieldName, PdfName filter
             , PdfName subFilter, int estimatedSize) {
             PdfDocument outDocument = new PdfDocument(new PdfReader(output));
@@ -198,7 +199,9 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsTrue(outSigContents.IsHexWriting());
             NUnit.Framework.Assert.AreEqual(new byte[estimatedSize], outSigContents.GetValueBytes());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] CalcDocBytesHash(Stream docBytes) {
             byte[] docBytesHash = null;
             try {
@@ -209,7 +212,9 @@ namespace iText.Signatures.Sign {
             // dummy catch clause
             return docBytesHash;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static byte[] SignDocBytesHash(byte[] docBytesHash, IPrivateKey pk, IX509Certificate[] chain) {
             if (pk == null || chain == null) {
                 return null;
@@ -229,7 +234,9 @@ namespace iText.Signatures.Sign {
             // dummy catch clause
             return signatureContent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class CmsDeferredSigner : IExternalSignatureContainer {
             private IPrivateKey pk;
 
@@ -256,7 +263,9 @@ namespace iText.Signatures.Sign {
             public virtual void ModifySigningDictionary(PdfDictionary signDic) {
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class DigestCalcBlankSigner : IExternalSignatureContainer {
             private readonly PdfName filter;
 
@@ -283,7 +292,9 @@ namespace iText.Signatures.Sign {
                 signDic.Put(PdfName.SubFilter, subFilter);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class ReadySignatureSigner : IExternalSignatureContainer {
             private byte[] cmsSignatureContents;
 
@@ -298,5 +309,6 @@ namespace iText.Signatures.Sign {
             public virtual void ModifySigningDictionary(PdfDictionary signDic) {
             }
         }
+//\endcond
     }
 }

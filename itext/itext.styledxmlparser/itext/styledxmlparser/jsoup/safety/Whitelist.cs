@@ -109,8 +109,10 @@ namespace iText.StyledXmlParser.Jsoup.Safety {
             return base.IsSafeAttribute(tagName, el, attr);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override Attributes GetEnforcedAttributes(String tagName) {
             return base.GetEnforcedAttributes(tagName);
         }
+//\endcond
     }
 }

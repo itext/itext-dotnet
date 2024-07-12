@@ -165,6 +165,12 @@ namespace iText.Signatures.Cms {
             return signerCertificate;
         }
 
+        /// <summary>Gets the signature data.</summary>
+        /// <returns>the signature data.</returns>
+        public virtual byte[] GetSignatureData() {
+            return signatureData;
+        }
+
         /// <summary>Sets the certificate that is used to sign a document and adds it to the signed attributes.</summary>
         /// <param name="certificate">the certificate that is used to sign</param>
         /// <param name="digestAlgorithmOid">the oid of the digest algorithm to be added to the signed attributes</param>
@@ -372,6 +378,7 @@ namespace iText.Signatures.Cms {
             return GetAsDerSequence(false);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Serializes the SignerInfo structure and makes the signed attributes readonly.</summary>
         /// <remarks>
         /// Serializes the SignerInfo structure and makes the signed attributes readonly.
@@ -432,6 +439,7 @@ namespace iText.Signatures.Cms {
             }
             return BC_FACTORY.CreateDERSequence(signerInfoV);
         }
+//\endcond
 
         private void ProcessSubjectKeyIdentifierSignerCertificate(IAsn1Encodable asnStruct, ICollection<IX509Certificate
             > certificates) {

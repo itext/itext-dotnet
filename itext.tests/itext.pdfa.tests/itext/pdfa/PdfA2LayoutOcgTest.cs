@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -50,8 +51,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void CheckIfOcgForPdfA2Works() {
             String fileName = "createdOcgPdfA.pdf";
-            Stream colorStream = new FileStream(sourceFolder + "color/sRGB_CS_profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream colorStream = FileUtil.GetInputStreamForFile(sourceFolder + "color/sRGB_CS_profile.icm");
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp/PdfA2LayoutOcgTest/cmp_" + fileName;
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outFileName), PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent

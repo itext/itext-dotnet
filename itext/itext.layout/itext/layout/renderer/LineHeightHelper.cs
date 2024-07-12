@@ -25,6 +25,7 @@ using iText.Kernel.Font;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class LineHeightHelper {
         public const int ASCENDER_INDEX = 0;
 
@@ -39,6 +40,7 @@ namespace iText.Layout.Renderer {
         private LineHeightHelper() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get actual ascender, descender.</summary>
         /// <param name="renderer">the renderer to retrieve the ascender and descender from</param>
         /// <returns>an array containing in this order actual ascender</returns>
@@ -46,7 +48,9 @@ namespace iText.Layout.Renderer {
             float[] result = GetActualFontInfo(renderer);
             return new float[] { result[0], result[1] };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get actual ascender, descender, xHeight and leading.</summary>
         /// <param name="renderer">the renderer to retrieve the font info from</param>
         /// <returns>an array containing in this order actual ascender, descender, xHeight and leading</returns>
@@ -61,7 +65,9 @@ namespace iText.Layout.Renderer {
             descender = fontAscenderDescender[1] - leading / 2F;
             return new float[] { ascender, descender, fontAscenderDescender[2], leading };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float[] GetFontAscenderDescenderNormalized(AbstractRenderer renderer) {
             PdfFont font = renderer.ResolveFirstPdfFont();
             float fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE).GetValue();
@@ -73,7 +79,9 @@ namespace iText.Layout.Renderer {
                 ()) * fontSize;
             return new float[] { fontAscender, fontDescender, xHeight };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float CalculateLineHeight(AbstractRenderer renderer) {
             LineHeight lineHeight = renderer.GetProperty<LineHeight>(Property.LINE_HEIGHT);
             float fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE).GetValue();
@@ -96,5 +104,7 @@ namespace iText.Layout.Renderer {
             }
             return lineHeightValue;
         }
+//\endcond
     }
+//\endcond
 }

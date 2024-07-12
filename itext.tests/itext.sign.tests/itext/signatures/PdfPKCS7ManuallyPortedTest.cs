@@ -72,5 +72,16 @@ namespace iText.Signatures {
                 VerifyIsoExtensionExample("SHA3-256withRSA", "sample-rsa-sha3_256.pdf");
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyRsaPssSha3SignatureTest()
+        {
+            if ("BC".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                VerifyIsoExtensionExample("RSASSA-PSS", "sample-pss-sha3_256.pdf");
+            } else {
+                // Signer "RSASSA-PSS not recognised in BCFIPS mode
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("RSASSA-PSS", "sample-pss-sha3_256.pdf"));
+            }
+        }
     }
 }

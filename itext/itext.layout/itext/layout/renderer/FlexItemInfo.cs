@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Geom;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class FlexItemInfo {
         private AbstractRenderer renderer;
 
@@ -41,4 +42,5 @@ namespace iText.Layout.Renderer {
             return rectangle;
         }
     }
+//\endcond
 }

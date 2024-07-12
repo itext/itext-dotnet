@@ -41,6 +41,7 @@ namespace iText.StyledXmlParser.Css.Media {
         /// <summary>The value.</summary>
         private String value;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
         /// <see cref="MediaExpression"/>
@@ -64,6 +65,7 @@ namespace iText.StyledXmlParser.Css.Media {
                 this.feature = feature.Substring(maxPref.Length);
             }
         }
+//\endcond
 
         /// <summary>
         /// Tries to match a

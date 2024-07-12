@@ -23,19 +23,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Compare
     /// <see cref="PdfString"/>
     /// objects by value.
     /// </summary>
     internal sealed class PdfStringComparator : IComparer<PdfString> {
+//\cond DO_NOT_DOCUMENT
         // Comparator.comparing(...) would be better; we do it like this for
         // autoporting reasons.
         internal PdfStringComparator() {
         }
+//\endcond
 
         public int Compare(PdfString o1, PdfString o2) {
             return string.CompareOrdinal(o1.GetValue(), o2.GetValue());
         }
     }
+//\endcond
 }

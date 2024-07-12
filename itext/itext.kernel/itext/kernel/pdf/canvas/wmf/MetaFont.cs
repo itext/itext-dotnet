@@ -27,69 +27,131 @@ using iText.IO.Font.Constants;
 namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A Meta Font.</summary>
     public class MetaFont : MetaObject {
+//\cond DO_NOT_DOCUMENT
         internal static readonly String[] fontNames = new String[] { "Courier", "Courier-Bold", "Courier-Oblique", 
             "Courier-BoldOblique", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique", "Times-Roman"
             , "Times-Bold", "Times-Italic", "Times-BoldItalic", "Symbol", "ZapfDingbats" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MARKER_BOLD = 1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MARKER_ITALIC = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MARKER_COURIER = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MARKER_HELVETICA = 4;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MARKER_TIMES = 8;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MARKER_SYMBOL = 12;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int DEFAULT_PITCH = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FIXED_PITCH = 1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int VARIABLE_PITCH = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FF_DONTCARE = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FF_ROMAN = 1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FF_SWISS = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FF_MODERN = 3;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FF_SCRIPT = 4;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int FF_DECORATIVE = 5;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int BOLDTHRESHOLD = 600;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int NAME_SIZE = 32;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int ETO_OPAQUE = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int ETO_CLIPPED = 4;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int height;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float angle;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int bold;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int italic;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal bool underline;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal bool strikeout;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int charset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int pitchAndFamily;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal String faceName = "arial";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal FontProgram font = null;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal FontEncoding encoding = null;
+//\endcond
 
         /// <summary>Creates a MetaFont instance.</summary>
         public MetaFont()

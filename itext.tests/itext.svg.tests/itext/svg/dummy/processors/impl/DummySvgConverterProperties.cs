@@ -30,13 +30,21 @@ using iText.Svg.Renderers.Factories;
 
 namespace iText.Svg.Dummy.Processors.Impl {
     public class DummySvgConverterProperties : ISvgConverterProperties {
+//\cond DO_NOT_DOCUMENT
         internal ISvgNodeRendererFactory rendererFactory;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal String baseUri;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal MediaDeviceDescription mediaDeviceDescription;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal IResourceRetriever resourceRetriever;
+//\endcond
 
         public DummySvgConverterProperties() {
             rendererFactory = new DummySvgNodeFactory();

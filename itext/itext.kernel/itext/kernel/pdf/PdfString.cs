@@ -248,11 +248,13 @@ namespace iText.Kernel.Pdf {
             SetState(PdfObject.UNENCRYPTED);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetDecryption(int decryptInfoNum, int decryptInfoGen, PdfEncryption decryption) {
             this.decryptInfoNum = decryptInfoNum;
             this.decryptInfoGen = decryptInfoGen;
             this.decryption = decryption;
         }
+//\endcond
 
         protected internal virtual void GenerateValue() {
             System.Diagnostics.Debug.Assert(content != null, "No byte[] content to generate value");

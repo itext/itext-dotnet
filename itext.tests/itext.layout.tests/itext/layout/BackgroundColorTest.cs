@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -39,11 +39,17 @@ namespace iText.Layout {
 
         public const String cmpPrefix = "cmp_";
 
+//\cond DO_NOT_DOCUMENT
         internal String fileName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal String outFileName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal String cmpFileName;
+//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -55,7 +61,7 @@ namespace iText.Layout {
             fileName = "simpleBackgroundColorTest.pdf";
             outFileName = destinationFolder + fileName;
             cmpFileName = sourceFolder + cmpPrefix + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Text foo = new Text("foo");

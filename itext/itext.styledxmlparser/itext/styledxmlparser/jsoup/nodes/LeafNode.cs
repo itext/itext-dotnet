@@ -26,7 +26,9 @@ using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
     public abstract class LeafNode : iText.StyledXmlParser.Jsoup.Nodes.Node {
+//\cond DO_NOT_DOCUMENT
         internal Object value;
+//\endcond
 
         // either a string value, or an attribute map (in the rare case multiple attributes are set)
         protected internal sealed override bool HasAttributes() {
@@ -50,13 +52,17 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String CoreValue() {
             return Attr(NodeName());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CoreValue(String value) {
             Attr(NodeName(), value);
         }
+//\endcond
 
         public override String Attr(String key) {
             Validate.NotNull(key);

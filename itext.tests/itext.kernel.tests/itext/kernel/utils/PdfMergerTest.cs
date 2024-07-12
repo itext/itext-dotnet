@@ -755,6 +755,30 @@ namespace iText.Kernel.Utils {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CopyEmptyOcPropertiesTest() {
+            String filename = sourceFolder + "emptyOcPropertiesDoc.pdf";
+            String resultFile = destinationFolder + "mergedEmptyOcPropertiesDoc.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfDocument result = new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile));
+            PdfMerger merger = new PdfMerger(result).SetCloseSourceDocuments(true);
+            merger.Merge(pdfDoc, 1, 1).Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedEmptyOcPropertiesDoc.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyOnlyEmptyOcPropertiesTest() {
+            String filename = sourceFolder + "ocPropertiesDoc.pdf";
+            String resultFile = destinationFolder + "mergedOcPropertiesDoc.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            PdfDocument result = new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile));
+            PdfMerger merger = new PdfMerger(result).SetCloseSourceDocuments(true);
+            merger.Merge(pdfDoc, 1, 1).Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedOcPropertiesDoc.pdf"
+                , destinationFolder, "diff_"));
+        }
+
         private PdfDictionary MergeSinglePdfAndGetResultingStructTreeRoot(String pathToMerge) {
             IList<FileInfo> sources = new List<FileInfo>();
             sources.Add(new FileInfo(sourceFolder + pathToMerge));

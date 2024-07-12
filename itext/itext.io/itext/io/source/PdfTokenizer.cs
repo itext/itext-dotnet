@@ -266,8 +266,10 @@ namespace iText.IO.Source {
                     // 6 stands for '%%EOF' length + 1
                     return currentPosition + eofPosition + 6;
                 }
+                // Change current position to ensure '%%EOF' is not cut in half.
+                file.Seek(file.GetPosition() - 4);
             }
-            while (!String.IsNullOrEmpty(str));
+            while (str.Length > 4);
             throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_EOF_NOT_FOUND, this);
         }
 

@@ -22,8 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
     public class SubstLookupRecord {
+//\cond DO_NOT_DOCUMENT
         internal int sequenceIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int lookupListIndex;
+//\endcond
     }
 }

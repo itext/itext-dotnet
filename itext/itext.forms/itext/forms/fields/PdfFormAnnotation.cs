@@ -229,6 +229,7 @@ namespace iText.Forms.Fields {
             return names.ToArray(new String[names.Count]);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void RetrieveStyles() {
             base.RetrieveStyles();
             PdfDictionary appearanceCharacteristics = GetPdfObject().GetAsDictionary(PdfName.MK);
@@ -243,6 +244,7 @@ namespace iText.Forms.Fields {
                 }
             }
         }
+//\endcond
 
         /// <summary>Basic setter for the <c>backgroundColor</c> property.</summary>
         /// <remarks>
@@ -1014,13 +1016,16 @@ namespace iText.Forms.Fields {
             ((CheckBox)formFieldElement).SetChecked(wasChecked);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void SetMetaInfoToCanvas(iText.Layout.Canvas canvas) {
             MetaInfoContainer metaInfo = FormsMetaInfoStaticContainer.GetMetaInfoForLayout();
             if (metaInfo != null) {
                 canvas.SetProperty(Property.META_INFO, metaInfo);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool RegenerateWidget() {
             if (FontRequiredForRegeneration()) {
                 return false;
@@ -1082,6 +1087,7 @@ namespace iText.Forms.Fields {
             }
             return false;
         }
+//\endcond
 
         private bool FontRequiredForRegeneration() {
             if (GetFont() != null) {
@@ -1096,6 +1102,7 @@ namespace iText.Forms.Fields {
             return true;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CreateInputButton() {
             if (!(formFieldElement is Button)) {
                 // Create it one time and re-set properties during each widget regeneration.
@@ -1108,7 +1115,9 @@ namespace iText.Forms.Fields {
                 ((Button)formFieldElement).SetFontColor(color);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CreateSigField() {
             if (!(formFieldElement is SignatureFieldAppearance)) {
                 // Create it one time and re-set properties during each widget regeneration.
@@ -1141,7 +1150,9 @@ namespace iText.Forms.Fields {
                 ((SignatureFieldAppearance)formFieldElement).SetContent(description);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetFontSize(PdfArray bBox, String value) {
             if (GetFontSize() == 0) {
                 if (bBox == null || value == null || String.IsNullOrEmpty(value)) {
@@ -1154,6 +1165,7 @@ namespace iText.Forms.Fields {
             }
             return GetFontSize();
         }
+//\endcond
 
         private bool IsCombTextFormField() {
             PdfName type = parent.GetFormType();

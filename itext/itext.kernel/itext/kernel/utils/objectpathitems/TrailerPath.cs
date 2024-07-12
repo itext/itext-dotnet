@@ -28,6 +28,12 @@ using System.Xml;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Utils.Objectpathitems {
+    /// <summary>
+    /// Direct path item (see
+    /// <see cref="ObjectPath"/>
+    /// ), which describes transition to the
+    /// trailer entry which value is now a currently comparing direct object.
+    /// </summary>
     public sealed class TrailerPath : ObjectPath {
         private readonly PdfDocument outDocument;
 
@@ -35,12 +41,31 @@ namespace iText.Kernel.Utils.Objectpathitems {
 
         private const String INITIAL_LINE = "Base cmp object: trailer. Base out object: trailer";
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="TrailerPath"/>
+        /// instance with corresponding base objects in two documents.
+        /// </summary>
+        /// <param name="cmpDoc">base object in the cmp document</param>
+        /// <param name="outDoc">base object in the out document</param>
         public TrailerPath(PdfDocument cmpDoc, PdfDocument outDoc)
             : base() {
             outDocument = outDoc;
             cmpDocument = cmpDoc;
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="TrailerPath"/>
+        /// instance from another
+        /// <see cref="TrailerPath"/>
+        /// object, passed as argument.
+        /// </summary>
+        /// <param name="trailerPath">
+        /// 
+        /// <see cref="TrailerPath"/>
+        /// to create new instance from
+        /// </param>
         public TrailerPath(iText.Kernel.Utils.Objectpathitems.TrailerPath trailerPath)
             : base() {
             outDocument = trailerPath.GetOutDocument();
@@ -48,6 +73,17 @@ namespace iText.Kernel.Utils.Objectpathitems {
             path = trailerPath.GetLocalPath();
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="TrailerPath"/>
+        /// instance with corresponding base objects in two documents.
+        /// </summary>
+        /// <param name="cmpDoc">base object in the cmp document</param>
+        /// <param name="outDoc">base object in the out document</param>
+        /// <param name="path">
+        /// local path that denotes sequence of the path items
+        /// from base object to the comparing direct object
+        /// </param>
         public TrailerPath(PdfDocument cmpDoc, PdfDocument outDoc, Stack<LocalPathItem> path)
             : base() {
             this.outDocument = outDoc;
@@ -84,13 +120,13 @@ namespace iText.Kernel.Utils.Objectpathitems {
         }
 
         /// <summary>
-        /// Creates an xml node that describes this
+        /// Creates xml node that describes this
         /// <see cref="TrailerPath"/>
         /// instance.
         /// </summary>
         /// <param name="document">xml document, to which this xml node will be added.</param>
         /// <returns>
-        /// an xml node describing this
+        /// xml node describing this
         /// <see cref="TrailerPath"/>
         /// instance.
         /// </returns>

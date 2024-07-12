@@ -455,7 +455,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static bool IsBlockElement(IRenderer renderer) {
-            return renderer is BlockRenderer || renderer is TableRenderer;
+            // GridContainerRenderer is inherited from BlockRenderer but only not to copy/paste some overloads.
+            // It doesn't use BlockRenderer#layout internally.
+            return (renderer is BlockRenderer || renderer is TableRenderer) && !(renderer is GridContainerRenderer);
         }
 
         private static bool HasHeightProp(IRenderer renderer) {
@@ -538,6 +540,12 @@ namespace iText.Layout.Margincollapse {
         private static void OverrideModelBottomMargin(IRenderer renderer, float collapsedMargins) {
             iText.Layout.Margincollapse.MarginsCollapseHandler.OverrideModelMargin(renderer, Property.MARGIN_BOTTOM, collapsedMargins
                 );
+            if (renderer.HasProperty(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT)) {
+                ContinuousContainer continuousContainer = renderer.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
+                    );
+                continuousContainer.UpdateValueOfSavedProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(collapsedMargins
+                    ));
+            }
         }
 
         private static float DefineMarginValueForCollapse(IRenderer renderer, int property) {

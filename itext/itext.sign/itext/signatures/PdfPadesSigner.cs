@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
@@ -56,6 +57,10 @@ namespace iText.Signatures {
         private String timestampSignatureName;
 
         private String temporaryDirectoryPath = null;
+
+        private AccessPermissions accessPermissions = AccessPermissions.UNSPECIFIED;
+
+        private PdfSigFieldLock fieldLock = null;
 
         private IExternalDigest externalDigest = new BouncyCastleDigest();
 
@@ -373,6 +378,36 @@ namespace iText.Signatures {
             return this;
         }
 
+        /// <summary>Set certification level which specifies DocMDP level which is expected to be set.</summary>
+        /// <param name="accessPermissions">
+        /// 
+        /// <see cref="AccessPermissions"/>
+        /// certification level
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetCertificationLevel(AccessPermissions accessPermissions) {
+            this.accessPermissions = accessPermissions;
+            return this;
+        }
+
+        /// <summary>Set FieldMDP rules to be applied for this signature.</summary>
+        /// <param name="fieldLock">
+        /// 
+        /// <see cref="iText.Forms.PdfSigFieldLock"/>
+        /// field lock dictionary.
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="PdfPadesSigner"/>
+        /// </returns>
+        public virtual iText.Signatures.PdfPadesSigner SetSignatureFieldLock(PdfSigFieldLock fieldLock) {
+            this.fieldLock = fieldLock;
+            return this;
+        }
+
         /// <summary>Set the name to be used for timestamp signature creation.</summary>
         /// <remarks>
         /// Set the name to be used for timestamp signature creation.
@@ -575,11 +610,14 @@ namespace iText.Signatures {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PerformTimestamping(PdfDocument document, Stream outputStream, ITSAClient tsaClient) {
             PdfSigner timestampSigner = new PdfSigner(document, outputStream, tempOutputStream, tempFile);
             timestampSigner.Timestamp(tsaClient, timestampSignatureName);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfSigner CreatePdfSigner(SignerProperties signerProperties, bool isFinal) {
             String tempFilePath = null;
             if (temporaryDirectoryPath != null) {
@@ -588,7 +626,9 @@ namespace iText.Signatures {
             return new PdfSigner(reader, isFinal ? outputStream : CreateOutputStream(), tempFilePath, stampingProperties
                 , signerProperties);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PerformLtvVerification(PdfDocument pdfDocument, IList<String> signatureNames, LtvVerification.RevocationDataNecessity
              revocationDataNecessity) {
             LtvVerification ltvVerification = new LtvVerification(pdfDocument).SetRevocationDataNecessity(revocationDataNecessity
@@ -599,13 +639,17 @@ namespace iText.Signatures {
             }
             ltvVerification.Merge();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void DeleteTempFiles() {
             foreach (FileInfo tempFile in tempFiles) {
                 tempFile.Delete();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Stream CreateOutputStream() {
             if (temporaryDirectoryPath != null) {
                 return FileUtil.GetFileOutputStream(GetNextTempFile());
@@ -613,19 +657,23 @@ namespace iText.Signatures {
             tempOutputStream = new MemoryStream();
             return tempOutputStream;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Stream CreateInputStream() {
             if (temporaryDirectoryPath != null) {
                 return FileUtil.GetInputStreamForFile(tempFile);
             }
             return new MemoryStream(tempOutputStream.ToArray());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CreateRevocationClients(IX509Certificate signingCert, bool clientsRequired) {
             if (crlClient == null && ocspClient == null && clientsRequired) {
                 IX509Certificate signingCertificate = (IX509Certificate)signingCert;
-                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURL(signingCertificate
-                    ) == null) {
+                if (CertificateUtil.GetOCSPURL(signingCertificate) == null && CertificateUtil.GetCRLURLs(signingCertificate
+                    ).IsEmpty()) {
                     throw new PdfException(SignExceptionMessageConstant.DEFAULT_CLIENTS_CANNOT_BE_CREATED);
                 }
             }
@@ -633,14 +681,17 @@ namespace iText.Signatures {
                 crlClient = new CrlClientOnline();
             }
             if (ocspClient == null) {
-                ocspClient = new OcspClientBouncyCastle(null);
+                ocspClient = new OcspClientBouncyCastle();
             }
         }
+//\endcond
 
         private void PerformSignDetached(SignerProperties signerProperties, bool isFinal, IExternalSignature externalSignature
             , IX509Certificate[] chain, ITSAClient tsaClient) {
             IX509Certificate[] fullChain = issuingCertificateRetriever.RetrieveMissingCertificates(chain);
             PdfSigner signer = CreatePdfSigner(signerProperties, isFinal);
+            signer.SetCertificationLevel(accessPermissions);
+            signer.SetFieldLockDict(fieldLock);
             try {
                 signer.SignDetached(externalDigest, externalSignature, fullChain, null, null, tsaClient, estimatedSize, PdfSigner.CryptoStandard
                     .CADES);

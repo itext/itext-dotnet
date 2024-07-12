@@ -176,29 +176,37 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
         /// <returns>n0 layer xObject.</returns>
         internal virtual PdfFormXObject GetBackgroundLayer() {
             return n0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the signature appearance layer that contains information about the signature if it was set.</summary>
         /// <returns>n2 layer xObject.</returns>
         internal virtual PdfFormXObject GetSignatureAppearanceLayer() {
             return n2;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Indicates if the existing appearances needs to be reused as a background.</summary>
         /// <returns>appearances reusing flag value.</returns>
         internal virtual bool IsReuseAppearance() {
             return reuseAppearance;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Indicates if page rotation should be ignored for the signature appearance.</summary>
         /// <returns>the boolean value which indicates if we need to ignore page rotation for the signature appearance.
         ///     </returns>
         internal virtual bool IsPageRotationIgnored() {
             return this.ignorePageRotation;
         }
+//\endcond
     }
 }

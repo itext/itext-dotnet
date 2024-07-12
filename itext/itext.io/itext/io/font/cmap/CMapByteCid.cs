@@ -43,11 +43,13 @@ namespace iText.IO.Font.Cmap {
             planes.Add(new int[256]);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
                 EncodeSequence(DecodeStringToByte(mark), (int)code.GetValue());
             }
         }
+//\endcond
 
         /// <summary>Decode byte sequence.</summary>
         /// <param name="cidBytes">byteCodeBytes</param>

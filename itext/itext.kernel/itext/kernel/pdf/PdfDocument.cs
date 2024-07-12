@@ -62,8 +62,10 @@ namespace iText.Kernel.Pdf {
 
         protected internal readonly StampingProperties properties;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
+//\endcond
 
         private readonly IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference
             , PdfFont>();
@@ -131,12 +133,16 @@ namespace iText.Kernel.Pdf {
 
         protected internal TagStructureContext tagStructureContext;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
         internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
             , byte[]>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Handler which will be used for decompression of pdf streams.</summary>
         internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
+//\endcond
 
         /// <summary>Default page size.</summary>
         /// <remarks>
@@ -1243,7 +1249,9 @@ namespace iText.Kernel.Pdf {
             // Copying OCGs should go after copying LinkAnnotations
             if (GetCatalog() != null && GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties) != null) {
                 OcgPropertiesCopier.CopyOCGProperties(this, toDocument, page2page);
-                toDocument.GetCatalog().SetOcgCopied(true);
+                if (toDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties) != null) {
+                    toDocument.GetCatalog().SetOcgCopied(true);
+                }
             }
             // It's important to copy tag structure after link annotations were copied, because object content items in tag
             // structure are not copied in case if their's OBJ key is annotation and doesn't contain /P entry.
@@ -1261,9 +1269,9 @@ namespace iText.Kernel.Pdf {
                         }
                         toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
                     }
-                    catch (Exception ex) {
+                    catch (Exception e) {
                         throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_COPYING_FAILED_IT_MIGHT_BE_CORRUPTED_IN_ONE_OF_THE_DOCUMENTS
-                            , ex);
+                            , e);
                     }
                     if (copier is IPdfPageFormCopier) {
                         ((IPdfPageFormCopier)copier).RecreateAcroformToProcessCopiedFields(toDocument);
@@ -2384,31 +2392,42 @@ namespace iText.Kernel.Pdf {
                 structTreeRoot = new PdfStructTreeRoot(str, this);
                 structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
             }
-            catch (Exception ex) {
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception e) {
                 structTreeRoot = null;
                 structParentIndex = -1;
                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
+                logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsDocumentFont(PdfIndirectReference indRef) {
             return indRef != null && documentFonts.ContainsKey(indRef);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool DoesStreamBelongToEmbeddedFile(PdfStream stream) {
             return encryptedEmbeddedStreamsHandler.IsStreamStoredAsEmbedded(stream);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool HasAcroForm() {
             return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
         }
+//\endcond
 
         private void TryFlushTagStructure(bool isAppendMode) {
             try {
@@ -2419,9 +2438,12 @@ namespace iText.Kernel.Pdf {
                     structTreeRoot.Flush();
                 }
             }
-            catch (Exception ex) {
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_FLUSHING_FAILED_IT_MIGHT_BE_CORRUPTED, 
-                    ex);
+                    e);
             }
         }
 

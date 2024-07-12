@@ -27,7 +27,9 @@ using iText.Svg.Utils;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(V) attribute of SVG's path element</summary>
     public class VerticalLineTo : LineTo {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 1;
+//\endcond
 
         /// <summary>Creates an absolute Vertical LineTo.</summary>
         public VerticalLineTo()

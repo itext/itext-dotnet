@@ -68,6 +68,7 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float GetAttribute(IDictionary<String, String> attributes, String key) {
             String value = attributes.Get(key);
             if (value != null && !String.IsNullOrEmpty(value)) {
@@ -75,6 +76,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             return 0;
         }
+//\endcond
 
         public override ISvgNodeRenderer CreateDeepCopy() {
             LineSvgNodeRenderer copy = new LineSvgNodeRenderer();

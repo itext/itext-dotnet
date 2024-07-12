@@ -24,17 +24,23 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
+//\cond DO_NOT_DOCUMENT
     internal class PdfPolylineAnnotation : PdfPolyGeomAnnotation {
+//\cond DO_NOT_DOCUMENT
         internal PdfPolylineAnnotation(Rectangle rect, float[] vertices)
             : base(rect, vertices) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal PdfPolylineAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
+//\endcond
 
         public override PdfName GetSubtype() {
             return PdfName.PolyLine;
         }
     }
+//\endcond
 }

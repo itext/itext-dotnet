@@ -24,6 +24,7 @@ using System;
 using iText.Layout.Minmaxwidth;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class MaxSumWidthHandler : AbstractWidthHandler {
         public MaxSumWidthHandler(MinMaxWidth minMaxWidth)
             : base(minMaxWidth) {
@@ -37,4 +38,5 @@ namespace iText.Layout.Renderer {
             minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + childMaxWidth);
         }
     }
+//\endcond
 }

@@ -31,6 +31,7 @@ using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.OpenSsl;
 
 namespace iText.Bouncycastlefips {
+    //\cond DO_NOT_DOCUMENT
     internal class BouncyCastleFipsUtil : IBouncyCastleUtil {
         
         internal BouncyCastleFipsUtil() {
@@ -56,4 +57,5 @@ namespace iText.Bouncycastlefips {
             }
         }
     }
+    //\endcond
 }

@@ -633,6 +633,7 @@ namespace iText.Signatures {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Returns reuseAppearance value which indicates that the existing appearances needs to be reused
         /// as a background layer.
@@ -641,7 +642,9 @@ namespace iText.Signatures {
         internal virtual bool IsReuseAppearance() {
             return reuseAppearance;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Checks if reuseAppearance value was set using
         /// <see>this#setReuseAppearance(boolean)</see>.
@@ -655,19 +658,25 @@ namespace iText.Signatures {
         internal virtual bool IsReuseAppearanceSet() {
             return reuseAppearanceSet;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the background layer that is present when creating the signature field if it was set.</summary>
         /// <returns>n0 layer xObject.</returns>
         internal virtual PdfFormXObject GetBackgroundLayer() {
             return n0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the signature appearance layer that contains information about the signature if it was set.</summary>
         /// <returns>n2 layer xObject.</returns>
         internal virtual PdfFormXObject GetSignatureAppearanceLayer() {
             return n2;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ApplyBackgroundImage() {
             if (image != null) {
                 BackgroundRepeat repeat = new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
@@ -691,11 +700,14 @@ namespace iText.Signatures {
                     (size).SetBackgroundRepeat(repeat).SetBackgroundPosition(position).Build());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual SignedAppearanceText GenerateSignatureText() {
             return new SignedAppearanceText().SetSignedBy(GetSignerName()).SetSignDate(signDate).SetReasonLine(reasonCaption
                  + reason).SetLocationLine(locationCaption + location);
         }
+//\endcond
 
         private void SetFontRelatedProperties() {
             if (fontProvider != null) {

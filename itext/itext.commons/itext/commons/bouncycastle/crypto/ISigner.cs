@@ -41,7 +41,15 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// </summary>
         /// <param name="publicKey">public key</param>
         void InitSign(IPrivateKey key);
-        
+
+        /// <summary>
+        /// Creates actual signer object to create RSASSA-PSS signature
+        /// </summary>
+        /// <param name="digestAlgoName">digect algorithm</param>
+        /// <param name="saltLen">salt length</param>
+        /// <param name="trailerField">trailer field</param>
+        void InitRsaPssSigner(string digestAlgoName, int saltLen, int trailerField);
+
         /// <summary>
         /// Calls actual
         /// <c>Update</c>

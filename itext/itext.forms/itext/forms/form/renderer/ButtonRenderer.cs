@@ -258,6 +258,7 @@ namespace iText.Forms.Form.Renderer {
             FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override void SetContentHeight(IRenderer flatRenderer, float height) {
             Rectangle bBox = flatRenderer.GetOccupiedArea().GetBBox();
@@ -285,5 +286,6 @@ namespace iText.Forms.Form.Renderer {
             bBox.SetHeight(height);
             flatRenderer.Move(0, -dy);
         }
+//\endcond
     }
 }

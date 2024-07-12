@@ -97,6 +97,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             return "#doctype";
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             if (@out.Syntax() == iText.StyledXmlParser.Jsoup.Nodes.Syntax.html && !Has(PUBLIC_ID) && !Has(SYSTEM_ID)) {
                 // looks like a html5 doctype, go lowercase for aesthetics
@@ -119,9 +120,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
             accum.Append('>');
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
         }
+//\endcond
 
         private bool Has(String attribute) {
             return !iText.StyledXmlParser.Jsoup.Internal.StringUtil.IsBlank(Attr(attribute));

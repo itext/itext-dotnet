@@ -28,13 +28,16 @@ using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Algorithm for construction
     /// <see cref="PdfPages"/>
     /// tree
     /// </summary>
     internal class PdfPagesTree {
+//\cond DO_NOT_DOCUMENT
         internal const int DEFAULT_LEAF_SIZE = 10;
+//\endcond
 
         private readonly int leafSize = DEFAULT_LEAF_SIZE;
 
@@ -270,6 +273,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ReleasePage(int pageNumber) {
             --pageNumber;
             if (pageRefs.Get(pageNumber) != null && !pageRefs.Get(pageNumber).CheckState(PdfObject.FLUSHED) && !pageRefs
@@ -278,6 +282,7 @@ namespace iText.Kernel.Pdf {
                 pages.Set(pageNumber, null);
             }
         }
+//\endcond
 
         /// <summary>Generate PdfPages tree.</summary>
         /// <returns>
@@ -519,6 +524,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// The class represents a list which allows null elements, but doesn't allocate a memory for them, in the rest of
         /// cases it behaves like usual
@@ -626,5 +632,7 @@ namespace iText.Kernel.Pdf {
                 return size;
             }
         }
+//\endcond
     }
+//\endcond
 }

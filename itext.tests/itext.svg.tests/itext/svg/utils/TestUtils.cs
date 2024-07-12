@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Svg.Converter;
@@ -29,12 +29,11 @@ using iText.Svg.Converter;
 namespace iText.Svg.Utils {
     public class TestUtils {
         public static void ConvertSVGtoPDF(String pdfFilePath, String svgFilePath, int PageNo, PageSize pageSize) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(pdfFilePath, FileMode.Create), new 
-                WriterProperties().SetCompressionLevel(0)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(pdfFilePath), new WriterProperties
+                ().SetCompressionLevel(0)));
             PageSize format = new PageSize(pageSize);
             pdfDocument.AddNewPage(format.Rotate());
-            SvgConverter.DrawOnDocument(new FileStream(svgFilePath, FileMode.Open, FileAccess.Read), pdfDocument, PageNo
-                );
+            SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(svgFilePath), pdfDocument, PageNo);
             pdfDocument.Close();
         }
     }

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
 
+    //\cond DO_NOT_DOCUMENT 
     internal class PdfDictionaryValues : ICollection<PdfObject> {
         private readonly ICollection<PdfObject> collection;
 
@@ -150,4 +151,5 @@ namespace iText.Kernel.Pdf {
             }
         }
     }
+   //\endcond 
 }

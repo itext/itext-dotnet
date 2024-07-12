@@ -84,12 +84,12 @@ namespace iText.Bouncycastle.Cert.Ocsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual DateTime GetNextUpdate() {
-            return singleResp.NextUpdate.ToDateTime();
+            return singleResp.NextUpdate == null ? DateTime.MaxValue : singleResp.NextUpdate.ToDateTime();
         }
 
         /// <summary><inheritDoc/></summary>
         public virtual DateTime GetThisUpdate() {
-            return singleResp.ThisUpdate.ToDateTime();
+            return singleResp.ThisUpdate == null ? DateTime.MaxValue : singleResp.ThisUpdate.ToDateTime();
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

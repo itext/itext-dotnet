@@ -150,6 +150,7 @@ namespace iText.Barcodes {
             return @out.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculates the checksum.</summary>
         /// <param name="text">the text</param>
         /// <returns>the checksum</returns>
@@ -168,6 +169,7 @@ namespace iText.Barcodes {
             }
             return CHARS[chk % 43];
         }
+//\endcond
 
         /// <summary>
         /// Gets the maximum area that the barcode and the text, if

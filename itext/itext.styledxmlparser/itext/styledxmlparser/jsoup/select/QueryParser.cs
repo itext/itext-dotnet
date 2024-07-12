@@ -66,6 +66,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Parse the query</summary>
         /// <returns>Evaluator</returns>
         internal virtual Evaluator Parse() {
@@ -100,6 +101,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             }
             return new CombiningEvaluator.And(evals);
         }
+//\endcond
 
         private void Combinator(char combinator) {
             tq.ConsumeWhitespace();

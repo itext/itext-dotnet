@@ -31,15 +31,19 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
 
         private String errorMsg;
 
+//\cond DO_NOT_DOCUMENT
         internal ParseError(int pos, String errorMsg) {
             this.pos = pos;
             this.errorMsg = errorMsg;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal ParseError(int pos, String errorFormat, params Object[] args) {
             this.errorMsg = MessageFormatUtil.Format(errorFormat, args);
             this.pos = pos;
         }
+//\endcond
 
         /// <summary>Retrieve the error message.</summary>
         /// <returns>the error message.</returns>

@@ -14,6 +14,7 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // Helper for rounding
     internal class Round {
         // Round a value up to the nearest multiple of 4. Don't round the value in the
@@ -32,4 +33,5 @@ namespace iText.IO.Font.Woff2 {
             return (value + 3) & ~3;
         }
     }
+//\endcond
 }

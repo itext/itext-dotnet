@@ -30,18 +30,27 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+//\cond DO_NOT_DOCUMENT
     internal class TiffImageHelper {
         private class TiffParameters {
+//\cond DO_NOT_DOCUMENT
             internal TiffParameters(TiffImageData image) {
                 this.image = image;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal TiffImageData image;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             //ByteArrayOutputStream stream;
             internal bool jpegProcessing;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<String, Object> additional;
+//\endcond
         }
 
         /// <summary>Processes the ImageData as a TIFF image.</summary>
@@ -771,4 +780,5 @@ namespace iText.IO.Image {
             }
         }
     }
+//\endcond
 }

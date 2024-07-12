@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Xfdf;
 using iText.Kernel.Pdf;
@@ -45,8 +45,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SimpleFormWithOneFieldTest() {
             String pdfDocumentName = "simpleFormWithOneField.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + pdfDocumentName
+                )));
             String xfdfFilename = destinationFolder + "simpleFormWithOneField.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
@@ -61,8 +61,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void SimpleFormWithMultipleFieldsTest() {
             String pdfDocumentName = "simpleFormWithMultipleFields.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + pdfDocumentName
+                )));
             String xfdfFilename = destinationFolder + "simpleFormWithMultipleFields.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDoc, pdfDocumentName);
@@ -78,8 +78,8 @@ namespace iText.Forms {
         public virtual void XfdfValueRichText() {
             //TODO DEVSIX-3215
             String pdfDocumentName = "xfdfValueRichText.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName, FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + pdfDocumentName
+                )));
             String xfdfFilename = destinationFolder + "xfdfValueRichText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDoc, pdfDocumentName);
@@ -93,8 +93,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfHierarchyFields() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfHierarchyFields.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfHierarchyFields.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfHierarchyFields.xfdf";
             String pdfDocumentName = "xfdfHierarchyFields.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -109,8 +109,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfFreeText() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFreeText.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfFreeText.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfFreeText.xfdf";
             String pdfDocumentName = "xfdfFreeText.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -125,8 +125,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfHighlightedText() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfHighlightedText.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfHighlightedText.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfHighlightedText.xfdf";
             String pdfDocumentName = "xfdfHighlightedText.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -141,8 +141,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfUnderlineText() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfUnderlineText.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfUnderlineText.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfUnderlineText.xfdf";
             String pdfDocumentName = "xfdfUnderlineText.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -157,8 +157,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfPopupNewFlags() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPopupNewFlags.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfPopupNewFlags.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfPopupNewFlags.xfdf";
             String pdfDocumentName = "xfdfPopupNewFlags.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -173,8 +173,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfStrikeout() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStrikeout.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfStrikeout.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfStrikeout.xfdf";
             String pdfDocumentName = "xfdfStrikeout.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -189,8 +189,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfSquigglyText() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquigglyText.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSquigglyText.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfSquigglyText.xfdf";
             String pdfDocumentName = "xfdfSquigglyText.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -205,8 +205,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLine() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLine.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLine.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLine.xfdf";
             String pdfDocumentName = "xfdfLine.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -221,8 +221,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfCircle() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCircle.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCircle.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfCircle.xfdf";
             String pdfDocumentName = "xfdfCircle.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -237,8 +237,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfSquare() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquare.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSquare.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfSquare.xfdf";
             String pdfDocumentName = "xfdfSquare.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -253,8 +253,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfSquareAndCircleInteriorColor() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSquareAndCircleInteriorColor.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSquareAndCircleInteriorColor.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfSquareAndCircleInteriorColor.xfdf";
             String pdfDocumentName = "xfdfSquareAndCircleInteriorColor.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -270,8 +270,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfCaret() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCaret.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCaret.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfCaret.xfdf";
             String pdfDocumentName = "xfdfCaret.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -287,8 +287,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfPolygon() {
             //TODO DEVSIX-3215 Support annots
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPolygon.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfPolygon.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfPolygon.xfdf";
             String pdfDocumentName = "xfdfPolygon.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -304,8 +304,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfPolyline() {
             //TODO DEVSIX-3215 Support annots
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfPolyline.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfPolyline.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfPolyline.xfdf";
             String pdfDocumentName = "xfdfPolyline.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -320,8 +320,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfStamp() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStamp.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfStamp.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfStamp.xfdf";
             String pdfDocumentName = "xfdfStamp.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -336,8 +336,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfStampWithAppearance() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfStampWithAppearance.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfStampWithAppearance.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfStampWithAppearance.xfdf";
             String pdfDocumentName = "xfdfStampWithAppearance.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -353,8 +353,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfInk() {
             //TODO DEVSIX-3215 Support annots
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfInk.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfInk.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfInk.xfdf";
             String pdfDocumentName = "xfdfInk.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -369,8 +369,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfFileAttachment() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfFileAttachment.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfFileAttachment.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfFileAttachment.xfdf";
             String pdfDocumentName = "xfdfFileAttachment.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -386,8 +386,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfSound() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSound.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSound.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfSound.xfdf";
             String pdfDocumentName = "xfdfSound.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -402,8 +402,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLink() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLink.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLink.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLink.xfdf";
             String pdfDocumentName = "xfdfLink.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -418,8 +418,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkBorderStyle() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkBorderStyle.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkBorderStyle.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkBorderStyle.xfdf";
             String pdfDocumentName = "xfdfLinkBorderStyle.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -434,8 +434,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDest() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDest.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDest.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDest.xfdf";
             String pdfDocumentName = "xfdfLinkDest.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -450,8 +450,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFit() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFit.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFit.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFit.xfdf";
             String pdfDocumentName = "xfdfLinkDestFit.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -466,8 +466,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitB() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitB.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFitB.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitB.xfdf";
             String pdfDocumentName = "xfdfLinkDestFitB.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -482,8 +482,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitR() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitR.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFitR.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitR.xfdf";
             String pdfDocumentName = "xfdfLinkDestFitR.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -498,8 +498,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitH() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitH.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFitH.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitH.xfdf";
             String pdfDocumentName = "xfdfLinkDestFitH.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -514,8 +514,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitBH() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitBH.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFitBH.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitBH.xfdf";
             String pdfDocumentName = "xfdfLinkDestFitBH.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -530,8 +530,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitBV() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitBV.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFitBV.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitBV.xfdf";
             String pdfDocumentName = "xfdfLinkDestFitBV.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -546,8 +546,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkDestFitV() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkDestFitV.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkDestFitV.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkDestFitV.xfdf";
             String pdfDocumentName = "xfdfLinkDestFitV.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -563,8 +563,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfRedact() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfRedact.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfRedact.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfRedact.xfdf";
             String pdfDocumentName = "xfdfRedact.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -580,8 +580,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfProjection() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfProjection.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfProjection.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfProjection.xfdf";
             String pdfDocumentName = "xfdfProjection.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -596,8 +596,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfLinkAllParams() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfLinkAllParams.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfLinkAllParams.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfLinkAllParams.xfdf";
             String pdfDocumentName = "xfdfLinkAllParams.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -613,8 +613,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfReplaceText() {
             //TODO DEVSIX-3215 Support caret annontation
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReplaceText.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReplaceText.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfReplaceText.xfdf";
             String pdfDocumentName = "xfdfReplaceText.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -630,8 +630,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfArrow() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfArrow.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfArrow.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfArrow.xfdf";
             String pdfDocumentName = "xfdfArrow.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -647,8 +647,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfCallout() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCallout.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCallout.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfCallout.xfdf";
             String pdfDocumentName = "xfdfCallout.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -664,8 +664,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfCloud() {
             //TODO DEVSIX-3215 Support annots
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCloud.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCloud.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfCloud.xfdf";
             String pdfDocumentName = "xfdfCloud.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -681,8 +681,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfCloudNested() {
             //TODO DEVSIX-3215 Support annots
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCloudNested.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCloudNested.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfCloudNested.xfdf";
             String pdfDocumentName = "xfdfCloudNested.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -698,8 +698,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfTextBoxAllParams() {
             //TODO DEVSIX-3215 Support richtext
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfTextBoxAllParams.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfTextBoxAllParams.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfTextBoxAllParams.xfdf";
             String pdfDocumentName = "xfdfTextBoxAllParams.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -715,8 +715,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfJavaScriptForms() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfJavaScriptForms.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfJavaScriptForms.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfJavaScriptForms.xfdf";
             String pdfDocumentName = "xfdfJavaScriptForms.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -732,8 +732,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfAttrColor() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAttrColor.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAttrColor.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfAttrColor.xfdf";
             String pdfDocumentName = "xfdfAttrColor.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -749,8 +749,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfAttrFlagsOpacity() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAttrFlagsOpacity.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAttrFlagsOpacity.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfAttrFlagsOpacity.xfdf";
             String pdfDocumentName = "xfdfAttrFlagsOpacity.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -766,8 +766,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfAttrTitle() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfAttrTitle.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAttrTitle.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfAttrTitle.xfdf";
             String pdfDocumentName = "xfdfAttrTitle.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -783,8 +783,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DMeasurement() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfReferenceFor3DMeasurement.xfdf";
             String pdfDocumentName = "xfdfReferenceFor3DMeasurement.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -799,8 +799,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DAngular() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfReferenceFor3DAngular.xfdf";
             String pdfDocumentName = "xfdfReferenceFor3DAngular.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -816,8 +816,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfReferenceFor3DRadial() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfReferenceFor3DRadial.xfdf";
             String pdfDocumentName = "xfdfReferenceFor3DRadial.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -833,8 +833,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfSubelementContents() {
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementContents.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSubelementContents.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfSubelementContents.xfdf";
             String pdfDocumentName = "xfdfSubelementContents.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -851,8 +851,8 @@ namespace iText.Forms {
         public virtual void XfdfSubelementOverlayAppearance() {
             //check when Redact annotation is implemented
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
-                , FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfSubelementOverlayAppearance.xfdf";
             String pdfDocumentName = "xfdfSubelementOverlayAppearance.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -869,8 +869,8 @@ namespace iText.Forms {
         public virtual void XfdfButton() {
             //Widget annotation is not supported in xfdf 2014 spec version
             //TODO  DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfButton.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfButton.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfButton.xfdf";
             String pdfDocumentName = "xfdfButton.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -887,8 +887,8 @@ namespace iText.Forms {
         public virtual void XfdfCheckBox() {
             //Widget annotation is not supported in xfdf 2014 spec version
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfCheckBox.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCheckBox.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfCheckBox.xfdf";
             String pdfDocumentName = "xfdfCheckBox.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -903,8 +903,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void XfdfList() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfList.pdf", FileMode.Open
-                , FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfList.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfList.xfdf";
             String pdfDocumentName = "xfdfList.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -921,8 +921,8 @@ namespace iText.Forms {
         public virtual void XfdfDropDown() {
             //Widget annotation is not supported in 2014 spec version
             //TODO DEVSIX-3215
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "xfdfDropDown.pdf", 
-                FileMode.Open, FileAccess.Read)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfDropDown.pdf"
+                )));
             String xfdfFilename = destinationFolder + "xfdfDropDown.xfdf";
             String pdfDocumentName = "xfdfDropDown.pdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
@@ -958,8 +958,8 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationAttributesTest() {
             //TODO DEVSIX-7600 update xfdf and src files after supporting all the annotation types mentioned in xfdf spec
             String pdfDocumentName = "xfdfAnnotationAttributes.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName
-                , FileMode.Open, FileAccess.Read)))) {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder
+                 + pdfDocumentName)))) {
                 String xfdfFilename = destinationFolder + "xfdfAnnotationAttributes.xfdf";
                 XfdfObjectFactory factory = new XfdfObjectFactory();
                 XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);
@@ -975,8 +975,8 @@ namespace iText.Forms {
         public virtual void XfdfOnlyRequiredAnnotationAttributesTest() {
             //TODO DEVSIX-7600 update xfdf and src files after supporting all the annotation types mentioned in xfdf spec
             String pdfDocumentName = "xfdfOnlyRequiredAnnotationAttributes.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileStream(sourceFolder + pdfDocumentName
-                , FileMode.Open, FileAccess.Read)))) {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder
+                 + pdfDocumentName)))) {
                 String xfdfFilename = destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.xfdf";
                 XfdfObjectFactory factory = new XfdfObjectFactory();
                 XfdfObject xfdfObject = factory.CreateXfdfObject(pdfDocument, pdfDocumentName);

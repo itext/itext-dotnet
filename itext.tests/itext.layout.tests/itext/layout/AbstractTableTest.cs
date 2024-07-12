@@ -29,10 +29,12 @@ using iText.Test;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class AbstractTableTest : ExtendedITextTest {
+//\cond DO_NOT_DOCUMENT
         internal static Document AddTableBelowToCheckThatOccupiedAreaIsCorrect(Document doc) {
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorder(new SolidBorder(ColorConstants
                 .ORANGE, 2)).AddCell("Is my occupied area correct?"));
             return doc;
         }
+//\endcond
     }
 }

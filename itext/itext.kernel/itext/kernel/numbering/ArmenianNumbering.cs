@@ -69,14 +69,20 @@ namespace iText.Kernel.Numbering {
         }
 
         private class ArmenianDigit {
+//\cond DO_NOT_DOCUMENT
             internal char digit;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int value;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ArmenianDigit(char digit, int value) {
                 this.digit = digit;
                 this.value = value;
             }
+//\endcond
         }
     }
 }

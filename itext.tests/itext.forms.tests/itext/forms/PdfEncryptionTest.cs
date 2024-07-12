@@ -49,10 +49,14 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+//\cond DO_NOT_DOCUMENT
         // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         internal const String customInfoEntryKey = "Custom";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String customInfoEntryValue = "String";
+//\endcond
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]

@@ -89,6 +89,13 @@ namespace iText.IO.Util {
             return new Uri(file.FullName);
         }
         
+        /// <summary>Get the entire URI string which is properly encoded.</summary>
+        /// <param name="uri">URI which convert to encoded string</param>
+        /// <returns>URI string representation</returns>
+        public static String ToAbsoluteURI(Uri uri) {
+            return uri.AbsoluteUri;
+        }
+        
         /// <summary>
         /// This method gets uri string from a file.
         /// </summary>

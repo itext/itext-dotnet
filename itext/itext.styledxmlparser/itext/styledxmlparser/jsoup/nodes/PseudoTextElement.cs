@@ -42,10 +42,14 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             : base(tag, baseUri, attributes) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
         }
+//\endcond
     }
 }

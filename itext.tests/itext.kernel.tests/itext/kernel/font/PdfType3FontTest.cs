@@ -279,11 +279,13 @@ namespace iText.Kernel.Font {
         }
 
         private class DisableEnsureUnderlyingObjectHasIndirectReference : PdfType3Font {
+//\cond DO_NOT_DOCUMENT
             internal DisableEnsureUnderlyingObjectHasIndirectReference(PdfType3FontTest _enclosing, PdfDictionary fontDictionary
                 )
                 : base(fontDictionary) {
                 this._enclosing = _enclosing;
             }
+//\endcond
 
             protected internal override void EnsureUnderlyingObjectHasIndirectReference() {
             }

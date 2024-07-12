@@ -794,6 +794,7 @@ namespace iText.Barcodes {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Returns <c>true</c> if the next <c>numDigits</c>
         /// starting from index <c>textIndex</c> are numeric skipping any FNC1.
@@ -823,7 +824,9 @@ namespace iText.Barcodes {
             }
             return numDigits == 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Packs the digits for charset C also considering FNC1.</summary>
         /// <remarks>
         /// Packs the digits for charset C also considering FNC1. It assumes that all the parameters
@@ -849,5 +852,6 @@ namespace iText.Barcodes {
             }
             return (char)(textIndex - start) + @out.ToString();
         }
+//\endcond
     }
 }

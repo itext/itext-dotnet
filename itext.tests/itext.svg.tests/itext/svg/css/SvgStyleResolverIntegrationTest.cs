@@ -133,6 +133,7 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void FontWeightTest() {
+            //TODO DEVSIX-2079: change compare file after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "fontWeightTest");
         }
 
@@ -192,6 +193,11 @@ namespace iText.Svg.Css {
         public virtual void RelativeStyleInheritanceTest() {
             // TODO DEVSIX-4140 font-relative values doesn't support
             ConvertAndCompare(sourceFolder, destinationFolder, "relativeStyleInheritanceTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTagNoFontSizeTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textTagNoFontSize");
         }
     }
 }

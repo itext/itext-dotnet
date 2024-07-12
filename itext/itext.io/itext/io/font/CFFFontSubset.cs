@@ -39,87 +39,130 @@ namespace iText.IO.Font {
     /// The CID synthetic creation was written by Sivan Toledo (sivan@math.tau.ac.il)
     /// </remarks>
     public class CFFFontSubset : CFFFont {
+//\cond DO_NOT_DOCUMENT
         /// <summary>The Strings in this array represent Type1/Type2 operator names</summary>
         internal static readonly String[] SubrsFunctions = new String[] { "RESERVED_0", "hstem", "RESERVED_2", "vstem"
             , "vmoveto", "rlineto", "hlineto", "vlineto", "rrcurveto", "RESERVED_9", "callsubr", "return", "escape"
             , "RESERVED_13", "endchar", "RESERVED_15", "RESERVED_16", "RESERVED_17", "hstemhm", "hintmask", "cntrmask"
             , "rmoveto", "hmoveto", "vstemhm", "rcurveline", "rlinecurve", "vvcurveto", "hhcurveto", "shortint", "callgsubr"
             , "vhcurveto", "hvcurveto" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The Strings in this array represent Type1/Type2 escape operator names</summary>
         internal static readonly String[] SubrsEscapeFuncs = new String[] { "RESERVED_0", "RESERVED_1", "RESERVED_2"
             , "and", "or", "not", "RESERVED_6", "RESERVED_7", "RESERVED_8", "abs", "add", "sub", "div", "RESERVED_13"
             , "neg", "eq", "RESERVED_16", "RESERVED_17", "drop", "RESERVED_19", "put", "get", "ifelse", "random", 
             "mul", "RESERVED_25", "sqrt", "dup", "exch", "index", "roll", "RESERVED_31", "RESERVED_32", "RESERVED_33"
             , "hflex", "flex", "hflex1", "flex1", "RESERVED_REST" };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Operator codes for unused  CharStrings and unused local and global Subrs</summary>
         internal const byte ENDCHAR_OP = 14;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const byte RETURN_OP = 11;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// A Map containing the glyphs used in the text after being converted
         /// to glyph number by the CMap
         /// </summary>
         internal ICollection<int> GlyphsUsed;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The GlyphsUsed keys as an list</summary>
         internal IList<int> glyphsInList;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A Set for keeping the FDArrays being used by the font</summary>
         internal ICollection<int> FDArrayUsed = new HashSet<int>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A Maps array for keeping the subroutines used in each FontDict</summary>
         internal GenericArray<ICollection<int>> hSubrsUsed;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The SubroutinesUsed Maps as lists</summary>
         internal GenericArray<IList<int>> lSubrsUsed;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A Map for keeping the Global subroutines used in the font</summary>
         internal ICollection<int> hGSubrsUsed = new HashSet<int>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The Global SubroutinesUsed Maps as lists</summary>
         internal IList<int> lGSubrsUsed = new List<int>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A Map for keeping the subroutines used in a non-cid font</summary>
         internal ICollection<int> hSubrsUsedNonCID = new HashSet<int>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The SubroutinesUsed Map as list</summary>
         internal IList<int> lSubrsUsedNonCID = new List<int>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>An array of the new Indexes for the local Subr.</summary>
         /// <remarks>An array of the new Indexes for the local Subr. One index for each FontDict</remarks>
         internal byte[][] NewLSubrsIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The new subroutines index for a non-cid font</summary>
         internal byte[] NewSubrsIndexNonCID;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The new global subroutines index of the font</summary>
         internal byte[] NewGSubrsIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The new CharString of the font</summary>
         internal byte[] NewCharStringsIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The bias for the global subroutines</summary>
         internal int GBias = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The linked list for generating the new font stream</summary>
         internal LinkedList<CFFFont.Item> OutputList;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Number of arguments to the stem operators in a subroutine calculated recursively</summary>
         internal int NumOfHints = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>C'tor for CFFFontSubset</summary>
         /// <param name="cff">- The font file</param>
         internal CFFFontSubset(byte[] cff)
             : this(cff, JavaCollectionsUtil.EmptySet<int>(), true) {
         }
+//\endcond
 
         public CFFFontSubset(byte[] cff, ICollection<int> GlyphsUsed)
             : this(cff, GlyphsUsed, false) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal CFFFontSubset(byte[] cff, ICollection<int> GlyphsUsed, bool isCidParsingRequired)
             : base(
                         // Use CFFFont c'tor in order to parse the font file.
@@ -154,7 +197,9 @@ namespace iText.IO.Font {
                 fonts[i].CharsetLength = CountCharset(fonts[i].charsetOffset, fonts[i].nglyphs);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculates the length of the charset according to its format</summary>
         /// <param name="Offset">The Charset Offset</param>
         /// <param name="NumofGlyphs">Number of glyphs in the font</param>
@@ -188,7 +233,9 @@ namespace iText.IO.Font {
             }
             return Length;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Function calculates the number of ranges in the Charset</summary>
         /// <param name="NumofGlyphs">The number of glyphs in the font</param>
         /// <param name="Type">The format of the Charset</param>
@@ -211,6 +258,7 @@ namespace iText.IO.Font {
             }
             return num;
         }
+//\endcond
 
         /// <summary>Read the FDSelect of the font and compute the array and its length</summary>
         /// <param name="Font">The index of the font being processed</param>
@@ -1435,6 +1483,7 @@ namespace iText.IO.Font {
             OutputList.AddLast(new CFFFont.IndexMarkerItem(privateIndex1Ref, privateBase));
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Function reconstructs the FDArray, PrivateDict and LSubr for CID fonts</summary>
         /// <param name="Font">the font</param>
         internal virtual void Reconstruct(int Font) {
@@ -1447,7 +1496,9 @@ namespace iText.IO.Font {
             ReconstructPrivateDict(Font, fdPrivate, fdPrivateBase, fdSubrs);
             ReconstructPrivateSubrs(Font, fdPrivateBase, fdSubrs);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Function subsets the FDArray and builds the new one with new offsets</summary>
         /// <param name="Font">The font</param>
         /// <param name="fdPrivate">OffsetItem Array (one for each FDArray)</param>
@@ -1508,7 +1559,9 @@ namespace iText.IO.Font {
                 OutputList.AddLast(new CFFFont.IndexMarkerItem(fdOffsets[k], fdArrayBase));
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Function Adds the new private dicts (only for the FDs used) to the list</summary>
         /// <param name="Font">the font</param>
         /// <param name="fdPrivate">OffsetItem array one element for each private</param>
@@ -1547,7 +1600,9 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //			}
         /// <summary>Function Adds the new LSubrs dicts (only for the FDs used) to the list</summary>
         /// <param name="Font">The index of the font</param>
@@ -1568,7 +1623,9 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Calculates how many byte it took to write the offset for the subrs in a specific
         /// private dict.
@@ -1596,6 +1653,7 @@ namespace iText.IO.Font {
             // return the size
             return OffsetSize;
         }
+//\endcond
 
         /// <summary>Function computes the size of an index</summary>
         /// <param name="indexOffset">The offset for the computed index</param>
@@ -1621,6 +1679,7 @@ namespace iText.IO.Font {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// The function creates a private dict for a font that was not CID
         /// All the keys are copied as is except for the subrs key
@@ -1647,7 +1706,9 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// the function marks the beginning of the subrs index and adds the subsetted subrs
         /// index to the output list.
@@ -1665,14 +1726,18 @@ namespace iText.IO.Font {
                     )), 0, NewSubrsIndexNonCID.Length));
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns the CID to which specified GID is mapped.</summary>
         /// <param name="gid">glyph identifier</param>
         /// <returns>CID value</returns>
         internal virtual int GetCidForGlyphId(int gid) {
             return GetCidForGlyphId(0, gid);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns the CID to which specified GID is mapped.</summary>
         /// <param name="fontIndex">index of font for which cid-gid mapping is to be identified</param>
         /// <param name="gid">glyph identifier</param>
@@ -1685,6 +1750,7 @@ namespace iText.IO.Font {
             int index = gid - 1;
             return index >= 0 && index < fonts[fontIndex].gidToCid.Length ? fonts[fontIndex].gidToCid[index] : gid;
         }
+//\endcond
 
         /// <summary>Creates glyph-to-character id array.</summary>
         /// <param name="fontIndex">index of font for which charsets data is to be parsed</param>

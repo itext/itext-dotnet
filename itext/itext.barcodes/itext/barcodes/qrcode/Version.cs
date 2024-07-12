@@ -24,6 +24,7 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>See ISO 18004:2006 Annex D.</summary>
     internal sealed class Version {
         /// <summary>See ISO 18004:2006 Annex D.</summary>
@@ -115,6 +116,7 @@ namespace iText.Barcodes.Qrcode {
             return VERSIONS[versionNumber - 1];
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Decode the version information.</summary>
         /// <param name="versionBits">bits stored as int containing</param>
         /// <returns>Version decoded from the versionBits</returns>
@@ -143,7 +145,9 @@ namespace iText.Barcodes.Qrcode {
             // If we didn't find a close enough match, fail
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Build the function pattern, See ISO 18004:2006 Annex E.</summary>
         /// <returns>Bitmatrix containing the pattern</returns>
         internal BitMatrix BuildFunctionPattern() {
@@ -179,6 +183,7 @@ namespace iText.Barcodes.Qrcode {
             }
             return bitMatrix;
         }
+//\endcond
 
         /// <summary>Encapsulates a set of error-correction blocks in one symbol version.</summary>
         /// <remarks>
@@ -192,15 +197,19 @@ namespace iText.Barcodes.Qrcode {
 
             private readonly Version.ECB[] ecBlocks;
 
+//\cond DO_NOT_DOCUMENT
             internal ECBlocks(int ecCodewordsPerBlock, Version.ECB ecBlocks) {
                 this.ecCodewordsPerBlock = ecCodewordsPerBlock;
                 this.ecBlocks = new Version.ECB[] { ecBlocks };
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ECBlocks(int ecCodewordsPerBlock, Version.ECB ecBlocks1, Version.ECB ecBlocks2) {
                 this.ecCodewordsPerBlock = ecCodewordsPerBlock;
                 this.ecBlocks = new Version.ECB[] { ecBlocks1, ecBlocks2 };
             }
+//\endcond
 
             /// <returns>The number of error-correction words per block</returns>
             public int GetECCodewordsPerBlock() {
@@ -236,10 +245,12 @@ namespace iText.Barcodes.Qrcode {
 
             private readonly int dataCodewords;
 
+//\cond DO_NOT_DOCUMENT
             internal ECB(int count, int dataCodewords) {
                 this.count = count;
                 this.dataCodewords = dataCodewords;
             }
+//\endcond
 
             public int GetCount() {
                 return count;
@@ -386,4 +397,5 @@ namespace iText.Barcodes.Qrcode {
                 (30, new Version.ECB(20, 15), new Version.ECB(61, 16))) };
         }
     }
+//\endcond
 }

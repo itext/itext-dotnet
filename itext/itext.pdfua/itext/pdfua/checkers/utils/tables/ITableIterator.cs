@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Pdfua.Checkers.Utils.Tables {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Interface that provides methods for iterating over the elements of a table.</summary>
     internal interface ITableIterator<T> {
         /// <summary>Checks if there is a next element in the iteration.</summary>
@@ -74,4 +75,5 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <returns>the colspan of current position</returns>
         int GetColspan();
     }
+//\endcond
 }

@@ -28,12 +28,15 @@ using iText.Signatures.Validation.V1.Context;
 using iText.Signatures.Validation.V1.Extensions;
 
 namespace iText.Signatures.Validation.V1 {
+    /// <summary>
+    /// Class which stores properties, which are related to signature validation process.
+    /// </summary>
     public class SignatureValidationProperties {
         public const bool DEFAULT_CONTINUE_AFTER_FAILURE = true;
 
         public static readonly TimeSpan DEFAULT_FRESHNESS_PRESENT_CRL = TimeSpan.FromDays(30);
 
-        public static readonly TimeSpan DEFAULT_FRESHNESS_PRESENT_OCSP = TimeSpan.FromDays(24);
+        public static readonly TimeSpan DEFAULT_FRESHNESS_PRESENT_OCSP = TimeSpan.FromDays(30);
 
         public static readonly TimeSpan DEFAULT_FRESHNESS_HISTORICAL = TimeSpan.FromMinutes(1);
 
@@ -42,7 +45,12 @@ namespace iText.Signatures.Validation.V1 {
 
         private readonly Dictionary<ValidationContext, SignatureValidationProperties.ContextProperties> properties
              = new Dictionary<ValidationContext, SignatureValidationProperties.ContextProperties>();
+        private readonly IList<IOcspClient> ocspClients = new List<IOcspClient>();
+        private readonly IList<ICrlClient> crlClients = new List<ICrlClient>();
 
+        /// <summary>
+        /// Create <see cref="SignatureValidationProperties"/> with default values.
+        /// </summary>
         public SignatureValidationProperties() {
             SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), DEFAULT_CONTINUE_AFTER_FAILURE);
             SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), DEFAULT_ONLINE_FETCHING
@@ -62,11 +70,14 @@ namespace iText.Signatures.Validation.V1 {
                 <CertificateExtension>(new KeyUsageExtension(KeyUsage.NON_REPUDIATION)));
             IList<CertificateExtension> certIssuerRequiredExtensions = new List<CertificateExtension>();
             certIssuerRequiredExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN));
-            certIssuerRequiredExtensions.Add(new BasicConstraintsExtension(true));
+            certIssuerRequiredExtensions.Add(new DynamicBasicConstraintsExtension());
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), certIssuerRequiredExtensions);
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.TIMESTAMP), JavaCollectionsUtil.SingletonList
                 <CertificateExtension>(new ExtendedKeyUsageExtension(JavaCollectionsUtil.SingletonList<String>(ExtendedKeyUsageExtension
                 .TIME_STAMPING))));
+            
+            ocspClients.Add(new ValidationOcspClient());
+            crlClients.Add(new ValidationCrlClient());
         }
 
         /// <summary>
@@ -83,6 +94,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <summary>
         /// Sets the freshness setting for the specified validator,
         /// time based and certificate source contexts in milliseconds.
+        /// This parameter specifies how old revocation data can be, compared to validation time, in order to be trustworthy.
         /// </summary>
         /// <param name="validatorContexts">the validators for which to apply the setting</param>
         /// <param name="certificateSources">the certificate sources to</param>
@@ -109,7 +121,11 @@ namespace iText.Signatures.Validation.V1 {
                 (p) => p.GetContinueAfterFailure().GetValueOrDefault());
         }
 
-        /// <summary>Sets the Continue after failure setting for the provided context.</summary>
+        /// <summary>
+        /// Sets the Continue after failure setting for the provided context.
+        /// This parameter specifies if validation is expected to continue after first failure is encountered.
+        /// Only <see cref="ValidationResult#INVALID"/> is considered to be a failure.
+        /// </summary>
         /// <param name="validatorContexts">the validators for which to set the Continue after failure setting</param>
         /// <param name="certificateSources">the certificateSources for which to set the Continue after failure setting
         ///     </param>
@@ -162,8 +178,17 @@ namespace iText.Signatures.Validation.V1 {
                 .GetCertificateSource(), validationContext.GetTimeBasedContext(), (p) => p.GetRequiredExtensions());
         }
 
-        internal iText.Signatures.Validation.V1.SignatureValidationProperties SetRequiredExtensions(CertificateSources
-             certificateSources, IList<CertificateExtension> requiredExtensions) {
+        /// <summary>
+        /// Set list of extensions which are required to be set to a certificate depending on certificate source.
+        /// <para />
+        /// By default, required extensions are set to be compliant with common validation norms.
+        /// Changing those can result in falsely positive validation result.
+        /// </summary>
+        /// <param name="certificateSources"><see cref="CertificateSource"/> for extensions to be present</param>
+        /// <param name="requiredExtensions">list of required <see cref="CertificateExtension"/></param>
+        /// <returns>this same <see cref="SignatureValidationProperties"/> instance</returns>
+        public iText.Signatures.Validation.V1.SignatureValidationProperties SetRequiredExtensions(CertificateSources
+            certificateSources, IList<CertificateExtension> requiredExtensions) {
             // make a defensive copy of  requiredExtensions and already wrap it with unmodifiableList so that we don't have
             // to do this every time it is retrieved. Now we are protected against changes in th passed list and from
             // changes in the returned list
@@ -174,6 +199,51 @@ namespace iText.Signatures.Validation.V1 {
             return this;
         }
 
+        /// <summary>
+        /// Gets all ICrlClient instances which will be used to retrieve CRL responses during the validation.
+        /// </summary>
+        /// <returns>
+        /// all ICrlClient instances which will be used to retrieve CRL responses during the validation
+        /// </returns>
+        public virtual IList<ICrlClient> GetCrlClients() {
+            return JavaCollectionsUtil.UnmodifiableList(crlClients);
+        }
+
+        /// <summary>
+        /// Adds new ICrlClient instance which will be used to retrieve CRL responses during the validation.
+        /// </summary>
+        /// <param name="crlClient">
+        /// ICrlClient instance which will be used to retrieve CRL responses during the validation
+        /// </param>
+        /// <returns>this same SignatureValidationProperties instance</returns>
+        public SignatureValidationProperties AddCrlClient(ICrlClient crlClient) {
+            crlClients.Add(crlClient);
+            return this;
+        }
+
+        /// <summary>
+        /// Gets all IOcspClient instances which will be used to retrieve OCSP responses during the validation.
+        /// </summary>
+        /// <returns>
+        /// all IOcspClient instances which will be used to retrieve OCSP responses during the validation
+        /// </returns>
+        public virtual IList<IOcspClient> GetOcspClients() {
+            return JavaCollectionsUtil.UnmodifiableList(ocspClients);
+        }
+        
+        /// <summary>
+        /// Adds new IOcspClient instance which will be used to retrieve OCSP response during the validation.
+        /// </summary>
+        /// <param name="ocspClient">
+        /// IOcspClient instance which will be used to retrieve OCSP response during the validation
+        /// </param>
+        /// <returns>this same SignatureValidationProperties instance</returns>
+        public SignatureValidationProperties AddOcspClient(IOcspClient ocspClient) {
+            ocspClients.Add(ocspClient);
+            return this;
+        }
+
+        //\cond DO_NOT_DOCUMENT 
         /// <summary>This method executes the setter method for every combination of selected validators and certificateSources
         ///     </summary>
         /// <param name="validatorContexts">the validators to execute the setter on</param>
@@ -212,6 +282,7 @@ namespace iText.Signatures.Validation.V1 {
             }
             return default;
         }
+        //\endcond 
 
         /// <summary>Enum representing possible online fetching permissions.</summary>
         public enum OnlineFetching {
@@ -223,6 +294,7 @@ namespace iText.Signatures.Validation.V1 {
             NEVER_FETCH
         }
 
+        //\cond DO_NOT_DOCUMENT 
         internal class ContextProperties {
             private TimeSpan freshness;
 
@@ -268,5 +340,6 @@ namespace iText.Signatures.Validation.V1 {
                 this.requiredExtensions = requiredExtensions;
             }
         }
+        //\endcond 
     }
 }

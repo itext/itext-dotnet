@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -155,7 +154,7 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
             properties.UseAppendMode();
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
             signer.SetCertificationLevel(certificationLevel);
             signer.SetFieldName(name);
             // Creating the signature
@@ -172,7 +171,7 @@ namespace iText.Signatures.Sign {
             if (isAppendMode) {
                 properties.UseAppendMode();
             }
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
             signer.SetCertificationLevel(certificationLevel);
             signer.SetFieldName(name);
             // Creating the appearance

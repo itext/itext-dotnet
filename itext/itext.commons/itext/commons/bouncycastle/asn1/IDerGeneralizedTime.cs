@@ -20,11 +20,24 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+
 namespace iText.Commons.Bouncycastle.Asn1 {
     /// <summary>
     /// This interface represents the wrapper for ASN1GeneralizedTime that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
     public interface IDerGeneralizedTime : IAsn1Object {
+        /// <summary>
+        /// Calls actual
+        /// <c>getDate</c>
+        /// method for the wrapped ASN1GeneralizedTime object.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="System.DateTime"/>
+        /// date stored in the wrapped ASN1GeneralizedTime.
+        /// </returns>
+        DateTime GetDate();
     }
 }

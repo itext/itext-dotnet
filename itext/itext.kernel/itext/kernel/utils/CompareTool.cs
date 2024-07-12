@@ -116,13 +116,20 @@ namespace iText.Kernel.Utils {
 
         private String compareExec;
 
+        /// <summary>
+        /// Create new
+        /// <see cref="CompareTool"/>
+        /// instance.
+        /// </summary>
         public CompareTool() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal CompareTool(String gsExec, String compareExec) {
             this.gsExec = gsExec;
             this.compareExec = compareExec;
         }
+//\endcond
 
         /// <summary>
         /// Create
@@ -1086,7 +1093,7 @@ namespace iText.Kernel.Utils {
             using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf)) {
                 using (PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
                     ))) {
-                    using (FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create)) {
+                    using (Stream xmlOut = FileUtil.GetFileOutputStream(outXmlPath)) {
                         new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
                     }
                 }
@@ -1094,7 +1101,7 @@ namespace iText.Kernel.Utils {
             using (PdfReader readerCmp = iText.Kernel.Utils.CompareTool.CreateOutputReader(cmpPdf)) {
                 using (PdfDocument docCmp = new PdfDocument(readerCmp, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
                     ))) {
-                    using (FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create)) {
+                    using (Stream xmlCmp = FileUtil.GetFileOutputStream(cmpXmlPath)) {
                         new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
                     }
                 }
@@ -1148,10 +1155,12 @@ namespace iText.Kernel.Utils {
             return convertedInfo;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String ConvertProducerLine(String producer) {
             return iText.Commons.Utils.StringUtil.ReplaceAll(iText.Commons.Utils.StringUtil.ReplaceAll(producer, VERSION_REGEXP
                 , VERSION_REPLACEMENT), COPYRIGHT_REGEXP, COPYRIGHT_REPLACEMENT);
         }
+//\endcond
 
         private void Init(String outPdf, String cmpPdf) {
             this.outPdf = outPdf;
@@ -1249,8 +1258,8 @@ namespace iText.Kernel.Utils {
                     (imageFiles[i].Name) + " ...");
                 System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": " + UrlUtil.GetNormalizedFileUriString
                     (imageFiles[i].Name) + " ...");
-                FileStream is1 = new FileStream(imageFiles[i].FullName, FileMode.Open, FileAccess.Read);
-                FileStream is2 = new FileStream(cmpImageFiles[i].FullName, FileMode.Open, FileAccess.Read);
+                Stream is1 = FileUtil.GetInputStreamForFile(imageFiles[i].FullName);
+                Stream is2 = FileUtil.GetInputStreamForFile(cmpImageFiles[i].FullName);
                 bool cmpResult = CompareStreams(is1, is2);
                 is1.Dispose();
                 is2.Dispose();
@@ -1409,8 +1418,8 @@ namespace iText.Kernel.Utils {
                             }
                             if (generateCompareByContentXmlReport) {
                                 String outPdfName = new FileInfo(outPdf).Name;
-                                FileStream xml = new FileStream(outPath + "/" + outPdfName.JSubstring(0, outPdfName.Length - 3) + "report.xml"
-                                    , FileMode.Create);
+                                Stream xml = FileUtil.GetFileOutputStream(outPath + "/" + outPdfName.JSubstring(0, outPdfName.Length - 3) 
+                                    + "report.xml");
                                 try {
                                     compareResult.WriteReportToXml(xml);
                                 }
@@ -1691,6 +1700,20 @@ namespace iText.Kernel.Utils {
             return null;
         }
 
+        /// <summary>Compare PDF objects.</summary>
+        /// <param name="outObj">out object corresponding to the output file, which is to be compared with cmp object</param>
+        /// <param name="cmpObj">cmp object corresponding to the cmp-file, which is to be compared with out object</param>
+        /// <param name="currentPath">
+        /// current objects
+        /// <see cref="iText.Kernel.Utils.Objectpathitems.ObjectPath"/>
+        /// path
+        /// </param>
+        /// <param name="compareResult">
+        /// 
+        /// <see cref="CompareResult"/>
+        /// for the results of the comparison of the two documents
+        /// </param>
+        /// <returns>true if objects are equal, false otherwise.</returns>
         protected internal virtual bool CompareObjects(PdfObject outObj, PdfObject cmpObj, ObjectPath currentPath, 
             CompareTool.CompareResult compareResult) {
             PdfObject outDirectObj = null;
@@ -2281,10 +2304,23 @@ namespace iText.Kernel.Utils {
                 XmlUtils.WriteXmlDocToStream(xmlReport, stream);
             }
 
+            /// <summary>Checks whether maximum number of difference messages to be handled by this CompareResult is reached.
+            ///     </summary>
+            /// <returns>true if limit of difference messages is reached, false otherwise.</returns>
             protected internal virtual bool IsMessageLimitReached() {
                 return differences.Count >= messageLimit;
             }
 
+            /// <summary>
+            /// Adds an error message for the
+            /// <see cref="iText.Kernel.Utils.Objectpathitems.ObjectPath"/>.
+            /// </summary>
+            /// <param name="path">
+            /// 
+            /// <see cref="iText.Kernel.Utils.Objectpathitems.ObjectPath"/>
+            /// for the two corresponding objects in the compared documents
+            /// </param>
+            /// <param name="message">an error message</param>
             protected internal virtual void AddError(ObjectPath path, String message) {
                 if (differences.Count < messageLimit) {
                     differences.Put(new ObjectPath(path), message);

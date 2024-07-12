@@ -598,6 +598,7 @@ namespace iText.Kernel.Pdf.Tagging {
             base.Flush();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void AddKidObject(PdfDictionary parent, int index, PdfObject kid) {
             if (parent.IsFlushed()) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_ADD_KID_TO_THE_FLUSHED_ELEMENT);
@@ -637,6 +638,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 kid.SetModified();
             }
         }
+//\endcond
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;

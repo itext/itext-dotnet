@@ -20,8 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Threading;
-using iText.Commons.Utils;
 using iText.Layout.Renderer;
 
 namespace iText.Forms.Fields {
@@ -53,6 +53,7 @@ namespace iText.Forms.Fields {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets meta info which was set previously.</summary>
         /// <remarks>
         /// Gets meta info which was set previously.
@@ -63,5 +64,6 @@ namespace iText.Forms.Fields {
         internal static MetaInfoContainer GetMetaInfoForLayout() {
             return metaInfoForLayout.Value;
         }
+//\endcond
     }
 }

@@ -172,17 +172,29 @@ namespace iText.Layout {
         }
 
         private class ImagesContainer {
+//\cond DO_NOT_DOCUMENT
             internal String imageName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal iText.Layout.Element.Image img;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal FloatPropertyValue? floatPropertyValue;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal HorizontalAlignment? horizontalAlignment;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ClearPropertyValue? clearPropertyValue;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal UnitValue width;
+//\endcond
 
             public ImagesContainer(String imageName, iText.Layout.Element.Image img, FloatPropertyValue? floatPropertyValue
                 , HorizontalAlignment? horizontalAlignment, ClearPropertyValue? clearPropertyValue, UnitValue width) {

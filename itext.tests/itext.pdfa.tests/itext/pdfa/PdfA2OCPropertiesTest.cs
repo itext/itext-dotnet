@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Pdfa.Exceptions;
@@ -47,8 +48,7 @@ namespace iText.Pdfa {
         public virtual void CheckNameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA2b_ocPropertiesCheck01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -71,8 +71,7 @@ namespace iText.Pdfa {
         public virtual void CheckAsKeyInContentConfigDictTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA2b_ocPropertiesCheck02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -93,8 +92,7 @@ namespace iText.Pdfa {
         public virtual void CheckNameEntryShouldBeUniqueBetweenAdditionalConfigsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA2b_ocPropertiesCheck03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -120,8 +118,7 @@ namespace iText.Pdfa {
         public virtual void CheckOCCDContainNameTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA2b_ocPropertiesCheck04.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -146,8 +143,7 @@ namespace iText.Pdfa {
         public virtual void CheckOrderArrayContainsReferencesToAllOCGsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA2b_ocPropertiesCheck05.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -182,8 +178,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA2b_ocPropertiesCheck06.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_pdfA2b_ocPropertiesCheck06.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
                 , "http://www.color.org", "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();

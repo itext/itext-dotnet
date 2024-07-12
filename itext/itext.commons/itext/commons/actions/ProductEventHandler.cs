@@ -35,10 +35,13 @@ using iText.Commons.Logs;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Actions {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Handles events based oh their origin.</summary>
     internal sealed class ProductEventHandler : AbstractContextBasedEventHandler {
+//\cond DO_NOT_DOCUMENT
         internal static readonly iText.Commons.Actions.ProductEventHandler INSTANCE = new iText.Commons.Actions.ProductEventHandler
             ();
+//\endcond
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.ProductEventHandler
             ));
@@ -77,14 +80,19 @@ namespace iText.Commons.Actions {
             TryProcessEvent(@event);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal ITextProductEventProcessor AddProcessor(ITextProductEventProcessor processor) {
             return processors.Put(processor.GetProductName(), processor);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal ITextProductEventProcessor RemoveProcessor(String productName) {
             return processors.JRemove(productName);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal ITextProductEventProcessor GetActiveProcessor(String productName) {
             ITextProductEventProcessor processor = processors.Get(productName);
             if (processor != null) {
@@ -99,15 +107,21 @@ namespace iText.Commons.Actions {
                 return null;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal IDictionary<String, ITextProductEventProcessor> GetProcessors() {
             return JavaCollectionsUtil.UnmodifiableMap(new Dictionary<String, ITextProductEventProcessor>(processors));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal void ClearProcessors() {
             processors.Clear();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal IList<AbstractProductProcessITextEvent> GetEvents(SequenceId id) {
             lock (events) {
                 IList<AbstractProductProcessITextEvent> listOfEvents = events.Get(id);
@@ -118,7 +132,9 @@ namespace iText.Commons.Actions {
                     >(listOfEvents));
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal void AddEvent(SequenceId id, AbstractProductProcessITextEvent @event) {
             lock (events) {
                 IList<AbstractProductProcessITextEvent> listOfEvents = events.Get(id);
@@ -129,6 +145,7 @@ namespace iText.Commons.Actions {
                 listOfEvents.Add(@event);
             }
         }
+//\endcond
 
         private void TryProcessEvent(AbstractContextBasedITextEvent @event) {
             if (!(@event is AbstractProductProcessITextEvent)) {
@@ -168,4 +185,5 @@ namespace iText.Commons.Actions {
             }
         }
     }
+//\endcond
 }

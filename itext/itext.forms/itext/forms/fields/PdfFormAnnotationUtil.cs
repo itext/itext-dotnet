@@ -102,6 +102,7 @@ namespace iText.Forms.Fields {
                     kidDict.Remove(PdfName.Parent);
                     field.GetPdfObject().MergeDifferent(kidDict);
                     field.RemoveChildren();
+                    kidDict.GetIndirectReference().SetFree();
                     field.SetChildField(PdfFormAnnotation.MakeFormAnnotation(field.GetPdfObject(), field.GetDocument()));
                     ReplaceAnnotationOnPage(kidDict, field.GetPdfObject());
                 }

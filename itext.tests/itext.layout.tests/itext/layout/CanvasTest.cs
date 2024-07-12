@@ -314,6 +314,7 @@ namespace iText.Layout {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class ExposedPdfCanvas : PdfCanvas {
             public ExposedPdfCanvas(PdfStream contentStream, PdfResources resources, PdfDocument document)
                 : base(contentStream, resources, document) {
@@ -327,5 +328,6 @@ namespace iText.Layout {
                 return this.drawingOnPage;
             }
         }
+//\endcond
     }
 }

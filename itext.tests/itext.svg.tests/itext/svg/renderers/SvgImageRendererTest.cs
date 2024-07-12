@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -55,7 +55,7 @@ namespace iText.Svg.Renderers {
             String outFileName = DESTINATION_FOLDER + "svgWithSvg.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
                 SetCompressionLevel(0))))) {
-                INode parsedSvg = SvgConverter.Parse(new FileStream(svgFileName, FileMode.Open, FileAccess.Read));
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
                 float[] wh = SvgConverter.ExtractWidthAndHeight(topSvgRenderer);
@@ -76,7 +76,7 @@ namespace iText.Svg.Renderers {
             String outFileName = DESTINATION_FOLDER + "svgImage.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
                 SetCompressionLevel(0))))) {
-                INode parsedSvg = SvgConverter.Parse(new FileStream(svgFileName, FileMode.Open, FileAccess.Read));
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
                 float[] wh = SvgConverter.ExtractWidthAndHeight(topSvgRenderer);

@@ -182,13 +182,17 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsStandardEncryptionUsed() {
             return ownerPassword != null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsPublicKeyEncryptionUsed() {
             return publicCertificates != null;
         }
+//\endcond
 
         private void ClearEncryption() {
             this.publicCertificates = null;

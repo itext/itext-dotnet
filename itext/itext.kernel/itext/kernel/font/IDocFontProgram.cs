@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
+//\cond DO_NOT_DOCUMENT
     internal interface IDocFontProgram {
         PdfStream GetFontFile();
 
@@ -30,4 +31,5 @@ namespace iText.Kernel.Font {
 
         PdfName GetSubtype();
     }
+//\endcond
 }

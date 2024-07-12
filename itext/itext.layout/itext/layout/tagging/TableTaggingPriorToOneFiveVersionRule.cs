@@ -27,6 +27,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 
 namespace iText.Layout.Tagging {
+//\cond DO_NOT_DOCUMENT
     internal class TableTaggingPriorToOneFiveVersionRule : ITaggingRule {
         private ICollection<TaggingHintKey> finishForbidden = new HashSet<TaggingHintKey>();
 
@@ -64,4 +65,5 @@ namespace iText.Layout.Tagging {
             }
         }
     }
+//\endcond
 }

@@ -14,6 +14,7 @@
 //
 // This is part of java port of project hosted at https://github.com/google/woff2
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // Font table tags
     internal class TableTags {
         // Note that the byte order is big-endian
@@ -165,4 +166,5 @@ namespace iText.IO.Font.Woff2 {
                 Tag('S', 'i', 'l', 'l') };
         // 62
     }
+//\endcond
 }

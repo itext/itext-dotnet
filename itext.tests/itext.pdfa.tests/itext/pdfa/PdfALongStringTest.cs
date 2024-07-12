@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
+using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -52,9 +53,8 @@ namespace iText.Pdfa {
         public virtual void RunTest() {
             String file = "pdfALongString.pdf";
             String filename = destinationFolder + file;
-            using (Stream icm = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )) {
-                using (FileStream fos = new FileStream(filename, FileMode.Create)) {
+            using (Stream icm = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
+                using (Stream fos = FileUtil.GetFileOutputStream(filename)) {
                     Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_3U, new PdfOutputIntent
                         ("Custom", "", "http://www.color.org", "sRGB ICC preference", icm)));
                     StringBuilder stringBuilder = new StringBuilder(LOREM_IPSUM);

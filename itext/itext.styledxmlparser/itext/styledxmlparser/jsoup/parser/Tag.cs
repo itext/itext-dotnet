@@ -189,10 +189,12 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return formSubmit;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual iText.StyledXmlParser.Jsoup.Parser.Tag SetSelfClosing() {
             selfClosing = true;
             return this;
         }
+//\endcond
 
         public override bool Equals(Object o) {
             if (this == o) {

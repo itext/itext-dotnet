@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
@@ -50,7 +51,7 @@ namespace iText.Kernel.Pdf {
             encryptionProperties.SetStandardEncryption(new byte[16], new byte[16], 0, 0);
             encryptor.SetEncryptionProperties(encryptionProperties);
             using (PdfReader initialFile = new PdfReader(initialFileName)) {
-                using (FileStream outputStream = new FileStream(outFileName, FileMode.Create)) {
+                using (Stream outputStream = FileUtil.GetFileOutputStream(outFileName)) {
                     encryptor.Encrypt(initialFile, outputStream);
                 }
             }

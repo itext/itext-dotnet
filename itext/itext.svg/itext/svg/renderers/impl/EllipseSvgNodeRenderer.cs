@@ -33,13 +33,21 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;circle&gt; tag.
     /// </summary>
     public class EllipseSvgNodeRenderer : AbstractSvgNodeRenderer {
+//\cond DO_NOT_DOCUMENT
         internal float cx;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float cy;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float rx;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float ry;
+//\endcond
 
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas cv = context.GetCurrentCanvas();

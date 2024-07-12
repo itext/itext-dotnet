@@ -24,14 +24,19 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfa {
+//\cond DO_NOT_DOCUMENT
     internal class PdfAPage : PdfPage {
+//\cond DO_NOT_DOCUMENT
         internal PdfAPage(PdfDocument pdfDocument, PageSize pageSize)
             : base(pdfDocument, pageSize) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal PdfAPage(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
+//\endcond
 
         public override void Flush(bool flushResourcesContentStreams) {
             // We check in advance whether this PdfAPage can be flushed and call the flush method only if it is.
@@ -46,4 +51,5 @@ namespace iText.Pdfa {
             }
         }
     }
+//\endcond
 }

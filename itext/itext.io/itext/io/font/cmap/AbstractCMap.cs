@@ -38,39 +38,52 @@ namespace iText.IO.Font.Cmap {
             return cmapName;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetName(String cmapName) {
             this.cmapName = cmapName;
         }
+//\endcond
 
         public virtual String GetOrdering() {
             return ordering;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetOrdering(String ordering) {
             this.ordering = ordering;
         }
+//\endcond
 
         public virtual String GetRegistry() {
             return registry;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetRegistry(String registry) {
             this.registry = registry;
         }
+//\endcond
 
         public virtual int GetSupplement() {
             return supplement;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetSupplement(int supplement) {
             this.supplement = supplement;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract void AddChar(String mark, CMapObject code);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddCodeSpaceRange(byte[] low, byte[] high) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddRange(String from, String to, CMapObject code) {
             byte[] a1 = DecodeStringToByte(from);
             byte[] a2 = DecodeStringToByte(to);
@@ -106,6 +119,7 @@ namespace iText.IO.Font.Cmap {
                 }
             }
         }
+//\endcond
 
         //    protected static byte[] toByteArray(String value) {
         //        if (PdfEncodings.isPdfDocEncoding(value)) {

@@ -27,6 +27,7 @@ using iText.Bouncycastlefips.Security;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -64,7 +65,7 @@ namespace iText.Signatures.Sign {
             String cmpFileName = "cmp_simplePssSignature.pdf";
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName, 
@@ -90,7 +91,7 @@ namespace iText.Signatures.Sign {
 
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName,
@@ -115,7 +116,7 @@ namespace iText.Signatures.Sign {
             String outFileName = "simplePssSignatureSha384.pdf";
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
             {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName,
@@ -136,7 +137,7 @@ namespace iText.Signatures.Sign {
             String cmpFileName = "cmp_simplePssSignature.pdf";
             
             if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                // Signer RSASSA-PSS not recognised in BC mode
+                // Signer RSASSA-PSS not recognised in BCFIPS mode
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
                 {
                     DoRoundTrip(digestName, "RSASSA-PSS", outFileName, new RSASSAPSSMechanismParams(
@@ -178,7 +179,7 @@ namespace iText.Signatures.Sign {
         private void DoSign(String digestAlgo, String signatureAlgo, String outFile, IApplicableSignatureParams @params
             ) {
             // write to a file for easier inspection when debugging
-            using (FileStream fos = new FileStream(outFile, FileMode.Create)) {
+            using (FileStream fos = FileUtil.GetFileOutputStream(outFile)) {
                 IX509Certificate root = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "ca.crt"));
                 IX509Certificate signerCert = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "rsa.crt"));
                 IX509Certificate[] signChain = new IX509Certificate[] { signerCert, root };

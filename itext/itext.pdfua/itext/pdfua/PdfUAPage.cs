@@ -24,6 +24,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfua {
+//\cond DO_NOT_DOCUMENT
     internal class PdfUAPage : PdfPage {
         protected internal PdfUAPage(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -42,4 +43,5 @@ namespace iText.Pdfua {
             ((PdfUADocument)document).WarnOnPageFlush();
         }
     }
+//\endcond
 }

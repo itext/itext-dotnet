@@ -59,11 +59,17 @@ namespace iText.Layout.Renderer {
             return line;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal const int NON_MONO_SPACE_ENSP_WIDTH = 500;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int NON_MONO_SPACE_THINSP_WIDTH = 200;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int AMOUNT_OF_SPACE_IN_TAB = 3;
+//\endcond
 
         private static int? CalculateXAdvancement(int spaceWidth, bool isMonospaceFont, Glyph glyph) {
             int? xAdvance = null;

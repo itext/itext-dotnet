@@ -141,6 +141,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// a radius must be positive, and cannot be more than half the distance in
         /// the dimension it is for.
@@ -159,7 +160,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             return radius;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// In case of a circular radius, the calculation in
         /// <see cref="CheckRadius(float, float)"/>
@@ -186,6 +189,7 @@ namespace iText.Svg.Renderers.Impl {
             float biggestRadius = Math.Max(rx, ry);
             return Math.Min(maxRadius, biggestRadius);
         }
+//\endcond
 
         public override ISvgNodeRenderer CreateDeepCopy() {
             iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer copy = new iText.Svg.Renderers.Impl.RectangleSvgNodeRenderer

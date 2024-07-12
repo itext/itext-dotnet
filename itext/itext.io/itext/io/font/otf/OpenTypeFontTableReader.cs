@@ -210,6 +210,7 @@ namespace iText.IO.Font.Otf {
             return tagslLocs;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>This is the starting point of the class.</summary>
         /// <remarks>
         /// This is the starting point of the class. A sub-class must call this
@@ -237,6 +238,7 @@ namespace iText.IO.Font.Otf {
                 throw new FontReadingException("Error reading font file", e);
             }
         }
+//\endcond
 
         private void ReadLookupListTable(int lookupListTableLocation) {
             lookupList = new List<OpenTableLookup>();

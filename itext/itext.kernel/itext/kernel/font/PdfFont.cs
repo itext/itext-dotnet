@@ -557,6 +557,7 @@ namespace iText.Kernel.Font {
             return fontStream;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Helper method for making an object indirect, if the object already is indirect.</summary>
         /// <remarks>
         /// Helper method for making an object indirect, if the object already is indirect.
@@ -581,6 +582,7 @@ namespace iText.Kernel.Font {
                 return false;
             }
         }
+//\endcond
 
         public override String ToString() {
             return "PdfFont{" + "fontProgram=" + fontProgram + '}';

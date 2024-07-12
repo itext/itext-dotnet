@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// A
     /// <see cref="FlexContainer"/>
@@ -42,4 +43,5 @@ namespace iText.Layout.Element {
             return new FlexContainerRenderer(this);
         }
     }
+//\endcond
 }

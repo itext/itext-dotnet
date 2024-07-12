@@ -136,13 +136,17 @@ namespace iText.Layout.Renderer {
         private class InvocationsCounter {
             private int counter = 0;
 
+//\cond DO_NOT_DOCUMENT
             internal virtual void RegisterInvocation() {
                 ++counter;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual int GetInvocationsCount() {
                 return counter;
             }
+//\endcond
         }
     }
 }

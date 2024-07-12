@@ -75,27 +75,41 @@ namespace iText.IO.Codec {
     /// </remarks>
     /// <seealso cref="TIFFField"/>
     public class TIFFDirectory {
+//\cond DO_NOT_DOCUMENT
         /// <summary>A boolean storing the endianness of the stream.</summary>
         internal bool isBigEndian;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The number of entries in the IFD.</summary>
         internal int numEntries;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>An array of TIFFFields.</summary>
         internal TIFFField[] fields;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A Hashtable indexing the fields by tag number.</summary>
         internal IDictionary<int, int?> fieldIndex = new Dictionary<int, int?>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The offset of this IFD.</summary>
         internal long IFDOffset = 8;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The offset of the next IFD.</summary>
         internal long nextIFDOffset = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The default constructor.</summary>
         internal TIFFDirectory() {
         }
+//\endcond
 
         private static bool IsValidEndianTag(int endian) {
             return endian == 0x4949 || endian == 0x4d4d;

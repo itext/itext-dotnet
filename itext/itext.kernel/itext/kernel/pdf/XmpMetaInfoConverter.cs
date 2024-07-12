@@ -28,10 +28,12 @@ using iText.Kernel.XMP.Options;
 using iText.Kernel.XMP.Properties;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class XmpMetaInfoConverter {
         private XmpMetaInfoConverter() {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void AppendMetadataToInfo(byte[] xmpMetadata, PdfDocumentInfo info) {
             if (xmpMetadata != null) {
                 try {
@@ -78,7 +80,9 @@ namespace iText.Kernel.Pdf {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void AppendDocumentInfoToMetadata(PdfDocumentInfo info, XMPMeta xmpMeta) {
             PdfDictionary docInfo = info.GetPdfObject();
             if (docInfo != null) {
@@ -159,6 +163,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
         }
+//\endcond
 
         private static void AppendArrayItemIfDoesNotExist(XMPMeta meta, String ns, String arrayName, String value, 
             int arrayOption) {
@@ -190,4 +195,5 @@ namespace iText.Kernel.Pdf {
             return sb != null ? sb.ToString() : null;
         }
     }
+//\endcond
 }

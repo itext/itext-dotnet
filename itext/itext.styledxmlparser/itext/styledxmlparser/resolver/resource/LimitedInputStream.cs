@@ -25,6 +25,7 @@ using System.IO;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
+    //\cond DO_NOT_DOCUMENT 
     /// <summary>
     /// Implementation of the
     /// <see cref="System.IO.Stream"/>
@@ -145,4 +146,5 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
         }
     }
+   //\endcond 
 }

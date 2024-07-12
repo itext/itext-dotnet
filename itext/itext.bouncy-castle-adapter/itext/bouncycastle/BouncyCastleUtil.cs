@@ -20,7 +20,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastle.X509;
 using iText.Commons.Bouncycastle;
@@ -31,6 +31,7 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.X509;
 
 namespace iText.Bouncycastle {
+    //\cond DO_NOT_DOCUMENT
     internal class BouncyCastleUtil : IBouncyCastleUtil {
 
         internal BouncyCastleUtil() {
@@ -56,4 +57,5 @@ namespace iText.Bouncycastle {
             }
         }
     }
+    //\endcond
 }

@@ -130,6 +130,19 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>
+        /// Get
+        /// <see cref="PdfSignature"/>
+        /// dictionary based on the provided name.
+        /// </summary>
+        /// <param name="name">signature name</param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfSignature"/>
+        /// instance corresponding to the provided name.
+        /// <see langword="null"/>
+        /// otherwise
+        /// </returns>
         public virtual PdfSignature GetSignature(String name) {
             PdfDictionary sigDict = GetSignatureDictionary(name);
             return sigDict != null ? new PdfSignature(sigDict) : null;
@@ -142,13 +155,17 @@ namespace iText.Signatures {
         /// a signature
         /// </returns>
         public virtual PdfDictionary GetSignatureDictionary(String name) {
+            PdfDictionary merged = GetSignatureFormFieldDictionary(name);
+            return merged == null ? null : merged.GetAsDictionary(PdfName.V);
+        }
+
+        public virtual PdfDictionary GetSignatureFormFieldDictionary(String name) {
             GetSignatureNames();
             if (acroForm == null || !sigNames.ContainsKey(name)) {
                 return null;
             }
             PdfFormField field = acroForm.GetField(name);
-            PdfDictionary merged = field.GetPdfObject();
-            return merged.GetAsDictionary(PdfName.V);
+            return field.GetPdfObject();
         }
 
         /* Updates the /ByteRange with the provided value */
@@ -214,11 +231,24 @@ namespace iText.Signatures {
             return sigs;
         }
 
+        /// <summary>Get the amount of signed document revisions.</summary>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// amount of signed document revisions
+        /// </returns>
         public virtual int GetTotalRevisions() {
             GetSignatureNames();
             return totalRevisions;
         }
 
+        /// <summary>Get signed document revision number, which corresponds to the provided signature name.</summary>
+        /// <param name="field">signature name</param>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// revision number
+        /// </returns>
         public virtual int GetRevision(String field) {
             GetSignatureNames();
             field = GetTranslatedFieldName(field);
@@ -228,6 +258,9 @@ namespace iText.Signatures {
             return sigNames.Get(field)[1];
         }
 
+        /// <summary>Get field name, translated using XFA, if any present in the document.</summary>
+        /// <param name="name">field name to be translated</param>
+        /// <returns>translated field name if XFA is present, original name otherwise</returns>
         public virtual String GetTranslatedFieldName(String name) {
             if (acroForm != null && acroForm.GetXfaForm().IsXfaPresent()) {
                 String namex = acroForm.GetXfaForm().FindFieldName(name);
@@ -325,7 +358,7 @@ namespace iText.Signatures {
                 sorter.Add(new Object[] { entry.Key, new int[] { length, 0 } });
             }
             JavaCollectionsUtil.Sort(sorter, new SignatureUtil.SorterComparator());
-            if (sorter.Count > 0) {
+            if (!sorter.IsEmpty()) {
                 if (((int[])sorter[sorter.Count - 1][1])[0] == document.GetReader().GetFileLength()) {
                     totalRevisions = sorter.Count;
                 }

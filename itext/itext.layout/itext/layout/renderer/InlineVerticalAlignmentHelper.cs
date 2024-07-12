@@ -29,6 +29,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal sealed class InlineVerticalAlignmentHelper {
         private const float ADJUSTMENT_THRESHOLD = 0.001F;
 
@@ -208,4 +209,5 @@ namespace iText.Layout.Renderer {
             }
         }
     }
+//\endcond
 }

@@ -152,7 +152,7 @@ namespace iText.Layout {
             String htmlString = MessageFormatUtil.Format(HTML_PATTERN, FormatTextAlignment(itemTextAlignment, true), FormatBaseDirection
                 (itemBaseDirection), FormatTextAlignment(listTextAlignment, true), FormatBaseDirection(listBaseDirection
                 ));
-            using (FileStream htmlFile = new FileStream(DESTINATION_FOLDER + fileName + ".html", FileMode.Create)) {
+            using (Stream htmlFile = FileUtil.GetFileOutputStream(DESTINATION_FOLDER + fileName + ".html")) {
                 byte[] htmlBytes = htmlString.GetBytes(System.Text.Encoding.UTF8);
                 htmlFile.Write(htmlBytes, 0, htmlBytes.Length);
             }

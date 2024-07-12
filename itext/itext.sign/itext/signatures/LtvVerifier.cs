@@ -39,6 +39,8 @@ using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.SignatureValidator should be used instead."
+        )]
     public class LtvVerifier : RootStoreVerifier {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
@@ -323,6 +325,22 @@ namespace iText.Signatures {
             return ocsps;
         }
 
+        /// <summary>
+        /// Initialize
+        /// <see cref="LtvVerifier"/>
+        /// object by using provided document.
+        /// </summary>
+        /// <remarks>
+        /// Initialize
+        /// <see cref="LtvVerifier"/>
+        /// object by using provided document.
+        /// This method reads all the existing signatures and mathematically validates the last one.
+        /// </remarks>
+        /// <param name="document">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance to be verified
+        /// </param>
         protected internal virtual void InitLtvVerifier(PdfDocument document) {
             this.document = document;
             this.acroForm = PdfFormCreator.GetAcroForm(document, true);

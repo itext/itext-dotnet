@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Font;
 using iText.StyledXmlParser.Css.Parse;
@@ -41,8 +40,8 @@ namespace iText.StyledXmlParser.Css {
         [NUnit.Framework.Test]
         public virtual void SrcPropertyTest() {
             String fontSrc = "web-fonts/droid-serif-invalid.";
-            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new FileStream(sourceFolder + "srcs.css", FileMode.Open
-                , FileAccess.Read));
+            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(sourceFolder + "srcs.css"
+                ));
             CssFontFaceRule fontFaceRule = (CssFontFaceRule)styleSheet.GetStatements()[0];
             CssDeclaration src = fontFaceRule.GetProperties()[0];
             NUnit.Framework.Assert.AreEqual("src", src.GetProperty(), "src expected");
@@ -99,8 +98,8 @@ namespace iText.StyledXmlParser.Css {
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION
             )]
         public virtual void ParseBase64SrcTest() {
-            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new FileStream(sourceFolder + "srcs2.css", FileMode.Open
-                , FileAccess.Read));
+            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(sourceFolder + "srcs2.css"
+                ));
             CssFontFaceRule fontFaceRule = (CssFontFaceRule)styleSheet.GetStatements()[0];
             CssDeclaration src = fontFaceRule.GetProperties()[0];
             NUnit.Framework.Assert.AreEqual("src", src.GetProperty(), "src expected");

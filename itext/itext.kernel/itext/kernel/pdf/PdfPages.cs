@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class PdfPages : PdfObjectWrapper<PdfDictionary> {
         private int from;
 
@@ -167,4 +168,5 @@ namespace iText.Kernel.Pdf {
             return true;
         }
     }
+//\endcond
 }

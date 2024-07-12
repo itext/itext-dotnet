@@ -33,13 +33,17 @@ namespace iText.Signatures {
     /// Class that allows you to verify a certificate against
     /// one or more Certificate Revocation Lists.
     /// </summary>
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.CRLValidator should be used instead."
+        )]
     public class CRLVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
         protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CRLVerifier
             ));
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The list of CRLs to check for revocation date.</summary>
         internal IList<IX509Crl> crls;
+//\endcond
 
         /// <summary>Creates a CRLVerifier instance.</summary>
         /// <param name="verifier">the next verifier in the chain</param>

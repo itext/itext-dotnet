@@ -30,95 +30,163 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     public sealed class GifImageHelper {
+//\cond DO_NOT_DOCUMENT
         // max decoder pixel stack size
         internal const int MAX_STACK_SIZE = 4096;
+//\endcond
 
         private class GifParameters {
             public GifParameters(GifImageData image) {
                 this.image = image;
             }
 
+//\cond DO_NOT_DOCUMENT
             internal Stream input;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // global color table used
             internal bool gctFlag;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // background color index
             internal int bgIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // background color
             internal int bgColor;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // pixel aspect ratio
             internal int pixelAspect;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // local color table flag
             internal bool lctFlag;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // interlace flag
             internal bool interlace;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // local color table size
             internal int lctSize;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // current image rectangle
             internal int ix;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int iy;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int iw;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int ih;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // current data block
             internal byte[] block = new byte[256];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // block size
             internal int blockSize = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // last graphic control extension info
             // 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
             internal int dispose = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // use transparent color
             internal bool transparency = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // delay in milliseconds
             internal int delay = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // transparent color index
             internal int transIndex;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // LZW decoder working arrays
             internal short[] prefix;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] suffix;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] pixelStack;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] pixels;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] m_out;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int m_bpc;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int m_gbpc;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] m_global_table;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] m_local_table;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] m_curr_table;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int m_line_stride;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] fromData;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal Uri fromUrl;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int currentFrame;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal GifImageData image;
+//\endcond
         }
 
         /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)</summary>

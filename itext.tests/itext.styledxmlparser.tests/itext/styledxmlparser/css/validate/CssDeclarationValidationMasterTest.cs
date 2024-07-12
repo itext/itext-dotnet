@@ -427,6 +427,24 @@ namespace iText.StyledXmlParser.Css.Validate {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GridRowColumnGapTest() {
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_ROW_GAP, "normal")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_COLUMN_GAP, "30px")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_ROW_GAP, "15%")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_ROW_GAP, "2em")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_COLUMN_GAP, "3rem")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_COLUMN_GAP, "-5em")));
+            NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .GRID_ROW_GAP, "10")));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ChangeValidatorTest() {
             try {
                 CssDeclarationValidationMaster.SetValidator(new CssDeviceCmykAwareValidator());

@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -28,16 +30,16 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
-using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.V1.Context;
+using iText.Signatures.Validation.V1.Mocks;
 using iText.Signatures.Validation.V1.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation.V1 {
-    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class SignatureValidatorTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/SignatureValidatorTest/certs/";
@@ -51,9 +53,13 @@ namespace iText.Signatures.Validation.V1 {
 
         private SignatureValidationProperties parameters;
 
-        private IssuingCertificateRetriever certificateRetriever;
+        private MockIssuingCertificateRetriever mockCertificateRetriever;
 
         private ValidatorChainBuilder builder;
+
+        private MockChainValidator mockCertificateChainValidator;
+
+        private MockDocumentRevisionsValidator mockDocumentRevisionsValidator;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -61,33 +67,13 @@ namespace iText.Signatures.Validation.V1 {
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
+            mockCertificateChainValidator = new MockChainValidator();
             parameters = new SignatureValidationProperties();
-            certificateRetriever = new IssuingCertificateRetriever();
-            builder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).WithSignatureValidationProperties
-                (parameters);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void ValidLatestSignatureTest() {
-            String chainName = CERTS_SRC + "validCertsChain.pem";
-            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
-            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            ValidationReport report;
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                AddRevDataClients();
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
-            }
-            for (int i = 0; i < 3; ++i) {
-                CertificateReportItem item = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(rootCert, item.GetCertificate());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item.GetMessage());
-            }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(3, report.GetLogs().Count);
+            mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            builder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(mockCertificateRetriever).WithSignatureValidationProperties
+                (parameters).WithCertificateChainValidator(mockCertificateChainValidator).WithRevocationDataValidator(
+                new MockRevocationDataValidator()).WithDocumentRevisionsValidator(mockDocumentRevisionsValidator);
         }
 
         [NUnit.Framework.Test]
@@ -97,9 +83,11 @@ namespace iText.Signatures.Validation.V1 {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
+            IX509Certificate timeStampCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "timestamp.pem"
+                )[0];
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(rootCert, rootPrivateKey);
                 DateTime currentDate = DateTimeUtil.GetCurrentUtcTime();
                 ocspBuilder.SetProducedAt(currentDate);
@@ -111,35 +99,78 @@ namespace iText.Signatures.Validation.V1 {
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            new AssertValidationReport(report).HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItems((l) => l.GetCheckName
-                ().Equals(CertificateChainValidator.CERTIFICATE_CHECK) && l.GetMessage().Equals(MessageFormatUtil.Format
-                (CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert.GetSubjectDN())) && ((CertificateReportItem)l
-                ).GetCertificate().Equals(rootCert), 2, CertificateChainValidator.CERTIFICATE_TRUSTED).DoAssert();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                (1).HasNumberOfFailures(0));
+            NUnit.Framework.Assert.AreEqual(1, mockCertificateChainValidator.verificationCalls.Count);
+            MockChainValidator.ValidationCallBack call = mockCertificateChainValidator.verificationCalls[0];
+            NUnit.Framework.Assert.AreEqual(CertificateSource.TIMESTAMP, call.context.GetCertificateSource());
+            NUnit.Framework.Assert.AreEqual(ValidatorContext.SIGNATURE_VALIDATOR, call.context.GetValidatorContext());
+            NUnit.Framework.Assert.AreEqual(timeStampCert.GetSubjectDN(), call.certificate.GetSubjectDN());
         }
 
         [NUnit.Framework.Test]
-        public virtual void ValidLatestSignatureWithTimestampTest() {
+        public virtual void LatestSignatureIsDocTimestampWithModifiedDateTest() {
             String chainName = CERTS_SRC + "validCertsChain.pem";
+            String privateKeyName = CERTS_SRC + "rootCertKey.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
             ValidationReport report;
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDocWithTimestamp.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                AddRevDataClients();
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDocTimestampDate.pdf"
+                ))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(rootCert, rootPrivateKey);
+                DateTime currentDate = DateTimeUtil.GetCurrentUtcTime();
+                ocspBuilder.SetProducedAt(currentDate);
+                ocspBuilder.SetThisUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(3)));
+                ocspBuilder.SetNextUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(30)));
+                TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, ocspBuilder);
+                builder.GetRevocationDataValidator().AddOcspClient(ocspClient);
+                parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
+                    .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
+                    , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            for (int i = 0; i < 5; ++i) {
-                CertificateReportItem item1 = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item1.GetMessage());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item1.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(rootCert, item1.GetCertificate());
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfLogs(2).HasNumberOfFailures(1).HasStatus(ValidationReport.ValidationResult
+                .INVALID).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator
+                .VALIDATING_SIGNATURE_NAME, (p) => "timestampSignature1")).HasLogItem((al) => al.WithCheckName(SignatureValidator
+                .SIGNATURE_VERIFICATION).WithMessage(MessageFormatUtil.Format(SignatureValidator.CANNOT_VERIFY_SIGNATURE
+                , "timestampSignature1")).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LatestSignatureWithModifiedTimestampDateTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            String privateKeyName = CERTS_SRC + "rootCertKey.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureWithModifiedTimestampDate.pdf"
+                ))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(rootCert, rootPrivateKey);
+                DateTime currentDate = DateTimeUtil.GetCurrentUtcTime();
+                ocspBuilder.SetProducedAt(currentDate);
+                ocspBuilder.SetThisUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(3)));
+                ocspBuilder.SetNextUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(30)));
+                TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, ocspBuilder);
+                builder.GetRevocationDataValidator().AddOcspClient(ocspClient);
+                parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
+                    .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
+                    , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2)).SetContinueAfterFailure(ValidatorContexts
+                    .All(), CertificateSources.All(), false);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(5, report.GetLogs().Count);
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfLogs(2).HasNumberOfFailures(1).HasStatus(ValidationReport.ValidationResult
+                .INVALID).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator
+                .VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItem((al) => al.WithCheckName(SignatureValidator
+                .TIMESTAMP_VERIFICATION).WithMessage(SignatureValidator.CANNOT_VERIFY_TIMESTAMP).WithStatus(ReportItem.ReportItemStatus
+                .INVALID)));
         }
 
         [NUnit.Framework.Test]
@@ -150,25 +181,13 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithBrokenTimestamp.pdf"))
                 ) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                AddRevDataClients();
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
-            ReportItem failure = report.GetFailures()[0];
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.CANNOT_VERIFY_TIMESTAMP, failure.GetMessage());
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.TIMESTAMP_VERIFICATION, failure.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(1, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(6, report.GetLogs().Count);
-            for (int i = 0; i < 5; ++i) {
-                CertificateReportItem item1 = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(rootCert, item1.GetCertificate());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item1.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item1.GetMessage());
-            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasLogItems
+                (2, 2, (al) => al.WithCheckName(SignatureValidator.TIMESTAMP_VERIFICATION).WithMessage(SignatureValidator
+                .CANNOT_VERIFY_TIMESTAMP).WithStatus(ReportItem.ReportItemStatus.INVALID)));
         }
 
         [NUnit.Framework.Test]
@@ -178,31 +197,14 @@ namespace iText.Signatures.Validation.V1 {
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDoc.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                AddRevDataClients();
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(5, report.GetLogs().Count);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[1], report.GetLogs()[1]);
-            ReportItem item1 = report.GetFailures()[0];
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.SIGNATURE_VERIFICATION, item1.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignatureValidator.DOCUMENT_IS_NOT_COVERED, "Signature1"
-                ), item1.GetMessage());
-            ReportItem item2 = report.GetFailures()[1];
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.SIGNATURE_VERIFICATION, item2.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignatureValidator.CANNOT_VERIFY_SIGNATURE, "Signature1"
-                ), item2.GetMessage());
-            for (int i = 0; i < 3; ++i) {
-                CertificateReportItem item = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(rootCert, item.GetCertificate());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item.GetMessage());
-            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasLogItem
+                ((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.DOCUMENT_IS_NOT_COVERED
+                , (i) => "Signature1")).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION)
+                .WithMessage(SignatureValidator.CANNOT_VERIFY_SIGNATURE, (i) => "Signature1")));
         }
 
         [NUnit.Framework.Test]
@@ -214,77 +216,16 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDoc.pdf"))) {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                report = signatureValidator.ValidateLatestSignature();
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(2, report.GetLogs().Count);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[1], report.GetLogs()[1]);
-            ReportItem item1 = report.GetFailures()[0];
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.SIGNATURE_VERIFICATION, item1.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignatureValidator.DOCUMENT_IS_NOT_COVERED, "Signature1"
-                ), item1.GetMessage());
-            ReportItem item2 = report.GetFailures()[1];
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.SIGNATURE_VERIFICATION, item2.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignatureValidator.CANNOT_VERIFY_SIGNATURE, "Signature1"
-                ), item2.GetMessage());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CertificatesNotInLatestSignatureTest() {
-            String chainName = CERTS_SRC + "validCertsChain.pem";
-            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
-            IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
-            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            ValidationReport report;
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDocWithoutChain.pdf"))) {
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
-                    .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
-                    , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                report = signatureValidator.ValidateLatestSignature();
-            }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(2, report.GetLogs().Count);
-            CertificateReportItem item = report.GetCertificateFailures()[0];
-            NUnit.Framework.Assert.AreEqual(signingCert, item.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.REVOCATION_DATA_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.NO_REVOCATION_DATA, item.GetMessage());
-            item = report.GetCertificateFailures()[1];
-            NUnit.Framework.Assert.AreEqual(signingCert, item.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.ISSUER_MISSING, signingCert
-                .GetSubjectDN()), item.GetMessage());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CertificatesNotInLatestSignatureButSetAsKnownTest() {
-            String chainName = CERTS_SRC + "validCertsChain.pem";
-            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
-            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
-            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            ValidationReport report;
-            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDocWithoutChain.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
-                AddRevDataClients();
-                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
-            }
-            for (int i = 0; i < 3; ++i) {
-                CertificateReportItem item = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(rootCert, item.GetCertificate());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item.GetMessage());
-            }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(3, report.GetLogs().Count);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasLogItem
+                ((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.DOCUMENT_IS_NOT_COVERED
+                , (i) => "Signature1").WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((al) => al.WithCheckName
+                (SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.CANNOT_VERIFY_SIGNATURE, (i
+                ) => "Signature1").WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            // check that no requests are made after failure
+            NUnit.Framework.Assert.AreEqual(0, mockCertificateChainValidator.verificationCalls.Count);
         }
 
         [NUnit.Framework.Test]
@@ -292,22 +233,20 @@ namespace iText.Signatures.Validation.V1 {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            ValidationReport report;
+            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
+            IX509Certificate signCert = (IX509Certificate)certificateChain[0];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithDss.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                AddRevDataClients();
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                signatureValidator.ValidateLatestSignature(document);
             }
-            for (int i = 0; i < 3; ++i) {
-                CertificateReportItem item = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(rootCert, item.GetCertificate());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item.GetMessage());
-            }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(3, report.GetLogs().Count);
+            NUnit.Framework.Assert.AreEqual(2, mockCertificateRetriever.addKnownCertificatesCalls.Count);
+            ICollection<IX509Certificate> dssCall = mockCertificateRetriever.addKnownCertificatesCalls[0];
+            NUnit.Framework.Assert.AreEqual(3, dssCall.Count);
+            NUnit.Framework.Assert.AreEqual(1, dssCall.Where((c) => ((IX509Certificate)c).Equals(rootCert)).Count());
+            NUnit.Framework.Assert.AreEqual(1, dssCall.Where((c) => ((IX509Certificate)c).Equals(intermediateCert)).Count
+                ());
+            NUnit.Framework.Assert.AreEqual(1, dssCall.Where((c) => ((IX509Certificate)c).Equals(signCert)).Count());
         }
 
         [NUnit.Framework.Test]
@@ -317,81 +256,202 @@ namespace iText.Signatures.Validation.V1 {
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithBrokenDss.pdf"))) {
-                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
-                AddRevDataClients();
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature();
+                report = signatureValidator.ValidateLatestSignature(document);
             }
-            ReportItem reportItem = report.GetLogs()[0];
-            NUnit.Framework.Assert.AreEqual(SignatureValidator.CERTS_FROM_DSS, reportItem.GetCheckName());
-            NUnit.Framework.Assert.IsTrue(reportItem.GetExceptionCause() is AbstractGeneralSecurityException);
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(4, report.GetLogs().Count);
-            for (int i = 0; i < 3; ++i) {
-                CertificateReportItem item = report.GetCertificateLogs()[i];
-                NUnit.Framework.Assert.AreEqual(rootCert, item.GetCertificate());
-                NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.CERTIFICATE_TRUSTED, rootCert
-                    .GetSubjectDN()), item.GetMessage());
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithExceptionCauseType(typeof(AbstractGeneralSecurityException
+                ))));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IndeterminateChainValidationLeadsToIndeterminateResultTest() {
+            mockCertificateChainValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("test", "test", ReportItem.ReportItemStatus
+                .INDETERMINATE)));
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateLatestSignature(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasNumberOfFailures(1).HasLogItem((al) => al.WithCheckName("test").WithMessage("test")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidChainValidationLeadsToInvalidResultTest() {
+            mockCertificateChainValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("test", "test", ReportItem.ReportItemStatus
+                .INVALID)));
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateLatestSignature(document);
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                (1).HasLogItem((al) => al.WithCheckName("test").WithMessage("test")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidRevisionsValidationLeadsToInvalidResultTest() {
+            mockDocumentRevisionsValidator.SetReportItemStatus(ReportItem.ReportItemStatus.INVALID);
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateSignatures();
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                (1).HasLogItem((al) => al.WithCheckName("test").WithMessage("test")));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidateMultipleSignatures() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
+                ))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateSignatures();
+                AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                    (5).HasNumberOfFailures(0).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                    ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItem((l) => l.
+                    WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
+                    , (p) => "Signature2")).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage
+                    (SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature3")).HasLogItem((l) => l.WithCheckName
+                    (SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, 
+                    (p) => "signer1")).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage
+                    (SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "signer2")));
+                DateTime date1 = TimeTestUtil.TEST_DATE_TIME.AddDays(1);
+                DateTime date2 = TimeTestUtil.TEST_DATE_TIME.AddDays(10);
+                DateTime date3 = TimeTestUtil.TEST_DATE_TIME.AddDays(20);
+                // 2 signatures with timestamp
+                // 3 document timestamps
+                IList<MockChainValidator.ValidationCallBack> verificationCalls = mockCertificateChainValidator.verificationCalls;
+                NUnit.Framework.Assert.AreEqual(7, verificationCalls.Count);
+                NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, verificationCalls[0].context.GetTimeBasedContext
+                    ());
+                for (int i = 1; i < verificationCalls.Count; ++i) {
+                    NUnit.Framework.Assert.AreEqual(TimeBasedContext.HISTORICAL, verificationCalls[i].context.GetTimeBasedContext
+                        ());
+                }
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1491571297") && c.checkDate.Equals(date3)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1491571297") && c.checkDate.Equals(date2)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1491571297") && c.checkDate.Equals(date1)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1550593058") && c.checkDate.Equals(date2)));
+                NUnit.Framework.Assert.IsTrue(verificationCalls.Any((c) => c.certificate.GetSerialNumber().ToString().Equals
+                    ("1701704311986") && c.checkDate.Equals(date1)));
             }
         }
 
         [NUnit.Framework.Test]
-        public virtual void RootIsNotTrustedInLatestSignatureTest() {
+        public virtual void SignatureChainValidatorFailureTest() {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateChainValidator.OnCallDo((c) => {
+                    throw new Exception("Test chain validation failure");
+                }
+                );
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
-                    .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
-                    , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
-                report = signatureValidator.ValidateLatestSignature();
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.CHAIN_VALIDATION_FAILED
+                    )));
             }
-            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INDETERMINATE, report.GetValidationResult
-                ());
-            NUnit.Framework.Assert.AreEqual(3, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(4, report.GetLogs().Count);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[1], report.GetLogs()[1]);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[2], report.GetLogs()[3]);
-            CertificateReportItem item = report.GetCertificateFailures()[0];
-            NUnit.Framework.Assert.AreEqual(certificateChain[0], item.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.REVOCATION_DATA_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.NO_REVOCATION_DATA, item.GetMessage());
-            item = report.GetCertificateFailures()[1];
-            NUnit.Framework.Assert.AreEqual(certificateChain[1], item.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.REVOCATION_DATA_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(RevocationDataValidator.NO_REVOCATION_DATA, item.GetMessage());
-            item = report.GetCertificateFailures()[2];
-            NUnit.Framework.Assert.AreEqual(rootCert, item.GetCertificate());
-            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.CERTIFICATE_CHECK, item.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(CertificateChainValidator.ISSUER_MISSING, rootCert
-                .GetSubjectDN()), item.GetMessage());
         }
 
-        private void AddRevDataClients() {
+        [NUnit.Framework.Test]
+        public virtual void TimeStampChainValidatorFailureTest() {
             String chainName = CERTS_SRC + "validCertsChain.pem";
-            String privateKeyName = CERTS_SRC + "rootCertKey.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
-            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
-            DateTime currentDate = DateTimeUtil.GetCurrentUtcTime();
-            TestOcspResponseBuilder builder1 = new TestOcspResponseBuilder(rootCert, rootPrivateKey);
-            builder1.SetProducedAt(currentDate);
-            builder1.SetThisUpdate(DateTimeUtil.GetCalendar(currentDate));
-            builder1.SetNextUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(30)));
-            TestOcspResponseBuilder builder2 = new TestOcspResponseBuilder(rootCert, rootPrivateKey);
-            builder2.SetProducedAt(currentDate);
-            builder2.SetThisUpdate(DateTimeUtil.GetCalendar(currentDate));
-            builder2.SetNextUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(30)));
-            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, builder1).AddBuilderForCertIssuer
-                (intermediateCert, builder2);
-            builder.GetRevocationDataValidator().AddOcspClient(ocspClient);
-            parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
-                .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH);
+            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
+            IX509Certificate signCert = (IX509Certificate)certificateChain[0];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateChainValidator.OnCallDo((c) => {
+                    throw new Exception("Test chain validation failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.CHAIN_VALIDATION_FAILED
+                    )));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverAddKnownCertificatesFromDSSFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithDss.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
+                    .ADD_KNOWN_CERTIFICATES_FAILED)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverAddKnownCertificatesFromSignatureFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
+                    .ADD_KNOWN_CERTIFICATES_FAILED)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverAddKnownCertificatesFromTimestampFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateLatestSignature(document);
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItems(1, int.MaxValue, (l) => l.WithMessage(SignatureValidator
+                    .ADD_KNOWN_CERTIFICATES_FAILED)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentRevisionValidatorFailureTest() {
+            String chainName = CERTS_SRC + "validCertsChain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                mockDocumentRevisionsValidator.OnCallDo((c) => {
+                    throw new Exception("Test add know certificates failure");
+                }
+                );
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateSignatures();
+                AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.REVISIONS_VALIDATION_FAILED
+                    )));
+            }
         }
     }
 }

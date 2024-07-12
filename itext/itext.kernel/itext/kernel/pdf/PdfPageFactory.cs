@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Geom;
 
 namespace iText.Kernel.Pdf {
+//\cond DO_NOT_DOCUMENT
     internal class PdfPageFactory : IPdfPageFactory {
         public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
             return new PdfPage(pdfObject);
@@ -32,4 +33,5 @@ namespace iText.Kernel.Pdf {
             return new PdfPage(pdfDocument, pageSize);
         }
     }
+//\endcond
 }

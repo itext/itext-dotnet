@@ -27,6 +27,7 @@ namespace iText.IO.Font.Cmap {
     public class CMapCidUni : AbstractCMap {
         private IntHashtable map = new IntHashtable(65537);
 
+//\cond DO_NOT_DOCUMENT
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
                 int codePoint;
@@ -40,6 +41,7 @@ namespace iText.IO.Font.Cmap {
                 map.Put((int)code.GetValue(), codePoint);
             }
         }
+//\endcond
 
         public virtual int Lookup(int character) {
             return map.Get(character);

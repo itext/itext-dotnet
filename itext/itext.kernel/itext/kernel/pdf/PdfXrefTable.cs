@@ -406,6 +406,7 @@ namespace iText.Kernel.Pdf {
             freeReferencesLinkedList.Clear();
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Change the state of the cross-reference table to mark that reading of the document
         /// was completed.
@@ -413,7 +414,9 @@ namespace iText.Kernel.Pdf {
         internal virtual void MarkReadingCompleted() {
             readingCompleted = true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Change the state of the cross-reference table to unmark that reading of the document
         /// was completed.
@@ -421,13 +424,17 @@ namespace iText.Kernel.Pdf {
         internal virtual void UnmarkReadingCompleted() {
             readingCompleted = false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Check if reading of the document was completed.</summary>
         /// <returns>true if reading was completed and false otherwise</returns>
         internal virtual bool IsReadingCompleted() {
             return readingCompleted;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set up appropriate state for the free references list.</summary>
         /// <param name="pdfDocument">
         /// is the current
@@ -482,7 +489,9 @@ namespace iText.Kernel.Pdf {
             }
             freeReferencesLinkedList.Put(0, prevFreeRef);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Method is used for object streams to avoid reuse existed references.</summary>
         /// <param name="document">
         /// is the current
@@ -494,7 +503,9 @@ namespace iText.Kernel.Pdf {
             Add(reference);
             return (PdfIndirectReference)reference.SetState(PdfObject.MODIFIED);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Clear the state of the cross-reference table without free references removal.</summary>
         internal virtual void Clear() {
             for (int i = 1; i <= count; i++) {
@@ -505,7 +516,9 @@ namespace iText.Kernel.Pdf {
             }
             count = 1;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Clear the state of the cross-reference table including free references.</summary>
         internal virtual void ClearAllReferences() {
             for (int i = 1; i <= count; i++) {
@@ -513,6 +526,7 @@ namespace iText.Kernel.Pdf {
             }
             count = 1;
         }
+//\endcond
 
         private IList<int> CreateSections(PdfDocument document, bool dropObjectsFromObjectStream) {
             IList<int> sections = new List<int>();

@@ -30,9 +30,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
     public abstract class TreeBuilder {
         protected internal iText.StyledXmlParser.Jsoup.Parser.Parser parser;
 
+//\cond DO_NOT_DOCUMENT
         internal CharacterReader reader;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal Tokeniser tokeniser;
+//\endcond
 
         protected internal Document doc;
 
@@ -53,7 +57,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         // start tag to process
         private Token.EndTag end = new Token.EndTag();
 
+//\cond DO_NOT_DOCUMENT
         internal abstract ParseSettings DefaultSettings();
+//\endcond
 
         protected internal virtual void InitialiseParse(TextReader input, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
@@ -71,6 +77,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             this.baseUri = baseUri;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Document Parse(TextReader input, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser
              parser) {
             InitialiseParse(input, baseUri, parser);
@@ -82,13 +89,18 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             stack = null;
             return doc;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a new copy of this TreeBuilder</summary>
         /// <returns>copy, ready for a new parse</returns>
         internal abstract TreeBuilder NewInstance();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract IList<iText.StyledXmlParser.Jsoup.Nodes.Node> ParseFragment(String inputFragment, iText.StyledXmlParser.Jsoup.Nodes.Element
              context, String baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser parser);
+//\endcond
 
         protected internal virtual void RunParser() {
             Tokeniser tokeniser = this.tokeniser;

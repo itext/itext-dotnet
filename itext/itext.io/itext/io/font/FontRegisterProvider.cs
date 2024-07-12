@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 
 namespace iText.IO.Font {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// If you are using True Type fonts, you can declare the paths of the different ttf- and ttc-files
     /// to this class first and then create fonts in your code using one of the getFont method
@@ -43,12 +44,15 @@ namespace iText.IO.Font {
         /// <summary>This is a map of fontfamilies.</summary>
         private readonly IDictionary<String, IList<String>> fontFamilies = new Dictionary<String, IList<String>>();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates new FontRegisterProvider</summary>
         internal FontRegisterProvider() {
             RegisterStandardFonts();
             RegisterStandardFontFamilies();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Constructs a <c>Font</c>-object.</summary>
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
@@ -56,7 +60,9 @@ namespace iText.IO.Font {
         internal virtual FontProgram GetFont(String fontName, int style) {
             return GetFont(fontName, style, true);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Constructs a <c>Font</c>-object.</summary>
         /// <param name="fontName">the name of the font</param>
         /// <param name="style">the style of this font</param>
@@ -94,6 +100,7 @@ namespace iText.IO.Font {
             }
             return GetFontProgram(fontName, cached);
         }
+//\endcond
 
         protected internal virtual void RegisterStandardFonts() {
             fontNames.Put(StandardFonts.COURIER.ToLowerInvariant(), StandardFonts.COURIER);
@@ -149,6 +156,7 @@ namespace iText.IO.Font {
             return fontProgram;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Register a font by giving explicitly the font family and name.</summary>
         /// <param name="familyName">the font family</param>
         /// <param name="fullName">the font name</param>
@@ -189,7 +197,9 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Register a font file, either .ttf or .otf, .afm or a font from TrueType Collection.</summary>
         /// <remarks>
         /// Register a font file, either .ttf or .otf, .afm or a font from TrueType Collection.
@@ -199,7 +209,9 @@ namespace iText.IO.Font {
         internal virtual void RegisterFont(String path) {
             RegisterFont(path, null);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Register a font file and use an alias for the font contained in it.</summary>
         /// <param name="path">the path to a font file</param>
         /// <param name="alias">the alias you want to use for the font</param>
@@ -259,7 +271,9 @@ namespace iText.IO.Font {
                 throw new iText.IO.Exceptions.IOException(e);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // remove regular and correct last symbol
         // do this job to give higher priority to regular fonts in comparison with light, narrow, etc
         // Don't use this method for not regular fonts!
@@ -272,14 +286,18 @@ namespace iText.IO.Font {
             }
             return false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Register all the fonts in a directory.</summary>
         /// <param name="dir">the directory</param>
         /// <returns>the number of fonts registered</returns>
         internal virtual int RegisterFontDirectory(String dir) {
             return RegisterFontDirectory(dir, false);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Register all the fonts in a directory and possibly its subdirectories.</summary>
         /// <param name="dir">the directory</param>
         /// <param name="scanSubdirectories">recursively scan subdirectories if <c>true</c></param>
@@ -320,7 +338,9 @@ namespace iText.IO.Font {
             //empty on purpose
             return count;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Register fonts in some probable directories.</summary>
         /// <remarks>
         /// Register fonts in some probable directories. It usually works in Windows,
@@ -340,25 +360,32 @@ namespace iText.IO.Font {
             }
             return count;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets a set of registered font names.</summary>
         /// <returns>a set of registered fonts</returns>
         internal virtual ICollection<String> GetRegisteredFonts() {
             return fontNames.Keys;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets a set of registered font names.</summary>
         /// <returns>a set of registered font families</returns>
         internal virtual ICollection<String> GetRegisteredFontFamilies() {
             return fontFamilies.Keys;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if a certain font is registered.</summary>
         /// <param name="fontname">the name of the font that has to be checked.</param>
         /// <returns>true if the font is found</returns>
         internal virtual bool IsRegisteredFont(String fontname) {
             return fontNames.ContainsKey(fontname.ToLowerInvariant());
         }
+//\endcond
 
         public virtual void ClearRegisteredFonts() {
             fontNames.Clear();
@@ -370,4 +397,5 @@ namespace iText.IO.Font {
             RegisterStandardFontFamilies();
         }
     }
+//\endcond
 }

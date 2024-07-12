@@ -126,14 +126,17 @@ namespace iText.IO.Font {
             return fontCache.Get(FontCacheKey.Create(fontName));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static FontProgram GetFont(FontCacheKey key) {
             return fontCache.Get(key);
         }
+//\endcond
 
         public static FontProgram SaveFont(FontProgram font, String fontName) {
             return SaveFont(font, FontCacheKey.Create(fontName));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static FontProgram SaveFont(FontProgram font, FontCacheKey key) {
             FontProgram fontFound = fontCache.Get(key);
             if (fontFound != null) {
@@ -142,5 +145,6 @@ namespace iText.IO.Font {
             fontCache.Put(key, font);
             return font;
         }
+//\endcond
     }
 }

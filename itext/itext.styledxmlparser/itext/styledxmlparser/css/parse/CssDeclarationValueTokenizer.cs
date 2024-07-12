@@ -163,26 +163,43 @@ namespace iText.StyledXmlParser.Css.Parse {
                                     );
                             }
                             else {
-                                if (curChar == ',' && !inString && functionDepth == 0) {
-                                    if (buff.Length == 0) {
-                                        return new CssDeclarationValueTokenizer.Token(",", CssDeclarationValueTokenizer.TokenType.COMMA);
-                                    }
-                                    else {
-                                        --index;
-                                        return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.UNKNOWN
-                                            );
-                                    }
+                                if (curChar == '[') {
+                                    stringQuote = (char)0;
+                                    inString = true;
+                                    buff.Append(curChar);
                                 }
                                 else {
-                                    if (iText.IO.Util.TextUtil.IsWhiteSpace(curChar)) {
-                                        if (functionDepth > 0) {
-                                            buff.Append(curChar);
-                                        }
-                                        return new CssDeclarationValueTokenizer.Token(buff.ToString(), functionDepth > 0 ? CssDeclarationValueTokenizer.TokenType
-                                            .FUNCTION : CssDeclarationValueTokenizer.TokenType.UNKNOWN);
+                                    if (curChar == ']') {
+                                        inString = false;
+                                        buff.Append(curChar);
+                                        return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.STRING
+                                            );
                                     }
                                     else {
-                                        buff.Append(curChar);
+                                        if (curChar == ',' && !inString && functionDepth == 0) {
+                                            if (buff.Length == 0) {
+                                                return new CssDeclarationValueTokenizer.Token(",", CssDeclarationValueTokenizer.TokenType.COMMA);
+                                            }
+                                            else {
+                                                --index;
+                                                return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.UNKNOWN
+                                                    );
+                                            }
+                                        }
+                                        else {
+                                            if (iText.IO.Util.TextUtil.IsWhiteSpace(curChar)) {
+                                                if (functionDepth > 0 || inString) {
+                                                    buff.Append(curChar);
+                                                }
+                                                if (!inString) {
+                                                    return new CssDeclarationValueTokenizer.Token(buff.ToString(), functionDepth > 0 ? CssDeclarationValueTokenizer.TokenType
+                                                        .FUNCTION : CssDeclarationValueTokenizer.TokenType.UNKNOWN);
+                                                }
+                                            }
+                                            else {
+                                                buff.Append(curChar);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -206,9 +223,13 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <param name="functionBuffer">the function buffer</param>
         private void ProcessFunctionToken(CssDeclarationValueTokenizer.Token token, StringBuilder functionBuffer) {
             if (token.IsString()) {
-                functionBuffer.Append(stringQuote);
+                if (stringQuote != 0) {
+                    functionBuffer.Append(stringQuote);
+                }
                 functionBuffer.Append(token.GetValue());
-                functionBuffer.Append(stringQuote);
+                if (stringQuote != 0) {
+                    functionBuffer.Append(stringQuote);
+                }
             }
             else {
                 functionBuffer.Append(token.GetValue());

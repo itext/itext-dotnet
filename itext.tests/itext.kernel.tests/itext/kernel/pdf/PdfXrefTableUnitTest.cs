@@ -164,6 +164,7 @@ namespace iText.Kernel.Pdf {
         }
     }
 
+//\cond DO_NOT_DOCUMENT
     internal class PdfIndirectReferenceProxy : PdfIndirectReference {
         private readonly long offset;
 
@@ -176,4 +177,5 @@ namespace iText.Kernel.Pdf {
             return offset;
         }
     }
+//\endcond
 }

@@ -146,6 +146,11 @@ namespace iText.Signatures.Validation.V1.Report {
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
         public override String ToString() {
             return "\nReportItem{" + "checkName='" + checkName + '\'' + ", message='" + message + '\'' + ", cause=" + 
                 cause + ", status=" + status + '}';

@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections {
+    //\cond DO_NOT_DOCUMENT
     internal class EmptyDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() {
             yield break;
@@ -90,4 +91,5 @@ namespace iText.Commons.Utils.Collections {
             get { return new EmptySet<TValue>(); }
         }
     }
+    //\endcond
 }

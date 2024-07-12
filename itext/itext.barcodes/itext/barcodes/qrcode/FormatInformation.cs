@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Encapsulates a QR Code's format information, including the data mask used and
     /// error correction level.
@@ -58,6 +59,7 @@ namespace iText.Barcodes.Qrcode {
             dataMask = (byte)(formatInfo & 0x07);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static int NumBitsDiffering(int a, int b) {
             // a now has a 1 bit exactly where its bit differs with b's
             a ^= b;
@@ -67,7 +69,9 @@ namespace iText.Barcodes.Qrcode {
                 [((int)(((uint)a) >> 16) & 0x0F)] + BITS_SET_IN_HALF_BYTE[((int)(((uint)a) >> 20) & 0x0F)] + BITS_SET_IN_HALF_BYTE
                 [((int)(((uint)a) >> 24) & 0x0F)] + BITS_SET_IN_HALF_BYTE[((int)(((uint)a) >> 28) & 0x0F)];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="maskedFormatInfo1">format info indicator, with mask still applied</param>
         /// <param name="maskedFormatInfo2">
         /// second copy of same info; both are checked at the same time
@@ -90,6 +94,7 @@ namespace iText.Barcodes.Qrcode {
             return DoDecodeFormatInformation(maskedFormatInfo1 ^ FORMAT_INFO_MASK_QR, maskedFormatInfo2 ^ FORMAT_INFO_MASK_QR
                 );
         }
+//\endcond
 
         private static iText.Barcodes.Qrcode.FormatInformation DoDecodeFormatInformation(int maskedFormatInfo1, int
              maskedFormatInfo2) {
@@ -125,14 +130,18 @@ namespace iText.Barcodes.Qrcode {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal ErrorCorrectionLevel GetErrorCorrectionLevel() {
             return errorCorrectionLevel;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>The datamask in byte-format</returns>
         internal byte GetDataMask() {
             return dataMask;
         }
+//\endcond
 
         /// <returns>the hashcode of the QR-code format information</returns>
         public override int GetHashCode() {
@@ -151,4 +160,5 @@ namespace iText.Barcodes.Qrcode {
             return this.errorCorrectionLevel == other.errorCorrectionLevel && this.dataMask == other.dataMask;
         }
     }
+//\endcond
 }

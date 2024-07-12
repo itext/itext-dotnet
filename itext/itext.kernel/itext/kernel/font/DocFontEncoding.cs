@@ -30,6 +30,7 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
+//\cond DO_NOT_DOCUMENT
     /// <summary>This class allow to parse document font's encoding.</summary>
     internal class DocFontEncoding : FontEncoding {
         protected internal DocFontEncoding() {
@@ -152,4 +153,5 @@ namespace iText.Kernel.Font {
             }
         }
     }
+//\endcond
 }

@@ -27,6 +27,7 @@ using System.Linq;
 
 namespace iText.Commons.Utils.Collections
 {
+    //\cond DO_NOT_DOCUMENT 
     internal static class EnumerableExtentions
     {
         public static IEnumerable<T> Sorted<T>(this  IEnumerable<T> source, Comparison<T> comp)
@@ -39,4 +40,5 @@ namespace iText.Commons.Utils.Collections
             return source.OrderBy(x => x);
         }
     }
+   //\endcond 
 }

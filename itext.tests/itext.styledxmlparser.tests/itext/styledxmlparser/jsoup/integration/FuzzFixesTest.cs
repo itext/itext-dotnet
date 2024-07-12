@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
@@ -54,8 +55,8 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             // lots of escape chars etc.
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, "UTF-8");
             NUnit.Framework.Assert.IsNotNull(doc);
-            Document docXml = iText.StyledXmlParser.Jsoup.Jsoup.Parse(new FileStream(@in.FullName, FileMode.Open, FileAccess.Read
-                ), "UTF-8", "https://example.com", iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
+            Document docXml = iText.StyledXmlParser.Jsoup.Jsoup.Parse(FileUtil.GetInputStreamForFile(@in), "UTF-8", "https://example.com"
+                , iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
             NUnit.Framework.Assert.IsNotNull(docXml);
         }
 
@@ -65,8 +66,8 @@ namespace iText.StyledXmlParser.Jsoup.Integration {
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/fuzztests/1569.html");
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, "UTF-8");
             NUnit.Framework.Assert.IsNotNull(doc);
-            Document docXml = iText.StyledXmlParser.Jsoup.Jsoup.Parse(new FileStream(@in.FullName, FileMode.Open, FileAccess.Read
-                ), "UTF-8", "https://example.com", iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
+            Document docXml = iText.StyledXmlParser.Jsoup.Jsoup.Parse(FileUtil.GetInputStreamForFile(@in), "UTF-8", "https://example.com"
+                , iText.StyledXmlParser.Jsoup.Parser.Parser.XmlParser());
             NUnit.Framework.Assert.IsNotNull(docXml);
         }
 

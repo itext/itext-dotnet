@@ -42,6 +42,19 @@ namespace iText.Signatures {
             Put(PdfName.SubFilter, subFilter);
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="PdfSignature"/>
+        /// instance from the provided
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>.
+        /// </summary>
+        /// <param name="sigDictionary">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to create new
+        /// <see cref="PdfSignature"/>
+        /// instance from
+        /// </param>
         public PdfSignature(PdfDictionary sigDictionary)
             : base(sigDictionary) {
             PdfString contents = GetPdfObject().GetAsString(PdfName.Contents);
@@ -101,8 +114,8 @@ namespace iText.Signatures {
         /// </param>
         public virtual void SetByteRange(int[] range) {
             PdfArray array = new PdfArray();
-            for (int k = 0; k < range.Length; ++k) {
-                array.Add(new PdfNumber(range[k]));
+            foreach (int i in range) {
+                array.Add(new PdfNumber(i));
             }
             Put(PdfName.ByteRange, array);
         }
@@ -223,6 +236,8 @@ namespace iText.Signatures {
             Put(PdfName.Reason, new PdfString(reason, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>Gets the /Reason value.</summary>
+        /// <returns>reason for signing</returns>
         public virtual String GetReason() {
             PdfString reasonStr = GetPdfObject().GetAsString(PdfName.Reason);
             return reasonStr != null ? reasonStr.ToUnicodeString() : null;
@@ -246,12 +261,33 @@ namespace iText.Signatures {
             Put(PdfName.ContactInfo, new PdfString(contactInfo, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>Add new key-value pair to the signature dictionary.</summary>
+        /// <param name="key">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// to be added as a key
+        /// </param>
+        /// <param name="value">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// to be added as a value
+        /// </param>
+        /// <returns>
+        /// the same
+        /// <see cref="PdfSignature"/>
+        /// instance
+        /// </returns>
         public virtual iText.Signatures.PdfSignature Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             SetModified();
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
         protected override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }

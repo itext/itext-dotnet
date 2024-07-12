@@ -98,6 +98,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         //TODO: DEVSIX-5731 Replace this workaround method with PdfCanvas::addXObjectAt
         internal static void AddXObject(PdfCanvas canvas, PdfXObject xObject, float x, float y) {
             if (xObject is PdfFormXObject) {
@@ -112,7 +113,9 @@ namespace iText.Svg.Renderers.Impl {
                 canvas.AddXObjectAt(xObject, x, y);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
         internal virtual void ApplyViewBox(SvgDrawContext context) {
@@ -128,7 +131,9 @@ namespace iText.Svg.Renderers.Impl {
                 CalculateAndApplyViewBox(context, viewBoxValues, currentViewPort);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String[] RetrieveAlignAndMeet() {
             String meetOrSlice = SvgConstants.Values.MEET;
             String align = SvgConstants.Values.DEFAULT_ASPECT_RATIO;
@@ -155,6 +160,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             return new String[] { align, meetOrSlice };
         }
+//\endcond
 
         /// <summary>Applies a clipping operation based on the view port.</summary>
         /// <param name="context">the svg draw context</param>
@@ -177,6 +183,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>If present, process the preserveAspectRatio position.</summary>
         /// <param name="context">the svg draw context</param>
         /// <param name="viewBoxValues">the four values depicting the viewbox [min-x min-y width height]</param>
@@ -273,6 +280,7 @@ namespace iText.Svg.Renderers.Impl {
             transform.Translate(x, y);
             return transform;
         }
+//\endcond
 
         /// <summary>Cleans up the SvgDrawContext by removing the current viewport and by popping the current canvas.</summary>
         /// <param name="context">context to clean</param>
@@ -308,11 +316,14 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void PostDraw(SvgDrawContext context) {
         }
+//\endcond
 
         public abstract override ISvgNodeRenderer CreateDeepCopy();
 
+//\cond DO_NOT_DOCUMENT
         internal override void SetPartOfClipPath(bool isPart) {
             base.SetPartOfClipPath(isPart);
             foreach (ISvgNodeRenderer child in children) {
@@ -321,7 +332,9 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CalculateAndApplyViewBox(SvgDrawContext context, float[] values, Rectangle currentViewPort
             ) {
             // TODO DEVSIX-4861 change this method with using of SvgCoordinateUtils#applyViewBox
@@ -359,7 +372,9 @@ namespace iText.Svg.Renderers.Impl {
                     .GetY() + -1 * (float)transform.GetTranslateY());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float[] GetViewBoxValues() {
             if (this.attributesAndStyles == null) {
                 return new float[] {  };
@@ -396,6 +411,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             return values;
         }
+//\endcond
 
         private static float[] ScaleViewBoxValues(float[] values, float scaleWidth, float scaleHeight) {
             float[] scaledViewBoxValues = new float[values.Length];

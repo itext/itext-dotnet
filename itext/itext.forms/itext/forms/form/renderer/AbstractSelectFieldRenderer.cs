@@ -300,14 +300,18 @@ namespace iText.Forms.Form.Renderer {
             return selectedOptions;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsOptGroupRenderer(IRenderer renderer) {
             return renderer.HasProperty(FormProperty.FORM_FIELD_LABEL) && !renderer.HasProperty(FormProperty.FORM_FIELD_SELECTED
                 );
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool IsOptionRenderer(IRenderer child) {
             return child.HasProperty(FormProperty.FORM_FIELD_SELECTED);
         }
+//\endcond
 
         private LayoutResult MakeLayoutResultFull(LayoutArea layoutArea, LayoutResult layoutResult) {
             IRenderer splitRenderer = layoutResult.GetSplitRenderer() == null ? this : layoutResult.GetSplitRenderer();

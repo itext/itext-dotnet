@@ -307,7 +307,7 @@ namespace iText.Kernel.XMP.Impl
 				return result.ToArray(new XMPAliasInfo[result.Count]);
 			}
 		}
-
+		//\cond DO_NOT_DOCUMENT
 		/// <summary>Associates an alias name with an actual name.</summary>
 		/// <remarks>
 		/// Associates an alias name with an actual name.
@@ -398,6 +398,7 @@ namespace iText.Kernel.XMP.Impl
 				aliasMap[key] = aliasInfo;
 			}
 		}
+		//\endcond	
 
 		private sealed class _XMPAliasInfo_409 : XMPAliasInfo
 		{

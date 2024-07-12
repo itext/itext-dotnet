@@ -29,6 +29,7 @@ using iText.Layout.Element;
 using iText.Pdfua.Checkers.Utils;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Class that has the result of the algorithm that checks the table for PDF/UA compliance.</summary>
     internal sealed class CellResultMatrix : AbstractResultMatrix<Cell> {
         /// <summary>
@@ -42,6 +43,7 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             : base(new TableCellIterator(table, context)) {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override IList<byte[]> GetHeaders(Cell cell) {
             PdfObject headerArray = GetAttribute(cell.GetAccessibilityProperties(), PdfName.Headers);
@@ -59,23 +61,30 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override String GetScope(Cell cell) {
             PdfName pdfStr = (PdfName)GetAttribute(cell.GetAccessibilityProperties(), PdfName.Scope);
             return pdfStr == null ? null : pdfStr.GetValue();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override byte[] GetElementId(Cell cell) {
             return cell.GetAccessibilityProperties().GetStructureElementId();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override String GetRole(Cell cell) {
             return ((TableCellIterator)iterator).context.ResolveToStandardRole(cell.GetAccessibilityProperties().GetRole
                 ());
         }
+//\endcond
 
         private static PdfObject GetAttribute(AccessibilityProperties props, PdfName name) {
             foreach (PdfStructureAttributes attributes in props.GetAttributesList()) {
@@ -87,4 +96,5 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             return null;
         }
     }
+//\endcond
 }

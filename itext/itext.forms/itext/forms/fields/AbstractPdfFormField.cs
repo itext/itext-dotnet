@@ -298,12 +298,14 @@ namespace iText.Forms.Fields {
             return this.enableFieldRegeneration;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets the text color and does not regenerate appearance stream.</summary>
         /// <param name="color">the new value for the Color.</param>
         /// <returns>the edited field.</returns>
         internal virtual void SetColorNoRegenerate(Color color) {
             this.color = color;
         }
+//\endcond
 
         /// <summary>Gets the appearance state names.</summary>
         /// <returns>an array of Strings containing the names of the appearance states.</returns>
@@ -486,11 +488,14 @@ namespace iText.Forms.Fields {
             return false;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void UpdateFontAndFontSize(PdfFont font, float fontSize) {
             this.font = font;
             this.fontSize = fontSize;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void RetrieveStyles() {
             PdfString defaultAppearance = GetDefaultAppearance();
             if (defaultAppearance != null) {
@@ -502,7 +507,9 @@ namespace iText.Forms.Fields {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfObject GetAcroFormObject(PdfName key, int type) {
             PdfObject acroFormObject = null;
             PdfDictionary acroFormDictionary = GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm
@@ -512,6 +519,7 @@ namespace iText.Forms.Fields {
             }
             return (acroFormObject != null && acroFormObject.GetObjectType() == type) ? acroFormObject : null;
         }
+//\endcond
 
         private static Object[] SplitDAelements(String da) {
             PdfTokenizer tk = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource

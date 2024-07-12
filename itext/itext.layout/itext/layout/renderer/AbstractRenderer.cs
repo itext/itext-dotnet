@@ -75,29 +75,37 @@ namespace iText.Layout.Renderer {
         /// <summary>The infinity value which is used while layouting</summary>
         protected internal const float INF = 1e6f;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// The common ordering index of top side in arrays of four elements which define top, right, bottom,
         /// left sides values (e.g. margins, borders, paddings).
         /// </summary>
         internal const int TOP_SIDE = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// The common ordering index of right side in arrays of four elements which define top, right, bottom,
         /// left sides values (e.g. margins, borders, paddings).
         /// </summary>
         internal const int RIGHT_SIDE = 1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// The common ordering index of bottom side in arrays of four elements which define top, right, bottom,
         /// left sides values (e.g. margins, borders, paddings).
         /// </summary>
         internal const int BOTTOM_SIDE = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// The common ordering index of left side in arrays of four elements which define top, right, bottom,
         /// left sides values (e.g. margins, borders, paddings).
         /// </summary>
         internal const int LEFT_SIDE = 3;
+//\endcond
 
         private const int ARC_RIGHT_DEGREE = 0;
 
@@ -139,6 +147,8 @@ namespace iText.Layout.Renderer {
             this.modelElement = modelElement;
         }
 
+        /// <summary>Creates a new renderer based on an instance of another renderer.</summary>
+        /// <param name="other">renderer from which to copy essential properties</param>
         protected internal AbstractRenderer(iText.Layout.Renderer.AbstractRenderer other) {
             this.childRenderers = other.childRenderers;
             this.positionedRenderers = other.positionedRenderers;
@@ -462,6 +472,16 @@ namespace iText.Layout.Renderer {
             flushed = true;
         }
 
+        /// <summary>
+        /// Apply
+        /// <c>Property.OPACITY</c>
+        /// property if specified by setting corresponding values in graphic state dictionary
+        /// opacity will be applied to all elements drawn after calling this method and before
+        /// calling
+        /// <see cref="EndElementOpacityApplying(DrawContext)"/>
+        /// ()}.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         protected internal virtual void BeginElementOpacityApplying(DrawContext drawContext) {
             float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
             if (opacity != null && opacity < 1f) {
@@ -471,6 +491,10 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// <see cref="BeginElementOpacityApplying(DrawContext)"/>.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         protected internal virtual void EndElementOpacityApplying(DrawContext drawContext) {
             float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
             if (opacity != null && opacity < 1f) {
@@ -1124,6 +1148,7 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Applies margins, borders and paddings of the renderer on the given rectangle.</summary>
         /// <param name="rect">a rectangle margins, borders and paddings will be applied on.</param>
         /// <param name="reverse">
@@ -1141,6 +1166,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(rect, reverse);
             return rect;
         }
+//\endcond
 
         /// <summary>Applies margins of the renderer on the given rectangle</summary>
         /// <param name="rect">a rectangle margins will be applied on.</param>
@@ -1228,6 +1254,7 @@ namespace iText.Layout.Renderer {
             return rendererOverflowProperty == null || OverflowPropertyValue.FIT.Equals(rendererOverflowProperty);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Replaces given property own value with the given value.</summary>
         /// <param name="property">the property to be replaced</param>
         /// <param name="replacementValue">the value with which property will be replaced</param>
@@ -1238,7 +1265,9 @@ namespace iText.Layout.Renderer {
             SetProperty(property, replacementValue);
             return ownProperty;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns back own value of the given property.</summary>
         /// <param name="property">the property to be returned back</param>
         /// <param name="prevValue">the value which will be returned back</param>
@@ -1251,21 +1280,27 @@ namespace iText.Layout.Renderer {
                 SetProperty(property, prevValue);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if this renderer has intrinsic aspect ratio.</summary>
         /// <returns>true, if aspect ratio is defined for this renderer, false otherwise</returns>
         internal virtual bool HasAspectRatio() {
             // TODO DEVSIX-5255 This method should be changed after we support aspect-ratio property
             return false;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets intrinsic aspect ratio for this renderer.</summary>
         /// <returns>aspect ratio, if it is defined for this renderer, null otherwise</returns>
         internal virtual float? GetAspectRatio() {
             // TODO DEVSIX-5255 This method should be changed after we support aspect-ratio property
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void ProcessWaitingDrawing(IRenderer child, Transform transformProp, IList<IRenderer> waitingDrawing
             ) {
             if (FloatingHelper.IsRendererFloating(child) || transformProp != null) {
@@ -1302,6 +1337,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         /// <summary>Retrieves element's fixed content box width, if it's set.</summary>
         /// <remarks>
@@ -2022,6 +2058,7 @@ namespace iText.Layout.Renderer {
                 , true);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void UpdateHeightsOnSplit(float usedHeight, bool wasHeightClipped, iText.Layout.Renderer.AbstractRenderer
              splitRenderer, iText.Layout.Renderer.AbstractRenderer overflowRenderer, bool enlargeOccupiedAreaOnHeightWasClipped
             ) {
@@ -2098,6 +2135,7 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
         // If parent has no resolved height, relative height declarations can be ignored
         /// <summary>Calculates min and max width values for current renderer.</summary>
@@ -2173,9 +2211,11 @@ namespace iText.Layout.Renderer {
             return IsKeepTogether(null);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsKeepTogether(IRenderer causeOfNothing) {
             return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER)) && !(causeOfNothing is AreaBreakRenderer);
         }
+//\endcond
 
         // Note! The second parameter is here on purpose. Currently occupied area is passed as a value of this parameter in
         // BlockRenderer, but actually, the block can have many areas, and occupied area will be the common area of sub-areas,
@@ -2361,6 +2401,7 @@ namespace iText.Layout.Renderer {
             return value != null && value.IsPercentValue();
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsFirstOnRootArea(bool checkRootAreaOnly) {
             bool isFirstOnRootArea = true;
             IRenderer ancestor = this;
@@ -2383,7 +2424,9 @@ namespace iText.Layout.Renderer {
             }
             return isFirstOnRootArea;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets pdf document from root renderers.</summary>
         /// <returns>PdfDocument, or null if there are no document</returns>
         internal virtual PdfDocument GetPdfDocument() {
@@ -2401,7 +2444,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual RootRenderer GetRootRenderer() {
             IRenderer currentRenderer = this;
             while (currentRenderer is iText.Layout.Renderer.AbstractRenderer) {
@@ -2412,7 +2457,9 @@ namespace iText.Layout.Renderer {
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float CalculateAdditionalWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyMargins(dummy, true);
@@ -2420,16 +2467,22 @@ namespace iText.Layout.Renderer {
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetWidth();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float? GetPropertyAsFloat(IRenderer renderer, int property) {
             return NumberUtil.AsFloat(renderer.GetProperty<Object>(property));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns the property of the renderer as a UnitValue if it exists and is a UnitValue, null otherwise
         ///     </summary>
         /// <param name="renderer">renderer to retrieve the property from</param>
@@ -2439,7 +2492,9 @@ namespace iText.Layout.Renderer {
             UnitValue result = renderer.GetProperty<UnitValue>(property);
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ShrinkOccupiedAreaForAbsolutePosition() {
             // In case of absolute positioning and not specified left, right, width values, the parent box is shrunk to fit
             // the children. It does not occupy all the available width if it does not need to.
@@ -2452,13 +2507,17 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void DrawPositionedChildren(DrawContext drawContext) {
             foreach (IRenderer positionedChild in positionedRenderers) {
                 positionedChild.Draw(drawContext);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual FontCharacteristics CreateFontCharacteristics() {
             FontCharacteristics fc = new FontCharacteristics();
             if (this.HasProperty(Property.FONT_WEIGHT)) {
@@ -2469,7 +2528,9 @@ namespace iText.Layout.Renderer {
             }
             return fc;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets any valid
         /// <see cref="iText.Kernel.Font.PdfFont"/>
@@ -2528,7 +2589,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Get first valid
         /// <see cref="iText.Kernel.Font.PdfFont"/>
@@ -2555,7 +2618,9 @@ namespace iText.Layout.Renderer {
             FontSelector fontSelector = provider.GetFontSelector(JavaUtil.ArraysAsList(font), fc, additionalFonts);
             return provider.GetPdfFont(fontSelector.BestMatch(), additionalFonts);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static Border[] GetBorders(IRenderer renderer) {
             Border border = renderer.GetProperty<Border>(Property.BORDER);
             Border topBorder = renderer.GetProperty<Border>(Property.BORDER_TOP);
@@ -2577,14 +2642,18 @@ namespace iText.Layout.Renderer {
             }
             return borders;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ApplyAbsolutePositionIfNeeded(LayoutContext layoutContext) {
             if (IsAbsolutePosition()) {
                 ApplyAbsolutePosition(layoutContext is PositionedLayoutContext ? ((PositionedLayoutContext)layoutContext).
                     GetParentOccupiedArea().GetBBox() : layoutContext.GetArea().GetBBox());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void PreparePositionedRendererAndAreaForLayout(IRenderer childPositionedRenderer, Rectangle
              fullBbox, Rectangle parentBbox) {
             float? left = GetPropertyAsFloat(childPositionedRenderer, Property.LEFT);
@@ -2598,6 +2667,7 @@ namespace iText.Layout.Renderer {
                 UpdateMinHeightForAbsolutelyPositionedRenderer(childPositionedRenderer, parentBbox, top, bottom);
             }
         }
+//\endcond
 
         private void UpdateMinHeightForAbsolutelyPositionedRenderer(IRenderer renderer, Rectangle parentRendererBox
             , float? top, float? bottom) {
@@ -2620,6 +2690,7 @@ namespace iText.Layout.Renderer {
                     resolvedMinHeight = Math.Min(resolvedMinHeight, currentMaxHeight.GetValue());
                 }
                 renderer.SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue((float)resolvedMinHeight));
+                renderer.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue((float)resolvedMinHeight));
             }
         }
 
@@ -2640,19 +2711,23 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static float CalculatePaddingBorderWidth(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetWidth();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static float CalculatePaddingBorderHeight(iText.Layout.Renderer.AbstractRenderer renderer) {
             Rectangle dummy = new Rectangle(0, 0);
             renderer.ApplyBorderBox(dummy, true);
             renderer.ApplyPaddings(dummy, true);
             return dummy.GetHeight();
         }
+//\endcond
 
         /// <summary>
         /// This method creates
@@ -2693,6 +2768,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Add the specified
         /// <see cref="IRenderer">renderer</see>
@@ -2709,7 +2785,9 @@ namespace iText.Layout.Renderer {
             child.SetParent(this);
             this.childRenderers.Add(child);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Add the specified collection of
         /// <see cref="IRenderer">renderers</see>
@@ -2729,7 +2807,9 @@ namespace iText.Layout.Renderer {
             SetThisAsParent(children);
             this.childRenderers.AddAll(children);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Inserts the specified collection of
         /// <see cref="IRenderer">renderers</see>
@@ -2747,7 +2827,9 @@ namespace iText.Layout.Renderer {
             SetThisAsParent(children);
             this.childRenderers.AddAll(index, children);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Set the specified collection of
         /// <see cref="IRenderer">renderers</see>
@@ -2779,7 +2861,9 @@ namespace iText.Layout.Renderer {
             this.childRenderers.Clear();
             AddAllChildRenderers(children);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Remove the child
         /// <see cref="IRenderer">renderer</see>
@@ -2802,7 +2886,9 @@ namespace iText.Layout.Renderer {
             RemoveThisFromParent(removed);
             return removed;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Remove the children
         /// <see cref="IRenderer">renderers</see>
@@ -2828,7 +2914,9 @@ namespace iText.Layout.Renderer {
             RemoveThisFromParents(children);
             return this.childRenderers.RemoveAll(children);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Update the child
         /// <see cref="IRenderer">renderer</see>
@@ -2856,7 +2944,9 @@ namespace iText.Layout.Renderer {
             RemoveThisFromParent(removedElement);
             return removedElement;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Sets current
         /// <see cref="AbstractRenderer"/>
@@ -2868,7 +2958,9 @@ namespace iText.Layout.Renderer {
                 child.SetParent(this);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool LogWarningIfGetNextRendererNotOverridden(Type baseClass, Type rendererClass) {
             if (baseClass != rendererClass) {
                 ILogger logger = ITextLogManager.GetLogger(baseClass);
@@ -2880,6 +2972,7 @@ namespace iText.Layout.Renderer {
                 return true;
             }
         }
+//\endcond
 
         private void RemoveThisFromParent(IRenderer toRemove) {
             // we need to be sure that the removed element has no other entries in child renderers list

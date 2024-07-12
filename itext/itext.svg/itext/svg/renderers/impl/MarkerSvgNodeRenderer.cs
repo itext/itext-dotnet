@@ -59,6 +59,7 @@ namespace iText.Svg.Renderers.Impl {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void PreDraw(SvgDrawContext context) {
             base.PreDraw(context);
             float[] markerWidthHeight = GetMarkerWidthHeightValues();
@@ -71,13 +72,17 @@ namespace iText.Svg.Renderers.Impl {
             Rectangle markerViewport = new Rectangle(x, y, markerWidth, markerHeight);
             context.AddViewPort(markerViewport);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ApplyMarkerAttributes(SvgDrawContext context) {
             ApplyRotation(context);
             ApplyUserSpaceScaling(context);
             ApplyCoordinatesTranslation(context);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static void DrawMarker(SvgDrawContext context, String moveX, String moveY, MarkerVertexType markerToUse
             , AbstractSvgNodeRenderer parent) {
             String elementToReUse = parent.attributesAndStyles.Get(markerToUse.ToString());
@@ -98,7 +103,9 @@ namespace iText.Svg.Renderers.Impl {
                 namedObject.SetParent(null);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void ApplyViewBox(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 float[] markerWidthHeight = GetMarkerWidthHeightValues();
@@ -109,6 +116,7 @@ namespace iText.Svg.Renderers.Impl {
                 base.CalculateAndApplyViewBox(context, values, currentViewPort);
             }
         }
+//\endcond
 
         private float[] GetMarkerWidthHeightValues() {
             float markerWidth = DEFAULT_MARKER_WIDTH;

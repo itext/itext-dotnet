@@ -27,7 +27,9 @@ using iText.IO.Font.Otf;
 namespace iText.IO.Font.Otf.Lookuptype5 {
     /// <summary>Contextual Substitution Subtable: Coverage-based context glyph substitution</summary>
     public class SubTableLookup5Format3 : ContextualTable<ContextualSubstRule> {
+//\cond DO_NOT_DOCUMENT
         internal ContextualSubstRule substitutionRule;
+//\endcond
 
         public SubTableLookup5Format3(OpenTypeFontTableReader openReader, int lookupFlag, SubTableLookup5Format3.SubstRuleFormat3
              rule)
@@ -44,9 +46,13 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
         }
 
         public class SubstRuleFormat3 : ContextualSubstRule {
+//\cond DO_NOT_DOCUMENT
             internal IList<ICollection<int>> coverages;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal SubstLookupRecord[] substLookupRecords;
+//\endcond
 
             public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords) {
                 this.coverages = coverages;

@@ -30,7 +30,9 @@ using iText.Svg.Exceptions;
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements moveTo(M) attribute of SVG's path element</summary>
     public class MoveTo : AbstractPathShape {
+//\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 2;
+//\endcond
 
         public MoveTo()
             : this(false) {

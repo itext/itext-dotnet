@@ -16,6 +16,7 @@
 using iText.IO.Exceptions;
 
 namespace iText.IO.Font.Woff2 {
+//\cond DO_NOT_DOCUMENT
     // Helper functions for woff2 variable length types: 255UInt16 and UIntBase128
     internal class VariableLength {
         // Based on section 6.1.1 of MicroType Express draft spec
@@ -69,4 +70,5 @@ namespace iText.IO.Font.Woff2 {
             throw new FontCompressionException(IoExceptionMessageConstant.READ_BASE_128_FAILED);
         }
     }
+//\endcond
 }

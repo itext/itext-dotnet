@@ -21,9 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -59,8 +59,8 @@ namespace iText.Signatures.Sign {
             IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             String signatureName = "Signature2";
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
-                new StampingProperties().UseAppendMode());
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
+                StampingProperties().UseAppendMode());
             signer.SetFieldName(signatureName);
             signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 350, 200, 100)).SetReason("Test").SetLocation
                 ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
@@ -80,8 +80,8 @@ namespace iText.Signatures.Sign {
             IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             String signatureName = "Signature2";
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), new FileStream(outFileName, FileMode.Create), 
-                new StampingProperties().UseAppendMode());
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
+                StampingProperties().UseAppendMode());
             PdfDocument document = signer.GetDocument();
             document.GetWriter().SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             signer.SetFieldName(signatureName);

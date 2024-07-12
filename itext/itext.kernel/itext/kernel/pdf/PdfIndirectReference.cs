@@ -305,24 +305,32 @@ namespace iText.Kernel.Pdf {
             return base.SetState(state);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetObjStreamNumber(int objectStreamNumber) {
             this.objectStreamNumber = objectStreamNumber;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetIndex(long index) {
             this.offsetOrIndex = index;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetOffset(long offset) {
             this.offsetOrIndex = offset;
             this.objectStreamNumber = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void FixOffset(long offset) {
             if (!IsFree()) {
                 this.offsetOrIndex = offset;
             }
         }
+//\endcond
 
         private int ComparePdfDocumentLinks(iText.Kernel.Pdf.PdfIndirectReference toCompare) {
             if (pdfDocument == toCompare.pdfDocument) {

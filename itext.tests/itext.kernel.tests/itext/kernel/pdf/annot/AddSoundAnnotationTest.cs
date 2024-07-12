@@ -119,7 +119,7 @@ namespace iText.Kernel.Pdf.Annot {
             String filename = destinationFolder + "soundAnnotation04.pdf";
             String audioFile = sourceFolder + "sample.snd";
             String cmpPdf = sourceFolder + "cmp_soundAnnotation04.pdf";
-            using (Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read)) {
+            using (Stream @is = FileUtil.GetInputStreamForFile(audioFile)) {
                 using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     Rectangle rect = new Rectangle(100, 100, 100, 100);
                     PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc, rect, @is, 44100, PdfName.Signed, 2, 16);
@@ -137,7 +137,7 @@ namespace iText.Kernel.Pdf.Annot {
             String filename = destinationFolder + "soundAnnotation01.pdf";
             String audioFile = sourceFolder + "sample.wav";
             String cmpPdf = sourceFolder + "cmp_soundAnnotation01.pdf";
-            using (Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read)) {
+            using (Stream @is = FileUtil.GetInputStreamForFile(audioFile)) {
                 using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename))) {
                     Rectangle rect = new Rectangle(100, 100, 100, 100);
                     PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc, rect, @is, 48000, PdfName.Signed, 2, 16);

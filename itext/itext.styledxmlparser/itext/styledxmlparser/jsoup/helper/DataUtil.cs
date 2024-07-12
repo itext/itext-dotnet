@@ -71,7 +71,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         /// <param name="baseUri">base URI of document, to resolve relative links against</param>
         /// <returns>Document</returns>
         public static Document Load(FileInfo @in, String charsetName, String baseUri) {
-            Stream stream = new FileStream(@in.FullName, FileMode.Open, FileAccess.Read);
+            Stream stream = FileUtil.GetInputStreamForFile(@in.FullName);
             String name = Normalizer.LowerCase(@in.Name);
             if (name.EndsWith(".gz") || name.EndsWith(".z")) {
                 // unfortunately file input streams don't support marks (why not?), so we will close and reopen after read
@@ -79,8 +79,8 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                 bool zipped = (stream.Read() == 0x1f && stream.Read() == 0x8b);
                 stream.Dispose();
                 stream = zipped ?
-                    CreateSeekableStream(new GZipStream(new FileStream(@in.FullName, FileMode.Open, FileAccess.Read), CompressionMode.Decompress))
-                    : new FileStream(@in.FullName, FileMode.Open, FileAccess.Read);
+                    CreateSeekableStream(new GZipStream(FileUtil.GetInputStreamForFile(@in.FullName), CompressionMode.Decompress))
+                    : FileUtil.GetInputStreamForFile(@in.FullName);
             }
             return ParseInputStream(stream, charsetName, baseUri, iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser
                 ());

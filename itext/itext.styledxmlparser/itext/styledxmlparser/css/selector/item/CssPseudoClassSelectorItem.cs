@@ -177,9 +177,11 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         private class AlwaysApplySelectorItem : CssPseudoClassSelectorItem {
+//\cond DO_NOT_DOCUMENT
             internal AlwaysApplySelectorItem(String pseudoClass, String arguments)
                 : base(pseudoClass, arguments) {
             }
+//\endcond
 
             public override bool Matches(INode node) {
                 return true;
@@ -187,9 +189,11 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         private class AlwaysNotApplySelectorItem : CssPseudoClassSelectorItem {
+//\cond DO_NOT_DOCUMENT
             internal AlwaysNotApplySelectorItem(String pseudoClass, String arguments)
                 : base(pseudoClass, arguments) {
             }
+//\endcond
 
             public override bool Matches(INode node) {
                 return false;

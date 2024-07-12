@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Font {
+//\cond DO_NOT_DOCUMENT
     internal class GidAwareGlyph : Glyph {
         private int gid;
 
@@ -38,4 +39,5 @@ namespace iText.IO.Font {
             return gid;
         }
     }
+//\endcond
 }

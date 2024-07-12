@@ -29,6 +29,7 @@ using System;
 
 namespace iText.Bouncycastlefips.Cert
 {
+    //\cond DO_NOT_DOCUMENT
     internal class X509CrlEntryBCFips : IX509CrlEntry
     {
         private X509CrlEntry entry;
@@ -56,4 +57,5 @@ namespace iText.Bouncycastlefips.Cert
             return new BigIntegerBCFips(entry.SerialNumber);
         }
     }
+    //\endcond
 }

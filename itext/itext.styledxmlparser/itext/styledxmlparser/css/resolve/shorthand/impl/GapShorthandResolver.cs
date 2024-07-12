@@ -31,8 +31,39 @@ using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
+    /// <summary>
+    /// Shorthand resolver for gap shorthand properties, can be used for
+    /// different gap properties like
+    /// <c>gap</c>
+    /// or
+    /// <c>grid-gap</c>.
+    /// </summary>
     public class GapShorthandResolver : IShorthandResolver {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(GapShorthandResolver));
+        private readonly String gapShorthandProperty;
+
+        /// <summary>
+        /// Instantiates default
+        /// <see cref="GapShorthandResolver"/>
+        /// for
+        /// <c>gap</c>
+        /// shorthand.
+        /// </summary>
+        public GapShorthandResolver()
+            : this(CommonCssConstants.GAP) {
+        }
+
+        /// <summary>
+        /// Instantiates default
+        /// <see cref="GapShorthandResolver"/>
+        /// for passed gap shorthand.
+        /// </summary>
+        /// <param name="gapShorthandProperty">the name of the gap shorthand property</param>
+        public GapShorthandResolver(String gapShorthandProperty) {
+            this.gapShorthandProperty = gapShorthandProperty;
+        }
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GapShorthandResolver
+            ));
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
@@ -43,11 +74,11 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             }
             if (CssTypesValidationUtils.ContainsInitialOrInheritOrUnset(shorthandExpression)) {
                 return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                    , CommonCssConstants.GAP, shorthandExpression);
+                    , gapShorthandProperty, shorthandExpression);
             }
             if (String.IsNullOrEmpty(shorthandExpression)) {
                 return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
-                    , CommonCssConstants.GAP, shorthandExpression);
+                    , gapShorthandProperty, shorthandExpression);
             }
             String[] gapProps = iText.Commons.Utils.StringUtil.Split(shorthandExpression, " ");
             if (gapProps.Length == 1) {
@@ -59,7 +90,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                 }
                 else {
                     return HandleExpressionError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
-                        , CommonCssConstants.GAP, shorthandExpression);
+                        , gapShorthandProperty, shorthandExpression);
                 }
             }
         }

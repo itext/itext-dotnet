@@ -27,7 +27,9 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
+//\cond DO_NOT_DOCUMENT
     internal sealed class AccessibilityPropertiesToStructElem {
+//\cond DO_NOT_DOCUMENT
         internal static void Apply(AccessibilityProperties properties, PdfStructElem elem) {
             SetTextualAids(properties, elem);
             SetAttributes(properties.GetAttributesList(), elem);
@@ -41,7 +43,9 @@ namespace iText.Kernel.Pdf.Tagutils {
                 elem.AddRef(@ref.GetCurrentStructElem());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal static PdfObject CombineAttributesList(PdfObject attributesObject, int insertIndex, IList<PdfStructureAttributes
             > newAttributesList, PdfNumber revision) {
             PdfObject combinedAttributes;
@@ -72,6 +76,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             return combinedAttributes;
         }
+//\endcond
 
         private static void SetAttributes(IList<PdfStructureAttributes> newAttributesList, PdfStructElem elem) {
             if (newAttributesList.Count > 0) {
@@ -121,4 +126,5 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
     }
+//\endcond
 }

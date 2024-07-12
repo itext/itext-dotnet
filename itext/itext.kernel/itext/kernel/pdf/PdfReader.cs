@@ -167,10 +167,12 @@ namespace iText.Kernel.Pdf {
             : this(file.FullName, properties) {
         }
 
+//\cond DO_NOT_DOCUMENT
         internal PdfReader(IRandomAccessSource byteSource, ReaderProperties properties, bool closeStream) {
             this.properties = properties;
             this.tokens = GetOffsetTokeniser(byteSource, closeStream);
         }
+//\endcond
 
         /// <summary>
         /// Close
@@ -379,6 +381,9 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>byte[] array.</returns>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
+            if (stream == null) {
+                throw new PdfException(KernelExceptionMessageConstant.UNABLE_TO_READ_STREAM_BYTES);
+            }
             PdfName type = stream.GetAsName(PdfName.Type);
             if (!PdfName.XRef.Equals(type) && !PdfName.ObjStm.Equals(type)) {
                 CheckPdfStreamLength(stream);
@@ -438,6 +443,7 @@ namespace iText.Kernel.Pdf {
                 catch (Exception) {
                 }
             }
+            // ignored
             return bytes;
         }
 
@@ -811,6 +817,9 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual void ReadObjectStream(PdfStream objectStream) {
+            if (objectStream == null) {
+                throw new PdfException(KernelExceptionMessageConstant.UNABLE_TO_READ_OBJECT_STREAM);
+            }
             int objectStreamNumber = objectStream.GetIndirectReference().GetObjNumber();
             int first = objectStream.GetAsNumber(PdfName.First).IntValue();
             int n = objectStream.GetAsNumber(PdfName.N).IntValue();
@@ -1466,6 +1475,9 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary dic = (PdfDictionary)ReadObject(false);
                 return dic.Get(PdfName.Root, false) != null;
             }
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
             catch (Exception) {
                 return false;
             }
@@ -1504,13 +1516,17 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool IsMemorySavingMode() {
             return memorySavingMode;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetXrefProcessor(PdfReader.XrefProcessor xrefProcessor) {
             this.xrefProcessor = xrefProcessor;
         }
+//\endcond
 
         private void ProcessArrayReadError() {
             String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.Commons.Utils.JavaUtil.GetStringForBytes
@@ -1564,6 +1580,10 @@ namespace iText.Kernel.Pdf {
                 if (reference.GetObjStreamNumber() > 0) {
                     PdfStream objectStream = (PdfStream)pdfDocument.GetXref().Get(reference.GetObjStreamNumber()).GetRefersTo(
                         false);
+                    if (objectStream == null) {
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_OBJECT_STREAM_NUMBER
+                            , reference.GetObjNumber(), reference.GetObjStreamNumber(), reference.GetIndex()));
+                    }
                     ReadObjectStream(objectStream);
                     return reference.refersTo;
                 }
@@ -1774,9 +1794,11 @@ namespace iText.Kernel.Pdf {
 
             private readonly int levelValue;
 
+//\cond DO_NOT_DOCUMENT
             internal StrictnessLevel(int levelValue) {
                 this.levelValue = levelValue;
             }
+//\endcond
 
             /// <summary>
             /// Checks whether the current instance represents more strict reading level than
@@ -1803,8 +1825,10 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Class containing a callback which is called on every xref table reading.</summary>
         internal class XrefProcessor {
+//\cond DO_NOT_DOCUMENT
             /// <summary>Process xref table.</summary>
             /// <param name="xrefTable">
             /// 
@@ -1818,8 +1842,10 @@ namespace iText.Kernel.Pdf {
             /// </param>
             internal virtual void ProcessXref(PdfXrefTable xrefTable, PdfTokenizer tokenizer) {
             }
+//\endcond
             // Do nothing.
         }
+//\endcond
 
         void System.IDisposable.Dispose() {
             Close();

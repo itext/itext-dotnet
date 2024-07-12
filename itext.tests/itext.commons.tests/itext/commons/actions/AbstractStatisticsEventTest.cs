@@ -50,14 +50,18 @@ namespace iText.Commons.Actions {
             NUnit.Framework.Assert.IsNull(dummyEvent.CreateStatisticsAggregatorFromName("statisticsName"));
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class DummyStatisticsEvent : AbstractStatisticsEvent {
+//\cond DO_NOT_DOCUMENT
             internal DummyStatisticsEvent(ProductData data)
                 : base(data) {
             }
+//\endcond
 
             public override IList<String> GetStatisticsNames() {
                 return null;
             }
         }
+//\endcond
     }
 }

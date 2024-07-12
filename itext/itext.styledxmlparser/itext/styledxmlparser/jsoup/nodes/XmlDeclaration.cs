@@ -73,14 +73,18 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out) {
             accum.Append("<").Append(isProcessingInstruction ? "!" : "?").Append(CoreValue());
             GetWholeDeclaration(accum, @out);
             accum.Append(isProcessingInstruction ? "!" : "?").Append(">");
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out) {
         }
+//\endcond
 
         public override String ToString() {
             return OuterHtml();

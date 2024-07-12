@@ -24,6 +24,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassRootSelectorItem : CssPseudoClassSelectorItem {
         private static readonly iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassRootSelectorItem instance = 
             new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassRootSelectorItem();
@@ -43,4 +44,5 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return node.ParentNode() is IDocumentNode;
         }
     }
+//\endcond
 }

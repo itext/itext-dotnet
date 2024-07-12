@@ -37,8 +37,10 @@ namespace iText.IO.Util {
  : ICloneable
 #endif
  {
+//\cond DO_NOT_DOCUMENT
         /// <summary>The total number of entries in the hash table.</summary>
         internal int count;
+//\endcond
 
         /// <summary>The hash table data.</summary>
         private IntHashtable.Entry[] table;
@@ -327,13 +329,20 @@ namespace iText.IO.Util {
         /// table.
         /// </summary>
         public class Entry {
+//\cond DO_NOT_DOCUMENT
             internal int key;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int value;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             //ArrayList<Integer> values = new ArrayList<Integer>();
             internal IntHashtable.Entry next;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Create a new entry with the given values.</summary>
             /// <param name="key">The key used to enter this in the table</param>
             /// <param name="value">The value for this key</param>
@@ -343,6 +352,7 @@ namespace iText.IO.Util {
                 this.value = value;
                 this.next = next;
             }
+//\endcond
 
             //values.add(value);
             // extra methods for inner class Entry by Paulo

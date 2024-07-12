@@ -27,6 +27,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Crypto;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
@@ -121,6 +122,12 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         /// <summary><inheritDoc/></summary>
         public DateTime GetProducedAt() {
             return GetBasicOcspResponse().TbsResponseData.ProducedAt.ToDateTime();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IAsn1Encodable GetExtensionParsedValue(IDerObjectIdentifier objectIdentifier) {
+            return new Asn1EncodableBCFips(GetBasicOcspResponse().TbsResponseData.ResponseExtensions.GetExtension(
+                ((DerObjectIdentifierBCFips)objectIdentifier).GetDerObjectIdentifier())?.GetParsedValue());
         }
     }
 }

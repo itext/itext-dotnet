@@ -400,21 +400,31 @@ namespace iText.Kernel.XMP.Impl.XPath {
         }
     }
 
+//\cond DO_NOT_DOCUMENT
     /// <summary>This objects contains all needed char positions to parse.</summary>
     internal class PathPosition {
         /// <summary>the complete path</summary>
         public String path = null;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>the start of a segment name</summary>
         internal int nameStart = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>the end of a segment name</summary>
         internal int nameEnd = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>the begin of a step</summary>
         internal int stepBegin = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>the end of a step</summary>
         internal int stepEnd = 0;
+//\endcond
     }
+//\endcond
 }

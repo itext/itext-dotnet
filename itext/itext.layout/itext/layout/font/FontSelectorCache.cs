@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace iText.Layout.Font {
+//\cond DO_NOT_DOCUMENT
     internal class FontSelectorCache {
         private readonly FontSelectorCache.FontSetSelectors defaultSelectors;
 
@@ -31,13 +32,16 @@ namespace iText.Layout.Font {
         private readonly IDictionary<long, FontSelectorCache.FontSetSelectors> caches = new Dictionary<long, FontSelectorCache.FontSetSelectors
             >();
 
+//\cond DO_NOT_DOCUMENT
         internal FontSelectorCache(FontSet defaultFontSet) {
             System.Diagnostics.Debug.Assert(defaultFontSet != null);
             this.defaultSelectors = new FontSelectorCache.FontSetSelectors();
             this.defaultSelectors.Update(defaultFontSet);
             this.defaultFontSet = defaultFontSet;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual FontSelector Get(FontSelectorKey key) {
             if (Update(null, null)) {
                 return null;
@@ -46,7 +50,9 @@ namespace iText.Layout.Font {
                 return defaultSelectors.map.Get(key);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual FontSelector Get(FontSelectorKey key, FontSet additionalFonts) {
             if (additionalFonts == null) {
                 return Get(key);
@@ -64,13 +70,17 @@ namespace iText.Layout.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Put(FontSelectorKey key, FontSelector fontSelector) {
             //update defaultSelectors to reset counter before pushing if needed.
             Update(null, null);
             defaultSelectors.map.Put(key, fontSelector);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void Put(FontSelectorKey key, FontSelector fontSelector, FontSet fontSet) {
             if (fontSet == null) {
                 Put(key, fontSelector);
@@ -85,6 +95,7 @@ namespace iText.Layout.Font {
                 selectors.map.Put(key, fontSelector);
             }
         }
+//\endcond
 
         private bool Update(FontSelectorCache.FontSetSelectors selectors, FontSet fontSet) {
             bool updated = false;
@@ -98,11 +109,14 @@ namespace iText.Layout.Font {
         }
 
         private class FontSetSelectors {
+//\cond DO_NOT_DOCUMENT
             internal readonly IDictionary<FontSelectorKey, FontSelector> map = new Dictionary<FontSelectorKey, FontSelector
                 >();
+//\endcond
 
             private int fontSetSize = -1;
 
+//\cond DO_NOT_DOCUMENT
             internal virtual bool Update(FontSet fontSet) {
                 System.Diagnostics.Debug.Assert(fontSet != null);
                 if (fontSetSize == fontSet.Size()) {
@@ -114,6 +128,8 @@ namespace iText.Layout.Font {
                     return true;
                 }
             }
+//\endcond
         }
     }
+//\endcond
 }

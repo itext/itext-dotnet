@@ -21,11 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -73,8 +73,8 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             byte[] ownerPass = "World".GetBytes();
             PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPassword(ownerPass));
-            PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
-                .UseAppendMode());
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(outPdf), new StampingProperties().UseAppendMode
+                ());
             signer.SetFieldName(fieldName);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
@@ -94,8 +94,8 @@ namespace iText.Signatures.Sign {
                 String cmpPdf = SOURCE_FOLDER + "cmp_signCertificateSecurityPdf.pdf";
                 String outPdf = DESTINATION_FOLDER + "signCertificateSecurityPdf.pdf";
                 PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPublicKeySecurityParams(chain[0], pk));
-                PdfSigner signer = new PdfSigner(reader, new FileStream(outPdf, FileMode.Create), new StampingProperties()
-                    .UseAppendMode());
+                PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(outPdf), new StampingProperties().UseAppendMode
+                    ());
                 // Creating the signature
                 IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
                 signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES

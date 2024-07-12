@@ -60,6 +60,7 @@ namespace iText.IO.Font {
         private static readonly String[] TT_FAMILY_ORDER = new String[] { "3", "1", "1033", "3", "0", "1033", "1", 
             "0", "0", "0", "3", "0" };
 
+//\cond DO_NOT_DOCUMENT
         internal FontProgramDescriptor(FontNames fontNames, float italicAngle, bool isMonospace) {
             this.fontName = fontNames.GetFontName();
             this.fontNameLowerCase = this.fontName.ToLowerInvariant();
@@ -81,10 +82,13 @@ namespace iText.IO.Font {
             this.fullNamesAllLangs = ExtractFullFontNames(fontNames);
             this.fullNamesEnglishOpenType = ExtractFullNamesEnglishOpenType(fontNames);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal FontProgramDescriptor(FontNames fontNames, FontMetrics fontMetrics)
             : this(fontNames, fontMetrics.GetItalicAngle(), fontMetrics.IsFixedPitch()) {
         }
+//\endcond
 
         public virtual String GetFontName() {
             return fontName;
@@ -144,9 +148,11 @@ namespace iText.IO.Font {
             return fullNamesEnglishOpenType;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual String GetFamilyNameEnglishOpenType() {
             return familyNameEnglishOpenType;
         }
+//\endcond
 
         private ICollection<String> ExtractFullFontNames(FontNames fontNames) {
             ICollection<String> uniqueFullNames = new HashSet<String>();

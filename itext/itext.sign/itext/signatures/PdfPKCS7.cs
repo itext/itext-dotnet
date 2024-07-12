@@ -353,6 +353,9 @@ namespace iText.Signatures {
                             IAsn1Set attributeValues = ts.GetAttrValues();
                             IAsn1Sequence tokenSequence = BOUNCY_CASTLE_FACTORY.CreateASN1SequenceInstance(attributeValues.GetObjectAt
                                 (0));
+                            this.timestampSignatureContainer = new iText.Signatures.PdfPKCS7(tokenSequence.GetEncoded(), PdfName.ETSI_RFC3161
+                                );
+                            this.timestampSignatureContainer.Update(signatureValue, 0, signatureValue.Length);
                             this.timestampCerts = SignUtils.ReadAllCerts(tokenSequence.GetEncoded());
                             IContentInfo contentInfo = BOUNCY_CASTLE_FACTORY.CreateContentInfo(tokenSequence);
                             this.timeStampTokenInfo = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(contentInfo);
@@ -365,6 +368,7 @@ namespace iText.Signatures {
                     this.timestampCerts = this.certs;
                     String algOID = timeStampTokenInfo.GetMessageImprint().GetHashAlgorithm().GetAlgorithm().GetId();
                     messageDigest = DigestAlgorithms.GetMessageDigestFromOid(algOID);
+                    encContDigest = DigestAlgorithms.GetMessageDigest(GetDigestAlgorithmName());
                 }
                 else {
                     if (this.encapMessageContent != null || digestAttr != null) {
@@ -384,10 +388,22 @@ namespace iText.Signatures {
             }
         }
 
+        /// <summary>Set signature policy identifier to be used during signature creation.</summary>
+        /// <param name="signaturePolicy">
+        /// 
+        /// <see cref="SignaturePolicyInfo"/>
+        /// to be used during signature creation
+        /// </param>
         public virtual void SetSignaturePolicy(SignaturePolicyInfo signaturePolicy) {
             this.signaturePolicyIdentifier = signaturePolicy.ToSignaturePolicyIdentifier();
         }
 
+        /// <summary>Set signature policy identifier to be used during signature creation.</summary>
+        /// <param name="signaturePolicy">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Esf.ISignaturePolicyIdentifier"/>
+        /// to be used during signature creation
+        /// </param>
         public virtual void SetSignaturePolicy(ISignaturePolicyIdentifier signaturePolicy) {
             this.signaturePolicyIdentifier = signaturePolicy;
         }
@@ -1124,34 +1140,42 @@ namespace iText.Signatures {
             if (verified) {
                 return verifyResult;
             }
-            if (isTsp) {
-                IMessageImprint imprint = timeStampTokenInfo.GetMessageImprint();
-                byte[] md = messageDigest.Digest();
-                byte[] imphashed = imprint.GetHashedMessage();
-                verifyResult = JavaUtil.ArraysEquals(md, imphashed);
+            if (sigAttr != null || sigAttrDer != null) {
+                byte[] msgDigestBytes = messageDigest.Digest();
+                bool verifySignedMessageContent = true;
+                // Stefan Santesson fixed a bug, keeping the code backward compatible
+                bool encContDigestCompare = false;
+                if (encapMessageContent != null) {
+                    if (isTsp) {
+                        byte[] tstInfo = new byte[0];
+                        try {
+                            tstInfo = timeStampTokenInfo.ToASN1Primitive().GetEncoded();
+                        }
+                        catch (System.IO.IOException) {
+                        }
+                        // Ignore.
+                        // Check that encapMessageContent is TSTInfo
+                        bool isTSTInfo = JavaUtil.ArraysEquals(tstInfo, encapMessageContent);
+                        IMessageImprint imprint = timeStampTokenInfo.GetMessageImprint();
+                        byte[] imphashed = imprint.GetHashedMessage();
+                        verifySignedMessageContent = isTSTInfo && JavaUtil.ArraysEquals(msgDigestBytes, imphashed);
+                    }
+                    else {
+                        verifySignedMessageContent = JavaUtil.ArraysEquals(msgDigestBytes, encapMessageContent);
+                    }
+                    encContDigest.Update(encapMessageContent);
+                    encContDigestCompare = JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
+                }
+                bool absentEncContDigestCompare = JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
+                bool concludingDigestCompare = absentEncContDigestCompare || encContDigestCompare;
+                bool sigVerify = VerifySigAttributes(sigAttr) || VerifySigAttributes(sigAttrDer);
+                verifyResult = concludingDigestCompare && sigVerify && verifySignedMessageContent;
             }
             else {
-                if (sigAttr != null || sigAttrDer != null) {
-                    byte[] msgDigestBytes = messageDigest.Digest();
-                    bool verifySignedMessageContent = true;
-                    // Stefan Santesson fixed a bug, keeping the code backward compatible
-                    bool encContDigestCompare = false;
-                    if (encapMessageContent != null) {
-                        verifySignedMessageContent = JavaUtil.ArraysEquals(msgDigestBytes, encapMessageContent);
-                        encContDigest.Update(encapMessageContent);
-                        encContDigestCompare = JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
-                    }
-                    bool absentEncContDigestCompare = JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
-                    bool concludingDigestCompare = absentEncContDigestCompare || encContDigestCompare;
-                    bool sigVerify = VerifySigAttributes(sigAttr) || VerifySigAttributes(sigAttrDer);
-                    verifyResult = concludingDigestCompare && sigVerify && verifySignedMessageContent;
+                if (encapMessageContent != null) {
+                    SignUtils.UpdateVerifier(sig, messageDigest.Digest());
                 }
-                else {
-                    if (encapMessageContent != null) {
-                        SignUtils.UpdateVerifier(sig, messageDigest.Digest());
-                    }
-                    verifyResult = sig.VerifySignature(signatureValue);
-                }
+                verifyResult = sig.VerifySignature(signatureValue);
             }
             verified = true;
             return verifyResult;
@@ -1178,12 +1202,14 @@ namespace iText.Signatures {
 
         // Certificates
         /// <summary>All the X.509 certificates in no particular order.</summary>
-        private ICollection<IX509Certificate> certs;
+        private readonly ICollection<IX509Certificate> certs;
 
         private ICollection<IX509Certificate> timestampCerts;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>All the X.509 certificates used for the main signature.</summary>
         internal ICollection<IX509Certificate> signCerts;
+//\endcond
 
         /// <summary>The X.509 certificate that is used to sign the digest.</summary>
         private IX509Certificate signCert;
@@ -1277,6 +1303,7 @@ namespace iText.Signatures {
             return signedDataCrls;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Helper method that tries to construct the CRLs.</summary>
         internal virtual void FindCRL(IAsn1Sequence seq) {
             try {
@@ -1291,11 +1318,14 @@ namespace iText.Signatures {
             catch (Exception) {
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // ignore
         // Online Certificate Status Protocol
         /// <summary>BouncyCastle IBasicOCSPResponse</summary>
         internal IBasicOcspResponse basicResp;
+//\endcond
 
         private readonly ICollection<IBasicOcspResponse> signedDataOcsps = new List<IBasicOcspResponse>();
 
@@ -1389,6 +1419,9 @@ namespace iText.Signatures {
         /// <summary>True if it's a CAdES signature type.</summary>
         private bool isCades;
 
+        /// <summary>Inner timestamp signature container.</summary>
+        private iText.Signatures.PdfPKCS7 timestampSignatureContainer;
+
         /// <summary>BouncyCastle TSTInfo.</summary>
         private ITstInfo timeStampTokenInfo;
 
@@ -1396,6 +1429,12 @@ namespace iText.Signatures {
         /// <returns>true if it's a PAdES-LTV time stamp, false otherwise</returns>
         public virtual bool IsTsp() {
             return isTsp;
+        }
+
+        /// <summary>Retrieves inner timestamp signature container if there is one.</summary>
+        /// <returns>timestamp signature container or null.</returns>
+        public virtual iText.Signatures.PdfPKCS7 GetTimestampSignatureContainer() {
+            return timestampSignatureContainer;
         }
 
         /// <summary>Gets the timestamp token info if there is one.</summary>

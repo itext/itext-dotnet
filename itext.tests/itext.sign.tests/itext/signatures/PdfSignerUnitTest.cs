@@ -436,8 +436,7 @@ namespace iText.Signatures {
         private static byte[] CreateSimplePdfaDocument() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(outputStream);
-            Stream @is = new FileStream(PDFA_RESOURCES + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                );
+            Stream @is = FileUtil.GetInputStreamForFile(PDFA_RESOURCES + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfDocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, outputIntent);
@@ -448,17 +447,21 @@ namespace iText.Signatures {
             return outputStream.ToArray();
         }
 
+//\cond DO_NOT_DOCUMENT
         // Android-Conversion-Skip-Block-End
         internal class ExtendedPdfSignatureFormField : PdfSignatureFormField {
             public ExtendedPdfSignatureFormField(PdfWidgetAnnotation widgetAnnotation, PdfDocument document)
                 : base(widgetAnnotation, document) {
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal class DummySignatureEvent : PdfSigner.ISignatureEvent {
             public virtual void GetSignatureDictionary(PdfSignature sig) {
             }
             // Do nothing.
         }
+//\endcond
     }
 }

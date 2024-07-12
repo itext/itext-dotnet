@@ -31,7 +31,9 @@ using iText.Svg.Renderers;
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Root renderer responsible for applying the initial axis-flipping transform</summary>
     public class PdfRootSvgNodeRenderer : ISvgNodeRenderer {
+//\cond DO_NOT_DOCUMENT
         internal ISvgNodeRenderer subTreeRoot;
+//\endcond
 
         /// <summary>
         /// Creates a
@@ -80,6 +82,7 @@ namespace iText.Svg.Renderers.Impl {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual AffineTransform CalculateTransformation(SvgDrawContext context) {
             Rectangle viewPort = context.GetCurrentViewPort();
             float horizontal = viewPort.GetX();
@@ -91,7 +94,9 @@ namespace iText.Svg.Renderers.Impl {
             transform.Concatenate(new AffineTransform(1, 0, 0, -1, 0, 0));
             return transform;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Rectangle CalculateViewPort(SvgDrawContext context) {
             float portX = 0f;
             float portY = 0f;
@@ -108,6 +113,7 @@ namespace iText.Svg.Renderers.Impl {
             portHeight = bboxArray.GetAsNumber(3).FloatValue() - portY;
             return new Rectangle(portX, portY, portWidth, portHeight);
         }
+//\endcond
 
         public virtual ISvgNodeRenderer CreateDeepCopy() {
             iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer copy = new iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer

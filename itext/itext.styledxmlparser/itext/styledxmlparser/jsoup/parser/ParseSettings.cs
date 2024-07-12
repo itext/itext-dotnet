@@ -60,9 +60,11 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             preserveAttributeCase = attribute;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal ParseSettings(iText.StyledXmlParser.Jsoup.Parser.ParseSettings copy)
             : this(copy.preserveTagCase, copy.preserveAttributeCase) {
         }
+//\endcond
 
         /// <summary>Normalizes a tag name according to the case preservation setting.</summary>
         public virtual String NormalizeTag(String name) {
@@ -82,11 +84,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             return name;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual Attributes NormalizeAttributes(Attributes attributes) {
             if (attributes != null && !preserveAttributeCase) {
                 attributes.Normalize();
             }
             return attributes;
         }
+//\endcond
     }
 }

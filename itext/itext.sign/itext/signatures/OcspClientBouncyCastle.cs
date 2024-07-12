@@ -50,9 +50,19 @@ namespace iText.Signatures {
         /// <c>OcspClient</c>.
         /// </summary>
         /// <param name="verifier">will be used for response verification.</param>
-        /// <seealso cref="OCSPVerifier"/>
+        [System.ObsoleteAttribute(@"starting from 8.0.5. OcspClientBouncyCastle() should be used instead. If required, iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse can be checked using iText.Signatures.Validation.V1.OCSPValidator class."
+            )]
         public OcspClientBouncyCastle(OCSPVerifier verifier) {
             this.verifier = verifier;
+        }
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="OcspClientBouncyCastle"/>
+        /// instance.
+        /// </summary>
+        public OcspClientBouncyCastle() {
+            this.verifier = null;
         }
 
         /// <summary>Gets OCSP response.</summary>
@@ -158,6 +168,7 @@ namespace iText.Signatures {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets an OCSP response object using BouncyCastle.</summary>
         /// <param name="checkCert">to certificate to check</param>
         /// <param name="rootCert">the parent certificate</param>
@@ -184,6 +195,7 @@ namespace iText.Signatures {
             Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
             return @in == null ? null : BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
         }
+//\endcond
 
         /// <summary>
         /// Create OCSP request and get the response for this request, represented as

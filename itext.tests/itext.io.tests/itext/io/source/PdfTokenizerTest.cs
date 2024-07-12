@@ -196,6 +196,23 @@ namespace iText.IO.Source {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetNextEofWhichIsCutTest() {
+            StringBuilder stringBuilder = new StringBuilder();
+            // We append 'a' 124 times because buffer has 128 bytes length.
+            // This way '%%EOF' is cut and first string only contains '%%EO'
+            for (int i = 0; i < 124; ++i) {
+                stringBuilder.Append("a");
+            }
+            stringBuilder.Append("%%EOF");
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(stringBuilder.
+                ToString().GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                long eofPosition = tok.GetNextEof();
+                NUnit.Framework.Assert.AreEqual(124 + 6, eofPosition);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetNextEofSeveralEofTest() {
             String data = "some text %%EOFto test \nget%%EOFting end of\n fil%%EOFe logic%%EOF";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
@@ -203,6 +220,16 @@ namespace iText.IO.Source {
                 iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
                 long eofPosition = tok.GetNextEof();
                 NUnit.Framework.Assert.AreEqual(data.IndexOf("%%EOF", StringComparison.Ordinal) + 6, eofPosition);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNextEofNoEofTest() {
+            String data = "some text to test \ngetting end of\n file logic";
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(
+                iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => tok.GetNextEof());
             }
         }
 

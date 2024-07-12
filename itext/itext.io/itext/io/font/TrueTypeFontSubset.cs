@@ -27,6 +27,7 @@ using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
     internal class TrueTypeFontSubset {
         // If it's a regular font subset, we should not add `name` and `post`,
@@ -105,6 +106,7 @@ namespace iText.IO.Font {
 
         private readonly String[] tableNames;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new TrueTypeFontSubSet</summary>
         /// <param name="directoryOffset">The offset from the start of the file to the table directory</param>
         /// <param name="fileName">the file name of the font</param>
@@ -124,7 +126,9 @@ namespace iText.IO.Font {
             }
             glyphsInList = new List<int>(glyphsUsed);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Does the actual work of subsetting the font.</summary>
         /// <returns>the subset font</returns>
         internal virtual byte[] Process() {
@@ -145,6 +149,7 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
         private void AssembleFont() {
             int[] tableLocation;
@@ -454,4 +459,5 @@ namespace iText.IO.Font {
             return v0 + (v1 << 8) + (v2 << 16) + (v3 << 24);
         }
     }
+//\endcond
 }

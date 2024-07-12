@@ -35,23 +35,72 @@ namespace iText.Kernel.Utils {
 
         private ICollection<PdfFont> fonts = null;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="ValidationContext"/>
+        /// instance.
+        /// </summary>
         public ValidationContext() {
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// for this
+        /// <see cref="ValidationContext"/>
+        /// instance.
+        /// </summary>
+        /// <param name="pdfDocument">document to validate.</param>
+        /// <returns>
+        /// this
+        /// <see cref="ValidationContext"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Utils.ValidationContext WithPdfDocument(PdfDocument pdfDocument) {
             this.PdfDocument = pdfDocument;
             return this;
         }
 
+        /// <summary>
+        /// Sets fonts for this
+        /// <see cref="ValidationContext"/>
+        /// instance.
+        /// </summary>
+        /// <param name="fonts">
+        /// collection of the
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// fonts to validate.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="ValidationContext"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Utils.ValidationContext WithFonts(ICollection<PdfFont> fonts) {
             this.fonts = fonts;
             return this;
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// related to this
+        /// <see cref="ValidationContext"/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// document to validate.
+        /// </returns>
         public virtual PdfDocument GetPdfDocument() {
             return PdfDocument;
         }
 
+        /// <summary>
+        /// Gets fonts related to this
+        /// <see cref="ValidationContext"/>.
+        /// </summary>
+        /// <returns>fonts to validate.</returns>
         public virtual ICollection<PdfFont> GetFonts() {
             return fonts;
         }

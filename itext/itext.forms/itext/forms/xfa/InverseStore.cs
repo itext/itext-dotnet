@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Forms.Xfa {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// A structure to store each part of a SOM name and link it to the next part
     /// beginning from the lower hierarchy.
@@ -69,4 +70,5 @@ namespace iText.Forms.Xfa {
             return false;
         }
     }
+//\endcond
 }

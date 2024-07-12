@@ -44,7 +44,9 @@ namespace iText.Kernel.Pdf {
 
         private int mcid = -1;
 
+//\cond DO_NOT_DOCUMENT
         internal PdfPages parentPages;
+//\endcond
 
         private static readonly IList<PdfName> PAGE_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName
             .Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
@@ -338,13 +340,16 @@ namespace iText.Kernel.Pdf {
             return GetResources(true);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfResources GetResources(bool initResourcesField) {
             if (this.resources == null && initResourcesField) {
                 InitResources(true);
             }
             return this.resources;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfDictionary InitResources(bool initResourcesField) {
             bool readOnly = false;
             PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
@@ -365,6 +370,7 @@ namespace iText.Kernel.Pdf {
             }
             return resources;
         }
+//\endcond
 
         /// <summary>
         /// Sets
@@ -1616,6 +1622,7 @@ namespace iText.Kernel.Pdf {
             return afArray;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void TryFlushPageTags() {
             try {
                 if (!GetDocument().isClosing) {
@@ -1623,16 +1630,19 @@ namespace iText.Kernel.Pdf {
                 }
                 GetDocument().GetStructTreeRoot().SavePageStructParentIndexIfNeeded(this);
             }
-            catch (Exception ex) {
+            catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.TAG_STRUCTURE_FLUSHING_FAILED_IT_MIGHT_BE_CORRUPTED, 
-                    ex);
+                    e);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ReleaseInstanceFields() {
             resources = null;
             parentPages = null;
         }
+//\endcond
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;

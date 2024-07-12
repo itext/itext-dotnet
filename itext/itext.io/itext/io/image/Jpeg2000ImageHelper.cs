@@ -27,17 +27,24 @@ using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+//\cond DO_NOT_DOCUMENT
     internal sealed class Jpeg2000ImageHelper {
         private class Jpeg2000Box {
+//\cond DO_NOT_DOCUMENT
             internal int length;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int type;
+//\endcond
         }
 
         private class ZeroBoxSizeException : System.IO.IOException {
+//\cond DO_NOT_DOCUMENT
             internal ZeroBoxSizeException(String s)
                 : base(s) {
             }
+//\endcond
         }
 
         private const int JPIP_JPIP = 0x6a706970;
@@ -218,4 +225,5 @@ namespace iText.IO.Image {
             return v;
         }
     }
+//\endcond
 }

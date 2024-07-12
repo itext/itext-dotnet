@@ -30,7 +30,9 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Geom {
     /// <summary>Class that represent rectangle object.</summary>
     public class Rectangle {
+//\cond DO_NOT_DOCUMENT
         internal static float EPS = 1e-4f;
+//\endcond
 
         protected internal float x;
 

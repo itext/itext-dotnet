@@ -85,9 +85,13 @@ namespace iText.Pdfa.Checker {
 
         protected internal ICollection<PdfObject> transparencyObjects = new HashSet<PdfObject>();
 
+//\cond DO_NOT_DOCUMENT
         internal const int MAX_PAGE_SIZE = 14400;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const int MIN_PAGE_SIZE = 3;
+//\endcond
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 32;
 
@@ -1028,6 +1032,7 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CheckContentsForTransparency(PdfDictionary pageDict) {
             PdfStream contentStream = pageDict.GetAsStream(PdfName.Contents);
             if (contentStream != null && transparencyObjects.Contains(contentStream)) {
@@ -1044,7 +1049,9 @@ namespace iText.Pdfa.Checker {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CheckAnnotationsForTransparency(PdfArray annotations) {
             if (annotations == null) {
                 return;
@@ -1060,6 +1067,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
         }
+//\endcond
 
         private void CheckAppearanceStreamForTransparency(PdfDictionary ap, ICollection<PdfObject> checkedObjects) {
             if (checkedObjects.Contains(ap)) {
@@ -1102,6 +1110,7 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void CheckResourcesForTransparency(PdfDictionary resources, ICollection<PdfObject> checkedObjects
             ) {
             if (resources != null) {
@@ -1109,6 +1118,7 @@ namespace iText.Pdfa.Checker {
                 CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.Pattern), checkedObjects);
             }
         }
+//\endcond
 
         private void CheckSingleResourceTypeForTransparency(PdfDictionary singleResourceDict, ICollection<PdfObject
             > checkedObjects) {

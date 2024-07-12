@@ -28,6 +28,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
+//\cond DO_NOT_DOCUMENT
     internal class RootTagNormalizer {
         private TagStructureContext context;
 
@@ -35,13 +36,16 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private PdfDocument document;
 
+//\cond DO_NOT_DOCUMENT
         internal RootTagNormalizer(TagStructureContext context, PdfStructElem rootTagElement, PdfDocument document
             ) {
             this.context = context;
             this.rootTagElement = rootTagElement;
             this.document = document;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfStructElem MakeSingleStandardRootTag(IList<IStructureNode> rootKids) {
             document.GetStructTreeRoot().MakeIndirect(document);
             if (rootTagElement == null) {
@@ -55,6 +59,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             AddStructTreeRootKidsToTheRootTag(rootKids);
             return rootTagElement;
         }
+//\endcond
 
         private void CreateNewRootTag() {
             IRoleMappingResolver mapping;
@@ -169,4 +174,5 @@ namespace iText.Kernel.Pdf.Tagutils {
                 , mappingRole));
         }
     }
+//\endcond
 }

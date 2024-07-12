@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.IO;
 
 namespace iText.IO.Source {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// A RandomAccessSource that uses a
     /// <see cref="System.IO.FileStream"/>
@@ -95,4 +96,5 @@ namespace iText.IO.Source {
             raf.Dispose();
         }
     }
+//\endcond
 }

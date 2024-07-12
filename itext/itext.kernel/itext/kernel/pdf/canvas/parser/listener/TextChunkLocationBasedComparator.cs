@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
+//\cond DO_NOT_DOCUMENT
     internal class TextChunkLocationBasedComparator : IComparer<TextChunk> {
         private IComparer<ITextChunkLocation> locationComparator;
 
@@ -34,4 +35,5 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return locationComparator.Compare(o1.location, o2.location);
         }
     }
+//\endcond
 }

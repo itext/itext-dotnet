@@ -736,6 +736,7 @@ namespace iText.Kernel.Pdf {
             return SetCryptoMode(cryptoMode, length);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static bool ReadEmbeddedFilesOnlyFromEncryptDictionary(PdfDictionary encDict) {
             PdfName embeddedFilesFilter = encDict.GetAsName(PdfName.EFF);
             bool encryptEmbeddedFiles = !PdfName.Identity.Equals(embeddedFilesFilter) && embeddedFilesFilter != null;
@@ -751,6 +752,7 @@ namespace iText.Kernel.Pdf {
             }
             return false;
         }
+//\endcond
 
         private int FixAccessibilityPermissionPdf20(int permissions) {
             // This bit was previously used to determine whether

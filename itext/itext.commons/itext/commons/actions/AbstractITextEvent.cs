@@ -51,8 +51,10 @@ namespace iText.Commons.Actions {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void RegisterNamespace(String @namespace) {
             INTERNAL_PACKAGES.Put(@namespace + ".", new Object());
         }
+//\endcond
     }
 }

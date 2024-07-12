@@ -50,11 +50,17 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         public const int HS_DIAGCROSS = 5;
 
+//\cond DO_NOT_DOCUMENT
         internal int style = BS_SOLID;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int hatch;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal Color color = ColorConstants.WHITE;
+//\endcond
 
         /// <summary>Creates a MetaBrush object.</summary>
         public MetaBrush()

@@ -27,6 +27,7 @@ using System.Linq;
 
 namespace iText.Commons.Utils.Collections
 {
+    //\cond DO_NOT_DOCUMENT 
     internal class EmptySet<T> : ISet<T> {
         public IEnumerator<T> GetEnumerator() {
             yield break;
@@ -109,4 +110,5 @@ namespace iText.Commons.Utils.Collections
             get { return true; }
         }
     }
+   //\endcond 
 }

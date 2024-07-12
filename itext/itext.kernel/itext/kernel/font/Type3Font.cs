@@ -44,6 +44,7 @@ namespace iText.Kernel.Font {
 
         private int flags = 0;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a Type 3 font program.</summary>
         /// <param name="colorized">defines whether the glyph color is specified in the glyph descriptions in the font.
         ///     </param>
@@ -52,6 +53,7 @@ namespace iText.Kernel.Font {
             this.fontNames = new FontNames();
             GetFontMetrics().SetBbox(0, 0, 0, 0);
         }
+//\endcond
 
         /// <summary>Returns a glyph by unicode.</summary>
         /// <param name="unicode">glyph unicode</param>
@@ -179,6 +181,7 @@ namespace iText.Kernel.Font {
             base.SetTypoDescender(descender);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets Font descriptor flags.</summary>
         /// <seealso cref="iText.IO.Font.Constants.FontDescriptorFlags"/>
         /// <param name="flags">
@@ -188,7 +191,9 @@ namespace iText.Kernel.Font {
         internal virtual void SetPdfFontFlags(int flags) {
             this.flags = flags;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph type3Glyph) {
             if (codeToGlyph.ContainsKey(code)) {
                 RemoveGlyphFromMappings(code);
@@ -204,6 +209,7 @@ namespace iText.Kernel.Font {
             }
             RecalculateAverageWidth();
         }
+//\endcond
 
         private void RemoveGlyphFromMappings(int glyphCode) {
             Glyph removed = codeToGlyph.JRemove(glyphCode);

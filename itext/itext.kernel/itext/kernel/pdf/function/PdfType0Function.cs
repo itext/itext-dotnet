@@ -206,6 +206,7 @@ namespace iText.Kernel.Pdf.Function {
             return Clip(result, GetRange());
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Encode normalized input value.</summary>
         /// <param name="normal">input normalized value</param>
         /// <param name="encodeMin">encode min value</param>
@@ -214,7 +215,9 @@ namespace iText.Kernel.Pdf.Function {
         internal static double Encode(double normal, int encodeMin, int encodeMax) {
             return encodeMin + normal * (encodeMax - encodeMin);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculates floor sample coordinates for the normalized  input array.</summary>
         /// <param name="normal">input array normalized to domain</param>
         /// <param name="encode">encode mapping</param>
@@ -228,7 +231,9 @@ namespace iText.Kernel.Pdf.Function {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Maps sample coordinates to linear position in samples table.</summary>
         /// <param name="sample">sample encoded coordinates</param>
         /// <param name="size">number of samples in each input dimension</param>
@@ -240,7 +245,9 @@ namespace iText.Kernel.Pdf.Function {
             }
             return position;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculated component-by-component normalized distances from input array to the nearest left interpolation point.
         ///     </summary>
         /// <remarks>
@@ -258,7 +265,9 @@ namespace iText.Kernel.Pdf.Function {
             }
             return result;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculates normalized distance from input value to the nearest left interpolation point.</summary>
         /// <remarks>
         /// Calculates normalized distance from input value to the nearest left interpolation point.
@@ -272,7 +281,9 @@ namespace iText.Kernel.Pdf.Function {
             double value = Encode(normal, encodeMin, encodeMax);
             return value - Math.Min(encodeMax - 1, (int)value);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Solves the system of linear equations by sweep method where the matrix is 3-diagonal.</summary>
         /// <remarks>
         /// Solves the system of linear equations by sweep method where the matrix is 3-diagonal.
@@ -303,6 +314,7 @@ namespace iText.Kernel.Pdf.Function {
             x[0] = x[x.Length - 1] = 0;
             return x;
         }
+//\endcond
 
         private void InitializeEncoding(PdfArray encodeObj) {
             if (encodeObj == null) {

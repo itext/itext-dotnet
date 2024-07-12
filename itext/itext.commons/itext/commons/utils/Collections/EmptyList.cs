@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections
 {
+    //\cond DO_NOT_DOCUMENT  
     internal class EmptyList<T> : IList<T> {
         public IEnumerator<T> GetEnumerator() {
             yield break;
@@ -78,4 +79,5 @@ namespace iText.Commons.Utils.Collections
             set { throw new NotSupportedException("Collection is read-only."); }
         }
     }
+   //\endcond     
 }

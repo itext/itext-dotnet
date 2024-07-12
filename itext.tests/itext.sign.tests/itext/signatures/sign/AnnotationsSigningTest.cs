@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -131,7 +130,7 @@ namespace iText.Signatures.Sign {
             if (isAppendMode) {
                 properties.UseAppendMode();
             }
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), properties);
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
             signer.SetCertificationLevel(certificationLevel);
             signer.SetFieldName(name);
             // Creating the appearance

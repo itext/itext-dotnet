@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
+//\cond DO_NOT_DOCUMENT
     internal class DefaultTextChunkLocationComparator : IComparer<ITextChunkLocation> {
         private bool leftToRight = true;
 
@@ -53,4 +54,5 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 (first.DistParallelEnd(), second.DistParallelEnd());
         }
     }
+//\endcond
 }

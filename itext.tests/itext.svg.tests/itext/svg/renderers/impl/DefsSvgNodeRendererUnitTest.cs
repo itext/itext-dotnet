@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Converter;
 using iText.Svg.Processors;
@@ -36,24 +36,24 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ProcessDefsNoChildrenTest() {
-            INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithNoChildren.svg", FileMode.Open
-                , FileAccess.Read));
+            INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(sourceFolder + "onlyDefsWithNoChildren.svg"
+                ));
             ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().IsEmpty());
         }
 
         [NUnit.Framework.Test]
         public virtual void ProcessDefsOneChildTest() {
-            INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithOneChild.svg", FileMode.Open
-                , FileAccess.Read));
+            INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(sourceFolder + "onlyDefsWithOneChild.svg"
+                ));
             ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("circle1") is CircleSvgNodeRenderer);
         }
 
         [NUnit.Framework.Test]
         public virtual void ProcessDefsMultipleChildrenTest() {
-            INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithMultipleChildren.svg", FileMode.Open
-                , FileAccess.Read));
+            INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(sourceFolder + "onlyDefsWithMultipleChildren.svg"
+                ));
             ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("circle1") is CircleSvgNodeRenderer);
             NUnit.Framework.Assert.IsTrue(result.GetNamedObjects().Get("line1") is LineSvgNodeRenderer);
@@ -62,8 +62,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ProcessDefsParentShouldBeNullTest() {
-            INode parsedSvg = SvgConverter.Parse(new FileStream(sourceFolder + "onlyDefsWithOneChild.svg", FileMode.Open
-                , FileAccess.Read));
+            INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(sourceFolder + "onlyDefsWithOneChild.svg"
+                ));
             ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
             NUnit.Framework.Assert.IsNull(result.GetNamedObjects().Get("circle1").GetParent());
         }

@@ -132,6 +132,18 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GridGapWithTwoValidValuesTest() {
+            IShorthandResolver resolver = new GapShorthandResolver(CommonCssConstants.GRID_GAP);
+            String shorthand = "10px 15px";
+            IList<CssDeclaration> resolvedShorthand = resolver.ResolveShorthand(shorthand);
+            NUnit.Framework.Assert.AreEqual(2, resolvedShorthand.Count);
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.ROW_GAP, resolvedShorthand[0].GetProperty());
+            NUnit.Framework.Assert.AreEqual("10px", resolvedShorthand[0].GetExpression());
+            NUnit.Framework.Assert.AreEqual(CommonCssConstants.COLUMN_GAP, resolvedShorthand[1].GetProperty());
+            NUnit.Framework.Assert.AreEqual("15px", resolvedShorthand[1].GetExpression());
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION)]
         public virtual void GapWithValidAndInvalidValuesTest() {
             IShorthandResolver resolver = new GapShorthandResolver();

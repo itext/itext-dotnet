@@ -85,5 +85,13 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>date BasicOCSPResponse was produced at.</returns>
         DateTime GetProducedAt();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>GetExtensionParsedValue</c>
+        /// method for the wrapped BasicOCSPResponse object.
+        /// </summary>
+        /// <returns>Parsed extension value.</returns>
+        IAsn1Encodable GetExtensionParsedValue(IDerObjectIdentifier getIdPkixOcspArchiveCutoff);
     }
 }

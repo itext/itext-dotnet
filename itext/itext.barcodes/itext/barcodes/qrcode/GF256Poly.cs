@@ -24,6 +24,7 @@ using System;
 using System.Text;
 
 namespace iText.Barcodes.Qrcode {
+//\cond DO_NOT_DOCUMENT
     /// <summary>Represents a polynomial whose coefficients are elements of GF(256).</summary>
     /// <remarks>
     /// Represents a polynomial whose coefficients are elements of GF(256).
@@ -37,6 +38,7 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly int[] coefficients;
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="field">
         /// the
         /// <see cref="GF256"/>
@@ -71,26 +73,36 @@ namespace iText.Barcodes.Qrcode {
                 this.coefficients = coefficients;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal int[] GetCoefficients() {
             return coefficients;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>degree of this polynomial</returns>
         internal int GetDegree() {
             return coefficients.Length - 1;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>true iff this polynomial is the monomial "0"</returns>
         internal bool IsZero() {
             return coefficients[0] == 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>coefficient of x^degree term in this polynomial</returns>
         internal int GetCoefficient(int degree) {
             return coefficients[coefficients.Length - 1 - degree];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>evaluation of this polynomial at a given point</returns>
         internal int EvaluateAt(int a) {
             if (a == 0) {
@@ -112,7 +124,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return result_1;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>GF addition or subtraction (they are identical for a GF(2^n)</summary>
         /// <param name="other">the other GF-poly</param>
         /// <returns>new GF256Poly obtained by summing this GF and other</returns>
@@ -142,7 +156,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return new iText.Barcodes.Qrcode.GF256Poly(field, sumDiff);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>GF multiplication</summary>
         /// <param name="other">the other GF-poly</param>
         /// <returns>new GF-poly obtained by multiplying this  with other</returns>
@@ -166,7 +182,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>GF scalar multiplication</summary>
         /// <param name="scalar">scalar</param>
         /// <returns>new GF-poly obtained by multiplying every element of this with the scalar.</returns>
@@ -184,7 +202,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal iText.Barcodes.Qrcode.GF256Poly MultiplyByMonomial(int degree, int coefficient) {
             if (degree < 0) {
                 throw new ArgumentException();
@@ -199,7 +219,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal iText.Barcodes.Qrcode.GF256Poly[] Divide(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
@@ -221,6 +243,7 @@ namespace iText.Barcodes.Qrcode {
             }
             return new iText.Barcodes.Qrcode.GF256Poly[] { quotient, remainder };
         }
+//\endcond
 
         /// <returns>String representation of the Galois Field polynomial.</returns>
         public override String ToString() {
@@ -266,4 +289,5 @@ namespace iText.Barcodes.Qrcode {
             return result.ToString();
         }
     }
+//\endcond
 }

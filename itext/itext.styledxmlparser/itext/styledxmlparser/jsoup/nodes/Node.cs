@@ -36,15 +36,23 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
  : ICloneable
 #endif
  {
+//\cond DO_NOT_DOCUMENT
         internal static readonly IList<iText.StyledXmlParser.Jsoup.Nodes.Node> EmptyNodes = JavaCollectionsUtil.EmptyList
             <iText.StyledXmlParser.Jsoup.Nodes.Node>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal const String EmptyString = "";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal iText.StyledXmlParser.Jsoup.Nodes.Node parentNode;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Nodes don't always have parents
         internal int siblingIndex;
+//\endcond
 
         /// <summary>Default constructor.</summary>
         /// <remarks>Default constructor. Doesn't setup base uri, children, or attributes; use with caution.</remarks>
@@ -472,8 +480,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void NodelistChanged() {
         }
+//\endcond
 
         // Element overrides this to clear its shadow children elements
         /// <summary>Replace this node in the DOM with the supplied node.</summary>
@@ -683,11 +693,15 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NodeTraversor.Traverse(new Node.OuterHtmlVisitor(accum, NodeUtils.OutputSettings(this)), this);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get the outer HTML of this node.</summary>
         /// <param name="accum">accumulator to place HTML into</param>
         internal abstract void OuterHtmlHead(StringBuilder accum, int depth, OutputSettings @out);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal abstract void OuterHtmlTail(StringBuilder accum, int depth, OutputSettings @out);
+//\endcond
 
         /// <summary>
         /// Write this node and its children to the given
@@ -812,11 +826,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
             private readonly OutputSettings @out;
 
+//\cond DO_NOT_DOCUMENT
             internal OuterHtmlVisitor(StringBuilder accum, OutputSettings @out) {
                 this.accum = accum;
                 this.@out = @out;
                 @out.PrepareEncoder();
             }
+//\endcond
 
             public virtual void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
                 try {

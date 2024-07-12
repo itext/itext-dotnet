@@ -120,10 +120,12 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
             private int num = 0;
 
+//\cond DO_NOT_DOCUMENT
             internal ImageXObjectStub()
                 : base(new PdfStream()) {
                 num = totalNum++;
             }
+//\endcond
 
             public static void ResetNumbering() {
                 totalNum = 0;

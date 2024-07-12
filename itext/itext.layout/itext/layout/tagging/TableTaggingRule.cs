@@ -28,6 +28,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Tagging {
+//\cond DO_NOT_DOCUMENT
     internal class TableTaggingRule : ITaggingRule {
         public virtual bool OnTagFinish(LayoutTaggingHelper taggingHelper, TaggingHintKey tableHintKey) {
             IList<TaggingHintKey> kidKeys = taggingHelper.GetAccessibleKidsHint(tableHintKey);
@@ -159,4 +160,5 @@ namespace iText.Layout.Tagging {
             }
         }
     }
+//\endcond
 }

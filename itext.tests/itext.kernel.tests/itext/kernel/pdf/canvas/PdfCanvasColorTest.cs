@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -136,10 +137,9 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamRgb = new FileStream(SOURCE_FOLDER + "CIERGB.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamCmyk = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read
-                );
+            Stream streamGray = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "BlackWhite.icc");
+            Stream streamRgb = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "CIERGB.icc");
+            Stream streamCmyk = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "USWebUncoated.icc");
             IccBased gray = new IccBased(streamGray, new float[] { 0.5f });
             IccBased rgb = new IccBased(streamRgb, new float[] { 1.0f, 0.5f, 0f });
             IccBased cmyk = new IccBased(streamCmyk, new float[] { 1.0f, 0.5f, 0f, 0f });
@@ -167,10 +167,9 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "colorTest05.pdf"
                 ));
             PdfPage page = document.AddNewPage();
-            FileStream streamGray = new FileStream(SOURCE_FOLDER + "BlackWhite.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamRgb = new FileStream(SOURCE_FOLDER + "CIERGB.icc", FileMode.Open, FileAccess.Read);
-            FileStream streamCmyk = new FileStream(SOURCE_FOLDER + "USWebUncoated.icc", FileMode.Open, FileAccess.Read
-                );
+            Stream streamGray = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "BlackWhite.icc");
+            Stream streamRgb = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "CIERGB.icc");
+            Stream streamCmyk = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "USWebUncoated.icc");
             PdfCieBasedCs.IccBased gray = (PdfCieBasedCs.IccBased)new IccBased(streamGray).GetColorSpace();
             PdfCieBasedCs.IccBased rgb = (PdfCieBasedCs.IccBased)new IccBased(streamRgb).GetColorSpace();
             PdfCieBasedCs.IccBased cmyk = (PdfCieBasedCs.IccBased)new IccBased(streamCmyk).GetColorSpace();

@@ -75,9 +75,9 @@ namespace iText.Kernel.Pdf {
             if (numbers.Length <= NODE_SIZE) {
                 PdfDictionary dic = new PdfDictionary();
                 PdfArray ar = new PdfArray();
-                for (int k = 0; k < numbers.Length; ++k) {
-                    ar.Add(new PdfNumber((int)numbers[k]));
-                    ar.Add(items.Get(numbers[k]));
+                foreach (int? number in numbers) {
+                    ar.Add(new PdfNumber((int)number));
+                    ar.Add(items.Get(number));
                 }
                 dic.Put(PdfName.Nums, ar);
                 return dic;

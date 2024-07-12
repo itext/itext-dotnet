@@ -36,8 +36,7 @@ namespace iText.IO.Image {
 
         [NUnit.Framework.Test]
         public virtual void GifImageTest() {
-            using (FileStream file = new FileStream(sourceFolder + "WP_20140410_001.gif", FileMode.Open, FileAccess.Read
-                )) {
+            using (Stream file = FileUtil.GetInputStreamForFile(sourceFolder + "WP_20140410_001.gif")) {
                 byte[] fileContent = StreamUtil.InputStreamToArray(file);
                 ImageData img = ImageDataFactory.CreateGif(fileContent).GetFrames()[0];
                 NUnit.Framework.Assert.IsTrue(img.IsRawImage());
@@ -56,7 +55,7 @@ namespace iText.IO.Image {
         [NUnit.Framework.Test]
         public virtual void GifImageSpecificFrameTest() {
             String imageFilePath = sourceFolder + "image-2frames.gif";
-            using (FileStream file = new FileStream(imageFilePath, FileMode.Open, FileAccess.Read)) {
+            using (Stream file = FileUtil.GetInputStreamForFile(imageFilePath)) {
                 byte[] fileContent = StreamUtil.InputStreamToArray(file);
                 ImageData img = ImageDataFactory.CreateGifFrame(fileContent, 2);
                 NUnit.Framework.Assert.AreEqual(100, (int)img.GetWidth());
@@ -69,7 +68,7 @@ namespace iText.IO.Image {
         [NUnit.Framework.Test]
         public virtual void GifImageReadingAllFramesTest() {
             String imageFilePath = sourceFolder + "image-2frames.gif";
-            using (FileStream file = new FileStream(imageFilePath, FileMode.Open, FileAccess.Read)) {
+            using (Stream file = FileUtil.GetInputStreamForFile(imageFilePath)) {
                 byte[] fileContent = StreamUtil.InputStreamToArray(file);
                 IList<ImageData> frames = ImageDataFactory.CreateGifFrames(fileContent);
                 NUnit.Framework.Assert.AreEqual(2, frames.Count);

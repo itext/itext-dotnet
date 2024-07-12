@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -131,7 +130,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "hybrid.pdf";
             String dest = DESTINATION_FOLDER + "signed_hybrid.pdf";
             String cmp = SOURCE_FOLDER + "cmp_signed_hybrid.pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ().UseAppendMode());
             String fieldName = "Sign1";
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFontSize(13.8f);
@@ -155,7 +154,7 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             Rectangle rect = new Rectangle(36, 648, 100, 50);
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             signer.SetFieldName("Signature1");
             // Creating the appearance
@@ -199,7 +198,7 @@ namespace iText.Signatures.Sign {
             String fileName = "signExistingNotMergedFieldNotReusedAP.pdf";
             String dest = DESTINATION_FOLDER + fileName;
             PdfReader reader = new PdfReader(src);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName("Signature1");
             signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(signer
@@ -219,7 +218,7 @@ namespace iText.Signatures.Sign {
             String fileName = "signExistingNotMergedFieldReusedAP.pdf";
             String dest = DESTINATION_FOLDER + fileName;
             PdfReader reader = new PdfReader(src);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName("Signature1");
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent("SIGNED"
@@ -241,7 +240,7 @@ namespace iText.Signatures.Sign {
             String fileName = "signExistingNotMergedFieldReusedAPEntryNDic.pdf";
             String dest = DESTINATION_FOLDER + fileName;
             PdfReader reader = new PdfReader(src);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), new StampingProperties());
+            PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), new StampingProperties());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName("Signature1");
             signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(signer
@@ -259,7 +258,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0Test.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
@@ -290,7 +289,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0WithImageTest.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
@@ -313,7 +312,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0WithImageAndPositiveImageScaleTest.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
@@ -337,7 +336,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer0WithImageAndNegativeImageScale.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
@@ -361,7 +360,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             String fileName = "layer2Test.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
@@ -395,7 +394,7 @@ namespace iText.Signatures.Sign {
                 (new Rectangle(45, 509, 517, 179)).CreateSignature();
             PdfFormCreator.GetAcroForm(document, true).AddField(field);
             document.Close();
-            PdfSigner signer = new PdfSigner(new PdfReader(unsignedDoc), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(unsignedDoc), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             signer.SetFieldName(fieldName);
             // Creating the appearance
@@ -414,7 +413,7 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "unsignedSignatureField.pdf";
             String fileName = "signedSignatureField.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             signer.SetFieldName("Signature1");
             // Creating the appearance
@@ -474,7 +473,7 @@ namespace iText.Signatures.Sign {
             String cmp = SOURCE_FOLDER + "cmp_" + fileName;
             String dest = DESTINATION_FOLDER + fileName;
             String fieldName = "Signature1";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             signer.SetFieldName(fieldName);
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent("Signature field"
@@ -498,7 +497,7 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(36, 648, 200, 100);
             String fieldName = "Signature1";
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName);
-            PdfSigner signer = new PdfSigner(new PdfReader(srcFile), new FileStream(outPdf, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFile), FileUtil.GetFileOutputStream(outPdf), new StampingProperties
                 ());
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName(fieldName);
@@ -531,7 +530,7 @@ namespace iText.Signatures.Sign {
             String cmp = SOURCE_FOLDER + "cmp_" + fileName;
             String dest = DESTINATION_FOLDER + fileName;
             String fieldName = "Signature1";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             signer.SetFieldName(fieldName);
             signer.GetSignatureField().SetReuseAppearance(fieldReuseAp);
@@ -549,7 +548,7 @@ namespace iText.Signatures.Sign {
         private void TestLayers(String src, String fileName, bool useDeprecated) {
             String dest = DESTINATION_FOLDER + fileName;
             String fieldName = "Signature1";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             signer.SetFieldName(fieldName);
             signer.SetPageRect(new Rectangle(250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance
@@ -587,7 +586,7 @@ namespace iText.Signatures.Sign {
             String fileName = "signaturesOnRotatedPages" + pageNum + "_mode_" + renderingMode.ToString() + ".pdf";
             String src = SOURCE_FOLDER + "documentWithRotatedPages.pdf";
             String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ().UseAppendMode());
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
             appearance.SetLayer2Text("Digitally signed by Test User. All rights reserved. Take care!").SetPageRect(new 
@@ -615,7 +614,7 @@ namespace iText.Signatures.Sign {
         private void TestSignatureAppearanceAutoscale(String dest, Rectangle rect, PdfSignatureAppearance.RenderingMode
              renderingMode) {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(src), new FileStream(dest, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
             // Creating the appearance
             signer.GetSignatureAppearance().SetLayer2FontSize(0).SetReason("Test 1").SetLocation("TestCity").SetPageRect

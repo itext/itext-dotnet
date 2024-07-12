@@ -26,6 +26,7 @@ using System.Reflection;
 using iText.Commons.Utils;
 
 namespace iText.Barcodes {
+    //\cond DO_NOT_DOCUMENT
     internal static class BarcodesExtensions {
         public static byte[] GetBytes(this String str, String encoding) {
             return EncodingUtil.GetEncoding(encoding).GetBytes(str);
@@ -69,4 +70,5 @@ namespace iText.Barcodes {
 #endif
         }
     }
+    //\endcond
 }

@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -73,8 +73,8 @@ namespace iText.Pdfa {
         private static void CreateInputPdfADocument(String docName) {
             PdfWriter writer = new PdfWriter(docName);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", new FileStream(sourceFolder + "sRGB Color Space Profile.icm"
-                , FileMode.Open, FileAccess.Read)));
+                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());

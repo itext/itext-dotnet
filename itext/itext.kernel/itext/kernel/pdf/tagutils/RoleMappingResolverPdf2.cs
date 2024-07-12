@@ -25,6 +25,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
+//\cond DO_NOT_DOCUMENT
     internal class RoleMappingResolverPdf2 : IRoleMappingResolver {
         private PdfName currRole;
 
@@ -32,6 +33,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private PdfNamespace defaultNamespace;
 
+//\cond DO_NOT_DOCUMENT
         internal RoleMappingResolverPdf2(String role, PdfNamespace @namespace, PdfDocument document) {
             this.currRole = PdfStructTreeRoot.ConvertRoleToPdfName(role);
             this.currNamespace = @namespace;
@@ -42,6 +44,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 currNamespace = defaultNamespace;
             }
         }
+//\endcond
 
         public virtual String GetRole() {
             return currRole.GetValue();
@@ -98,4 +101,5 @@ namespace iText.Kernel.Pdf.Tagutils {
             return mappingWasResolved;
         }
     }
+//\endcond
 }

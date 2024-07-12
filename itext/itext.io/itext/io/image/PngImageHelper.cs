@@ -33,62 +33,115 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+//\cond DO_NOT_DOCUMENT
     internal class PngImageHelper {
         private class PngParameters {
+//\cond DO_NOT_DOCUMENT
             internal PngParameters(PngImageData image) {
                 this.image = image;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal PngImageData image;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal Stream dataStream;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int width;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int height;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int bitDepth;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int compressionMethod;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int filterMethod;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int interlaceMethod;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IDictionary<String, Object> additional = new Dictionary<String, Object>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] imageData;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] smask;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal byte[] trans;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ByteArrayOutputStream idat = new ByteArrayOutputStream();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int dpiX;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int dpiY;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float XYRatio;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool genBWMask;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool palShades;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int transRedGray = -1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int transGreen = -1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int transBlue = -1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal int inputBands;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             // number of bytes per input pixel
             internal int bytesPerPixel;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal String intent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal IccProfile iccProfile;
+//\endcond
         }
 
         /// <summary>Some PNG specific values.</summary>
@@ -742,6 +795,7 @@ namespace iText.IO.Image {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         internal static void SetPixel(byte[] image, int[] data, int offset, int size, int x, int y, int bitDepth, 
             int bytesPerRow) {
             if (bitDepth == 8) {
@@ -764,6 +818,7 @@ namespace iText.IO.Image {
                 }
             }
         }
+//\endcond
 
         private static int[] GetPixel(byte[] curr, PngImageHelper.PngParameters png) {
             switch (png.bitDepth) {
@@ -893,4 +948,5 @@ namespace iText.IO.Image {
             return buf.ToString();
         }
     }
+//\endcond
 }

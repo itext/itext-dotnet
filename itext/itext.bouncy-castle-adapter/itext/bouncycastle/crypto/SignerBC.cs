@@ -67,6 +67,23 @@ namespace iText.Bouncycastle.Crypto {
         }
 
         /// <summary><inheritDoc/></summary>
+        public void InitRsaPssSigner(string digestAlgoName, int saltLen, int trailerField) {
+            if (iSigner != null) {
+                return;
+            }
+            // If trailerField == 1 then trailer = 0xBC (it's the default one)
+            if (trailerField != 1) {
+                throw new ArgumentException("unknown trailer field");
+            }
+
+            Org.BouncyCastle.Crypto.IDigest digest = Org.BouncyCastle.Security.DigestUtilities.GetDigest(digestAlgoName);
+            Org.BouncyCastle.Crypto.ISigner signer = new Org.BouncyCastle.Crypto.Signers.PssSigner(
+                new Org.BouncyCastle.Crypto.Engines.RsaBlindedEngine(), digest, digest, saltLen, 0xBC);
+
+            this.iSigner = signer;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public void Update(byte[] buf, int off, int len) {
             iSigner.BlockUpdate(buf, off, len);
         }
@@ -130,23 +147,24 @@ namespace iText.Bouncycastle.Crypto {
         }
 
         private void InitVerify(IPublicKey publicKey, string hashAlgorithm, string encrAlgorithm) {
-            if (string.IsNullOrEmpty(hashAlgorithm)) {
-                iSigner = SignerUtilities.GetSigner(encrAlgorithm);
-            } else {
-                iSigner = SignerUtilities.GetSigner(hashAlgorithm + "with" + encrAlgorithm);
+            if (iSigner == null) {
+                if (string.IsNullOrEmpty(hashAlgorithm)) {
+                    iSigner = SignerUtilities.GetSigner(encrAlgorithm);
+                } else {
+                    iSigner = SignerUtilities.GetSigner(hashAlgorithm + "with" + encrAlgorithm);
+                }
             }
-            
+
             iSigner.Init(false, ((PublicKeyBC) publicKey).GetPublicKey());
         }
 
         private void InitSign(IPrivateKey key, string hashAlgorithm, string encrAlgorithm) {
-            if (string.IsNullOrEmpty(hashAlgorithm))
-            {
-                iSigner = SignerUtilities.GetSigner(encrAlgorithm);
-            }
-            else
-            {
-                iSigner = SignerUtilities.GetSigner(hashAlgorithm + "with" + encrAlgorithm);
+            if (iSigner == null) {
+                if (string.IsNullOrEmpty(hashAlgorithm)) {
+                    iSigner = SignerUtilities.GetSigner(encrAlgorithm);
+                } else {
+                    iSigner = SignerUtilities.GetSigner(hashAlgorithm + "with" + encrAlgorithm);
+                }
             }
 
             iSigner.Init(true, ((PrivateKeyBC) key).GetPrivateKey());

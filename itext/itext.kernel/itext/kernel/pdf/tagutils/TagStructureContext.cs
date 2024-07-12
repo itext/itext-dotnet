@@ -726,17 +726,22 @@ namespace iText.Kernel.Pdf.Tagutils {
             return new TagTreePointer(structElem, document);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfStructElem GetRootTag() {
             if (rootTagElement == null) {
                 NormalizeDocumentRootTag();
             }
             return rootTagElement;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual PdfDocument GetDocument() {
             return document;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void EnsureNamespaceRegistered(PdfNamespace @namespace) {
             if (@namespace != null) {
                 PdfDictionary namespaceObj = @namespace.GetPdfObject();
@@ -746,7 +751,9 @@ namespace iText.Kernel.Pdf.Tagutils {
                 nameToNamespace.Put(@namespace.GetNamespaceName(), @namespace);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ThrowExceptionIfRoleIsInvalid(AccessibilityProperties properties, PdfNamespace pointerCurrentNamespace
             ) {
             PdfNamespace @namespace = properties.GetNamespace();
@@ -755,7 +762,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             ThrowExceptionIfRoleIsInvalid(properties.GetRole(), @namespace);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void ThrowExceptionIfRoleIsInvalid(String role, PdfNamespace @namespace) {
             if (!CheckIfRoleShallBeMappedToStandardRole(role, @namespace)) {
                 String exMessage = ComposeInvalidRoleException(role, @namespace);
@@ -768,11 +777,15 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual bool TargetTagStructureVersionIs2() {
             return PdfVersion.PDF_2_0.CompareTo(tagStructureTargetVersion) <= 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
             if (parent.IsFlushed() || waitingTagsManager.GetObjForStructDict(parent.GetPdfObject()) != null || parent.
                 GetParent() is PdfStructTreeRoot) {
@@ -805,6 +818,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
         }
+//\endcond
 
         private bool IsRoleAllowedToBeRoot(String role) {
             if (TargetTagStructureVersionIs2()) {

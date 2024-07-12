@@ -22,6 +22,7 @@
  */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Exceptions;
@@ -130,7 +131,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [Test]
         public virtual void MalformedResourceNameTest07() {
             String fileName = "%23%5B%5D@!$&'()+,;=._~-/styles09.css";
-            Stream expected = new FileStream(baseUri + "#[]@!$&'()+,;=._~-/styles09.css", FileMode.Open, FileAccess.Read);
+            Stream expected = FileUtil.GetInputStreamForFile(baseUri + "#[]@!$&'()+,;=._~-/styles09.css");
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
@@ -350,7 +351,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [Test]
         public virtual void RetrieveStyleSheetTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            Stream expected = new FileStream(baseUri + fileName, FileMode.Open, FileAccess.Read);
+            Stream expected = FileUtil.GetInputStreamForFile(baseUri + fileName);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
@@ -360,7 +361,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         [Test]
         public virtual void RetrieveResourceAsInputStreamStyleSheetTest() {
             String fileName = "retrieveStyleSheetTest.css";
-            Stream expected = new FileStream(baseUri + fileName, FileMode.Open, FileAccess.Read);
+            Stream expected = FileUtil.GetInputStreamForFile(baseUri + fileName);
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
@@ -388,7 +389,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public virtual void RetrieveInputStreamWithRetryRetrieverTest() {
             String fileName = "!invalid! StyleSheetName.css";
             ResourceResolver resourceResolver = new ResourceResolver(baseUri, new RetryResourceRetriever(baseUri));
-            Stream expected = new FileStream(baseUri + "retrieveStyleSheetTest.css", FileMode.Open, FileAccess.Read);
+            Stream expected = FileUtil.GetInputStreamForFile(baseUri + "retrieveStyleSheetTest.css");
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
             Assert.AreEqual(expected.Read(), stream.Read());
@@ -427,7 +428,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
-                expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
+                expected = FileUtil.GetInputStreamForFile(absolutePath)) {
                 Assert.NotNull(stream);
                 Assert.AreEqual(expected.Read(), stream.Read());
             }
@@ -440,7 +441,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
-                expected = new FileStream(absolutePath, FileMode.Open, FileAccess.Read)) {
+                expected = FileUtil.GetInputStreamForFile(absolutePath)) {
                 Assert.NotNull(stream);
                 Assert.AreEqual(expected.Read(), stream.Read());
             }

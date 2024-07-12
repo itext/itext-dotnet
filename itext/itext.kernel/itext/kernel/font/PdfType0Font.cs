@@ -65,6 +65,7 @@ namespace iText.Kernel.Font {
 
         private readonly CMapToUnicode embeddedToUnicode;
 
+//\cond DO_NOT_DOCUMENT
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
             : base() {
             if (!PdfEncodings.IDENTITY_H.Equals(cmap) && !PdfEncodings.IDENTITY_V.Equals(cmap)) {
@@ -92,7 +93,9 @@ namespace iText.Kernel.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Note. Make this constructor protected. Only PdfFontFactory (kernel level) will
         // be able to create Type0 font based on predefined font.
         // Or not? Possible it will be convenient construct PdfType0Font based on custom CidFont.
@@ -111,7 +114,9 @@ namespace iText.Kernel.Font {
             cidFontType = CID_FONT_TYPE_0;
             embeddedToUnicode = null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal PdfType0Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
@@ -196,6 +201,7 @@ namespace iText.Kernel.Font {
             usedGlyphs = new SortedSet<int>();
             subset = false;
         }
+//\endcond
 
         /// <summary>Get Unicode mapping name from ordering.</summary>
         /// <param name="ordering">the text ordering to base to unicode mapping on</param>

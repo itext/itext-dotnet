@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace iText.Commons.Utils.Collections
 {
+	//\cond DO_NOT_DOCUMENT
     internal class EmptyEnumerator<T> : IEnumerator<T>
     {
         public void Dispose() {
@@ -71,4 +72,5 @@ namespace iText.Commons.Utils.Collections
 			get { return Current; }
 		}
 	}
+	//\endcond
 }

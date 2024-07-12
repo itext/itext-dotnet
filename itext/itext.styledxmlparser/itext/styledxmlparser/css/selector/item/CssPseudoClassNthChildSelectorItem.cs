@@ -24,9 +24,13 @@ using System;
 using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
+//\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNthChildSelectorItem : CssPseudoClassNthSelectorItem {
+//\cond DO_NOT_DOCUMENT
         internal CssPseudoClassNthChildSelectorItem(String arguments)
             : base(CommonCssConstants.NTH_CHILD, arguments) {
         }
+//\endcond
     }
+//\endcond
 }

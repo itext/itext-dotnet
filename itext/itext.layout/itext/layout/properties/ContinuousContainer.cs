@@ -101,5 +101,12 @@ namespace iText.Layout.Properties {
                 blockRenderer.SetProperty(Property.BORDER_BOTTOM, allBorders);
             }
         }
+
+        /// <summary>Updates values of the saved property.</summary>
+        /// <param name="property">the property to be updated</param>
+        /// <param name="value">the new value</param>
+        public void UpdateValueOfSavedProperty(int property, Object value) {
+            properties.Put(property, value);
+        }
     }
 }

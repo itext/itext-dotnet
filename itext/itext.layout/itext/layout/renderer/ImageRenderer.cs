@@ -51,7 +51,9 @@ namespace iText.Layout.Renderer {
 
         protected internal float imageHeight;
 
+//\cond DO_NOT_DOCUMENT
         internal float[] matrix = new float[6];
+//\endcond
 
         private float? height;
 
@@ -340,15 +342,19 @@ namespace iText.Layout.Renderer {
             return initialOccupiedAreaBBox;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override bool HasAspectRatio() {
             return true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override float? GetAspectRatio() {
             return imageWidth / imageHeight;
         }
+//\endcond
 
         /// <summary>
         /// Gets original width of the image, not the width set by

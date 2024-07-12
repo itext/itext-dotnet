@@ -114,6 +114,7 @@ namespace iText.Kernel.XMP.Impl {
             return buffer.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Split the name and value parts for field and qualifier selectors.</summary>
         /// <remarks>
         /// Split the name and value parts for field and qualifier selectors. Following selectors are taken into account:
@@ -160,7 +161,9 @@ namespace iText.Kernel.XMP.Impl {
             }
             return new String[] { name, value.ToString() };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="schema">a schema namespace</param>
         /// <param name="prop">an XMP Property</param>
         /// <returns>
@@ -262,7 +265,9 @@ namespace iText.Kernel.XMP.Impl {
             }
             return isInternal;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Check some requirements for an UUID:
         /// <list type="bullet">
@@ -290,6 +295,7 @@ namespace iText.Kernel.XMP.Impl {
             }
             return result && UUID_SEGMENT_COUNT == delimCnt && UUID_LENGTH == delimPos;
         }
+//\endcond
 
         /// <summary>Simple check for valid XMLNames.</summary>
         /// <remarks>
@@ -335,11 +341,13 @@ namespace iText.Kernel.XMP.Impl {
             return true;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="c">a char</param>
         /// <returns>Returns true if the char is an ASCII control char.</returns>
         internal static bool IsControlChar(char c) {
             return (c <= 0x1F || c == 0x7F) && c != 0x09 && c != 0x0A && c != 0x0D;
         }
+//\endcond
 
         /// <summary>Serializes the node value in XML encoding.</summary>
         /// <remarks>
@@ -417,6 +425,7 @@ namespace iText.Kernel.XMP.Impl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Replaces the ASCII control chars with a space.</summary>
         /// <param name="value">a node value</param>
         /// <returns>Returns the cleaned up value</returns>
@@ -429,6 +438,7 @@ namespace iText.Kernel.XMP.Impl {
             }
             return buffer.ToString();
         }
+//\endcond
 
         /// <summary>Simple check if a character is a valid XML start name char.</summary>
         /// <remarks>

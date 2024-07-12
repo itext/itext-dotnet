@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal class TableBorderDescriptor {
         private int borderIndex;
 
@@ -60,4 +61,5 @@ namespace iText.Layout.Renderer {
             return mainCoordinateWidths;
         }
     }
+//\endcond
 }

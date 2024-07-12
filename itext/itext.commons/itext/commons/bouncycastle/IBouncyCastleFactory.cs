@@ -967,6 +967,11 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>
         /// <returns>casted ASN1 Generalized time wrapper</returns>
         IDerGeneralizedTime CreateASN1GeneralizedTime(IAsn1Encodable encodable);
+        
+        /// <summary>Cast DateTime to ASN1 Generalized time wrapper.</summary>
+        /// <param name="date">DateTime to be cast</param>
+        /// <returns>ASN1 Generalized time wrapper</returns>
+        IDerGeneralizedTime CreateASN1GeneralizedTime(DateTime date);
 
         /// <summary>Cast ASN1 Encodable wrapper to ASN1 UTC Time wrapper.</summary>
         /// <param name="encodable">ASN1 Encodable wrapper to be cast</param>

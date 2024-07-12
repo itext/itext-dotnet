@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -35,26 +34,26 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void SetVerifierTest() {
-            LtvVerifier verifier1 = new LtvVerifier(new PdfDocument(new PdfReader(new FileStream(SOURCE_FOLDER + "ltvDoc.pdf"
-                , FileMode.Open, FileAccess.Read))));
-            LtvVerifier verifier2 = new LtvVerifier(new PdfDocument(new PdfReader(new FileStream(SOURCE_FOLDER + "ltvDoc.pdf"
-                , FileMode.Open, FileAccess.Read))));
+            LtvVerifier verifier1 = new LtvVerifier(new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "ltvDoc.pdf"))));
+            LtvVerifier verifier2 = new LtvVerifier(new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "ltvDoc.pdf"))));
             verifier1.SetVerifier(verifier2);
             NUnit.Framework.Assert.AreSame(verifier2, verifier1.verifier);
         }
 
         [NUnit.Framework.Test]
         public virtual void SetVerifyRootCertificateTest() {
-            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(new FileStream(SOURCE_FOLDER + "ltvDoc.pdf"
-                , FileMode.Open, FileAccess.Read))));
+            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "ltvDoc.pdf"))));
             verifier.SetVerifyRootCertificate(true);
             NUnit.Framework.Assert.IsTrue(verifier.verifyRootCertificate);
         }
 
         [NUnit.Framework.Test]
         public virtual void VerifyNotNullTest() {
-            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(new FileStream(SOURCE_FOLDER + "ltvDoc.pdf"
-                , FileMode.Open, FileAccess.Read))));
+            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "ltvDoc.pdf"))));
             verifier.pkcs7 = null;
             IList<VerificationOK> list = JavaCollectionsUtil.EmptyList<VerificationOK>();
             NUnit.Framework.Assert.AreSame(list, verifier.Verify(list));
@@ -62,16 +61,16 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void GetCRLsFromDSSCRLsNullTest() {
-            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(new FileStream(SOURCE_FOLDER + "ltvDoc.pdf"
-                , FileMode.Open, FileAccess.Read))));
+            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "ltvDoc.pdf"))));
             verifier.dss = new PdfDictionary();
             NUnit.Framework.Assert.AreEqual(new List<Object>(), verifier.GetCRLsFromDSS());
         }
 
         [NUnit.Framework.Test]
         public virtual void GetOCSPResponsesFromDSSOCSPsNullTest() {
-            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(new FileStream(SOURCE_FOLDER + "ltvDoc.pdf"
-                , FileMode.Open, FileAccess.Read))));
+            LtvVerifier verifier = new LtvVerifier(new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(SOURCE_FOLDER
+                 + "ltvDoc.pdf"))));
             verifier.dss = new PdfDictionary();
             NUnit.Framework.Assert.AreEqual(new List<Object>(), verifier.GetOCSPResponsesFromDSS());
         }

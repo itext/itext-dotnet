@@ -29,6 +29,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
+//\cond DO_NOT_DOCUMENT
     internal class Type1Parser {
         private const String AFM_HEADER = "StartFontMetrics";
 
@@ -170,4 +171,5 @@ namespace iText.IO.Font {
             return AFM_HEADER.Equals(builder.ToString());
         }
     }
+//\endcond
 }

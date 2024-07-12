@@ -70,9 +70,9 @@ namespace iText.Pdfa {
                 GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
                     Stream @is = null;
                     try {
-                        @is = new FileStream(SOURCE_FOLDER + "sample.aif", FileMode.Open, FileAccess.Read);
+                        @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sample.aif");
                     }
-                    catch (FileNotFoundException er) {
+                    catch (System.IO.IOException er) {
                         NUnit.Framework.Assert.Fail(er.Message);
                     }
                     PdfStream sound1 = new PdfStream(doc, @is);
@@ -468,8 +468,8 @@ namespace iText.Pdfa {
             }
             PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
-                , "sRGB IEC61966-2.1", new FileStream(SOURCE_FOLDER + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read
-                )));
+                , "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"))
+                );
             doc.AddNewPage();
             consumer(doc);
             doc.Close();

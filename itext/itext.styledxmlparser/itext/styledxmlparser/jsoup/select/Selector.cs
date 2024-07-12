@@ -168,6 +168,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             return elements;
         }
 
+//\cond DO_NOT_DOCUMENT
         // exclude set. package open so that Elements can implement .not() selector.
         internal static Elements FilterOut(ICollection<iText.StyledXmlParser.Jsoup.Nodes.Element> elements, ICollection
             <iText.StyledXmlParser.Jsoup.Nodes.Element> outs) {
@@ -186,6 +187,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             }
             return output;
         }
+//\endcond
 
         /// <summary>Find the first element that matches the query.</summary>
         /// <param name="cssQuery">CSS selector</param>

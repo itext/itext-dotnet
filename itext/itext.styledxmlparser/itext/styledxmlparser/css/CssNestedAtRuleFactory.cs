@@ -93,6 +93,7 @@ namespace iText.StyledXmlParser.Css {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Extracts the rule name from the CSS rule declaration.</summary>
         /// <param name="ruleDeclaration">the rule declaration</param>
         /// <returns>the rule name</returns>
@@ -113,5 +114,6 @@ namespace iText.StyledXmlParser.Css {
             }
             return separatorIndex == -1 ? ruleDeclaration : ruleDeclaration.JSubstring(0, separatorIndex);
         }
+//\endcond
     }
 }

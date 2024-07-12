@@ -32,6 +32,7 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+//\cond DO_NOT_DOCUMENT
     internal sealed class TableWidths {
         private readonly TableRenderer tableRenderer;
 
@@ -59,6 +60,7 @@ namespace iText.Layout.Renderer {
 
         private float tableMaxWidth;
 
+//\cond DO_NOT_DOCUMENT
         internal TableWidths(TableRenderer tableRenderer, float availableWidth, bool calculateTableMaxWidth, float
              rightBorderMaxWidth, float leftBorderMaxWidth) {
             this.tableRenderer = tableRenderer;
@@ -75,11 +77,15 @@ namespace iText.Layout.Renderer {
             }
             CalculateTableWidth(availableWidth, calculateTableMaxWidth);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal bool HasFixedLayout() {
             return fixedTableLayout;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float[] Layout() {
             if (HasFixedLayout()) {
                 return FixedLayout();
@@ -88,11 +94,15 @@ namespace iText.Layout.Renderer {
                 return AutoLayout();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float GetMinWidth() {
             return layoutMinWidth;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float[] AutoLayout() {
             System.Diagnostics.Debug.Assert(tableRenderer.GetTable().IsComplete());
             FillAndSortCells();
@@ -108,14 +118,18 @@ namespace iText.Layout.Renderer {
             Recalculate(minSum);
             return ExtractWidths();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal IList<TableWidths.CellInfo> AutoLayoutCustom() {
             System.Diagnostics.Debug.Assert(tableRenderer.GetTable().IsComplete());
             FillAndSortCells();
             CalculateMinMaxWidths();
             return cells;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal void ProcessCell(TableWidths.CellInfo cell) {
             // For automatic layout algorithm percents have higher priority
             // value must be > 0, while for fixed layout >= 0
@@ -196,7 +210,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal void ProcessColumns() {
             for (int i = 0; i < numberOfColumns; i++) {
                 UnitValue colWidth = GetTable().GetColumnWidth(i);
@@ -222,7 +238,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal void Recalculate(float minSum) {
             if (tableWidth - minSum < 0) {
                 for (int i = 0; i < numberOfColumns; i++) {
@@ -426,7 +444,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal void ProcessCellsRemainWidth(TableWidths.CellInfo cell, UnitValue cellWidth) {
             int flexibleCols = 0;
             float remainWidth = cellWidth.GetValue();
@@ -478,7 +498,9 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal float[] FixedLayout() {
             float[] columnWidths = new float[numberOfColumns];
             //fill columns from col info
@@ -592,6 +614,7 @@ namespace iText.Layout.Renderer {
             }
             return columnWidths;
         }
+//\endcond
 
         //region Common methods
         private void CalculateTableWidth(float availableWidth, bool calculateTableMaxWidth) {
@@ -784,19 +807,32 @@ namespace iText.Layout.Renderer {
         }
 
         private class ColumnWidthData {
+//\cond DO_NOT_DOCUMENT
             internal readonly float min;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float max;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float width = 0;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal float finalWidth = -1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal bool isPercent = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             //true means that this column has cell property based width.
             internal bool isFixed = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal ColumnWidthData(float min, float max) {
                 System.Diagnostics.Debug.Assert(min >= 0);
                 System.Diagnostics.Debug.Assert(max >= 0);
@@ -805,27 +841,35 @@ namespace iText.Layout.Renderer {
                 // This limit is based on KHTML's representation that used 16 bits widths.
                 this.max = max > 0 ? Math.Min(max + MinMaxWidthUtils.GetEps(), 32760) : 0;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual TableWidths.ColumnWidthData SetPoints(float width) {
                 System.Diagnostics.Debug.Assert(!isPercent);
                 System.Diagnostics.Debug.Assert(this.min <= width);
                 this.width = Math.Max(this.width, width);
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual TableWidths.ColumnWidthData ResetPoints(float width) {
                 System.Diagnostics.Debug.Assert(this.min <= width);
                 this.width = width;
                 this.isPercent = false;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual TableWidths.ColumnWidthData AddPoints(float width) {
                 System.Diagnostics.Debug.Assert(!isPercent);
                 this.width += width;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual TableWidths.ColumnWidthData SetPercents(float percent) {
                 if (isPercent) {
                     width = Math.Max(width, percent);
@@ -837,21 +881,28 @@ namespace iText.Layout.Renderer {
                 isFixed = false;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual TableWidths.ColumnWidthData AddPercents(float width) {
                 System.Diagnostics.Debug.Assert(isPercent);
                 this.width += width;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual TableWidths.ColumnWidthData SetFixed(bool @fixed) {
                 this.isFixed = @fixed;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual bool IsFlexible() {
                 return !this.isFixed && !this.isPercent;
             }
+//\endcond
 
             public override String ToString() {
                 return "w=" + width + (isPercent ? "%" : "pt") + (isFixed ? " !!" : "") + ", min=" + min + ", max=" + max 
@@ -926,12 +977,19 @@ namespace iText.Layout.Renderer {
             return widthValue;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal class CellInfo : IComparable<TableWidths.CellInfo> {
+//\cond DO_NOT_DOCUMENT
             internal const byte HEADER = 1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal const byte BODY = 2;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal const byte FOOTER = 3;
+//\endcond
 
             private readonly CellRenderer cell;
 
@@ -939,8 +997,11 @@ namespace iText.Layout.Renderer {
 
             private readonly int col;
 
+//\cond DO_NOT_DOCUMENT
             internal readonly byte region;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal CellInfo(CellRenderer cell, int row, int col, byte region) {
                 this.cell = cell;
                 this.region = region;
@@ -948,28 +1009,39 @@ namespace iText.Layout.Renderer {
                 this.row = row;
                 this.col = col;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual CellRenderer GetCell() {
                 return cell;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual int GetCol() {
                 return col;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual int GetColspan() {
                 //we cannot use getModelElement().getColspan(), because it may be changed during layout.
                 return (int)cell.GetPropertyAsInteger(Property.COLSPAN);
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual int GetRow() {
                 return row;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             internal virtual int GetRowspan() {
                 //we cannot use getModelElement().getRowspan(), because it may be changed during layout.
                 return (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             }
+//\endcond
 
             public virtual int CompareTo(TableWidths.CellInfo o) {
                 if (GetColspan() == 1 ^ o.GetColspan() == 1) {
@@ -1014,6 +1086,8 @@ namespace iText.Layout.Renderer {
                 }
             }
         }
+//\endcond
         //endregion
     }
+//\endcond
 }

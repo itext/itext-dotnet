@@ -50,11 +50,17 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Map that contains attributes and styles used for drawing operations.</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
 
+//\cond DO_NOT_DOCUMENT
         internal bool partOfClipPath;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal bool doFill = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal bool doStroke = false;
+//\endcond
 
         private ISvgNodeRenderer parent;
 
@@ -179,6 +185,7 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculate the transformation for the viewport based on the context.</summary>
         /// <remarks>
         /// Calculate the transformation for the viewport based on the context. Only used by elements that can create
@@ -192,7 +199,9 @@ namespace iText.Svg.Renderers.Impl {
             transform = AffineTransform.GetTranslateInstance(viewPort.GetX(), viewPort.GetY());
             return transform;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Operations to be performed after drawing the element.</summary>
         /// <remarks>
         /// Operations to be performed after drawing the element.
@@ -257,11 +266,15 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void SetPartOfClipPath(bool value) {
             partOfClipPath = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Operations to perform before drawing an element.</summary>
         /// <remarks>
         /// Operations to perform before drawing an element.
@@ -306,6 +319,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
         }
+//\endcond
 
         /// <summary>Parse length attributes.</summary>
         /// <param name="length">

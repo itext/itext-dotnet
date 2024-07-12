@@ -168,13 +168,16 @@ namespace iText.Layout.Renderer {
             return minMaxWidth;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal virtual IFlexItemMainDirector GetFlexItemMainDirector() {
             if (flexItemMainDirector == null) {
                 flexItemMainDirector = CreateMainDirector();
             }
             return flexItemMainDirector;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Check if flex container is wrapped reversely.</summary>
         /// <returns>
         /// 
@@ -187,7 +190,9 @@ namespace iText.Layout.Renderer {
             return FlexWrapPropertyValue.WRAP_REVERSE == this.GetProperty<FlexWrapPropertyValue?>(Property.FLEX_WRAP, 
                 null);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override AbstractRenderer[] CreateSplitAndOverflowRenderers(int childPos, int layoutStatus, LayoutResult
              childResult, IDictionary<int, IRenderer> waitingFloatsSplitRenderers, IList<IRenderer> waitingOverflowFloatRenderers
@@ -240,7 +245,9 @@ namespace iText.Layout.Renderer {
             overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
             return new AbstractRenderer[] { splitRenderer, overflowRenderer };
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override LayoutResult ProcessNotFullChildResult(LayoutContext layoutContext, IDictionary<int, IRenderer
             > waitingFloatsSplitRenderers, IList<IRenderer> waitingOverflowFloatRenderers, bool wasHeightClipped, 
             IList<Rectangle> floatRendererAreas, bool marginsCollapsingEnabled, float clearHeightCorrection, Border
@@ -283,17 +290,23 @@ namespace iText.Layout.Renderer {
                     null).SetAreaBreak(result.GetAreaBreak());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // TODO DEVSIX-5238 Consider this fix (perhaps it should be improved or unified) while working on the ticket
         internal virtual LayoutArea GetOccupiedAreaInCaseNothingWasWrappedWithFull(LayoutResult result, IRenderer 
             splitRenderer) {
             return null != result.GetOccupiedArea() ? result.GetOccupiedArea() : splitRenderer.GetOccupiedArea();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override bool StopLayoutingChildrenIfChildResultNotFull(LayoutResult returnResult) {
             return returnResult.GetStatus() != LayoutResult.FULL;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override void RecalculateOccupiedAreaAfterChildLayout(Rectangle resultBBox, float? blockMaxHeight
             ) {
@@ -309,12 +322,16 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().SetHeight((float)blockMaxHeight);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override MarginsCollapseInfo StartChildMarginsHandling(IRenderer childRenderer, Rectangle layoutBox
             , MarginsCollapseHandler marginsCollapseHandler) {
             return marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void DecreaseLayoutBoxAfterChildPlacement(Rectangle layoutBox, LayoutResult result, IRenderer
              childRenderer) {
             if (FlexUtil.IsColumnDirection(this)) {
@@ -324,7 +341,9 @@ namespace iText.Layout.Renderer {
                 DecreaseLayoutBoxAfterChildPlacementRowLayout(layoutBox, result, childRenderer);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void DecreaseLayoutBoxAfterChildPlacementRowLayout(Rectangle layoutBox, LayoutResult result
             , IRenderer childRenderer) {
             layoutBox.DecreaseWidth(result.GetOccupiedArea().GetBBox().GetRight() - layoutBox.GetLeft());
@@ -347,7 +366,9 @@ namespace iText.Layout.Renderer {
                 layoutBox.DecreaseHeight(layoutBox.GetTop() - minBottom);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual void DecreaseLayoutBoxAfterChildPlacementColumnLayout(Rectangle layoutBox, IRenderer childRenderer
             ) {
             FlexItemInfo childFlexItemInfo = FindFlexItemInfo((AbstractRenderer)childRenderer);
@@ -369,7 +390,9 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveRight(maxWidth);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override Rectangle RecalculateLayoutBoxBeforeChildLayout(Rectangle layoutBox, IRenderer childRenderer
             , Rectangle initialLayoutBox) {
             Rectangle layoutBoxCopy = layoutBox.Clone();
@@ -383,19 +406,26 @@ namespace iText.Layout.Renderer {
             }
             return layoutBoxCopy;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal override void HandleForcedPlacement(bool anythingPlaced) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // In (horizontal) FlexContainerRenderer Property.FORCED_PLACEMENT is still valid for other children
         // so do nothing
         internal virtual void SetHypotheticalCrossSize(float? mainSize, float? hypotheticalCrossSize) {
             hypotheticalCrossSizes.Put(mainSize.Value, hypotheticalCrossSize);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal virtual float? GetHypotheticalCrossSize(float? mainSize) {
             return hypotheticalCrossSizes.Get(mainSize.Value);
         }
+//\endcond
 
         /// <summary>Apply wrap-reverse property.</summary>
         private void ApplyWrapReverse() {
@@ -435,10 +465,12 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         internal override void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
             // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
             return;
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {

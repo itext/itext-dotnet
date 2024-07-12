@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
+using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
 using iText.Kernel.Pdf;
@@ -77,7 +78,7 @@ namespace iText.Forms.Xfa {
             String outFileName = destinationFolder + "createXFAFormTest.pdf";
             String cmpFileName = sourceFolder + "cmp_createXFAFormTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
-            XfaForm xfa = new XfaForm(new FileStream(XML, FileMode.Open, FileAccess.Read));
+            XfaForm xfa = new XfaForm(FileUtil.GetInputStreamForFile(XML));
             xfa.Write(doc);
             doc.AddNewPage();
             doc.Close();

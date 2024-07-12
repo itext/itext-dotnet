@@ -100,6 +100,9 @@ namespace iText.Signatures.Validation.V1.Extensions {
             catch (System.IO.IOException) {
                 return false;
             }
+            catch (Exception) {
+                return false;
+            }
             return Object.Equals(providedExtensionValue, extensionValue);
         }
 

@@ -1054,6 +1054,7 @@ namespace iText.Kernel.XMP.Impl
 			}
 		}
 
+		//\cond DO_NOT_DOCUMENT	
 		/// <summary>
 		/// The internals for setProperty() and related calls, used after the node is
 		/// found or created.
@@ -1087,6 +1088,7 @@ namespace iText.Kernel.XMP.Impl
 				node.RemoveChildren();
 			}
 		}
+		//\endcond	
 
 		/// <summary>
 		/// Evaluates a raw node value to the given value type, apply special
