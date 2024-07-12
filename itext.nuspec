@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext</id>
-    <version>8.0.5-SNAPSHOT</version>
+    <version>8.0.6-SNAPSHOT</version>
     <title>iText Community</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
@@ -19,11 +19,11 @@
 	<repository type="git" url="https://github.com/itext/itext7-dotnet.git" />
     <dependencies>
       <group targetFramework="net461">
-        <dependency id="itext.commons" version="8.0.5-SNAPSHOT" />
+        <dependency id="itext.commons" version="8.0.6-SNAPSHOT" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="itext.commons" version="8.0.5-SNAPSHOT" />
+        <dependency id="itext.commons" version="8.0.6-SNAPSHOT" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
         <dependency id="System.Globalization.Extensions" version="4.3.0" />
