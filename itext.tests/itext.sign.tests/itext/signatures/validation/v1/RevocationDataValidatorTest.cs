@@ -251,6 +251,32 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         [NUnit.Framework.Test]
+        public virtual void NoRevAvailTest() {
+            String checkCertFileName = SOURCE_FOLDER + "noRevAvailCertWithoutCA.pem";
+            IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validator.Validate(report, baseContext, certificate, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
+                .NO_REV_AVAILABLE, (m) => certificate.GetSubjectDN()).WithCertificate(certificate)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoRevAvailWithCATest() {
+            String checkCertFileName = SOURCE_FOLDER + "noRevAvailCert.pem";
+            IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            ValidationReport report = new ValidationReport();
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validator.Validate(report, baseContext, certificate, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
+                .NO_REV_AVAILABLE_CA, (m) => certificate.GetSubjectDN()).WithCertificate(certificate)));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SelfSignedCertificateIsNotValidatedTest() {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             ValidationReport report = new ValidationReport();
@@ -385,7 +411,7 @@ namespace iText.Signatures.Validation.V1 {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_516(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_557(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(MessageFormatUtil
@@ -394,8 +420,8 @@ namespace iText.Signatures.Validation.V1 {
                 )));
         }
 
-        private sealed class _ICrlClient_516 : ICrlClient {
-            public _ICrlClient_516(byte[] crl) {
+        private sealed class _ICrlClient_557 : ICrlClient {
+            public _ICrlClient_557(byte[] crl) {
                 this.crl = crl;
             }
 
@@ -493,7 +519,7 @@ namespace iText.Signatures.Validation.V1 {
             mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(crlGeneration, c.responseGenerationDate));
             ValidationReport report = new ValidationReport();
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
-            ValidationOcspClient ocspClient = new _ValidationOcspClient_635();
+            ValidationOcspClient ocspClient = new _ValidationOcspClient_676();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
                 , caCert, null);
@@ -501,7 +527,7 @@ namespace iText.Signatures.Validation.V1 {
                 ));
             ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
             validator.AddOcspClient(ocspClient);
-            ValidationCrlClient crlClient = new _ValidationCrlClient_650();
+            ValidationCrlClient crlClient = new _ValidationCrlClient_691();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
@@ -511,8 +537,8 @@ namespace iText.Signatures.Validation.V1 {
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
 
-        private sealed class _ValidationOcspClient_635 : ValidationOcspClient {
-            public _ValidationOcspClient_635() {
+        private sealed class _ValidationOcspClient_676 : ValidationOcspClient {
+            public _ValidationOcspClient_676() {
             }
 
             public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
@@ -521,8 +547,8 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        private sealed class _ValidationCrlClient_650 : ValidationCrlClient {
-            public _ValidationCrlClient_650() {
+        private sealed class _ValidationCrlClient_691 : ValidationCrlClient {
+            public _ValidationCrlClient_691() {
             }
 
             public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
@@ -588,18 +614,18 @@ namespace iText.Signatures.Validation.V1 {
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
-            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_729(testOcspClient);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_770(testOcspClient);
             validator.AddOcspClient(ocspClient);
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
-            CrlClientOnline crlClient = new _CrlClientOnline_739(testCrlClient);
+            CrlClientOnline crlClient = new _CrlClientOnline_780(testCrlClient);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
                 );
         }
 
-        private sealed class _OcspClientBouncyCastle_729 : OcspClientBouncyCastle {
-            public _OcspClientBouncyCastle_729(TestOcspClient testOcspClient) {
+        private sealed class _OcspClientBouncyCastle_770 : OcspClientBouncyCastle {
+            public _OcspClientBouncyCastle_770(TestOcspClient testOcspClient) {
                 this.testOcspClient = testOcspClient;
             }
 
@@ -610,8 +636,8 @@ namespace iText.Signatures.Validation.V1 {
             private readonly TestOcspClient testOcspClient;
         }
 
-        private sealed class _CrlClientOnline_739 : CrlClientOnline {
-            public _CrlClientOnline_739(TestCrlClient testCrlClient) {
+        private sealed class _CrlClientOnline_780 : CrlClientOnline {
+            public _CrlClientOnline_780(TestCrlClient testCrlClient) {
                 this.testCrlClient = testCrlClient;
             }
 

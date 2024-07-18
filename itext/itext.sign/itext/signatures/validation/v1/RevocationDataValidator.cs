@@ -59,6 +59,16 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String NO_REV_AVAILABLE = "noRevAvail extension from RFC 9608 is present on {0} certificate. "
+             + "Revocation data checks are not required.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String NO_REV_AVAILABLE_CA = "noRevAvail extension from RFC 9608 is present on {0} certificate, "
+             + "however this certificate is a CA, which is not allowed.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String CANNOT_PARSE_OCSP = "OCSP response from \"{0}\" OCSP response cannot be parsed.";
 //\endcond
 
@@ -182,6 +192,17 @@ namespace iText.Signatures.Validation.V1 {
                  null) {
                 report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, VALIDITY_ASSURED, ReportItem.ReportItemStatus
                     .INFO));
+                return;
+            }
+            if (CertificateUtil.GetExtensionValueByOid(certificate, OID.X509Extensions.NO_REV_AVAILABLE) != null) {
+                if (certificate.GetBasicConstraints() < 0) {
+                    report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
+                        (NO_REV_AVAILABLE, certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INFO));
+                }
+                else {
+                    report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format
+                        (NO_REV_AVAILABLE_CA, certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INDETERMINATE));
+                }
                 return;
             }
             if (CertificateSource.OCSP_ISSUER == localContext.GetCertificateSource()) {
