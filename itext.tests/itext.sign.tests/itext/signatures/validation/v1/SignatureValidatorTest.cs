@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
@@ -367,8 +368,6 @@ namespace iText.Signatures.Validation.V1 {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
-            IX509Certificate signCert = (IX509Certificate)certificateChain[0];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockCertificateChainValidator.OnCallDo((c) => {
@@ -452,6 +451,33 @@ namespace iText.Signatures.Validation.V1 {
                 AssertValidationReport.AssertThat(report, (r) => r.HasLogItem((l) => l.WithMessage(SignatureValidator.REVISIONS_VALIDATION_FAILED
                     )));
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ThrowExceptionOnTheSecondValidationAttempt() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                signatureValidator.ValidateSignatures();
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => signatureValidator.ValidateSignatures
+                    ());
+                NUnit.Framework.Assert.AreEqual(SignatureValidator.VALIDATION_PERFORMED, exception.Message);
+                exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => signatureValidator.ValidateSignature(
+                    "Signature1"));
+                NUnit.Framework.Assert.AreEqual(SignatureValidator.VALIDATION_PERFORMED, exception.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureWithSpecifiedNameNotFound() {
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateSignature("Invalid signature name");
+            }
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasNumberOfLogs(1).HasNumberOfFailures(1).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
+                ).WithMessage(SignatureValidator.SIGNATURE_NOT_FOUND, (p) => "Invalid signature name").WithStatus(ReportItem.ReportItemStatus
+                .INDETERMINATE)));
         }
     }
 }

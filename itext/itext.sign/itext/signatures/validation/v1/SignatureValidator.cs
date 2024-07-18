@@ -32,6 +32,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.V1.Context;
@@ -98,6 +99,14 @@ namespace iText.Signatures.Validation.V1 {
         internal const String ADD_KNOWN_CERTIFICATES_FAILED = "Unexpected exception occurred adding known certificates to certificate retriever.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNATURE_NOT_FOUND = "Document doesn't contain signature field {0}.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String VALIDATION_PERFORMED = "Validation has already been performed. " + "You should create new SignatureValidator instance for each validation call.";
+//\endcond
+
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
@@ -121,6 +130,8 @@ namespace iText.Signatures.Validation.V1 {
         private ValidationOcspClient validationOcspClient;
 
         private ValidationCrlClient validationCrlClient;
+
+        private bool validationPerformed = false;
 
         /// <summary>
         /// Creates new instance of
@@ -170,6 +181,10 @@ namespace iText.Signatures.Validation.V1 {
         /// which contains detailed validation results
         /// </returns>
         public virtual ValidationReport ValidateSignatures() {
+            if (validationPerformed) {
+                throw new PdfException(VALIDATION_PERFORMED);
+            }
+            validationPerformed = true;
             ValidationReport report = new ValidationReport();
             SafeCalling.OnRuntimeExceptionLog(() => {
                 documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
@@ -182,30 +197,34 @@ namespace iText.Signatures.Validation.V1 {
             if (StopValidation(report, validationContext)) {
                 return report;
             }
-            SignatureUtil util = new SignatureUtil(originalDocument);
-            IList<String> signatureNames = util.GetSignatureNames();
-            JavaCollectionsUtil.Reverse(signatureNames);
-            foreach (String fieldName in signatureNames) {
-                try {
-                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName)), new DocumentProperties
-                        ().SetEventCountingMetaInfo(metaInfo))) {
-                        ValidationReport subReport = ValidateLatestSignature(doc);
-                        report.Merge(subReport);
-                        if (StopValidation(report, validationContext)) {
-                            return report;
-                        }
-                    }
-                }
-                catch (System.IO.IOException e) {
-                    report.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
-                catch (Exception e) {
-                    report.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
+            return report.Merge(Validate(null));
+        }
+
+        /// <summary>Validate single signature in the document.</summary>
+        /// <param name="signatureName">name of the signature to validate</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
+        /// which contains detailed validation results.
+        /// </returns>
+        public virtual ValidationReport ValidateSignature(String signatureName) {
+            if (validationPerformed) {
+                throw new PdfException(VALIDATION_PERFORMED);
             }
-            return report;
+            validationPerformed = true;
+            ValidationReport report = new ValidationReport();
+            SafeCalling.OnRuntimeExceptionLog(() => {
+                documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
+                ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(validationContext
+                    , originalDocument, signatureName);
+                report.Merge(revisionsValidationReport);
+            }
+            , report, (e) => new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_VALIDATION_FAILED, e, ReportItem.ReportItemStatus
+                .INDETERMINATE));
+            if (StopValidation(report, validationContext)) {
+                return report;
+            }
+            return report.Merge(Validate(signatureName));
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -266,6 +285,47 @@ namespace iText.Signatures.Validation.V1 {
             return validationReport.Merge(signatureReport);
         }
 //\endcond
+
+        private ValidationReport Validate(String signatureName) {
+            ValidationReport validationReport = new ValidationReport();
+            bool validateSingleSignature = signatureName != null;
+            SignatureUtil util = new SignatureUtil(originalDocument);
+            IList<String> signatureNames = util.GetSignatureNames();
+            JavaCollectionsUtil.Reverse(signatureNames);
+            foreach (String fieldName in signatureNames) {
+                ValidationReport subReport = new ValidationReport();
+                try {
+                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName)), new DocumentProperties
+                        ().SetEventCountingMetaInfo(metaInfo))) {
+                        subReport.Merge(ValidateLatestSignature(doc));
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    subReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                catch (Exception e) {
+                    subReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, REVISIONS_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                if (!validateSingleSignature) {
+                    validationReport.Merge(subReport);
+                    if (StopValidation(subReport, validationContext)) {
+                        return validationReport;
+                    }
+                }
+                else {
+                    if (fieldName.Equals(signatureName)) {
+                        return subReport;
+                    }
+                }
+            }
+            if (validateSingleSignature) {
+                validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(SIGNATURE_NOT_FOUND
+                    , signatureName), ReportItem.ReportItemStatus.INDETERMINATE));
+            }
+            return validationReport;
+        }
 
         private void FindValidationClients() {
             foreach (IOcspClient ocspClient in this.properties.GetOcspClients()) {

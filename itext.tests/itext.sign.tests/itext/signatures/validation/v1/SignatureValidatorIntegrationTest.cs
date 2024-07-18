@@ -78,7 +78,7 @@ namespace iText.Signatures.Validation.V1 {
                 certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 AddRevDataClients();
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
-                report = signatureValidator.ValidateLatestSignature(document);
+                report = signatureValidator.ValidateSignatures();
             }
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
                 (3, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage
@@ -102,7 +102,6 @@ namespace iText.Signatures.Validation.V1 {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateSignatures();
             }
-            // ocsp validation date is wrong but why
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
                 ((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
                 .UNEXPECTED_ENTRY_IN_XREF, (i) => 30)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
@@ -174,6 +173,68 @@ namespace iText.Signatures.Validation.V1 {
             ValidationOcspClient validationOcspClient = (ValidationOcspClient)ocspClients[0];
             NUnit.Framework.Assert.AreEqual(2, validationCrlClient.GetCrls().Count);
             NUnit.Framework.Assert.AreEqual(2, validationOcspClient.GetResponses().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidateSingleSignatureTest1() {
+            String rootCertName = CERTS_SRC + "root_cert.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertName)[0];
+            ValidationReport report1;
+            ValidationReport report2;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validateSingleSignature1.pdf"
+                ))) {
+                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                AddRevDataClients();
+                SignatureValidator signatureValidator1 = builder.BuildSignatureValidator(document);
+                report1 = signatureValidator1.ValidateSignature("Signature1");
+                SignatureValidator signatureValidator2 = builder.BuildSignatureValidator(document);
+                report2 = signatureValidator2.ValidateSignature("Signature2");
+            }
+            // Signature1 set access permissions to level 3, Signature2 - to level 1, after that annotation was added.
+            AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                (4).HasNumberOfFailures(0).HasLogItem((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK
+                ).WithMessage(DocumentRevisionsValidator.UNEXPECTED_ENTRY_IN_XREF, (i) => 17).WithStatus(ReportItem.ReportItemStatus
+                .INFO)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator
+                .VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItems(2, (al) => al.WithCertificate(rootCert).
+                WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED
+                , (i) => rootCert.GetSubjectDN())));
+            AssertValidationReport.AssertThat(report2, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfLogs
+                (4).HasNumberOfFailures(1).HasLogItem((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK
+                ).WithMessage(DocumentRevisionsValidator.PAGE_ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus
+                .INVALID)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(
+                SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature2")).HasLogItems(2, (al) => al.WithCertificate
+                (rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidateSingleSignatureTest2() {
+            String rootCertName = CERTS_SRC + "root_cert.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertName)[0];
+            ValidationReport report1;
+            ValidationReport report2;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validateSingleSignature2.pdf"
+                ))) {
+                certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+                AddRevDataClients();
+                SignatureValidator signatureValidator1 = builder.BuildSignatureValidator(document);
+                report1 = signatureValidator1.ValidateSignature("Signature1");
+                SignatureValidator signatureValidator2 = builder.BuildSignatureValidator(document);
+                report2 = signatureValidator2.ValidateSignature("Signature2");
+            }
+            // Signature1 set access permissions to level 1, after that annotation was added and then Signature2 applied.
+            AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                (3).HasLogItem((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                .PAGE_ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((al) => al.WithCheckName
+                (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.UNEXPECTED_FORM_FIELD
+                , (p) => "Signature2").WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((al) => al.WithCheckName
+                (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.NOT_ALLOWED_ACROFORM_CHANGES
+                ).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((al) => al.WithCheckName(SignatureValidator
+                .SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1"
+                )));
+            AssertValidationReport.AssertThat(report2, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator
+                .VALIDATING_SIGNATURE_NAME, (p) => "Signature2")));
         }
 
         [NUnit.Framework.Test]

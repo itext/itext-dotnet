@@ -348,6 +348,25 @@ namespace iText.Signatures.Validation.V1 {
         /// </returns>
         public virtual ValidationReport ValidateAllDocumentRevisions(ValidationContext context, PdfDocument document
             ) {
+            return ValidateAllDocumentRevisions(context, document, null);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Validate all document revisions according to docMDP and fieldMDP transform methods and collect validation report
+        /// related to the single signature field checks if specified.
+        /// </summary>
+        /// <param name="context">the validation context in which to validate document revisions</param>
+        /// <param name="document">the document to be validated</param>
+        /// <param name="signatureName">signature field to collect validation result for. If null, all signatures will be checked
+        ///     </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
+        /// which contains detailed validation results.
+        /// </returns>
+        internal virtual ValidationReport ValidateAllDocumentRevisions(ValidationContext context, PdfDocument document
+            , String signatureName) {
             ResetClassFields();
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
                 );
@@ -375,13 +394,16 @@ namespace iText.Signatures.Validation.V1 {
                     .INFO));
                 return report;
             }
-            bool signatureFound = false;
+            bool updateAccessPermissions = true;
+            bool documentSigned = false;
             bool certificationSignatureFound = false;
-            PdfSignature currentSignature = signatureUtil.GetSignature(signatures[0]);
+            bool collectRevisionsValidationReport = signatureName == null;
+            String currentSignatureName = signatures[0];
+            PdfSignature currentSignature = signatureUtil.GetSignature(currentSignatureName);
             for (int i = 0; i < documentRevisions.Count; i++) {
-                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0], document, report
-                    )) {
-                    signatureFound = true;
+                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], currentSignatureName, document
+                    , report)) {
+                    documentSigned = true;
                     if (IsCertificationSignature(currentSignature)) {
                         if (certificationSignatureFound) {
                             report.AddReportItem(new ReportItem(DOC_MDP_CHECK, TOO_MANY_CERTIFICATION_SIGNATURES, ReportItem.ReportItemStatus
@@ -389,34 +411,48 @@ namespace iText.Signatures.Validation.V1 {
                         }
                         else {
                             certificationSignatureFound = true;
-                            UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                            if (updateAccessPermissions) {
+                                UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                            }
                         }
                     }
-                    UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(signatures[0]), report
-                        );
-                    UpdateApprovalSignatureFieldLock(documentRevisions[i], signatureUtil.GetSignatureFormFieldDictionary(signatures
-                        [0]), document, report);
+                    if (updateAccessPermissions) {
+                        UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(currentSignatureName
+                            ), report);
+                        UpdateApprovalSignatureFieldLock(documentRevisions[i], signatureUtil.GetSignatureFormFieldDictionary(currentSignatureName
+                            ), document, report);
+                    }
+                    if (signatureName != null && signatureName.Equals(currentSignatureName)) {
+                        updateAccessPermissions = false;
+                        collectRevisionsValidationReport = true;
+                    }
                     signatures.JRemoveAt(0);
                     if (signatures.IsEmpty()) {
                         currentSignature = null;
                     }
                     else {
-                        currentSignature = signatureUtil.GetSignature(signatures[0]);
+                        currentSignatureName = signatures[0];
+                        currentSignature = signatureUtil.GetSignature(currentSignatureName);
                     }
                 }
-                if (signatureFound && i < documentRevisions.Count - 1) {
-                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], document, report, localContext);
+                if (documentSigned && i < documentRevisions.Count - 1) {
+                    ValidationReport validationReport = new ValidationReport();
+                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], document, validationReport, localContext);
+                    if (collectRevisionsValidationReport) {
+                        report.Merge(validationReport);
+                    }
                 }
                 if (StopValidation(report, localContext)) {
                     break;
                 }
             }
-            if (!signatureFound) {
+            if (!documentSigned) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, SIGNATURE_REVISION_NOT_FOUND, ReportItem.ReportItemStatus
                     .INVALID));
             }
             return report;
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
