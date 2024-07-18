@@ -282,7 +282,7 @@ namespace iText.Kernel.Exceptions {
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry "
              + "in this xref subsection.";
 
-        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0}.";
+        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R.";
 
         public const String INVALID_INPUT_FOR_TYPE_2_FUNCTION = "Invalid input value for PDF Type 2 Function, value should be a single number.";
 

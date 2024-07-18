@@ -501,7 +501,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void RootCannotBeReferenceFromTrailerTest() {
             String filename = SOURCE_FOLDER + "rootCannotBeReferenceFromTrailerTest.pdf";
             PdfReader corruptedReader = new PdfReader(filename);

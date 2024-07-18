@@ -804,8 +804,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception ex) {
                 if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                    logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
+                    LogXrefException(ex);
                     RebuildXref();
                 }
                 else {
@@ -917,8 +916,8 @@ namespace iText.Kernel.Pdf {
                         return CreatePdfNullInstance(readAsDirect);
                     }
                     else {
-                        throw new PdfException(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, MessageFormatUtil.Format
-                            ("{0} {1} R", reference.GetObjNumber(), reference.GetGenNumber()));
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                            reference.GetObjNumber(), reference.GetGenNumber()), reference);
                     }
                 }
             }
@@ -1734,6 +1733,23 @@ namespace iText.Kernel.Pdf {
             }
             finally {
                 tokens.Seek(currentPosition);
+            }
+        }
+
+        private static void LogXrefException(Exception ex) {
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+            if (ex.InnerException != null) {
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
+                    , ex.InnerException.Message));
+            }
+            else {
+                if (ex.Message != null) {
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
+                        , ex.Message));
+                }
+                else {
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
+                }
             }
         }
 

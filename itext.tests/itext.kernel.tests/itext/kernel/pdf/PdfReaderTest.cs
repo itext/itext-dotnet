@@ -675,7 +675,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            Count = 1)]
         public virtual void CorrectSimpleDoc1() {
             String filename = SOURCE_FOLDER + "correctSimpleDoc1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -702,7 +703,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            Count = 1)]
         public virtual void CorrectSimpleDoc3() {
             String filename = SOURCE_FOLDER + "correctSimpleDoc3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -716,7 +718,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void CorrectSimpleDoc4() {
             String filename = SOURCE_FOLDER + "correctSimpleDoc4.pdf";
@@ -736,7 +738,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest01() {
             String filename = SOURCE_FOLDER + "OnlyTrailer.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -802,7 +804,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest05() {
             String filename = SOURCE_FOLDER + "CompressionWrongShift.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -850,7 +852,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest08() {
             String filename = SOURCE_FOLDER + "XRefSectionWithFreeReferences2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -870,7 +872,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest09() {
             String filename = SOURCE_FOLDER + "XRefSectionWithFreeReferences3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -911,7 +913,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest11() {
             String filename = SOURCE_FOLDER + "XRefSectionWithoutSize.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -928,7 +930,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest12() {
             String filename = SOURCE_FOLDER + "XRefWithBreaks.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1003,7 +1005,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest15() {
             String filename = SOURCE_FOLDER + "XRefWithInvalidGenerations3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1037,7 +1039,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest17() {
             String filename = SOURCE_FOLDER + "XrefWithNullOffsets.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1054,7 +1056,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void FixPdfTest18() {
             String filename = SOURCE_FOLDER + "noXrefAndTrailerWithInfo.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1148,7 +1150,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void AppendModeWith10PagesFix1() {
             String filename = SOURCE_FOLDER + "10PagesDocumentAppendedFix1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1170,7 +1172,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void AppendModeWith10PagesFix2() {
             String filename = SOURCE_FOLDER + "10PagesDocumentAppendedFix2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1438,7 +1440,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, Count = 1)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR)]
         public virtual void WrongTagStructureFlushingTest() {
             //wrong /Pg number
@@ -1925,7 +1927,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void NameInsteadOfArrayClosingBracketTest() {
             String fileName = SOURCE_FOLDER + "invalidArrayNameToken.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(fileName));
@@ -1974,7 +1976,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelExceptionMessageConstant.UNEXPECTED_TOKEN)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         public virtual void StringInsteadOfArrayClosingBracketTest() {
             String fileName = SOURCE_FOLDER + "invalidArrayStringToken.pdf";
             PdfDocument document = new PdfDocument(new PdfReader(fileName));
@@ -2092,7 +2094,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         [NUnit.Framework.Test]
         public virtual void ExactLimitOfObjectNrSizeTest() {
             String fileName = SOURCE_FOLDER + "exactLimitOfObjectNr.pdf";
@@ -2104,7 +2106,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         [NUnit.Framework.Test]
         public virtual void JustBeforeLimitOfObjectNrSizeTest() {
             String inputFile = SOURCE_FOLDER + "justBeforeLimitOfObjectNr.pdf";
@@ -2141,7 +2143,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            Count = 1)]
         public virtual void XrefTablesHaveCycledReferencesTest() {
             String fileName = SOURCE_FOLDER + "cycledReferencesInXrefTables.pdf";
             using (PdfReader pdfReader = new PdfReader(fileName)) {
@@ -2152,7 +2155,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            Count = 1)]
         public virtual void XrefTablePointsItselfTest() {
             String fileName = SOURCE_FOLDER + "xrefTablePointsItself.pdf";
             using (PdfReader pdfReader = new PdfReader(fileName)) {
@@ -2418,7 +2422,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, Count = 1)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            Count = 1)]
         public virtual void InvalidXrefTableRebuildsCorrectlyWhenTrailerIsBeforeObjects() {
             // when a pdf is Linearized the following can occur:
             // xref table
@@ -2560,6 +2565,42 @@ namespace iText.Kernel.Pdf {
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
                 return true;
             }
+        }
+
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
+        [NUnit.Framework.Test]
+        public virtual void IncorrectFilePositionInSubsectionCauseTest() {
+            PdfReader pdfReader = new PdfReader(SOURCE_FOLDER + "incorrectFilePositionInSubsection.pdf").SetStrictnessLevel
+                (PdfReader.StrictnessLevel.LENIENT);
+            new PdfDocument(pdfReader);
+            NUnit.Framework.Assert.IsTrue(pdfReader.HasRebuiltXref(), "Need rebuildXref()");
+        }
+
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
+        [NUnit.Framework.Test]
+        public virtual void NoSubsectionCauseTest() {
+            PdfReader pdfReader = new PdfReader(SOURCE_FOLDER + "noSubsection.pdf").SetStrictnessLevel(PdfReader.StrictnessLevel
+                .LENIENT);
+            new PdfDocument(pdfReader);
+            NUnit.Framework.Assert.IsTrue(pdfReader.HasRebuiltXref(), "Need rebuildXref()");
+        }
+
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
+        [NUnit.Framework.Test]
+        public virtual void InvalidRefCauseXrefRebuildTest() {
+            PdfReader pdfReader = new PdfReader(SOURCE_FOLDER + "invalidRefCauseXrefRebuild.pdf").SetStrictnessLevel(PdfReader.StrictnessLevel
+                .LENIENT);
+            new PdfDocument(pdfReader);
+            NUnit.Framework.Assert.IsTrue(pdfReader.HasRebuiltXref(), "Need rebuildXref()");
+        }
+
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
+        [NUnit.Framework.Test]
+        public virtual void StartxrefNotFoundCauseTest() {
+            PdfReader pdfReader = new PdfReader(SOURCE_FOLDER + "startxrefNotFound.pdf").SetStrictnessLevel(PdfReader.StrictnessLevel
+                .LENIENT);
+            new PdfDocument(pdfReader);
+            NUnit.Framework.Assert.IsTrue(pdfReader.HasRebuiltXref(), "Need rebuildXref()");
         }
 
         private static PdfDictionary GetTestPdfDictionary() {
