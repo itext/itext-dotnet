@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -34,16 +35,21 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class FlexContainerRenderer : DivRenderer {
-        /* Used for caching purposes in FlexUtil
-        * We couldn't find the real use case when this map contains more than 1 entry
-        * but let it still be a map to be on a safe(r) side
-        * Map mainSize (always width in our case) - hypotheticalCrossSize
-        */
+        /// <summary>
+        /// Used for caching purposes in FlexUtil
+        /// We couldn't find the real use case when this map contains more than 1 entry
+        /// but let it still be a map to be on a safe(r) side
+        /// Map mainSize (always width in our case) - hypotheticalCrossSize
+        /// </summary>
         private readonly IDictionary<float, float?> hypotheticalCrossSizes = new Dictionary<float, float?>();
 
         private IList<IList<FlexItemInfo>> lines;
 
         private IFlexItemMainDirector flexItemMainDirector = null;
+
+        /// <summary>Child renderers and their heights and min heights before the layout.</summary>
+        private readonly IDictionary<IRenderer, Tuple2<UnitValue, UnitValue>> heights = new Dictionary<IRenderer, 
+            Tuple2<UnitValue, UnitValue>>();
 
         /// <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -90,8 +96,6 @@ namespace iText.Layout.Renderer {
             AddAllChildRenderers(renderers);
             IList<IRenderer> renderersToOverflow = RetrieveRenderersToOverflow(layoutContextRectangle);
             IList<UnitValue> previousWidths = new List<UnitValue>();
-            IList<UnitValue> previousHeights = new List<UnitValue>();
-            IList<UnitValue> previousMinHeights = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     Rectangle rectangleWithoutBordersMarginsPaddings;
@@ -103,9 +107,9 @@ namespace iText.Layout.Renderer {
                         rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo.GetRectangle
                             ().Clone(), false);
                     }
+                    heights.Put(itemInfo.GetRenderer(), new Tuple2<UnitValue, UnitValue>(itemInfo.GetRenderer().GetProperty<UnitValue
+                        >(Property.HEIGHT), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT)));
                     previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
-                    previousHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.HEIGHT));
-                    previousMinHeights.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT));
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetWidth()));
                     itemInfo.GetRenderer().SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
@@ -131,8 +135,9 @@ namespace iText.Layout.Renderer {
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, previousWidths[counter]);
-                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, previousHeights[counter]);
-                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, previousMinHeights[counter]);
+                    Tuple2<UnitValue, UnitValue> curHeights = heights.Get(itemInfo.GetRenderer());
+                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, curHeights.GetFirst());
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, curHeights.GetSecond());
                     ++counter;
                 }
             }
@@ -488,6 +493,7 @@ namespace iText.Layout.Renderer {
 
         private void FillSplitOverflowRenderersForPartialResult(AbstractRenderer splitRenderer, AbstractRenderer overflowRenderer
             , IList<FlexItemInfo> line, IRenderer childRenderer, LayoutResult childResult) {
+            RestoreHeightForOverflowRenderer(childRenderer, childResult.GetOverflowRenderer());
             float occupiedSpace = 0;
             float maxHeightInLine = 0;
             bool metChildRendererInLine = false;
@@ -502,7 +508,7 @@ namespace iText.Layout.Renderer {
                         // Get rid of vertical alignment for item with partial result. For column direction, justify-content
                         // is applied to the entire line, not the single item, so there is no point in getting rid of it
                         if (!FlexUtil.IsColumnDirection(this)) {
-                            childResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
+                            SetAlignSelfIfNotStretch(childResult.GetOverflowRenderer());
                         }
                         overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
                     }
@@ -526,6 +532,7 @@ namespace iText.Layout.Renderer {
                             ).GetY(), itemInfo.GetRectangle().GetWidth(), maxHeightInLine - itemInfo.GetRectangle().GetY());
                         LayoutResult neighbourLayoutResult = itemInfo.GetRenderer().Layout(new LayoutContext(new LayoutArea(childResult
                             .GetOccupiedArea().GetPageNumber(), neighbourBbox)));
+                        RestoreHeightForOverflowRenderer(itemInfo.GetRenderer(), neighbourLayoutResult.GetOverflowRenderer());
                         // Handle result
                         if (neighbourLayoutResult.GetStatus() == LayoutResult.PARTIAL && neighbourLayoutResult.GetSplitRenderer() 
                             != null) {
@@ -540,7 +547,7 @@ namespace iText.Layout.Renderer {
                         if (neighbourLayoutResult.GetOverflowRenderer() != null) {
                             if (neighbourLayoutResult.GetStatus() == LayoutResult.PARTIAL) {
                                 // Get rid of cross alignment for item with partial result
-                                neighbourLayoutResult.GetOverflowRenderer().SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
+                                SetAlignSelfIfNotStretch(neighbourLayoutResult.GetOverflowRenderer());
                             }
                             overflowRenderer.AddChildRenderer(neighbourLayoutResult.GetOverflowRenderer());
                         }
@@ -562,6 +569,31 @@ namespace iText.Layout.Renderer {
                 }
                 // X is nonzero only for the 1st renderer in line serving for alignment adjustments
                 occupiedSpace += itemInfo.GetRectangle().GetX() + itemInfo.GetRectangle().GetWidth();
+            }
+        }
+
+        private void SetAlignSelfIfNotStretch(IRenderer overflowRenderer) {
+            AlignmentPropertyValue alignItems = (AlignmentPropertyValue)this.GetProperty<AlignmentPropertyValue?>(Property
+                .ALIGN_ITEMS, AlignmentPropertyValue.STRETCH);
+            AlignmentPropertyValue alignSelf = (AlignmentPropertyValue)overflowRenderer.GetProperty<AlignmentPropertyValue?
+                >(Property.ALIGN_SELF, alignItems);
+            if (alignSelf != AlignmentPropertyValue.STRETCH) {
+                overflowRenderer.SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
+            }
+        }
+
+        private void RestoreHeightForOverflowRenderer(IRenderer childRenderer, IRenderer overflowRenderer) {
+            if (overflowRenderer == null) {
+                return;
+            }
+            // childRenderer is the original renderer we set the height for before the layout
+            // And we need to remove the height from the corresponding overflow renderer
+            Tuple2<UnitValue, UnitValue> curHeights = heights.Get(childRenderer);
+            if (curHeights.GetFirst() == null) {
+                overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
+            }
+            if (curHeights.GetSecond() == null) {
+                overflowRenderer.DeleteOwnProperty(Property.MIN_HEIGHT);
             }
         }
 

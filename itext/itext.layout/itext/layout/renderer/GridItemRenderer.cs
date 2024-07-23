@@ -101,7 +101,7 @@ namespace iText.Layout.Renderer {
                     break;
                 }
 
-                case Property.FILL_AVAILABLE_AREA: {
+                case Property.FILL_AVAILABLE_AREA_ON_SPLIT: {
                     renderer.SetProperty(property, value);
                     break;
                 }

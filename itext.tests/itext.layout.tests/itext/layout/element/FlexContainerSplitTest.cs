@@ -200,7 +200,7 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 556)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 553)]
         public virtual void RowWrapRtlStartTest() {
             String outFileName = DESTINATION_FOLDER + "rowWrapRtlStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_rowWrapRtlStartTest.pdf";
@@ -219,7 +219,7 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 556)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 553)]
         public virtual void ReverseRowWrapRtlStartTest() {
             String outFileName = DESTINATION_FOLDER + "reverseRowWrapRtlStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseRowWrapRtlStartTest.pdf";
@@ -302,6 +302,30 @@ namespace iText.Layout.Element {
                 flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
                 flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.CENTER);
                 flexContainer.SetProperty(Property.JUSTIFY_CONTENT, JustifyContent.CENTER);
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TableInFlexOnSplitTest() {
+            String outFileName = DESTINATION_FOLDER + "tableInFlexOnSplitTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "tableInFlexOnSplitTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = new FlexContainer();
+                flexContainer.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                flexContainer.SetBorder(new SolidBorder(2));
+                Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
+                for (int i = 1; i <= 3; i++) {
+                    table.AddHeaderCell("Header" + i);
+                }
+                for (int i = 1; i <= 150; i++) {
+                    table.AddCell("Cell" + i);
+                }
+                flexContainer.Add(table);
                 document.Add(flexContainer);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
