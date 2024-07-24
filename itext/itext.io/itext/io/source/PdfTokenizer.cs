@@ -143,6 +143,27 @@ namespace iText.IO.Source {
             return file.Read();
         }
 
+        /// <summary>Gets the next byte of pdf source without moving source position.</summary>
+        /// <returns>the byte, or -1 if EOF is reached</returns>
+        public virtual int Peek() {
+            return file.Peek();
+        }
+
+        /// <summary>
+        /// Gets the next
+        /// <c>buffer.length</c>
+        /// bytes of pdf source without moving source position.
+        /// </summary>
+        /// <param name="buffer">buffer to store read bytes</param>
+        /// <returns>
+        /// the number of read bytes. If it is less than
+        /// <c>buffer.length</c>
+        /// it means EOF has been reached.
+        /// </returns>
+        public virtual int Peek(byte[] buffer) {
+            return file.Peek(buffer);
+        }
+
         public virtual String ReadString(int size) {
             StringBuilder buf = new StringBuilder();
             int ch;

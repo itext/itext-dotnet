@@ -97,6 +97,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String CANNOT_FIND_IMAGE_DATA_OR_EI = "Cannot find image data or EI.";
 
+        public const String UNSUPPORTED_ENCODING_FOR_INLINE_IMAGE = "Cannot parse inline image: {0} encoding is unsupported.";
+
         public const String CANNOT_FLUSH_DOCUMENT_ROOT_TAG_BEFORE_DOCUMENT_IS_CLOSED = "Cannot flush document root "
              + "tag before document is closed.";
 
@@ -499,8 +501,6 @@ namespace iText.Kernel.Exceptions {
         public const String UNBALANCED_LAYER_OPERATORS = "Unbalanced layer operators.";
 
         public const String UNBALANCED_SAVE_RESTORE_STATE_OPERATORS = "Unbalanced save restore state operators.";
-
-        public const String UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} " + "found after ID in inline image.";
 
         public const String UNEXPECTED_COLOR_SPACE = "Unexpected ColorSpace: {0}.";
 

@@ -23,6 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -31,7 +34,8 @@ using iText.Kernel.Pdf.Filters;
 namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Utility methods to help with processing of inline images</summary>
     public sealed class InlineImageParsingUtils {
-        private static readonly byte[] EI = new byte[] { (byte)'E', (byte)'I' };
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Canvas.Parser.Util.InlineImageParsingUtils
+            ));
 
         private InlineImageParsingUtils() {
         }
@@ -174,10 +178,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
                 dict.Put(resolvedKey, GetAlternateValue(resolvedKey, value));
             }
-            int ch = ps.GetTokeniser().Read();
-            if (!PdfTokenizer.IsWhitespace(ch)) {
-                throw new InlineImageParsingUtils.InlineImageParseException(KernelExceptionMessageConstant.UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE
-                    ).SetMessageParams(ch);
+            int ch = ps.GetTokeniser().Peek();
+            //ASCIIHexDecode and ASCII85Decode are not required to have a whitespace after ID operator
+            if (PdfTokenizer.IsWhitespace(ch)) {
+                ps.GetTokeniser().Read();
             }
             return dict;
         }
@@ -303,44 +307,97 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         private static byte[] ParseSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
              ps) {
             // by the time we get to here, we have already parsed the ID operator
+            //If image is unfiltered then we can calculate exact number of bytes it occupies
             if (!imageDictionary.ContainsKey(PdfName.Filter) && ImageColorSpaceIsKnown(imageDictionary, colorSpaceDic)
                 ) {
                 return ParseUnfilteredSamples(imageDictionary, colorSpaceDic, ps);
             }
-            // read all content until we reach an EI operator followed by whitespace.
-            // then decode the content stream to check that bytes that were parsed are really all image bytes
-            MemoryStream baos = new MemoryStream();
-            int ch;
-            int found = 0;
-            PdfTokenizer tokeniser = ps.GetTokeniser();
-            while ((ch = tokeniser.Read()) != -1) {
-                if (ch == 'E') {
-                    // probably some bytes were preserved so write them
-                    baos.Write(EI, 0, found);
-                    // just preserve 'E' and do not write it immediately
-                    found = 1;
-                }
-                else {
-                    if (found == 1 && ch == 'I') {
-                        // just preserve 'EI' and do not write it immediately
-                        found = 2;
-                    }
-                    else {
-                        if (found == 2 && PdfTokenizer.IsWhitespace(ch)) {
-                            byte[] tmp = baos.ToArray();
-                            if (InlineImageStreamBytesAreComplete(tmp, imageDictionary)) {
-                                return tmp;
-                            }
-                        }
-                        // probably some bytes were preserved so write them
-                        baos.Write(EI, 0, found);
-                        baos.Write(ch);
-                        found = 0;
+            PdfTokenizer tokenizer = ps.GetTokeniser();
+            MemoryStream imageStream = new MemoryStream();
+            int lastByte = tokenizer.Read();
+            int currentByte = tokenizer.Read();
+            // PDF spec is unclear about how to parse inline images. Should a whitespace
+            // appear before EI or not, so reading until EI<whitespace> or EOF.
+            while (currentByte != -1) {
+                if (lastByte == 'E' && currentByte == 'I' && PdfTokenizer.IsWhitespace(tokenizer.Peek()) && !FollowedByBinaryData
+                    (tokenizer)) {
+                    byte[] image = imageStream.ToArray();
+                    //Try to decode inline image as an additional safeguard and also to check for unsupported encodings
+                    if (InlineImageStreamBytesAreComplete(image, imageDictionary)) {
+                        return image;
                     }
                 }
+                imageStream.Write(lastByte);
+                lastByte = currentByte;
+                currentByte = tokenizer.Read();
             }
+            //If EOF was encountered than image was not parsed
             throw new InlineImageParsingUtils.InlineImageParseException(KernelExceptionMessageConstant.CANNOT_FIND_IMAGE_DATA_OR_EI
                 );
+        }
+
+        /// <summary>Check whether next several bytes of tokenizer contain binary data.</summary>
+        /// <remarks>
+        /// Check whether next several bytes of tokenizer contain binary data.
+        /// This method probes 10 bytes and tries to find pdf operator in them.
+        /// </remarks>
+        /// <param name="tokenizer">pdf tokenizer.</param>
+        /// <returns>true if next 10 bytes is binary data, false if they're most likely pdf operators.</returns>
+        private static bool FollowedByBinaryData(PdfTokenizer tokenizer) {
+            byte[] testSequence = new byte[10];
+            tokenizer.Peek(testSequence);
+            // We don't need to cleanup possible zeroes at the end, they aer whitespaces
+            // so can't break our logic in followedByBinaryData(byteArr)
+            bool isBinaryData = false;
+            int operatorStart = -1;
+            int operatorEnd = -1;
+            for (int i = 0; i < testSequence.Length; ++i) {
+                byte b = testSequence[i];
+                //Checking for ASCII and Unicode common control characters except spaces:
+                //     0x00  0x10
+                //0x00	NUL	 DLE
+                //0x01	SOH	 DC1
+                //0x02	STX	 DC2
+                //0x03	ETX	 DC3
+                //0x04	EOT	 DC4
+                //0x05	ENQ	 NAK
+                //0x06	ACK	 SYN
+                //0x07	BEL	 ETB
+                //0x08	BS	 CAN
+                //0x09	HT	 EM
+                //0x0A	LF	 SUB
+                //0x0B	VT	 ESC
+                //0x0C	FF	 FS
+                //0x0D	CR	 GS
+                //0x0E	SO	 RS
+                //0x0F	SI	 US
+                //0x7F	DEL -> we have binary data
+                // Also if we have any byte > 0x7f (byte < 0) than we treat it also as binary data
+                // because pdf operators are in range 0x0 - 0x7f
+                if (b < 0x20 && !PdfTokenizer.IsWhitespace(b)) {
+                    isBinaryData = true;
+                    break;
+                }
+                // try to find PDF operator start and end
+                if (operatorStart == -1 && !PdfTokenizer.IsWhitespace(b)) {
+                    operatorStart = i;
+                }
+                if (operatorStart != -1 && PdfTokenizer.IsWhitespace(b)) {
+                    operatorEnd = i;
+                    break;
+                }
+            }
+            if (operatorEnd == -1 && operatorStart != -1) {
+                operatorEnd = testSequence.Length;
+            }
+            //checking for any ASCII sequence here having less than 3 bytes length, because it most likely a pdf operator.
+            if (operatorEnd - operatorStart > 3) {
+                isBinaryData = true;
+            }
+            //if no operator start & end was found than it means only whitespaces were encountered or eof was reached
+            //earlier, so returning false in that case, it's highly unlikely inline image will have a lot of whitespaces in
+            //its data.
+            return isBinaryData;
         }
 
         private static bool ImageColorSpaceIsKnown(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic) {
@@ -367,14 +424,33 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
             try {
                 IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
                     ());
-                filters.Put(PdfName.JBIG2Decode, new DoNothingFilter());
+                // According to pdf spec JPXDecode and JBIG2Decode are unsupported for inline images encoding
+                filters.Put(PdfName.JPXDecode, new InlineImageParsingUtils.UnsupportedFilter(PdfName.JPXDecode.GetValue())
+                    );
+                filters.Put(PdfName.JBIG2Decode, new InlineImageParsingUtils.UnsupportedFilter(PdfName.JBIG2Decode.GetValue
+                    ()));
                 filters.Put(PdfName.FlateDecode, new FlateDecodeStrictFilter());
                 PdfReader.DecodeBytes(samples, imageDictionary, filters);
+                return true;
             }
             catch (Exception) {
                 return false;
             }
-            return true;
+        }
+
+        private class UnsupportedFilter : IFilterHandler {
+            private readonly String name;
+
+            public UnsupportedFilter(String name) {
+                this.name = name;
+            }
+
+            public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
+                ) {
+                LOGGER.LogError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_ENCODING_FOR_INLINE_IMAGE
+                    , name));
+                throw new NotSupportedException();
+            }
         }
     }
 }
