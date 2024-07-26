@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -40,7 +39,6 @@ using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("CreateParametersTestFixtureData")]
     public class PdfPadesWithMissingCertTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -55,22 +53,9 @@ namespace iText.Signatures.Sign {
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private readonly String missingCertName1;
-
-        private readonly String missingCertName2;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(destinationFolder);
-        }
-
-        public PdfPadesWithMissingCertTest(Object missingCertName1, Object missingCertName2) {
-            this.missingCertName1 = (String)missingCertName1;
-            this.missingCertName2 = (String)missingCertName2;
-        }
-
-        public PdfPadesWithMissingCertTest(Object[] array)
-            : this(array[0], array[1]) {
         }
 
         public static IEnumerable<Object[]> CreateParameters() {
@@ -79,13 +64,9 @@ namespace iText.Signatures.Sign {
                 , "not_existing_file" }, new Object[] { "missing_cert1.der", "missing_cert2.der" });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> CreateParametersTestFixtureData() {
-            return CreateParameters().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT, Ignore = true)]
-        public virtual void MissingCertTest() {
+        public virtual void MissingCertTest(String missingCertName1, String missingCertName2) {
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
             String signCertFileName = certsSrc + "sign_cert.pem";
             String fistIntermediateCertFileName = certsSrc + "first_intermediate_cert.pem";
@@ -103,7 +84,7 @@ namespace iText.Signatures.Sign {
             SignerProperties signerProperties = CreateSignerProperties();
             MemoryStream outputStream = new MemoryStream();
             PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
-            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_118(firstMissingCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_107(firstMissingCertFileName
                 , secondMissingCertFileName);
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
             padesSigner.SignWithBaselineBProfile(signerProperties, new IX509Certificate[] { signCert, rootCert }, signPrivateKey
@@ -120,8 +101,8 @@ namespace iText.Signatures.Sign {
                 );
         }
 
-        private sealed class _IssuingCertificateRetriever_118 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_118(String firstMissingCertFileName, String secondMissingCertFileName) {
+        private sealed class _IssuingCertificateRetriever_107 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_107(String firstMissingCertFileName, String secondMissingCertFileName) {
                 this.firstMissingCertFileName = firstMissingCertFileName;
                 this.secondMissingCertFileName = secondMissingCertFileName;
             }

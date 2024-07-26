@@ -341,7 +341,7 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         public virtual void FontNullCustomCheck() {
             String outPdf = DESTINATION_FOLDER + "fontNullCustomCheck.pdf";
-            PdfDocument pdfDoc = new _PdfDocument_413(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new _PdfDocument_412(new PdfWriter(outPdf));
             Document document = new Document(pdfDoc);
             SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
             sigField.SetContent("test");
@@ -352,8 +352,8 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE, e.Message);
         }
 
-        private sealed class _PdfDocument_413 : PdfDocument {
-            public _PdfDocument_413(PdfWriter baseArg1)
+        private sealed class _PdfDocument_412 : PdfDocument {
+            public _PdfDocument_412(PdfWriter baseArg1)
                 : base(baseArg1) {
             }
 

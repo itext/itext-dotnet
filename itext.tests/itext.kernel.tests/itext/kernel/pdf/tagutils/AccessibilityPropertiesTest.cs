@@ -30,7 +30,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     public class AccessibilityPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetAccessibilityPropertiesTest() {
-            AccessibilityProperties properties = new _AccessibilityProperties_43();
+            AccessibilityProperties properties = new _AccessibilityProperties_42();
             NUnit.Framework.Assert.IsNotNull(properties.SetRole(StandardRoles.DIV));
             NUnit.Framework.Assert.IsNotNull(properties.SetLanguage("EN-GB"));
             NUnit.Framework.Assert.IsNotNull(properties.SetActualText("actualText"));
@@ -48,14 +48,14 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.IsNotNull(properties.AddRef(new TagTreePointer(CreateTestDocument())));
         }
 
-        private sealed class _AccessibilityProperties_43 : AccessibilityProperties {
-            public _AccessibilityProperties_43() {
+        private sealed class _AccessibilityProperties_42 : AccessibilityProperties {
+            public _AccessibilityProperties_42() {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAccessibilityPropertiesTest() {
-            AccessibilityProperties properties = new _AccessibilityProperties_64();
+            AccessibilityProperties properties = new _AccessibilityProperties_63();
             NUnit.Framework.Assert.IsNull(properties.GetRole());
             NUnit.Framework.Assert.IsNull(properties.GetLanguage());
             NUnit.Framework.Assert.IsNull(properties.GetActualText());
@@ -66,8 +66,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             NUnit.Framework.Assert.IsNull(properties.GetNamespace());
         }
 
-        private sealed class _AccessibilityProperties_64 : AccessibilityProperties {
-            public _AccessibilityProperties_64() {
+        private sealed class _AccessibilityProperties_63 : AccessibilityProperties {
+            public _AccessibilityProperties_63() {
             }
         }
 

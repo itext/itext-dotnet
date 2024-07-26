@@ -229,14 +229,14 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_274(new Div());
+            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_273(new Div());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(FlexContainerRenderer), flexContainerRenderer.GetNextRenderer().GetType
                 ());
         }
 
-        private sealed class _FlexContainerRenderer_274 : FlexContainerRenderer {
-            public _FlexContainerRenderer_274(Div baseArg1)
+        private sealed class _FlexContainerRenderer_273 : FlexContainerRenderer {
+            public _FlexContainerRenderer_273(Div baseArg1)
                 : base(baseArg1) {
             }
         }

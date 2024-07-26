@@ -57,8 +57,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_78 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_78() {
+        private sealed class _ContentProvider_77 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_77() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_78();
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_77();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -242,12 +242,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_379());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_378());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_379 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_379() {
+        private sealed class _ContentProvider_378 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_378() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -860,7 +860,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CanvasStreamFlushedNoException() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfStream stream = new _PdfStream_1113();
+            PdfStream stream = new _PdfStream_1112();
             stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 new PdfCanvas(stream, new PdfResources(), doc);
@@ -868,8 +868,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _PdfStream_1113 : PdfStream {
-            public _PdfStream_1113() {
+        private sealed class _PdfStream_1112 : PdfStream {
+            public _PdfStream_1112() {
                 this.isFlushed = false;
             }
 
@@ -889,7 +889,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             ReaderProperties properties = new ReaderProperties();
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1136();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1135();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
             properties.SetMemoryLimitsAwareHandler(handler);
             PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
@@ -900,8 +900,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_1136 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_1136() {
+        private sealed class _MemoryLimitsAwareHandler_1135 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1135() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

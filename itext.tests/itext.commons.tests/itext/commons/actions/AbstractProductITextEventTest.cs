@@ -29,13 +29,13 @@ namespace iText.Commons.Actions {
     public class AbstractProductITextEventTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NullProductDataTest() {
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => new _AbstractProductITextEvent_36
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => new _AbstractProductITextEvent_35
                 (null));
             NUnit.Framework.Assert.AreEqual("ProductData shouldn't be null.", exception.Message);
         }
 
-        private sealed class _AbstractProductITextEvent_36 : AbstractProductITextEvent {
-            public _AbstractProductITextEvent_36(ProductData baseArg1)
+        private sealed class _AbstractProductITextEvent_35 : AbstractProductITextEvent {
+            public _AbstractProductITextEvent_35(ProductData baseArg1)
                 : base(baseArg1) {
             }
         }

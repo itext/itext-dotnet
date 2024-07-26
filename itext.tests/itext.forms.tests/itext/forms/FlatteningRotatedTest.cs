@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Forms.Fields;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -31,15 +30,12 @@ using iText.Test;
 
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("InputFileNamesTestFixtureData")]
     public class FlatteningRotatedTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/FlatteningRotatedTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/FlatteningRotatedTest/";
-
-        private readonly String inputPdfFileName;
 
         public static ICollection<Object[]> InputFileNames() {
             IList<Object[]> inputFileNames = new List<Object[]>();
@@ -51,25 +47,13 @@ namespace iText.Forms {
             return inputFileNames;
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> InputFileNamesTestFixtureData() {
-            return InputFileNames().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        public FlatteningRotatedTest(Object inputPdfFileName) {
-            this.inputPdfFileName = (String)inputPdfFileName;
-        }
-
-        public FlatteningRotatedTest(Object[] array)
-            : this(array[0]) {
-        }
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot() {
+        [NUnit.Framework.TestCaseSource("InputFileNames")]
+        public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot(String inputPdfFileName) {
             String src = sourceFolder + inputPdfFileName + ".pdf";
             String dest = destinationFolder + inputPdfFileName + ".pdf";
             String dest_flattened = destinationFolder + inputPdfFileName + "_flattened.pdf";

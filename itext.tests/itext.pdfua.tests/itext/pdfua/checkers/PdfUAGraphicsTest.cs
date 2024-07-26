@@ -105,12 +105,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_127());
+            framework.AddSuppliers(new _Generator_126());
             framework.AssertBothValid("imageWithCustomRoleOk");
         }
 
-        private sealed class _Generator_127 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_127() {
+        private sealed class _Generator_126 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_126() {
             }
 
             public IBlockElement Generate() {
@@ -135,12 +135,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_151());
+            framework.AddSuppliers(new _Generator_150());
             framework.AssertBothValid("imageWithDoubleMapping");
         }
 
-        private sealed class _Generator_151 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_151() {
+        private sealed class _Generator_150 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_150() {
             }
 
             public IBlockElement Generate() {
@@ -164,12 +164,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_174());
+            framework.AddSuppliers(new _Generator_173());
             framework.AssertBothFail("imageWithCustomRoleAndNoDescription");
         }
 
-        private sealed class _Generator_174 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_174() {
+        private sealed class _Generator_173 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_173() {
             }
 
             public IBlockElement Generate() {
@@ -193,12 +193,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_197());
+            framework.AddSuppliers(new _Generator_196());
             framework.AssertBothFail("imageCustomDoubleMapping_Throws");
         }
 
-        private sealed class _Generator_197 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_197() {
+        private sealed class _Generator_196 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_196() {
             }
 
             public IBlockElement Generate() {

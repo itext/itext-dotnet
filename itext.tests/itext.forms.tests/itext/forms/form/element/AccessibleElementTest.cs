@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Forms.Form;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
@@ -34,18 +33,7 @@ using iText.Test;
 
 namespace iText.Forms.Form.Element {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("GetDataTestFixtureDataTestFixtureData")]
     public class AccessibleElementTest : ExtendedITextTest {
-        private readonly AccessibleElementTest.TestContainer testContainer;
-
-        public AccessibleElementTest(AccessibleElementTest.TestContainer index) {
-            this.testContainer = index;
-        }
-
-        public AccessibleElementTest(AccessibleElementTest.TestContainer[] array)
-            : this(array[0]) {
-        }
-
         public static ICollection<Object[]> GetDataTestFixtureData() {
             int amountOfEntries = 8;
             IList<Object[]> data = new List<Object[]>();
@@ -53,10 +41,6 @@ namespace iText.Forms.Form.Element {
                 data.Add(new Object[] { new AccessibleElementTest.TestContainer(i) });
             }
             return data;
-        }
-
-        public static ICollection<NUnit.Framework.TestFixtureData> GetDataTestFixtureDataTestFixtureData() {
-            return GetDataTestFixtureData().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
         }
 
         private Func<IFormField> GetDataToTest(int index) {
@@ -105,8 +89,8 @@ namespace iText.Forms.Form.Element {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TestInteractive() {
+        [NUnit.Framework.TestCaseSource("GetDataTestFixtureData")]
+        public virtual void TestInteractive(AccessibleElementTest.TestContainer testContainer) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos));
             pdfDocument.SetTagged();
@@ -128,8 +112,8 @@ namespace iText.Forms.Form.Element {
             pdfDocument.Close();
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TestNonInteractive() {
+        [NUnit.Framework.TestCaseSource("GetDataTestFixtureData")]
+        public virtual void TestNonInteractive(AccessibleElementTest.TestContainer testContainer) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos));
             pdfDocument.SetTagged();
@@ -150,8 +134,8 @@ namespace iText.Forms.Form.Element {
             pdfDocument.Close();
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TestInteractiveProperty() {
+        [NUnit.Framework.TestCaseSource("GetDataTestFixtureData")]
+        public virtual void TestInteractiveProperty(AccessibleElementTest.TestContainer testContainer) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos));
             pdfDocument.SetTagged();

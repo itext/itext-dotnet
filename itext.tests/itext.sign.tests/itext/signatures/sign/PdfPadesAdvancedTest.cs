@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -42,7 +41,6 @@ using iText.Test;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("CreateParametersTestFixtureData")]
     public class PdfPadesAdvancedTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -57,42 +55,9 @@ namespace iText.Signatures.Sign {
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private readonly String signingCertName;
-
-        private readonly String rootCertName;
-
-        private readonly bool? isOcspRevoked;
-
-        private readonly String cmpFilePostfix;
-
-        private readonly int? amountOfCrlsForSign;
-
-        private readonly int? amountOfOcspsForSign;
-
-        private readonly int? amountOfCrlsForRoot;
-
-        private readonly int? amountOfOcspsForRoot;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        public PdfPadesAdvancedTest(Object signingCertName, Object rootCertName, Object isOcspRevoked, Object cmpFilePostfix
-            , Object amountOfCrlsForSign, Object amountOfOcspsForSign, Object amountOfCrlsForRoot, Object amountOfOcspsForRoot
-            ) {
-            this.signingCertName = (String)signingCertName;
-            this.rootCertName = (String)rootCertName;
-            this.isOcspRevoked = (bool?)isOcspRevoked;
-            this.cmpFilePostfix = (String)cmpFilePostfix;
-            this.amountOfCrlsForSign = (int?)amountOfCrlsForSign;
-            this.amountOfOcspsForSign = (int?)amountOfOcspsForSign;
-            this.amountOfCrlsForRoot = (int?)amountOfCrlsForRoot;
-            this.amountOfOcspsForRoot = (int?)amountOfOcspsForRoot;
-        }
-
-        public PdfPadesAdvancedTest(Object[] array)
-            : this(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]) {
         }
 
         public static IEnumerable<Object[]> CreateParameters() {
@@ -102,10 +67,6 @@ namespace iText.Signatures.Sign {
             parameters.AddAll(CreateParametersUsingRootName("rootCertCrlNoOcsp", 1, 0));
             parameters.AddAll(CreateParametersUsingRootName("rootCertOcspNoCrl", 0, 1));
             return parameters;
-        }
-
-        public static ICollection<NUnit.Framework.TestFixtureData> CreateParametersTestFixtureData() {
-            return CreateParameters().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
         }
 
         private static IList<Object[]> CreateParametersUsingRootName(String rootCertName, int crlsForRoot, int ocspForRoot
@@ -121,8 +82,10 @@ namespace iText.Signatures.Sign {
                  + rootCertName, 1, 0, crlsForRoot, ocspForRoot });
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SignWithAdvancedClientsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignWithAdvancedClientsTest(String signingCertName, String rootCertName, bool? isOcspRevoked
+            , String cmpFilePostfix, int? amountOfCrlsForSign, int? amountOfOcspsForSign, int? amountOfCrlsForRoot
+            , int? amountOfOcspsForRoot) {
             String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
             String signCertFileName = CERTS_SRC + signingCertName;
             String rootCertFileName = CERTS_SRC + rootCertName;
@@ -175,12 +138,13 @@ namespace iText.Signatures.Sign {
                 padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
                 TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
                 AssertDss(outputStream, rootCert, signRsaCert, (IX509Certificate)tsaChain[0], (IX509Certificate)tsaChain[1
-                    ]);
+                    ], amountOfCrlsForRoot, amountOfCrlsForSign, amountOfOcspsForRoot, amountOfOcspsForSign);
             }
         }
 
         private void AssertDss(MemoryStream outputStream, IX509Certificate rootCert, IX509Certificate signRsaCert, 
-            IX509Certificate tsaCert, IX509Certificate rootTsaCert) {
+            IX509Certificate tsaCert, IX509Certificate rootTsaCert, int? amountOfCrlsForRoot, int? amountOfCrlsForSign
+            , int? amountOfOcspsForRoot, int? amountOfOcspsForSign) {
             IDictionary<String, int?> expectedNumberOfCrls = new Dictionary<String, int?>();
             if (amountOfCrlsForRoot + amountOfCrlsForSign != 0) {
                 expectedNumberOfCrls.Put(rootCert.GetSubjectDN().ToString(), amountOfCrlsForRoot + amountOfCrlsForSign);

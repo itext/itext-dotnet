@@ -23,14 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Select {
     [NUnit.Framework.Category("UnitTest")]
-    [NUnit.Framework.TestFixtureSource("LocalesTestFixtureData")]
     public class MultiLocaleTest : ExtendedITextTest {
         private readonly CultureInfo defaultLocale = System.Threading.Thread.CurrentThread.CurrentUICulture;
 
@@ -39,27 +37,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
                 ));
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> LocalesTestFixtureData() {
-            return Locales().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
         [NUnit.Framework.TearDown]
         public virtual void SetDefaultLocale() {
             System.Threading.Thread.CurrentThread.CurrentUICulture = defaultLocale;
         }
 
-        private CultureInfo locale;
-
-        public MultiLocaleTest(CultureInfo locale) {
-            this.locale = locale;
-        }
-
-        public MultiLocaleTest(CultureInfo[] array)
-            : this(array[0]) {
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestByAttribute() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void TestByAttribute(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             String h = "<div Title=Foo /><div Title=Bar /><div Style=Qux /><div title=Balim /><div title=SLIM />" + "<div data-name='with spaces'/>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(h);
@@ -91,8 +75,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual("SLIM", contains.Last().Attr("title"));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TestPseudoContains() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void TestPseudoContains(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>The Rain.</p> <p class=light>The <i>RAIN</i>.</p> <p>Rain, the.</p></div>"
                 );
@@ -115,8 +99,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual(8, ps6.Count);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ContainsOwn() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void ContainsOwn(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p id=1>Hello <b>there</b> igor</p>");
             Elements ps = doc.Select("p:containsOwn(Hello IGOR)");
@@ -127,8 +111,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual(1, doc2.Select("p:containsOwn(igor)").Count);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ContainsData() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void ContainsData(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             String html = "<p>function</p><script>FUNCTION</script><style>item</style><span><!-- comments --></span>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
@@ -152,8 +136,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual(1, dataEls5.Count);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TestByAttributeStarting() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void TestByAttributeStarting(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div id=1 ATTRIBUTE data-name=jsoup>Hello</div><p data-val=5 id=2>There</p><p id=3>No</p>"
                 );

@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -36,7 +35,6 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("BaseDirectionAndSymbolAlignmentPropertiesTestFixtureData")]
     public class ListItemPositionAlignmentTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/ListItemPositionAlignmentTest/";
@@ -53,32 +51,9 @@ namespace iText.Layout {
              + "  <li style=\"background-color: yellow; direction: {2}; symbol-alignment:{1}; symbol-position: {0}\">Specific item</li>"
              + "</ul>";
 
-        private BaseDirection? listBaseDirection;
-
-        private BaseDirection? listItemBaseDirection;
-
-        private ListSymbolAlignment listSymbolAlignment;
-
-        private ListSymbolPosition listSymbolPosition;
-
-        private int? comparisonPdfId;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        public ListItemPositionAlignmentTest(Object listBaseDirection, Object listItemBaseDirection, Object listSymbolAlignment
-            , Object listSymbolPosition, Object comparisonPdfId) {
-            this.listBaseDirection = (BaseDirection?)listBaseDirection;
-            this.listItemBaseDirection = (BaseDirection?)listItemBaseDirection;
-            this.listSymbolAlignment = (ListSymbolAlignment)listSymbolAlignment;
-            this.listSymbolPosition = (ListSymbolPosition)listSymbolPosition;
-            this.comparisonPdfId = (int?)comparisonPdfId;
-        }
-
-        public ListItemPositionAlignmentTest(Object[] array)
-            : this(array[0], array[1], array[2], array[3], array[4]) {
         }
 
         public static IEnumerable<Object[]> BaseDirectionAndSymbolAlignmentProperties() {
@@ -103,16 +78,13 @@ namespace iText.Layout {
             return objectList;
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> BaseDirectionAndSymbolAlignmentPropertiesTestFixtureData
-            () {
-            return BaseDirectionAndSymbolAlignmentProperties().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("BaseDirectionAndSymbolAlignmentProperties")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
-        public virtual void DefaultListIemPositionAlignmentTest() {
+        public virtual void DefaultListIemPositionAlignmentTest(BaseDirection? listBaseDirection, BaseDirection? listItemBaseDirection
+            , ListSymbolAlignment listSymbolAlignment, ListSymbolPosition listSymbolPosition, int? comparisonPdfId
+            ) {
             // Create an HTML for this test
-            CreateHtml();
+            CreateHtml(listBaseDirection, listItemBaseDirection, listSymbolAlignment, listSymbolPosition);
             String fileName = MessageFormatUtil.Format(RESULTANT_FILE_NAME_PATTERN, FormatSymbolPosition(listSymbolPosition
                 ), FormatSymbolAlignment(listSymbolAlignment), FormatBaseDirection(listItemBaseDirection), FormatBaseDirection
                 (listBaseDirection));
@@ -120,7 +92,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_defaultListItemTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            List list = CreateTestList();
+            List list = CreateTestList(listBaseDirection, listItemBaseDirection, listSymbolAlignment, listSymbolPosition
+                );
             document.Add(list);
             document.Close();
             System.Console.Out.WriteLine("HTML: " + UrlUtil.GetNormalizedFileUriString(DESTINATION_FOLDER + fileName +
@@ -129,7 +102,8 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        private List CreateTestList() {
+        private List CreateTestList(BaseDirection? listBaseDirection, BaseDirection? listItemBaseDirection, ListSymbolAlignment
+             listSymbolAlignment, ListSymbolPosition listSymbolPosition) {
             List list = new List();
             list.SetSymbolIndent(20);
             list.SetListSymbol("\u2022");
@@ -149,7 +123,8 @@ namespace iText.Layout {
             return list;
         }
 
-        private void CreateHtml() {
+        private void CreateHtml(BaseDirection? listBaseDirection, BaseDirection? listItemBaseDirection, ListSymbolAlignment
+             listSymbolAlignment, ListSymbolPosition listSymbolPosition) {
             String fileName = MessageFormatUtil.Format(RESULTANT_FILE_NAME_PATTERN, FormatSymbolPosition(listSymbolPosition
                 ), FormatSymbolAlignment(listSymbolAlignment), FormatBaseDirection(listItemBaseDirection), FormatBaseDirection
                 (listBaseDirection));

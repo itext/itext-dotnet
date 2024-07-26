@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using iText.Commons.Utils;
 using iText.Layout.Hyphenation;
@@ -30,22 +29,8 @@ using iText.Test;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("HyphenationPropertiesTestFixtureData")]
     public class HyphenateTest : ExtendedITextTest {
-        private readonly String lang;
-
-        private readonly String testWord;
-
         private IList<String> errors = new List<String>();
-
-        public HyphenateTest(String testName, String lang, String testWord) {
-            this.lang = lang;
-            this.testWord = testWord;
-        }
-
-        public HyphenateTest(String[] array)
-            : this(array[0], array[1], array[2]) {
-        }
 
         public static IEnumerable<Object[]> HyphenationProperties() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { "African", "af", "country" }, new Object[] { 
@@ -90,12 +75,8 @@ namespace iText.Layout {
                  }, new Object[] { "Chinese Latin", "zh_Latn", "country" } });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> HyphenationPropertiesTestFixtureData() {
-            return HyphenationProperties().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void RunTest() {
+        [NUnit.Framework.TestCaseSource("HyphenationProperties")]
+        public virtual void RunTest(String name, String lang, String testWord) {
             errors.Clear();
             TryHyphenate(lang, testWord);
             NUnit.Framework.Assert.IsTrue(errors.IsEmpty(), BuildReport());

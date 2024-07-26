@@ -38,13 +38,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ListRenderer listRenderer = new _ListRenderer_57(new List());
+            ListRenderer listRenderer = new _ListRenderer_56(new List());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ListRenderer), listRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ListRenderer_57 : ListRenderer {
-            public _ListRenderer_57(List baseArg1)
+        private sealed class _ListRenderer_56 : ListRenderer {
+            public _ListRenderer_56(List baseArg1)
                 : base(baseArg1) {
             }
         }

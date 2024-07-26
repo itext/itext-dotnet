@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Form.Element;
@@ -35,7 +34,6 @@ using iText.Test;
 
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("RotationRelatedPropertiesTestFixtureData")]
     public class FieldsRotationTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/fields/FieldsRotationTest/";
@@ -43,29 +41,9 @@ namespace iText.Forms.Fields {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/fields/FieldsRotationTest/";
 
-        private readonly int[] pageRotation;
-
-        private readonly int[] fieldRotation;
-
-        private readonly bool ignorePageRotation;
-
-        private readonly String testName;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        public FieldsRotationTest(Object pageRotation, Object fieldRotation, Object ignorePageRotation, Object testName
-            ) {
-            this.pageRotation = (int[])pageRotation;
-            this.fieldRotation = (int[])fieldRotation;
-            this.ignorePageRotation = (bool)ignorePageRotation;
-            this.testName = (String)testName;
-        }
-
-        public FieldsRotationTest(Object[] array)
-            : this(array[0], array[1], array[2], array[3]) {
         }
 
         public static IEnumerable<Object[]> RotationRelatedProperties() {
@@ -80,20 +58,17 @@ namespace iText.Forms.Fields {
                  } });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> RotationRelatedPropertiesTestFixtureData() {
-            return RotationRelatedProperties().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void FieldRotationTest() {
+        [NUnit.Framework.TestCaseSource("RotationRelatedProperties")]
+        public virtual void FieldRotationTest(int[] pageRotation, int[] fieldRotation, bool ignorePageRotation, String
+             testName) {
             String outFileName = DESTINATION_FOLDER + testName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            FillForm(outFileName);
+            FillForm(pageRotation, fieldRotation, ignorePageRotation, outFileName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
-        private void FillForm(String outPdf) {
+        private void FillForm(int[] pageRotation, int[] fieldRotation, bool ignorePageRotation, String outPdf) {
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(document.GetPdfDocument(), true);
                 for (int i = 1; i < 5; ++i) {

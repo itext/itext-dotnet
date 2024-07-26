@@ -53,7 +53,7 @@ namespace iText.Kernel.Utils {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             IList<int> pageNumbers = JavaUtil.ArraysAsList(30, 100);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_72(inputPdfDoc).SplitByPageNumbers(pageNumbers);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_71(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments) {
                 doc.Close();
             }
@@ -64,8 +64,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_72 : PdfSplitter {
-            public _PdfSplitter_72(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_71 : PdfSplitter {
+            public _PdfSplitter_71(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -90,8 +90,8 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentTest02() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PdfSplitter splitter = new _PdfSplitter_102(inputPdfDoc);
-            splitter.SplitByPageCount(60, new _IDocumentReadyListener_115());
+            PdfSplitter splitter = new _PdfSplitter_101(inputPdfDoc);
+            splitter.SplitByPageCount(60, new _IDocumentReadyListener_114());
             for (int i = 1; i <= 3; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument2_" + i
                     .ToString() + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument2_" + i.ToString() + ".pdf", destinationFolder
@@ -99,8 +99,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_102 : PdfSplitter {
-            public _PdfSplitter_102(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_101 : PdfSplitter {
+            public _PdfSplitter_101(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -121,8 +121,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _IDocumentReadyListener_115 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_115() {
+        private sealed class _IDocumentReadyListener_114 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_114() {
             }
 
             public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
@@ -140,7 +140,7 @@ namespace iText.Kernel.Utils {
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
             PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_143(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_142(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -152,8 +152,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_143 : PdfSplitter {
-            public _PdfSplitter_143(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_142 : PdfSplitter {
+            public _PdfSplitter_142(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -181,7 +181,7 @@ namespace iText.Kernel.Utils {
             PageRange pageRange1 = new PageRange("even & 80-").AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
                 (1, 2);
             PageRange pageRange2 = new PageRange("99,98").AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_177(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_176(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -193,8 +193,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_177 : PdfSplitter {
-            public _PdfSplitter_177(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_176 : PdfSplitter {
+            public _PdfSplitter_176(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -234,7 +234,7 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentBySize() {
             String inputFileName = sourceFolder + "splitBySize.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PdfSplitter splitter = new _PdfSplitter_223(inputPdfDoc);
+            PdfSplitter splitter = new _PdfSplitter_222(inputPdfDoc);
             IList<PdfDocument> documents = splitter.SplitBySize(100000);
             foreach (PdfDocument doc in documents) {
                 doc.Close();
@@ -245,8 +245,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_223 : PdfSplitter {
-            public _PdfSplitter_223(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_222 : PdfSplitter {
+            public _PdfSplitter_222(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }

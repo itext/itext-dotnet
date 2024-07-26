@@ -33,7 +33,7 @@ namespace iText.Forms.Fields {
     public class PdfFormCreatorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetAcroFormTest() {
-            PdfFormFactory customFactory = new _PdfFormFactory_43();
+            PdfFormFactory customFactory = new _PdfFormFactory_42();
             // Never create new acroform.
             PdfFormCreator.SetFactory(customFactory);
             try {
@@ -47,8 +47,8 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private sealed class _PdfFormFactory_43 : PdfFormFactory {
-            public _PdfFormFactory_43() {
+        private sealed class _PdfFormFactory_42 : PdfFormFactory {
+            public _PdfFormFactory_42() {
             }
 
             public override PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {
@@ -58,7 +58,7 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void CreateTextFormFieldTest() {
-            PdfFormFactory customFactory = new _PdfFormFactory_63();
+            PdfFormFactory customFactory = new _PdfFormFactory_62();
             // All text is read by default.
             PdfFormCreator.SetFactory(customFactory);
             try {
@@ -73,8 +73,8 @@ namespace iText.Forms.Fields {
             }
         }
 
-        private sealed class _PdfFormFactory_63 : PdfFormFactory {
-            public _PdfFormFactory_63() {
+        private sealed class _PdfFormFactory_62 : PdfFormFactory {
+            public _PdfFormFactory_62() {
             }
 
             public override PdfTextFormField CreateTextFormField(PdfWidgetAnnotation widgetAnnotation, PdfDocument document

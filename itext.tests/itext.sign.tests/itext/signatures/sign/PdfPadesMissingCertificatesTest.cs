@@ -83,7 +83,7 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaCollectionsUtil.SingletonList(tsaCert), tsaPrivateKey);
-            CrlClientOnline testCrlClient = new _CrlClientOnline_111(crlSignedByCrlCert, crlSignedByCA);
+            CrlClientOnline testCrlClient = new _CrlClientOnline_110(crlSignedByCrlCert, crlSignedByCA);
             IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IX509Certificate crlRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCrlFileName)[0];
             IX509Certificate ocspRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootOcspFileName)[0];
@@ -110,7 +110,7 @@ namespace iText.Signatures.Sign {
                 , outputStream);
             padesSigner.SetCrlClient(testCrlClient);
             padesSigner.SetOcspClient(ocspClient);
-            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_146(crlCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_145(crlCertFileName
                 , intermediateCrlFileName, rootCrlFileName, intermediateTsaFileName, rootTsaFileName, intermediateOscpFileName
                 , rootOcspFileName, intermediateCertFileName, rootCertFileName);
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
@@ -133,8 +133,8 @@ namespace iText.Signatures.Sign {
                 , certs);
         }
 
-        private sealed class _CrlClientOnline_111 : CrlClientOnline {
-            public _CrlClientOnline_111(String crlSignedByCrlCert, String crlSignedByCA) {
+        private sealed class _CrlClientOnline_110 : CrlClientOnline {
+            public _CrlClientOnline_110(String crlSignedByCrlCert, String crlSignedByCA) {
                 this.crlSignedByCrlCert = crlSignedByCrlCert;
                 this.crlSignedByCA = crlSignedByCA;
             }
@@ -151,8 +151,8 @@ namespace iText.Signatures.Sign {
             private readonly String crlSignedByCA;
         }
 
-        private sealed class _IssuingCertificateRetriever_146 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_146(String crlCertFileName, String intermediateCrlFileName, String rootCrlFileName
+        private sealed class _IssuingCertificateRetriever_145 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_145(String crlCertFileName, String intermediateCrlFileName, String rootCrlFileName
                 , String intermediateTsaFileName, String rootTsaFileName, String intermediateOscpFileName, String rootOcspFileName
                 , String intermediateCertFileName, String rootCertFileName) {
                 this.crlCertFileName = crlCertFileName;
@@ -230,7 +230,7 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaCollectionsUtil.SingletonList(tsaCert), tsaPrivateKey);
-            CrlClientOnline testCrlClient = new _CrlClientOnline_222(crlSignedByCrlCert, crlSignedByCA);
+            CrlClientOnline testCrlClient = new _CrlClientOnline_221(crlSignedByCrlCert, crlSignedByCA);
             IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IX509Certificate crlRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCrlFileName)[0];
             MemoryStream outputStream = new MemoryStream();
@@ -257,8 +257,8 @@ namespace iText.Signatures.Sign {
                 , certs);
         }
 
-        private sealed class _CrlClientOnline_222 : CrlClientOnline {
-            public _CrlClientOnline_222(String crlSignedByCrlCert, String crlSignedByCA) {
+        private sealed class _CrlClientOnline_221 : CrlClientOnline {
+            public _CrlClientOnline_221(String crlSignedByCrlCert, String crlSignedByCA) {
                 this.crlSignedByCrlCert = crlSignedByCrlCert;
                 this.crlSignedByCA = crlSignedByCA;
             }

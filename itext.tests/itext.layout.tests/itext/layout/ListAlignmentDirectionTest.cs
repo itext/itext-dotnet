@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -36,7 +35,6 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("AlignItemsAndJustifyContentPropertiesTestFixtureData")]
     public class ListAlignmentDirectionTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/ListAlignmentDirectionTest/";
@@ -52,29 +50,9 @@ namespace iText.Layout {
              + "  <li style=\"background-color: blue;\">Usual line</li>" + "  <li style=\"background-color: yellow; text-align: {0}; direction: {1}\">Specific line</li>"
              + "</ul>";
 
-        private TextAlignment? itemTextAlignment;
-
-        private BaseDirection? itemBaseDirection;
-
-        private TextAlignment? listTextAlignment;
-
-        private BaseDirection? listBaseDirection;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        public ListAlignmentDirectionTest(Object itemTextAlignment, Object itemBaseDirection, Object listTextAlignment
-            , Object listBaseDirection) {
-            this.itemTextAlignment = (TextAlignment?)itemTextAlignment;
-            this.itemBaseDirection = (BaseDirection?)itemBaseDirection;
-            this.listTextAlignment = (TextAlignment?)listTextAlignment;
-            this.listBaseDirection = (BaseDirection?)listBaseDirection;
-        }
-
-        public ListAlignmentDirectionTest(Object[] array)
-            : this(array[0], array[1], array[2], array[3]) {
         }
 
         public static IEnumerable<Object[]> AlignItemsAndJustifyContentProperties() {
@@ -95,18 +73,14 @@ namespace iText.Layout {
             return objectList;
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> AlignItemsAndJustifyContentPropertiesTestFixtureData
-            () {
-            return AlignItemsAndJustifyContentProperties().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
-        public virtual void AlignmentDirectionTest() {
+        public virtual void AlignmentDirectionTest(TextAlignment? itemTextAlignment, BaseDirection? itemBaseDirection
+            , TextAlignment? listTextAlignment, BaseDirection? listBaseDirection) {
             // TODO DEVSIX-5727 direction of the first list-item should define the symbol indent's side. Once the issue
             // is fixed, the corresponding cmps should be updated.
             // Create an HTML for this test
-            CreateHtml();
+            CreateHtml(itemTextAlignment, itemBaseDirection, listTextAlignment, listBaseDirection);
             String fileName = MessageFormatUtil.Format(RESULTANT_FILE_NAME_PATTERN, FormatTextAlignment(itemTextAlignment
                 ), FormatBaseDirection(itemBaseDirection), FormatTextAlignment(listTextAlignment), FormatBaseDirection
                 (listBaseDirection));
@@ -145,7 +119,8 @@ namespace iText.Layout {
             return list;
         }
 
-        private void CreateHtml() {
+        private void CreateHtml(TextAlignment? itemTextAlignment, BaseDirection? itemBaseDirection, TextAlignment?
+             listTextAlignment, BaseDirection? listBaseDirection) {
             String fileName = MessageFormatUtil.Format(RESULTANT_FILE_NAME_PATTERN, FormatTextAlignment(itemTextAlignment
                 ), FormatBaseDirection(itemBaseDirection), FormatTextAlignment(listTextAlignment), FormatBaseDirection
                 (listBaseDirection));

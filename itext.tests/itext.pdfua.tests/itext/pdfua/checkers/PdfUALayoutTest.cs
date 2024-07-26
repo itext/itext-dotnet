@@ -133,12 +133,12 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void AddNoteWithoutIdTest() {
-            framework.AddSuppliers(new _Generator_163());
+            framework.AddSuppliers(new _Generator_162());
             framework.AssertBothFail("noteWithoutID", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY);
         }
 
-        private sealed class _Generator_163 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_163() {
+        private sealed class _Generator_162 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_162() {
             }
 
             public IBlockElement Generate() {
@@ -160,13 +160,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 2)]
         public virtual void AddTwoNotesWithSameIdTest() {
-            framework.AddSuppliers(new _Generator_185(), new _Generator_201());
+            framework.AddSuppliers(new _Generator_184(), new _Generator_200());
             framework.AssertBothFail("twoNotesWithSameId", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
                 , "123"), false);
         }
 
-        private sealed class _Generator_185 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_185() {
+        private sealed class _Generator_184 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_184() {
             }
 
             public IBlockElement Generate() {
@@ -186,8 +186,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_201 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_201() {
+        private sealed class _Generator_200 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_200() {
             }
 
             public IBlockElement Generate() {
@@ -209,12 +209,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void AddNoteWithValidIdTest() {
-            framework.AddSuppliers(new _Generator_224());
+            framework.AddSuppliers(new _Generator_223());
             framework.AssertBothValid("noteWithValidID");
         }
 
-        private sealed class _Generator_224 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_224() {
+        private sealed class _Generator_223 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_223() {
             }
 
             public IBlockElement Generate() {
@@ -236,12 +236,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void AddTwoNotesWithDifferentIdTest() {
-            framework.AddSuppliers(new _Generator_245(), new _Generator_261());
+            framework.AddSuppliers(new _Generator_244(), new _Generator_260());
             framework.AssertBothValid("twoNotesWithDifferentId");
         }
 
-        private sealed class _Generator_245 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_245() {
+        private sealed class _Generator_244 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_244() {
             }
 
             public IBlockElement Generate() {
@@ -261,8 +261,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_261 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_261() {
+        private sealed class _Generator_260 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_260() {
             }
 
             public IBlockElement Generate() {

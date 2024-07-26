@@ -31,8 +31,8 @@ namespace iText.Forms.Fields {
     public class FormsMetaInfoStaticContainerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void UseMetaInfoDuringTheActionOneThreadTest() {
-            MetaInfoContainer metaInfo1 = new MetaInfoContainer(new _IMetaInfo_38());
-            MetaInfoContainer metaInfo2 = new MetaInfoContainer(new _IMetaInfo_39());
+            MetaInfoContainer metaInfo1 = new MetaInfoContainer(new _IMetaInfo_37());
+            MetaInfoContainer metaInfo2 = new MetaInfoContainer(new _IMetaInfo_38());
             FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfo1, () => {
                 NUnit.Framework.Assert.AreSame(metaInfo1, FormsMetaInfoStaticContainer.GetMetaInfoForLayout());
                 FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfo2, () => NUnit.Framework.Assert.AreSame(metaInfo2
@@ -43,13 +43,13 @@ namespace iText.Forms.Fields {
             NUnit.Framework.Assert.IsNull(FormsMetaInfoStaticContainer.GetMetaInfoForLayout());
         }
 
-        private sealed class _IMetaInfo_38 : IMetaInfo {
-            public _IMetaInfo_38() {
+        private sealed class _IMetaInfo_37 : IMetaInfo {
+            public _IMetaInfo_37() {
             }
         }
 
-        private sealed class _IMetaInfo_39 : IMetaInfo {
-            public _IMetaInfo_39() {
+        private sealed class _IMetaInfo_38 : IMetaInfo {
+            public _IMetaInfo_38() {
             }
         }
 
@@ -79,7 +79,7 @@ namespace iText.Forms.Fields {
             }
 
             public virtual void CheckMetaInfo() {
-                MetaInfoContainer metaInfo = new MetaInfoContainer(new _IMetaInfo_78());
+                MetaInfoContainer metaInfo = new MetaInfoContainer(new _IMetaInfo_77());
                 FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfo, () => {
                     if (metaInfoCheckClass != null) {
                         Thread thread = new Thread(() => metaInfoCheckClass.CheckMetaInfo());
@@ -97,8 +97,8 @@ namespace iText.Forms.Fields {
                 checkFailed |= FormsMetaInfoStaticContainer.GetMetaInfoForLayout() != null;
             }
 
-            private sealed class _IMetaInfo_78 : IMetaInfo {
-                public _IMetaInfo_78() {
+            private sealed class _IMetaInfo_77 : IMetaInfo {
+                public _IMetaInfo_77() {
                 }
             }
 

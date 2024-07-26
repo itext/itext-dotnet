@@ -67,14 +67,14 @@ namespace iText.Forms.Fields {
             TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT
                 , DUMMY_NAME);
             builder.SetPage(5);
-            PdfFormAnnotation formFieldAnnot = new _PdfFormAnnotation_79((PdfDictionary)new PdfDictionary().MakeIndirect
+            PdfFormAnnotation formFieldAnnot = new _PdfFormAnnotation_77((PdfDictionary)new PdfDictionary().MakeIndirect
                 (DUMMY_DOCUMENT));
             PdfFormField formField = PdfFormCreator.CreateFormField(DUMMY_DOCUMENT).AddKid(formFieldAnnot);
             builder.SetPageToField(formField);
         }
 
-        private sealed class _PdfFormAnnotation_79 : PdfFormAnnotation {
-            public _PdfFormAnnotation_79(PdfDictionary baseArg1)
+        private sealed class _PdfFormAnnotation_77 : PdfFormAnnotation {
+            public _PdfFormAnnotation_77(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 

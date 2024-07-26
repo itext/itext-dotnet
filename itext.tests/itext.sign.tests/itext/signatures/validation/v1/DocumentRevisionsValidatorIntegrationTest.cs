@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
@@ -34,7 +33,6 @@ using iText.Test;
 
 namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("CreateParametersTestFixtureData")]
     public class DocumentRevisionsValidatorIntegrationTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/DocumentRevisionsValidatorIntegrationTest/";
@@ -46,37 +44,23 @@ namespace iText.Signatures.Validation.V1 {
         private readonly ValidationContext validationContext = new ValidationContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
             , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
 
-        private readonly bool continueValidationAfterFail;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
+        public virtual void SetUp(bool continueValidationAfterFail) {
             builder = new ValidatorChainBuilder();
             builder.GetProperties().SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), continueValidationAfterFail
                 );
-        }
-
-        public DocumentRevisionsValidatorIntegrationTest(Object continueValidationAfterFail) {
-            this.continueValidationAfterFail = (bool)continueValidationAfterFail;
-        }
-
-        public DocumentRevisionsValidatorIntegrationTest(Object[] array)
-            : this(array[0]) {
         }
 
         public static IEnumerable<Object[]> CreateParameters() {
             return JavaUtil.ArraysAsList(new Object[] { false }, new Object[] { true });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> CreateParametersTestFixtureData() {
-            return CreateParameters().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void NoSignaturesDocTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void NoSignaturesDocTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noSignaturesDoc.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -89,8 +73,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinearizedDocTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void LinearizedDocTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "linearizedDoc.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -103,8 +88,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MultipleRevisionsDocumentWithoutPermissionsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void MultipleRevisionsDocumentWithoutPermissionsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocumentWithoutPermissions.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -115,8 +101,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MultipleRevisionsDocumentWithPermissionsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void MultipleRevisionsDocumentWithPermissionsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocumentWithPermissions.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -127,8 +114,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TwoCertificationSignaturesTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TwoCertificationSignaturesTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "twoCertificationSignatures.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -151,8 +139,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SignatureNotFoundTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureNotFoundTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureNotFound.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -165,8 +154,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void DifferentFieldLockLevelsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void DifferentFieldLockLevelsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "differentFieldLockLevels.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -180,8 +170,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockLevelIncreaseTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockLevelIncreaseTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockLevelIncrease.pdf"))
                 ) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -195,8 +186,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CertificationSignatureAfterApprovalTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void CertificationSignatureAfterApprovalTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "certificationSignatureAfterApproval.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -207,8 +199,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockChildModificationAllowedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockChildModificationAllowedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockChildModificationAllowed.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -217,8 +210,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockChildModificationNotAllowedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockChildModificationNotAllowedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockChildModificationNotAllowed.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -230,8 +224,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockRootModificationAllowedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockRootModificationAllowedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockRootModificationAllowed.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -240,8 +235,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockRootModificationNotAllowedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockRootModificationNotAllowedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockRootModificationNotAllowed.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -253,8 +249,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockSequentialExcludeValuesTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockSequentialExcludeValuesTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockSequentialExcludeValues.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -266,8 +263,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockSequentialIncludeValuesTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockSequentialIncludeValuesTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockSequentialIncludeValues.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -288,8 +286,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FieldLockKidsRemovedAndAddedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FieldLockKidsRemovedAndAddedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockKidsRemovedAndAdded.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -310,8 +309,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PageAndParentIndirectReferenceModifiedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void PageAndParentIndirectReferenceModifiedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pageAndParentIndirectReferenceModified.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -323,8 +323,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LockedSignatureFieldModifiedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void LockedSignatureFieldModifiedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "lockedSignatureFieldModified.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -336,8 +337,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LockedFieldRemoveAddKidsEntryTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void LockedFieldRemoveAddKidsEntryTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "lockedFieldRemoveAddKidsEntry.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -358,8 +360,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemovedLockedFieldTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemovedLockedFieldTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removedLockedField.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -370,8 +373,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void DanglingWidgetAnnotationTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void DanglingWidgetAnnotationTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "danglingWidgetAnnotation.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -386,8 +390,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemoveAllThePageAnnotationsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemoveAllThePageAnnotationsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeAllAnnots.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -398,8 +403,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemoveAllTheFieldAnnotationsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemoveAllTheFieldAnnotationsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeFieldAnnots.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -410,8 +416,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SimpleTaggedDocTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SimpleTaggedDocTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simpleTaggedDoc.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -420,8 +427,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocAddAndRemoveAnnotationsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocAddAndRemoveAnnotationsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocAddAndRemoveAnnotations.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -435,8 +443,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocRemoveStructTreeElementTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocRemoveStructTreeElementTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocRemoveStructTreeElement.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -447,8 +456,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocRemoveStructTreeAnnotationTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocRemoveStructTreeAnnotationTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocRemoveStructTreeAnnotation.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -459,8 +469,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocModifyAnnotationTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocModifyAnnotationTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocModifyAnnotation.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -470,8 +481,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocModifyAnnotationAndStructElementTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocModifyAnnotationAndStructElementTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocModifyAnnotationAndStructElement.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -484,8 +496,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocModifyAnnotationAndStructContentTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocModifyAnnotationAndStructContentTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocModifyAnnotationAndStructContent.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -495,8 +508,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TaggedDocModifyStructElementTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void TaggedDocModifyStructElementTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocModifyStructElement.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -509,8 +523,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemoveUnnamedFieldTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemoveUnnamedFieldTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeUnnamedField.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
@@ -525,8 +540,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FullCompressionModeLevel1Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FullCompressionModeLevel1Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionModeLevel1.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -537,8 +553,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FullCompressionModeLevel2Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FullCompressionModeLevel2Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionModeLevel2.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -550,8 +567,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FullCompressionModeLevel3Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FullCompressionModeLevel3Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionModeLevel3.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();

@@ -72,12 +72,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_123());
+            framework.AddSuppliers(new _Generator_122());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_123 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_123() {
+        private sealed class _Generator_122 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_122() {
             }
 
             public IBlockElement Generate() {

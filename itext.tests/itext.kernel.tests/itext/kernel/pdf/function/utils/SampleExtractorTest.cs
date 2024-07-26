@@ -22,13 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Function.Utils {
     [NUnit.Framework.Category("IntegrationTest")]
-    [NUnit.Framework.TestFixtureSource("SamplesInfoTestFixtureData")]
     public class SampleExtractorTest : ExtendedITextTest {
         private const String PARAMETERS_NAME_PATTERN = "{0}bitsPerSample";
 
@@ -51,25 +49,8 @@ namespace iText.Kernel.Pdf.Function.Utils {
                 9 << 24) | (10 << 20) | (11 << 16) | (12 << 12) | (13 << 8) | (14 << 4) | 15 } } });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> SamplesInfoTestFixtureData() {
-            return SamplesInfo().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        private readonly int bitsPerSample;
-
-        private readonly long[] expected;
-
-        public SampleExtractorTest(Object bitsPerSample, Object expected) {
-            this.bitsPerSample = (int)bitsPerSample;
-            this.expected = (long[])expected;
-        }
-
-        public SampleExtractorTest(Object[] array)
-            : this(array[0], array[1]) {
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestSamplesExtraction() {
+        [NUnit.Framework.TestCaseSource("SamplesInfo")]
+        public virtual void TestSamplesExtraction(int bitsPerSample, long[] expected) {
             long[] actual = new long[(SAMPLES.Length << 3) / bitsPerSample];
             NUnit.Framework.Assert.AreEqual(expected.Length, actual.Length);
             AbstractSampleExtractor extractor = AbstractSampleExtractor.CreateExtractor(bitsPerSample);

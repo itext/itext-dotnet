@@ -112,21 +112,21 @@ namespace iText.Forms.Form.Renderer {
             IRenderer paragraphRender = inputFieldRendererWithoutPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             InputField inputFieldWithEmptyPlaceholder = new InputField("");
-            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_130());
+            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_129());
             InputFieldRenderer inputFieldRendererWithEmptyPlaceholder = new InputFieldRenderer(inputFieldWithEmptyPlaceholder
                 );
             paragraphRender = inputFieldRendererWithEmptyPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             NUnit.Framework.Assert.IsFalse(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
             InputField inputFieldWithPlaceholder = new InputField("");
-            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_143());
+            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_142());
             InputFieldRenderer inputFieldRendererWithPlaceholder = new InputFieldRenderer(inputFieldWithPlaceholder);
             paragraphRender = inputFieldRendererWithPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
         }
 
-        private sealed class _Paragraph_130 : Paragraph {
-            public _Paragraph_130() {
+        private sealed class _Paragraph_129 : Paragraph {
+            public _Paragraph_129() {
             }
 
             public override IRenderer CreateRendererSubTree() {
@@ -134,8 +134,8 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        private sealed class _Paragraph_143 : Paragraph {
-            public _Paragraph_143() {
+        private sealed class _Paragraph_142 : Paragraph {
+            public _Paragraph_142() {
             }
 
             public override bool IsEmpty() {

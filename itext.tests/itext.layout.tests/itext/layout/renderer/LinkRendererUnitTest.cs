@@ -32,14 +32,14 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            LinkRenderer linkRenderer = new _LinkRenderer_47(new Link("test", new PdfLinkAnnotation(new Rectangle(0, 0
+            LinkRenderer linkRenderer = new _LinkRenderer_46(new Link("test", new PdfLinkAnnotation(new Rectangle(0, 0
                 ))));
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(LinkRenderer), linkRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _LinkRenderer_47 : LinkRenderer {
-            public _LinkRenderer_47(Link baseArg1)
+        private sealed class _LinkRenderer_46 : LinkRenderer {
+            public _LinkRenderer_46(Link baseArg1)
                 : base(baseArg1) {
             }
         }

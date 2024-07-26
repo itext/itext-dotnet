@@ -73,11 +73,11 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            CrlClientOnline testCrlClient = new _CrlClientOnline_95();
+            CrlClientOnline testCrlClient = new _CrlClientOnline_94();
             MemoryStream outputStream = new MemoryStream();
             PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
             padesSigner.SetCrlClient(testCrlClient);
-            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_108(crlCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_107(crlCertFileName
                 , rootCrlFileName);
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
             IX509Certificate[] signChain = new IX509Certificate[] { signCert, rootCert };
@@ -93,8 +93,8 @@ namespace iText.Signatures.Sign {
                 );
         }
 
-        private sealed class _CrlClientOnline_95 : CrlClientOnline {
-            public _CrlClientOnline_95() {
+        private sealed class _CrlClientOnline_94 : CrlClientOnline {
+            public _CrlClientOnline_94() {
             }
 
             protected internal override Stream GetCrlResponse(IX509Certificate cert, Uri urlt) {
@@ -105,8 +105,8 @@ namespace iText.Signatures.Sign {
             }
         }
 
-        private sealed class _IssuingCertificateRetriever_108 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_108(String crlCertFileName, String rootCrlFileName) {
+        private sealed class _IssuingCertificateRetriever_107 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_107(String crlCertFileName, String rootCrlFileName) {
                 this.crlCertFileName = crlCertFileName;
                 this.rootCrlFileName = rootCrlFileName;
             }

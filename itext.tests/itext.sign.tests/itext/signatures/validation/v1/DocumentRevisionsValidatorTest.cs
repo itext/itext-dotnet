@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
@@ -34,7 +33,6 @@ using iText.Test;
 
 namespace iText.Signatures.Validation.V1 {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    [NUnit.Framework.TestFixtureSource("CreateParametersTestFixtureData")]
     public class DocumentRevisionsValidatorTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/v1/DocumentRevisionsValidatorTest/";
@@ -46,37 +44,23 @@ namespace iText.Signatures.Validation.V1 {
         private readonly ValidationContext validationContext = new ValidationContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
             , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
 
-        private readonly bool continueValidationAfterFail;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
+        public virtual void SetUp(bool continueValidationAfterFail) {
             builder = new ValidatorChainBuilder();
             builder.GetProperties().SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), continueValidationAfterFail
                 );
-        }
-
-        public DocumentRevisionsValidatorTest(Object continueValidationAfterFail) {
-            this.continueValidationAfterFail = (bool)continueValidationAfterFail;
-        }
-
-        public DocumentRevisionsValidatorTest(Object[] array)
-            : this(array[0]) {
         }
 
         public static IEnumerable<Object[]> CreateParameters() {
             return JavaUtil.ArraysAsList(new Object[] { false }, new Object[] { true });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> CreateParametersTestFixtureData() {
-            return CreateParameters().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MultipleRevisionsDocumentLevel1Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void MultipleRevisionsDocumentLevel1Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -101,8 +85,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void HugeDocumentTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void HugeDocumentTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "hugeDocument.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
@@ -116,8 +101,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ExtensionsModificationsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void ExtensionsModificationsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "extensionsModifications.pdf")
                 )) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -160,8 +146,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CompletelyInvalidDocumentTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void CompletelyInvalidDocumentTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "completelyInvalidDocument.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -178,8 +165,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MakeFontDirectAndIndirectTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void MakeFontDirectAndIndirectTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "makeFontDirectAndIndirect.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -209,8 +197,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RandomEntryAddedTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RandomEntryAddedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryAdded.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
@@ -227,8 +216,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RandomEntryWithoutUsageTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RandomEntryWithoutUsageTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "randomEntryWithoutUsage.pdf")
                 )) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator().SetAccessPermissions(AccessPermissions
@@ -246,8 +236,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ChangeExistingFontTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void ChangeExistingFontTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "changeExistingFont.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
@@ -263,8 +254,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ChangeExistingFontAndAddAsDssTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void ChangeExistingFontAndAddAsDssTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "changeExistingFontAndAddAsDss.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -282,8 +274,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void FillInFieldAtLevel1Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void FillInFieldAtLevel1Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fillInField.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.NO_CHANGES_PERMITTED);
@@ -301,8 +294,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MultipleRevisionsDocumentLevel2Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void MultipleRevisionsDocumentLevel2Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument2.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -330,8 +324,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemovePermissionsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemovePermissionsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removePermissions.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -348,8 +343,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemoveDSSTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemoveDSSTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeDSS.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -366,8 +362,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemoveAcroformTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemoveAcroformTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeAcroform.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -384,8 +381,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RemoveFieldTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RemoveFieldTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "removeField.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -402,8 +400,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void RenameFieldTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void RenameFieldTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "renameField.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -421,8 +420,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddTextFieldTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void AddTextFieldTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addTextField.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -441,8 +441,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddUnsignedSignatureFieldTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void AddUnsignedSignatureFieldTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addUnsignedSignatureField.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -462,8 +463,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void BrokenSignatureFieldDictionaryTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void BrokenSignatureFieldDictionaryTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "brokenSignatureFieldDictionary.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -484,8 +486,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ModifyPageAnnotsTest() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void ModifyPageAnnotsTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifyPageAnnots.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
@@ -502,8 +505,9 @@ namespace iText.Signatures.Validation.V1 {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MultipleRevisionsDocumentLevel3Test() {
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void MultipleRevisionsDocumentLevel3Test(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument3.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
