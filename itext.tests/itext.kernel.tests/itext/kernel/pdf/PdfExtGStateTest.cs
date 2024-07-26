@@ -86,5 +86,58 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationDocument, sourceFolder + "cmp_egsTest1.pdf"
                 , destinationFolder, "diff_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest1() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            pdfExtGState.SetUseBlackPointCompensation(true);
+            NUnit.Framework.Assert.IsTrue(pdfExtGState.IsBlackPointCompensationUsed());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest2() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            pdfExtGState.SetUseBlackPointCompensation(false);
+            NUnit.Framework.Assert.IsFalse(pdfExtGState.IsBlackPointCompensationUsed());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest3() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            PdfObject useBlackPoint = pdfExtGState.GetPdfObject().GetAsName(PdfName.UseBlackPtComp);
+            NUnit.Framework.Assert.IsNull(useBlackPoint);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest4() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            PdfDictionary pdfExtGStateObj = pdfExtGState.GetPdfObject();
+            pdfExtGStateObj.Put(PdfName.UseBlackPtComp, PdfName.ON);
+            NUnit.Framework.Assert.IsTrue(pdfExtGState.IsBlackPointCompensationUsed());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest5() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            PdfDictionary pdfExtGStateObj = pdfExtGState.GetPdfObject();
+            pdfExtGStateObj.Put(PdfName.UseBlackPtComp, PdfName.OFF);
+            NUnit.Framework.Assert.IsFalse(pdfExtGState.IsBlackPointCompensationUsed());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest6() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            pdfExtGState.SetUseBlackPointCompensation(true);
+            PdfName useBlackPtComp = pdfExtGState.GetPdfObject().GetAsName(PdfName.UseBlackPtComp);
+            NUnit.Framework.Assert.AreEqual(PdfName.ON, useBlackPtComp, "PdfName is different from expected.");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BlackPointCompensationTest7() {
+            PdfExtGState pdfExtGState = new PdfExtGState();
+            pdfExtGState.SetUseBlackPointCompensation(false);
+            PdfName useBlackPtComp = pdfExtGState.GetPdfObject().GetAsName(PdfName.UseBlackPtComp);
+            NUnit.Framework.Assert.AreEqual(PdfName.OFF, useBlackPtComp, "PdfName is different from expected.");
+        }
     }
 }
