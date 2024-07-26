@@ -179,6 +179,49 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CheckPoint_01_005_TextGlyphLineInBadStructure() {
+            String outPdf = DESTINATION_FOLDER + "checkPoint_01_005_TextGlyphLineInBadStructure.pdf";
+            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            PdfCanvas canvas = new _PdfCanvas_249(pdfDoc.AddNewPage());
+            // disable the checkIsoConformance call check by simulating  generating not tagged content
+            // same as in annotations of formfields.
+            GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
+            TagTreePointer pointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+            pointer.AddTag(StandardRoles.DIV);
+            pointer.SetPageForTagging(pdfDoc.GetFirstPage());
+            canvas.SaveState();
+            canvas.OpenTag(pointer.GetTagReference());
+            canvas.OpenTag(new CanvasArtifact());
+            pointer.AddTag(StandardRoles.P);
+            canvas.OpenTag(pointer.GetTagReference());
+            canvas.SetFontAndSize(font, 12);
+            canvas.BeginText();
+            canvas.MoveText(200, 200);
+            canvas.SetColor(ColorConstants.RED, true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+                canvas.ShowText(glyphLine);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA, 
+                e.Message);
+        }
+
+        private sealed class _PdfCanvas_249 : PdfCanvas {
+            public _PdfCanvas_249(PdfPage baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override PdfCanvas OpenTag(CanvasTag tag) {
+                this.SetDrawingOnPage(false);
+                base.OpenTag(tag);
+                this.SetDrawingOnPage(true);
+                return this;
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsArtifact() {
             String outPdf = DESTINATION_FOLDER + "01_005_TextGlyphLineContentIsArtifact.pdf";
             PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));

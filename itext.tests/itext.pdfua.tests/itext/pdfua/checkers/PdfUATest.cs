@@ -25,6 +25,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -34,9 +35,12 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Pdfua;
 using iText.Pdfua.Exceptions;
 using iText.Test;
@@ -458,6 +462,262 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_manualPdfUaCreation.pdf"
                 , DESTINATION_FOLDER, "diff_"));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void CopyPageAsFormXobjectWithTaggedPdf() {
+            String outPdf = DESTINATION_FOLDER + "xobjectTesting.pdf";
+            String inputPdf = SOURCE_FOLDER + "cmp_manualPdfUaCreation.pdf";
+            String cmpFIle = SOURCE_FOLDER + "cmp_xobjectTesting.pdf";
+            PdfUATestPdfDocument doc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
+            PdfDocument inputDoc = new PdfDocument(new PdfReader(inputPdf));
+            PdfFormXObject xObject = inputDoc.GetFirstPage().CopyAsFormXObject(doc);
+            Document document = new Document(doc);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(xObject);
+            img.GetAccessibilityProperties().SetAlternateDescription("Some description");
+            document.Add(img);
+            document.Close();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpFIle, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            // We expect verapdf to fail because we are embedding tagged content which contains artifacts
+            NUnit.Framework.Assert.IsNotNull("We expect vera pdf to fail, because we are embedding tagged" + " content which contains artifacts into a tagged item"
+                , validator.Validate(outPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        public virtual void CopyPageAsFormXobjectWithUnTaggedContentButInvalidBecauseOfFont() {
+            //itext should thrown an exception here but it does not.
+            // because even if it's not tagged the inner content stream is not compliant as the font is not embeded
+            String outputPdf = DESTINATION_FOLDER + "copyPageAsFormXobjectWithUnTaggedPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_copyPageAsFormXobjectWithUnTaggedPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            Document document = new Document(dummyDoc);
+            document.Add(new Paragraph("Hello World!"));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(xObject);
+            img.GetAccessibilityProperties().SetAlternateDescription("Some description");
+            Document doc = new Document(pdfDoc);
+            doc.Add(img);
+            doc.Close();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNotNull("Fails are expected because the content inside the xobject isn't valid because "
+                 + "of not embedded font, and iText doesn't parse the content streams", validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [NUnit.Framework.Test]
+        public virtual void CopyPageAsFormWithUntaggedContentAndCorrectFont() {
+            String outputPdf = DESTINATION_FOLDER + "copyPageAsFormWithCorrectFontXobjectWithUnTaggedPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_copyPageAsFormWithCorrectFontXobjectWithUnTaggedPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            Document document = new Document(dummyDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
+            document.Add(new Paragraph("Hello World!").SetFont(font));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(xObject);
+            img.GetAccessibilityProperties().SetAlternateDescription("Some description");
+            Document doc = new Document(pdfDoc);
+            doc.Add(img);
+            doc.Close();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void ManuallyAddToCanvasWithUnTaggedContentButBadFont() {
+            String outputPdf = DESTINATION_FOLDER + "manuallyAddToCanvasWithUnTaggedPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_manuallyAddToCanvasWithUnTaggedPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            Document document = new Document(dummyDoc);
+            document.Add(new Paragraph("Hello World!"));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.BeginMarkedContent(PdfName.Artifact);
+            canvas.AddXObject(xObject);
+            canvas.EndMarkedContent();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNotNull("Content of the xobject is not valid causing it to be" + " an non compliant"
+                , validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void ManuallyAddToCanvasCorrectFontAndUnTaggedContent() {
+            String outputPdf = DESTINATION_FOLDER + "manuallyAddToCanvasWithUnAndCorrectFontUnTaggedPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_manuallyAddToCanvasWithUnAndCorrectFontUnTaggedPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            Document document = new Document(dummyDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            document.Add(new Paragraph("Hello World!").SetFont(font));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer().AddTag(StandardRoles.DIV
+                );
+            tagPointer.SetPageForTagging(pdfDoc.GetPage(1));
+            canvas.OpenTag(tagPointer.GetTagReference());
+            canvas.AddXObject(xObject);
+            canvas.CloseTag();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactUnTaggedContent() {
+            //Now we are again adding untagged content with some artifacts and embedded font's so we should also be fine
+            String outputPdf = DESTINATION_FOLDER + "manuallyAddToCanvasWithUnAndCorrectFontAndArtifactUnTaggedPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_manuallyAddToCanvasWithUnAndCorrectFontUnAndArtifactTaggedPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            Document document = new Document(dummyDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            document.Add(new Paragraph("Hello World!").SetFont(font).SetBorder(new SolidBorder(ColorConstants.CYAN, 2)
+                ));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer().AddTag(StandardRoles.DIV
+                );
+            tagPointer.SetPageForTagging(pdfDoc.GetPage(1));
+            canvas.OpenTag(tagPointer.GetTagReference());
+            canvas.AddXObject(xObject);
+            canvas.CloseTag();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContent() {
+            String outputPdf = DESTINATION_FOLDER + "manuallyAddToCanvasWithUnAndCorrectFontAndArtifactUnPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_manuallyAddToCanvasWithUnAndCorrectFontUnAndArtifactPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            dummyDoc.SetTagged();
+            Document document = new Document(dummyDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            document.Add(new Paragraph("Hello World!").SetFont(font).SetBorder(new SolidBorder(ColorConstants.CYAN, 2)
+                ));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer().AddTag(StandardRoles.DIV
+                );
+            tagPointer.SetPageForTagging(pdfDoc.GetPage(1));
+            canvas.OpenTag(tagPointer.GetTagReference());
+            canvas.AddXObject(xObject);
+            canvas.CloseTag();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNotNull("The content is non compliant because it contains both artifacts," + " and real content"
+                , validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideArtifact() {
+            // We are adding tagged content to an artifact. Looks like Verapdf doesn't check xobject stream at all because
+            // page content is marked as artifact. We think it's wrong though.
+            String outputPdf = DESTINATION_FOLDER + "manuallyAddToCanvasWithUnAndCorrectFontAndArtifactInsideArtPdf.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_manuallyAddToCanvasWithUnAndCorrectFontUnAndArtifacInsideArttPdf.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            dummyDoc.SetTagged();
+            Document document = new Document(dummyDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            document.Add(new Paragraph("Hello World!").SetFont(font).SetBorder(new SolidBorder(ColorConstants.CYAN, 2)
+                ));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.OpenTag(new CanvasArtifact());
+            canvas.AddXObject(xObject);
+            canvas.CloseTag();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-8509")]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent() {
+            //We are adding untagged content we should throw an exception
+            String outputPdf = DESTINATION_FOLDER + "manuallyAddToCanvasWithAndCorrectFontTaggedAndArtifactInsidedUntaggedContent.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_manuallyAddToCanvasWithAndCorrectFontTaggedAndArtifactInsidedUntaggedContent.pdf";
+            MemoryStream os = new MemoryStream();
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
+            dummyDoc.SetTagged();
+            Document document = new Document(dummyDoc);
+            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                );
+            document.Add(new Paragraph("Hello World!").SetFont(font).SetBorder(new SolidBorder(ColorConstants.CYAN, 2)
+                ));
+            document.Close();
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
+            PdfFormXObject xObject = new PdfDocument(new PdfReader(new MemoryStream(os.ToArray()))).GetFirstPage().CopyAsFormXObject
+                (pdfDoc);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.AddXObject(xObject);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
+                ));
+            VeraPdfValidator validator = new VeraPdfValidator();
+            NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
         }
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     }
