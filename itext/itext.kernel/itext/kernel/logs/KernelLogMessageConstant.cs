@@ -90,6 +90,10 @@ namespace iText.Kernel.Logs {
 
         public const String XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED = "XObject has no StructParents index in its stream, so index is recreated";
 
+        //TODO DEVSIX-8490 remove this log message when implemented
+        public const String DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED = "Duplicated entries in order array are " + 
+            "removed";
+
         private KernelLogMessageConstant() {
         }
         //Private constructor will prevent the instantiation of this class directly

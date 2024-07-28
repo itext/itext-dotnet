@@ -24,6 +24,8 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
+using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -353,6 +355,23 @@ namespace iText.Kernel.Pdf.Layer {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "output_layered.pdf", 
                 sourceFolder + "cmp_output_layered.pdf", destinationFolder, "diff"));
+        }
+
+        //TODO DEVSIX-8490 remove this test when implemented
+        [NUnit.Framework.Test]
+        public virtual void AddSecondParentlayerTest() {
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument doc = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfLayer childLayer = new PdfLayer("childLayer", doc);
+                    PdfLayer parentLayer1 = new PdfLayer("firstParentLayer", doc);
+                    PdfLayer parentLayer2 = new PdfLayer("secondParentLayer", doc);
+                    parentLayer1.AddChild(childLayer);
+                    PdfIndirectReference @ref = childLayer.GetIndirectReference();
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => parentLayer2.AddChild(childLayer));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_ADD_SECOND_PARENT_LAYER
+                        , @ref.ToString()), e.Message);
+                }
+            }
         }
     }
 }
