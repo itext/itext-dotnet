@@ -483,6 +483,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpFIle, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             // We expect verapdf to fail because we are embedding tagged content which contains artifacts
             NUnit.Framework.Assert.IsNotNull("We expect vera pdf to fail, because we are embedding tagged" + " content which contains artifacts into a tagged item"
                 , validator.Validate(outPdf));
@@ -513,6 +514,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNotNull("Fails are expected because the content inside the xobject isn't valid because "
                  + "of not embedded font, and iText doesn't parse the content streams", validator.Validate(outputPdf));
         }
@@ -542,6 +544,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
         }
 
@@ -566,6 +569,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNotNull("Content of the xobject is not valid causing it to be" + " an non compliant"
                 , validator.Validate(outputPdf));
         }
@@ -596,6 +600,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
         }
 
@@ -627,6 +632,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
         }
 
@@ -658,6 +664,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNotNull("The content is non compliant because it contains both artifacts," + " and real content"
                 , validator.Validate(outputPdf));
         }
@@ -689,6 +696,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
         }
 
@@ -717,6 +725,7 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputPdf, cmpFile, DESTINATION_FOLDER, "diff_"
                 ));
             VeraPdfValidator validator = new VeraPdfValidator();
+            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(validator.Validate(outputPdf));
         }
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
