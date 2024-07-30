@@ -193,7 +193,10 @@ namespace iText.Signatures.Validation.V1 {
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
-                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                    ).HasNumberOfFailures(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.NOT_ALLOWED_CERTIFICATION_SIGNATURE).WithStatus(ReportItem.ReportItemStatus
+                    .INDETERMINATE)));
                 NUnit.Framework.Assert.AreEqual(AccessPermissions.FORM_FIELDS_MODIFICATION, validator.GetAccessPermissions
                     ());
             }

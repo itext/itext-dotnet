@@ -136,6 +136,11 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String NOT_ALLOWED_CERTIFICATION_SIGNATURE = "Certification signature is applied after " + 
+            "the approval signature which is not allowed.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String OBJECT_REMOVED = "Object \"{0}\", which is not allowed to be removed, was removed from the document through XREF table.";
 //\endcond
 
@@ -403,19 +408,25 @@ namespace iText.Signatures.Validation.V1 {
             for (int i = 0; i < documentRevisions.Count; i++) {
                 if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], currentSignatureName, document
                     , report)) {
-                    documentSigned = true;
                     if (IsCertificationSignature(currentSignature)) {
                         if (certificationSignatureFound) {
                             report.AddReportItem(new ReportItem(DOC_MDP_CHECK, TOO_MANY_CERTIFICATION_SIGNATURES, ReportItem.ReportItemStatus
                                 .INDETERMINATE));
                         }
                         else {
-                            certificationSignatureFound = true;
-                            if (updateAccessPermissions) {
-                                UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                            if (documentSigned) {
+                                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, NOT_ALLOWED_CERTIFICATION_SIGNATURE, ReportItem.ReportItemStatus
+                                    .INDETERMINATE));
+                            }
+                            else {
+                                certificationSignatureFound = true;
+                                if (updateAccessPermissions) {
+                                    UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                                }
                             }
                         }
                     }
+                    documentSigned = true;
                     if (updateAccessPermissions) {
                         UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(currentSignatureName
                             ), report);
