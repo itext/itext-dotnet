@@ -50,7 +50,7 @@ namespace iText.Signatures {
         /// <c>OcspClient</c>.
         /// </summary>
         /// <param name="verifier">will be used for response verification.</param>
-        [System.ObsoleteAttribute(@"starting from 8.0.5. OcspClientBouncyCastle() should be used instead. If required, iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse can be checked using iText.Signatures.Validation.V1.OCSPValidator class."
+        [System.ObsoleteAttribute(@"starting from 8.0.5. OcspClientBouncyCastle() should be used instead. If required, iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse can be checked using iText.Signatures.Validation.OCSPValidator class."
             )]
         public OcspClientBouncyCastle(OCSPVerifier verifier) {
             this.verifier = verifier;

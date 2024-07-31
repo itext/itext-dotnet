@@ -30,7 +30,7 @@ namespace iText.Signatures {
     /// Verifies a certificate against a <c>KeyStore</c>
     /// containing trusted anchors.
     /// </summary>
-    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.CertificateChainValidator should be used instead."
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.CertificateChainValidator should be used instead."
         )]
     public class RootStoreVerifier : CertificateVerifier {
         /// <summary>A key store against which certificates can be verified.</summary>

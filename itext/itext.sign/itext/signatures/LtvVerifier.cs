@@ -39,7 +39,7 @@ using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
-    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.SignatureValidator should be used instead."
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.SignatureValidator should be used instead."
         )]
     public class LtvVerifier : RootStoreVerifier {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory

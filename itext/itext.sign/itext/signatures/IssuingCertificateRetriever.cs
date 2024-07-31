@@ -28,7 +28,7 @@ using iText.Commons;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Logs;
-using iText.Signatures.Validation.V1;
+using iText.Signatures.Validation;
 
 namespace iText.Signatures {
     /// <summary>
@@ -232,12 +232,12 @@ namespace iText.Signatures {
 
         /// <summary>
         /// Gets
-        /// <see cref="iText.Signatures.Validation.V1.TrustedCertificatesStore"/>
+        /// <see cref="iText.Signatures.Validation.TrustedCertificatesStore"/>
         /// to be used to provide more complex trusted certificates configuration.
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iText.Signatures.Validation.V1.TrustedCertificatesStore"/>
+        /// <see cref="iText.Signatures.Validation.TrustedCertificatesStore"/>
         /// storage
         /// </returns>
         public virtual TrustedCertificatesStore GetTrustedCertificatesStore() {
