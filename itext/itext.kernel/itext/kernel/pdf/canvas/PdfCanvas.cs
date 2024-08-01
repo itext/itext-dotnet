@@ -1692,6 +1692,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
         public virtual PdfXObject AddImageWithTransformationMatrix(ImageData image, float a, float b, float c, float
              d, float e, float f) {
+            CheckIsoConformanceWritingOnContent();
             return AddImageWithTransformationMatrix(image, a, b, c, d, e, f, false);
         }
 
@@ -1723,6 +1724,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
         public virtual PdfXObject AddImageWithTransformationMatrix(ImageData image, float a, float b, float c, float
              d, float e, float f, bool asInline) {
+            CheckIsoConformanceWritingOnContent();
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreateFormXObject(document);
@@ -1771,6 +1773,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     "/>
         public virtual PdfXObject AddImageFittedIntoRectangle(ImageData image, iText.Kernel.Geom.Rectangle rect, bool
              asInline) {
+            CheckIsoConformanceWritingOnContent();
             return AddImageWithTransformationMatrix(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.
                 GetY(), asInline);
         }
@@ -1790,6 +1793,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="asInline">true if to add image as in-line</param>
         /// <returns>the created imageXObject or null in case of in-line image (asInline = true)</returns>
         public virtual PdfXObject AddImageAt(ImageData image, float x, float y, bool asInline) {
+            CheckIsoConformanceWritingOnContent();
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
                 PdfXObject xObject = wmf.CreateFormXObject(document);
@@ -1833,6 +1837,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <seealso cref="ConcatMatrix(double, double, double, double, double, double)"/>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectWithTransformationMatrix(PdfXObject xObject, float
              a, float b, float c, float d, float e, float f) {
+            CheckIsoConformanceWritingOnContent();
             if (xObject is PdfFormXObject) {
                 return AddFormWithTransformationMatrix((PdfFormXObject)xObject, a, b, c, d, e, f, true);
             }
@@ -1856,6 +1861,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y">the vertical position of the xObject</param>
         /// <returns>the current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectAt(PdfXObject xObject, float x, float y) {
+            CheckIsoConformanceWritingOnContent();
             if (xObject is PdfFormXObject) {
                 return AddFormAt((PdfFormXObject)xObject, x, y);
             }
@@ -1883,6 +1889,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     "/>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObjectFittedIntoRectangle(PdfXObject xObject, iText.Kernel.Geom.Rectangle
              rect) {
+            CheckIsoConformanceWritingOnContent();
             if (xObject is PdfFormXObject) {
                 return AddFormFittedIntoRectangle((PdfFormXObject)xObject, rect);
             }
@@ -1916,6 +1923,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="xObject">the xObject to add</param>
         /// <returns>the current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas AddXObject(PdfXObject xObject) {
+            CheckIsoConformanceWritingOnContent();
             if (xObject is PdfFormXObject) {
                 return AddFormWithTransformationMatrix((PdfFormXObject)xObject, 1, 0, 0, 1, 0, 0, false);
             }
@@ -2111,6 +2119,7 @@ namespace iText.Kernel.Pdf.Canvas {
         protected internal virtual void AddInlineImage(PdfImageXObject imageXObject, float a, float b, float c, float
              d, float e, float f) {
             document.CheckIsoConformance(imageXObject.GetPdfObject(), IsoKey.INLINE_IMAGE, resources, contentStream);
+            CheckIsoConformanceWritingOnContent();
             SaveState();
             ConcatMatrix(a, b, c, d, e, f);
             PdfOutputStream os = contentStream.GetOutputStream();
