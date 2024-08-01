@@ -85,8 +85,8 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever = new IssuingCertificateRetriever();
             parameters = new SignatureValidationProperties();
             mockCertificateChainValidator = new MockChainValidator();
-            validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(parameters).WithIssuingCertificateRetriever
-                (certificateRetriever).WithCertificateChainValidator(mockCertificateChainValidator);
+            validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(parameters).WithIssuingCertificateRetrieverFactory
+                (() => certificateRetriever).WithCertificateChainValidatorFactory(() => mockCertificateChainValidator);
         }
 
         [NUnit.Framework.Test]
@@ -165,8 +165,9 @@ namespace iText.Signatures.Validation.V1 {
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
                 GetEncoded(checkCert, caCert, null)));
             ValidationReport report = new ValidationReport();
-            validatorChainBuilder.WithIssuingCertificateRetriever(new OCSPValidatorTest.TestIssuingCertificateRetriever
-                (wrongRootCertFileName));
+            OCSPValidatorTest.TestIssuingCertificateRetriever wrongRootCertificateRetriever = new OCSPValidatorTest.TestIssuingCertificateRetriever
+                (wrongRootCertFileName);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => wrongRootCertificateRetriever);
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
                 .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
@@ -383,7 +384,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void CertificateRetrieverRetrieveIssuerCertificateFailureTest() {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             mockCertificateRetriever.OnRetrieveIssuerCertificateDo((c) => {
                 throw new Exception("Test retrieveMissingCertificates failure");
             }
@@ -398,7 +399,7 @@ namespace iText.Signatures.Validation.V1 {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
                 );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             mockCertificateRetriever.OnRetrieveOCSPResponderCertificateDo((c) => {
                 throw new Exception("Test retrieveMissingCertificates failure");
             }
@@ -413,7 +414,7 @@ namespace iText.Signatures.Validation.V1 {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
                 );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             mockCertificateRetriever.OnIsCertificateTrustedDo((c) => {
                 throw new Exception("Test isCertificateTrusted failure");
             }
@@ -428,7 +429,7 @@ namespace iText.Signatures.Validation.V1 {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
                 );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             mockCertificateRetriever.OnIsCertificateTrustedDo((c) => false);
             MockTrustedCertificatesStore mockTrustedStore = new MockTrustedCertificatesStore(certificateRetriever.GetTrustedCertificatesStore
                 ());

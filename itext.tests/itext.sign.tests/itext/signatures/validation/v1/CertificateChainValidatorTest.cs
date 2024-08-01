@@ -55,8 +55,9 @@ namespace iText.Signatures.Validation.V1 {
             mockRevocationDataValidator = new MockRevocationDataValidator();
             properties = new SignatureValidationProperties();
             certificateRetriever = new IssuingCertificateRetriever();
-            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).
-                WithSignatureValidationProperties(properties).WithRevocationDataValidator(mockRevocationDataValidator);
+            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever
+                ).WithSignatureValidationProperties(properties).WithRevocationDataValidatorFactory(() => mockRevocationDataValidator
+                );
         }
 
         [NUnit.Framework.Test]
@@ -524,7 +525,7 @@ namespace iText.Signatures.Validation.V1 {
                 throw new Exception("Test trust store failure");
             }
             );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
             certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert
                 ));
@@ -547,7 +548,7 @@ namespace iText.Signatures.Validation.V1 {
                 throw new Exception("Test issuer retrieval failure");
             }
             );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
             certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert
                 ));
@@ -605,7 +606,7 @@ namespace iText.Signatures.Validation.V1 {
             properties.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
             MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever(certificateRetriever
                 );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
             CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
             certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert
                 ));

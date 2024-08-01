@@ -64,7 +64,7 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void SetUp() {
             parameters = new SignatureValidationProperties();
             certificateRetriever = new IssuingCertificateRetriever();
-            builder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).WithSignatureValidationProperties
+            builder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever).WithSignatureValidationProperties
                 (parameters);
         }
 
@@ -305,7 +305,9 @@ namespace iText.Signatures.Validation.V1 {
                 ocspBuilder.SetThisUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(3)));
                 ocspBuilder.SetNextUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(30)));
                 TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, ocspBuilder);
-                builder.GetRevocationDataValidator().AddOcspClient(ocspClient);
+                RevocationDataValidator revocationDataValidator = builder.BuildRevocationDataValidator();
+                revocationDataValidator.AddOcspClient(ocspClient);
+                builder.WithRevocationDataValidatorFactory(() => revocationDataValidator);
                 parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                     .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
                     , CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(-2));
@@ -388,7 +390,7 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureSigningCertExpired.pdf"
                 ))) {
                 SignatureValidator signatureValidator = new ValidatorChainBuilder().WithTrustedCertificates(JavaUtil.ArraysAsList
-                    (trustedCerts)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator
+                    (trustedCerts)).WithRevocationDataValidatorFactory(() => new MockRevocationDataValidator()).BuildSignatureValidator
                     (document);
                 ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
@@ -407,8 +409,8 @@ namespace iText.Signatures.Validation.V1 {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDocWithTimestamp.pdf"))) {
                 SignatureValidator signatureValidator = new ValidatorChainBuilder().WithSignatureValidationProperties(new 
                     SignatureValidationProperties().SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All
-                    (), false)).WithRevocationDataValidator(new MockRevocationDataValidator()).BuildSignatureValidator(document
-                    );
+                    (), false)).WithRevocationDataValidatorFactory(() => new MockRevocationDataValidator()).BuildSignatureValidator
+                    (document);
                 ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                     ).HasNumberOfLogs(3).HasNumberOfFailures(2).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
@@ -436,7 +438,9 @@ namespace iText.Signatures.Validation.V1 {
             builder2.SetNextUpdate(DateTimeUtil.GetCalendar(currentDate.AddDays(30)));
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(rootCert, builder1).AddBuilderForCertIssuer
                 (intermediateCert, builder2);
-            builder.GetRevocationDataValidator().AddOcspClient(ocspClient);
+            RevocationDataValidator revocationDataValidator = builder.GetRevocationDataValidator().AddOcspClient(ocspClient
+                );
+            builder.WithRevocationDataValidatorFactory(() => revocationDataValidator);
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                 .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH);
         }

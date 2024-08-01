@@ -69,8 +69,9 @@ namespace iText.Signatures.Validation.V1 {
             certificateRetriever = new IssuingCertificateRetriever();
             SignatureValidationProperties parameters = new SignatureValidationProperties();
             mockChainValidator = new MockChainValidator();
-            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).
-                WithSignatureValidationProperties(parameters).WithCertificateChainValidator(mockChainValidator);
+            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever
+                ).WithSignatureValidationProperties(parameters).WithCertificateChainValidatorFactory(() => mockChainValidator
+                );
         }
 
         [NUnit.Framework.Test]
@@ -227,12 +228,13 @@ namespace iText.Signatures.Validation.V1 {
             ValidationReport report = new ValidationReport();
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
+            CRLValidator validator = validatorChainBuilder.GetCRLValidator();
             // Validate full CRL.
-            validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
-                (FileUtil.GetInputStreamForFile(fullCrlPath)), TimeTestUtil.TEST_DATE_TIME);
+            validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile
+                (fullCrlPath)), TimeTestUtil.TEST_DATE_TIME);
             // Validate CRL with onlySomeReasons.
-            validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
-                (new MemoryStream(builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+            validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
+                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
@@ -336,8 +338,8 @@ namespace iText.Signatures.Validation.V1 {
                 throw new Exception("just testing");
             }
             );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetriever);
-            validatorChainBuilder.WithCRLValidator(new CRLValidator(validatorChainBuilder));
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever);
+            validatorChainBuilder.WithCRLValidatorFactory(() => new CRLValidator(validatorChainBuilder));
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((l) => l.WithMessage(CRLValidator.CRL_ISSUER_REQUEST_FAILED)));

@@ -79,8 +79,8 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void SetUp() {
             certificateRetriever = new IssuingCertificateRetriever();
             parameters = new SignatureValidationProperties();
-            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).
-                WithSignatureValidationProperties(parameters);
+            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever
+                ).WithSignatureValidationProperties(parameters);
         }
 
         [NUnit.Framework.Test]

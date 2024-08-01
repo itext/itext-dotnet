@@ -72,9 +72,10 @@ namespace iText.Signatures.Validation.V1 {
             parameters = new SignatureValidationProperties();
             mockCertificateRetriever = new MockIssuingCertificateRetriever();
             mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
-            builder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(mockCertificateRetriever).WithSignatureValidationProperties
-                (parameters).WithCertificateChainValidator(mockCertificateChainValidator).WithRevocationDataValidator(
-                new MockRevocationDataValidator()).WithDocumentRevisionsValidator(mockDocumentRevisionsValidator);
+            builder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever
+                ).WithSignatureValidationProperties(parameters).WithCertificateChainValidatorFactory(() => mockCertificateChainValidator
+                ).WithRevocationDataValidatorFactory(() => new MockRevocationDataValidator()).WithDocumentRevisionsValidatorFactory
+                (() => mockDocumentRevisionsValidator);
         }
 
         [NUnit.Framework.Test]

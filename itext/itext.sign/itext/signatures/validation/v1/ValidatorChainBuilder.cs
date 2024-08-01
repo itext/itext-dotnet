@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Pdf;
@@ -34,17 +35,21 @@ namespace iText.Signatures.Validation.V1 {
     public class ValidatorChainBuilder {
         private SignatureValidationProperties properties;
 
-        private IssuingCertificateRetriever certificateRetriever;
+        private Func<IssuingCertificateRetriever> certificateRetrieverFactory;
 
-        private CertificateChainValidator certificateChainValidator;
+        private Func<CertificateChainValidator> certificateChainValidatorFactory;
 
-        private RevocationDataValidator revocationDataValidator;
+        private Func<RevocationDataValidator> revocationDataValidatorFactory;
 
-        private OCSPValidator ocspValidator;
+        private Func<OCSPValidator> ocspValidatorFactory;
 
-        private CRLValidator crlValidator;
+        private Func<CRLValidator> crlValidatorFactory;
 
-        private DocumentRevisionsValidator documentRevisionsValidator;
+        private Func<DocumentRevisionsValidator> documentRevisionsValidatorFactory;
+
+        private ICollection<IX509Certificate> trustedCertificates;
+
+        private ICollection<IX509Certificate> knownCertificates;
 
         /// <summary>
         /// Create a new
@@ -143,65 +148,65 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         /// <summary>
-        /// Use this instance of a
+        /// Use this factory method to create instances of
         /// <see cref="DocumentRevisionsValidator"/>
-        /// in the validation chain.
+        /// for use in the validation chain.
         /// </summary>
-        /// <param name="documentRevisionsValidator">the document revisions validator instance to use</param>
+        /// <param name="documentRevisionsValidatorFactory">the document revisions validator factory method to use</param>
         /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual ValidatorChainBuilder WithDocumentRevisionsValidator(DocumentRevisionsValidator documentRevisionsValidator
-            ) {
-            this.documentRevisionsValidator = documentRevisionsValidator;
+        public virtual ValidatorChainBuilder WithDocumentRevisionsValidatorFactory(Func<DocumentRevisionsValidator
+            > documentRevisionsValidatorFactory) {
+            this.documentRevisionsValidatorFactory = documentRevisionsValidatorFactory;
             return this;
         }
 
         /// <summary>
-        /// Use this instance of a
+        /// Use this factory method to create instances of
         /// <see cref="CRLValidator"/>
-        /// in the validation chain.
+        /// for use in the validation chain.
         /// </summary>
-        /// <param name="crlValidator">the CRLValidator instance to use</param>
+        /// <param name="crlValidatorFactory">the CRLValidatorFactory method to use</param>
         /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual ValidatorChainBuilder WithCRLValidator(CRLValidator crlValidator) {
-            this.crlValidator = crlValidator;
+        public virtual ValidatorChainBuilder WithCRLValidatorFactory(Func<CRLValidator> crlValidatorFactory) {
+            this.crlValidatorFactory = crlValidatorFactory;
             return this;
         }
 
         /// <summary>
-        /// Use this instance of a
+        /// Use this factory method to create instances of
         /// <see cref="OCSPValidator"/>
-        /// in the validation chain.
+        /// for use in the validation chain.
         /// </summary>
-        /// <param name="ocspValidator">the OCSPValidator instance to use</param>
+        /// <param name="ocspValidatorFactory">the OCSPValidatorFactory method to use</param>
         /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual ValidatorChainBuilder WithOCSPValidator(OCSPValidator ocspValidator) {
-            this.ocspValidator = ocspValidator;
+        public virtual ValidatorChainBuilder WithOCSPValidatorFactory(Func<OCSPValidator> ocspValidatorFactory) {
+            this.ocspValidatorFactory = ocspValidatorFactory;
             return this;
         }
 
         /// <summary>
-        /// Use this instance of a
+        /// Use this factory method to create instances of
         /// <see cref="RevocationDataValidator"/>
-        /// in the validation chain.
+        /// for use in the validation chain.
         /// </summary>
-        /// <param name="revocationDataValidator">the RevocationDataValidator instance to use</param>
+        /// <param name="revocationDataValidatorFactory">the RevocationDataValidator factory method to use</param>
         /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual ValidatorChainBuilder WithRevocationDataValidator(RevocationDataValidator revocationDataValidator
+        public virtual ValidatorChainBuilder WithRevocationDataValidatorFactory(Func<RevocationDataValidator> revocationDataValidatorFactory
             ) {
-            this.revocationDataValidator = revocationDataValidator;
+            this.revocationDataValidatorFactory = revocationDataValidatorFactory;
             return this;
         }
 
         /// <summary>
-        /// Use this instance of a
+        /// Use this factory method to create instances of
         /// <see cref="CertificateChainValidator"/>
-        /// in the validation chain.
+        /// for use in the validation chain.
         /// </summary>
-        /// <param name="certificateChainValidator">the CertificateChainValidator instance to use</param>
+        /// <param name="certificateChainValidatorFactory">the CertificateChainValidator factory method to use</param>
         /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual ValidatorChainBuilder WithCertificateChainValidator(CertificateChainValidator certificateChainValidator
-            ) {
-            this.certificateChainValidator = certificateChainValidator;
+        public virtual ValidatorChainBuilder WithCertificateChainValidatorFactory(Func<CertificateChainValidator> 
+            certificateChainValidatorFactory) {
+            this.certificateChainValidatorFactory = certificateChainValidatorFactory;
             return this;
         }
 
@@ -219,15 +224,15 @@ namespace iText.Signatures.Validation.V1 {
         }
 
         /// <summary>
-        /// Use this instance of a
+        /// Use this factory method to create instances of
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>
-        /// in the validation chain.
+        /// for use in the validation chain.
         /// </summary>
-        /// <param name="certificateRetriever">the IssuingCertificateRetriever instance to use</param>
+        /// <param name="certificateRetrieverFactory">the IssuingCertificateRetriever factory method to use</param>
         /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual ValidatorChainBuilder WithIssuingCertificateRetriever(IssuingCertificateRetriever certificateRetriever
-            ) {
-            this.certificateRetriever = certificateRetriever;
+        public virtual ValidatorChainBuilder WithIssuingCertificateRetrieverFactory(Func<IssuingCertificateRetriever
+            > certificateRetrieverFactory) {
+            this.certificateRetrieverFactory = certificateRetrieverFactory;
             return this;
         }
 
@@ -239,7 +244,7 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithKnownCertificates(ICollection<IX509Certificate> knownCertificates
             ) {
-            GetCertificateRetriever().AddKnownCertificates(knownCertificates);
+            this.knownCertificates = new List<IX509Certificate>(knownCertificates);
             return this;
         }
 
@@ -251,104 +256,9 @@ namespace iText.Signatures.Validation.V1 {
         /// <returns>the current ValidatorChainBuilder.</returns>
         public virtual ValidatorChainBuilder WithTrustedCertificates(ICollection<IX509Certificate> trustedCertificates
             ) {
-            GetCertificateRetriever().SetTrustedCertificates(trustedCertificates);
+            this.trustedCertificates = new List<IX509Certificate>(trustedCertificates);
             return this;
         }
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="DocumentRevisionsValidator"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="DocumentRevisionsValidator"/>
-        /// instance.
-        /// </returns>
-        internal virtual DocumentRevisionsValidator GetDocumentRevisionsValidator() {
-            if (documentRevisionsValidator == null) {
-                documentRevisionsValidator = BuildDocumentRevisionsValidator();
-            }
-            return documentRevisionsValidator;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="CertificateChainValidator"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="CertificateChainValidator"/>
-        /// instance.
-        /// </returns>
-        internal virtual CertificateChainValidator GetCertificateChainValidator() {
-            if (certificateChainValidator == null) {
-                certificateChainValidator = BuildCertificateChainValidator();
-            }
-            return certificateChainValidator;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="RevocationDataValidator"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="RevocationDataValidator"/>
-        /// instance.
-        /// </returns>
-        internal virtual RevocationDataValidator GetRevocationDataValidator() {
-            if (revocationDataValidator == null) {
-                revocationDataValidator = BuildRevocationDataValidator();
-            }
-            return revocationDataValidator;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="CRLValidator"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="CRLValidator"/>
-        /// instance.
-        /// </returns>
-        internal virtual CRLValidator GetCRLValidator() {
-            if (crlValidator == null) {
-                crlValidator = BuildCRLValidator();
-            }
-            return crlValidator;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="OCSPValidator"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="OCSPValidator"/>
-        /// instance.
-        /// </returns>
-        internal virtual OCSPValidator GetOCSPValidator() {
-            if (ocspValidator == null) {
-                ocspValidator = BuildOCSPValidator();
-            }
-            return ocspValidator;
-        }
-//\endcond
 
         /// <summary>
         /// Retrieves the explicitly added or automatically created
@@ -361,10 +271,10 @@ namespace iText.Signatures.Validation.V1 {
         /// instance.
         /// </returns>
         public virtual IssuingCertificateRetriever GetCertificateRetriever() {
-            if (certificateRetriever == null) {
-                certificateRetriever = new IssuingCertificateRetriever();
+            if (certificateRetrieverFactory == null) {
+                return BuildIssuingCertificateRetriever();
             }
-            return certificateRetriever;
+            return certificateRetrieverFactory();
         }
 
         /// <summary>
@@ -382,6 +292,112 @@ namespace iText.Signatures.Validation.V1 {
                 properties = new SignatureValidationProperties();
             }
             return properties;
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="DocumentRevisionsValidator"/>
+        /// instance.
+        /// </returns>
+        internal virtual DocumentRevisionsValidator GetDocumentRevisionsValidator() {
+            if (documentRevisionsValidatorFactory == null) {
+                return BuildDocumentRevisionsValidator();
+            }
+            return documentRevisionsValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="CertificateChainValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="CertificateChainValidator"/>
+        /// instance.
+        /// </returns>
+        internal virtual CertificateChainValidator GetCertificateChainValidator() {
+            if (certificateChainValidatorFactory == null) {
+                return BuildCertificateChainValidator();
+            }
+            return certificateChainValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="RevocationDataValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="RevocationDataValidator"/>
+        /// instance.
+        /// </returns>
+        internal virtual RevocationDataValidator GetRevocationDataValidator() {
+            if (revocationDataValidatorFactory == null) {
+                return BuildRevocationDataValidator();
+            }
+            return revocationDataValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="CRLValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="CRLValidator"/>
+        /// instance.
+        /// </returns>
+        internal virtual CRLValidator GetCRLValidator() {
+            if (crlValidatorFactory == null) {
+                return BuildCRLValidator();
+            }
+            return crlValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="OCSPValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="OCSPValidator"/>
+        /// instance.
+        /// </returns>
+        internal virtual OCSPValidator GetOCSPValidator() {
+            if (ocspValidatorFactory == null) {
+                return BuildOCSPValidator();
+            }
+            return ocspValidatorFactory();
+        }
+//\endcond
+
+        private IssuingCertificateRetriever BuildIssuingCertificateRetriever() {
+            IssuingCertificateRetriever result = new IssuingCertificateRetriever();
+            if (trustedCertificates != null) {
+                result.SetTrustedCertificates(trustedCertificates);
+            }
+            if (knownCertificates != null) {
+                result.AddKnownCertificates(knownCertificates);
+            }
+            return result;
         }
     }
 }

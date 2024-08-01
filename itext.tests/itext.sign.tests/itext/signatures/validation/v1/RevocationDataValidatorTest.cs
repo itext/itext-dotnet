@@ -96,9 +96,9 @@ namespace iText.Signatures.Validation.V1 {
             mockCrlValidator = new MockCrlValidator();
             mockOCSPValidator = new MockOCSPValidator();
             mockParameters = new MockSignatureValidationProperties(parameters);
-            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetriever(certificateRetriever).
-                WithSignatureValidationProperties(mockParameters).WithCRLValidator(mockCrlValidator).WithOCSPValidator
-                (mockOCSPValidator);
+            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever
+                ).WithSignatureValidationProperties(mockParameters).WithCRLValidatorFactory(() => mockCrlValidator).WithOCSPValidatorFactory
+                (() => mockOCSPValidator);
         }
 
         [NUnit.Framework.Test]
@@ -726,7 +726,7 @@ namespace iText.Signatures.Validation.V1 {
                 throw new Exception("Test retrieveIssuerCertificate failure");
             }
             );
-            validatorChainBuilder.WithIssuingCertificateRetriever(mockCertificateRetreiver);
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => mockCertificateRetreiver);
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
             validator.AddOcspClient(ocspClient);
             ReportItem reportItem = new ReportItem("validator", "message", ReportItem.ReportItemStatus.INFO);

@@ -80,8 +80,8 @@ namespace iText.Signatures.Validation.V1 {
         public virtual void SetUp() {
             certificateRetriever = new IssuingCertificateRetriever();
             parameters = new SignatureValidationProperties();
-            validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(parameters).WithIssuingCertificateRetriever
-                (certificateRetriever);
+            validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(parameters).WithIssuingCertificateRetrieverFactory
+                (() => certificateRetriever);
         }
 
         [NUnit.Framework.Test]
@@ -222,8 +222,10 @@ namespace iText.Signatures.Validation.V1 {
             if (revokedOcsp) {
                 parameters.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
             }
-            validatorChainBuilder.GetRevocationDataValidator().AddOcspClient(ocspClient);
-            validatorChainBuilder.GetRevocationDataValidator().AddOcspClient(ocspClient2);
+            RevocationDataValidator revocationDataValidator = validatorChainBuilder.GetRevocationDataValidator();
+            revocationDataValidator.AddOcspClient(ocspClient);
+            revocationDataValidator.AddOcspClient(ocspClient2);
+            validatorChainBuilder.WithRevocationDataValidatorFactory(() => revocationDataValidator);
             OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, checkDate
                 , checkDate);
