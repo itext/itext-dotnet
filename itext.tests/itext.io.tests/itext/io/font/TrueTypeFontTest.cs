@@ -79,5 +79,25 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.AreEqual(1, actualResult.Count);
             NUnit.Framework.Assert.IsTrue(actualResult.Contains(charGidInFont));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CmapPlatform0PlatEnc3Format4Test() {
+            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs.ttf");
+            CheckCmapTableEntry(fontProgram, 'f', 2);
+            CheckCmapTableEntry(fontProgram, 'i', 3);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CmapPlatform0PlatEnc3Format6Test() {
+            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs-fmt-6.ttf");
+            CheckCmapTableEntry(fontProgram, 'f', 2);
+            CheckCmapTableEntry(fontProgram, 'i', 3);
+        }
+
+        private void CheckCmapTableEntry(FontProgram fontProgram, char uniChar, int expectedGlyphId) {
+            Glyph glyph = fontProgram.GetGlyph(uniChar);
+            NUnit.Framework.Assert.AreEqual(expectedGlyphId, glyph.GetCode());
+            NUnit.Framework.Assert.AreEqual(new char[] { uniChar }, glyph.GetUnicodeChars());
+        }
     }
 }
