@@ -506,6 +506,63 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void GotoReferencesModifiedStructTreeElemTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "gotoReferencesModifiedStructTreeElem.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
+                PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
+                IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
+                ValidationReport validationReport = new ValidationReport();
+                validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
+                    .Count - 1], document, validationReport, validationContext);
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
+                    ));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void CatalogReferenceInRandomPlaceTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "catalogReferenceInRandomPlace.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
+                PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
+                IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
+                ValidationReport validationReport = new ValidationReport();
+                validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
+                    .Count - 1], document, validationReport, validationContext);
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
+                    ));
+                validator.ValidateRevision(documentRevisions[documentRevisions.Count - 3], documentRevisions[documentRevisions
+                    .Count - 2], document, validationReport, validationContext);
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID
+                    ));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void CatalogReferenceInRandomPlaceModifiedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "catalogReferenceInRandomPlaceModified.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                validator.SetAccessPermissions(AccessPermissions.FORM_FIELDS_MODIFICATION);
+                PdfRevisionsReader revisionsReader = new PdfRevisionsReader(document.GetReader());
+                IList<DocumentRevision> documentRevisions = revisionsReader.GetAllRevisions();
+                ValidationReport validationReport = new ValidationReport();
+                validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
+                    .Count - 1], document, validationReport, validationContext);
+                AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
+                    ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
+                    .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         public virtual void MultipleRevisionsDocumentLevel3Test(bool continueValidationAfterFail) {
             SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument3.pdf"

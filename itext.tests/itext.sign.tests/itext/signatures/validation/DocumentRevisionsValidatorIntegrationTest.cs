@@ -471,6 +471,28 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void OutlinesNotModifiedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlinesNotModified.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void OutlinesModifiedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlinesModified.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .NOT_ALLOWED_CATALOG_CHANGES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         public virtual void TaggedDocRemoveStructTreeAnnotationTest(bool continueValidationAfterFail) {
             SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocRemoveStructTreeAnnotation.pdf"
