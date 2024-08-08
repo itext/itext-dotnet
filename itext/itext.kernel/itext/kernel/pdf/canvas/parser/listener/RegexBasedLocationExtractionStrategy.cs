@@ -31,12 +31,33 @@ using iText.Kernel.Pdf.Canvas.Parser.Data;
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>This class is designed to search for the occurrences of a regular expression and return the resultant rectangles.
     ///     </summary>
+    /// <remarks>
+    /// This class is designed to search for the occurrences of a regular expression and return the resultant rectangles.
+    /// Do note that this class holds all text locations and can't be used for processing multiple pages.
+    /// If you want to extract text from several pages of pdf document you have to create a new instance
+    /// of
+    /// <see cref="RegexBasedLocationExtractionStrategy"/>
+    /// for each page.
+    /// <para />
+    /// Here is an example of usage with new instance per each page:
+    /// <c>
+    /// PdfDocument document = new PdfDocument(new PdfReader("..."));
+    /// for (int i = 1; i &lt;= document.getNumberOfPages(); ++i) {
+    /// RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("");
+    /// PdfCanvasProcessor processor = new PdfCanvasProcessor(extractionStrategy);
+    /// processor.processPageContent(document.getPage(i));
+    /// for (IPdfTextLocation location : extractionStrategy.getResultantLocations()) {
+    /// //process locations ...
+    /// }
+    /// }
+    /// </c>
+    /// </remarks>
     public class RegexBasedLocationExtractionStrategy : ILocationExtractionStrategy {
         private const float EPS = 1.0E-4F;
 
-        private Regex pattern;
+        private readonly Regex pattern;
 
-        private IList<CharacterRenderInfo> parseResult = new List<CharacterRenderInfo>();
+        private readonly IList<CharacterRenderInfo> parseResult = new List<CharacterRenderInfo>();
 
         public RegexBasedLocationExtractionStrategy(String regex) {
             this.pattern = iText.Commons.Utils.StringUtil.RegexCompile(regex);
@@ -46,6 +67,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             this.pattern = pattern;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual ICollection<IPdfTextLocation> GetResultantLocations() {
             // align characters in "logical" order
             JavaCollectionsUtil.Sort(parseResult, new TextChunkLocationBasedComparator(new DefaultTextChunkLocationComparator
@@ -59,7 +81,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 int? endIndex = GetEndIndex(txt.indexMap, mat.End() - 1);
                 if (startIndex != null && endIndex != null && startIndex <= endIndex) {
                     foreach (Rectangle r in ToRectangles(parseResult.SubList(startIndex.Value, endIndex.Value + 1))) {
-                        retval.Add(new DefaultPdfTextLocation(0, r, mat.Group(0)));
+                        retval.Add(new DefaultPdfTextLocation(r, mat.Group(0)));
                     }
                 }
             }
@@ -74,27 +96,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             return retval;
         }
 
-        private void RemoveDuplicates(IList<IPdfTextLocation> sortedList) {
-            IPdfTextLocation lastItem = null;
-            int orgSize = sortedList.Count;
-            for (int i = orgSize - 1; i >= 0; i--) {
-                IPdfTextLocation currItem = sortedList[i];
-                Rectangle currRect = currItem.GetRectangle();
-                if (lastItem != null && currRect.EqualsWithEpsilon(lastItem.GetRectangle())) {
-                    sortedList.Remove(currItem);
-                }
-                lastItem = currItem;
-            }
-        }
-
+        /// <summary><inheritDoc/></summary>
         public virtual void EventOccurred(IEventData data, EventType type) {
-            if (data is TextRenderInfo) {
-                parseResult.AddAll(ToCRI((TextRenderInfo)data));
-            }
+            parseResult.AddAll(ToCRI((TextRenderInfo)data));
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual ICollection<EventType> GetSupportedEvents() {
-            return null;
+            return JavaCollectionsUtil.Singleton(EventType.RENDER_TEXT);
         }
 
         /// <summary>
@@ -195,6 +204,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
             // return
             return retval;
+        }
+
+        private void RemoveDuplicates(IList<IPdfTextLocation> sortedList) {
+            IPdfTextLocation lastItem = null;
+            int orgSize = sortedList.Count;
+            for (int i = orgSize - 1; i >= 0; i--) {
+                IPdfTextLocation currItem = sortedList[i];
+                Rectangle currRect = currItem.GetRectangle();
+                if (lastItem != null && currRect.EqualsWithEpsilon(lastItem.GetRectangle())) {
+                    sortedList.Remove(currItem);
+                }
+                lastItem = currItem;
+            }
         }
 
         private static int? GetStartIndex(IDictionary<int, int?> indexMap, int index, String txt) {

@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
@@ -36,20 +35,47 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/RegexBasedLocationExtractionStrategyTest/";
 
         [NUnit.Framework.Test]
-        public virtual void Test01() {
-            System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "in01.pdf"));
-            // build strategy
-            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy(iText.Commons.Utils.StringUtil.RegexCompile
-                ("\\{\\{Signature\\}\\}"));
+        public virtual void Test00() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "in00.pdf"));
             // get locations
             IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
-            for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
-                new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
+            for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("cillum"
+                    );
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(extractionStrategy);
+                processor.ProcessPageContent(document.GetPage(i));
                 foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
-                    if (location != null) {
-                        locationList.Add(location);
-                    }
+                    locationList.Add(location);
+                }
+            }
+            // compare
+            NUnit.Framework.Assert.AreEqual(2, locationList.Count);
+            IPdfTextLocation loc = locationList[0];
+            NUnit.Framework.Assert.AreEqual("cillum", loc.GetText());
+            NUnit.Framework.Assert.AreEqual(64, (int)loc.GetRectangle().GetX());
+            NUnit.Framework.Assert.AreEqual(732, (int)loc.GetRectangle().GetY());
+            NUnit.Framework.Assert.AreEqual(30, (int)loc.GetRectangle().GetWidth());
+            NUnit.Framework.Assert.AreEqual(11, (int)loc.GetRectangle().GetHeight());
+            IPdfTextLocation loc2 = locationList[1];
+            NUnit.Framework.Assert.AreEqual(64, (int)loc2.GetRectangle().GetX());
+            NUnit.Framework.Assert.AreEqual(732, (int)loc2.GetRectangle().GetY());
+            NUnit.Framework.Assert.AreEqual(30, (int)loc2.GetRectangle().GetWidth());
+            NUnit.Framework.Assert.AreEqual(11, (int)loc2.GetRectangle().GetHeight());
+            document.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Test02() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "in01.pdf"));
+            // get locations
+            IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
+            for (int i = 1; i <= document.GetNumberOfPages(); ++i) {
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("\\{\\{Signature\\}\\}"
+                    );
+                PdfCanvasProcessor processor = new PdfCanvasProcessor(extractionStrategy);
+                processor.ProcessPageContent(document.GetPage(i));
+                foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
+                    locationList.Add(location);
                 }
             }
             // compare
@@ -60,8 +86,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             NUnit.Framework.Assert.AreEqual(375, (int)loc.GetRectangle().GetY());
             NUnit.Framework.Assert.AreEqual(55, (int)loc.GetRectangle().GetWidth());
             NUnit.Framework.Assert.AreEqual(11, (int)loc.GetRectangle().GetHeight());
-            // close
-            pdfDocument.Close();
+            document.Close();
         }
 
         // https://jira.itextsupport.com/browse/DEVSIX-1940
@@ -70,11 +95,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         public virtual void TestLigatureBeforeLigature() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ligature.pdf"));
-            // build strategy
-            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("ca");
             // get locations
             IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
             for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                // build strategy
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("ca");
                 new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
                 foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
                     if (location != null) {
@@ -98,11 +123,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         public virtual void TestLigatureCrossLigature() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ligature.pdf"));
-            // build strategy
-            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("al");
             // get locations
             IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
             for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                // build strategy
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("al");
                 new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
                 foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
                     if (location != null) {
@@ -126,11 +151,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         public virtual void TestLigatureInLigature() {
             System.Console.Out.WriteLine(new FileInfo(sourceFolder).FullName);
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "ligature.pdf"));
-            // build strategy
-            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("l");
             // get locations
             IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
             for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                // build strategy
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("l");
                 new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
                 foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
                     if (location != null) {
@@ -153,11 +178,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         [NUnit.Framework.Test]
         public virtual void TestRotatedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "rotatedText.pdf"));
-            // build strategy
-            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("abc");
             // get locations
             IList<IPdfTextLocation> locationList = new List<IPdfTextLocation>();
             for (int x = 1; x <= pdfDocument.GetNumberOfPages(); x++) {
+                // build strategy
+                RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy("abc");
                 new PdfCanvasProcessor(extractionStrategy).ProcessPageContent(pdfDocument.GetPage(x));
                 foreach (IPdfTextLocation location in extractionStrategy.GetResultantLocations()) {
                     if (location != null) {
