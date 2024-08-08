@@ -37,6 +37,8 @@ namespace iText.Bouncycastlefips.Crypto {
         
         private string lastHashAlgorithm;
         private string lastEncryptionAlgorithm;
+        private string digestAlgoName;
+        private int saltLen;
 
         private IStreamCalculator<IBlockResult> digest;
 
@@ -71,8 +73,8 @@ namespace iText.Bouncycastlefips.Crypto {
 
         /// <summary><inheritDoc/></summary>
         public void InitRsaPssSigner(string digestAlgoName, int saltLen, int trailerField) {
-            // Not supported yet
-            // Leave empty, we will throw in another place
+            this.digestAlgoName = digestAlgoName;
+            this.saltLen = saltLen;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -159,8 +161,16 @@ namespace iText.Bouncycastlefips.Crypto {
         private void InitSignature(IAsymmetricKey key, string hashAlgorithm, string encAlgorithm) {
             ISignatureFactoryService signatureFactoryProvider =
                 CryptoServicesRegistrar.CreateService((ICryptoServiceType<ISignatureFactoryService>)key, new SecureRandom());
-            FipsShs.Parameters parameters = DigestBCFips.GetMessageDigestParams(hashAlgorithm);
+            FipsShs.Parameters parameters = digestAlgoName == null
+                ? DigestBCFips.GetMessageDigestParams(hashAlgorithm)
+                : DigestBCFips.GetMessageDigestParams(digestAlgoName);
             switch (encAlgorithm) {
+                case "RSASSA-PSS": {
+                    ISignatureFactory<FipsRsa.PssSignatureParameters> rsaSig = signatureFactoryProvider.CreateSignatureFactory(
+                            FipsRsa.Pss.WithDigest(parameters).WithSaltLength(saltLen));
+                    digest = rsaSig.CreateCalculator();
+                    break;
+                }
                 case "RSA": {
                     ISignatureFactory<FipsRsa.SignatureParameters> rsaSig =
                         signatureFactoryProvider.CreateSignatureFactory(
@@ -188,9 +198,17 @@ namespace iText.Bouncycastlefips.Crypto {
         private void InitVerifySignature(IAsymmetricKey key, String hashAlgorithm, String encrAlgorithm) {
             IVerifierFactoryService verifierFactoryProvider =
                 CryptoServicesRegistrar.CreateService((ICryptoServiceType<IVerifierFactoryService>)key);
-            FipsShs.Parameters parameters = DigestBCFips.GetMessageDigestParams(hashAlgorithm);
+            FipsShs.Parameters parameters = digestAlgoName == null
+                ? DigestBCFips.GetMessageDigestParams(hashAlgorithm)
+                : DigestBCFips.GetMessageDigestParams(digestAlgoName);
 
             switch (encrAlgorithm) {
+                case "RSASSA-PSS": {
+                    IVerifierFactory<FipsRsa.PssSignatureParameters> rsaSig =
+                        verifierFactoryProvider.CreateVerifierFactory(FipsRsa.Pss.WithDigest(parameters).WithSaltLength(saltLen));
+                    iSigner = rsaSig.CreateCalculator();
+                    break;
+                }
                 case "RSA": {
                     IVerifierFactory<FipsRsa.SignatureParameters> rsaSig =
                         verifierFactoryProvider.CreateVerifierFactory(FipsRsa.Pkcs1v15.WithDigest(parameters));

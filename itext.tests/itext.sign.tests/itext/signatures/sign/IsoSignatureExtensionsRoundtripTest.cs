@@ -142,14 +142,8 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestRsaSsaPssWithSha3_256()
-        {
-            if ("BC".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                DoRoundTrip("rsa", DigestAlgorithms.SHA3_256, "RSASSA-PSS", new DerObjectIdentifier(SecurityIDs.ID_RSASSA_PSS));
-            } else {
-                // Signer RSASSA-PSS not recognised in BCFIPS mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => DoRoundTrip("rsa", DigestAlgorithms.SHA3_256, "RSASSA-PSS", new DerObjectIdentifier(SecurityIDs.ID_RSASSA_PSS)));
-            }
+        public virtual void TestRsaSsaPssWithSha3_256() {
+            DoRoundTrip("rsa", DigestAlgorithms.SHA3_256, "RSASSA-PSS", new DerObjectIdentifier(SecurityIDs.ID_RSASSA_PSS));
         }
 
         [NUnit.Framework.Test]

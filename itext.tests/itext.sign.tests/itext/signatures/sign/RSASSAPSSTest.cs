@@ -1,29 +1,28 @@
 /*
-    This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
-    Authors: Apryse Software.
+This file is part of the iText (R) project.
+Copyright (c) 1998-2024 Apryse Group NV
+Authors: Apryse Software.
 
-    This program is offered under a commercial and under the AGPL license.
-    For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
 
-    AGPL licensing:
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using System;
 using System.IO;
 using iText.Bouncycastleconnector;
-using iText.Bouncycastlefips.Security;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -35,13 +34,12 @@ using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures.Sign {
-    [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class RSASSAPSSTest : ExtendedITextTest {
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory();
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(
-            NUnit.Framework.TestContext.CurrentContext.TestDirectory) 
-                                                       + "/resources/itext/signatures/sign/RSASSAPSSTest/";
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/RSASSAPSSTest/";
 
         private static readonly String SOURCE_FILE = SOURCE_FOLDER + "helloWorldDoc.pdf";
 
@@ -58,76 +56,34 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SignWithRsaSsaPssTest()
-        {
+        public virtual void SignWithRsaSsaPssTest() {
             String digestName = "SHA256";
             String outFileName = "simplePssSignature.pdf";
             String cmpFileName = "cmp_simplePssSignature.pdf";
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
-            {
-                // Signer RSASSA-PSS not recognised in BCFIPS mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
-                {
-                    DoRoundTrip(digestName, "RSASSA-PSS", outFileName, 
-                        RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
-                });
-            }
-            else
-            {
-                DoRoundTrip(digestName, "RSASSA-PSS", outFileName, 
-                    RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(System.IO.Path.Combine(
-                    DESTINATION_FOLDER
-                    , outFileName).ToString(), System.IO.Path.Combine(SOURCE_FOLDER, cmpFileName).ToString()));
-            }
+            DoRoundTrip(digestName, "RSASSA-PSS", outFileName, RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName
+                ));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(System.IO.Path.Combine(DESTINATION_FOLDER
+                , outFileName).ToString(), System.IO.Path.Combine(SOURCE_FOLDER, cmpFileName).ToString()));
         }
 
         [NUnit.Framework.Test]
-        public virtual void SignWithRsaSsaPssAlternativeNomenclatureTest()
-        {
+        public virtual void SignWithRsaSsaPssAlternativeNomenclatureTest() {
             String digestName = "SHA256";
             String outFileName = "simplePssAlternativeNomenclatureSignature.pdf";
             String cmpFileName = "cmp_simplePssSignature.pdf";
-
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
-            {
-                // Signer RSASSA-PSS not recognised in BCFIPS mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
-                {
-                    DoRoundTrip(digestName,
+            DoRoundTrip(digestName, 
                         //we should accept the "<digest>withRSA/PSS" convention as well
                         "RSA/PSS", outFileName, RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
-                });
-            }
-            else
-            {
-                DoRoundTrip(digestName,
-                    //we should accept the "<digest>withRSA/PSS" convention as well
-                    "RSA/PSS", outFileName, RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(System.IO.Path.Combine(
-                    DESTINATION_FOLDER
-                    , outFileName).ToString(), System.IO.Path.Combine(SOURCE_FOLDER, cmpFileName).ToString()));
-            }
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(System.IO.Path.Combine(DESTINATION_FOLDER
+                , outFileName).ToString(), System.IO.Path.Combine(SOURCE_FOLDER, cmpFileName).ToString()));
         }
 
         [NUnit.Framework.Test]
         public virtual void SignWithRsaSsaSha384PssTest() {
             String digestName = "SHA384";
             String outFileName = "simplePssSignatureSha384.pdf";
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
-            {
-                // Signer RSASSA-PSS not recognised in BCFIPS mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
-                {
-                    DoRoundTrip(digestName, "RSASSA-PSS", outFileName,
-                        RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
-                });
-            }
-            else
-            {
-                DoRoundTrip(digestName, "RSASSA-PSS", outFileName,
-                    RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName));
-            }
+            DoRoundTrip(digestName, "RSASSA-PSS", outFileName, RSASSAPSSMechanismParams.CreateForDigestAlgorithm(digestName
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -135,26 +91,12 @@ namespace iText.Signatures.Sign {
             String digestName = "SHA256";
             String outFileName = "customSaltLength.pdf";
             String cmpFileName = "cmp_simplePssSignature.pdf";
-            
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                // Signer RSASSA-PSS not recognised in BCFIPS mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () =>
-                {
-                    DoRoundTrip(digestName, "RSASSA-PSS", outFileName, new RSASSAPSSMechanismParams(
-                        BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
-                            (DigestAlgorithms.GetAllowedDigest(digestName)), 40, 1));
-                });
-            }
-            else
-            {
-                DoRoundTrip(digestName, "RSASSA-PSS", outFileName, 
-                    new RSASSAPSSMechanismParams(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier
-                        (DigestAlgorithms.GetAllowedDigest(digestName)), 40, 1));
-                String cmpOut = SignaturesCompareTool.CompareSignatures(System.IO.Path.Combine(DESTINATION_FOLDER, 
-                    outFileName).ToString(), System.IO.Path.Combine(SOURCE_FOLDER, cmpFileName).ToString());
-                NUnit.Framework.Assert.IsTrue(cmpOut.Contains("out: Integer(40)"));
-                NUnit.Framework.Assert.IsTrue(cmpOut.Contains("cmp: Integer(32)"));
-            }
+            DoRoundTrip(digestName, "RSASSA-PSS", outFileName, new RSASSAPSSMechanismParams(FACTORY.CreateASN1ObjectIdentifier
+                (DigestAlgorithms.GetAllowedDigest(digestName)), 40, 1));
+            String cmpOut = SignaturesCompareTool.CompareSignatures(System.IO.Path.Combine(DESTINATION_FOLDER, outFileName
+                ).ToString(), System.IO.Path.Combine(SOURCE_FOLDER, cmpFileName).ToString());
+            NUnit.Framework.Assert.IsTrue(cmpOut.Contains("out: Integer(40)"));
+            NUnit.Framework.Assert.IsTrue(cmpOut.Contains("cmp: Integer(32)"));
         }
 
         [NUnit.Framework.Test]
@@ -164,6 +106,7 @@ namespace iText.Signatures.Sign {
             using (PdfReader r = new PdfReader(System.IO.Path.Combine(SOURCE_FOLDER, inFileName).ToString())) {
                 using (PdfDocument pdfDoc = new PdfDocument(r)) {
                     SignatureUtil u = new SignatureUtil(pdfDoc);
+                    String provider = FACTORY.GetProviderName();
                     NUnit.Framework.Assert.Catch(typeof(PdfException), () => u.ReadSignatureData(SIGNATURE_FIELD));
                 }
             }
@@ -179,16 +122,17 @@ namespace iText.Signatures.Sign {
         private void DoSign(String digestAlgo, String signatureAlgo, String outFile, IApplicableSignatureParams @params
             ) {
             // write to a file for easier inspection when debugging
-            using (FileStream fos = FileUtil.GetFileOutputStream(outFile)) {
-                IX509Certificate root = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "ca.crt"));
-                IX509Certificate signerCert = ReadCertificate(System.IO.Path.Combine(SOURCE_FOLDER, "rsa.crt"));
+            using (Stream fos = FileUtil.GetFileOutputStream(outFile)) {
+                IX509Certificate root = PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "ca.pem")[0];
+                IX509Certificate signerCert = PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "rsa.pem")[0];
                 IX509Certificate[] signChain = new IX509Certificate[] { signerCert, root };
-                IPrivateKey signPrivateKey = ReadPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, "rsa.key.pem"));
+                IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(SOURCE_FOLDER + "rsa.key.pem", SAMPLE_KEY_PASSPHRASE
+                    );
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, digestAlgo, signatureAlgo, @params);
-                //IExternalSignature pks = new PrivateKeySignature(signPrivateKey, digestAlgo, @params);
                 PdfSigner signer = new PdfSigner(new PdfReader(SOURCE_FILE), fos, new StampingProperties());
                 signer.SetFieldName(SIGNATURE_FIELD);
-                signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
+                signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
+                    .CMS);
             }
         }
 
@@ -201,20 +145,6 @@ namespace iText.Signatures.Sign {
                     NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
                 }
             }
-        }
-
-        private IPrivateKey ReadPrivateKey(string path) {
-            try {
-                return PemFileHelper.ReadFirstKey(path, SAMPLE_KEY_PASSPHRASE);
-            }
-            catch (Exception e) {
-                throw new Exception("Reading key failed", e);
-            }
-        }
-
-        private IX509Certificate ReadCertificate(string  path) {
-            byte[] content = System.IO.File.ReadAllBytes(path);
-            return BOUNCY_CASTLE_FACTORY.CreateX509Certificate(content);
         }
     }
 }
