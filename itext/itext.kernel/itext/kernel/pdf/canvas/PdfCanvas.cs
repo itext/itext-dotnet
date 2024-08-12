@@ -2125,6 +2125,7 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfOutputStream os = contentStream.GetOutputStream();
             os.WriteBytes(BI);
             byte[] imageBytes = imageXObject.GetPdfObject().GetBytes(false);
+            SaveColorSpaceToPageResourcesIfNeeded(imageXObject.GetPdfObject());
             foreach (KeyValuePair<PdfName, PdfObject> entry in imageXObject.GetPdfObject().EntrySet()) {
                 PdfName key = entry.Key;
                 if (!PdfName.Type.Equals(key) && !PdfName.Subtype.Equals(key) && !PdfName.Length.Equals(key)) {
@@ -2139,6 +2140,22 @@ namespace iText.Kernel.Pdf.Canvas {
             os.WriteBytes(ID);
             os.WriteBytes(imageBytes).WriteNewLine().WriteBytes(EI).WriteNewLine();
             RestoreState();
+        }
+
+        private void SaveColorSpaceToPageResourcesIfNeeded(PdfStream image) {
+            PdfObject colorSpace = image.Get(PdfName.ColorSpace);
+            //The colour space specified by the ColorSpace (or CS) entry shall be one of the standard device colour spaces
+            //(DeviceGray, DeviceRGB, or DeviceCMYK).
+            if (colorSpace == null || colorSpace.Equals(PdfName.DeviceGray) || colorSpace.Equals(PdfName.DeviceRGB) ||
+                 colorSpace.Equals(PdfName.DeviceCMYK)) {
+                return;
+            }
+            //PDF 1.2: the value of the ColorSpace entry may also be the name of a colour space in the ColorSpace
+            //subdictionary of the current resource dictionary. In this case, the name may designate any colour space
+            //that can be used with an image XObject.
+            PdfName name = resources.AddColorSpace(colorSpace);
+            image.Remove(PdfName.ColorSpace);
+            image.Put(PdfName.ColorSpace, name);
         }
 
         /// <summary>
