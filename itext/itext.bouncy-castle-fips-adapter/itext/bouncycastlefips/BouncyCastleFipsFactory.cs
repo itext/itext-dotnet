@@ -48,6 +48,7 @@ using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Cms;
 using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Crypto.Generators;
+using iText.Bouncycastlefips.Crypto.Modes;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Openssl;
 using iText.Bouncycastlefips.Operator;
@@ -70,6 +71,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
+using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
@@ -1246,6 +1248,10 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
             throw new NotSupportedException("Encrypted key generation with AES256 is not supported in bouncy-castle FIPS mode.");
+        }
+
+        public IGCMBlockCipher CreateGCMBlockCipher() {
+            return new GCMBlockCipherBCFips();
         }
 
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {

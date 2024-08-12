@@ -50,6 +50,7 @@ using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Cms;
 using iText.Bouncycastle.Crypto;
 using iText.Bouncycastle.Crypto.Generators;
+using iText.Bouncycastle.Crypto.Modes;
 using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Openssl;
 using iText.Bouncycastle.Operator;
@@ -72,6 +73,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
+using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
@@ -83,6 +85,8 @@ using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
@@ -1202,6 +1206,11 @@ namespace iText.Bouncycastle {
             IWrapper wrapper = new AesWrapEngine();
             wrapper.Init(true, new KeyParameter(kek));
             return wrapper.Wrap(key, 0, key.Length);
+        }
+
+        public IGCMBlockCipher CreateGCMBlockCipher() {
+            GcmBlockCipher cipher = new GcmBlockCipher(new AesEngine());
+            return new GCMBlockCipherBC(cipher);
         }
 
         //\cond DO_NOT_DOCUMENT

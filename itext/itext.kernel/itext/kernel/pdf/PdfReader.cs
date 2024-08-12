@@ -432,7 +432,14 @@ namespace iText.Kernel.Pdf {
                     if (!skip) {
                         decrypt.SetHashKeyForNextObject(stream.GetIndirectReference().GetObjNumber(), stream.GetIndirectReference(
                             ).GetGenNumber());
-                        bytes = decrypt.DecryptByteArray(bytes);
+                        try {
+                            bytes = decrypt.DecryptByteArray(bytes);
+                        } catch (Exception ex) {
+                            PdfIndirectReference refr = stream.GetIndirectReference();
+                            String msg = "Error while decrypting object " + refr.GetObjNumber() + " " + refr.GetGenNumber();
+                            throw new PdfException(msg, ex);
+                        }
+
                     }
                 }
             }

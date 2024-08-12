@@ -40,6 +40,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Crypto.Generators;
+using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
@@ -1672,5 +1673,7 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="kek">key encryption key to be used</param>
         /// <returns>encrypted key.</returns>
         byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek);
+
+        IGCMBlockCipher CreateGCMBlockCipher();
     }
 }

@@ -67,6 +67,12 @@ namespace iText.Kernel.Pdf {
             (PdfName.ISO_, PdfName.Pdf_Version_2_0, 32004, "https://www.iso.org/standard/45877.html", ":2024", true
             );
 
+        /// <summary>An instance of this class for ISO/TS 32003.</summary>
+        public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ISO_32003 = 
+                // TODO document.getCatalog().addDeveloperExtension(PdfDeveloperExtension.ISO_32003);
+                new iText.Kernel.Pdf.PdfDeveloperExtension(PdfName.ISO_, PdfName.Pdf_Version_2_0, 32003, "https://www.iso.org/standard/45876.html"
+            , ":2023", true);
+
         /// <summary>The prefix used in the Extensions dictionary added to the Catalog.</summary>
         protected internal PdfName prefix;
 

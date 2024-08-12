@@ -122,6 +122,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName AESV3 = CreateDirectName("AESV3");
 
+        public static readonly iText.Kernel.Pdf.PdfName AESV4 = CreateDirectName("AESV4");
+
         public static readonly iText.Kernel.Pdf.PdfName AF = CreateDirectName("AF");
 
         public static readonly iText.Kernel.Pdf.PdfName AFRelationship = CreateDirectName("AFRelationship");

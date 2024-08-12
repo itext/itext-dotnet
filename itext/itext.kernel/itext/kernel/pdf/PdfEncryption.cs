@@ -46,6 +46,8 @@ namespace iText.Kernel.Pdf {
 
         private const int AES_256 = 5;
 
+        private const int AES_GCM = 6;
+
         private const int DEFAULT_KEY_LENGTH = 40;
 
         private static long seq = SystemUtil.GetTimeBasedSeed();
@@ -242,6 +244,14 @@ namespace iText.Kernel.Pdf {
                     securityHandler = handlerAes256;
                     break;
                 }
+
+                case AES_GCM: {
+                    StandardHandlerUsingAesGcm handlerAesGcm = new StandardHandlerUsingAesGcm(this.GetPdfObject(), userPassword
+                        , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly);
+                    this.permissions = handlerAesGcm.GetPermissions();
+                    securityHandler = handlerAesGcm;
+                    break;
+                }
             }
         }
 
@@ -411,6 +421,12 @@ namespace iText.Kernel.Pdf {
                         );
                     break;
                 }
+
+                case AES_GCM: {
+                    securityHandler = new PubSecHandlerUsingAesGcm(this.GetPdfObject(), certs, permissions, encryptMetadata, embeddedFilesOnly
+                        );
+                    break;
+                }
             }
         }
 
@@ -451,6 +467,14 @@ namespace iText.Kernel.Pdf {
                     securityHandler = aes256Handler;
                     break;
                 }
+
+                case AES_GCM: {
+                    StandardHandlerUsingAesGcm aesGcmHandler = new StandardHandlerUsingAesGcm(this.GetPdfObject(), password);
+                    permissions = aesGcmHandler.GetPermissions();
+                    encryptMetadata = aesGcmHandler.IsEncryptMetadata();
+                    securityHandler = aesGcmHandler;
+                    break;
+                }
             }
         }
 
@@ -479,6 +503,12 @@ namespace iText.Kernel.Pdf {
 
                 case AES_256: {
                     securityHandler = new PubSecHandlerUsingAes256(this.GetPdfObject(), certificateKey, certificate, encryptMetadata
+                        );
+                    break;
+                }
+
+                case AES_GCM: {
+                    securityHandler = new PubSecHandlerUsingAesGcm(this.GetPdfObject(), certificateKey, certificate, encryptMetadata
                         );
                     break;
                 }
@@ -724,6 +754,12 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
 
+                case EncryptionConstants.ENCRYPTION_AES_GCM: {
+                    SetKeyLength(256);
+                    revision = AES_GCM;
+                    break;
+                }
+
                 default: {
                     throw new PdfException(KernelExceptionMessageConstant.NO_VALID_ENCRYPTION_MODE);
                 }
@@ -799,6 +835,18 @@ namespace iText.Kernel.Pdf {
                     break;
                 }
 
+                case 7: {
+                    cryptoMode = EncryptionConstants.ENCRYPTION_AES_GCM;
+                    PdfBoolean em7 = encDict.GetAsBoolean(PdfName.EncryptMetadata);
+                    if (em7 != null && !em7.GetValue()) {
+                        cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
+                    }
+                    if (embeddedFilesOnlyMode) {
+                        cryptoMode |= EncryptionConstants.EMBEDDED_FILES_ONLY;
+                    }
+                    break;
+                }
+
                 default: {
                     throw new PdfException(KernelExceptionMessageConstant.UNKNOWN_ENCRYPTION_TYPE_R).SetMessageParams(rValue);
                 }
@@ -861,6 +909,35 @@ namespace iText.Kernel.Pdf {
                                 throw new PdfException(KernelExceptionMessageConstant.NO_COMPATIBLE_ENCRYPTION_FOUND);
                             }
                         }
+                    }
+                    PdfBoolean em = dic.GetAsBoolean(PdfName.EncryptMetadata);
+                    if (em != null && !em.GetValue()) {
+                        cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
+                    }
+                    if (embeddedFilesOnlyMode) {
+                        cryptoMode |= EncryptionConstants.EMBEDDED_FILES_ONLY;
+                    }
+                    break;
+                }
+
+                case 6: {
+                    // (ISO/TS 32003) The security handler defines the use of encryption
+                    // and decryption in the same way as when the value of V is 5, and declares at least
+                    // one crypt filter using the AESV4 method.
+                    PdfDictionary dic = encDict.GetAsDictionary(PdfName.CF);
+                    if (dic == null) {
+                        throw new PdfException(KernelExceptionMessageConstant.CF_NOT_FOUND_ENCRYPTION);
+                    }
+                    dic = (PdfDictionary)dic.Get(PdfName.DefaultCryptFilter);
+                    if (dic == null) {
+                        throw new PdfException(KernelExceptionMessageConstant.DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION);
+                    }
+                    if (PdfName.AESV4.Equals(dic.Get(PdfName.CFM))) {
+                        cryptoMode = EncryptionConstants.ENCRYPTION_AES_GCM;
+                        length = 256;
+                    }
+                    else {
+                        throw new PdfException(KernelExceptionMessageConstant.NO_COMPATIBLE_ENCRYPTION_FOUND);
                     }
                     PdfBoolean em = dic.GetAsBoolean(PdfName.EncryptMetadata);
                     if (em != null && !em.GetValue()) {
