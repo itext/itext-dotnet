@@ -54,8 +54,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             Point start = points[0];
             Point end = points[points.Count - 1];
-            if (JavaUtil.DoubleCompare(start.x, end.x) != 0 || JavaUtil.DoubleCompare(start.y, end.y) != 0) {
-                points.Add(new Point(start.x, start.y));
+            if (JavaUtil.DoubleCompare(start.GetX(), end.GetX()) != 0 || JavaUtil.DoubleCompare(start.GetY(), end.GetY
+                ()) != 0) {
+                points.Add(new Point(start.GetX(), start.GetY()));
             }
         }
 

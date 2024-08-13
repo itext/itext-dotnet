@@ -155,7 +155,7 @@ namespace iText.Svg.Renderers.Impl {
                     }
                 }
                 basePoint = new Point(x, y);
-                basePoint.Translate(GetRelativeTranslation()[0], GetRelativeTranslation()[1]);
+                basePoint.Move(GetRelativeTranslation()[0], GetRelativeTranslation()[1]);
                 Rectangle commonRect = null;
                 foreach (ISvgTextNodeRenderer child in GetChildren()) {
                     if (child != null) {

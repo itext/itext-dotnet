@@ -267,8 +267,8 @@ namespace iText.Kernel.Colors.Gradients {
             double xDiff = baseVector[1].GetX() - baseVector[0].GetX();
             double yDiff = baseVector[1].GetY() - baseVector[0].GetY();
             Point[] targetCoords = new Point[] { baseVector[0].GetLocation(), baseVector[1].GetLocation() };
-            targetCoords[0].Translate(xDiff * newDomain[0], yDiff * newDomain[0]);
-            targetCoords[1].Translate(xDiff * (newDomain[1] - 1), yDiff * (newDomain[1] - 1));
+            targetCoords[0].Move(xDiff * newDomain[0], yDiff * newDomain[0]);
+            targetCoords[1].Move(xDiff * (newDomain[1] - 1), yDiff * (newDomain[1] - 1));
             return targetCoords;
         }
 

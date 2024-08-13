@@ -23,29 +23,94 @@ using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.Kernel.Geom {
+    /// <summary>Class that represent point object with x and y coordinates.</summary>
     public class Point
 #if !NETSTANDARD2_0
  : ICloneable
 #endif
  {
-        public double x;
+        private double x;
 
-        public double y;
+        private double y;
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="Point"/>
+        /// instance with 0 x and y.
+        /// </summary>
         public Point() {
             SetLocation(0, 0);
         }
 
-        public Point(int x, int y) {
-            SetLocation(x, y);
-        }
-
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="Point"/>
+        /// instance based on passed x and y.
+        /// </summary>
+        /// <param name="x">the x coordinates of the point</param>
+        /// <param name="y">the y coordinates of the point</param>
         public Point(double x, double y) {
             SetLocation(x, y);
         }
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="Point"/>
+        /// instance based on another point.
+        /// </summary>
+        /// <param name="p">the point which will be copied</param>
         public Point(iText.Kernel.Geom.Point p) {
             SetLocation(p.x, p.y);
+        }
+
+        /// <summary>Gets x coordinate of the point.</summary>
+        /// <returns>the x coordinate</returns>
+        public virtual double GetX() {
+            return x;
+        }
+
+        /// <summary>Gets y coordinate of the point.</summary>
+        /// <returns>the y coordinate</returns>
+        public virtual double GetY() {
+            return y;
+        }
+
+        /// <summary>Gets location of point by creating a new copy.</summary>
+        /// <returns>the copy of this point</returns>
+        public virtual iText.Kernel.Geom.Point GetLocation() {
+            return new iText.Kernel.Geom.Point(x, y);
+        }
+
+        /// <summary>Sets x and y double coordinates of the point.</summary>
+        /// <param name="x">the x coordinate</param>
+        /// <param name="y">the y coordinate</param>
+        public virtual void SetLocation(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        /// <summary>Moves the point by the specified offset.</summary>
+        /// <param name="dx">the x-axis offset</param>
+        /// <param name="dy">the y-axis offset</param>
+        public virtual void Move(double dx, double dy) {
+            x += dx;
+            y += dy;
+        }
+
+        /// <summary>The distance between this point and the second point which is defined by passed x and y coordinates.
+        ///     </summary>
+        /// <param name="px">the x coordinate of the second point</param>
+        /// <param name="py">the y coordinate of the second point</param>
+        /// <returns>the distance between points</returns>
+        public virtual double Distance(double px, double py) {
+            return Math.Sqrt(DistanceSq(GetX(), GetY(), px, py));
+        }
+
+        /// <summary>The distance between this point and the second point.</summary>
+        /// <param name="p">the second point to calculate distance</param>
+        /// <returns>the distance between points</returns>
+        public virtual double Distance(iText.Kernel.Geom.Point p) {
+            return Distance(p.GetX(), p.GetY());
         }
 
         public override bool Equals(Object obj) {
@@ -60,42 +125,7 @@ namespace iText.Kernel.Geom {
         }
 
         public override String ToString() {
-            //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             return MessageFormatUtil.Format("Point: [x={0},y={1}]", x, y);
-        }
-
-        public virtual double GetX() {
-            return x;
-        }
-
-        public virtual double GetY() {
-            return y;
-        }
-
-        public virtual iText.Kernel.Geom.Point GetLocation() {
-            return new iText.Kernel.Geom.Point(x, y);
-        }
-
-        public virtual void SetLocation(iText.Kernel.Geom.Point p) {
-            SetLocation(p.x, p.y);
-        }
-
-        public virtual void SetLocation(int x, int y) {
-            SetLocation((double)x, (double)y);
-        }
-
-        public virtual void SetLocation(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public virtual void Move(double x, double y) {
-            SetLocation(x, y);
-        }
-
-        public virtual void Translate(double dx, double dy) {
-            x += dx;
-            y += dy;
         }
 
         public override int GetHashCode() {
@@ -105,34 +135,14 @@ namespace iText.Kernel.Geom {
             return hash.GetHashCode();
         }
 
-        public static double DistanceSq(double x1, double y1, double x2, double y2) {
+        public virtual Object Clone() {
+            return new iText.Kernel.Geom.Point(x, y);
+        }
+
+        private static double DistanceSq(double x1, double y1, double x2, double y2) {
             x2 -= x1;
             y2 -= y1;
             return x2 * x2 + y2 * y2;
-        }
-
-        public virtual double DistanceSq(double px, double py) {
-            return DistanceSq(GetX(), GetY(), px, py);
-        }
-
-        public virtual double DistanceSq(iText.Kernel.Geom.Point p) {
-            return DistanceSq(GetX(), GetY(), p.GetX(), p.GetY());
-        }
-
-        public static double Distance(double x1, double y1, double x2, double y2) {
-            return Math.Sqrt(DistanceSq(x1, y1, x2, y2));
-        }
-
-        public virtual double Distance(double px, double py) {
-            return Math.Sqrt(DistanceSq(px, py));
-        }
-
-        public virtual double Distance(iText.Kernel.Geom.Point p) {
-            return Math.Sqrt(DistanceSq(p));
-        }
-
-        public virtual Object Clone() {
-            return new iText.Kernel.Geom.Point(x, y);
         }
     }
 }

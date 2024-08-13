@@ -29,8 +29,8 @@ namespace iText.Svg.Renderers.Path.Impl {
         private const double DELTA = 0.00001;
 
         private void AssertPointEqual(Point expected, Point actual) {
-            NUnit.Framework.Assert.AreEqual(expected.x, actual.x, DELTA);
-            NUnit.Framework.Assert.AreEqual(expected.y, actual.y, DELTA);
+            NUnit.Framework.Assert.AreEqual(expected.GetX(), actual.GetX(), DELTA);
+            NUnit.Framework.Assert.AreEqual(expected.GetY(), actual.GetY(), DELTA);
         }
 
         [NUnit.Framework.Test]

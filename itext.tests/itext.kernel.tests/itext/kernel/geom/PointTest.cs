@@ -31,8 +31,8 @@ namespace iText.Kernel.Geom {
         [NUnit.Framework.Test]
         public virtual void DefaultConstructorTest() {
             Point first = new Point();
-            NUnit.Framework.Assert.AreEqual(0, first.x, EPSILON_COMPARISON);
-            NUnit.Framework.Assert.AreEqual(0, first.y, EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(0, first.GetX(), EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(0, first.GetY(), EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -45,15 +45,8 @@ namespace iText.Kernel.Geom {
         [NUnit.Framework.Test]
         public virtual void IntParamConstructorTest() {
             Point first = new Point(2, 3);
-            NUnit.Framework.Assert.AreEqual(2, first.x, EPSILON_COMPARISON);
-            NUnit.Framework.Assert.AreEqual(3, first.y, EPSILON_COMPARISON);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CopyConstructorTest() {
-            Point second = new Point(new Point(0.13, 1.1));
-            NUnit.Framework.Assert.AreEqual(0.13, second.GetX(), EPSILON_COMPARISON);
-            NUnit.Framework.Assert.AreEqual(1.1, second.GetY(), EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(2, first.GetX(), EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(3, first.GetY(), EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -88,51 +81,12 @@ namespace iText.Kernel.Geom {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DistanceSquareBetweenCoordinatesTest() {
-            Point first = new Point(1, 1);
-            Point second = new Point(1.1, 1.1);
-            double expected = 0.02;
-            NUnit.Framework.Assert.AreEqual(expected, Point.DistanceSq(first.x, first.y, second.x, second.y), EPSILON_COMPARISON
-                );
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DistanceSquareByCoordinatesTest() {
-            Point first = new Point(1, 1);
-            Point second = new Point(1.1, 1.1);
-            double expected = 0.02;
-            NUnit.Framework.Assert.AreEqual(expected, first.DistanceSq(second.x, second.y), EPSILON_COMPARISON);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DistanceSquareByPointTest() {
-            Point first = new Point(1, 1);
-            Point second = new Point(1.1, 1.1);
-            double expected = 0.02;
-            NUnit.Framework.Assert.AreEqual(expected, first.DistanceSq(second), EPSILON_COMPARISON);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DistanceItselfSquareTest() {
-            Point first = new Point(1, 1);
-            NUnit.Framework.Assert.AreEqual(0, first.DistanceSq(first), EPSILON_COMPARISON);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void DistanceBetweenCoordinatesTest() {
-            Point first = new Point(1, 1);
-            Point second = new Point(1.1, 1.1);
-            double expected = Math.Sqrt(0.02);
-            NUnit.Framework.Assert.AreEqual(expected, Point.Distance(first.x, first.y, second.x, second.y), EPSILON_COMPARISON
-                );
-        }
-
-        [NUnit.Framework.Test]
         public virtual void DistanceByCoordinatesTest() {
             Point first = new Point(1, 1);
             Point second = new Point(1.1, 1.1);
             double expected = Math.Sqrt(0.02);
-            NUnit.Framework.Assert.AreEqual(expected, first.Distance(second.x, second.y), EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(expected, first.Distance(second.GetX(), second.GetY()), EPSILON_COMPARISON
+                );
         }
 
         [NUnit.Framework.Test]
@@ -164,19 +118,19 @@ namespace iText.Kernel.Geom {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TranslateTest() {
+        public virtual void MoveTest() {
             float w = 3.73f;
             float h = 5.23f;
             Rectangle rectangle = new Rectangle(0, 0, w, h);
             Point[] expectedPoints = rectangle.ToPointsArray();
             Point point = new Point(0, 0);
-            point.Translate(w, 0);
+            point.Move(w, 0);
             NUnit.Framework.Assert.AreEqual(expectedPoints[1], point);
-            point.Translate(0, h);
+            point.Move(0, h);
             NUnit.Framework.Assert.AreEqual(expectedPoints[2], point);
-            point.Translate(-w, 0);
+            point.Move(-w, 0);
             NUnit.Framework.Assert.AreEqual(expectedPoints[3], point);
-            point.Translate(0, -h);
+            point.Move(0, -h);
             NUnit.Framework.Assert.AreEqual(expectedPoints[0], point);
         }
 
@@ -188,12 +142,10 @@ namespace iText.Kernel.Geom {
         }
 
         [NUnit.Framework.Test]
-        public virtual void SetLocationByPointTest() {
-            Point first = new Point(1.23, 1.1);
-            Point second = new Point(3.59, 0.87);
-            NUnit.Framework.Assert.AreNotEqual(first, second);
-            first.SetLocation(second);
-            NUnit.Framework.Assert.AreEqual(first, second);
+        public virtual void CopyConstructorTest() {
+            Point second = new Point(new Point(0.13, 1.1));
+            NUnit.Framework.Assert.AreEqual(0.13, second.GetX(), EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(1.1, second.GetY(), EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]
@@ -201,25 +153,7 @@ namespace iText.Kernel.Geom {
             Point first = new Point(1.23, 1.1);
             Point second = new Point(3.59, 0.87);
             NUnit.Framework.Assert.AreNotEqual(first, second);
-            first.SetLocation(second.x, second.y);
-            NUnit.Framework.Assert.AreEqual(first, second);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void SetLocationByIntParamTest() {
-            Point first = new Point(1.23, 1.1);
-            Point second = new Point(3.59, 0.87);
-            NUnit.Framework.Assert.AreNotEqual(first, second);
-            first.SetLocation((int)second.x, (int)second.y);
-            NUnit.Framework.Assert.AreEqual(first, new Point(3, 0));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MovePointTest() {
-            Point first = new Point(1.23, 1.1);
-            Point second = new Point(3.59, 0.87);
-            NUnit.Framework.Assert.AreNotEqual(first, second);
-            first.Move(second.x, second.y);
+            first.SetLocation(second.GetX(), second.GetY());
             NUnit.Framework.Assert.AreEqual(first, second);
         }
     }
