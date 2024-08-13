@@ -210,5 +210,20 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void SimpleNestedTspanTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleNestedTspan");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void XWithoutYTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "xWithoutY");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoXNoYTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "noXNoY");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void YWithoutXTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "yWithoutX");
+        }
     }
 }

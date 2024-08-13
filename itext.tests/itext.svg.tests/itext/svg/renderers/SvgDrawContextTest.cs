@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Util;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg.Dummy.Renderers.Impl;
@@ -191,6 +193,15 @@ namespace iText.Svg.Renderers {
             context.AddNamedObject(dummyName, expectedTwo);
             Object actual = context.GetNamedObject(dummyName);
             NUnit.Framework.Assert.AreEqual(expectedOne, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RootTransformText() {
+            AffineTransform at = new AffineTransform();
+            NUnit.Framework.Assert.AreEqual(at, context.GetRootTransform());
+            at.SetToRotation(MathUtil.ToRadians(45));
+            context.SetRootTransform(at);
+            NUnit.Framework.Assert.AreEqual(at, context.GetRootTransform());
         }
     }
 }

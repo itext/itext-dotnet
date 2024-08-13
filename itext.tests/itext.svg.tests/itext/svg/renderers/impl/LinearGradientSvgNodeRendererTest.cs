@@ -353,7 +353,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextXOffset() {
-            // TODO DEVSIX-4143 change cmp file after fixing
             ConvertAndCompare(sourceFolder, destinationFolder, "textXOffset");
         }
 
@@ -529,7 +528,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MatrixTransformInGradientWithObjectBoundingBoxUnitsTest() {
-            //TODO change cmp after DEVSIX-4143 is fixed (bug with only one absolute coordinate in tspan)
             ConvertAndCompare(sourceFolder, destinationFolder, "matrixTransformInGradientWithObjectBoundingBoxUnits");
         }
 

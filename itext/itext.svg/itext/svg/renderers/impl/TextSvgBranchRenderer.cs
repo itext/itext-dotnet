@@ -190,6 +190,7 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
                 context.ResetTextMove();
                 context.SetLastTextTransform(null);
+                context.SetRootTransform(null);
                 if (this.attributesAndStyles != null) {
                     foreach (ISvgTextNodeRenderer c in children) {
                         currentCanvas.SaveState();
@@ -213,6 +214,10 @@ namespace iText.Svg.Renderers.Impl {
                         else {
                             if (c is TextLeafSvgNodeRenderer && !context.GetLastTextTransform().IsIdentity()) {
                                 currentCanvas.SetTextMatrix(context.GetLastTextTransform());
+                            }
+                            else {
+                                // If we don't update the matrix, we should set root matrix as the last text matrix
+                                context.SetLastTextTransform(context.GetRootTransform());
                             }
                         }
                         // Handle Text-Anchor declarations
@@ -246,6 +251,7 @@ namespace iText.Svg.Renderers.Impl {
             else {
                 rootTf = new AffineTransform(TEXTFLIP);
             }
+            context.SetRootTransform(rootTf);
             currentCanvas.SetTextMatrix(rootTf);
             // Apply relative move
             if (this.ContainsRelativeMove()) {
@@ -356,11 +362,12 @@ namespace iText.Svg.Renderers.Impl {
             AffineTransform tf = new AffineTransform();
             // If x is not specified, but y is, we need to correct for preceding text.
             if (absolutePositions[0] == null && absolutePositions[1] != null) {
-                absolutePositions[0] = new float[] { context.GetTextMove()[0] };
+                absolutePositions[0] = new float[] { context.GetTextMove()[0] + (float)context.GetLastTextTransform().GetTranslateX
+                    () };
             }
-            // If y is not present, we can replace it with a neutral transformation (0.0f)
+            // If y is not present, we should take the last text y
             if (absolutePositions[1] == null) {
-                absolutePositions[1] = new float[] { 0.0f };
+                absolutePositions[1] = new float[] { (float)context.GetLastTextTransform().GetTranslateY() };
             }
             tf.Concatenate(TEXTFLIP);
             tf.Concatenate(AffineTransform.GetTranslateInstance(absolutePositions[0][0], -absolutePositions[1][0]));
