@@ -28,16 +28,32 @@ namespace iText.Kernel.Pdf {
     /// <summary>Data container for debugging information.</summary>
     /// <remarks>
     /// Data container for debugging information. This class keeps a record of every registered product that
-    /// was involved in the creation of a certain PDF file. This information can then be used to log to the
-    /// logger or to the file.
+    /// was involved in the creation of a certain PDF file.
     /// </remarks>
     public class FingerPrint {
         private ICollection<ProductData> productDataSet;
+
+        private bool fingerPrintEnabled = true;
 
         /// <summary>Default constructor.</summary>
         /// <remarks>Default constructor. Initializes the productDataSet.</remarks>
         public FingerPrint() {
             this.productDataSet = new LinkedHashSet<ProductData>();
+        }
+
+        /// <summary>This method is used to disable iText fingerprint.</summary>
+        /// <remarks>
+        /// This method is used to disable iText fingerprint.
+        /// IText fingerPrint can only be disabled if all products are in non AGPL mode.
+        /// </remarks>
+        public virtual void DisableFingerPrint() {
+            fingerPrintEnabled = false;
+        }
+
+        /// <summary>This method is used to check iText fingerprint state.</summary>
+        /// <returns>true if fingerprint will be added to the document</returns>
+        public virtual bool IsFingerPrintEnabled() {
+            return fingerPrintEnabled;
         }
 
         /// <summary>Registers a product to be added to the fingerprint or other debugging info.</summary>

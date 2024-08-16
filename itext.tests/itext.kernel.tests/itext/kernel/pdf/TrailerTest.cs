@@ -27,8 +27,10 @@ using iText.Commons.Actions.Data;
 using iText.Commons.Utils;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Font;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -137,6 +139,35 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void EnableFingerprintInAGPLModeTest() {
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "enableFingerprintInAGPLMode.pdf"));
+            pdf.RegisterProduct(this.productData);
+            PdfPage page = pdf.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(), 12f).ShowText("Hello World").EndText();
+            pdf.Close();
+            NUnit.Framework.Assert.IsTrue(DoesTrailerContainFingerprint(new FileInfo(destinationFolder + "enableFingerprintInAGPLMode.pdf"
+                ), MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetProductName(), productData.GetVersion()
+                )));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.FINGERPRINT_DISABLED_BUT_NO_REQUIRED_LICENCE)]
+        public virtual void TryDisablingFingerprintInAGPLModeTest() {
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "tryDisablingFingerprintInAGPLMode.pdf"
+                ));
+            pdf.RegisterProduct(this.productData);
+            PdfPage page = pdf.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(), 12f).ShowText("Hello World").EndText();
+            pdf.GetFingerPrint().DisableFingerPrint();
+            pdf.Close();
+            NUnit.Framework.Assert.IsTrue(DoesTrailerContainFingerprint(new FileInfo(destinationFolder + "tryDisablingFingerprintInAGPLMode.pdf"
+                ), MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetProductName(), productData.GetVersion()
+                )));
+        }
+
         private bool DoesTrailerContainFingerprint(FileInfo file, String fingerPrint) {
             using (FileStream raf = FileUtil.GetRandomAccessFile(file)) {
                 // put the pointer at the end of the file
@@ -145,6 +176,9 @@ namespace iText.Kernel.Pdf {
                 String coreProductData = "%iText-Core-" + ITextCoreProductData.GetInstance().GetVersion();
                 String templine = "";
                 while (!templine.Contains(coreProductData)) {
+                    if (raf.Position <= 2) {
+                        return false;
+                    }
                     templine = (char)raf.ReadByte() + templine;
                     raf.Seek(raf.Position - 2);
                 }
@@ -152,6 +186,9 @@ namespace iText.Kernel.Pdf {
                 char read = ' ';
                 templine = "";
                 while (read != '%') {
+                    if (raf.Position <= 2) {
+                        return false;
+                    }
                     read = (char)raf.ReadByte();
                     templine = read + templine;
                     raf.Seek(raf.Position - 2);

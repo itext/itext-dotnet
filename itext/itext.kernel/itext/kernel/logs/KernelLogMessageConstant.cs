@@ -94,6 +94,8 @@ namespace iText.Kernel.Logs {
         public const String DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED = "Duplicated entries in order array are " + 
             "removed";
 
+        public const String FINGERPRINT_DISABLED_BUT_NO_REQUIRED_LICENCE = "Fingerprint disabling is only " + "available in non AGPL mode. Fingerprint will be added at the end of the document.";
+
         private KernelLogMessageConstant() {
         }
         //Private constructor will prevent the instantiation of this class directly

@@ -25,10 +25,10 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Commons.Actions.Data;
+using iText.Commons.Actions;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Actions.Data;
+using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
@@ -182,28 +182,6 @@ namespace iText.Kernel.Pdf {
                 return null;
             }
             return xref[index];
-        }
-
-        /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
-        /// <remarks>
-        /// Convenience method to write the fingerprint preceding the trailer.
-        /// The fingerprint contains information on iText products used in the generation or manipulation
-        /// of an outputted PDF file.
-        /// </remarks>
-        /// <param name="document">pdfDocument to write the fingerprint to</param>
-        protected internal static void WriteKeyInfo(PdfDocument document) {
-            PdfWriter writer = document.GetWriter();
-            ICollection<ProductData> products = document.GetFingerPrint().GetProducts();
-            if (products.IsEmpty()) {
-                writer.WriteString(MessageFormatUtil.Format("%iText-{0}-no-registered-products\n", ITextCoreProductData.GetInstance
-                    ().GetVersion()));
-            }
-            else {
-                foreach (ProductData productData in products) {
-                    writer.WriteString(MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetPublicProductName(), productData
-                        .GetVersion()));
-                }
-            }
         }
 
         /// <summary>Creates next available indirect reference.</summary>
@@ -400,7 +378,7 @@ namespace iText.Kernel.Pdf {
                 writer.Write(document.GetTrailer());
                 writer.Write('\n');
             }
-            WriteKeyInfo(document);
+            EventManager.GetInstance().OnEvent(new AddFingerPrintEvent(document));
             writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
             xref = null;
             freeReferencesLinkedList.Clear();

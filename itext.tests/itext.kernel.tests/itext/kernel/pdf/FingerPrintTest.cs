@@ -53,5 +53,12 @@ namespace iText.Kernel.Pdf {
             fingerPrint.RegisterProduct(productData);
             NUnit.Framework.Assert.IsFalse(fingerPrint.RegisterProduct(duplicateProductData));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableFingerPrintTest() {
+            FingerPrint fingerPrint = new FingerPrint();
+            fingerPrint.DisableFingerPrint();
+            NUnit.Framework.Assert.IsFalse(fingerPrint.IsFingerPrintEnabled());
+        }
     }
 }
