@@ -428,7 +428,8 @@ namespace iText.Kernel.Utils {
             PdfDocument inputDoc = new PdfDocument(new PdfReader(sourceFolder + "infiniteLoopInOutlineStructure.pdf"));
             PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "infiniteLoopInOutlineStructure.pdf"
                 ));
-            PdfMerger merger = new PdfMerger(outputDoc, false, true);
+            PdfMerger merger = new PdfMerger(outputDoc, new PdfMergerProperties().SetMergeTags(false).SetMergeOutlines
+                (true));
             System.Console.Out.WriteLine("Doing merge");
             merger.Merge(inputDoc, 1, 2);
             merger.Close();
@@ -463,7 +464,8 @@ namespace iText.Kernel.Utils {
             using (PdfDocument merged = new PdfDocument(CompareTool.CreateTestPdfWriter(mergedPdf))) {
                 using (PdfDocument fileA = new PdfDocument(new PdfReader(firstDocument))) {
                     using (PdfDocument fileB = new PdfDocument(new PdfReader(secondDocument))) {
-                        PdfMerger merger = new PdfMerger(merged, false, true);
+                        PdfMerger merger = new PdfMerger(merged, new PdfMergerProperties().SetMergeTags(false).SetMergeOutlines(true
+                            ));
                         merger.Merge(fileA, 1, fileA.GetNumberOfPages());
                         merger.Merge(fileB, 1, fileB.GetNumberOfPages());
                         merger.Close();
@@ -483,7 +485,8 @@ namespace iText.Kernel.Utils {
             using (PdfDocument documentA = new PdfDocument(new PdfReader(firstDocument))) {
                 using (PdfDocument documentB = new PdfDocument(new PdfReader(secondDocument))) {
                     using (PdfDocument merged = new PdfDocument(CompareTool.CreateTestPdfWriter(mergedPdf))) {
-                        PdfMerger merger = new PdfMerger(merged, false, true);
+                        PdfMerger merger = new PdfMerger(merged, new PdfMergerProperties().SetMergeTags(false).SetMergeOutlines(true
+                            ));
                         merger.Merge(documentA, 1, documentA.GetNumberOfPages());
                         merger.Merge(documentB, 1, documentB.GetNumberOfPages());
                         merger.Close();
@@ -502,7 +505,8 @@ namespace iText.Kernel.Utils {
             using (PdfDocument documentA = new PdfDocument(new PdfReader(firstPdfDocument))) {
                 using (PdfDocument documentB = new PdfDocument(new PdfReader(secondPdfDocument))) {
                     using (PdfDocument mergedPdf = new PdfDocument(CompareTool.CreateTestPdfWriter(mergedDocument))) {
-                        PdfMerger merger = new PdfMerger(mergedPdf, false, true);
+                        PdfMerger merger = new PdfMerger(mergedPdf, new PdfMergerProperties().SetMergeTags(false).SetMergeOutlines
+                            (true));
                         merger.Merge(documentA, 1, documentA.GetNumberOfPages());
                         merger.Merge(documentB, 1, documentB.GetNumberOfPages());
                         merger.Close();

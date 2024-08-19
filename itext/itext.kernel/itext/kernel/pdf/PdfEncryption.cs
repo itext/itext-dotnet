@@ -350,28 +350,14 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="id">the first id</param>
         /// <param name="modified">whether the document has been changed or not</param>
-        /// <returns>PdfObject containing the two entries.</returns>
+        /// <returns>PdfObject containing the two entries</returns>
         public static PdfObject CreateInfoId(byte[] id, bool modified) {
             if (modified) {
-                return CreateInfoId(id, GenerateNewDocumentId());
+                return CreateInfoId(id, GenerateNewDocumentId(), false);
             }
             else {
-                return CreateInfoId(id, id);
+                return CreateInfoId(id, id, false);
             }
-        }
-
-        /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
-        /// <remarks>
-        /// Creates a PdfLiteral that contains an array of two id entries. These entries are both hexadecimal
-        /// strings containing 16 hex characters. The first entry is the original id, the second entry
-        /// should be different from the first one if the document has changed.
-        /// </remarks>
-        /// <param name="firstId">the first id</param>
-        /// <param name="secondId">the second id</param>
-        /// <returns>PdfObject containing the two entries.</returns>
-        [System.ObsoleteAttribute(@"Use CreateInfoId(byte[], byte[], bool) instead")]
-        public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId) {
-            return CreateInfoId(firstId, secondId, false);
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
