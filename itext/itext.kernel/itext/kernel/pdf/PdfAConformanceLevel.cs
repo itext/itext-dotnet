@@ -154,27 +154,5 @@ namespace iText.Kernel.Pdf {
                     .GetValue());
             }
         }
-
-        /// <summary>Gets the PdfA conformance level.</summary>
-        /// <param name="possibleConformance">
-        /// the possible candidate for
-        /// <see cref="PdfAConformanceLevel"/>
-        /// </param>
-        /// <param name="document">the document</param>
-        /// <returns>the conformance level or null if it's not PDFA</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 Will be removed in next major release")]
-        public static iText.Kernel.Pdf.PdfAConformanceLevel GetPDFAConformance(IConformanceLevel possibleConformance
-            , PdfDocument document) {
-            if (possibleConformance is iText.Kernel.Pdf.PdfAConformanceLevel) {
-                return (iText.Kernel.Pdf.PdfAConformanceLevel)possibleConformance;
-            }
-            if (document == null) {
-                return null;
-            }
-            if (document.GetConformanceLevel() is iText.Kernel.Pdf.PdfAConformanceLevel) {
-                return (iText.Kernel.Pdf.PdfAConformanceLevel)document.GetConformanceLevel();
-            }
-            return null;
-        }
     }
 }

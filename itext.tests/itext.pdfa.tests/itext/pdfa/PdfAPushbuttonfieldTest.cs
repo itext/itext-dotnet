@@ -69,7 +69,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             form.AddField(button);
             doc.Close();
@@ -98,7 +98,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             button.RegenerateField();
             form.AddField(button);
@@ -128,7 +128,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             button.SetValue("button");
             form.AddField(button);

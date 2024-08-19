@@ -120,13 +120,13 @@ namespace iText.Forms.Fields {
             }
             else {
                 annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (null != GetGenericConformanceLevel()) {
+                if (null != GetConformanceLevel()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 field = PdfFormCreator.CreateChoiceFormField(annotation, GetDocument());
             }
             field.DisableFieldRegeneration();
-            field.pdfConformanceLevel = GetGenericConformanceLevel();
+            field.pdfConformanceLevel = GetConformanceLevel();
             if (this.GetFont() != null) {
                 field.SetFont(this.GetFont());
             }

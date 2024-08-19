@@ -57,7 +57,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (null != GetGenericConformanceLevel()) {
+                if (null != GetConformanceLevel()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 field = PdfFormCreator.CreateTextFormField(annotation, GetDocument());
@@ -67,7 +67,7 @@ namespace iText.Forms.Fields {
                 field.SetFont(GetFont());
             }
             field.DisableFieldRegeneration();
-            field.pdfConformanceLevel = GetGenericConformanceLevel();
+            field.pdfConformanceLevel = GetConformanceLevel();
             field.SetMultiline(multiline);
             field.SetFieldName(GetFormFieldName());
             field.SetValue(TEXT_FORM_FIELD_DEFAULT_VALUE);

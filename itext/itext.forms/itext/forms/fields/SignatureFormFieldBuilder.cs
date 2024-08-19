@@ -52,7 +52,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (GetGenericConformanceLevel() != null) {
+                if (GetConformanceLevel() != null) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 signatureFormField = PdfFormCreator.CreateSignatureFormField(annotation, GetDocument());
@@ -63,7 +63,7 @@ namespace iText.Forms.Fields {
             if (GetFont() != null) {
                 signatureFormField.font = GetFont();
             }
-            signatureFormField.pdfConformanceLevel = GetGenericConformanceLevel();
+            signatureFormField.pdfConformanceLevel = GetConformanceLevel();
             signatureFormField.SetFieldName(GetFormFieldName());
             return signatureFormField;
         }

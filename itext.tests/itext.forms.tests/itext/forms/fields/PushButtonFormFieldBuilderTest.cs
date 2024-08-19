@@ -69,7 +69,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreatePushButtonWithConformanceLevelTest() {
             PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreatePushButton();
+                (DUMMY_RECTANGLE).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreatePushButton();
             ComparePushButtons(pushButtonFormField, true);
         }
 

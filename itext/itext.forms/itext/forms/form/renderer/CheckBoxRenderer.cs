@@ -77,15 +77,6 @@ namespace iText.Forms.Form.Renderer {
             return RenderingMode.DEFAULT_LAYOUT_MODE;
         }
 
-        /// <summary>Returns whether or not the checkbox is in PDF/A mode.</summary>
-        /// <returns>true if the checkbox is in PDF/A mode, false otherwise</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will be removed")]
-        public virtual bool IsPdfA() {
-            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
-                );
-            return conformanceLevel is PdfAConformanceLevel;
-        }
-
         /// <summary>Gets the checkBoxType.</summary>
         /// <returns>the checkBoxType</returns>
         public virtual CheckBoxType GetCheckBoxType() {
@@ -200,7 +191,7 @@ namespace iText.Forms.Form.Renderer {
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
             IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetGenericConformanceLevel
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
                 (this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
             if (this.HasProperty(FormProperty.FORM_CHECKBOX_TYPE)) {
                 builder.SetCheckType((CheckBoxType)this.GetProperty<CheckBoxType?>(FormProperty.FORM_CHECKBOX_TYPE));

@@ -44,24 +44,16 @@ namespace iText.Forms.Fields {
         public virtual void GetSetConformanceLevelTest() {
             FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT, DUMMY_NAME
                 );
-            builder.SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A);
-            NUnit.Framework.Assert.AreSame(PdfAConformanceLevel.PDF_A_1A, builder.GetGenericConformanceLevel());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetSetConformanceLevelDepreceatedTest() {
-            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT, DUMMY_NAME
-                );
             builder.SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A);
             NUnit.Framework.Assert.AreSame(PdfAConformanceLevel.PDF_A_1A, builder.GetConformanceLevel());
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetSetConformanceLevelDifferentTest() {
+        public virtual void GetSetConformanceLevelPdfUATest() {
             FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT, DUMMY_NAME
                 );
-            builder.SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1);
-            NUnit.Framework.Assert.IsNull(builder.GetConformanceLevel());
+            builder.SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1);
+            NUnit.Framework.Assert.AreSame(PdfUAConformanceLevel.PDFUA_1, builder.GetConformanceLevel());
         }
 
         private class TestBuilder : FormFieldBuilder<FormFieldBuilderTest.TestBuilder> {

@@ -243,7 +243,7 @@ namespace iText.Forms.Form.Renderer {
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
             PdfButtonFormField button = new PushButtonFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
-                ).SetGenericConformanceLevel(GetGenericConformanceLevel(doc)).CreatePushButton();
+                ).SetConformanceLevel(GetConformanceLevel(doc)).CreatePushButton();
             button.DisableFieldRegeneration();
             button.SetFontSize(fontSizeValue);
             button.GetFirstFormAnnotation().SetBackgroundColor(backgroundColor);

@@ -113,7 +113,7 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         public virtual void CreateCheckBoxFactoryPdfATest() {
             CheckBox checkBox = new CheckBox("test");
-            checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
+            checkBox.SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
             CheckBoxRenderer renderer = (CheckBoxRenderer)checkBox.GetRenderer();
             ICheckBoxRenderingStrategy strategy = renderer.CreateCheckBoxRenderStrategy();
             NUnit.Framework.Assert.IsTrue(strategy is PdfACheckBoxRenderingStrategy);
@@ -132,23 +132,10 @@ namespace iText.Forms.Form.Element {
         public virtual void CreateCheckBoxFactoryHtmlWithPdfATest() {
             CheckBox checkBox = new CheckBox("test");
             checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-            checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
+            checkBox.SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
             CheckBoxRenderer renderer = (CheckBoxRenderer)checkBox.GetRenderer();
             ICheckBoxRenderingStrategy strategy = renderer.CreateCheckBoxRenderStrategy();
             NUnit.Framework.Assert.IsTrue(strategy is HtmlCheckBoxRenderingStrategy);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void IsPdfATest() {
-            CheckBox checkBox = new CheckBox("test");
-            CheckBoxRenderer rendererPdf2 = (CheckBoxRenderer)checkBox.GetRenderer();
-            NUnit.Framework.Assert.IsFalse(rendererPdf2.IsPdfA());
-            checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
-            CheckBoxRenderer rendererPdf = (CheckBoxRenderer)checkBox.GetRenderer();
-            NUnit.Framework.Assert.IsTrue(rendererPdf.IsPdfA());
-            checkBox.SetPdfAConformanceLevel(null);
-            CheckBoxRenderer rendererPdf1 = (CheckBoxRenderer)checkBox.GetRenderer();
-            NUnit.Framework.Assert.IsFalse(rendererPdf1.IsPdfA());
         }
 
         [NUnit.Framework.Test]
@@ -228,16 +215,16 @@ namespace iText.Forms.Form.Element {
             String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckBoxPdfA.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 //should be invisble because there is no default border
-                CheckBox checkBoxUnset = new CheckBox("test").SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
+                CheckBox checkBoxUnset = new CheckBox("test").SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
                 document.Add(checkBoxUnset);
-                CheckBox checkBoxset = new CheckBox("test").SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
+                CheckBox checkBoxset = new CheckBox("test").SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
                 checkBoxset.SetChecked(true);
                 document.Add(checkBoxset);
-                CheckBox checkBoxUnsetInteractive = new CheckBox("test1").SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B
+                CheckBox checkBoxUnsetInteractive = new CheckBox("test1").SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B
                     );
                 checkBoxUnsetInteractive.SetInteractive(true);
                 document.Add(checkBoxUnsetInteractive);
-                CheckBox checkBoxsetInteractive = new CheckBox("test2").SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B
+                CheckBox checkBoxsetInteractive = new CheckBox("test2").SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B
                     );
                 checkBoxsetInteractive.SetInteractive(true);
                 checkBoxsetInteractive.SetChecked(true);
@@ -352,7 +339,7 @@ namespace iText.Forms.Form.Element {
                     }
                     );
                     GenerateCheckBoxes(document, (checkBox) => {
-                        checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
+                        checkBox.SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
                         checkBox.SetCheckBoxType(enumConstant);
                     }
                     );
@@ -369,7 +356,7 @@ namespace iText.Forms.Form.Element {
                 foreach (CheckBoxType enumConstant in EnumUtil.GetAllValuesOfEnum<CheckBoxType>()) {
                     GenerateCheckBoxes(document, (checkBox) => {
                         checkBox.SetSize(20);
-                        checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_3B);
+                        checkBox.SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_3B);
                         checkBox.SetCheckBoxType(enumConstant);
                     }
                     );
@@ -515,7 +502,7 @@ namespace iText.Forms.Form.Element {
             document.Add(new Paragraph("Pdfa rendering mode"));
             GenerateCheckBoxes(document, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
-                checkBox.SetPdfAConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
+                checkBox.SetPdfConformanceLevel(PdfAConformanceLevel.PDF_A_1B);
                 alterFunction(checkBox);
             }
             );

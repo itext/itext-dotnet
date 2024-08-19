@@ -56,27 +56,27 @@ namespace iText.Forms {
             pdfDoc.AddNewPage();
             // 规
             PdfFormField field = new ChoiceFormFieldBuilder(pdfDoc, "combo1").SetWidgetRectangle(new Rectangle(36, 666
-                , 40, 80)).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetGenericConformanceLevel(null).CreateComboBox
-                ().SetValue("\u89c4");
+                , 40, 80)).SetOptions(new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox().
+                SetValue("\u89c4");
             field.SetFont(font);
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             // 觉
             field = new ChoiceFormFieldBuilder(pdfDoc, "combo2").SetWidgetRectangle(new Rectangle(136, 666, 40, 80)).SetOptions
-                (new String[] { "\u89c4", "\u89c9" }).SetGenericConformanceLevel(null).CreateComboBox();
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateComboBox();
             field.SetValue("\u89c4").SetFont(font);
             field.SetValue("\u89c9");
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             // 规
             field = new ChoiceFormFieldBuilder(pdfDoc, "list1").SetWidgetRectangle(new Rectangle(236, 666, 50, 80)).SetOptions
-                (new String[] { "\u89c4", "\u89c9" }).SetGenericConformanceLevel(null).CreateList().SetValue("\u89c4");
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList().SetValue("\u89c4");
             field.SetFont(font);
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             form.AddField(field);
             // 觉
             field = new ChoiceFormFieldBuilder(pdfDoc, "list2").SetWidgetRectangle(new Rectangle(336, 666, 50, 80)).SetOptions
-                (new String[] { "\u89c4", "\u89c9" }).SetGenericConformanceLevel(null).CreateList();
+                (new String[] { "\u89c4", "\u89c9" }).SetConformanceLevel(null).CreateList();
             field.SetValue("\u89c4").SetFont(font);
             field.SetValue("\u89c9");
             field.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
@@ -146,7 +146,7 @@ namespace iText.Forms {
             document.AddNewPage();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(document, true);
             PdfChoiceFormField choice = (PdfChoiceFormField)new ChoiceFormFieldBuilder(document, "choice").SetWidgetRectangle
-                (new Rectangle(336, 666, 50, 80)).SetOptions(new String[] { "one", "two", "three", "four" }).SetGenericConformanceLevel
+                (new Rectangle(336, 666, 50, 80)).SetOptions(new String[] { "one", "two", "three", "four" }).SetConformanceLevel
                 (null).CreateList().SetValue("two").SetFont(null);
             choice.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             choice.SetMultiSelect(true);

@@ -149,7 +149,7 @@ namespace iText.Forms.Fields {
         public virtual void CreateRadioButtonWithConformanceLevelTest() {
             RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
-            PdfFormAnnotation radioAnnotation = builder.SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateRadioButton
+            PdfFormAnnotation radioAnnotation = builder.SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateRadioButton
                 (DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             CompareRadioButtons(radioAnnotation, radioGroup, false);
         }
@@ -158,7 +158,7 @@ namespace iText.Forms.Fields {
         public virtual void CreateRadioButtonWithConformanceLevelAddedToGroupTest() {
             RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
-            PdfFormAnnotation radioAnnotation = builder.SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateRadioButton
+            PdfFormAnnotation radioAnnotation = builder.SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateRadioButton
                 (DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             radioGroup.AddKid(radioAnnotation);
             CompareRadioButtons(radioAnnotation, radioGroup, true);

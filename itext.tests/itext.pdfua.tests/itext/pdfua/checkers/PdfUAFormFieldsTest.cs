@@ -2269,7 +2269,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
-                    , 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateText();
+                    , 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateText();
                 field.SetValue("Some value");
                 field.SetAlternativeName("Some tu entry value");
                 form.AddField(field);
@@ -2283,7 +2283,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
-                    , 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateText();
+                    , 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateText();
                 field.SetValue("Some value");
                 form.AddField(field);
             }
@@ -2297,7 +2297,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfChoiceFormField field = new ChoiceFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100
-                    , 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateComboBox
+                    , 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateComboBox
                     ();
                 field.SetAlternativeName("Some tu entry value");
                 form.AddField(field);
@@ -2311,7 +2311,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfChoiceFormField field = new ChoiceFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100
-                    , 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateComboBox
+                    , 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateComboBox
                     ();
                 form.AddField(field);
             }
@@ -2325,7 +2325,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField field = new PushButtonFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
-                    (100, 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreatePushButton
+                    (100, 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreatePushButton
                     ();
                 field.SetAlternativeName("Some tu entry value");
                 form.AddField(field);
@@ -2339,7 +2339,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField field = new PushButtonFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
-                    (100, 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreatePushButton
+                    (100, 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreatePushButton
                     ();
                 form.AddField(field);
             }
@@ -2353,7 +2353,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField field = new PushButtonFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
-                    (100, 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreatePushButton
+                    (100, 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreatePushButton
                     ();
                 IList<PdfFormAnnotation> annList = field.GetChildFormAnnotations();
                 annList[0].SetVisibility(PdfFormAnnotation.HIDDEN);
@@ -2402,7 +2402,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfSignatureFormField field = new SignatureFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
-                    (100, 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateSignature
+                    (100, 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateSignature
                     ();
                 field.SetValue("some value");
                 field.SetAlternativeName("Some tu entry value");
@@ -2417,7 +2417,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfSignatureFormField field = new SignatureFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
-                    (100, 100, 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateSignature
+                    (100, 100, 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateSignature
                     ();
                 field.SetValue("some value");
                 form.AddField(field);
@@ -2432,7 +2432,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
-                    , 100, 100)).SetFont(GetFont()).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateText();
+                    , 100, 100)).SetFont(GetFont()).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateText();
                 field.SetValue("Some value");
                 pdfDoc.GetTagStructureContext().GetAutoTaggingPointer().AddTag(new DefaultAccessibilityProperties(StandardRoles
                     .FORM).SetAlternateDescription("alternate description"));

@@ -71,41 +71,11 @@ namespace iText.Forms.Fields {
         /// <summary>Gets conformance level for form field creation.</summary>
         /// <returns>
         /// instance of
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
-        /// to be used for form field creation
-        /// </returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will return iText.Kernel.Pdf.IConformanceLevel in next major release"
-            )]
-        public virtual PdfAConformanceLevel GetConformanceLevel() {
-            if (conformanceLevel is PdfAConformanceLevel) {
-                return (PdfAConformanceLevel)conformanceLevel;
-            }
-            return null;
-        }
-
-        /// <summary>Gets conformance level for form field creation.</summary>
-        /// <returns>
-        /// instance of
         /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
         /// to be used for form field creation
         /// </returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will be renamed to getConformanceLevel()")]
-        public virtual IConformanceLevel GetGenericConformanceLevel() {
+        public virtual IConformanceLevel GetConformanceLevel() {
             return conformanceLevel;
-        }
-
-        /// <summary>Sets conformance level for form field creation.</summary>
-        /// <param name="conformanceLevel">
-        /// instance of
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
-        /// to be used for form field creation
-        /// </param>
-        /// <returns>this builder</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 conformance level param will change to iText.Kernel.Pdf.IConformanceLevel"
-            )]
-        public virtual T SetConformanceLevel(PdfAConformanceLevel conformanceLevel) {
-            this.conformanceLevel = conformanceLevel;
-            return GetThis();
         }
 
         /// <summary>Sets conformance level for form field creation.</summary>
@@ -114,9 +84,8 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
         /// to be used for form field creation.
         /// </param>
-        /// <returns>This builder.</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will be renamed to setConformanceLevel")]
-        public virtual T SetGenericConformanceLevel(IConformanceLevel conformanceLevel) {
+        /// <returns>this builder</returns>
+        public virtual T SetConformanceLevel(IConformanceLevel conformanceLevel) {
             this.conformanceLevel = conformanceLevel;
             return GetThis();
         }

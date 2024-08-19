@@ -65,7 +65,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateTextWithConformanceLevelTest() {
             PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
-                ).SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateText();
+                ).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
             CompareTexts(expectedDictionary, textFormField, true);
@@ -92,7 +92,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateMultilineTextWithConformanceLevelTest() {
             PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
-                ).SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateMultilineText();
+                ).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateMultilineText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(PdfTextFormField.FF_MULTILINE));
             CompareTexts(expectedDictionary, textFormField, true);

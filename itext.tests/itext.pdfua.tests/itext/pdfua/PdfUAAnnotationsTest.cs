@@ -98,7 +98,7 @@ namespace iText.Pdfua {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
-                    (10, 650, 40, 20)).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateCheckBox();
+                    (10, 650, 40, 20)).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateCheckBox();
                 checkBox.SetAlternativeName("widget");
                 acroForm.AddField(checkBox);
             }
@@ -350,7 +350,7 @@ namespace iText.Pdfua {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 // The rest of the tests for widgets can be found in com.itextpdf.pdfua.checkers.PdfUAFormFieldsTest
                 PdfFormField button = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle
-                    (10, 650, 40, 20)).SetGenericConformanceLevel(PdfUAConformanceLevel.PDFUA_1).SetFont(LoadFont()).CreatePushButton
+                    (10, 650, 40, 20)).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).SetFont(LoadFont()).CreatePushButton
                     ();
                 button.SetAlternativeName("widget");
                 acroForm.AddField(button);

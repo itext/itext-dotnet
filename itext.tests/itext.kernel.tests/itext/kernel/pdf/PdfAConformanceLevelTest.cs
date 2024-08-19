@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.IO.Source;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Impl;
 using iText.Test;
@@ -53,32 +52,6 @@ namespace iText.Kernel.Pdf {
             meta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, "B");
             PdfAConformanceLevel level = PdfAConformanceLevel.GetConformanceLevel(meta);
             NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_2B, level);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetPdfAConformanceLevel01Test() {
-            NUnit.Framework.Assert.IsNull(PdfAConformanceLevel.GetPDFAConformance(null, null));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetPdfAConformanceLevel02Test() {
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1A, PdfAConformanceLevel.GetPDFAConformance(PdfAConformanceLevel
-                .PDF_A_1A, null));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetPdfAConformanceLevel03Test() {
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
-                NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1A, PdfAConformanceLevel.GetPDFAConformance(PdfAConformanceLevel
-                    .PDF_A_1A, pdfDocument));
-            }
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void GetPdfAConformanceLevel04Test() {
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
-                NUnit.Framework.Assert.IsNull(PdfAConformanceLevel.GetPDFAConformance(null, pdfDocument));
-            }
         }
     }
 }

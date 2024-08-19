@@ -62,7 +62,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateSignatureWithConformanceLevelTest() {
             PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetGenericConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateSignature();
+                (DUMMY_RECTANGLE).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateSignature();
             CompareSignatures(signatureFormField, true);
         }
 
