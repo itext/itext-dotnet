@@ -206,7 +206,7 @@ namespace iText.Forms.Form.Renderer {
         /// </param>
         protected internal virtual void SetupBuilderValues(ChoiceFormFieldBuilder builder, AbstractSelectField field
             ) {
-            IList<SelectFieldItem> options = field.GetItems();
+            IList<SelectFieldItem> options = field.GetOptions();
             if (options.IsEmpty()) {
                 builder.SetOptions(new String[0]);
                 return;

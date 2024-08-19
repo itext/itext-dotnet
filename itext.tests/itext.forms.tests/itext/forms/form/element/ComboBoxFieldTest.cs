@@ -32,7 +32,6 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using iText.Layout.Tagging;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -273,7 +272,7 @@ namespace iText.Forms.Form.Element {
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 2"));
                 flattenComboBoxField.SetSelected("option 1");
-                ((IAccessibleElement)flattenComboBoxField).GetAccessibilityProperties().SetLanguage("random_lang");
+                flattenComboBoxField.GetAccessibilityProperties().SetLanguage("random_lang");
                 document.Add(flattenComboBoxField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -459,7 +458,7 @@ namespace iText.Forms.Form.Element {
             ComboBoxField comboBoxField = new ComboBoxField("test");
             comboBoxField.AddOption(new SelectFieldItem("option 1", "1"));
             comboBoxField.AddOption(new SelectFieldItem("option 1", "2"));
-            NUnit.Framework.Assert.AreEqual(2, comboBoxField.GetItems().Count);
+            NUnit.Framework.Assert.AreEqual(2, comboBoxField.GetOptions().Count);
         }
 
         [NUnit.Framework.Test]
@@ -467,7 +466,7 @@ namespace iText.Forms.Form.Element {
             ComboBoxField comboBoxField = new ComboBoxField("test");
             comboBoxField.AddOption(new SelectFieldItem("option 1", "1"));
             comboBoxField.AddOption(new SelectFieldItem("option 2", "1"));
-            NUnit.Framework.Assert.AreEqual(2, comboBoxField.GetItems().Count);
+            NUnit.Framework.Assert.AreEqual(2, comboBoxField.GetOptions().Count);
         }
 
         [NUnit.Framework.Test]

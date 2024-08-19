@@ -99,10 +99,10 @@ namespace iText.Forms.Form.Renderer {
 
         protected internal override IRenderer CreateFlatRenderer() {
             AbstractSelectField selectField = (AbstractSelectField)modelElement;
-            IList<IBlockElement> options = selectField.GetOptions();
+            IList<SelectFieldItem> options = selectField.GetOptions();
             Div optionsContainer = new Div();
-            foreach (IBlockElement option in options) {
-                optionsContainer.Add(option);
+            foreach (SelectFieldItem option in options) {
+                optionsContainer.Add(option.GetElement());
             }
             String lang = GetLang();
             if (lang != null) {

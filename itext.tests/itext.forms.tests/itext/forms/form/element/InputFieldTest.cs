@@ -35,7 +35,6 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using iText.Layout.Tagging;
 using iText.Test;
 
 namespace iText.Forms.Form.Element {
@@ -111,7 +110,7 @@ namespace iText.Forms.Form.Element {
                 InputField flattenInputField = new InputField("input field with lang");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "input field with lang");
-                ((IAccessibleElement)flattenInputField).GetAccessibilityProperties().SetLanguage("random_lang");
+                flattenInputField.GetAccessibilityProperties().SetLanguage("random_lang");
                 flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
@@ -127,7 +126,7 @@ namespace iText.Forms.Form.Element {
                 InputField flattenInputField = new InputField("input field with null lang");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "input field with null lang");
-                ((IAccessibleElement)flattenInputField).GetAccessibilityProperties().SetLanguage(null);
+                flattenInputField.GetAccessibilityProperties().SetLanguage(null);
                 flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
