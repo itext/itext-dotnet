@@ -40,15 +40,16 @@ namespace iText.Pdfua.Checkers.Utils {
             }
 
             /// <summary><inheritDoc/></summary>
-            public override void NextElement(IStructureNode elem) {
+            public override bool NextElement(IStructureNode elem) {
                 PdfStructElem structElem = context.GetElementIfRoleMatches(PdfName.Note, elem);
                 if (structElem == null) {
-                    return;
+                    return true;
                 }
                 PdfDictionary pdfObject = structElem.GetPdfObject();
                 if (pdfObject.Get(PdfName.ID) == null) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY);
                 }
+                return true;
             }
         }
     }

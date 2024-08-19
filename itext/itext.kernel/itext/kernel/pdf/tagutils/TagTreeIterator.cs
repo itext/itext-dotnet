@@ -121,7 +121,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             if (traversalOrder == TagTreeIterator.TreeTraversalOrder.PRE_ORDER) {
                 foreach (ITagTreeIteratorHandler handler in handlerList) {
-                    handler.NextElement(elem);
+                    if (!handler.NextElement(elem)) {
+                        return;
+                    }
                 }
             }
             IList<IStructureNode> kids = elem.GetKids();

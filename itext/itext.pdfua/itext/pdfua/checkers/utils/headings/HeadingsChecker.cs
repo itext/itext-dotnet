@@ -172,8 +172,9 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
             }
 
             /// <summary><inheritDoc/></summary>
-            public override void NextElement(IStructureNode elem) {
+            public override bool NextElement(IStructureNode elem) {
                 checker.CheckStructElement(elem);
+                return true;
             }
         }
     }

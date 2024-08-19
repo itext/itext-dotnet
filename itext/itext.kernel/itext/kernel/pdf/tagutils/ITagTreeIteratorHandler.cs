@@ -35,6 +35,16 @@ namespace iText.Kernel.Pdf.Tagutils {
     public interface ITagTreeIteratorHandler {
         /// <summary>Called when the next element is reached during the traversal.</summary>
         /// <param name="elem">the next element</param>
-        void NextElement(IStructureNode elem);
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the iteration should be continued,
+        /// <see langword="false"/>
+        /// otherwise. Note that this value
+        /// is relevant only in case
+        /// <see cref="TreeTraversalOrder.PRE_ORDER"/>
+        /// is used for the traversal
+        /// </returns>
+        bool NextElement(IStructureNode elem);
     }
 }

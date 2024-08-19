@@ -37,10 +37,11 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         // Empty constructor
         /// <summary><inheritDoc/></summary>
-        public virtual void NextElement(IStructureNode elem) {
+        public virtual bool NextElement(IStructureNode elem) {
             if (elem is PdfStructElem && !((PdfStructElem)elem).IsFlushed()) {
                 ((PdfStructElem)elem).Flush();
             }
+            return true;
         }
     }
 }

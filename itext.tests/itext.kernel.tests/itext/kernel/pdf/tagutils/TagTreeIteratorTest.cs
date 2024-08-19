@@ -151,8 +151,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             internal readonly IList<IStructureNode> nodes = new List<IStructureNode>();
 //\endcond
 
-            public virtual void NextElement(IStructureNode elem) {
+            public virtual bool NextElement(IStructureNode elem) {
                 nodes.Add(elem);
+                return true;
             }
         }
 //\endcond

@@ -762,10 +762,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE);
             }
             TagTreePointer.RoleFinderHandler handler = new TagTreePointer.RoleFinderHandler(n, role);
-            TagTreePointer.TagTreeIteratorApproverWithStop approver = new TagTreePointer.TagTreeIteratorApproverWithStop
-                (handler);
-            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), approver, TagTreeIterator.TreeTraversalOrder
-                .PRE_ORDER);
+            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), new TagTreeIteratorAvoidDuplicatesApprover
+                (), TagTreeIterator.TreeTraversalOrder.PRE_ORDER);
             iterator.AddHandler(handler);
             iterator.Traverse();
             PdfStructElem elem = handler.GetFoundElement();
@@ -1145,33 +1143,19 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
 //\endcond
 
-            public virtual void NextElement(IStructureNode elem) {
+            public virtual bool NextElement(IStructureNode elem) {
                 if (foundElem != null) {
-                    return;
+                    return false;
                 }
                 String descendantRole = elem.GetRole().GetValue();
                 if (descendantRole.Equals(role) && foundIdx++ == n) {
                     foundElem = (PdfStructElem)elem;
                 }
+                return true;
             }
 
             public virtual PdfStructElem GetFoundElement() {
                 return foundElem;
-            }
-        }
-
-        [System.ObsoleteAttribute(@"change ITagTreeIteratorHandler#nextElement to return boolean showing whether the iteration should be continued. It will allow to get rid of this ugly workaround."
-            )]
-        private class TagTreeIteratorApproverWithStop : TagTreeIteratorAvoidDuplicatesApprover {
-            private readonly TagTreePointer.RoleFinderHandler handler;
-
-            public TagTreeIteratorApproverWithStop(TagTreePointer.RoleFinderHandler handler)
-                : base() {
-                this.handler = handler;
-            }
-
-            public override bool Approve(IStructureNode elem) {
-                return base.Approve(elem) && handler.GetFoundElement() == null;
             }
         }
     }

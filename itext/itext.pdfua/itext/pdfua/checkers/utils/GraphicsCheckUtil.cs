@@ -92,16 +92,17 @@ namespace iText.Pdfua.Checkers.Utils {
             }
 
             /// <summary><inheritDoc/></summary>
-            public override void NextElement(IStructureNode elem) {
+            public override bool NextElement(IStructureNode elem) {
                 PdfStructElem structElem = context.GetElementIfRoleMatches(PdfName.Figure, elem);
                 if (structElem == null) {
-                    return;
+                    return true;
                 }
                 PdfDictionary pdfObject = structElem.GetPdfObject();
                 if (!HasAtleastOneValidValue(pdfObject.GetAsString(PdfName.Alt), pdfObject.GetAsString(PdfName.ActualText)
                     )) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
                 }
+                return true;
             }
         }
     }
