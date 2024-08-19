@@ -45,7 +45,7 @@ namespace iText.Signatures
 
             cert.KeyUsage = new bool[] { true, true };
 
-            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace iText.Signatures
 
             cert.SetCriticalExtensions(criticalExtensions);
 
-            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace iText.Signatures
 
             cert.SetExtendedKeyUsage(extendedKeyUsage);
 
-            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
 
         [Test]
@@ -124,13 +124,13 @@ namespace iText.Signatures
 
             cert.SetCriticalExtensions(criticalExtensions);
 
-            Assert.True(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.True(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
 
         [Test]
         public void CertificateIsNullTest()
         {
-            Assert.Catch(typeof(ArgumentException), () => SignUtils.HasUnsupportedCriticalExtension(null));
+            Assert.Catch(typeof(ArgumentException), () => CertificateVerification.HasUnsupportedCriticalExtension(null));
         }
         
         [Test]
@@ -140,7 +140,7 @@ namespace iText.Signatures
             
             cert.SetCriticalExtensions(null);
 
-            Assert.False(SignUtils.HasUnsupportedCriticalExtension(cert));
+            Assert.False(CertificateVerification.HasUnsupportedCriticalExtension(cert));
         }
     }
 }

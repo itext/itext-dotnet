@@ -42,8 +42,8 @@ namespace iText.Signatures.Testutils.Client {
         private readonly IDictionary<String, TestOcspResponseBuilder> subjectNameToResponseBuilder = new LinkedDictionary
             <String, TestOcspResponseBuilder>();
 
-        public AdvancedTestOcspClient(OCSPVerifier verifier)
-            : base(verifier) {
+        public AdvancedTestOcspClient()
+            : base() {
         }
 
         protected internal override Stream CreateRequestAndResponse(IX509Certificate checkCert, IX509Certificate rootCert

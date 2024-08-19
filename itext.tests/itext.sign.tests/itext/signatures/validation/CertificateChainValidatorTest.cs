@@ -26,7 +26,6 @@ using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
-using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Extensions;
 using iText.Signatures.Validation.Mocks;
@@ -578,20 +577,6 @@ namespace iText.Signatures.Validation {
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItems(1, 10, (la) => la.WithMessage(CertificateChainValidator.REVOCATION_VALIDATION_FAILED)));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void AddCrlClientPasstroughTest() {
-            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
-            validator.AddCrlClient(new TestCrlClient());
-            NUnit.Framework.Assert.AreEqual(1, mockRevocationDataValidator.crlClientsAdded.Count);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void AddOcdpClientPasstroughTest() {
-            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
-            validator.AddOcspClient(new TestOcspClient());
-            NUnit.Framework.Assert.AreEqual(1, mockRevocationDataValidator.ocspClientsAdded.Count);
         }
 
         [NUnit.Framework.Test]

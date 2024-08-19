@@ -207,7 +207,7 @@ namespace iText.Signatures.Validation {
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             CRLValidator validator = validatorChainBuilder.GetCRLValidator();
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
-                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((al) => al.WithMessage(CRLValidator.ONLY_SOME_REASONS_CHECKED).WithCertificate(signCert))
                 );
@@ -231,10 +231,10 @@ namespace iText.Signatures.Validation {
             CRLValidator validator = validatorChainBuilder.GetCRLValidator();
             // Validate full CRL.
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile
-                (fullCrlPath)), TimeTestUtil.TEST_DATE_TIME);
+                (fullCrlPath)), TimeTestUtil.TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             // Validate CRL with onlySomeReasons.
             validator.Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream(new MemoryStream
-                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+                (builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
@@ -253,7 +253,7 @@ namespace iText.Signatures.Validation {
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
-                (new MemoryStream(builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME);
+                (new MemoryStream(builder.MakeCrl())), TimeTestUtil.TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
                 ((la) => la.WithCertificate(signCert).WithCheckName(CRLValidator.CRL_CHECK).WithMessage(CRLValidator.CERTIFICATE_IS_UNREVOKED
                 )));
@@ -278,7 +278,7 @@ namespace iText.Signatures.Validation {
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             validatorChainBuilder.GetCRLValidator().Validate(report, context, cert, (IX509Crl)CertificateUtil.ParseCrlFromStream
-                (new MemoryStream(builder.MakeCrl())), checkDate);
+                (new MemoryStream(builder.MakeCrl())), checkDate, checkDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithStatus(ReportItem.ReportItemStatus.INDETERMINATE).WithCertificate(cert).WithMessage
                 (CRLValidator.ONLY_SOME_REASONS_CHECKED)));
@@ -380,7 +380,7 @@ namespace iText.Signatures.Validation {
             ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
                 .SIGNER_CERT, TimeBasedContext.PRESENT);
             validatorChainBuilder.GetCRLValidator().Validate(report, context, signCert, (IX509Crl)CertificateUtil.ParseCrlFromStream
-                (FileUtil.GetInputStreamForFile(crlPath)), TimeTestUtil.TEST_DATE_TIME);
+                (FileUtil.GetInputStreamForFile(crlPath)), TimeTestUtil.TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             return report;
         }
 

@@ -130,20 +130,6 @@ namespace iText.Signatures.Validation {
         /// <param name="singleResp">single response to check</param>
         /// <param name="ocspResp">basic OCSP response which contains single response to check</param>
         /// <param name="validationDate">validation date to check for</param>
-        [System.ObsoleteAttribute(@"starting from 8.0.5. TODO DEVSIX-8398 To be removed.")]
-        public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
-            , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate) {
-            Validate(report, context, certificate, singleResp, ocspResp, validationDate, DateTimeUtil.GetCurrentUtcTime
-                ());
-        }
-
-        /// <summary>Validates a certificate against single OCSP Response.</summary>
-        /// <param name="report">to store all the chain verification results</param>
-        /// <param name="context">the context in which to perform the validation</param>
-        /// <param name="certificate">the certificate to check for</param>
-        /// <param name="singleResp">single response to check</param>
-        /// <param name="ocspResp">basic OCSP response which contains single response to check</param>
-        /// <param name="validationDate">validation date to check for</param>
         /// <param name="responseGenerationDate">trusted date at which response is generated</param>
         public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate, DateTime responseGenerationDate

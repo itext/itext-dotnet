@@ -136,18 +136,6 @@ namespace iText.Signatures.Validation {
         /// <param name="certificate">the certificate to check against CRL response</param>
         /// <param name="crl">the crl response to be validated</param>
         /// <param name="validationDate">validation date to check for</param>
-        [System.ObsoleteAttribute(@"starting from 8.0.5. TODO DEVSIX-8398 To be removed.")]
-        public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
-            , IX509Crl crl, DateTime validationDate) {
-            Validate(report, context, certificate, crl, validationDate, DateTimeUtil.GetCurrentUtcTime());
-        }
-
-        /// <summary>Validates a certificate against Certificate Revocation List (CRL) Responses.</summary>
-        /// <param name="report">to store all the chain verification results</param>
-        /// <param name="context">the context in which to perform the validation</param>
-        /// <param name="certificate">the certificate to check against CRL response</param>
-        /// <param name="crl">the crl response to be validated</param>
-        /// <param name="validationDate">validation date to check for</param>
         /// <param name="responseGenerationDate">trusted date at which response is generated</param>
         public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , IX509Crl crl, DateTime validationDate, DateTime responseGenerationDate) {

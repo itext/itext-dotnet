@@ -96,7 +96,7 @@ namespace iText.Signatures.Sign {
                 )[0];
             IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediateCertFileName
                 )[0];
-            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
+            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient();
             ocspClient.AddBuilderForCertIssuer(signCert, ocspCert, ocspPrivateKey);
             ocspClient.AddBuilderForCertIssuer(ocspIntermediateCert, ocspCert, ocspPrivateKey);
             ocspClient.AddBuilderForCertIssuer(crlIntermediateCert, ocspCert, ocspPrivateKey);

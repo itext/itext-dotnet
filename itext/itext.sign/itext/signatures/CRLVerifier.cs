@@ -129,12 +129,12 @@ namespace iText.Signatures {
         public virtual IX509Crl GetCRL(IX509Certificate signCert, IX509Certificate issuerCert) {
             try {
                 // gets the URL from the certificate
-                String crlurl = CertificateUtil.GetCRLURL(signCert);
-                if (crlurl == null) {
+                IList<String> crlurl = CertificateUtil.GetCRLURLs(signCert);
+                if (crlurl.IsEmpty()) {
                     return null;
                 }
-                LOGGER.LogInformation("Getting CRL from " + crlurl);
-                return (IX509Crl)SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(crlurl)));
+                LOGGER.LogInformation("Getting CRL from " + crlurl[0]);
+                return (IX509Crl)SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(crlurl[0])));
             }
             catch (System.IO.IOException) {
                 return null;

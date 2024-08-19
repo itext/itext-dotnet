@@ -97,7 +97,7 @@ namespace iText.Signatures.Sign {
             IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            AdvancedTestOcspClient testOcspClient = new AdvancedTestOcspClient(null);
+            AdvancedTestOcspClient testOcspClient = new AdvancedTestOcspClient();
             TestOcspResponseBuilder ocspBuilderMainCert = new TestOcspResponseBuilder(rootCert, rootPrivateKey);
             if ((bool)isOcspRevoked) {
                 ocspBuilderMainCert.SetCertificateStatus(FACTORY.CreateRevokedStatus(TimeTestUtil.TEST_DATE_TIME, FACTORY.

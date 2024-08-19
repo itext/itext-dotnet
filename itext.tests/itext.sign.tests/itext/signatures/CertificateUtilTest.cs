@@ -60,13 +60,6 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetCRLFromCertificateWithoutCRLTest() {
-            IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
-            IX509Crl crl = CertificateUtil.GetCRL(tsaCert);
-            NUnit.Framework.Assert.IsNull(crl);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void GetCRLsFromCertificateWithoutCRLTest() {
             IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
             IList<IX509Crl> crls = CertificateUtil.GetCRLs(tsaCert);

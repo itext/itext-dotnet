@@ -30,7 +30,6 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
-using iText.Commons.Utils;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -43,33 +42,24 @@ namespace iText.Signatures {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.OcspClientBouncyCastle
             ));
 
-        private readonly OCSPVerifier verifier;
-
-        /// <summary>
-        /// Creates
-        /// <c>OcspClient</c>.
-        /// </summary>
-        /// <param name="verifier">will be used for response verification.</param>
-        [System.ObsoleteAttribute(@"starting from 8.0.5. OcspClientBouncyCastle() should be used instead. If required, iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse can be checked using iText.Signatures.Validation.OCSPValidator class."
-            )]
-        public OcspClientBouncyCastle(OCSPVerifier verifier) {
-            this.verifier = verifier;
-        }
-
         /// <summary>
         /// Creates new
         /// <see cref="OcspClientBouncyCastle"/>
         /// instance.
         /// </summary>
         public OcspClientBouncyCastle() {
-            this.verifier = null;
         }
 
+        // Empty constructor in order for default one to not be removed if another one is added.
         /// <summary>Gets OCSP response.</summary>
         /// <remarks>
-        /// Gets OCSP response. If
-        /// <see cref="OCSPVerifier"/>
-        /// was set, the response will be checked.
+        /// Gets OCSP response.
+        /// <para />
+        /// If required,
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
+        /// can be checked using
+        /// <see cref="iText.Signatures.Validation.OCSPValidator"/>
+        /// class.
         /// </remarks>
         /// <param name="checkCert">the certificate to check</param>
         /// <param name="rootCert">parent certificate</param>
@@ -89,12 +79,7 @@ namespace iText.Signatures {
                 if (ocspResponse.GetStatus() != BOUNCY_CASTLE_FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
                     return null;
                 }
-                IBasicOcspResponse basicResponse = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject
-                    ());
-                if (verifier != null) {
-                    verifier.IsValidResponse(basicResponse, rootCert, DateTimeUtil.GetCurrentUtcTime());
-                }
-                return basicResponse;
+                return BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject());
             }
             catch (Exception ex) {
                 LOGGER.LogError(ex.Message);

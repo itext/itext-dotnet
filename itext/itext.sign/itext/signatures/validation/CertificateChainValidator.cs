@@ -114,48 +114,6 @@ namespace iText.Signatures.Validation {
             this.revocationDataValidator = builder.GetRevocationDataValidator();
         }
 
-        /// <summary>
-        /// Add
-        /// <see cref="iText.Signatures.ICrlClient"/>
-        /// to be used for CRL responses receiving.
-        /// </summary>
-        /// <param name="crlClient">
-        /// 
-        /// <see cref="iText.Signatures.ICrlClient"/>
-        /// to be used for CRL responses receiving
-        /// </param>
-        /// <returns>
-        /// same instance of
-        /// <see cref="CertificateChainValidator"/>.
-        /// </returns>
-        [System.ObsoleteAttribute(@"in favour of either SignatureValidationProperties.AddCrlClient(iText.Signatures.ICrlClient) or RevocationDataValidator.AddCrlClient(iText.Signatures.ICrlClient) . TODO DEVSIX-8398 To be removed."
-            )]
-        public virtual iText.Signatures.Validation.CertificateChainValidator AddCrlClient(ICrlClient crlClient) {
-            revocationDataValidator.AddCrlClient(crlClient);
-            return this;
-        }
-
-        /// <summary>
-        /// Add
-        /// <see cref="iText.Signatures.IOcspClient"/>
-        /// to be used for OCSP responses receiving.
-        /// </summary>
-        /// <param name="ocpsClient">
-        /// 
-        /// <see cref="iText.Signatures.IOcspClient"/>
-        /// to be used for OCSP responses receiving
-        /// </param>
-        /// <returns>
-        /// same instance of
-        /// <see cref="CertificateChainValidator"/>.
-        /// </returns>
-        [System.ObsoleteAttribute(@"in favour of either SignatureValidationProperties.AddOcspClient(iText.Signatures.IOcspClient) or RevocationDataValidator.AddOcspClient(iText.Signatures.IOcspClient) . TODO DEVSIX-8398 To be removed."
-            )]
-        public virtual iText.Signatures.Validation.CertificateChainValidator AddOcspClient(IOcspClient ocpsClient) {
-            revocationDataValidator.AddOcspClient(ocpsClient);
-            return this;
-        }
-
         /// <summary>Validate given certificate using provided validation date and required extensions.</summary>
         /// <param name="context">the validation context in which to validate the certificate chain</param>
         /// <param name="certificate">

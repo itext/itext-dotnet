@@ -49,14 +49,6 @@ namespace iText.Signatures {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateUtil));
 
         // Certificate Revocation Lists
-        /// <summary>Gets a CRL from an X509 certificate.</summary>
-        /// <param name="certificate">the X509Certificate to extract the CRL from</param>
-        /// <returns>CRL or null if there's no CRL available</returns>
-        [System.ObsoleteAttribute(@"use GetCRLs(iText.Commons.Bouncycastle.Cert.IX509Certificate) .")]
-        public static IX509Crl GetCRL(IX509Certificate certificate) {
-            return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
-        }
-
         /// <summary>Gets a CRLs from the X509 certificate.</summary>
         /// <param name="certificate">the X509Certificate to extract the CRLs from</param>
         /// <returns>CRL list or null if there's no CRL available</returns>
@@ -66,15 +58,6 @@ namespace iText.Signatures {
                 crls.Add(CertificateUtil.GetCRL(crlUrl));
             }
             return crls;
-        }
-
-        /// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
-        /// <param name="certificate">the Certificate</param>
-        /// <returns>the String where you can check if the certificate was revoked.</returns>
-        [System.ObsoleteAttribute(@"use GetCRLURLs(iText.Commons.Bouncycastle.Cert.IX509Certificate) .")]
-        public static String GetCRLURL(IX509Certificate certificate) {
-            IList<String> urls = GetCRLURLs(certificate);
-            return urls.IsEmpty() ? null : urls[0];
         }
 
         /// <summary>Gets the list of the Certificate Revocation List URLs for a Certificate.</summary>

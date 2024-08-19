@@ -136,14 +136,6 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("OCSP response could not be verified")]
-        public virtual void GetBasicOCSPRespLogMessageTest() {
-            OcspClientBouncyCastle ocspClientBouncyCastle = CreateOcspClient();
-            IBasicOcspResponse basicOCSPResp = ocspClientBouncyCastle.GetBasicOCSPResp(null, null, null);
-            NUnit.Framework.Assert.IsNull(basicOCSPResp);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void GetEncodedTest() {
             OcspClientBouncyCastle ocspClientBouncyCastle = CreateOcspClient();
             byte[] encoded = ocspClientBouncyCastle.GetEncoded(checkCert, rootCert, ocspServiceUrl);
@@ -185,8 +177,7 @@ namespace iText.Signatures {
         }
 
         private static OcspClientBouncyCastle CreateOcspClient(TestOcspResponseBuilder builder) {
-            OCSPVerifier ocspVerifier = new OCSPVerifier(null, null);
-            return new OcspClientBouncyCastleTest.TestOcspClientBouncyCastle(ocspVerifier, builder);
+            return new OcspClientBouncyCastleTest.TestOcspClientBouncyCastle(builder);
         }
 
         private static OcspClientBouncyCastle CreateTestOcspClient(TestOcspResponseBuilder responseBuilder) {
@@ -202,8 +193,8 @@ namespace iText.Signatures {
         private sealed class TestOcspClientBouncyCastle : OcspClientBouncyCastle {
             private static TestOcspResponseBuilder testOcspBuilder;
 
-            public TestOcspClientBouncyCastle(OCSPVerifier verifier, TestOcspResponseBuilder testBuilder)
-                : base(verifier) {
+            public TestOcspClientBouncyCastle(TestOcspResponseBuilder testBuilder)
+                : base() {
                 testOcspBuilder = testBuilder;
             }
 
