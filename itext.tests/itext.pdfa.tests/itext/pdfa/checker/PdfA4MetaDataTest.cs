@@ -54,7 +54,7 @@ namespace iText.Pdfa.Checker {
                 new PdfA4Checker(PdfAConformanceLevel.PDF_A_4).CheckMetaData(dictionary);
             }
             );
-            NUnit.Framework.Assert.AreEqual(e.Message, PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_CONTAIN_METADATA_ENTRY
+            NUnit.Framework.Assert.AreEqual(e.Message, PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_CONTAIN_METADATA_ENTRY
                 );
         }
 

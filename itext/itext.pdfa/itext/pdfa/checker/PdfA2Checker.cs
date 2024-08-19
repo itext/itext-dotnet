@@ -97,13 +97,14 @@ namespace iText.Pdfa.Checker {
 
         private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
 
-        private const String TRANSPARENCY_ERROR_MESSAGE = PdfAConformanceException.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE;
+        private const String TRANSPARENCY_ERROR_MESSAGE = PdfaExceptionMessageConstant.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE;
 
         private bool currentFillCsIsIccBasedCMYK = false;
 
         private bool currentStrokeCsIsIccBasedCMYK = false;
 
-        private IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>();
+        private readonly IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>(
+            );
 
         /// <summary>Creates a PdfA2Checker with the required conformance level</summary>
         /// <param name="conformanceLevel">
@@ -146,13 +147,6 @@ namespace iText.Pdfa.Checker {
                 }
             }
             CheckImage(inlineImage, currentColorSpaces);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        [Obsolete]
-        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
-            ) {
-            CheckColor(null, color, currentColorSpaces, fill, contentStream);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -538,7 +532,7 @@ namespace iText.Pdfa.Checker {
         /// <param name="dict">the catalog dictionary</param>
         protected internal virtual void CheckCatalogAAConformance(PdfDictionary dict) {
             if (dict.ContainsKey(PdfName.AA)) {
-                throw new PdfAConformanceException(PdfAConformanceException.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_NOT_CONTAIN_AA_ENTRY
                     );
             }
         }
@@ -746,18 +740,18 @@ namespace iText.Pdfa.Checker {
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
             ) {
-            if ((rgbIsUsed || cmykIsUsed || grayIsUsed || !rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || !
-                grayUsedObjects.IsEmpty()) && pdfAOutputIntentColorSpace == null) {
+            if ((!rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || !grayUsedObjects.IsEmpty()) && pdfAOutputIntentColorSpace
+                 == null) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT_OR_DEFAULT_RGB_CMYK_GRAY_IN_USAGE_CONTEXT
                     );
             }
-            if (rgbIsUsed || !rgbUsedObjects.IsEmpty()) {
+            if (!rgbUsedObjects.IsEmpty()) {
                 if (!ICC_COLOR_SPACE_RGB.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_RGB_PDFA_OUTPUT_INTENT_OR_DEFAULTRGB_IN_USAGE_CONTEXT
                         );
                 }
             }
-            if (cmykIsUsed || !cmykUsedObjects.IsEmpty()) {
+            if (!cmykUsedObjects.IsEmpty()) {
                 if (!ICC_COLOR_SPACE_CMYK.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
                         );
@@ -919,16 +913,15 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary>
-        /// For pdf/a-2+ checkers use the
-        /// <c>checkFormXObject(PdfStream form, PdfStream contentStream)</c>
-        /// method
+        /// For pdf/a-2+ checkers this method is overridden to use
+        /// <see cref="CheckFormXObject(iText.Kernel.Pdf.PdfStream, iText.Kernel.Pdf.PdfStream)"/>
+        /// method.
         /// </summary>
         /// <param name="form">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// to check
         /// </param>
-        [Obsolete]
         protected internal override void CheckFormXObject(PdfStream form) {
             CheckFormXObject(form, null);
         }
@@ -1012,7 +1005,7 @@ namespace iText.Pdfa.Checker {
         /// <param name="config">a content configuration dictionary</param>
         protected internal virtual void CheckContentConfigurationDictAgainstAsKey(PdfDictionary config) {
             if (config.ContainsKey(PdfName.AS)) {
-                throw new PdfAConformanceException(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
                     );
             }
         }
@@ -1027,7 +1020,7 @@ namespace iText.Pdfa.Checker {
         /// <param name="blendMode">blend mode name to check.</param>
         protected internal virtual void CheckBlendMode(PdfName blendMode) {
             if (!allowedBlendModes.Contains(blendMode)) {
-                throw new PdfAConformanceException(PdfAConformanceException.ONLY_STANDARD_BLEND_MODES_SHALL_BE_USED_FOR_THE_VALUE_OF_THE_BM_KEY_IN_AN_EXTENDED_GRAPHIC_STATE_DICTIONARY
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.ONLY_STANDARD_BLEND_MODES_SHALL_BE_USED_FOR_THE_VALUE_OF_THE_BM_KEY_IN_AN_EXTENDED_GRAPHIC_STATE_DICTIONARY
                     );
             }
         }

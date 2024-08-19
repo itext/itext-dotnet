@@ -252,7 +252,7 @@ namespace iText.Pdfa {
                 );
             }
             );
-            String messageFormat = MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED, PdfName
+            String messageFormat = MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED, PdfName
                 .SetOCGState.GetValue());
             NUnit.Framework.Assert.AreEqual(messageFormat, pdfa4Exception.Message);
         }
@@ -277,7 +277,7 @@ namespace iText.Pdfa {
                 );
             }
             );
-            String messageFormat = MessageFormatUtil.Format(PdfAConformanceException._0_ACTIONS_ARE_NOT_ALLOWED, PdfName
+            String messageFormat = MessageFormatUtil.Format(PdfaExceptionMessageConstant._0_ACTIONS_ARE_NOT_ALLOWED, PdfName
                 .GoTo3DView.GetValue());
             NUnit.Framework.Assert.AreEqual(messageFormat, pdfa4Exception.Message);
         }

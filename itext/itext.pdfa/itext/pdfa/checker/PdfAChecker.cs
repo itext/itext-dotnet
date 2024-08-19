@@ -99,15 +99,6 @@ namespace iText.Pdfa.Checker {
 
         protected internal int gsStackDepth = 0;
 
-        [Obsolete]
-        protected internal bool rgbIsUsed = false;
-
-        [Obsolete]
-        protected internal bool cmykIsUsed = false;
-
-        [Obsolete]
-        protected internal bool grayIsUsed = false;
-
         protected internal ICollection<PdfObject> rgbUsedObjects = new HashSet<PdfObject>();
 
         protected internal ICollection<PdfObject> cmykUsedObjects = new HashSet<PdfObject>();
@@ -162,7 +153,6 @@ namespace iText.Pdfa.Checker {
             }
             CheckPages(catalog.GetDocument());
             CheckOpenAction(catalogDict.Get(PdfName.OpenAction));
-            CheckColorsUsages();
         }
 
         public virtual void ValidateDocument(ValidationContext validationContext) {
@@ -384,11 +374,15 @@ namespace iText.Pdfa.Checker {
             checkedObjects.Add(signatureDict);
         }
 
-        /// <summary>This method checks compliance of the signature type</summary>
-        /// <param name="isCAdES">true is CAdES sig type is used, false otherwise.</param>
-        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
-        public virtual void CheckSignatureType(bool isCAdES) {
-        }
+        /// <summary>This method checks compliance of the signature type.</summary>
+        /// <param name="isCAdES">
+        /// 
+        /// <see langword="true"/>
+        /// if CAdES signature type is used,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </param>
+        public abstract void CheckSignatureType(bool isCAdES);
 
         /// <summary>
         /// This method checks compliance with the graphics state architectural
@@ -418,28 +412,6 @@ namespace iText.Pdfa.Checker {
         /// This method checks compliance with the color restrictions imposed by the
         /// available color spaces in the document.
         /// </summary>
-        /// <remarks>
-        /// This method checks compliance with the color restrictions imposed by the
-        /// available color spaces in the document.
-        /// This method will be abstract in update 7.2
-        /// </remarks>
-        /// <param name="color">the color to check</param>
-        /// <param name="currentColorSpaces">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// containing the color spaces used in the document
-        /// </param>
-        /// <param name="fill">whether the color is used for fill or stroke operations</param>
-        /// <param name="contentStream">current content stream</param>
-        [System.ObsoleteAttribute(@"in favor of checkColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, Boolean fill, PdfStream contentStream)"
-            )]
-        public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
-            );
-
-        /// <summary>
-        /// This method checks compliance with the color restrictions imposed by the
-        /// available color spaces in the document.
-        /// </summary>
         /// <param name="gState">canvas graphics state</param>
         /// <param name="color">the color to check</param>
         /// <param name="currentColorSpaces">
@@ -449,10 +421,8 @@ namespace iText.Pdfa.Checker {
         /// </param>
         /// <param name="fill">whether the color is used for fill or stroke operations</param>
         /// <param name="contentStream">current content stream</param>
-        [System.ObsoleteAttribute(@"This method will be abstract in next major release")]
-        public virtual void CheckColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, 
-            bool? fill, PdfStream contentStream) {
-        }
+        public abstract void CheckColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, 
+            bool? fill, PdfStream contentStream);
 
         /// <summary>
         /// This method performs a range of checks on the given color space, depending
@@ -467,29 +437,8 @@ namespace iText.Pdfa.Checker {
         /// </param>
         /// <param name="checkAlternate">whether or not to also check the parent color space</param>
         /// <param name="fill">whether the color space is used for fill or stroke operations</param>
-        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
-        public virtual void CheckColorSpace(PdfColorSpace colorSpace, PdfObject pdfObject, PdfDictionary currentColorSpaces
-            , bool checkAlternate, bool? fill) {
-        }
-
-        /// <summary>
-        /// This method performs a range of checks on the given color space, depending
-        /// on the type and properties of that color space.
-        /// </summary>
-        /// <param name="colorSpace">the color space to check</param>
-        /// <param name="currentColorSpaces">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// containing the color spaces used in the document
-        /// </param>
-        /// <param name="checkAlternate">whether or not to also check the parent color space</param>
-        /// <param name="fill">whether the color space is used for fill or stroke operations</param>
-        [System.ObsoleteAttribute(@"in favor of checkColorSpace(PdfColorSpace colorSpace, PdfObject object, PdfDictionary currentColorSpaces, boolean checkAlternate, Boolean fill)"
-            )]
-        public virtual void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
-            , bool? fill) {
-            CheckColorSpace(colorSpace, null, currentColorSpaces, checkAlternate, fill);
-        }
+        public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfObject pdfObject, PdfDictionary currentColorSpaces
+            , bool checkAlternate, bool? fill);
 
         /// <summary>Set Pdf A output intent color space.</summary>
         /// <param name="catalog">Catalog dictionary to retrieve the color space from.</param>
@@ -556,17 +505,13 @@ namespace iText.Pdfa.Checker {
         public abstract void CheckXrefTable(PdfXrefTable xrefTable);
 
         /// <summary>Verify the conformity of encryption usage.</summary>
-        /// <param name="crypto">Encryption object to verify.</param>
-        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
-        public virtual void CheckCrypto(PdfObject crypto) {
-        }
+        /// <param name="crypto">encryption object to verify</param>
+        public abstract void CheckCrypto(PdfObject crypto);
 
         /// <summary>Verify the conformity of the text written by the specified font.</summary>
-        /// <param name="text">Text to verify.</param>
-        /// <param name="font">Font to verify the text against.</param>
-        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
-        public virtual void CheckText(String text, PdfFont font) {
-        }
+        /// <param name="text">text to verify</param>
+        /// <param name="font">font to verify the text against</param>
+        public abstract void CheckText(String text, PdfFont font);
 
         /// <summary>Attest content stream conformance with appropriate specification.</summary>
         /// <remarks>
@@ -667,25 +612,19 @@ namespace iText.Pdfa.Checker {
         /// </param>
         protected internal abstract void CheckCatalogValidEntries(PdfDictionary catalogDict);
 
-        /// <summary>Verify the conformity of used color spaces.</summary>
-        [System.ObsoleteAttribute(@"in favor of checkPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources)"
-            )]
-        protected internal abstract void CheckColorsUsages();
-
         /// <summary>Verify the conformity of used color spaces on the page.</summary>
         /// <param name="pageDict">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// contains contents for colors to be checked.
+        /// contains contents for colors to be checked
         /// </param>
         /// <param name="pageResources">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// contains resources for colors to be checked.
+        /// contains resources for colors to be checked
         /// </param>
-        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
-        protected internal virtual void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources) {
-        }
+        protected internal abstract void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
+            );
 
         /// <summary>Verify the conformity of the given image.</summary>
         /// <param name="image">the image to check</param>
@@ -837,11 +776,9 @@ namespace iText.Pdfa.Checker {
         /// <param name="catalog">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
-        /// of trailer to check.
+        /// of trailer to check
         /// </param>
-        [System.ObsoleteAttribute(@"Will become abstract in the next major release.")]
-        protected internal virtual void CheckCatalog(PdfCatalog catalog) {
-        }
+        protected internal abstract void CheckCatalog(PdfCatalog catalog);
 
         /// <summary>Verify the conformity of the page transparency.</summary>
         /// <param name="pageDict">
@@ -856,17 +793,6 @@ namespace iText.Pdfa.Checker {
         /// </param>
         protected internal abstract void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
             );
-
-        /// <summary>Verify the conformity of the resources dictionary.</summary>
-        /// <param name="resources">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// to be checked
-        /// </param>
-        [System.ObsoleteAttribute(@"in favor of checkResources(PdfDictionary resources, PdfObject pdfObject)")]
-        protected internal virtual void CheckResources(PdfDictionary resources) {
-            CheckResources(resources, null);
-        }
 
         /// <summary>Verify the conformity of the resources dictionary.</summary>
         /// <param name="resources">

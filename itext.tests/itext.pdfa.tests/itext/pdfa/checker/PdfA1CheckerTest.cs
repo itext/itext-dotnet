@@ -89,7 +89,7 @@ namespace iText.Pdfa.Checker {
             pattern.SetShading(dictionary);
             Color color = new PatternColor(pattern);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                pdfA1Checker.CheckColor(color, new PdfDictionary(), true, null);
+                pdfA1Checker.CheckColor(null, color, new PdfDictionary(), true, null);
             }
             );
         }

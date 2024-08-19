@@ -123,13 +123,6 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary><inheritDoc/></summary>
-        [Obsolete]
-        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream stream
-            ) {
-            CheckColor(null, color, currentColorSpaces, fill, stream);
-        }
-
-        /// <summary><inheritDoc/></summary>
         public override void CheckColor(CanvasGraphicsState graphicsState, Color color, PdfDictionary currentColorSpaces
             , bool? fill, PdfStream stream) {
             CheckColorSpace(color.GetColorSpace(), stream, currentColorSpaces, true, fill);
@@ -158,7 +151,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             if (colorSpace is PdfDeviceCs.Rgb) {
-                if (cmykIsUsed || !cmykUsedObjects.IsEmpty()) {
+                if (!cmykUsedObjects.IsEmpty()) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                         );
                 }
@@ -166,7 +159,7 @@ namespace iText.Pdfa.Checker {
             }
             else {
                 if (colorSpace is PdfDeviceCs.Cmyk) {
-                    if (rgbIsUsed || !rgbUsedObjects.IsEmpty()) {
+                    if (!rgbUsedObjects.IsEmpty()) {
                         throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_AND_DEVICECMYK_COLORSPACES_CANNOT_BE_USED_BOTH_IN_ONE_FILE
                             );
                     }
@@ -200,25 +193,20 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary><inheritDoc/></summary>
-        protected internal override void CheckColorsUsages() {
-        }
-
-        // Do not check anything here. All checks are in checkPageColorsUsages.
-        /// <summary><inheritDoc/></summary>
         protected internal override void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
             ) {
-            if ((rgbIsUsed || cmykIsUsed || grayIsUsed || !rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || grayUsedObjects
-                .IsEmpty()) && pdfAOutputIntentColorSpace == null) {
+            if ((!rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || grayUsedObjects.IsEmpty()) && pdfAOutputIntentColorSpace
+                 == null) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT
                     );
             }
-            if (rgbIsUsed || !rgbUsedObjects.IsEmpty()) {
+            if (!rgbUsedObjects.IsEmpty()) {
                 if (!ICC_COLOR_SPACE_RGB.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICERGB_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_RGB_PDFA_OUTPUT_INTENT
                         );
                 }
             }
-            if (cmykIsUsed || !cmykUsedObjects.IsEmpty()) {
+            if (!cmykUsedObjects.IsEmpty()) {
                 if (!ICC_COLOR_SPACE_CMYK.Equals(pdfAOutputIntentColorSpace)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT
                         );

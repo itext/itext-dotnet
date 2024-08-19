@@ -69,7 +69,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
                 , e.Message);
         }
 
@@ -323,7 +323,7 @@ namespace iText.Pdfa.Checker {
             pattern.SetShading(dictionary);
             Color color = new PatternColor(pattern);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                pdfA2Checker.CheckColor(color, new PdfDictionary(), true, null);
+                pdfA2Checker.CheckColor(null, color, new PdfDictionary(), true, null);
             }
             );
         }
@@ -684,7 +684,7 @@ namespace iText.Pdfa.Checker {
                 .GetPdfObject());
             PdfDictionary currentColorSpaces = new PdfDictionary();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
-                (new PdfSpecialCs.DeviceN(deviceNAsArray), currentColorSpaces, true, false));
+                (new PdfSpecialCs.DeviceN(deviceNAsArray), null, currentColorSpaces, true, false));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
                 , e.Message);
         }
@@ -708,7 +708,7 @@ namespace iText.Pdfa.Checker {
             PdfDictionary attributes = new PdfDictionary();
             deviceNAsArray.Add(attributes);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
-                (new PdfSpecialCs.DeviceN(deviceNAsArray), currentColorSpaces, true, false));
+                (new PdfSpecialCs.DeviceN(deviceNAsArray), null, currentColorSpaces, true, false));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
                 , e.Message);
         }

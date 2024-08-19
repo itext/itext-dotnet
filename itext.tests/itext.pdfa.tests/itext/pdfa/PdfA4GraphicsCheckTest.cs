@@ -234,7 +234,7 @@ namespace iText.Pdfa {
                 canvas.GetResources().SetDefaultCmyk(calRgb);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.SetFillColor(new 
                     DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)));
-                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfAConformanceException.COLOR_SPACE_0_SHALL_HAVE_1_COMPONENTS
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.COLOR_SPACE_0_SHALL_HAVE_1_COMPONENTS
                     , PdfName.DefaultCMYK.GetValue(), 4), e.Message);
             }
         }

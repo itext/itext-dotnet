@@ -90,14 +90,17 @@ namespace iText.Pdfa.Checker {
                 : base(null) {
             }
 
+            public override void CheckSignatureType(bool isCAdES) {
+            }
+
             public override void CheckCanvasStack(char stackOperation) {
             }
 
             public override void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces) {
             }
 
-            public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill, PdfStream contentStream
-                ) {
+            public override void CheckColor(CanvasGraphicsState gState, Color color, PdfDictionary currentColorSpaces, 
+                bool? fill, PdfStream contentStream) {
             }
 
             public override void CheckColorSpace(PdfColorSpace colorSpace, PdfObject @object, PdfDictionary currentColorSpaces
@@ -117,6 +120,12 @@ namespace iText.Pdfa.Checker {
             }
 
             public override void CheckXrefTable(PdfXrefTable xrefTable) {
+            }
+
+            public override void CheckCrypto(PdfObject crypto) {
+            }
+
+            public override void CheckText(String text, PdfFont font) {
             }
 
             protected internal override void CheckContentStream(PdfStream contentStream) {
@@ -146,7 +155,8 @@ namespace iText.Pdfa.Checker {
             protected internal override void CheckCatalogValidEntries(PdfDictionary catalogDict) {
             }
 
-            protected internal override void CheckColorsUsages() {
+            protected internal override void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
+                ) {
             }
 
             protected internal override void CheckImage(PdfStream image, PdfDictionary currentColorSpaces) {
