@@ -142,13 +142,6 @@ namespace iText.Kernel.Geom {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CopyConstructorTest() {
-            Point second = new Point(new Point(0.13, 1.1));
-            NUnit.Framework.Assert.AreEqual(0.13, second.GetX(), EPSILON_COMPARISON);
-            NUnit.Framework.Assert.AreEqual(1.1, second.GetY(), EPSILON_COMPARISON);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void SetLocationByDoubleParamTest() {
             Point first = new Point(1.23, 1.1);
             Point second = new Point(3.59, 0.87);

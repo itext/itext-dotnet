@@ -1879,11 +1879,11 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Paragraph("A cell with bold text:"));
             table = new Table(new float[1]);
-            table.AddCell("A cell").SetBold();
+            table.AddCell("A cell").SimulateBold();
             doc.Add(table);
             doc.Add(new Paragraph("A cell with italic text:"));
             table = new Table(new float[1]);
-            table.AddCell("A cell").SetItalic();
+            table.AddCell("A cell").SimulateItalic();
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -2762,7 +2762,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("He")));
             // If this property is not inherited while calculating min/max widths,
             // then while layouting header will request more space than the layout box's width
-            table.GetHeader().SetBold();
+            table.GetHeader().SimulateBold();
             document.Add(table);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
@@ -2928,7 +2928,7 @@ namespace iText.Layout {
                     table.UseAllAvailableWidth();
                     table.SetFixedLayout();
                     for (int i = 0; i < numberOfColumns; i++) {
-                        table.AddCell(new Cell().Add(new Paragraph("Description").SetBold()));
+                        table.AddCell(new Cell().Add(new Paragraph("Description").SimulateBold()));
                     }
                     doc.Add(table);
                 }

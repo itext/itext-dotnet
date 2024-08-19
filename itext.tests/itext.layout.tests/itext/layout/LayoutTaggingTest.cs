@@ -997,7 +997,7 @@ namespace iText.Layout {
                 Div div = new Div();
                 div.GetAccessibilityProperties().SetRole(StandardRoles.TABLE);
                 Paragraph p = new Paragraph("Caption").SetNeutralRole();
-                p.SetTextAlignment(TextAlignment.CENTER).SetBold();
+                p.SetTextAlignment(TextAlignment.CENTER).SimulateBold();
                 Div caption = new Div().Add(p);
                 caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
                 div.Add(caption);

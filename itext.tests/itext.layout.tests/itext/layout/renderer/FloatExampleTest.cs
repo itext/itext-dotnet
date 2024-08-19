@@ -198,7 +198,7 @@ namespace iText.Layout.Renderer {
                     }
                     div.Add(image);
                     div.Add(new Paragraph("Figure for Div" + i + ": This is longer text that wraps This is longer text that wraps"
-                        ).SetTextAlignment(TextAlignment.CENTER)).SetBold();
+                        ).SetTextAlignment(TextAlignment.CENTER)).SimulateBold();
                     document.Add(div);
                 }
                 else {

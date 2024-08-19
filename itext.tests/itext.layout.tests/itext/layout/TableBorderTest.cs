@@ -1590,7 +1590,7 @@ namespace iText.Layout {
                 }
             }
             table.GetHeader().SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(1));
-            table.GetFooter().SetBold().SetBorderTop(new SolidBorder(10)).SetBorderBottom(new SolidBorder(1)).SetBackgroundColor
+            table.GetFooter().SimulateBold().SetBorderTop(new SolidBorder(10)).SetBorderBottom(new SolidBorder(1)).SetBackgroundColor
                 (ColorConstants.LIGHT_GRAY);
             doc.Add(table);
             doc.Add(new AreaBreak());

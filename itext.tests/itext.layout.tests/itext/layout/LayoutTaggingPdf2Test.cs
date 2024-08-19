@@ -592,7 +592,7 @@ namespace iText.Layout {
             if (defaultNamespace == null) {
                 Text i = new Text("italic text");
                 i.GetAccessibilityProperties().SetRole("I");
-                Paragraph pi = new Paragraph(i.SetItalic());
+                Paragraph pi = new Paragraph(i.SimulateItalic());
                 document.Add(pi);
             }
         }

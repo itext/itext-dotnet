@@ -669,24 +669,24 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Switch on the simulation of bold style for a font.</summary>
+        /// <summary>Simulates bold style for a font.</summary>
         /// <remarks>
-        /// Switch on the simulation of bold style for a font.
+        /// Simulates bold style for a font.
         /// Be aware that using correct bold font is highly preferred over this option.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetBold() {
+        public virtual T SimulateBold() {
             SetProperty(Property.BOLD_SIMULATION, true);
             return (T)(Object)this;
         }
 
-        /// <summary>Switch on the simulation of italic style for a font.</summary>
+        /// <summary>Simulates italic style for a font.</summary>
         /// <remarks>
-        /// Switch on the simulation of italic style for a font.
+        /// Simulates italic style for a font.
         /// Be aware that using correct italic (oblique) font is highly preferred over this option.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetItalic() {
+        public virtual T SimulateItalic() {
             SetProperty(Property.ITALIC_SIMULATION, true);
             return (T)(Object)this;
         }

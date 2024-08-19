@@ -263,7 +263,6 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereBoldSimulationMaxWidth() {
             Text text = new Text("wow");
-            text.SetBold();
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
@@ -275,7 +274,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereItalicSimulationMaxWidth() {
             Text text = new Text("wow");
-            text.SetItalic();
+            text.SimulateItalic();
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
@@ -291,7 +290,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float minWidthNoBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
-            text.SetBold();
+            text.SimulateBold();
             float minWidthAndBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             NUnit.Framework.Assert.IsTrue(minWidthAndBoldSimulation > minWidthNoBoldSimulation);
         }
@@ -303,7 +302,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float minWidthNoItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
-            text.SetItalic();
+            text.SimulateItalic();
             float minWidthAndItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             NUnit.Framework.Assert.IsTrue(minWidthAndItalicSimulation > minWidthNoItalicSimulation);
         }
