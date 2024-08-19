@@ -158,7 +158,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                     }
                     if (PdfName.DeviceN.Equals(colorSpace.GetAsName(0))) {
                         //Checking colorants dict size
-                        return colorSpace.GetAsDictionary(2).Size();
+                        return colorSpace.GetAsArray(1).Size();
                     }
                 }
             }

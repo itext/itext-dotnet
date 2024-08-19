@@ -99,13 +99,135 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Test() {
-            PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "calgray.pdf"));
-            for (int i = 1; i <= pdf.GetNumberOfPages(); i++) {
+        public virtual void ParseInlineImageCalRGBColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageCalRGBColorSpace.pdf"))) {
                 PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
-                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(i));
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.CalRGB, actualName);
             }
-            pdf.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageCalGrayColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageCalGrayColorSpace.pdf"))
+                ) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.CalGray, actualName);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageLabColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageLabColorSpace.pdf"))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.Lab, actualName);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageICCBasedColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageICCBasedColorSpace.pdf")
+                )) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.ICCBased, actualName);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageDeviceRGBColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageDeviceRGBColorSpace.pdf"
+                ))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfStream stream = pdf.GetPage(1).GetContentStream(0);
+                String firstPageData = iText.Commons.Utils.JavaUtil.GetStringForBytes(stream.GetBytes());
+                NUnit.Framework.Assert.IsTrue(firstPageData.Contains(PdfName.DeviceRGB.GetValue()));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageDeviceCMYKColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageDeviceCMYKColorSpace.pdf"
+                ))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfStream stream = pdf.GetPage(1).GetContentStream(0);
+                String firstPageData = iText.Commons.Utils.JavaUtil.GetStringForBytes(stream.GetBytes());
+                NUnit.Framework.Assert.IsTrue(firstPageData.Contains(PdfName.DeviceCMYK.GetValue()));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageDeviceGrayColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageDeviceGrayColorSpace.pdf"
+                ))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfStream stream = pdf.GetPage(1).GetContentStream(0);
+                String firstPageData = iText.Commons.Utils.JavaUtil.GetStringForBytes(stream.GetBytes());
+                NUnit.Framework.Assert.IsTrue(firstPageData.Contains(PdfName.DeviceGray.GetValue()));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageSeparationColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageSeparationColorSpace.pdf"
+                ))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.Separation, actualName);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageDeviceNColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageDeviceNColorSpace.pdf"))
+                ) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.DeviceN, actualName);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageIndexedColorSpaceTest() {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineImageIndexedColorSpace.pdf"))
+                ) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfName name = new PdfName("Cs1");
+                PdfColorSpace colorSpace = pdf.GetPage(1).GetResources().GetColorSpace(name);
+                PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
+                PdfName actualName = (PdfName)pdfArray.Get(0);
+                NUnit.Framework.Assert.AreEqual(PdfName.Indexed, actualName);
+            }
         }
 
         private class InlineImageEventListener : IEventListener {

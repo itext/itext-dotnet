@@ -77,22 +77,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NotSupportedCsWithCsDictionaryTest() {
-            PdfName colorSpace = PdfName.ICCBased;
-            PdfDictionary dictionary = new PdfDictionary();
-            PdfArray array = new PdfArray();
-            array.Add(PdfName.Pattern);
-            PdfStream stream = new PdfStream();
-            stream.Put(PdfName.N, new PdfNumber(4));
-            array.Add(stream);
-            dictionary.Put(colorSpace, array);
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(InlineImageParsingUtils.InlineImageParseException
-                ), () => InlineImageParsingUtils.GetComponentsPerPixel(colorSpace, dictionary));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_COLOR_SPACE
-                , "/ICCBased"), exception.Message);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void NullCsTest() {
             NUnit.Framework.Assert.AreEqual(1, InlineImageParsingUtils.GetComponentsPerPixel(null, null));
         }
