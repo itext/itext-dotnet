@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Forms.Form;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -141,9 +140,10 @@ namespace iText.Forms.Form.Element {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             IFormField element = GetDataToTest(testContainer.index)();
-            element.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "en");
             IFormField formField = (IFormField)element;
             formField.SetInteractive(true);
+            IAccessibleElement accessibleElement = (IAccessibleElement)formField;
+            accessibleElement.GetAccessibilityProperties().SetLanguage("en");
             document.Add((IBlockElement)element);
             PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
             IStructureNode documentStruct = root.GetKids()[0];

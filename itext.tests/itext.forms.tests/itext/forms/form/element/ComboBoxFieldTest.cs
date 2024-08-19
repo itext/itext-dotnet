@@ -32,6 +32,7 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -272,8 +273,7 @@ namespace iText.Forms.Form.Element {
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 2"));
                 flattenComboBoxField.SetSelected("option 1");
-                //TODO DEVSIX-8205 Use setLanguage method from AccessibilityProperties
-                flattenComboBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
+                ((IAccessibleElement)flattenComboBoxField).GetAccessibilityProperties().SetLanguage("random_lang");
                 document.Add(flattenComboBoxField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));

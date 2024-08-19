@@ -37,6 +37,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -270,7 +271,7 @@ namespace iText.Forms.Form.Element {
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
                 listBoxField.AddOption("option 1");
                 listBoxField.AddOption("option 2");
-                listBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
+                ((IAccessibleElement)listBoxField).GetAccessibilityProperties().SetLanguage("random_lang");
                 document.Add(listBoxField);
                 document.Add(new Paragraph("Line break"));
                 document.Add(listBoxField.SetInteractive(true));

@@ -122,15 +122,15 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        /// <summary>Gets the accessibility language.</summary>
+        /// <summary>
+        /// Gets the accessibility language using
+        /// <see cref="iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties()"/>.
+        /// </summary>
         /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
             String language = null;
             if (this.GetModelElement() is IAccessibleElement) {
                 language = ((IAccessibleElement)this.GetModelElement()).GetAccessibilityProperties().GetLanguage();
-            }
-            if (language == null) {
-                language = this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
             }
             return language;
         }
