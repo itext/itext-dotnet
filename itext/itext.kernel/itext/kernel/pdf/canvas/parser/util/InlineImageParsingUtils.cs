@@ -146,11 +146,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                     }
                 }
                 else {
-                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0))) {
+                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0)) || PdfName.CalGray.Equals(colorSpace.GetAsName(0)) || 
+                        PdfName.Pattern.Equals(colorSpace.GetAsName(0)) || PdfName.Separation.Equals(colorSpace.GetAsName(0))) {
                         return 1;
+                    }
+                    if (PdfName.CalRGB.Equals(colorSpace.GetAsName(0)) || PdfName.Lab.Equals(colorSpace.GetAsName(0))) {
+                        return 3;
                     }
                     if (PdfName.ICCBased.Equals(colorSpace.GetAsName(0))) {
                         return colorSpace.GetAsStream(1).GetAsNumber(PdfName.N).IntValue();
+                    }
+                    if (PdfName.DeviceN.Equals(colorSpace.GetAsName(0))) {
+                        //Checking colorants dict size
+                        return colorSpace.GetAsDictionary(2).Size();
                     }
                 }
             }

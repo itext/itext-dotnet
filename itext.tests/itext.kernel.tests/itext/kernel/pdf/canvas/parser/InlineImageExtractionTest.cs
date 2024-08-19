@@ -98,6 +98,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(cmpImgBytes, data);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void Test() {
+            PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "calgray.pdf"));
+            for (int i = 1; i <= pdf.GetNumberOfPages(); i++) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(new SimpleTextExtractionStrategy());
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(i));
+            }
+            pdf.Close();
+        }
+
         private class InlineImageEventListener : IEventListener {
             private readonly IList<PdfStream> inlineImages = new List<PdfStream>();
 
