@@ -41,16 +41,6 @@ namespace iText.Pdfua.Checkers.Utils {
             this.context = context;
         }
 
-        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
-        /// <remarks>
-        /// WARNING! This method is an artifact and currently does nothing.
-        /// It is kept to ensure backward binary compatibility
-        /// </remarks>
-        /// <param name="rendererObj">layout element to check</param>
-        [Obsolete]
-        public static void CheckLayoutElements(Object rendererObj) {
-        }
-
         /// <summary>Checks renderer for PDF UA compliance.</summary>
         /// <param name="rendererObj">The renderer to check.</param>
         public void CheckRenderer(Object rendererObj) {
