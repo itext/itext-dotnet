@@ -250,8 +250,7 @@ namespace iText.Layout.Renderer {
         }
 
         //endregion
-        protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct
-            ) {
+        protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col) {
             // We should check if the row number is less than horizontal borders array size. It can happen if the cell with
             // big rowspan doesn't fit current area and is going to be placed partial.
             if (row > horizontalBorders.Count) {
@@ -276,7 +275,7 @@ namespace iText.Layout.Renderer {
                 // process only valid cells which hasn't been processed yet
                 if (j >= 0 && nextCellRow != rows.Count && nextCellRow > row) {
                     CellRenderer nextCell = rows[nextCellRow][j];
-                    BuildBordersArrays(nextCell, nextCellRow, true);
+                    BuildBordersArrays(nextCell, nextCellRow);
                 }
             }
             // consider cells under the current one
@@ -292,7 +291,7 @@ namespace iText.Layout.Renderer {
                 CellRenderer nextCell = rows[nextCellRow][col + j];
                 // otherwise the border was considered previously
                 if (row == nextCellRow - (int)nextCell.GetPropertyAsInteger(Property.ROWSPAN)) {
-                    BuildBordersArrays(nextCell, nextCellRow, true);
+                    BuildBordersArrays(nextCell, nextCellRow);
                 }
                 j += (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
             }
@@ -304,14 +303,14 @@ namespace iText.Layout.Renderer {
                 }
                 if (nextCellRow != rows.Count) {
                     CellRenderer nextCell = rows[nextCellRow][col + currCellColspan];
-                    BuildBordersArrays(nextCell, nextCellRow, true);
+                    BuildBordersArrays(nextCell, nextCellRow);
                 }
             }
             // consider current cell
-            BuildBordersArrays(cell, row, false);
+            BuildBordersArrays(cell, row);
         }
 
-        protected internal virtual void BuildBordersArrays(CellRenderer cell, int row, bool isNeighbourCell) {
+        protected internal virtual void BuildBordersArrays(CellRenderer cell, int row) {
             int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
             int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             int colN = ((Cell)cell.GetModelElement()).GetCol();

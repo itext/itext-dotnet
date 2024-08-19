@@ -112,8 +112,8 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     this.occupiedArea = CalculateContainerOccupiedArea(layoutContext, false);
-                    return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, CreateSplitRenderer(layoutResult.GetSplitRenderers
-                        ()), CreateOverflowRenderer(layoutResult.GetOverflowRenderer()));
+                    return new LayoutResult(LayoutResult.PARTIAL, this.occupiedArea, GridMulticolUtil.CreateSplitRenderer(layoutResult
+                        .GetSplitRenderers(), this), CreateOverflowRenderer(layoutResult.GetOverflowRenderer()));
                 }
             }
         }
@@ -178,19 +178,6 @@ namespace iText.Layout.Renderer {
             }
             approximateHeight = inifiniteHeighOneColumnLayoutResult.GetOccupiedArea().GetBBox().GetHeight() / columnCount;
             return BalanceContentAndLayoutColumns(layoutContext, actualBBox);
-        }
-
-        /// <summary>Creates a split renderer.</summary>
-        /// <param name="children">children of the split renderer</param>
-        /// <returns>
-        /// a new
-        /// <see cref="AbstractRenderer"/>
-        /// instance
-        /// </returns>
-        [System.ObsoleteAttribute(@"use GridMulticolUtil.CreateSplitRenderer(System.Collections.Generic.IList{E}, AbstractRenderer)"
-            )]
-        protected internal virtual AbstractRenderer CreateSplitRenderer(IList<IRenderer> children) {
-            return GridMulticolUtil.CreateSplitRenderer(children, this);
         }
 
         /// <summary>Creates an overflow renderer.</summary>

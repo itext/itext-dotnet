@@ -158,8 +158,7 @@ namespace iText.Layout.Renderer {
             return new float[] { 0, 0, 0, 0 };
         }
 
-        protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct
-            ) {
+        protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col) {
             int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
             int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             int colN = ((Cell)cell.GetModelElement()).GetCol();
