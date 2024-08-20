@@ -124,6 +124,34 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SignWithFieldLockNotNullAndLocksWholeDocumentTest()
+        {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument(PdfVersion.PDF_2_0)))
+                , new ByteArrayOutputStream(), new StampingProperties());
+            signer.cryptoDictionary = new PdfSignature();
+            signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
+            var documentLocker = new PdfSigFieldLock().SetDocumentPermissions(PdfSigFieldLock.LockPermissions.NO_CHANGES_ALLOWED).SetFieldLock(PdfSigFieldLock.LockAction.ALL);
+            signer.SetFieldLockDict(documentLocker);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsTrue(signer.closed);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignWithFieldLockNotNullAndLocksFieldTest()
+        {
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument(PdfVersion.PDF_2_0)))
+                , new ByteArrayOutputStream(), new StampingProperties());
+            signer.cryptoDictionary = new PdfSignature();
+            signer.appearance.SetPageRect(new Rectangle(100, 100, 10, 10));
+            var documentLocker = new PdfSigFieldLock().SetFieldLock(PdfSigFieldLock.LockAction.ALL);
+            signer.SetFieldLockDict(documentLocker);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+            NUnit.Framework.Assert.IsTrue(signer.closed);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SignDetachedWhenAlreadySignedIsNotPossibleTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
