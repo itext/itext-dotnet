@@ -204,18 +204,6 @@ namespace iText.IO.Font.Cmap {
             return false;
         }
 
-        /// <summary>
-        /// Use
-        /// <see cref="iText.IO.Util.PdfNameUtil.DecodeName(byte[])"/>
-        /// instead.
-        /// </summary>
-        /// <param name="content">to decode</param>
-        /// <returns>decoded content</returns>
-        [System.ObsoleteAttribute]
-        protected internal static String DecodeName(byte[] content) {
-            return PdfNameUtil.DecodeName(content);
-        }
-
         private static String ToHex4(int n) {
             String s = "0000" + JavaUtil.IntegerToHexString(n);
             return s.Substring(s.Length - 4);

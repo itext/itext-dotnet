@@ -367,11 +367,6 @@ namespace iText.IO.Logs {
 
         public const String XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE = "Xfdf unsupported attribute type";
 
-        [Obsolete]
-        public const String XOBJECT_HAS_NO_STRUCT_PARENTS = 
-                // replaced by com.itextpdf.kernel.logs.KernelLogMessageConstant#XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED
-                "XObject has no StructParents entry in its stream, no " + "entry in ParentTree will be created for the corresponding structure elements";
-
         public const String XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT = "Error occurred while " + "reading cross reference table. Cross reference table will be rebuilt. No additional information available";
 
         public const String XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE = "Error occurred while " + 
