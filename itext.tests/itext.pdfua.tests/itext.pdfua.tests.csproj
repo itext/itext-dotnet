@@ -40,6 +40,7 @@
     <ProjectReference Include="..\..\itext\itext.pdfua\itext.pdfua.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
         <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj" />
+        <ProjectReference Include="..\..\itext\itext.sign\itext.sign.csproj" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
