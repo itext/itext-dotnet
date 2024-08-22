@@ -21,14 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
@@ -74,8 +73,10 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), 
                 new StampingProperties());
             signer.SetFieldName("Signature1");
-            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
-                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName())
+                .SetContent("Approval test signature.\nCreated by iText.");
+            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
+                ("TestCity").SetSignatureAppearance(appearance);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.SignDetached(new BouncyCastleDigest(), pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
             TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");

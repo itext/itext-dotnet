@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Fields.Properties;
+using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -115,7 +117,7 @@ namespace iText.Signatures.Sign {
             signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
             signer.SetFieldName("Signature1");
             // Creating the appearance
-            CreateAppearance(signer, "Test 1", "TestCity", false, rect, 12f);
+            CreateAppearance(signer, "Signature1", "Test 1", "TestCity", false, rect, 12f);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -138,7 +140,7 @@ namespace iText.Signatures.Sign {
             signer.SetCertificationLevel(certificationLevel);
             signer.SetFieldName(name);
             // Creating the appearance
-            CreateAppearance(signer, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
+            CreateAppearance(signer, name, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
@@ -150,16 +152,18 @@ namespace iText.Signatures.Sign {
             return result;
         }
 
-        private static void CreateAppearance(PdfSigner signer, String reason, String location, bool setReuseAppearance
-            , Rectangle rectangleForNewField, float? fontSize) {
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetReuseAppearance(setReuseAppearance);
+        private static void CreateAppearance(PdfSigner signer, String signatureName, String reason, String location
+            , bool setReuseAppearance, Rectangle rectangleForNewField, float? fontSize) {
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signatureName).SetContent(new SignedAppearanceText
+                ());
+            signer.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             if (rectangleForNewField != null) {
                 signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetLayer2FontSize((float)fontSize);
+                appearance.SetFontSize((float)fontSize);
             }
+            signer.GetSignatureField().SetReuseAppearance(setReuseAppearance);
         }
     }
 }

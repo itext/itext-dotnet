@@ -26,6 +26,8 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
+using iText.Forms.Fields.Properties;
+using iText.Forms.Form.Element;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -149,8 +151,10 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(x, y, w, h);
             PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
-            signer.SetPageRect(rect).GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity").SetLayer2Font
-                (font).SetReuseAppearance(false);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent(new SignedAppearanceText
+                ()).SetFont(font);
+            signer.SetPageRect(rect).SetReason("pdfA test").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signer.GetSignatureField().SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(new 
                 BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
@@ -180,14 +184,17 @@ namespace iText.Signatures.Sign {
                 );
             signer.SetFieldName(name);
             // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetLayer2Font(font).SetReuseAppearance(setReuseAppearance);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetContent(new SignedAppearanceText
+                ());
+            appearance.SetFont(font);
+            signer.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             if (rectangleForNewField != null) {
                 signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetLayer2FontSize((float)fontSize);
+                appearance.SetFontSize((float)fontSize);
             }
+            signer.GetSignatureField().SetReuseAppearance(setReuseAppearance);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);

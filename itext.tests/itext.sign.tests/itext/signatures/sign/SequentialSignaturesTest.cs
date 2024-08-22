@@ -24,6 +24,7 @@ using System;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -62,8 +63,10 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
                 StampingProperties().UseAppendMode());
             signer.SetFieldName(signatureName);
-            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 350, 200, 100)).SetReason("Test").SetLocation
-                ("TestCity").SetLayer2Text("Approval test signature.\nCreated by iText.");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signatureName).SetContent("Approval test signature.\nCreated by iText."
+                );
+            signer.SetPageRect(new Rectangle(50, 350, 200, 100)).SetReason("Test").SetLocation("TestCity").SetSignatureAppearance
+                (appearance);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
                 .CADES);
             TestSignUtils.BasicCheckSignedDoc(outFileName, signatureName);
@@ -85,10 +88,11 @@ namespace iText.Signatures.Sign {
             PdfDocument document = signer.GetDocument();
             document.GetWriter().SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             signer.SetFieldName(signatureName);
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance();
-            appearance.SetPageNumber(1);
-            signer.GetSignatureAppearance().SetPageRect(new Rectangle(50, 550, 200, 100)).SetReason("Test2").SetLocation
-                ("TestCity2").SetLayer2Text("Approval test signature #2.\nCreated by iText.");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signatureName).SetContent("Approval test signature #2.\nCreated by iText."
+                );
+            signer.SetPageNumber(1);
+            signer.SetPageRect(new Rectangle(50, 550, 200, 100)).SetReason("Test2").SetLocation("TestCity2").SetSignatureAppearance
+                (appearance);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
                 .CADES);
             TestSignUtils.BasicCheckSignedDoc(outFileName, "Signature1");

@@ -27,6 +27,8 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Fields.Properties;
+using iText.Forms.Form.Element;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -35,6 +37,7 @@ using iText.Signatures;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -81,6 +84,7 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD)]
         public virtual void SignPdf2CertificationAfterApprovalTest() {
             String srcFile = SOURCE_FOLDER + "approvalSignedDocPdf2.pdf";
             String outPdf = DESTINATION_FOLDER + "signedPdf2CertificationAfterApproval.pdf";
@@ -175,14 +179,15 @@ namespace iText.Signatures.Sign {
             signer.SetCertificationLevel(certificationLevel);
             signer.SetFieldName(name);
             // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetReuseAppearance(setReuseAppearance);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetContent(new SignedAppearanceText
+                ());
             if (rectangleForNewField != null) {
                 signer.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetLayer2FontSize((float)fontSize);
+                appearance.SetFontSize((float)fontSize);
             }
+            signer.SetReason(reason).SetLocation(location).GetSignatureField().SetReuseAppearance(setReuseAppearance);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
