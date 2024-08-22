@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.Forms.Form.Element;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -206,6 +207,34 @@ namespace iText.Signatures {
             PdfDictionary formFieldDictionary = formField.GetPdfObject();
             NUnit.Framework.Assert.IsNotNull(formFieldDictionary);
             NUnit.Framework.Assert.IsTrue(formFieldDictionary.ContainsKey(PdfName.AP));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetAlternativeName() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfDocument document = new PdfDocument(new PdfWriter(outputStream, new WriterProperties()));
+            document.SetTagged();
+            document.AddNewPage();
+            document.Close();
+            ByteArrayOutputStream signedOutputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(outputStream.ToArray())), signedOutputStream
+                , new StampingProperties());
+            signer.SetFieldName("Signature1");
+            signer.SetPageNumber(1).SetPageRect(new Rectangle(100, 100, 10, 10));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+            appearance.SetContent("Some text");
+            appearance.GetAccessibilityProperties().SetAlternateDescription("Alternate description");
+            signer.SetSignatureAppearance(appearance);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            signer.document.Close();
+            PdfDocument signedDocument = new PdfDocument(new PdfReader(new MemoryStream(signedOutputStream.ToArray()))
+                , new PdfWriter(new ByteArrayOutputStream()));
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signedDocument, true);
+            PdfFormField formField = acroForm.GetField(signer.GetFieldName());
+            NUnit.Framework.Assert.AreEqual("Alternate description", formField.GetPdfObject().Get(PdfName.TU).ToString
+                ());
         }
 
         [NUnit.Framework.Test]

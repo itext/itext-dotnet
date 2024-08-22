@@ -40,7 +40,9 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 using iText.Pdfa;
 using iText.Signatures.Exceptions;
 
@@ -1451,6 +1453,18 @@ namespace iText.Signatures {
         }
 //\endcond
 
+        protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, IAccessibleElement modelElement
+            , PdfDocument pdfDocument) {
+            if (!pdfDocument.IsTagged()) {
+                return;
+            }
+            AccessibilityProperties properties = modelElement.GetAccessibilityProperties();
+            String alternativeDescription = properties.GetAlternateDescription();
+            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
+                formField.SetAlternativeName(alternativeDescription);
+            }
+        }
+
         private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {
             SignatureFieldAppearance formFieldElement = appearance.GetSignatureAppearance();
             PdfFormAnnotation annotation = sigField.GetFirstFormAnnotation();
@@ -1472,6 +1486,7 @@ namespace iText.Signatures {
             }
             BorderStyleUtil.ApplyBorderProperty(formFieldElement, annotation);
             Background background = formFieldElement.GetProperty<Background>(Property.BACKGROUND);
+            ApplyAccessibilityProperties(sigField, formFieldElement, document);
             if (background != null) {
                 sigField.GetFirstFormAnnotation().SetBackgroundColor(background.GetColor());
             }
