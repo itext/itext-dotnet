@@ -145,10 +145,6 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String OUTLINES_MODIFIED = "Outlines entry in catalog dictionary was modified. " + "iText currently cannot identify if these modifications are allowed.";
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal const String PAGES_MODIFIED = "Pages structure was unexpectedly modified.";
 //\endcond
 
@@ -1885,7 +1881,8 @@ namespace iText.Signatures.Validation {
             }
             if (catalog.Get(PdfName.StructTreeRoot) != null) {
                 usuallyModifiedObjectsSet.Add(catalog.Get(PdfName.StructTreeRoot).GetIndirectReference());
-                if (catalog.GetAsDictionary(PdfName.StructTreeRoot) != null) {
+                if (catalog.GetAsDictionary(PdfName.StructTreeRoot) != null && catalog.GetAsDictionary(PdfName.StructTreeRoot
+                    ).Get(PdfName.K) != null) {
                     AddStructTreeElementsToSet(catalog.GetAsDictionary(PdfName.StructTreeRoot).Get(PdfName.K), usuallyModifiedObjectsSet
                         );
                 }

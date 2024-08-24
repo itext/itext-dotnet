@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.Esf;
@@ -1580,7 +1581,18 @@ namespace iText.Commons.Bouncycastle {
         /// </returns>
         bool IsNullExtension(IX509Extension extNonce);
 
+        /// <summary>
+        /// Check if provided encodable wrapper wraps null.
+        /// </summary>
+        /// <param name="encodable">encodable wrapper to be checked</param>
+        /// <returns>true if provided encodable wrapper wraps null, false otherwise</returns>
         bool IsNull(IAsn1Encodable encodable);
+
+        /// <summary>
+        /// Get SecureRandom implementation from the factory.
+        /// </summary>
+        /// <returns>SecureRandom implementation</returns>
+        RNGCryptoServiceProvider GetSecureRandom();
         
         /// <summary>
         /// Create
@@ -1635,5 +1647,30 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="certificate">certificate to get end date</param>
         /// <returns>The end date of the certificate</returns>
         string CreateEndDate(IX509Certificate certificate);
+
+        /// <summary>
+        /// Generates byte array based on extract-and-expand key derivation function, using provided parameters.
+        /// </summary>
+        /// <param name="inputKey">byte[] input key material</param>
+        /// <param name="salt">byte[] salt</param>
+        /// <param name="info">byte[] info</param>
+        /// <returns>byte[] key derivation function result.</returns>
+        byte[] GenerateHKDF(byte[] inputKey, byte[] salt, byte[] info);
+
+        /// <summary>
+        /// Generates byte array based MAC token according to HMACSHA256 algorithm.
+        /// </summary>
+        /// <param name="key">MAC key</param>
+        /// <param name="data">data to be encrypted</param>
+        /// <returns>byte array based MAC token.</returns>
+        byte[] GenerateHMACSHA256Token(byte[] key, byte[] data);
+
+        /// <summary>
+        /// Generates encrypted key based on AES256 without padding wrapping algorithm.
+        /// </summary>
+        /// <param name="key">key to be encrypted</param>
+        /// <param name="kek">key encryption key to be used</param>
+        /// <returns>encrypted key.</returns>
+        byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek);
     }
 }

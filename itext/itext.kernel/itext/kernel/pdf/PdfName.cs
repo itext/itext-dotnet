@@ -202,6 +202,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName AuthEvent = CreateDirectName("AuthEvent");
 
+        public static readonly iText.Kernel.Pdf.PdfName AuthCode = CreateDirectName("AuthCode");
+
         public static readonly iText.Kernel.Pdf.PdfName Author = CreateDirectName("Author");
 
         public static readonly iText.Kernel.Pdf.PdfName B = CreateDirectName("B");
@@ -885,6 +887,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Justify = CreateDirectName("Justify");
 
         public static readonly iText.Kernel.Pdf.PdfName K = CreateDirectName("K");
+
+        public static readonly iText.Kernel.Pdf.PdfName KDFSalt = CreateDirectName("KDFSalt");
 
         public static readonly iText.Kernel.Pdf.PdfName Keywords = CreateDirectName("Keywords");
 

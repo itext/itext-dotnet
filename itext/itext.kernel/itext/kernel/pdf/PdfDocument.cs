@@ -745,6 +745,7 @@ namespace iText.Kernel.Pdf {
                         .GetInstance()));
                     // The event will prepare document for flushing, i.e. will set an appropriate producer line
                     manager.OnEvent(new FlushPdfDocumentEvent(this));
+                    DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_DOCUMENT_CLOSING, this));
                     UpdateXmpMetadata();
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {
@@ -2215,19 +2216,8 @@ namespace iText.Kernel.Pdf {
                             if (!embeddedStreamsSavedOnReading && writer.crypto.IsEmbeddedFilesOnly()) {
                                 encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
                             }
-                            if (writer.crypto.GetCryptoMode() < EncryptionConstants.ENCRYPTION_AES_256) {
-                                VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(this, PdfVersion.PDF_2_0, VersionConforming
-                                    .DEPRECATED_ENCRYPTION_ALGORITHMS);
-                            }
-                            else {
-                                if (writer.crypto.GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_256) {
-                                    PdfNumber r = writer.crypto.GetPdfObject().GetAsNumber(PdfName.R);
-                                    if (r != null && r.IntValue() == 5) {
-                                        VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(this, PdfVersion.PDF_2_0, VersionConforming
-                                            .DEPRECATED_AES256_REVISION);
-                                    }
-                                }
-                            }
+                            writer.crypto.CheckEncryptionRequirements(this);
+                            writer.crypto.ConfigureEncryptionParameters(this);
                         }
                     }
                 }

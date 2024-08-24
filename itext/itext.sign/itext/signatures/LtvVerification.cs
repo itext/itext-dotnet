@@ -214,7 +214,7 @@ namespace iText.Signatures {
                     validationData.certs.Add(processedCert.GetEncoded());
                 }
             }
-            if (validationData.crls.Count == 0 && validationData.ocsps.Count == 0) {
+            if (validationData.crls.IsEmpty() && validationData.ocsps.IsEmpty()) {
                 return false;
             }
             validated.Put(GetSignatureHashKey(signatureName), validationData);
@@ -250,7 +250,7 @@ namespace iText.Signatures {
 
         /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
         public virtual void Merge() {
-            if (used || validated.Count == 0) {
+            if (used || validated.IsEmpty()) {
                 return;
             }
             used = true;
@@ -353,6 +353,7 @@ namespace iText.Signatures {
                 ICollection<byte[]> cims = crl.GetEncoded(cert, null);
                 if (cims != null) {
                     foreach (byte[] cim in cims) {
+                        revocationDataAdded = true;
                         bool dup = false;
                         foreach (byte[] b in validationData.crls) {
                             if (JavaUtil.ArraysEquals(b, cim)) {
@@ -362,7 +363,6 @@ namespace iText.Signatures {
                         }
                         if (!dup) {
                             validationData.crls.Add(cim);
-                            revocationDataAdded = true;
                             LOGGER.LogInformation("CRL added");
                             if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                                 IX509Certificate[] certsList = issuingCertificateRetriever.GetCrlIssuerCertificates(SignUtils.ParseCrlFromStream
@@ -536,15 +536,15 @@ namespace iText.Signatures {
                     certs.Add(ps);
                     certs.SetModified();
                 }
-                if (ocsp.Size() > 0) {
+                if (!ocsp.IsEmpty()) {
                     ocsp.MakeIndirect(document);
                     vri.Put(PdfName.OCSP, ocsp);
                 }
-                if (crl.Size() > 0) {
+                if (!crl.IsEmpty()) {
                     crl.MakeIndirect(document);
                     vri.Put(PdfName.CRL, crl);
                 }
-                if (cert.Size() > 0) {
+                if (!cert.IsEmpty()) {
                     cert.MakeIndirect(document);
                     vri.Put(PdfName.Cert, cert);
                 }
@@ -554,15 +554,15 @@ namespace iText.Signatures {
             vrim.MakeIndirect(document);
             vrim.SetModified();
             dss.Put(PdfName.VRI, vrim);
-            if (ocsps.Size() > 0) {
+            if (!ocsps.IsEmpty()) {
                 ocsps.MakeIndirect(document);
                 dss.Put(PdfName.OCSPs, ocsps);
             }
-            if (crls.Size() > 0) {
+            if (!crls.IsEmpty()) {
                 crls.MakeIndirect(document);
                 dss.Put(PdfName.CRLs, crls);
             }
-            if (certs.Size() > 0) {
+            if (!certs.IsEmpty()) {
                 certs.MakeIndirect(document);
                 dss.Put(PdfName.Certs, certs);
             }

@@ -27,6 +27,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 
@@ -94,6 +95,22 @@ namespace iText.Kernel.Crypto.Securityhandler {
         public abstract OutputStreamEncryption GetEncryptionStream(Stream os);
 
         public abstract IDecryptor GetDecryptor();
+        
+        /// <summary>
+        /// Gets encryption key for a particular object/generation.
+        /// </summary>
+        /// <returns>encryption key for a particular object/generation.</returns>
+        public byte[] GetNextObjectKey() {
+            return JavaUtil.ArraysCopyOf(nextObjectKey, nextObjectKey.Length);
+        }
+
+        /// <summary>
+        /// Gets global encryption key.
+        /// </summary>
+        /// <returns>global encryption key.</returns>
+        public byte[] GetMkey() {
+            return JavaUtil.ArraysCopyOf(mkey, mkey.Length);
+        }
 
         private void SafeInitMessageDigest() {
             try {

@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
@@ -79,7 +80,11 @@ using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Operators;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
@@ -1127,6 +1132,11 @@ namespace iText.Bouncycastle {
         public bool IsNull(IAsn1Encodable encodable) {
             return ((Asn1EncodableBC)encodable).GetEncodable() == null;
         }
+
+        /// <summary><inheritDoc/></summary>
+        public RNGCryptoServiceProvider GetSecureRandom() {
+            return new RNGCryptoServiceProvider();
+        }
         
         /// <summary><inheritDoc/></summary>
         public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
@@ -1168,6 +1178,30 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public string CreateEndDate(IX509Certificate certificate) {
             return certificate.GetEndDateTime();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateHKDF(byte[] inputKey, byte[] salt, byte[] info) {
+            HkdfBytesGenerator hkdfBytesGenerator = new HkdfBytesGenerator(new Sha256Digest());
+            HkdfParameters hkdfParameters = new HkdfParameters(inputKey, salt, info);
+            hkdfBytesGenerator.Init(hkdfParameters);
+            byte[] hkdf = new byte[32];
+            hkdfBytesGenerator.GenerateBytes(hkdf, 0, 32);
+
+            return hkdf;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateHMACSHA256Token(byte[] key, byte[] data) {
+            HMACSHA256 mac = new HMACSHA256(key);
+            return mac.ComputeHash(data);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
+            IWrapper wrapper = new AesWrapEngine();
+            wrapper.Init(true, new KeyParameter(kek));
+            return wrapper.Wrap(key, 0, key.Length);
         }
 
         //\cond DO_NOT_DOCUMENT

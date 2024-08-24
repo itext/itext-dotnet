@@ -43,6 +43,12 @@ namespace iText.Kernel.Events {
         /// </remarks>
         public const String END_PAGE = "EndPdfPage";
 
+        /// <summary>Dispatched before writer is flushed to a document.</summary>
+        public const String END_WRITER_FLUSH = "EndWriterFlush";
+
+        /// <summary>Dispatched after writer is flushed to a document.</summary>
+        public const String START_DOCUMENT_CLOSING = "StartDocumentClosing";
+
         /// <summary>The PdfPage associated with this event.</summary>
         protected internal PdfPage page;
 

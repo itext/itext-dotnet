@@ -27,13 +27,15 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Events;
+using iText.Kernel.Mac;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
-        private static readonly byte[] obj = ByteUtils.GetIsoBytes(" obj\n");
+        private static readonly byte[] OBJ = ByteUtils.GetIsoBytes(" obj\n");
 
-        private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
+        private static readonly byte[] ENDOBJ = ByteUtils.GetIsoBytes("\nendobj\n");
 
         protected internal WriterProperties properties;
 
@@ -55,11 +57,13 @@ namespace iText.Kernel.Pdf {
         /// It stores hashes of the indirect reference from the source document and the corresponding
         /// indirect references of the copied objects from the new document.
         /// </remarks>
-        private IDictionary<PdfIndirectReference, PdfIndirectReference> copiedObjects = new LinkedDictionary<PdfIndirectReference
-            , PdfIndirectReference>();
+        private readonly IDictionary<PdfIndirectReference, PdfIndirectReference> copiedObjects = new LinkedDictionary
+            <PdfIndirectReference, PdfIndirectReference>();
 
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
-        private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
+        private readonly SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
+
+        private Stream originalOutputStream;
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
         /// <param name="file">File to write to.</param>
@@ -74,7 +78,11 @@ namespace iText.Kernel.Pdf {
         }
 
         public PdfWriter(Stream os, WriterProperties properties)
-            : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
+            : base(IsByteArrayWritingMode(properties) ? (Stream)new ByteArrayOutputStream() : new CountOutputStream(FileUtil
+                .WrapWithBufferedOutputStream(os))) {
+            if (IsByteArrayWritingMode(properties)) {
+                this.originalOutputStream = os;
+            }
             this.properties = properties;
         }
 
@@ -89,6 +97,17 @@ namespace iText.Kernel.Pdf {
         /// <param name="properties">writerproperties to use.</param>
         public PdfWriter(String filename, WriterProperties properties)
             : this(FileUtil.GetBufferedOutputStream(filename), properties) {
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void Flush() {
+            base.Flush();
+            if (document != null) {
+                document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_WRITER_FLUSH, document));
+            }
+            if (IsByteArrayWritingMode(properties)) {
+                CompleteByteArrayWritingMode();
+            }
         }
 
         /// <summary>Indicates if to use full compression mode.</summary>
@@ -156,17 +175,30 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Initializes
+        /// <see cref="PdfEncryption"/>
+        /// object if any encryption is specified in
+        /// <see cref="WriterProperties"/>.
+        /// </summary>
+        /// <param name="version">
+        /// 
+        /// <see cref="PdfVersion"/>
+        /// version of the document in question
+        /// </param>
         protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
             EncryptionProperties encryptProps = properties.encryptionProperties;
+            MacIntegrityProtector mac = encryptProps.macProperties == null ? null : new MacIntegrityProtector(document
+                , encryptProps.macProperties);
             if (properties.IsStandardEncryptionUsed()) {
                 crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
                     , encryptProps.encryptionAlgorithm, ByteUtils.GetIsoBytes(this.document.GetOriginalDocumentId().GetValue
-                    ()), version);
+                    ()), version, mac);
             }
             else {
                 if (properties.IsPublicKeyEncryptionUsed()) {
                     crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
-                        .encryptionAlgorithm, version);
+                        .encryptionAlgorithm, version, mac);
                 }
             }
         }
@@ -293,9 +325,9 @@ namespace iText.Kernel.Pdf {
                     .GetGenNumber());
             }
             WriteInteger(pdfObj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger(pdfObj.GetIndirectReference
-                ().GetGenNumber()).WriteBytes(obj);
+                ().GetGenNumber()).WriteBytes(OBJ);
             Write(pdfObj);
-            WriteBytes(endobj);
+            WriteBytes(ENDOBJ);
         }
 
         /// <summary>Writes PDF header.</summary>
@@ -410,6 +442,12 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+        private void CompleteByteArrayWritingMode() {
+            byte[] baos = ((ByteArrayOutputStream)GetOutputStream()).ToArray();
+            originalOutputStream.Write(baos, 0, baos.Length);
+            originalOutputStream.Dispose();
+        }
+
         private void MarkArrayContentToFlush(PdfArray array) {
             for (int i = 0; i < array.Size(); i++) {
                 MarkObjectToFlush(array.Get(i, false));
@@ -448,6 +486,10 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
+        }
+
+        private static bool IsByteArrayWritingMode(WriterProperties properties) {
+            return properties.encryptionProperties.macProperties != null;
         }
 
         private static bool CheckTypeOfPdfDictionary(PdfObject dictionary, PdfName expectedType) {

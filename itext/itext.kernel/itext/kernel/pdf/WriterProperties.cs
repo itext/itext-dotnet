@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Kernel.Mac;
 
 namespace iText.Kernel.Pdf {
     public class WriterProperties {
@@ -213,7 +214,79 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
             , int permissions, int encryptionAlgorithm) {
-            encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm);
+            return SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm, null);
+        }
+
+        /// <summary>Sets the encryption options for the document.</summary>
+        /// <param name="userPassword">
+        /// the user password. Can be null or of zero length, which is equal to
+        /// omitting the user password
+        /// </param>
+        /// <param name="ownerPassword">
+        /// the owner password. If it's null or empty, iText will generate
+        /// a random string to be used as the owner password
+        /// </param>
+        /// <param name="permissions">
+        /// the user permissions
+        /// The open permissions for the document can be
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
+        /// The permissions can be combined by ORing them
+        /// </param>
+        /// <param name="encryptionAlgorithm">
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed
+        /// to output the metadata in cleartext.
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// can be ORed as well.
+        /// Please be aware that the passed encryption types may override permissions:
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// and
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// </param>
+        /// <param name="macProperties">
+        /// 
+        /// <see cref="iText.Kernel.Mac.MacProperties"/>
+        /// class to configure MAC integrity protection properties
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="WriterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
+            , int permissions, int encryptionAlgorithm, MacProperties macProperties) {
+            encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm, 
+                macProperties);
             return this;
         }
 
@@ -277,18 +350,89 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions
             , int encryptionAlgorithm) {
+            return SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm, null);
+        }
+
+        /// <summary>Sets the certificate encryption options for the document.</summary>
+        /// <remarks>
+        /// Sets the certificate encryption options for the document. An array of one or more public certificates
+        /// must be provided together with an array of the same size for the permissions for each certificate.
+        /// </remarks>
+        /// <param name="certs">the public certificates to be used for the encryption</param>
+        /// <param name="permissions">
+        /// the user permissions for each of the certificates
+        /// The open permissions for the document can be
+        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
+        /// and
+        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
+        /// The permissions can be combined by ORing them
+        /// </param>
+        /// <param name="encryptionAlgorithm">
+        /// the type of encryption. It can be one of
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// ,
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// or
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// Optionally
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// can be ORed
+        /// to output the metadata in cleartext.
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// can be ORed as well.
+        /// Please be aware that the passed encryption types may override permissions:
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
+        /// and
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
+        /// implicitly sets
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
+        /// as false;
+        /// </param>
+        /// <param name="macProperties">
+        /// 
+        /// <see cref="iText.Kernel.Mac.MacProperties"/>
+        /// class to configure MAC integrity protection properties
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="WriterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions
+            , int encryptionAlgorithm, MacProperties macProperties) {
             BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(encryptionAlgorithm, true);
-            encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
+            encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm, macProperties);
             return this;
         }
 
         /// <summary>The /ID entry of a document contains an array with two entries.</summary>
         /// <remarks>
-        /// The /ID entry of a document contains an array with two entries. The first one (initial id) represents the initial document id.
+        /// The /ID entry of a document contains an array with two entries.
+        /// The first one (initial id) represents the initial document id.
         /// It's a permanent identifier based on the contents of the file at the time it was originally created
         /// and does not change when the file is incrementally updated.
-        /// To help ensure the uniqueness of file identifiers, it is recommend to be computed by means of a message digest algorithm such as MD5.
-        /// iText will by default keep the existing initial id. But if you'd like you can set this id yourself using this setter.
+        /// To help ensure the uniqueness of file identifiers,
+        /// it is recommended to be computed by means of a message digest algorithm such as MD5.
+        /// iText will by default keep the existing initial id.
+        /// But if you'd like you can set this id yourself using this setter.
         /// </remarks>
         /// <param name="initialDocumentId">the new initial document id</param>
         /// <returns>

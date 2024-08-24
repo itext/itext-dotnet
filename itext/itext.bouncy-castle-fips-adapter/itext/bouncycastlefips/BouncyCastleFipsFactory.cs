@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using iText.Bouncycastle.Security;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
@@ -1187,6 +1188,11 @@ namespace iText.Bouncycastlefips {
         public bool IsNull(IAsn1Encodable encodable) {
             return ((Asn1EncodableBCFips)encodable).GetEncodable() == null;
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public RNGCryptoServiceProvider GetSecureRandom() {
+            return new RNGCryptoServiceProvider();
+        }
 
         /// <summary><inheritDoc/></summary>
         public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
@@ -1217,17 +1223,6 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
-        public SecureRandom GetSecureRandom() {
-            byte[] personalizationString = Strings.ToUtf8ByteArray("some personalization string");
-            SecureRandom entropySource = new SecureRandom();
-            return CryptoServicesRegistrar.CreateService(FipsDrbg.Sha512)
-                .FromEntropySource(entropySource,true)
-                .SetPersonalizationString(personalizationString).Build(
-                    entropySource.GenerateSeed(256 / (2 * 8)), true, 
-                    Strings.ToByteArray("number only used once"));
-        }
-        
-        /// <summary><inheritDoc/></summary>
         public IBouncyCastleUtil GetBouncyCastleUtil() {
             return BOUNCY_CASTLE_UTIL;
         }
@@ -1235,6 +1230,22 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public string CreateEndDate(IX509Certificate certificate) {
             return certificate.GetEndDateTime();
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateHKDF(byte[] inputKey, byte[] salt, byte[] info) {
+            throw new NotSupportedException("HKDF algorithm is not supported in bouncy-castle FIPS mode.");
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateHMACSHA256Token(byte[] key, byte[] data) {
+            HMACSHA256 mac = new HMACSHA256(key);
+            return mac.ComputeHash(data);
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
+            throw new NotSupportedException("Encrypted key generation with AES256 is not supported in bouncy-castle FIPS mode.");
         }
 
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {
