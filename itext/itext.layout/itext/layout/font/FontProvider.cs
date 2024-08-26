@@ -115,8 +115,8 @@ namespace iText.Layout.Font {
             pdfFonts = new Dictionary<FontInfo, PdfFont>();
             fontSelectorCache = new FontSelectorCache(this.fontSet);
             this.defaultFontFamily = defaultFontFamily;
-            this.fontSelectorStrategyFactory = new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
-                ();
+            this.fontSelectorStrategyFactory = new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory(
+                );
         }
 
         /// <summary>
