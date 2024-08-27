@@ -28,7 +28,8 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -155,97 +156,106 @@ namespace iText.Pdfa.Checker {
             CheckOpenAction(catalogDict.Get(PdfName.OpenAction));
         }
 
-        public virtual void ValidateDocument(ValidationContext validationContext) {
-            foreach (PdfFont pdfFont in validationContext.GetFonts()) {
-                CheckFont(pdfFont);
+        public virtual void Validate(IValidationContext context) {
+            CanvasGraphicsState gState = null;
+            if (context is IGraphicStateValidationParameter) {
+                gState = ((IGraphicStateValidationParameter)context).GetGraphicsState();
             }
-            PdfCatalog catalog = validationContext.GetPdfDocument().GetCatalog();
-            CheckDocument(catalog);
-        }
-
-        public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            , Object extra) {
-            CanvasGraphicsState gState;
-            PdfDictionary currentColorSpaces = null;
-            if (resources != null) {
-                currentColorSpaces = resources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
+            PdfStream contentStream = null;
+            if (context is IContentStreamValidationParameter) {
+                contentStream = ((IContentStreamValidationParameter)context).GetContentStream();
             }
-            switch (key) {
-                case IsoKey.CANVAS_STACK: {
-                    CheckCanvasStack((char)obj);
+            switch (context.GetType()) {
+                case ValidationType.PDF_DOCUMENT: {
+                    PdfDocumentValidationContext pdfDocContext = (PdfDocumentValidationContext)context;
+                    foreach (PdfFont pdfFont in pdfDocContext.GetDocumentFonts()) {
+                        CheckFont(pdfFont);
+                    }
+                    CheckDocument(pdfDocContext.GetPdfDocument().GetCatalog());
                     break;
                 }
 
-                case IsoKey.PDF_OBJECT: {
-                    CheckPdfObject((PdfObject)obj);
+                case ValidationType.CANVAS_STACK: {
+                    CheckCanvasStack(((CanvasStackValidationContext)context).GetOperator());
                     break;
                 }
 
-                case IsoKey.RENDERING_INTENT: {
-                    CheckRenderingIntent((PdfName)obj);
+                case ValidationType.FILL_COLOR:
+                case ValidationType.STROKE_COLOR: {
+                    bool isFill = ValidationType.FILL_COLOR == context.GetType();
+                    Color color = isFill ? gState.GetFillColor() : gState.GetStrokeColor();
+                    AbstractColorValidationContext colorContext = (AbstractColorValidationContext)context;
+                    CheckColor(gState, color, colorContext.GetCurrentColorSpaces(), isFill, contentStream);
                     break;
                 }
 
-                case IsoKey.INLINE_IMAGE: {
-                    CheckInlineImage((PdfStream)obj, currentColorSpaces);
-                    break;
-                }
-
-                case IsoKey.EXTENDED_GRAPHICS_STATE: {
-                    gState = (CanvasGraphicsState)obj;
+                case ValidationType.EXTENDED_GRAPHICS_STATE: {
                     CheckExtGState(gState, contentStream);
                     break;
                 }
 
-                case IsoKey.FILL_COLOR: {
-                    gState = (CanvasGraphicsState)obj;
-                    CheckColor(gState, gState.GetFillColor(), currentColorSpaces, true, contentStream);
+                case ValidationType.INLINE_IMAGE: {
+                    InlineImageValidationContext imageContext = (InlineImageValidationContext)context;
+                    CheckInlineImage(imageContext.GetImage(), imageContext.GetCurrentColorSpaces());
                     break;
                 }
 
-                case IsoKey.PAGE: {
-                    CheckSinglePage((PdfPage)obj);
+                case ValidationType.PDF_PAGE: {
+                    PdfPageValidationContext pageContext = (PdfPageValidationContext)context;
+                    CheckSinglePage(pageContext.GetPage());
                     break;
                 }
 
-                case IsoKey.STROKE_COLOR: {
-                    gState = (CanvasGraphicsState)obj;
-                    CheckColor(gState, gState.GetStrokeColor(), currentColorSpaces, false, contentStream);
+                case ValidationType.PDF_OBJECT: {
+                    PdfObjectValidationContext objContext = (PdfObjectValidationContext)context;
+                    CheckPdfObject(objContext.GetObject());
                     break;
                 }
 
-                case IsoKey.TAG_STRUCTURE_ELEMENT: {
-                    CheckTagStructureElement((PdfObject)obj);
+                case ValidationType.RENDERING_INTENT: {
+                    RenderingIntentValidationContext intentContext = (RenderingIntentValidationContext)context;
+                    CheckRenderingIntent(intentContext.GetIntent());
                     break;
                 }
 
-                case IsoKey.FONT_GLYPHS: {
-                    CheckFontGlyphs(((CanvasGraphicsState)obj).GetFont(), contentStream);
+                case ValidationType.TAG_STRUCTURE_ELEMENT: {
+                    TagStructElementValidationContext tagContext = (TagStructElementValidationContext)context;
+                    CheckTagStructureElement(tagContext.GetObject());
                     break;
                 }
 
-                case IsoKey.XREF_TABLE: {
-                    CheckXrefTable((PdfXrefTable)obj);
+                case ValidationType.FONT_GLYPHS: {
+                    CheckFontGlyphs(gState.GetFont(), contentStream);
                     break;
                 }
 
-                case IsoKey.SIGNATURE: {
-                    CheckSignature((PdfDictionary)obj);
+                case ValidationType.XREF_TABLE: {
+                    XrefTableValidationContext xrefContext = (XrefTableValidationContext)context;
+                    CheckXrefTable(xrefContext.GetXrefTable());
                     break;
                 }
 
-                case IsoKey.SIGNATURE_TYPE: {
-                    CheckSignatureType(((bool?)obj).Value);
+                case ValidationType.SIGNATURE: {
+                    SignatureValidationContext signContext = (SignatureValidationContext)context;
+                    CheckSignature(signContext.GetSignature());
                     break;
                 }
 
-                case IsoKey.CRYPTO: {
-                    CheckCrypto((PdfObject)obj);
+                case ValidationType.SIGNATURE_TYPE: {
+                    SignTypeValidationContext signTypeContext = (SignTypeValidationContext)context;
+                    CheckSignatureType(signTypeContext.IsCAdES());
                     break;
                 }
 
-                case IsoKey.FONT: {
-                    CheckText((String)obj, (PdfFont)extra);
+                case ValidationType.CRYPTO: {
+                    CryptoValidationContext cryptoContext = (CryptoValidationContext)context;
+                    CheckCrypto(cryptoContext.GetCrypto());
+                    break;
+                }
+
+                case ValidationType.FONT: {
+                    FontValidationContext fontContext = (FontValidationContext)context;
+                    CheckText(fontContext.GetText(), fontContext.GetFont());
                     break;
                 }
             }

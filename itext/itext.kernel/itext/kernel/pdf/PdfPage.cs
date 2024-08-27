@@ -35,6 +35,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -645,7 +646,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             if (flushResourcesContentStreams) {
-                GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
+                GetDocument().CheckIsoConformance(new PdfPageValidationContext(this));
                 FlushResourcesContentStreams();
             }
             PdfArray annots = GetAnnots(false);

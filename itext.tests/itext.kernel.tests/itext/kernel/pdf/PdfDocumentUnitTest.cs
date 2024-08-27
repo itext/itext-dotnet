@@ -31,7 +31,8 @@ using iText.Kernel.Font;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -209,7 +210,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_250(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_252(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -219,15 +220,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_250 : PdfDocument {
-            public _PdfDocument_250(PdfReader baseArg1)
+        private sealed class _PdfDocument_252 : PdfDocument {
+            public _PdfDocument_252(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_267(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_269(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -238,8 +239,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_267 : PdfDocument {
-            public _PdfDocument_267(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_269 : PdfDocument {
+            public _PdfDocument_269(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }
@@ -410,7 +411,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CheckEmptyIsoConformanceTest() {
             using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
-                NUnit.Framework.Assert.DoesNotThrow(() => doc.CheckIsoConformance());
+                IValidationContext validationContext = new PdfDocumentValidationContext(doc, doc.GetDocumentFonts());
+                NUnit.Framework.Assert.DoesNotThrow(() => doc.CheckIsoConformance(validationContext));
             }
         }
 
@@ -422,7 +424,8 @@ namespace iText.Kernel.Pdf {
                 container.AddChecker(checker);
                 doc.GetDiContainer().Register(typeof(ValidationContainer), container);
                 NUnit.Framework.Assert.IsFalse(checker.documentValidationPerformed);
-                doc.CheckIsoConformance();
+                IValidationContext validationContext = new PdfDocumentValidationContext(doc, doc.GetDocumentFonts());
+                doc.CheckIsoConformance(validationContext);
                 NUnit.Framework.Assert.IsTrue(checker.documentValidationPerformed);
             }
         }
@@ -430,15 +433,10 @@ namespace iText.Kernel.Pdf {
         private class CustomValidationChecker : IValidationChecker {
             public bool documentValidationPerformed = false;
 
-            public bool objectValidationPerformed = false;
-
-            public virtual void ValidateDocument(ValidationContext validationContext) {
-                documentValidationPerformed = true;
-            }
-
-            public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-                , Object extra) {
-                objectValidationPerformed = true;
+            public virtual void Validate(IValidationContext validationContext) {
+                if (validationContext.GetType() == ValidationType.PDF_DOCUMENT) {
+                    documentValidationPerformed = true;
+                }
             }
         }
     }

@@ -40,14 +40,14 @@ using iText.Kernel.Geom;
 using iText.Kernel.Logs;
 using iText.Kernel.Numbering;
 using iText.Kernel.Pdf.Annot;
-using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Statistics;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -778,7 +778,7 @@ namespace iText.Kernel.Pdf {
                     if (!properties.appendMode && catalog.IsOCPropertiesMayHaveChanged()) {
                         catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
                     }
-                    CheckIsoConformance();
+                    CheckIsoConformance(new PdfDocumentValidationContext(this, GetDocumentFonts()));
                     if (GetNumberOfPages() == 0) {
                         // Add new page here, not in PdfPagesTree#generateTree method, so that any page
                         // operations are available when handling the START_PAGE and INSERT_PAGE events
@@ -878,7 +878,7 @@ namespace iText.Kernel.Pdf {
                     // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
                     // NOTE. No need in reverting, because it is the last operation with the document.
                     writer.crypto = null;
-                    CheckIsoConformance(crypto, IsoKey.CRYPTO);
+                    CheckIsoConformance(new CryptoValidationContext(crypto));
                     if (!properties.appendMode && crypto != null) {
                         // no need to flush crypto in append mode, it shall not have changed in this case
                         crypto.Flush(false);
@@ -1556,39 +1556,7 @@ namespace iText.Kernel.Pdf {
             outputIntents.Add(outputIntent.GetPdfObject());
         }
 
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <param name="obj">An object to conform.</param>
-        /// <param name="key">type of object to conform.</param>
-        public virtual void CheckIsoConformance(Object obj, IsoKey key) {
-            CheckIsoConformance(obj, key, null, null);
-        }
-
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <param name="obj">an object to conform.</param>
-        /// <param name="key">type of object to conform.</param>
-        /// <param name="resources">
-        /// 
-        /// <see cref="PdfResources"/>
-        /// associated with an object to check.
-        /// </param>
-        /// <param name="contentStream">current content stream</param>
-        public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            ) {
-            CheckIsoConformance(obj, key, resources, contentStream, null);
-        }
-
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <param name="obj">an object to conform.</param>
-        /// <param name="key">type of object to conform.</param>
-        /// <param name="resources">
-        /// 
-        /// <see cref="PdfResources"/>
-        /// associated with an object to check.
-        /// </param>
-        /// <param name="contentStream">current content stream.</param>
-        /// <param name="extra">extra data required for the check.</param>
-        public virtual void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            , Object extra) {
+        public virtual void CheckIsoConformance(IValidationContext validationContext) {
             if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
                 return;
             }
@@ -1596,25 +1564,7 @@ namespace iText.Kernel.Pdf {
             if (container == null) {
                 return;
             }
-            container.Validate(obj, key, resources, contentStream, extra);
-        }
-
-        /// <summary>Checks whether PDF document conforms a specific standard.</summary>
-        /// <remarks>
-        /// Checks whether PDF document conforms a specific standard.
-        /// Shall be overridden.
-        /// </remarks>
-        /// <param name="gState">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.Canvas.CanvasGraphicsState"/>
-        /// object to conform.
-        /// </param>
-        /// <param name="resources">
-        /// 
-        /// <see cref="PdfResources"/>
-        /// associated with an object to check.
-        /// </param>
-        public virtual void CheckShowTextIsoConformance(CanvasGraphicsState gState, PdfResources resources) {
+            container.Validate(validationContext);
         }
 
         /// <summary>Adds file attachment at document level.</summary>
@@ -2020,19 +1970,6 @@ namespace iText.Kernel.Pdf {
             > onPageAvailable, Action<PdfDestination> onPageNotAvailable) {
             pendingDestinationMutations.Add(new PdfDocument.DestinationMutationInfo(destination, onPageAvailable, onPageNotAvailable
                 ));
-        }
-
-        /// <summary>Checks whether PDF document conforms to a specific standard.</summary>
-        protected internal virtual void CheckIsoConformance() {
-            if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
-                return;
-            }
-            ValidationContainer container = this.GetDiContainer().GetInstance<ValidationContainer>();
-            if (container == null) {
-                return;
-            }
-            ValidationContext context = new ValidationContext().WithPdfDocument(this).WithFonts(GetDocumentFonts());
-            container.Validate(context);
         }
 
         /// <summary>

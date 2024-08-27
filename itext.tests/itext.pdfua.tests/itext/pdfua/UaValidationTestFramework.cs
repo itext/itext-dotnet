@@ -26,14 +26,13 @@ using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfua.Exceptions;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     /// <summary>Class that helps to test PDF/UA conformance.</summary>
     /// <remarks>
     /// Class that helps to test PDF/UA conformance.

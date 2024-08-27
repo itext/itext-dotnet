@@ -36,6 +36,8 @@ using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -369,6 +371,30 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(page34Res.IsDictionary());
             NUnit.Framework.Assert.AreNotEqual(page15Res, page34Res);
             result.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PageValidationTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                ValidationContainer container = new ValidationContainer();
+                PageFlushingTest.CustomValidationChecker checker = new PageFlushingTest.CustomValidationChecker();
+                container.AddChecker(checker);
+                doc.GetDiContainer().Register(typeof(ValidationContainer), container);
+                NUnit.Framework.Assert.IsNull(checker.page);
+                PdfPage pdfPage = doc.AddNewPage();
+                pdfPage.Flush(true);
+                NUnit.Framework.Assert.AreSame(pdfPage, checker.page);
+            }
+        }
+
+        private class CustomValidationChecker : IValidationChecker {
+            public PdfPage page;
+
+            public virtual void Validate(IValidationContext validationContext) {
+                if (validationContext.GetType() == ValidationType.PDF_PAGE) {
+                    page = ((PdfPageValidationContext)validationContext).GetPage();
+                }
+            }
         }
 
         private static void Test(String filename, PageFlushingTest.DocMode docMode, PageFlushingTest.FlushMode flushMode

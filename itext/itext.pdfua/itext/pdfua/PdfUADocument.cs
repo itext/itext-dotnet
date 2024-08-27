@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Pdf;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
 using iText.Pdfua.Checkers;
 using iText.Pdfua.Exceptions;
 

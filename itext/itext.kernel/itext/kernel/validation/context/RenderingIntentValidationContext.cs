@@ -20,27 +20,32 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Kernel.Pdf {
-    /// <summary>Type of object to conform.</summary>
-    public enum IsoKey {
-        CANVAS_STACK,
-        FILL_COLOR,
-        EXTENDED_GRAPHICS_STATE,
-        INLINE_IMAGE,
-        PAGE,
-        PDF_OBJECT,
-        RENDERING_INTENT,
-        STROKE_COLOR,
-        TAG_STRUCTURE_ELEMENT,
-        FONT_GLYPHS,
-        XREF_TABLE,
-        SIGNATURE,
-        SIGNATURE_TYPE,
-        CRYPTO,
-        FONT,
-        CANVAS_BEGIN_MARKED_CONTENT,
-        CANVAS_WRITING_CONTENT,
-        LAYOUT,
-        DUPLICATE_ID_ENTRY
+using iText.Kernel.Pdf;
+using iText.Kernel.Validation;
+
+namespace iText.Kernel.Validation.Context {
+    /// <summary>Class for rendering intent validation context.</summary>
+    public class RenderingIntentValidationContext : IValidationContext {
+        private readonly PdfName intent;
+
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="RenderingIntentValidationContext"/>
+        /// based on pdf name.
+        /// </summary>
+        /// <param name="intent">the intent pdf name</param>
+        public RenderingIntentValidationContext(PdfName intent) {
+            this.intent = intent;
+        }
+
+        /// <summary>Gets the intent pdf name.</summary>
+        /// <returns>the intent pdf name</returns>
+        public virtual PdfName GetIntent() {
+            return intent;
+        }
+
+        public virtual ValidationType GetType() {
+            return ValidationType.RENDERING_INTENT;
+        }
     }
 }

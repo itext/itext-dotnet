@@ -21,9 +21,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Datastructures;
+using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas {
@@ -84,6 +91,108 @@ namespace iText.Kernel.Pdf.Canvas {
                 ));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT
                 , exception.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RenderingIntentValidationTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                ValidationContainer container = new ValidationContainer();
+                PdfCanvasUnitTest.CustomValidationChecker checker = new PdfCanvasUnitTest.CustomValidationChecker();
+                container.AddChecker(checker);
+                doc.GetDiContainer().Register(typeof(ValidationContainer), container);
+                NUnit.Framework.Assert.IsNull(checker.intent);
+                PdfPage pdfPage = doc.AddNewPage();
+                PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
+                PdfName intent = new PdfName("Test");
+                pdfCanvas.SetRenderingIntent(intent);
+                NUnit.Framework.Assert.AreSame(intent, checker.intent);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BmcValidationTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                ValidationContainer container = new ValidationContainer();
+                PdfCanvasUnitTest.CustomValidationChecker checker = new PdfCanvasUnitTest.CustomValidationChecker();
+                container.AddChecker(checker);
+                doc.GetDiContainer().Register(typeof(ValidationContainer), container);
+                NUnit.Framework.Assert.IsNull(checker.intent);
+                PdfPage pdfPage = doc.AddNewPage();
+                PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
+                PdfName tag = new PdfName("Test");
+                pdfCanvas.BeginMarkedContent(tag);
+                NUnit.Framework.Assert.AreSame(tag, checker.currentBmc.GetFirst());
+                NUnit.Framework.Assert.IsNull(checker.currentBmc.GetSecond());
+                NUnit.Framework.Assert.AreEqual(1, checker.tagStructureStack.Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontGlyphsValidationTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                ValidationContainer container = new ValidationContainer();
+                PdfCanvasUnitTest.CustomValidationChecker checker = new PdfCanvasUnitTest.CustomValidationChecker();
+                container.AddChecker(checker);
+                doc.GetDiContainer().Register(typeof(ValidationContainer), container);
+                NUnit.Framework.Assert.IsNull(checker.intent);
+                PdfPage pdfPage = doc.AddNewPage();
+                PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
+                pdfCanvas.BeginText();
+                pdfCanvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER), 24);
+                pdfCanvas.ShowText("Test");
+                pdfCanvas.EndText();
+                NUnit.Framework.Assert.IsNotNull(checker.gState);
+                NUnit.Framework.Assert.IsNotNull(checker.contentStream);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtendedGStateValidationTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                ValidationContainer container = new ValidationContainer();
+                PdfCanvasUnitTest.CustomValidationChecker checker = new PdfCanvasUnitTest.CustomValidationChecker();
+                container.AddChecker(checker);
+                doc.GetDiContainer().Register(typeof(ValidationContainer), container);
+                NUnit.Framework.Assert.IsNull(checker.intent);
+                PdfPage pdfPage = doc.AddNewPage();
+                PdfCanvas pdfCanvas = new PdfCanvas(pdfPage);
+                pdfCanvas.SetExtGState(new PdfExtGState());
+                NUnit.Framework.Assert.IsNotNull(checker.gState);
+                NUnit.Framework.Assert.IsNotNull(checker.contentStream);
+            }
+        }
+
+        private class CustomValidationChecker : IValidationChecker {
+            public PdfName intent;
+
+            public Stack<Tuple2<PdfName, PdfDictionary>> tagStructureStack;
+
+            public Tuple2<PdfName, PdfDictionary> currentBmc;
+
+            public PdfStream contentStream;
+
+            public CanvasGraphicsState gState;
+
+            public virtual void Validate(IValidationContext validationContext) {
+                if (validationContext.GetType() == ValidationType.RENDERING_INTENT) {
+                    intent = ((RenderingIntentValidationContext)validationContext).GetIntent();
+                }
+                if (validationContext.GetType() == ValidationType.CANVAS_BEGIN_MARKED_CONTENT) {
+                    CanvasBmcValidationContext bmcContext = (CanvasBmcValidationContext)validationContext;
+                    tagStructureStack = bmcContext.GetTagStructureStack();
+                    currentBmc = bmcContext.GetCurrentBmc();
+                }
+                if (validationContext.GetType() == ValidationType.EXTENDED_GRAPHICS_STATE) {
+                    ExtendedGStateValidationContext gContext = (ExtendedGStateValidationContext)validationContext;
+                    contentStream = gContext.GetContentStream();
+                    gState = gContext.GetGraphicsState();
+                }
+                if (validationContext.GetType() == ValidationType.FONT_GLYPHS) {
+                    FontGlyphsGStateValidationContext glyphsContext = (FontGlyphsGStateValidationContext)validationContext;
+                    contentStream = glyphsContext.GetContentStream();
+                    gState = glyphsContext.GetGraphicsState();
+                }
+            }
         }
     }
 }

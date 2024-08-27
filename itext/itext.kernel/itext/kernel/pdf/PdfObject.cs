@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfObject {
@@ -152,7 +153,7 @@ namespace iText.Kernel.Pdf {
                         logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
                         return;
                     }
-                    document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
+                    document.CheckIsoConformance(new PdfObjectValidationContext(this));
                     document.FlushObject(this, canBeInObjStm && GetObjectType() != STREAM && GetObjectType() != INDIRECT_REFERENCE
                          && GetIndirectReference().GetGenNumber() == 0);
                 }

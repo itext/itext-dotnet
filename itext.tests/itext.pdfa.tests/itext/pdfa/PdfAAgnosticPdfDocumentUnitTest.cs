@@ -21,8 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Source;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 using iText.Pdfa.Logs;
 using iText.Test;
@@ -48,7 +52,8 @@ namespace iText.Pdfa {
                 (this, new PdfReader(sourceFolder + "pdfs/simpleDoc.pdf"), new PdfWriter(new ByteArrayOutputStream()));
             pdfDoc.FlushObjectPublic(pdfDoc.GetPage(1).GetPdfObject(), true);
             NUnit.Framework.Assert.IsTrue(pdfDoc.GetPage(1).GetPdfObject().IsFlushed());
-            pdfDoc.CheckIsoConformancePublic();
+            IValidationContext validationContext = new PdfDocumentValidationContext(pdfDoc, new List<PdfFont>());
+            pdfDoc.CheckIsoConformance(validationContext);
             // Does nothing for PdfDocument
             NUnit.Framework.Assert.IsFalse(pdfDoc.GetPageFactoryPublic() is PdfAPageFactory);
             NUnit.Framework.Assert.IsNull(pdfDoc.GetConformanceLevel());
@@ -74,7 +79,8 @@ namespace iText.Pdfa {
                 StampingProperties());
             pdfADoc.FlushObjectPublic(pdfADoc.GetPage(1).GetPdfObject(), true);
             NUnit.Framework.Assert.IsFalse(pdfADoc.GetPage(1).GetPdfObject().IsFlushed());
-            pdfADoc.CheckIsoConformancePublic();
+            IValidationContext validationContext = new PdfDocumentValidationContext(pdfADoc, new List<PdfFont>());
+            pdfADoc.CheckIsoConformance(validationContext);
             NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_2B, pdfADoc.GetConformanceLevel());
             NUnit.Framework.Assert.IsTrue(pdfADoc.GetPageFactoryPublic() is PdfAPageFactory);
             pdfADoc.UpdateXmpMetadataPublic();
@@ -98,10 +104,6 @@ namespace iText.Pdfa {
                 , StampingProperties properties)
                 : base(reader, writer, properties) {
                 this._enclosing = _enclosing;
-            }
-
-            public virtual void CheckIsoConformancePublic() {
-                base.CheckIsoConformance();
             }
 
             public virtual IPdfPageFactory GetPageFactoryPublic() {

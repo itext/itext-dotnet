@@ -30,6 +30,7 @@ using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
@@ -268,7 +269,7 @@ namespace iText.Kernel.Pdf {
                 xref = null;
                 return;
             }
-            document.CheckIsoConformance(this, IsoKey.XREF_TABLE);
+            document.CheckIsoConformance(new XrefTableValidationContext(this));
             long startxref = writer.GetCurrentPos();
             long xRefStmPos = -1;
             if (xrefStream != null) {

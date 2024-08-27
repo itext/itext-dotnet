@@ -26,7 +26,7 @@ using iText.Commons;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
 using iText.Kernel.XMP;
 using iText.Pdfa.Checker;
 using iText.Pdfa.Exceptions;
@@ -231,24 +231,9 @@ namespace iText.Pdfa {
             }
         }
 
-        protected override void CheckIsoConformance() {
+        public override void CheckIsoConformance(IValidationContext validationContext) {
             SetCheckerIfChanged();
-            base.CheckIsoConformance();
-        }
-
-        /// <param name="obj">an object to conform.</param>
-        /// <param name="key">type of object to conform.</param>
-        /// <param name="resources">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
-        /// associated with an object to check.
-        /// </param>
-        /// <param name="contentStream">current content stream.</param>
-        /// <param name="extra">extra data required for the check.</param>
-        public override void CheckIsoConformance(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            , Object extra) {
-            SetCheckerIfChanged();
-            base.CheckIsoConformance(obj, key, resources, contentStream, extra);
+            base.CheckIsoConformance(validationContext);
         }
 
         protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {

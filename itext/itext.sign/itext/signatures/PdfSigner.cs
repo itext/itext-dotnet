@@ -42,6 +42,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Validation.Context;
 using iText.Layout.Properties;
 using iText.Layout.Tagging;
 using iText.Pdfa;
@@ -782,7 +783,7 @@ namespace iText.Signatures {
                         );
                 }
             }
-            document.CheckIsoConformance(sigtype == PdfSigner.CryptoStandard.CADES, IsoKey.SIGNATURE_TYPE);
+            document.CheckIsoConformance(new SignTypeValidationContext(sigtype == PdfSigner.CryptoStandard.CADES));
             ICollection<byte[]> crlBytes = null;
             int i = 0;
             while (crlBytes == null && i < chain.Length) {
@@ -1069,7 +1070,7 @@ namespace iText.Signatures {
                 document.GetCatalog().Put(PdfName.Perms, docmdp);
                 document.GetCatalog().SetModified();
             }
-            document.CheckIsoConformance(cryptoDictionary.GetPdfObject(), IsoKey.SIGNATURE);
+            document.CheckIsoConformance(new SignatureValidationContext(cryptoDictionary.GetPdfObject()));
             cryptoDictionary.GetPdfObject().Flush(false);
             document.Close();
             range = new long[exclusionLocations.Count * 2];

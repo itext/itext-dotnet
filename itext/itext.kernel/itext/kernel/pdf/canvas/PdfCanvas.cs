@@ -40,6 +40,7 @@ using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf.Canvas {
     /// <summary>PdfCanvas class represents an algorithm for writing data into content stream.</summary>
@@ -316,7 +317,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Saves graphics state.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SaveState() {
-            document.CheckIsoConformance('q', IsoKey.CANVAS_STACK);
+            document.CheckIsoConformance(new CanvasStackValidationContext('q'));
             gsStack.Push(currentGs);
             currentGs = new CanvasGraphicsState(currentGs);
             contentStream.GetOutputStream().WriteBytes(q);
@@ -326,7 +327,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Restores graphics state.</summary>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas RestoreState() {
-            document.CheckIsoConformance('Q', IsoKey.CANVAS_STACK);
+            document.CheckIsoConformance(new CanvasStackValidationContext('Q'));
             if (gsStack.IsEmpty()) {
                 throw new PdfException(KernelExceptionMessageConstant.UNBALANCED_SAVE_RESTORE_STATE_OPERATORS);
             }
@@ -636,14 +637,14 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
             > iterator) {
             CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
-            document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
+            document.CheckIsoConformance(new FontGlyphsGStateValidationContext(currentGs, contentStream));
             this.CheckIsoConformanceWritingOnContent();
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
-            document.CheckIsoConformance(text.ToString(), IsoKey.FONT, null, null, currentGs.GetFont());
+            document.CheckIsoConformance(new FontValidationContext(text.ToString(), currentGs.GetFont()));
             float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
@@ -809,7 +810,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(PdfArray textArray) {
             CheckDefaultDeviceGrayBlackColor(GetColorKeyForText());
-            document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
+            document.CheckIsoConformance(new FontGlyphsGStateValidationContext(currentGs, contentStream));
             this.CheckIsoConformanceWritingOnContent();
             if (currentGs.GetFont() == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
@@ -822,7 +823,7 @@ namespace iText.Kernel.Pdf.Canvas {
                     text.Append(obj);
                 }
             }
-            document.CheckIsoConformance(text.ToString(), IsoKey.FONT, null, null, currentGs.GetFont());
+            document.CheckIsoConformance(new FontValidationContext(text.ToString(), currentGs.GetFont()));
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
                 if (obj.IsString()) {
@@ -1368,7 +1369,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="renderingIntent">a PdfName containing a color metric</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetRenderingIntent(PdfName renderingIntent) {
-            document.CheckIsoConformance(renderingIntent, IsoKey.RENDERING_INTENT);
+            document.CheckIsoConformance(new RenderingIntentValidationContext(renderingIntent));
             if (renderingIntent.Equals(currentGs.GetRenderingIntent())) {
                 return this;
             }
@@ -1494,8 +1495,12 @@ namespace iText.Kernel.Pdf.Canvas {
                     }
                 }
             }
-            document.CheckIsoConformance(currentGs, fill ? IsoKey.FILL_COLOR : IsoKey.STROKE_COLOR, resources, contentStream
-                );
+            if (fill) {
+                document.CheckIsoConformance(new FillColorValidationContext(currentGs, resources, contentStream));
+            }
+            else {
+                document.CheckIsoConformance(new StrokeColorValidationContext(currentGs, resources, contentStream));
+            }
             return this;
         }
 
@@ -1946,7 +1951,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             PdfName name = resources.AddExtGState(extGState);
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(gs);
-            document.CheckIsoConformance(currentGs, IsoKey.EXTENDED_GRAPHICS_STATE, null, contentStream);
+            document.CheckIsoConformance(new ExtendedGStateValidationContext(currentGs, contentStream));
             return this;
         }
 
@@ -1989,7 +1994,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             Tuple2<PdfName, PdfDictionary> tuple2 = new Tuple2<PdfName, PdfDictionary>(tag, properties);
             if (this.drawingOnPage) {
-                document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_BEGIN_MARKED_CONTENT, null, null, tuple2);
+                document.CheckIsoConformance(new CanvasBmcValidationContext(tagStructureStack, tuple2));
             }
             tagStructureStack.Push(tuple2);
             return this;
@@ -2118,7 +2123,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="f">an element of the transformation matrix</param>
         protected internal virtual void AddInlineImage(PdfImageXObject imageXObject, float a, float b, float c, float
              d, float e, float f) {
-            document.CheckIsoConformance(imageXObject.GetPdfObject(), IsoKey.INLINE_IMAGE, resources, contentStream);
+            document.CheckIsoConformance(new InlineImageValidationContext(imageXObject.GetPdfObject(), resources));
             CheckIsoConformanceWritingOnContent();
             SaveState();
             ConcatMatrix(a, b, c, d, e, f);
@@ -2312,19 +2317,19 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </summary>
         /// <param name="text">the text to write.</param>
         private void ShowTextInt(String text) {
-            document.CheckIsoConformance(currentGs, IsoKey.FONT_GLYPHS, null, contentStream);
+            document.CheckIsoConformance(new FontGlyphsGStateValidationContext(currentGs, contentStream));
             if (currentGs.GetFont() == null) {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
             this.CheckIsoConformanceWritingOnContent();
-            document.CheckIsoConformance(text, IsoKey.FONT, null, null, currentGs.GetFont());
+            document.CheckIsoConformance(new FontValidationContext(text, currentGs.GetFont()));
             currentGs.GetFont().WriteText(text, contentStream.GetOutputStream());
         }
 
         private void CheckIsoConformanceWritingOnContent() {
             if (this.drawingOnPage) {
-                document.CheckIsoConformance(tagStructureStack, IsoKey.CANVAS_WRITING_CONTENT);
+                document.CheckIsoConformance(new CanvasWritingContentValidationContext(tagStructureStack));
             }
         }
 
@@ -2411,13 +2416,13 @@ namespace iText.Kernel.Pdf.Canvas {
                 // But it's still important to do not check fill color if it's not used and vice versa
                 if (currentGs.GetFillColor() == DeviceGray.BLACK && (checkColorMode == PdfCanvas.CheckColorMode.FILL || checkColorMode
                      == PdfCanvas.CheckColorMode.FILL_AND_STROKE)) {
-                    document.CheckIsoConformance(currentGs, IsoKey.FILL_COLOR, resources, contentStream);
+                    document.CheckIsoConformance(new FillColorValidationContext(currentGs, resources, contentStream));
                     defaultDeviceGrayBlackColorCheckRequired = false;
                 }
                 else {
                     if (currentGs.GetStrokeColor() == DeviceGray.BLACK && (checkColorMode == PdfCanvas.CheckColorMode.STROKE ||
                          checkColorMode == PdfCanvas.CheckColorMode.FILL_AND_STROKE)) {
-                        document.CheckIsoConformance(currentGs, IsoKey.STROKE_COLOR, resources, contentStream);
+                        document.CheckIsoConformance(new StrokeColorValidationContext(currentGs, resources, contentStream));
                         defaultDeviceGrayBlackColorCheckRequired = false;
                     }
                 }

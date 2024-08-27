@@ -20,8 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using iText.Kernel.Pdf;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Test;
 
 namespace iText.Kernel.Utils {
@@ -30,20 +30,20 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ValidateObjectTest() {
             ValidationContainer container = new ValidationContainer();
-            container.Validate(null, IsoKey.FONT, null, null, null);
+            container.Validate(new FontValidationContext(null, null));
             ValidationContainerTest.CustomValidationChecker checker = new ValidationContainerTest.CustomValidationChecker
                 ();
             container.AddChecker(checker);
             NUnit.Framework.Assert.IsTrue(container.ContainsChecker(checker));
             NUnit.Framework.Assert.IsFalse(checker.objectValidationPerformed);
-            container.Validate(null, IsoKey.FONT, null, null, null);
+            container.Validate(new FontValidationContext(null, null));
             NUnit.Framework.Assert.IsTrue(checker.objectValidationPerformed);
         }
 
         [NUnit.Framework.Test]
         public virtual void ValidateDocumentTest() {
             ValidationContainer container = new ValidationContainer();
-            ValidationContext context = new ValidationContext().WithPdfDocument(null);
+            PdfDocumentValidationContext context = new PdfDocumentValidationContext(null, null);
             container.Validate(context);
             ValidationContainerTest.CustomValidationChecker checker = new ValidationContainerTest.CustomValidationChecker
                 ();
@@ -58,13 +58,13 @@ namespace iText.Kernel.Utils {
 
             public bool objectValidationPerformed = false;
 
-            public virtual void ValidateDocument(ValidationContext validationContext) {
-                documentValidationPerformed = true;
-            }
-
-            public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-                , Object extra) {
-                objectValidationPerformed = true;
+            public virtual void Validate(IValidationContext validationContext) {
+                if (validationContext.GetType() == ValidationType.PDF_DOCUMENT) {
+                    documentValidationPerformed = true;
+                }
+                else {
+                    objectValidationPerformed = true;
+                }
             }
         }
     }

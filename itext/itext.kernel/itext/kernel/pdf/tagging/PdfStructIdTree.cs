@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Pdf;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf.Tagging {
     /// <summary>Models the tree of structure element IDs.</summary>
@@ -81,7 +82,8 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override void AddEntry(PdfString key, PdfObject value) {
-            base.AddEntry(key, value, (pdfDoc) => pdfDoc.CheckIsoConformance(key, IsoKey.DUPLICATE_ID_ENTRY));
+            base.AddEntry(key, value, (pdfDoc) => pdfDoc.CheckIsoConformance(new DuplicateIdEntryValidationContext(key
+                )));
         }
     }
 }

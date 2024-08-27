@@ -20,11 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.Collections.Generic;
-using iText.Kernel.Pdf;
 
-namespace iText.Kernel.Utils {
+namespace iText.Kernel.Validation {
     /// <summary>
     /// This class is a container for one or more
     /// <see cref="IValidationChecker"/>
@@ -62,62 +60,19 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// Validate the provided
-        /// <see cref="ValidationContext"/>
+        /// <see cref="IValidationContext"/>
         /// with all the
         /// <see cref="IValidationChecker"/>
         /// implementations.
         /// </summary>
-        /// <remarks>
-        /// Validate the provided
-        /// <see cref="ValidationContext"/>
-        /// with all the
-        /// <see cref="IValidationChecker"/>
-        /// implementations.
-        /// <para />
-        /// </remarks>
         /// <param name="context">
         /// the
-        /// <see cref="ValidationContext"/>
+        /// <see cref="IValidationContext"/>
         /// to validate
         /// </param>
-        public virtual void Validate(ValidationContext context) {
+        public virtual void Validate(IValidationContext context) {
             foreach (IValidationChecker checker in validationCheckers) {
-                checker.ValidateDocument(context);
-            }
-        }
-
-        /// <summary>
-        /// Check the provided object for conformance with all the
-        /// <see cref="IValidationChecker"/>
-        /// implementations.
-        /// </summary>
-        /// <remarks>
-        /// Check the provided object for conformance with all the
-        /// <see cref="IValidationChecker"/>
-        /// implementations.
-        /// <para />
-        /// </remarks>
-        /// <param name="obj">the object to check</param>
-        /// <param name="key">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.IsoKey"/>
-        /// of the object
-        /// </param>
-        /// <param name="resources">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
-        /// of the object
-        /// </param>
-        /// <param name="contentStream">
-        /// the
-        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
-        /// of the object
-        /// </param>
-        /// <param name="extra">additional information</param>
-        public virtual void Validate(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream, Object
-             extra) {
-            foreach (IValidationChecker checker in validationCheckers) {
-                checker.ValidateObject(obj, key, resources, contentStream, extra);
+                checker.Validate(context);
             }
         }
 

@@ -57,9 +57,8 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
         }
 
         /// <summary>Checks if layout element has correct heading.</summary>
-        /// <param name="rendererObj">layout element to check</param>
-        public void CheckLayoutElement(Object rendererObj) {
-            IRenderer renderer = (IRenderer)rendererObj;
+        /// <param name="renderer">layout element to check</param>
+        public void CheckLayoutElement(IRenderer renderer) {
             IPropertyContainer element = renderer.GetModelElement();
             if (element is IAccessibleElement) {
                 IAccessibleElement accessibleElement = (IAccessibleElement)element;

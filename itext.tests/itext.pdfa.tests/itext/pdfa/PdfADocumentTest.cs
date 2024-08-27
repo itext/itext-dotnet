@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
+using iText.Kernel.Validation.Context;
 using iText.Pdfa.Exceptions;
 using iText.Test;
 
@@ -40,7 +41,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
-            document.CheckIsoConformance(true, IsoKey.SIGNATURE_TYPE, null, null);
+            document.CheckIsoConformance(new SignTypeValidationContext(true));
         }
 
         [NUnit.Framework.Test]
@@ -51,7 +52,7 @@ namespace iText.Pdfa {
             PdfADocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.CheckIsoConformance
-                (false, IsoKey.SIGNATURE_TYPE, null, null));
+                (new SignTypeValidationContext(false)));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.SIGNATURE_SHALL_CONFORM_TO_ONE_OF_THE_PADES_PROFILE
                 , e.Message);
         }

@@ -28,9 +28,11 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Kernel.Utils;
 using iText.Kernel.Utils.Checkers;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
+using iText.Layout.Validation.Context;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Checkers.Utils.Headings;
 using iText.Pdfua.Checkers.Utils.Tables;
@@ -62,52 +64,58 @@ namespace iText.Pdfua.Checkers {
             this.headingsChecker = new HeadingsChecker(context);
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual void ValidateDocument(ValidationContext validationContext) {
-            CheckCatalog(validationContext.GetPdfDocument().GetCatalog());
-            CheckStructureTreeRoot(validationContext.GetPdfDocument().GetStructTreeRoot());
-            CheckFonts(validationContext.GetFonts());
-            XfaCheckUtil.Check(validationContext.GetPdfDocument());
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual void ValidateObject(Object obj, IsoKey key, PdfResources resources, PdfStream contentStream
-            , Object extra) {
-            switch (key) {
-                case IsoKey.LAYOUT: {
-                    new LayoutCheckUtil(context).CheckRenderer(obj);
-                    headingsChecker.CheckLayoutElement(obj);
+        public virtual void Validate(IValidationContext context) {
+            switch (context.GetType()) {
+                case ValidationType.PDF_DOCUMENT: {
+                    PdfDocumentValidationContext pdfDocContext = (PdfDocumentValidationContext)context;
+                    CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
+                    CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
+                    CheckFonts(pdfDocContext.GetDocumentFonts());
+                    XfaCheckUtil.Check(pdfDocContext.GetPdfDocument());
                     break;
                 }
 
-                case IsoKey.CANVAS_WRITING_CONTENT: {
-                    CheckOnWritingCanvasToContent(obj);
+                case ValidationType.PDF_OBJECT: {
+                    PdfObjectValidationContext objContext = (PdfObjectValidationContext)context;
+                    CheckPdfObject(objContext.GetObject());
                     break;
                 }
 
-                case IsoKey.CANVAS_BEGIN_MARKED_CONTENT: {
-                    CheckOnOpeningBeginMarkedContent(obj, extra);
+                case ValidationType.CRYPTO: {
+                    CryptoValidationContext cryptoContext = (CryptoValidationContext)context;
+                    CheckCrypto((PdfDictionary)cryptoContext.GetCrypto());
                     break;
                 }
 
-                case IsoKey.FONT: {
-                    CheckText((String)obj, (PdfFont)extra);
+                case ValidationType.FONT: {
+                    FontValidationContext fontContext = (FontValidationContext)context;
+                    CheckText(fontContext.GetText(), fontContext.GetFont());
                     break;
                 }
 
-                case IsoKey.DUPLICATE_ID_ENTRY: {
+                case ValidationType.CANVAS_BEGIN_MARKED_CONTENT: {
+                    CanvasBmcValidationContext bmcContext = (CanvasBmcValidationContext)context;
+                    CheckOnOpeningBeginMarkedContent(bmcContext.GetTagStructureStack(), bmcContext.GetCurrentBmc());
+                    break;
+                }
+
+                case ValidationType.CANVAS_WRITING_CONTENT: {
+                    CanvasWritingContentValidationContext writingContext = (CanvasWritingContentValidationContext)context;
+                    CheckOnWritingCanvasToContent(writingContext.GetTagStructureStack());
+                    break;
+                }
+
+                case ValidationType.LAYOUT: {
+                    LayoutValidationContext layoutContext = (LayoutValidationContext)context;
+                    new LayoutCheckUtil(this.context).CheckRenderer(layoutContext.GetRenderer());
+                    headingsChecker.CheckLayoutElement(layoutContext.GetRenderer());
+                    break;
+                }
+
+                case ValidationType.DUPLICATE_ID_ENTRY: {
+                    DuplicateIdEntryValidationContext idContext = (DuplicateIdEntryValidationContext)context;
                     throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
-                        , obj));
-                }
-
-                case IsoKey.PDF_OBJECT: {
-                    CheckPdfObject((PdfObject)obj);
-                    break;
-                }
-
-                case IsoKey.CRYPTO: {
-                    CheckCrypto((PdfDictionary)obj);
-                    break;
+                        , idContext.GetId()));
                 }
             }
         }
@@ -176,8 +184,7 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private void CheckOnWritingCanvasToContent(Object data) {
-            Stack<Tuple2<PdfName, PdfDictionary>> tagStack = GetTagStack(data);
+        private void CheckOnWritingCanvasToContent(Stack<Tuple2<PdfName, PdfDictionary>> tagStack) {
             if (tagStack.IsEmpty()) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
                     );
@@ -196,14 +203,9 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private Stack<Tuple2<PdfName, PdfDictionary>> GetTagStack(Object data) {
-            return (Stack<Tuple2<PdfName, PdfDictionary>>)data;
-        }
-
-        private void CheckOnOpeningBeginMarkedContent(Object obj, Object extra) {
-            Tuple2<PdfName, PdfDictionary> currentBmc = (Tuple2<PdfName, PdfDictionary>)extra;
+        private void CheckOnOpeningBeginMarkedContent(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2<PdfName, 
+            PdfDictionary> currentBmc) {
             CheckStandardRoleMapping(currentBmc);
-            Stack<Tuple2<PdfName, PdfDictionary>> stack = GetTagStack(obj);
             if (stack.IsEmpty()) {
                 return;
             }
