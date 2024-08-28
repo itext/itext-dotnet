@@ -141,8 +141,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
         }
 
-        private void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte[] ueKey, byte[] aes256Perms
-            , bool encryptMetadata, bool embeddedFilesOnly) {
+        protected internal virtual void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte
+            [] ueKey, byte[] aes256Perms, bool encryptMetadata, bool embeddedFilesOnly) {
             int vAes256 = 5;
             int rAes256 = 5;
             int rAes256Pdf2 = 6;
@@ -183,7 +183,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                         password = JavaUtil.ArraysCopyOf(password, 127);
                     }
                 }
-                isPdf2 = encryptionDictionary.GetAsNumber(PdfName.R).GetValue() == 6;
+                isPdf2 = encryptionDictionary.GetAsNumber(PdfName.R).GetValue() == 6 || encryptionDictionary.GetAsNumber(PdfName
+                    .R).GetValue() == 7;
                 //truncate user and owner passwords to 48 bytes where the first 32 bytes
                 //are a hash value, next 8 bytes are validation salt and final 8 bytes are the key salt
                 byte[] oValue = TruncateArray(GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O)));
@@ -195,7 +196,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 this.permissions = pValue.LongValue();
                 byte[] hash;
                 hash = ComputeHash(password, oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH, uValue);
-                usedOwnerPassword = CompareArray(hash, oValue, 32);
+                usedOwnerPassword = EqualsArray(hash, oValue, 32);
                 if (usedOwnerPassword) {
                     hash = ComputeHash(password, oValue, KEY_SALT_OFFSET, SALT_LENGTH, uValue);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
@@ -203,7 +204,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 }
                 else {
                     hash = ComputeHash(password, uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
-                    if (!CompareArray(hash, uValue, 32)) {
+                    if (!EqualsArray(hash, uValue, 32)) {
                         throw new BadPasswordException(KernelExceptionMessageConstant.BAD_USER_PASSWORD);
                     }
                     hash = ComputeHash(password, uValue, KEY_SALT_OFFSET, SALT_LENGTH);
@@ -315,15 +316,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 k = k.Length == 32 ? k : JavaUtil.ArraysCopyOf(k, 32);
             }
             return k;
-        }
-
-        private static bool CompareArray(byte[] a, byte[] b, int len) {
-            for (int k = 0; k < len; ++k) {
-                if (a[k] != b[k]) {
-                    return false;
-                }
-            }
-            return true;
         }
 
         private byte[] TruncateArray(byte[] array) {

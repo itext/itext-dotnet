@@ -21,15 +21,51 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Commons.Bouncycastle.Crypto.Modes {
+    /// <summary>Interface for aes-gcm cryptographic ciphers.</summary>
     public interface IGCMBlockCipher {
+        /// <summary>Initialize this cipher with a key and a set of algorithm parameters.</summary>
+        /// <param name="forEncryption">true to use encrypt mode, false to use decrypt mode</param>
+        /// <param name="key">the encryption key</param>
+        /// <param name="macSizeBits">MAC size, MAC sizes from 32 bits to 128 bits (must be a multiple of 8)</param>
+        /// <param name="iv">the IV source buffer</param>
         void Init(bool forEncryption, byte[] key, int macSizeBits, byte[] iv);
 
+        /// <summary>
+        /// Returns the length in bytes that an output buffer would need to be in order to hold the result of
+        /// the next update operation, given the input length (in bytes).
+        /// </summary>
+        /// <param name="len">input length (in bytes)</param>
+        /// <returns>output length in bytes</returns>
         int GetUpdateOutputSize(int len);
 
-        void ProcessBytes(byte[] inputBuff, int inOff, int len, byte[] outBuff, int outOff);
+        /// <summary>
+        /// Perform a multiple-part encryption or decryption operation (depending on how this cipher was initialized),
+        /// processing another data part.
+        /// </summary>
+        /// <param name="input">the input buffer</param>
+        /// <param name="inputOffset">the offset in input where the input starts</param>
+        /// <param name="len">the input length</param>
+        /// <param name="output">the buffer for the result</param>
+        /// <param name="outOffset">the offset in output where the result is stored</param>
+        void ProcessBytes(byte[] input, int inputOffset, int len, byte[] output, int outOffset);
 
-        int GetOutputSize(int i);
+        /// <summary>
+        /// Returns the length in bytes that an output buffer would need to be in order to hold the result of
+        /// the next doFinal operation, given the input length (in bytes).
+        /// </summary>
+        /// <param name="len">input length (in bytes)</param>
+        /// <returns>output length in bytes</returns>
+        int GetOutputSize(int len);
 
+        /// <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        ///     </summary>
+        /// <remarks>
+        /// Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        /// Input data that may have been buffered during a previous update operation is processed, also
+        /// the authentication tag is appended in the case of encryption, or verified in the case of decryption.
+        /// </remarks>
+        /// <param name="plainText">the buffer for the result</param>
+        /// <param name="i">the offset in output where the result is stored</param>
         void DoFinal(byte[] plainText, int i);
     }
 }

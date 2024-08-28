@@ -28,42 +28,65 @@ using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastle.Crypto.Modes {
+    /// <summary>
+    /// This class provides the functionality of a cryptographic cipher of aes-gcm for encryption and decryption via
+    /// wrapping the corresponding
+    /// <c>GCMBlockCipher</c>
+    /// class from bouncy-castle.
+    /// </summary>
     public class GCMBlockCipherBC : IGCMBlockCipher {
         private readonly GcmBlockCipher cipher;
 
+        /// <summary>
+        /// Creates new wrapper for
+        /// <see cref="Org.BouncyCastle.Crypto.Modes.GcmBlockCipher"/>
+        /// aes-gcm block cipher class.
+        /// </summary>
+        /// <param name="cipher">bouncy-castle class to wrap</param>
         public GCMBlockCipherBC(GcmBlockCipher cipher) {
             this.cipher = cipher;
         }
 
+        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
+        /// <returns>
+        /// wrapped
+        /// <see cref="Org.BouncyCastle.Crypto.Modes.GcmBlockCipher"/>
+        /// </returns>
         public virtual GcmBlockCipher GetCipher() {
             return cipher;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void Init(bool forEncryption, byte[] key, int macSizeBits, byte[] iv) {
             cipher.Init(forEncryption, new AeadParameters(new KeyParameter(key), macSizeBits, iv));
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual int GetUpdateOutputSize(int len) {
             return cipher.GetUpdateOutputSize(len);
         }
 
-        public virtual void ProcessBytes(byte[] inputBuff, int inOff, int len, byte[] outBuff, int outOff) {
-            cipher.ProcessBytes(inputBuff, inOff, len, outBuff, outOff);
+        /// <summary><inheritDoc/></summary>
+        public virtual void ProcessBytes(byte[] input, int inputOffset, int len, byte[] output, int outOffset) {
+            cipher.ProcessBytes(input, inputOffset, len, output, outOffset);
         }
 
-        public virtual int GetOutputSize(int i) {
-            return cipher.GetOutputSize(i);
+        /// <summary><inheritDoc/></summary>
+        public virtual int GetOutputSize(int len) {
+            return cipher.GetOutputSize(len);
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void DoFinal(byte[] plainText, int i) {
             try {
                 cipher.DoFinal(plainText, i);
             }
             catch (InvalidCipherTextException e) {
-                throw new InvalidCipherTextExceptionBC(e);
+                throw new ArgumentException(e.Message, e);
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -76,10 +99,12 @@ namespace iText.Bouncycastle.Crypto.Modes {
             return Object.Equals(cipher, that.cipher);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(cipher);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override String ToString() {
             return cipher.ToString();
         }

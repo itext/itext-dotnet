@@ -924,23 +924,23 @@ namespace iText.Kernel.Pdf {
                     // (ISO/TS 32003) The security handler defines the use of encryption
                     // and decryption in the same way as when the value of V is 5, and declares at least
                     // one crypt filter using the AESV4 method.
-                    PdfDictionary dic = encDict.GetAsDictionary(PdfName.CF);
-                    if (dic == null) {
+                    PdfDictionary cfDic = encDict.GetAsDictionary(PdfName.CF);
+                    if (cfDic == null) {
                         throw new PdfException(KernelExceptionMessageConstant.CF_NOT_FOUND_ENCRYPTION);
                     }
-                    dic = (PdfDictionary)dic.Get(PdfName.DefaultCryptFilter);
-                    if (dic == null) {
+                    cfDic = (PdfDictionary)cfDic.Get(PdfName.DefaultCryptFilter);
+                    if (cfDic == null) {
                         throw new PdfException(KernelExceptionMessageConstant.DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION);
                     }
-                    if (PdfName.AESV4.Equals(dic.Get(PdfName.CFM))) {
+                    if (PdfName.AESV4.Equals(cfDic.Get(PdfName.CFM))) {
                         cryptoMode = EncryptionConstants.ENCRYPTION_AES_GCM;
                         length = 256;
                     }
                     else {
                         throw new PdfException(KernelExceptionMessageConstant.NO_COMPATIBLE_ENCRYPTION_FOUND);
                     }
-                    PdfBoolean em = dic.GetAsBoolean(PdfName.EncryptMetadata);
-                    if (em != null && !em.GetValue()) {
+                    PdfBoolean encrM = cfDic.GetAsBoolean(PdfName.EncryptMetadata);
+                    if (encrM != null && !encrM.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
                     }
                     if (embeddedFilesOnlyMode) {
@@ -1009,6 +1009,13 @@ namespace iText.Kernel.Pdf {
                     if (r != null && r.IntValue() == 5) {
                         VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(document, PdfVersion.PDF_2_0, VersionConforming
                             .DEPRECATED_AES256_REVISION);
+                    }
+                }
+                else {
+                    if (GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_GCM) {
+                        VersionConforming.ValidatePdfVersionForNotSupportedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming
+                            .NOT_SUPPORTED_AES_GCM);
+                        document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32003);
                     }
                 }
             }

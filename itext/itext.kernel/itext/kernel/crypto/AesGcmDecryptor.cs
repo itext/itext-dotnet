@@ -21,18 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
-using iText.Commons.Bouncycastle.Crypto;
-using iText.Commons.Bouncycastle.Crypto.Modes;
-using iText.Commons.Bouncycastle.Security;
-using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto {
+    /// <summary>Class for decrypting aes-gcm encrypted bytes.</summary>
     public class AesGcmDecryptor : IDecryptor {
-        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
-        private IGCMBlockCipher cipher;
+        private AESGCMCipher cipher;
 
         private readonly byte[] key;
 
@@ -44,7 +37,7 @@ namespace iText.Kernel.Crypto {
 
         /// <summary>
         /// Creates a new instance of
-        /// <see cref="AesDecryptor"/>
+        /// <see cref="AesGcmDecryptor"/>.
         /// </summary>
         /// <param name="key">the byte array containing the key for decryption</param>
         /// <param name="off">offset of the key in the byte array</param>
@@ -54,6 +47,14 @@ namespace iText.Kernel.Crypto {
             Array.Copy(key, off, this.key, 0, len);
         }
 
+        /// <summary>
+        /// Continues a multiple-part decryption operation, processing another data part and initializing aes-gcm cipher if
+        /// this method called for the first time.
+        /// </summary>
+        /// <param name="b">the input buffer</param>
+        /// <param name="off">the offset in input where the input starts</param>
+        /// <param name="len">the input length</param>
+        /// <returns>decrypted bytes array</returns>
         public virtual byte[] Update(byte[] b, int off, int len) {
             if (!initiated) {
                 int left = Math.Min(iv.Length - ivptr, len);
@@ -62,42 +63,21 @@ namespace iText.Kernel.Crypto {
                 len -= left;
                 ivptr += left;
                 if (ivptr == iv.Length) {
-                    cipher = FACTORY.CreateGCMBlockCipher();
-                    try {
-                        cipher.Init(false, key, OutputStreamAesGcmEncryption.MAC_SIZE_BITS, iv);
-                    }
-                    catch (AbstractGeneralSecurityException e) {
-                        throw new PdfException(e);
-                    }
+                    cipher = new AESGCMCipher(false, key, iv);
                     initiated = true;
                 }
                 if (len == 0) {
                     return null;
                 }
             }
-            byte[] plainText = new byte[cipher.GetUpdateOutputSize(len)];
-            try {
-                cipher.ProcessBytes(b, off, len, plainText, 0);
-            }
-            catch (AbstractGeneralSecurityException e) {
-                throw new PdfException(e);
-            }
-            return plainText;
+            return cipher.Update(b, off, len);
         }
 
+        /// <summary>Finishes a multiple-part decryption operation.</summary>
+        /// <returns>input data that may have been buffered during a previous update operation</returns>
         public virtual byte[] Finish() {
             if (cipher != null) {
-                byte[] plainText = new byte[cipher.GetOutputSize(0)];
-                try {
-                    cipher.DoFinal(plainText, 0);
-                }
-                catch (AbstractInvalidCipherTextException e) {
-                    throw new PdfException(e);
-                }
-                catch (AbstractGeneralSecurityException e) {
-                    throw new PdfException(e);
-                }
-                return plainText;
+                return cipher.DoFinal();
             }
             else {
                 return null;
