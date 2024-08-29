@@ -240,14 +240,17 @@ namespace iText.Signatures.Sign {
                 IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, keySample1 + ".key.pem"));
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA3_256);
                 PdfSigner signer = new PdfSigner(new PdfReader(in1), baos1, new StampingProperties());
-                signer.SetFieldName("Signature1");
+                SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1");
+                signer.SetSignerProperties(signerProperties);
+
                 signer.SignDetached(new BouncyCastleDigest(), pks, signChain1, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
             }
             using (Stream in2 = new MemoryStream(baos1.ToArray())) {
                 IPrivateKey signPrivateKey = ReadUnencryptedPrivateKey(System.IO.Path.Combine(SOURCE_FOLDER, keySample2 + ".key.pem"));
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA512);
                 PdfSigner signer = new PdfSigner(new PdfReader(in2), baos2, new StampingProperties());
-                signer.SetFieldName("Signature2");
+                SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature2");
+                signer.SetSignerProperties(signerProperties);
                 signer.SignDetached(new BouncyCastleDigest(), pks, signChain2, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
             }
             CheckIsoExtensions(baos2.ToArray(), JavaUtil.ArraysAsList(32001, 32002));
@@ -288,11 +291,13 @@ namespace iText.Signatures.Sign {
             // and accessing that information requires APIs that are not available in older JDKs we still support.
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, digestAlgo, signatureAlgo, null);
             PdfSigner signer = new PdfSigner(new PdfReader(SOURCE_FILE), os, new StampingProperties());
-            signer.SetFieldName(SIGNATURE_FIELD);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName())
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SIGNATURE_FIELD)
                 .SetContent("Approval test signature.\nCreated by iText.");
-            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
-                ("TestCity").SetSignatureAppearance(appearance);
+            SignerProperties signerProperties = new SignerProperties()
+                .SetFieldName(SIGNATURE_FIELD)
+                .SetPageRect(new Rectangle(50, 650, 200, 100))
+                .SetReason("Test").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signer.SetSignerProperties(signerProperties);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CMS);
         }
         

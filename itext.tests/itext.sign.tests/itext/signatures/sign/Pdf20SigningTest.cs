@@ -75,8 +75,8 @@ namespace iText.Signatures.Sign {
             String srcFile = SOURCE_FOLDER + "signExistingFieldWhenDirectAcroformAndNoSigFlag.pdf";
             String outPdf = DESTINATION_FOLDER + "signExistingFieldWhenDirectAcroformAndNoSigFlag.pdf";
             String fieldName = "Signature1";
-            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, PdfSigner
-                .NOT_CERTIFIED);
+            Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, AccessPermissions
+                .UNSPECIFIED);
             PdfDocument doc = new PdfDocument(new PdfReader(outPdf));
             PdfNumber sigFlag = doc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm).GetAsNumber(PdfName.
                 SigFlags);
@@ -92,7 +92,7 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature2";
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => Sign(srcFile, fieldName, outPdf, chain
                 , pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", rect, false, true
-                , PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED, null));
+                , AccessPermissions.NO_CHANGES_PERMITTED, null));
             NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS
                 , e.Message);
         }
@@ -133,7 +133,7 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(30, 200, 200, 100);
             String fieldName = "Signature1";
             Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CMS, "Test 1"
-                , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+                , "TestCity", rect, false, true, AccessPermissions.UNSPECIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(rect)));
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
@@ -147,20 +147,21 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(30, 200, 200, 100);
             String fieldName = "Signature1";
             Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
-                , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+                , "TestCity", rect, false, true, AccessPermissions.UNSPECIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(rect)));
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
         }
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
-             pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, int certificationLevel) {
+             pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, AccessPermissions certificationLevel) {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
             properties.UseAppendMode();
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
-            signer.SetCertificationLevel(certificationLevel);
-            signer.SetFieldName(name);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(certificationLevel).SetFieldName
+                (name);
+            signer.SetSignerProperties(signerProperties);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
@@ -168,26 +169,27 @@ namespace iText.Signatures.Sign {
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
-             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
-            ) {
+             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, AccessPermissions certificationLevel
+            , float? fontSize) {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
             if (isAppendMode) {
                 properties.UseAppendMode();
             }
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
-            signer.SetCertificationLevel(certificationLevel);
-            signer.SetFieldName(name);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(certificationLevel).SetFieldName
+                (name).SetReason(reason).SetLocation(location);
             // Creating the appearance
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetContent(new SignedAppearanceText
                 ());
             if (rectangleForNewField != null) {
-                signer.SetPageRect(rectangleForNewField);
+                signerProperties.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
                 appearance.SetFontSize((float)fontSize);
             }
-            signer.SetReason(reason).SetLocation(location).GetSignatureField().SetReuseAppearance(setReuseAppearance);
+            signer.SetSignerProperties(signerProperties);
+            signer.GetSignatureField().SetReuseAppearance(setReuseAppearance);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
@@ -197,7 +199,7 @@ namespace iText.Signatures.Sign {
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
             Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance
-                , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
+                , isAppendMode, AccessPermissions.UNSPECIFIED, null);
         }
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {

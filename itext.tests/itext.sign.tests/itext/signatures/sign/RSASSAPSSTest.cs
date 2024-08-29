@@ -130,7 +130,7 @@ namespace iText.Signatures.Sign {
                     );
                 IExternalSignature pks = new PrivateKeySignature(signPrivateKey, digestAlgo, signatureAlgo, @params);
                 PdfSigner signer = new PdfSigner(new PdfReader(SOURCE_FILE), fos, new StampingProperties());
-                signer.SetFieldName(SIGNATURE_FIELD);
+                signer.SetSignerProperties(new SignerProperties().SetFieldName(SIGNATURE_FIELD));
                 signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
                     .CMS);
             }

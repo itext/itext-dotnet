@@ -72,11 +72,13 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), 
                 new StampingProperties());
-            signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName())
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance("Signature1")
                 .SetContent("Approval test signature.\nCreated by iText.");
-            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation
-                ("TestCity").SetSignatureAppearance(appearance);
+            SignerProperties signerProperties = new SignerProperties()
+                    .SetFieldName("Signature1")
+                    .SetPageRect(new Rectangle(50, 650, 200, 100))
+                    .SetReason("Test").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signer.SetSignerProperties(signerProperties);  
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
             signer.SignDetached(new BouncyCastleDigest(), pks, signRsaChain, null, null, testTsa, 0, PdfSigner.CryptoStandard.CADES);
             TestSignUtils.BasicCheckSignedDoc(destinationFolder + "padesSignatureLevelTTest01.pdf", "Signature1");

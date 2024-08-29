@@ -67,10 +67,12 @@ namespace iText.Signatures.Sign {
             int estimatedSize = 8192;
             PdfReader reader = new PdfReader(input);
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(output), new StampingProperties());
-            signer.SetFieldName(sigFieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
+            signer.SetSignerProperties(signerProperties);
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
                 );
-            signer.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance);
+            signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
+                );
             IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
             signer.SignExternalContainer(external, estimatedSize);
             // validate result
@@ -85,10 +87,12 @@ namespace iText.Signatures.Sign {
             PdfName subFilter = PdfName.Adbe_pkcs7_detached;
             PdfReader reader = new PdfReader(input);
             PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
-            signer.SetFieldName(sigFieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
+            signer.SetSignerProperties(signerProperties);
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
                 );
-            signer.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance);
+            signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
+                );
             IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
             // This size is definitely not enough
             int estimatedSize = -1;
@@ -105,10 +109,12 @@ namespace iText.Signatures.Sign {
             PdfName subFilter = PdfName.Adbe_pkcs7_detached;
             PdfReader reader = new PdfReader(input);
             PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
-            signer.SetFieldName(sigFieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
+            signer.SetSignerProperties(signerProperties);
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
                 );
-            signer.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance);
+            signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
+                );
             IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
             // This size is definitely not enough, however, the size check will pass.
             // The test will fail lately on an invalid key
@@ -154,11 +160,13 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(input);
             MemoryStream baos = new MemoryStream();
             PdfSigner signer = new PdfSigner(reader, baos, new StampingProperties());
-            signer.SetCertificationLevel(PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
-            signer.SetFieldName(sigFieldName);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.NO_CHANGES_PERMITTED
+                ).SetFieldName(sigFieldName);
+            signer.SetSignerProperties(signerProperties);
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
                 );
-            signer.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance);
+            signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
+                );
             SignDeferredTest.DigestCalcBlankSigner external = new SignDeferredTest.DigestCalcBlankSigner(filter, subFilter
                 );
             signer.SignExternalContainer(external, estimatedSize);

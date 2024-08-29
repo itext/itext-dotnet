@@ -254,12 +254,12 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.SetFieldName(name);
-            signer.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.UNSPECIFIED
+                ).SetFieldName(name).SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             if (rectangleForNewField != null) {
-                signer.SetPageRect(rectangleForNewField);
+                signerProperties.SetPageRect(rectangleForNewField);
             }
+            signer.SetSignerProperties(signerProperties);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES

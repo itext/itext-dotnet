@@ -75,10 +75,11 @@ namespace iText.Pdfua {
         public virtual void InvisibleSignatureWithTU() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignature(inPdf, "invisibleSignatureWithTU", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
-                signer.SetSignatureAppearance(appearance);
+                signer.GetSignerProperties().SetSignatureAppearance(appearance);
             }
             );
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
@@ -89,8 +90,9 @@ namespace iText.Pdfua {
         public virtual void VisibleSignatureWithTUButNotAFont() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignature(inPdf, "visibleSignatureWithTUButNotAFont", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 try {
                     appearance.SetFont(PdfFontFactory.CreateFont(FONT));
@@ -99,8 +101,8 @@ namespace iText.Pdfua {
                     throw new Exception();
                 }
                 appearance.SetContent("Some signature content");
-                signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
-                signer.SetSignatureAppearance(appearance);
+                signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100)).SetSignatureAppearance
+                    (appearance);
             }
             );
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
@@ -112,8 +114,9 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 GenerateSignature(inPdf, "visibleSignatureWithoutTUFont", (signer) => {
-                    signer.SetFieldName("Signature12");
-                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                    signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                        ());
                     appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                         ).SetSignedBy("Dummy"));
                     try {
@@ -122,8 +125,8 @@ namespace iText.Pdfua {
                     catch (System.IO.IOException) {
                         throw new Exception();
                     }
-                    signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
-                    signer.SetSignatureAppearance(appearance);
+                    signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100)).SetSignatureAppearance
+                        (appearance);
                 }
                 );
             }
@@ -135,14 +138,15 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 GenerateSignature(inPdf, "visibleSignatureWithNoFontSelected", (signer) => {
-                    signer.SetFieldName("Signature12");
-                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                    signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                        ());
                     appearance.SetContent("Some signature content");
-                    signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
+                    signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
                     appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                     appearance.SetContent(new SignedAppearanceText().SetSignedBy("Dummy").SetReasonLine("Dummy reason").SetLocationLine
                         ("Dummy location"));
-                    signer.SetSignatureAppearance(appearance);
+                    signer.GetSignerProperties().SetSignatureAppearance(appearance);
                 }
                 );
             }
@@ -153,10 +157,11 @@ namespace iText.Pdfua {
         public virtual void NormalPdfSignerInvisibleSignatureWithTU() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerInvisibleSignatureWithTU", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
-                signer.SetSignatureAppearance(appearance);
+                signer.GetSignerProperties().SetSignatureAppearance(appearance);
             }
             );
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
@@ -167,9 +172,10 @@ namespace iText.Pdfua {
         public virtual void NormalPdfSignerInvisibleSignatureWithoutTU() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerInvisibleSignatureWithoutTU", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
-                signer.SetSignatureAppearance(appearance);
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
+                signer.GetSignerProperties().SetSignatureAppearance(appearance);
             }
             );
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
@@ -182,13 +188,14 @@ namespace iText.Pdfua {
             //This test should fail with the appropriate exception
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithoutFont", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                     ).SetSignedBy("Dummy"));
-                signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
-                signer.SetSignatureAppearance(appearance);
+                signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100)).SetSignatureAppearance
+                    (appearance);
             }
             );
             NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
@@ -200,14 +207,15 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             PdfFont font = PdfFontFactory.CreateFont(FONT);
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithFont", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                     ).SetSignedBy("Dummy"));
                 appearance.SetFont(font);
-                signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
-                signer.SetSignatureAppearance(appearance);
+                signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100)).SetSignatureAppearance
+                    (appearance);
             }
             );
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
@@ -221,14 +229,15 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             PdfFont font = PdfFontFactory.CreateFont(FONT);
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithFontEmptyTU", (signer) => {
-                signer.SetFieldName("Signature12");
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                    ());
                 appearance.GetAccessibilityProperties().SetAlternateDescription("");
                 appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                     ).SetSignedBy("Dummy"));
                 appearance.SetFont(font);
-                signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
-                signer.SetSignatureAppearance(appearance);
+                signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100)).SetSignatureAppearance
+                    (appearance);
             }
             );
             NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
@@ -242,14 +251,15 @@ namespace iText.Pdfua {
             PdfFont font = PdfFontFactory.CreateFont(FONT);
             NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 GenerateSignature(inPdf, "pdfSignerVisibleSignatureWithFontEmptyTU", (signer) => {
-                    signer.SetFieldName("Signature12");
-                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+                    signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
+                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                        ());
                     appearance.GetAccessibilityProperties().SetAlternateDescription("");
                     appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                         ).SetSignedBy("Dummy"));
                     appearance.SetFont(font);
-                    signer.SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
-                    signer.SetSignatureAppearance(appearance);
+                    signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100)).SetSignatureAppearance
+                        (appearance);
                 }
                 );
             }

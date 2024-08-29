@@ -142,10 +142,11 @@ namespace iText.Signatures.Sign {
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
                 StampingProperties());
-            signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent("Approval test signature.\nCreated by iText."
-                );
-            signer.SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation("TestCity").SetSignatureAppearance
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1");
+            signer.SetSignerProperties(signerProperties);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                ()).SetContent("Approval test signature.\nCreated by iText.");
+            signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation("TestCity").SetSignatureAppearance
                 (appearance);
             if (sigPolicyIdentifier != null) {
                 signer.SignDetached(pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard.CADES, sigPolicyIdentifier

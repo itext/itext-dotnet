@@ -97,31 +97,32 @@ namespace iText.Signatures.Sign {
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
             Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance
-                , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
+                , isAppendMode, AccessPermissions.UNSPECIFIED, null);
         }
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
-             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
-            ) {
+             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, AccessPermissions certificationLevel
+            , float? fontSize) {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
             if (isAppendMode) {
                 properties.UseAppendMode();
             }
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
-            signer.SetCertificationLevel(certificationLevel);
-            signer.SetFieldName(name);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(certificationLevel).SetFieldName
+                (name);
+            signer.SetSignerProperties(signerProperties);
             // Creating the appearance
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetContent(new SignedAppearanceText
                 ());
             if (rectangleForNewField != null) {
-                signer.SetPageRect(rectangleForNewField);
+                signerProperties.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
                 appearance.SetFontSize((float)fontSize);
             }
-            signer.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
+            signerProperties.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             signer.GetSignatureField().SetReuseAppearance(setReuseAppearance);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);

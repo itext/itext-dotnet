@@ -143,10 +143,10 @@ namespace iText.Signatures.Sign {
             String fieldName = "Sign1";
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
                 ()).SetFontSize(13.8f);
-            signer.SetFieldName(fieldName);
-            signer.SetReason("Test").SetLocation("Nagpur").SetPageRect(new Rectangle(36, 748, 250, 100)).SetPageNumber
-                (1).SetSignatureAppearance(appearance);
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(fieldName).SetReason("Test").SetLocation
+                ("Nagpur").SetPageRect(new Rectangle(36, 748, 250, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
+                ).SetCertificationLevel(AccessPermissions.UNSPECIFIED);
+            signer.SetSignerProperties(signerProperties);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
                 );
@@ -165,10 +165,11 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
-            signer.SetFieldName("Signature1");
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1");
+            signer.SetSignerProperties(signerProperties);
             // Creating the appearance
-            signer.SetPageRect(rect).SetSignatureAppearance(new SignatureFieldAppearance(signer.GetFieldName()).SetFontColor
-                (ColorConstants.RED).SetContent("Verified and signed by me."));
+            signerProperties.SetPageRect(rect).SetSignatureAppearance(new SignatureFieldAppearance(signerProperties.GetFieldName
+                ()).SetFontColor(ColorConstants.RED).SetContent("Verified and signed by me."));
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -208,10 +209,11 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), new StampingProperties());
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.SetFieldName("Signature1");
-            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(signer
-                .GetFieldName()).SetContent("Verified and signed by me."));
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1").SetCertificationLevel
+                (AccessPermissions.UNSPECIFIED).SetReason("Test 1").SetLocation("TestCity");
+            signer.SetSignerProperties(signerProperties);
+            signerProperties.SetSignatureAppearance(new SignatureFieldAppearance(signerProperties.GetFieldName()).SetContent
+                ("Verified and signed by me."));
             signer.GetSignatureField().SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -228,12 +230,13 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), new StampingProperties());
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent("SIGNED"
-                ).SetFontColor(ColorConstants.GREEN);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.UNSPECIFIED
+                ).SetFieldName("Signature1");
+            signer.SetSignerProperties(signerProperties);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                ()).SetContent("SIGNED").SetFontColor(ColorConstants.GREEN);
             appearance.SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.MIDDLE);
-            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signerProperties.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(appearance);
             signer.GetSignatureField().SetReuseAppearance(true);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -250,10 +253,11 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), new StampingProperties());
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.SetFieldName("Signature1");
-            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(signer
-                .GetFieldName()).SetContent("Verified and signed by me."));
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.UNSPECIFIED
+                ).SetFieldName("Signature1").SetReason("Test 1").SetLocation("TestCity");
+            signer.SetSignerProperties(signerProperties);
+            signerProperties.SetSignatureAppearance(new SignatureFieldAppearance(signerProperties.GetFieldName()).SetContent
+                ("Verified and signed by me."));
             signer.GetSignatureField().SetReuseAppearance(true);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -305,11 +309,13 @@ namespace iText.Signatures.Sign {
             document.Close();
             PdfSigner signer = new PdfSigner(new PdfReader(unsignedDoc), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
-            signer.SetFieldName(fieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(fieldName);
+            signer.SetSignerProperties(signerProperties);
             // Creating the appearance
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent("Test signature field appearance. Test signature field appearance. "
                  + "Test signature field appearance. Test signature field appearance");
-            signer.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            signerProperties.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance
+                );
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -324,11 +330,14 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
-            signer.SetFieldName("Signature1");
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1");
+            signer.SetSignerProperties(signerProperties);
             // Creating the appearance
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName()).SetContent("Test signature field appearance. Test signature field appearance. "
-                 + "Test signature field appearance. Test signature field appearance");
-            signer.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                ()).SetContent("Test signature field appearance. Test signature field appearance. " + "Test signature field appearance. Test signature field appearance"
+                );
+            signerProperties.SetReason("Appearance is tested").SetLocation("TestCity").SetSignatureAppearance(appearance
+                );
             signer.GetSignatureField().SetReuseAppearance(true);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
@@ -361,12 +370,13 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
-            signer.SetFieldName(fieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(fieldName);
+            signer.SetSignerProperties(signerProperties);
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent("Signature field"
                 ).SetBackgroundColor(ColorConstants.GREEN).SetBorder(new SolidBorder(ColorConstants.LIGHT_GRAY, 3)).SetFontColor
                 (ColorConstants.DARK_GRAY).SetFontSize(20).SetTextAlignment(TextAlignment.CENTER);
-            signer.SetPageRect(new Rectangle(250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance
-                (appearance);
+            signerProperties.SetPageRect(new Rectangle(250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity"
+                ).SetSignatureAppearance(appearance);
             // Signing
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -385,10 +395,10 @@ namespace iText.Signatures.Sign {
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFile), FileUtil.GetFileOutputStream(outPdf), new StampingProperties
                 ());
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
-            signer.SetFieldName(fieldName);
-            signer.SetReason("test reason").SetLocation("test location").SetSignatureAppearance(appearance);
-            signer.SetPageRect(rect);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.UNSPECIFIED
+                ).SetFieldName(fieldName).SetReason("test reason").SetLocation("test location").SetSignatureAppearance
+                (appearance).SetPageRect(rect);
+            signer.SetSignerProperties(signerProperties);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -417,10 +427,11 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
-            signer.SetFieldName(fieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(fieldName);
+            signer.SetSignerProperties(signerProperties);
             signer.GetSignatureField().SetReuseAppearance(true);
-            signer.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance(fieldName
-                ).SetContent("New appearance").SetFontColor(ColorConstants.GREEN));
+            signerProperties.SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance
+                (fieldName).SetContent("New appearance").SetFontColor(ColorConstants.GREEN));
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
                 );
@@ -432,9 +443,10 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
-            signer.SetFieldName(fieldName);
-            signer.SetPageRect(new Rectangle(250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance
-                (new SignatureFieldAppearance(fieldName));
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(fieldName).SetPageRect(new Rectangle
+                (250, 500, 100, 100)).SetReason("Test 1").SetLocation("TestCity").SetSignatureAppearance(new SignatureFieldAppearance
+                (fieldName));
+            signer.SetSignerProperties(signerProperties);
             PdfFormXObject layer0 = new PdfFormXObject(new Rectangle(0, 0, 100, 100));
             // Draw pink rectangle with blue border
             new PdfCanvas(layer0, signer.GetDocument()).SaveState().SetFillColor(ColorConstants.PINK).SetStrokeColor(ColorConstants
@@ -481,9 +493,10 @@ namespace iText.Signatures.Sign {
             String dest = DESTINATION_FOLDER + fileName;
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ().UseAppendMode());
-            signer.SetFieldName(signatureName);
-            signer.SetPageRect(new Rectangle(100, 100, 100, 50)).SetPageNumber(pageNum).SetSignatureAppearance(appearance
-                ).SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(signatureName).SetPageRect(new Rectangle
+                (100, 100, 100, 50)).SetPageNumber(pageNum).SetSignatureAppearance(appearance).SetCertificationLevel(AccessPermissions
+                .UNSPECIFIED);
+            signer.SetSignerProperties(signerProperties);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
                 );
@@ -507,8 +520,11 @@ namespace iText.Signatures.Sign {
             String src = SOURCE_FOLDER + "simpleDocument.pdf";
             PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
                 ());
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1");
+            signer.SetSignerProperties(signerProperties);
             // Creating the appearance
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetFieldName());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
+                ());
             if (image != null) {
                 appearance.SetContent(new SignedAppearanceText(), image);
             }
@@ -521,8 +537,8 @@ namespace iText.Signatures.Sign {
                 }
             }
             appearance.SetFontSize(0);
-            signer.SetReason("Test 1").SetLocation("TestCity").SetPageRect(rect).SetSignatureAppearance(appearance);
-            signer.SetFieldName("Signature1");
+            signerProperties.SetReason("Test 1").SetLocation("TestCity").SetPageRect(rect).SetSignatureAppearance(appearance
+                );
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
