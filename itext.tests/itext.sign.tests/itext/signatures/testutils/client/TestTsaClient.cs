@@ -54,8 +54,8 @@ namespace iText.Signatures.Testutils.Client {
             return 4096;
         }
 
-        public virtual IDigest GetMessageDigest() {
-            return (IDigest)SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
+        public virtual IMessageDigest GetMessageDigest() {
+            return SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
         }
 
         public virtual byte[] GetTimeStampToken(byte[] imprint) {

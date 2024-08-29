@@ -26,8 +26,9 @@ using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
-using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 
@@ -60,7 +61,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
-        protected internal IDigest md5;
+        protected internal IMessageDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];
@@ -92,23 +93,35 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
         }
 
+        /// <summary>Gets a stream wrapper, responsible for encryption.</summary>
+        /// <param name="os">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// to be wrapped
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Crypto.OutputStreamEncryption"/>
+        /// , responsible for encryption.
+        /// </returns>
         public abstract OutputStreamEncryption GetEncryptionStream(Stream os);
 
+        /// <summary>Gets decryptor object.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Crypto.IDecryptor"/>
+        /// </returns>
         public abstract IDecryptor GetDecryptor();
-        
-        /// <summary>
-        /// Gets encryption key for a particular object/generation.
-        /// </summary>
+
+        /// <summary>Gets encryption key for a particular object/generation.</summary>
         /// <returns>encryption key for a particular object/generation.</returns>
-        public byte[] GetNextObjectKey() {
+        public virtual byte[] GetNextObjectKey() {
             return JavaUtil.ArraysCopyOf(nextObjectKey, nextObjectKey.Length);
         }
 
-        /// <summary>
-        /// Gets global encryption key.
-        /// </summary>
+        /// <summary>Gets global encryption key.</summary>
         /// <returns>global encryption key.</returns>
-        public byte[] GetMkey() {
+        public virtual byte[] GetMkey() {
             return JavaUtil.ArraysCopyOf(mkey, mkey.Length);
         }
 

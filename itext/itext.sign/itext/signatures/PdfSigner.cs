@@ -531,7 +531,7 @@ namespace iText.Signatures {
                 sgn.SetSignaturePolicy(signaturePolicy);
             }
             Stream data = GetRangeStream();
-            byte[] hash = DigestAlgorithms.Digest(data, hashAlgorithm, externalDigest);
+            byte[] hash = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(hashAlgorithm, externalDigest));
             IList<byte[]> ocspList = new List<byte[]>();
             if (chain.Length > 1 && ocspClient != null) {
                 for (int j = 0; j < chain.Length - 1; ++j) {

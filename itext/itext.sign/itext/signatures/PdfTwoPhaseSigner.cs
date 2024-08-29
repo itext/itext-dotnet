@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Digest;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;
@@ -92,38 +93,15 @@ namespace iText.Signatures {
         /// <returns>the message digest of the prepared document.</returns>
         public virtual byte[] PrepareDocumentForSignature(SignerProperties signerProperties, String digestAlgorithm
             , PdfName filter, PdfName subFilter, int estimatedSize, bool includeDate) {
-            if (closed) {
-                throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
-            }
-            PdfSigner pdfSigner = CreatePdfSigner(signerProperties);
-            PdfDocument document = pdfSigner.GetDocument();
-            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
-                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
-            }
-            document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
-            document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
-            PdfSignature cryptoDictionary = pdfSigner.CreateSignatureDictionary(includeDate);
-            cryptoDictionary.Put(PdfName.Filter, filter);
-            cryptoDictionary.Put(PdfName.SubFilter, subFilter);
-            pdfSigner.cryptoDictionary = cryptoDictionary;
-            IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
-            pdfSigner.PreClose(exc);
-            Stream data = pdfSigner.GetRangeStream();
-            byte[] digest;
+            IMessageDigest digest;
             if (externalDigest != null) {
-                digest = DigestAlgorithms.Digest(data, digestAlgorithm, externalDigest);
+                digest = externalDigest.GetMessageDigest(digestAlgorithm);
             }
             else {
-                digest = DigestAlgorithms.Digest(data, SignUtils.GetMessageDigest(digestAlgorithm));
+                digest = SignUtils.GetMessageDigest(digestAlgorithm);
             }
-            byte[] paddedSig = new byte[estimatedSize];
-            PdfDictionary dic2 = new PdfDictionary();
-            dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
-            pdfSigner.Close(dic2);
-            pdfSigner.closed = true;
-            closed = true;
-            return digest;
+            return PrepareDocumentForSignature(signerProperties, digest, filter, subFilter, estimatedSize, includeDate
+                );
         }
 
         /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
@@ -185,5 +163,35 @@ namespace iText.Signatures {
             return new PdfSigner(reader, outputStream, null, stampingProperties, signerProperties);
         }
 //\endcond
+
+        private byte[] PrepareDocumentForSignature(SignerProperties signerProperties, IMessageDigest messageDigest
+            , PdfName filter, PdfName subFilter, int estimatedSize, bool includeDate) {
+            if (closed) {
+                throw new PdfException(SignExceptionMessageConstant.THIS_INSTANCE_OF_PDF_SIGNER_ALREADY_CLOSED);
+            }
+            PdfSigner pdfSigner = CreatePdfSigner(signerProperties);
+            PdfDocument document = pdfSigner.GetDocument();
+            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
+                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
+            }
+            document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32002);
+            document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32001);
+            PdfSignature cryptoDictionary = pdfSigner.CreateSignatureDictionary(includeDate);
+            cryptoDictionary.Put(PdfName.Filter, filter);
+            cryptoDictionary.Put(PdfName.SubFilter, subFilter);
+            pdfSigner.cryptoDictionary = cryptoDictionary;
+            IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
+            pdfSigner.PreClose(exc);
+            Stream data = pdfSigner.GetRangeStream();
+            byte[] digest = DigestAlgorithms.Digest(data, messageDigest);
+            byte[] paddedSig = new byte[estimatedSize];
+            PdfDictionary dic2 = new PdfDictionary();
+            dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
+            pdfSigner.Close(dic2);
+            pdfSigner.closed = true;
+            closed = true;
+            return digest;
+        }
     }
 }
