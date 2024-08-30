@@ -69,6 +69,8 @@ namespace iText.Layout.Exceptions {
 
         public const String FLEXIBLE_ARENT_ALLOWED_AS_MINIMUM_IN_MINMAX = "Flexible values aren't allowed as minimum in minmax grid function.";
 
+        public const String TEXT_CONTENT_CANNOT_BE_NULL = "Text content cannot be null.";
+
         private LayoutExceptionMessageConstant() {
         }
     }

@@ -30,6 +30,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Test;
 
@@ -293,6 +294,12 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextInitializationWithNullValueThrowsException() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new Text(null));
+            NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.TEXT_CONTENT_CANNOT_BE_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]

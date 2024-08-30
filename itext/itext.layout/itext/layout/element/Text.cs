@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Tagging;
@@ -53,7 +54,7 @@ namespace iText.Layout.Element {
         /// </param>
         public Text(String text) {
             if (null == text) {
-                throw new ArgumentException();
+                throw new ArgumentException(LayoutExceptionMessageConstant.TEXT_CONTENT_CANNOT_BE_NULL);
             }
             this.text = text;
         }
