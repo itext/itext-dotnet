@@ -255,13 +255,24 @@ namespace iText.Pdfua.Checkers {
             if (properties == null || !properties.ContainsKey(PdfName.MCID)) {
                 return false;
             }
-            PdfMcr mcr = this.pdfDocument.GetStructTreeRoot().FindMcrByMcid(pdfDocument, (int)properties.GetAsInt(PdfName
-                .MCID));
+            PdfMcr mcr = McrExists(pdfDocument, (int)properties.GetAsInt(PdfName.MCID));
             if (mcr == null) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
                     );
             }
             return true;
+        }
+
+        private PdfMcr McrExists(PdfDocument document, int mcid) {
+            int amountOfPages = document.GetNumberOfPages();
+            for (int i = 1; i <= amountOfPages; ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfMcr mcr = document.GetStructTreeRoot().FindMcrByMcid(page.GetPdfObject(), mcid);
+                if (mcr != null) {
+                    return mcr;
+                }
+            }
+            return null;
         }
 
         private void CheckCatalog(PdfCatalog catalog) {

@@ -160,7 +160,9 @@ namespace iText.Layout.Renderer {
                     rectangle.DecreaseHeight(paddingBottom.GetValue());
                 }
                 Border borderBottom = renderer.GetBorders()[AbstractRenderer.BOTTOM_SIDE];
-                rectangle.DecreaseHeight(borderBottom.GetWidth());
+                if (borderBottom != null) {
+                    rectangle.DecreaseHeight(borderBottom.GetWidth());
+                }
             }
             else {
                 renderer.ApplyMarginsBordersPaddings(rectangle, false);

@@ -783,6 +783,26 @@ namespace iText.Kernel.Utils {
                 , destinationFolder, "diff_"));
         }
 
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [NUnit.Framework.Test]
+        public virtual void CombineTagRootKidsTest() {
+            String filename1 = sourceFolder + "tagRootKidsDoc1.pdf";
+            String filename2 = sourceFolder + "tagRootKidsDoc2.pdf";
+            String resultFile = destinationFolder + "mergedTags.pdf";
+            PdfDocument result = new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile));
+            PdfMerger merger = new PdfMerger(result, new PdfMergerProperties().SetMergeTags(true).SetMergeOutlines(true
+                )).SetCloseSourceDocuments(true);
+            PdfDocument input1 = new PdfDocument(new PdfReader(filename1));
+            merger.Merge(input1, 1, 1);
+            input1.Close();
+            PdfDocument input2 = new PdfDocument(new PdfReader(filename2));
+            merger.Merge(input2, 1, 1);
+            input2.Close();
+            merger.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergedTags.pdf"
+                , destinationFolder, "diff_"));
+        }
+
         private PdfDictionary MergeSinglePdfAndGetResultingStructTreeRoot(String pathToMerge) {
             IList<FileInfo> sources = new List<FileInfo>();
             sources.Add(new FileInfo(sourceFolder + pathToMerge));

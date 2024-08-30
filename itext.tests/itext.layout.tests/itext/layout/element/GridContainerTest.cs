@@ -68,9 +68,28 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void BorderBoxWithNoBordersTest() {
+            String filename = DESTINATION_FOLDER + "borderBoxWithNoBordersTest.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_borderBoxWithNoBordersTest.pdf";
+            IList<TemplateValue> templateColumns = new List<TemplateValue>();
+            templateColumns.Add(new PointValue(150.0f));
+            templateColumns.Add(new PointValue(150.0f));
+            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+                GridContainer grid = new GridContainer();
+                grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
+                Paragraph child = new Paragraph("First");
+                child.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                grid.Add(child);
+                document.Add(grid);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpName, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BasicTwoColumnsTest() {
-            String filename = DESTINATION_FOLDER + "basicTwoColumnsTest.pdf";
-            String cmpName = SOURCE_FOLDER + "cmp_basicTwoColumnsTest.pdf";
+            String filename = DESTINATION_FOLDER + "borderBoxChild.pdf";
+            String cmpName = SOURCE_FOLDER + "cmp_borderBoxChild.pdf";
             IList<TemplateValue> templateColumns = new List<TemplateValue>();
             templateColumns.Add(new PointValue(150.0f));
             templateColumns.Add(new PointValue(150.0f));
