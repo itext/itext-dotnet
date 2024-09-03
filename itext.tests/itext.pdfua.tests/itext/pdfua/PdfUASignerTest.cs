@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Element;
 using iText.IO.Util;
@@ -281,7 +282,7 @@ namespace iText.Pdfua {
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(certFileName);
             String outPdf = DESTINATION_FOLDER + name + ".pdf";
-            PdfSigner signer = new PdfUASignerTest.PdfUaSigner(new PdfReader(inPdf), new FileStream(outPdf, FileMode.Create
+            PdfSigner signer = new PdfUASignerTest.PdfUaSigner(new PdfReader(inPdf), FileUtil.GetFileOutputStream(outPdf
                 ), new StampingProperties());
             signingAction(signer);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
@@ -296,7 +297,7 @@ namespace iText.Pdfua {
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, DigestAlgorithms.SHA256);
             IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(certFileName);
             String outPdf = DESTINATION_FOLDER + name + ".pdf";
-            PdfSigner signer = new PdfSigner(new PdfReader(inPdf), new FileStream(outPdf, FileMode.Create), new StampingProperties
+            PdfSigner signer = new PdfSigner(new PdfReader(inPdf), FileUtil.GetFileOutputStream(outPdf), new StampingProperties
                 ());
             signingAction(signer);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
