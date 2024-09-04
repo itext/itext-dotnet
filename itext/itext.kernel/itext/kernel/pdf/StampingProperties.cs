@@ -35,6 +35,13 @@ namespace iText.Kernel.Pdf {
             this.preserveEncryption = other.preserveEncryption;
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal StampingProperties(DocumentProperties documentProperties)
+            : base(documentProperties) {
+            this.dependencies = documentProperties.dependencies;
+        }
+//\endcond
+
         /// <summary>Defines if the document will be edited in append mode.</summary>
         /// <returns>
         /// this

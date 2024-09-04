@@ -178,9 +178,7 @@ namespace iText.Kernel.Pdf {
             }
             documentId = new SequenceId();
             this.reader = reader;
-            // default values of the StampingProperties doesn't affect anything
-            this.properties = new StampingProperties();
-            this.properties.SetEventCountingMetaInfo(properties.metaInfo);
+            this.properties = new StampingProperties(properties);
             Open(null);
         }
 
@@ -207,9 +205,7 @@ namespace iText.Kernel.Pdf {
             }
             documentId = new SequenceId();
             this.writer = writer;
-            // default values of the StampingProperties doesn't affect anything
-            this.properties = new StampingProperties();
-            this.properties.SetEventCountingMetaInfo(properties.metaInfo);
+            this.properties = new StampingProperties(properties);
             Open(writer.properties.pdfVersion);
         }
 
@@ -1999,6 +1995,11 @@ namespace iText.Kernel.Pdf {
         /// otherwise
         /// </param>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
+            if (properties != null) {
+                foreach (Type aClass in properties.dependencies.Keys) {
+                    diContainer.Register(aClass, properties.dependencies.Get(aClass));
+                }
+            }
             this.fingerPrint = new FingerPrint();
             this.encryptedEmbeddedStreamsHandler = new EncryptedEmbeddedStreamsHandler(this);
             try {

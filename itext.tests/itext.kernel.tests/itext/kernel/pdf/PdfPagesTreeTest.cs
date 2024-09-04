@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Datastructures;
 using iText.IO.Source;
+using iText.Kernel.DI.Pagetree;
 using iText.Test;
 
 namespace iText.Kernel.Pdf {
@@ -34,36 +36,54 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NullUnlimitedListAddTest() {
-            PdfPagesTree.NullUnlimitedList<String> list = new PdfPagesTree.NullUnlimitedList<String>();
-            list.Add("hey");
-            list.Add("bye");
-            NUnit.Framework.Assert.AreEqual(2, list.Size());
-            list.Add(-1, "hello");
-            list.Add(3, "goodbye");
-            NUnit.Framework.Assert.AreEqual(2, list.Size());
+        public virtual void DefaultImplementationIsExpectedInstance() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            pdfDoc.GetCatalog().Put(PdfName.Count, new PdfNumber(10));
+            IPageTreeListFactory factory = pdfDoc.GetDiContainer().GetInstance<IPageTreeListFactory>();
+            NUnit.Framework.Assert.IsTrue(factory is DefaultPageTreeListFactory);
         }
 
         [NUnit.Framework.Test]
-        public virtual void NullUnlimitedListIndexOfTest() {
-            PdfPagesTree.NullUnlimitedList<String> list = new PdfPagesTree.NullUnlimitedList<String>();
-            list.Add("hey");
-            list.Add(null);
-            list.Add("bye");
-            list.Add(null);
-            NUnit.Framework.Assert.AreEqual(4, list.Size());
-            NUnit.Framework.Assert.AreEqual(1, list.IndexOf(null));
+        public virtual void DefaultImplementationWritingOnlyReturnArrayList() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            IPageTreeListFactory factory = pdfDoc.GetDiContainer().GetInstance<IPageTreeListFactory>();
+            NUnit.Framework.Assert.IsTrue(factory.CreateList<Object>(null) is SimpleArrayList<object>);
         }
 
         [NUnit.Framework.Test]
-        public virtual void NullUnlimitedListRemoveTest() {
-            PdfPagesTree.NullUnlimitedList<String> list = new PdfPagesTree.NullUnlimitedList<String>();
-            list.Add("hey");
-            list.Add("bye");
-            NUnit.Framework.Assert.AreEqual(2, list.Size());
-            list.Remove(-1);
-            list.Remove(2);
-            NUnit.Framework.Assert.AreEqual(2, list.Size());
+        public virtual void DefaultImplementationReadingAndModifyingNullUnlimitedList() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            IPageTreeListFactory factory = pdfDoc.GetDiContainer().GetInstance<IPageTreeListFactory>();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(PdfName.Count, new PdfNumber(int.MaxValue));
+            NUnit.Framework.Assert.IsTrue(factory.CreateList<Object>(dict) is NullUnlimitedList<object>);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultImplementationReadingAndModifyingArrayList() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            IPageTreeListFactory factory = pdfDoc.GetDiContainer().GetInstance<IPageTreeListFactory>();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(PdfName.Count, new PdfNumber(10));
+            NUnit.Framework.Assert.IsTrue(factory.CreateList<Object>(dict) is SimpleArrayList<object>);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultImplementationReadingAndModifyingArrayListNegative() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            IPageTreeListFactory factory = pdfDoc.GetDiContainer().GetInstance<IPageTreeListFactory>();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(PdfName.Count, new PdfNumber(-10));
+            NUnit.Framework.Assert.IsTrue(factory.CreateList<Object>(dict) is NullUnlimitedList<object>);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultImplementationReadingAndModifyingArrayListNull() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            IPageTreeListFactory factory = pdfDoc.GetDiContainer().GetInstance<IPageTreeListFactory>();
+            PdfDictionary dict = new PdfDictionary();
+            dict.Put(PdfName.Count, new PdfNull());
+            NUnit.Framework.Assert.IsTrue(factory.CreateList<Object>(dict) is NullUnlimitedList<object>);
         }
     }
 }

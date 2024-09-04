@@ -625,6 +625,10 @@ namespace iText.Kernel.Exceptions {
         //TODO DEVSIX-8490 remove this exception message when implemented
         public const String UNABLE_TO_REMOVE_DUPLICATE_LAYER = "Unable to remove duplicated layer {0} " + "because it has child layers.";
 
+        public const String TYPE_SHOULD_NOT_BE_NULL = "ClassArgument type should not be null";
+
+        public const String INSTANCE_SHOULD_NOT_BE_NULL = "Instance should not be null";
+
         private KernelExceptionMessageConstant() {
         }
     }
