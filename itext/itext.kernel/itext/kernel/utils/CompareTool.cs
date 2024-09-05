@@ -918,8 +918,8 @@ namespace iText.Kernel.Utils {
                         using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(this.outPdf)) {
                             using (PdfDocument outDocument = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo
                                 (metaInfo))) {
-                                byte[] cmpBytes = cmpDocument.GetXmpMetadata();
-                                byte[] outBytes = outDocument.GetXmpMetadata();
+                                byte[] cmpBytes = cmpDocument.GetXmpMetadataBytes();
+                                byte[] outBytes = outDocument.GetXmpMetadataBytes();
                                 if (ignoreDateAndProducerProperties) {
                                     XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(cmpBytes, new ParseOptions().SetOmitNormalization(true));
                                     XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_XMP, PdfConst.CreateDate, true, true);

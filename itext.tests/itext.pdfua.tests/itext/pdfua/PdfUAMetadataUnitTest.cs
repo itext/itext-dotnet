@@ -26,6 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Pdfua.Checkers;
 using iText.Pdfua.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Pdfua {
     [NUnit.Framework.Category("UnitTest")]
@@ -51,18 +52,20 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidMetadataVersionTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
-                pdfDocument.AddNewPage();
-                PdfCatalog catalog = pdfDocument.GetCatalog();
-                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_version_metadata.xmp"));
-                catalog.Put(PdfName.Metadata, new PdfStream(bytes));
-                PdfUAMetadataUnitTest.PdfUA1MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA1MetadataChecker(pdfDocument
-                    );
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
-                    catalog));
-                NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_UA_VERSION_IDENTIFIER
-                    , e.Message);
-            }
+            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDocument.AddNewPage();
+            PdfCatalog catalog = pdfDocument.GetCatalog();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_version_metadata.xmp"));
+            catalog.Put(PdfName.Metadata, new PdfStream(bytes));
+            PdfUAMetadataUnitTest.PdfUA1MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA1MetadataChecker(pdfDocument
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                catalog));
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_UA_VERSION_IDENTIFIER
+                , e.Message);
+            e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_UA_VERSION_IDENTIFIER
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -106,19 +109,22 @@ namespace iText.Pdfua {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
         public virtual void DocumentWithBrokenMetadataTest() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()))) {
-                pdfDocument.AddNewPage();
-                PdfCatalog catalog = pdfDocument.GetCatalog();
-                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_metadata.xmp"));
-                catalog.Put(PdfName.Metadata, new PdfStream(bytes));
-                PdfUAMetadataUnitTest.PdfUA1MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA1MetadataChecker(pdfDocument
-                    );
-                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
-                    catalog));
-                NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM, 
-                    e.Message);
-            }
+            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDocument.AddNewPage();
+            PdfCatalog catalog = pdfDocument.GetCatalog();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_metadata.xmp"));
+            catalog.Put(PdfName.Metadata, new PdfStream(bytes));
+            PdfUAMetadataUnitTest.PdfUA1MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA1MetadataChecker(pdfDocument
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                catalog));
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM, 
+                e.Message);
+            e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM, 
+                e.Message);
         }
 
         private class PdfUA1MetadataChecker : PdfUA1Checker {

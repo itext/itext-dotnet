@@ -223,7 +223,7 @@ namespace iText.Kernel.Crypto.Pdfencryption {
             PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPlainMetadata.pdf", new ReaderProperties().SetPassword
                 (PdfEncryptionTestUtils.OWNER));
             PdfDocument doc = new PdfDocument(reader);
-            XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(doc.GetXmpMetadata());
+            XMPMeta xmpMeta = doc.GetXmpMetadata();
             XMPProperty creatorToolXmp = xmpMeta.GetProperty(XMPConst.NS_XMP, "CreatorTool");
             doc.Close();
             NUnit.Framework.Assert.IsNotNull(creatorToolXmp);

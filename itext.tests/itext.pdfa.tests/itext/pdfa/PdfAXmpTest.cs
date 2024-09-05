@@ -104,8 +104,8 @@ namespace iText.Pdfa {
             // Closing document and reopening it to flush it XMP metadata ModifyDate
             using (PdfDocument doc_1 = new PdfDocument(new PdfReader(outFile))) {
                 using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFile))) {
-                    byte[] rdf = doc_1.GetXmpMetadata();
-                    byte[] expectedRdf = cmpDoc.GetXmpMetadata();
+                    byte[] rdf = doc_1.GetXmpMetadataBytes();
+                    byte[] expectedRdf = cmpDoc.GetXmpMetadataBytes();
                     // Comparing angle brackets, since it's the main difference between canonical and compact format.
                     NUnit.Framework.Assert.AreEqual(Count(expectedRdf, (byte)'<'), Count(rdf, (byte)'<'));
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(cmpFile, outFile, true));
@@ -130,7 +130,7 @@ namespace iText.Pdfa {
             GeneratePdfAWithUA(baos);
             // check whether the pdfuaid NS URI was properly encoded as a URI with rdf:resource
             PdfDocument readDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
-            String xmpString = iText.Commons.Utils.JavaUtil.GetStringForBytes(readDoc.GetXmpMetadata(), System.Text.Encoding
+            String xmpString = iText.Commons.Utils.JavaUtil.GetStringForBytes(readDoc.GetXmpMetadataBytes(), System.Text.Encoding
                 .UTF8);
             NUnit.Framework.Assert.IsTrue(xmpString.Contains("<pdfaSchema:namespaceURI rdf:resource=\"http://www.aiim.org/pdfua/ns/id/\"/>"
                 ), "Did not find expected namespaceURI definition");

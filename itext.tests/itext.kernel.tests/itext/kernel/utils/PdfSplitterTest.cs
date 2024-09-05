@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -79,7 +78,7 @@ namespace iText.Kernel.Utils {
                     return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument1_" + (this.partNumber
                         ++).ToString() + ".pdf");
                 }
-                catch (FileNotFoundException) {
+                catch (System.IO.IOException) {
                     throw new Exception();
                 }
             }
@@ -115,7 +114,7 @@ namespace iText.Kernel.Utils {
                          (this.partNumber++).ToString() + ".pdf");
                     return writer;
                 }
-                catch (FileNotFoundException) {
+                catch (System.IO.IOException) {
                     throw new Exception();
                 }
             }
@@ -167,7 +166,7 @@ namespace iText.Kernel.Utils {
                     return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument3_" + (this.partNumber
                         ++).ToString() + ".pdf");
                 }
-                catch (FileNotFoundException) {
+                catch (System.IO.IOException) {
                     throw new Exception();
                 }
             }
@@ -208,7 +207,7 @@ namespace iText.Kernel.Utils {
                     return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitDocument4_" + (this.partNumber
                         ++).ToString() + ".pdf");
                 }
-                catch (FileNotFoundException) {
+                catch (System.IO.IOException) {
                     throw new Exception();
                 }
             }
@@ -260,7 +259,7 @@ namespace iText.Kernel.Utils {
                     return CompareTool.CreateTestPdfWriter(PdfSplitterTest.destinationFolder + "splitBySize_part" + (this.partNumber
                         ++).ToString() + ".pdf");
                 }
-                catch (FileNotFoundException) {
+                catch (System.IO.IOException) {
                     throw new Exception();
                 }
             }

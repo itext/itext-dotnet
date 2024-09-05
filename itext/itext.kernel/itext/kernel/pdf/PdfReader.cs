@@ -65,8 +65,6 @@ namespace iText.Kernel.Pdf {
         //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
         private PdfIndirectReference currentIndirectReference;
 
-        private XMPMeta xmpMeta;
-
         private PdfReader.XrefProcessor xrefProcessor = new PdfReader.XrefProcessor();
 
         protected internal PdfTokenizer tokens;
@@ -85,8 +83,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfDocument pdfDocument;
 
-        protected internal PdfAConformanceLevel pdfAConformanceLevel;
-
         protected internal ReaderProperties properties;
 
         protected internal bool encrypted = false;
@@ -98,6 +94,10 @@ namespace iText.Kernel.Pdf {
         protected internal bool fixedXref = false;
 
         protected internal bool xrefStm = false;
+
+        private XMPMeta xmpMeta;
+
+        private PdfAConformanceLevel pdfAConformanceLevel;
 
         /// <summary>Constructs a new PdfReader.</summary>
         /// <param name="byteSource">source of bytes for the reader</param>
@@ -672,7 +672,7 @@ namespace iText.Kernel.Pdf {
                 }
                 try {
                     if (xmpMeta == null && pdfDocument.GetXmpMetadata() != null) {
-                        xmpMeta = XMPMetaFactory.ParseFromBuffer(pdfDocument.GetXmpMetadata());
+                        xmpMeta = pdfDocument.GetXmpMetadata();
                     }
                     if (xmpMeta != null) {
                         pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(xmpMeta);

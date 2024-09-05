@@ -31,7 +31,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Utils;
-using iText.Kernel.XMP;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -689,8 +688,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
-                );
+            NUnit.Framework.Assert.IsNotNull(pdfDoc3.GetXmpMetadata(), "XmpMetadata not found");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
@@ -732,8 +730,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
-                );
+            NUnit.Framework.Assert.IsNotNull(pdfDoc3.GetXmpMetadata(), "XmpMetadata not found");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
             NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");

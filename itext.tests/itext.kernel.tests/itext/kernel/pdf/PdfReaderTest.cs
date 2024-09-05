@@ -2357,14 +2357,14 @@ namespace iText.Kernel.Pdf {
             using (PdfReader reader = new PdfReader(fileName)) {
                 reader.SetStrictnessLevel(PdfReader.StrictnessLevel.LENIENT);
                 using (PdfDocument document = new PdfDocument(reader)) {
+                    // Initialize xmp metadata, because we in reader mode in which xmp will be initialized only during closing
+                    byte[] metadataBytes = document.GetXmpMetadataBytes();
                     PdfCatalog catalog = new PdfCatalog((PdfDictionary)reader.trailer.Get(PdfName.Root, true));
                     PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                     int xmpMetadataStreamLength = ((PdfNumber)xmpMetadataStream.Get(PdfName.Length)).IntValue();
-                    // 27600 is actual invalid length of stream. In reader StrictnessLevel#LENIENT we expect, that this
-                    // length will be fixed.
-                    NUnit.Framework.Assert.AreNotEqual(27600, xmpMetadataStreamLength);
-                    // 3090 is expected length of the stream after fix.
+                    // Initial length was 27600. 3090 is expected length of the stream after the fix
                     NUnit.Framework.Assert.AreEqual(3090, xmpMetadataStreamLength);
+                    NUnit.Framework.Assert.AreEqual(3090, metadataBytes.Length);
                 }
             }
         }
@@ -2374,7 +2374,10 @@ namespace iText.Kernel.Pdf {
             String fileName = SOURCE_FOLDER + "NoEndstreamKeyword.pdf";
             using (PdfReader reader = new PdfReader(fileName)) {
                 reader.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
-                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader));
+                PdfDocument pdfDocument = new PdfDocument(reader);
+                // Initialize xmp metadata, because we in reader mode in which xmp will be initialized only during closing
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDocument.GetXmpMetadata(
+                    ));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.STREAM_SHALL_END_WITH_ENDSTREAM, exception.
                     Message);
                 PdfCatalog catalog = new PdfCatalog((PdfDictionary)reader.trailer.Get(PdfName.Root, true));
@@ -2382,6 +2385,18 @@ namespace iText.Kernel.Pdf {
                 // 27600 is actual invalid length of stream. In reader StrictnessLevel#CONSERVATIVE we expect, that
                 // exception would be thrown and length wouldn't be fixed.
                 NUnit.Framework.Assert.AreEqual(27600, ((PdfNumber)xmpMetadataStream.Get(PdfName.Length)).IntValue());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StreamWithoutEndKeyConservativeModeWithWriterTest() {
+            String fileName = SOURCE_FOLDER + "NoEndstreamKeyword.pdf";
+            using (PdfReader reader = new PdfReader(fileName)) {
+                reader.SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(reader, new 
+                    PdfWriter(new ByteArrayOutputStream())));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.STREAM_SHALL_END_WITH_ENDSTREAM, exception.
+                    Message);
             }
         }
 
@@ -2418,7 +2433,7 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < 1000; ++i) {
                 pdfTestDoc.GetReader().GetPdfAConformanceLevel();
             }
-            NUnit.Framework.Assert.AreEqual(2, pdfTestDoc.GetCounter());
+            NUnit.Framework.Assert.AreEqual(1, pdfTestDoc.GetCounter());
         }
 
         [NUnit.Framework.Test]
@@ -2520,14 +2535,14 @@ namespace iText.Kernel.Pdf {
             int objNumber = pdfDictionary.GetIndirectReference().objNr;
             pdfDocument.catalog.GetPdfObject().Put(PdfName.StructTreeRoot, pdfDictionary);
             pdfDocument.Close();
-            PdfReader pdfReader = new _PdfReader_2841(objNumber, new MemoryStream(bsaos.ToArray()));
+            PdfReader pdfReader = new _PdfReader_2853(objNumber, new MemoryStream(bsaos.ToArray()));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(pdfReader));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_OBJECT_STREAM_NUMBER
                 , 5, 4, 492), e.Message);
         }
 
-        private sealed class _PdfReader_2841 : PdfReader {
-            public _PdfReader_2841(int objNumber, Stream baseArg1)
+        private sealed class _PdfReader_2853 : PdfReader {
+            public _PdfReader_2853(int objNumber, Stream baseArg1)
                 : base(baseArg1) {
                 this.objNumber = objNumber;
             }
@@ -2546,7 +2561,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void InitTagTreeStructureThrowsOOMIsCatched() {
             FileInfo file = new FileInfo(SOURCE_FOLDER + "big_table_lot_of_mcrs.pdf");
-            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2860();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2872();
             memoryLimitsAwareHandler.SetMaxSizeOfDecompressedPdfStreamsSum(100000);
             NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => {
                 using (PdfReader reader = new PdfReader(file, new ReaderProperties().SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler
@@ -2558,8 +2573,8 @@ namespace iText.Kernel.Pdf {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_2860 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_2860() {
+        private sealed class _MemoryLimitsAwareHandler_2872 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_2872() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -2626,9 +2641,9 @@ namespace iText.Kernel.Pdf {
                 this._enclosing = _enclosing;
             }
 
-            public override byte[] GetXmpMetadata(bool createNew) {
+            public override byte[] GetXmpMetadataBytes(bool createdNew) {
                 ++this.getXmpMetadataCounter;
-                return base.GetXmpMetadata(createNew);
+                return base.GetXmpMetadataBytes(createdNew);
             }
 
             public virtual int GetCounter() {

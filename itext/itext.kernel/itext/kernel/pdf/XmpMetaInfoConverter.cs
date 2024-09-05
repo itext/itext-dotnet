@@ -34,10 +34,9 @@ namespace iText.Kernel.Pdf {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal static void AppendMetadataToInfo(byte[] xmpMetadata, PdfDocumentInfo info) {
-            if (xmpMetadata != null) {
+        internal static void AppendMetadataToInfo(XMPMeta meta, PdfDocumentInfo info) {
+            if (meta != null) {
                 try {
-                    XMPMeta meta = XMPMetaFactory.ParseFromBuffer(xmpMetadata);
                     XMPProperty title = meta.GetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst.X_DEFAULT
                         );
                     if (title != null) {

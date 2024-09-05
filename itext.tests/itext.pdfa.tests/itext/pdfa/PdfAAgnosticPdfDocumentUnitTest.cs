@@ -58,7 +58,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsFalse(pdfDoc.GetPageFactoryPublic() is PdfAPageFactory);
             NUnit.Framework.Assert.IsNull(pdfDoc.GetConformanceLevel());
             pdfDoc.UpdateXmpMetadataPublic();
-            XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(pdfDoc.GetXmpMetadata(true));
+            XMPMeta xmpMeta = pdfDoc.GetXmpMetadata(true);
             NUnit.Framework.Assert.IsNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART));
             NUnit.Framework.Assert.IsNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE));
             pdfDoc.Close();
@@ -84,7 +84,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_2B, pdfADoc.GetConformanceLevel());
             NUnit.Framework.Assert.IsTrue(pdfADoc.GetPageFactoryPublic() is PdfAPageFactory);
             pdfADoc.UpdateXmpMetadataPublic();
-            XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(pdfADoc.GetXmpMetadata(true));
+            XMPMeta xmpMeta = pdfADoc.GetXmpMetadata();
             NUnit.Framework.Assert.IsNotNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART));
             NUnit.Framework.Assert.IsNotNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE));
             // Extra PdfA error message check

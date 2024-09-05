@@ -564,7 +564,7 @@ namespace iText.Pdfa.Checker {
         }
 
         private static PdfDictionary GenerateCustomXmpCatalog(PdfADocument pdfADocument, Action<XMPMeta> action) {
-            XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(pdfADocument.GetXmpMetadata()));
+            XMPMeta xmpMeta = pdfADocument.GetXmpMetadata();
             PdfDictionary catalog = pdfADocument.GetCatalog().GetPdfObject();
             MemoryStream baos = new MemoryStream();
             action(xmpMeta);

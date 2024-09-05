@@ -147,14 +147,12 @@ namespace iText.Pdfua.Checkers {
             if (catalog.GetDocument().GetPdfVersion().CompareTo(PdfVersion.PDF_1_7) > 0) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.INVALID_PDF_VERSION);
             }
-            PdfObject pdfMetadata = catalog.GetPdfObject().Get(PdfName.Metadata);
-            if (pdfMetadata == null || !pdfMetadata.IsStream()) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM
-                    );
-            }
-            byte[] metaBytes = ((PdfStream)pdfMetadata).GetBytes();
             try {
-                XMPMeta metadata = XMPMetaFactory.ParseFromBuffer(metaBytes);
+                XMPMeta metadata = catalog.GetDocument().GetXmpMetadata();
+                if (metadata == null) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM
+                        );
+                }
                 int? part = metadata.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART);
                 if (!Convert.ToInt32(1).Equals(part)) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_UA_VERSION_IDENTIFIER

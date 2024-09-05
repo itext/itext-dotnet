@@ -54,7 +54,6 @@ using iText.Kernel.XMP.Options;
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
-        //
         private static readonly PdfName[] PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER = new PdfName[] { PdfName.Encrypt
             , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm };
 
@@ -97,17 +96,11 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal PdfReader reader = null;
 
-        /// <summary>XMP Metadata for the document.</summary>
-        protected internal byte[] xmpMetadata = null;
-
         /// <summary>Document catalog.</summary>
         protected internal PdfCatalog catalog = null;
 
         /// <summary>Document trailed.</summary>
         protected internal PdfDictionary trailer = null;
-
-        /// <summary>Document info.</summary>
-        protected internal PdfDocumentInfo info = null;
 
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
@@ -160,6 +153,15 @@ namespace iText.Kernel.Pdf {
         private PdfFont defaultFont = null;
 
         private EncryptedEmbeddedStreamsHandler encryptedEmbeddedStreamsHandler;
+
+        /// <summary>Document info.</summary>
+        private PdfDocumentInfo info = null;
+
+        /// <summary>XMP Metadata bytes for the document.</summary>
+        private byte[] xmpMetadataBytes = null;
+
+        /// <summary>XMP Metadata which is used to prevent bytes deserialization for a few times on the same bytes.</summary>
+        private XMPMeta xmpMetadata = null;
 
         private readonly DIContainer diContainer = new DIContainer();
 
@@ -248,37 +250,125 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
+        /// <remarks>
+        /// Sets the XMP Metadata.
+        /// <para />
+        /// The XMP Metadata values are synchronized with information dictionary.
+        /// </remarks>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
         /// <param name="serializeOptions">serialization options</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
             this.serializeOptions = serializeOptions;
-            SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
-        }
-
-        /// <summary>Use this method to set the XMP Metadata.</summary>
-        /// <param name="xmpMetadata">The xmpMetadata to set.</param>
-        protected internal virtual void SetXmpMetadata(byte[] xmpMetadata) {
-            this.xmpMetadata = xmpMetadata;
+            this.xmpMetadataBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions);
+            this.xmpMetadata = xmpMeta;
         }
 
         /// <summary>Sets the XMP Metadata.</summary>
+        /// <remarks>
+        /// Sets the XMP Metadata.
+        /// <para />
+        /// The XMP Metadata values are synchronized with information dictionary.
+        /// <para />
+        /// <see cref="serializeOptions"/>
+        /// will be used for serialization, they
+        /// can be changed by
+        /// <see cref="SetSerializeOptions(iText.Kernel.XMP.Options.SerializeOptions)"/>.
+        /// </remarks>
         /// <param name="xmpMeta">the xmpMetadata to set</param>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
-            serializeOptions.SetPadding(2000);
             SetXmpMetadata(xmpMeta, serializeOptions);
         }
 
-        /// <summary>Gets XMPMetadata.</summary>
-        /// <returns>the XMPMetadata</returns>
-        public virtual byte[] GetXmpMetadata() {
+        /// <summary>Sets the XMP Metadata.</summary>
+        /// <remarks>
+        /// Sets the XMP Metadata.
+        /// <para />
+        /// The XMP Metadata values are synchronized with information dictionary.
+        /// </remarks>
+        /// <param name="xmpMetadata">the xmpMetadata bytes to set</param>
+        protected internal virtual void SetXmpMetadata(byte[] xmpMetadata) {
+            this.xmpMetadataBytes = xmpMetadata;
+            this.xmpMetadata = null;
+            try {
+                GetXmpMetadata();
+            }
+            catch (XMPException e) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+            }
+        }
+
+        /// <summary>Gets XMP Metadata.</summary>
+        /// <remarks>
+        /// Gets XMP Metadata.
+        /// <para />
+        /// XMP Metadata is lazy initialized. It will be initialized during the first call of this method.
+        /// <para />
+        /// To update XMP Metadata of the document, use
+        /// <see cref="SetXmpMetadata(iText.Kernel.XMP.XMPMeta)"/>
+        /// method.
+        /// </remarks>
+        /// <returns>existed XMP Metadata</returns>
+        public virtual XMPMeta GetXmpMetadata() {
             return GetXmpMetadata(false);
         }
 
-        /// <summary>Gets XMPMetadata or create a new one.</summary>
-        /// <param name="createNew">if true, create a new empty XMPMetadata if it did not present.</param>
-        /// <returns>existed or newly created XMPMetadata byte array.</returns>
-        public virtual byte[] GetXmpMetadata(bool createNew) {
-            if (xmpMetadata == null && createNew) {
+        /// <summary>Gets XMP Metadata or create a new one.</summary>
+        /// <remarks>
+        /// Gets XMP Metadata or create a new one.
+        /// <para />
+        /// XMP Metadata is lazy initialized. It will be initialized during the first call of this method.
+        /// <para />
+        /// To update XMP Metadata of the document, use
+        /// <see cref="SetXmpMetadata(iText.Kernel.XMP.XMPMeta)"/>
+        /// method.
+        /// </remarks>
+        /// <param name="createNew">if true, create a new empty XMP Metadata if it did not present</param>
+        /// <returns>existed or newly created XMP Metadata</returns>
+        public virtual XMPMeta GetXmpMetadata(bool createNew) {
+            if (xmpMetadata == null) {
+                byte[] bytes = GetXmpMetadataBytes(createNew);
+                xmpMetadata = bytes == null ? null : XMPMetaFactory.ParseFromBuffer(bytes);
+            }
+            return xmpMetadata;
+        }
+
+        /// <summary>Gets XMP Metadata.</summary>
+        /// <remarks>
+        /// Gets XMP Metadata.
+        /// <para />
+        /// XMP Metadata is lazy initialized. It will be initialized during the first call of this method.
+        /// <para />
+        /// To update XMP Metadata of the document, use
+        /// <see cref="SetXmpMetadata(iText.Kernel.XMP.XMPMeta)"/>
+        /// method.
+        /// </remarks>
+        /// <returns>existed XMP Metadata bytes</returns>
+        public virtual byte[] GetXmpMetadataBytes() {
+            return GetXmpMetadataBytes(false);
+        }
+
+        /// <summary>Gets XMP Metadata or create a new one.</summary>
+        /// <remarks>
+        /// Gets XMP Metadata or create a new one.
+        /// <para />
+        /// XMP Metadata is lazy initialized. It will be initialized during the first call of this method.
+        /// <para />
+        /// To update XMP Metadata of the document, use
+        /// <see cref="SetXmpMetadata(iText.Kernel.XMP.XMPMeta)"/>
+        /// method.
+        /// </remarks>
+        /// <param name="createNew">if true, create a new empty XMP Metadata if it did not present</param>
+        /// <returns>existed or newly created XMP Metadata byte array</returns>
+        public virtual byte[] GetXmpMetadataBytes(bool createNew) {
+            CheckClosingStatus();
+            if (xmpMetadataBytes == null) {
+                PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
+                if (xmpMetadataStream != null) {
+                    xmpMetadataBytes = xmpMetadataStream.GetBytes();
+                }
+            }
+            if (createNew && xmpMetadataBytes == null) {
                 XMPMeta xmpMeta = XMPMetaFactory.Create();
                 xmpMeta.SetObjectName(XMPConst.TAG_XMPMETA);
                 xmpMeta.SetObjectName("");
@@ -290,7 +380,10 @@ namespace iText.Kernel.Pdf {
                 catch (XMPException) {
                 }
             }
-            return xmpMetadata;
+            if (xmpMetadataBytes == null) {
+                return null;
+            }
+            return JavaUtil.ArraysCopyOf(xmpMetadataBytes, xmpMetadataBytes.Length);
         }
 
         /// <summary>Gets PdfObject by object number.</summary>
@@ -571,18 +664,23 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets document information dictionary.</summary>
         /// <remarks>
         /// Gets document information dictionary.
+        /// <para />
         /// <see cref="info"/>
         /// is lazy initialized. It will be initialized during the first call of this method.
+        /// <para />
         /// The information dictionary values are synchronized with document XMP Metadata.
         /// </remarks>
         /// <returns>document information dictionary.</returns>
         public virtual PdfDocumentInfo GetDocumentInfo() {
             CheckClosingStatus();
             if (info == null) {
-                PdfObject infoDict = trailer.Get(PdfName.Info);
-                info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
-                    );
-                XmpMetaInfoConverter.AppendMetadataToInfo(xmpMetadata, info);
+                PdfDictionary infoDict = trailer == null ? null : trailer.GetAsDictionary(PdfName.Info);
+                info = new PdfDocumentInfo(infoDict == null ? new PdfDictionary() : infoDict, this);
+                try {
+                    XmpMetaInfoConverter.AppendMetadataToInfo(GetXmpMetadata(), info);
+                }
+                catch (XMPException) {
+                }
             }
             return info;
         }
@@ -595,7 +693,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="WriterProperties.SetInitialDocumentId(PdfString)"/>
         /// should be used
         /// </remarks>
-        /// <returns>original dccument id</returns>
+        /// <returns>original document id</returns>
         public virtual PdfString GetOriginalDocumentId() {
             return originalDocumentId;
         }
@@ -749,17 +847,17 @@ namespace iText.Kernel.Pdf {
                             GetDocumentInfo().GetPdfObject().Remove(deprecatedKey);
                         }
                     }
-                    if (GetXmpMetadata() != null) {
+                    if (GetXmpMetadataBytes() != null) {
                         PdfStream xmp = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
                         if (IsAppendMode() && xmp != null && !xmp.IsFlushed() && xmp.GetIndirectReference() != null) {
                             // Use existing object for append mode
-                            xmp.SetData(xmpMetadata);
+                            xmp.SetData(GetXmpMetadataBytes());
                             xmp.SetModified();
                         }
                         else {
                             // Create new object
                             xmp = (PdfStream)new PdfStream().MakeIndirect(this);
-                            xmp.GetOutputStream().Write(xmpMetadata);
+                            xmp.GetOutputStream().Write(GetXmpMetadataBytes());
                             catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                             catalog.SetModified();
                         }
@@ -2031,16 +2129,6 @@ namespace iText.Kernel.Pdf {
                     }
                     catalog = new PdfCatalog(catalogDictionary);
                     UpdatePdfVersionFromCatalog();
-                    PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
-                    if (xmpMetadataStream != null) {
-                        xmpMetadata = xmpMetadataStream.GetBytes();
-                        if (!this.GetType().Equals(typeof(iText.Kernel.Pdf.PdfDocument))) {
-                            // TODO DEVSIX-5292 If somebody extends PdfDocument we have to initialize document info
-                            //  and conformance level to provide compatibility. This code block shall be removed
-                            reader.GetPdfAConformanceLevel();
-                            GetDocumentInfo();
-                        }
-                    }
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
                     if (str != null) {
                         TryInitTagStructure(str);
@@ -2064,7 +2152,8 @@ namespace iText.Kernel.Pdf {
                     writer.document = this;
                     if (reader == null) {
                         catalog = new PdfCatalog(this);
-                        info = new PdfDocumentInfo(this).AddCreationDate();
+                        // initialize document info
+                        GetDocumentInfo().AddCreationDate();
                     }
                     GetDocumentInfo().AddModDate();
                     if (trailer == null) {
@@ -2201,8 +2290,8 @@ namespace iText.Kernel.Pdf {
             try {
                 // We add PDF producer info in any case, and the valid way to do it for PDF 2.0 in only in metadata, not
                 // in the info dictionary.
-                if (xmpMetadata != null || writer.properties.addXmpMetadata || pdfVersion.CompareTo(PdfVersion.PDF_2_0) >=
-                     0) {
+                if (GetXmpMetadataBytes() != null || writer.properties.addXmpMetadata || pdfVersion.CompareTo(PdfVersion.PDF_2_0
+                    ) >= 0) {
                     SetXmpMetadata(UpdateDefaultXmpMetadata());
                 }
             }
@@ -2218,7 +2307,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <returns>the XMPMetadata</returns>
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
-            XMPMeta xmpMeta = XMPMetaFactory.ParseFromBuffer(GetXmpMetadata(true));
+            XMPMeta xmpMeta = GetXmpMetadata(true);
             XmpMetaInfoConverter.AppendDocumentInfoToMetadata(GetDocumentInfo(), xmpMeta);
             if (IsTagged() && writer.properties.addUAXmpMetadata && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID
                 , XMPConst.PART)) {
