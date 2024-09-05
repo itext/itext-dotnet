@@ -148,6 +148,9 @@ namespace iText.Svg.Utils {
             while (tokenizer.HasMoreTokens()) {
                 String trim = tokenizer.NextToken().Trim();
                 if (trim != null && !String.IsNullOrEmpty(trim)) {
+                    if (trim.StartsWith(",")) {
+                        trim = trim.Substring(1).Trim();
+                    }
                     list.Add(trim + ")");
                 }
             }

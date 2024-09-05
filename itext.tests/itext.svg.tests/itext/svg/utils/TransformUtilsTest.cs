@@ -119,6 +119,13 @@ namespace iText.Svg.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CombinedReverseTransformWithCommaTest() {
+            AffineTransform actual = TransformUtils.ParseTransform("scale(3),translate(40,20)");
+            AffineTransform expected = new AffineTransform(3d, 0d, 0d, 3d, 90d, 45d);
+            NUnit.Framework.Assert.AreEqual(actual, expected);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DoubleTransformationTest() {
             AffineTransform expected = new AffineTransform(9d, 0d, 0d, 9d, 0d, 0d);
             AffineTransform actual = TransformUtils.ParseTransform("scale(3) scale(3)");
