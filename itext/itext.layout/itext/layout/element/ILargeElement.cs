@@ -51,10 +51,16 @@ namespace iText.Layout.Element {
         /// <summary>Writes the newly added content to the document.</summary>
         void Flush();
 
-        /// <summary>Flushes the content which has just been added to the document.</summary>
+        /// <summary>Writes to the output document the content which has just been added to it.</summary>
         /// <remarks>
-        /// Flushes the content which has just been added to the document.
-        /// This is a method for internal usage and is called automatically by the document.
+        /// Writes to the output document the content which has just been added to it.
+        /// <para />
+        /// This method is called automatically for the newly added
+        /// <see cref="ILargeElement"/>
+        /// to be immediately placed
+        /// in the page contents after it is added to the
+        /// <see cref="iText.Layout.Document"/>
+        /// , so it shouldn't be used in any other places.
         /// </remarks>
         void FlushContent();
 

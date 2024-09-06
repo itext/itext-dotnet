@@ -298,7 +298,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Creates new
         /// <see cref="PdfStream"/>
-        /// object and puts it at the end of Contents array
+        /// object and puts it at the end of
+        /// <c>Contents</c>
+        /// array
         /// (if Contents object is
         /// <see cref="PdfStream"/>
         /// it will be replaced with one-element array).
@@ -1532,38 +1534,6 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>
-        /// This flag is meaningful for the case, when page rotation is applied and ignorePageRotationForContent
-        /// is set to true.
-        /// </summary>
-        /// <remarks>
-        /// This flag is meaningful for the case, when page rotation is applied and ignorePageRotationForContent
-        /// is set to true. NOTE: It is needed for the internal usage.
-        /// <br /><br />
-        /// This flag defines if inverse matrix (which rotates content into the opposite direction from page rotation
-        /// direction in order to give the impression of the not rotated text) is already applied to the page content stream.
-        /// See
-        /// <see cref="SetIgnorePageRotationForContent(bool)"/>
-        /// </remarks>
-        /// <returns>true, if inverse matrix is already applied, false otherwise.</returns>
-        public virtual bool IsPageRotationInverseMatrixWritten() {
-            return pageRotationInverseMatrixWritten;
-        }
-
-        /// <summary>NOTE: For internal usage! Use this method only if you know what you are doing.</summary>
-        /// <remarks>
-        /// NOTE: For internal usage! Use this method only if you know what you are doing.
-        /// <br /><br />
-        /// This method is called when inverse matrix (which rotates content into the opposite direction from page rotation
-        /// direction in order to give the impression of the not rotated text) is applied to the page content stream.
-        /// See
-        /// <see cref="SetIgnorePageRotationForContent(bool)"/>
-        /// </remarks>
-        public virtual void SetPageRotationInverseMatrixWritten() {
-            // this method specifically return void to discourage it's unintended usage
-            pageRotationInverseMatrixWritten = true;
-        }
-
         /// <summary>Adds file associated with PDF page and identifies the relationship between them.</summary>
         /// <remarks>
         /// Adds file associated with PDF page and identifies the relationship between them.
@@ -1642,6 +1612,49 @@ namespace iText.Kernel.Pdf {
         internal virtual void ReleaseInstanceFields() {
             resources = null;
             parentPages = null;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Checks if page rotation inverse matrix (which rotates content into the opposite direction from page rotation
+        /// direction in order to give the impression of the not rotated text) is already applied to the page content stream.
+        /// </summary>
+        /// <remarks>
+        /// Checks if page rotation inverse matrix (which rotates content into the opposite direction from page rotation
+        /// direction in order to give the impression of the not rotated text) is already applied to the page content stream.
+        /// See
+        /// <see cref="SetIgnorePageRotationForContent(bool)"/>
+        /// and
+        /// <see cref="PageContentRotationHelper"/>.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if inverse matrix is already applied,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        internal virtual bool IsPageRotationInverseMatrixWritten() {
+            return pageRotationInverseMatrixWritten;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Specifies that page rotation inverse matrix (which rotates content into the opposite direction from page rotation
+        /// direction in order to give the impression of the not rotated text) is applied to the page content stream.
+        /// </summary>
+        /// <remarks>
+        /// Specifies that page rotation inverse matrix (which rotates content into the opposite direction from page rotation
+        /// direction in order to give the impression of the not rotated text) is applied to the page content stream.
+        /// See
+        /// <see cref="SetIgnorePageRotationForContent(bool)"/>
+        /// and
+        /// <see cref="PageContentRotationHelper"/>.
+        /// </remarks>
+        internal virtual void SetPageRotationInverseMatrixWritten() {
+            pageRotationInverseMatrixWritten = true;
         }
 //\endcond
 

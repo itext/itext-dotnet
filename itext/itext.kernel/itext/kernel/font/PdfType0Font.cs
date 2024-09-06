@@ -920,7 +920,8 @@ namespace iText.Kernel.Font {
 
         private PdfObject GenerateWidthsArray() {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes);
+            HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream
+                >(bytes);
             stream.WriteByte('[');
             int lastNumber = -10;
             bool firstTime = true;
@@ -953,8 +954,8 @@ namespace iText.Kernel.Font {
         /// <summary>Creates a ToUnicode CMap to allow copy and paste from Acrobat.</summary>
         /// <returns>the stream representing this CMap or <c>null</c></returns>
         public virtual PdfStream GetToUnicode() {
-            OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(new ByteArrayOutputStream
-                ());
+            HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream
+                >(new ByteArrayOutputStream());
             stream.WriteString("/CIDInit /ProcSet findresource begin\n" + "12 dict begin\n" + "begincmap\n" + "/CIDSystemInfo\n"
                  + "<< /Registry (Adobe)\n" + "/Ordering (UCS)\n" + "/Supplement 0\n" + ">> def\n" + "/CMapName /Adobe-Identity-UCS def\n"
                  + "/CMapType 2 def\n" + "1 begincodespacerange\n" + "<0000><FFFF>\n" + "endcodespacerange\n");
@@ -979,7 +980,8 @@ namespace iText.Kernel.Font {
             return new PdfStream(((ByteArrayOutputStream)stream.GetOutputStream()).ToArray());
         }
 
-        private int WriteBfrange(OutputStream<ByteArrayOutputStream> stream, IList<Glyph> range) {
+        private static int WriteBfrange(HighPrecisionOutputStream<ByteArrayOutputStream> stream, IList<Glyph> range
+            ) {
             if (range.IsEmpty()) {
                 return 0;
             }

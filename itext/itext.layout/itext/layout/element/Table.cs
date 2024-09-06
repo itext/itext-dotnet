@@ -870,11 +870,6 @@ namespace iText.Layout.Element {
             }
         }
 
-        /// <summary>Flushes the content which has just been added to the document.</summary>
-        /// <remarks>
-        /// Flushes the content which has just been added to the document.
-        /// This is a method for internal usage and is called automatically by the document.
-        /// </remarks>
         public virtual void FlushContent() {
             if (lastAddedRowGroups == null || lastAddedRowGroups.IsEmpty()) {
                 return;

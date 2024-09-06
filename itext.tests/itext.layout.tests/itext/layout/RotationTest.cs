@@ -21,12 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -38,10 +41,10 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class RotationTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/RotationTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/RotationTest/";
 
         public const String cmpPrefix = "cmp_";
@@ -62,13 +65,13 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest01() {
-            String outFileName = destinationFolder + "fixedTextRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedTextRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedTextRotationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             SolidBorder border = new SolidBorder(0.5f);
@@ -88,14 +91,14 @@ namespace iText.Layout {
                 width2));
             document.Add(new Paragraph(longText).SetMargin(0).SetFixedPosition(x2, y2, width2));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest02() {
-            String outFileName = destinationFolder + "fixedTextRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedTextRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedTextRotationTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String longText = "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
@@ -104,14 +107,14 @@ namespace iText.Layout {
                 , 450));
             document.Add(new Paragraph(longText).SetMargin(0).SetFixedPosition(50, 50, 450));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest03() {
-            String outFileName = destinationFolder + "fixedTextRotationTest03.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedTextRotationTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedTextRotationTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String simpleText = "text simple text";
@@ -124,14 +127,14 @@ namespace iText.Layout {
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetFirstPage());
             DrawCross(canvas, x, y);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedTextRotationTest04() {
-            String outFileName = destinationFolder + "fixedTextRotationTest04.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest04.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedTextRotationTest04.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedTextRotationTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String simpleText = "text simple text";
@@ -143,15 +146,15 @@ namespace iText.Layout {
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetFirstPage());
             DrawCross(canvas, x, y);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest01() {
-            String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "staticTextRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "staticTextRotationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph();
@@ -162,15 +165,15 @@ namespace iText.Layout {
             document.Add(new Paragraph("text line text line text line text line text line text line text line text line text line text line text line"
                 ));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest02() {
-            String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "staticTextRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "staticTextRotationTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
@@ -179,15 +182,15 @@ namespace iText.Layout {
                 (-Math.PI / 12)).SetBackgroundColor(ColorConstants.BLUE));
             document.Add(new Paragraph(para3Text));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest03() {
-            String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "staticTextRotationTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "staticTextRotationTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
@@ -196,14 +199,14 @@ namespace iText.Layout {
             document.Add(new Paragraph(para2Text).SetRotationAngle((-Math.PI / 3)));
             document.Add(new Paragraph(para3Text));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest04() {
-            String outFileName = destinationFolder + "staticTextRotationTest04.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest04.pdf";
+            String outFileName = DESTINATION_FOLDER + "staticTextRotationTest04.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "staticTextRotationTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
@@ -211,14 +214,14 @@ namespace iText.Layout {
                 .RED));
             document.Add(new Paragraph(para3Text));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitTextRotationTest01() {
-            String outFileName = destinationFolder + "splitTextRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "splitTextRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "splitTextRotationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
@@ -227,15 +230,15 @@ namespace iText.Layout {
             document.Add(new Paragraph(para2Text).SetRotationAngle((-Math.PI / 3)));
             document.Add(new Paragraph(para3Text));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void SplitTextRotationTest02() {
-            String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "splitTextRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "splitTextRotationTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
@@ -248,21 +251,21 @@ namespace iText.Layout {
             document.Add(new Paragraph(extremelyLongText).SetRotationAngle(Math.PI / 2));
             document.Add(new Paragraph(extremelyLongText).SetRotationAngle(Math.PI / 4));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest01() {
             String fileName = "rotationInfiniteLoopTest01.pdf";
-            String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String outFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetDefaultPageSize(PageSize.A5.Rotate());
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text).SetRotationAngle((Math.PI / 2)));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -270,22 +273,22 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest02() {
             String fileName = "rotationInfiniteLoopTest02.pdf";
-            String outFileName = destinationFolder + fileName;
-            String cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String outFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetDefaultPageSize(PageSize.A5.Rotate());
             Document document = new Document(pdfDocument);
             document.Add(new List().Add(para1Text).SetRotationAngle((Math.PI / 2)));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest02() {
-            String outFileName = destinationFolder + "tableRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "tableRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "tableRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 });
@@ -296,15 +299,15 @@ namespace iText.Layout {
                 SetRotationAngle((Math.PI))));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void TableRotationTest03() {
-            String outFileName = destinationFolder + "tableRotationTest03.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "tableRotationTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "tableRotationTest03.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 25, 50 });
@@ -316,14 +319,14 @@ namespace iText.Layout {
                 ((Math.PI))));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellRotationTest01() {
-            String outFileName = destinationFolder + "cellRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "cellRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -332,14 +335,14 @@ namespace iText.Layout {
                 (ColorConstants.GREEN));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellRotationTest02() {
-            String outFileName = destinationFolder + "cellRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "cellRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 5, 95 }));
@@ -348,14 +351,14 @@ namespace iText.Layout {
                 )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellRotationTest03() {
-            String outFileName = destinationFolder + "cellRotationTest03.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "cellRotationTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTest03.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePointArray(new float[] { -1, -1 }));
@@ -364,14 +367,14 @@ namespace iText.Layout {
                 )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellRotationDependsOnNeighbourCell() {
-            String outFileName = destinationFolder + "cellRotationDependsOnNeighbourCell.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "cellRotationDependsOnNeighbourCell.pdf";
+            String outFileName = DESTINATION_FOLDER + "cellRotationDependsOnNeighbourCell.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationDependsOnNeighbourCell.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(300, 180));
             doc.Add(CreateTable(60));
@@ -380,7 +383,7 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             doc.Add(CreateTable(100));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -388,8 +391,8 @@ namespace iText.Layout {
         public virtual void CellRotationParagraphIsGone() {
             // TODO DEVSIX-5029 Content of the first cell is missing
             String testName = "cellRotationParagraphIsGone.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + cmpPrefix + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + testName;
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             Table table = new Table(2);
@@ -405,7 +408,7 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -423,8 +426,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DivRotationTest01() {
-            String outFileName = destinationFolder + "divRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "divRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "divRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Div div = new Div().SetBackgroundColor(ColorConstants.GREEN);
@@ -434,15 +437,15 @@ namespace iText.Layout {
             div.Add(new Paragraph(para1Text)).SetRotationAngle(Math.PI / 2);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void DivRotationTest02() {
-            String outFileName = destinationFolder + "divRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "divRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "divRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
@@ -455,14 +458,14 @@ namespace iText.Layout {
             doc.Add(new Div().Add(new Paragraph(extremelyLongText)).SetRotationAngle(Math.PI / 2));
             doc.Add(new Div().Add(new Paragraph(extremelyLongText)).SetRotationAngle(Math.PI / 4));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ListRotationTest01() {
-            String outFileName = destinationFolder + "listRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "listRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "listRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
@@ -473,15 +476,15 @@ namespace iText.Layout {
             doc.Add(list);
             doc.Add(new Paragraph(para2Text));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void ListRotationTest02() {
-            String outFileName = destinationFolder + "listRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "listRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "listRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
@@ -495,14 +498,14 @@ namespace iText.Layout {
             doc.Add(list);
             doc.Add(new Paragraph(para2Text));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AlignedTextRotationTest01() {
-            String outFileName = destinationFolder + "alignedTextRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "alignedTextRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "alignedTextRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "alignedTextRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
@@ -513,29 +516,29 @@ namespace iText.Layout {
             doc.Add(p);
             doc.Add(new Paragraph(para3Text));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InnerRotationTest01() {
-            String outFileName = destinationFolder + "innerRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "innerRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "innerRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Div().SetBackgroundColor(ColorConstants.GREEN).SetHeight(300).SetWidth(300).Add(new Div().SetBackgroundColor
                 (ColorConstants.RED).SetHeight(100).SetWidth(100).SetRotationAngle(Math.PI / 4)).SetRotationAngle(Math
                 .PI / 8));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
         [NUnit.Framework.Test]
         public virtual void InnerRotationTest02() {
-            String outFileName = destinationFolder + "innerRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "innerRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "innerRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(6400, 6400));
             String longText = para1Text + para2Text + para3Text;
@@ -545,14 +548,14 @@ namespace iText.Layout {
                 ))).Add(new Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk")).Add(new Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk"
                 )).SetRotationAngle(Math.PI / 8));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest01() {
-            String outFileName = destinationFolder + "fixedWidthRotationTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedWidthRotationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedWidthRotationTest01.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
                 );
@@ -561,14 +564,14 @@ namespace iText.Layout {
                 .BLUE, 5));
             doc.Add(d.Add(p));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest02() {
-            String outFileName = destinationFolder + "fixedWidthRotationTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedWidthRotationTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedWidthRotationTest02.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
                 );
@@ -577,14 +580,14 @@ namespace iText.Layout {
                 (ColorConstants.BLUE, 5));
             doc.Add(d.Add(p));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedWidthRotationTest03() {
-            String outFileName = destinationFolder + "fixedWidthRotationTest03.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "fixedWidthRotationTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "fixedWidthRotationTest03.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
                 );
@@ -593,17 +596,17 @@ namespace iText.Layout {
                 SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(d.Add(d1));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageInRotatedBlockTest01() {
-            String outFileName = destinationFolder + "imageInRotatedBlockTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_imageInRotatedBlockTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "imageInRotatedBlockTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_imageInRotatedBlockTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
-            iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
             image.SetWidth(200);
             Div div = new Div();
             div.SetRotationAngle(Math.PI / 2);
@@ -612,7 +615,7 @@ namespace iText.Layout {
             doc.Add(div);
             doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -621,12 +624,12 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, Count = 
             2)]
         public virtual void ImageInRotatedBlockTest02() {
-            String outFileName = destinationFolder + "imageInRotatedBlockTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_imageInRotatedBlockTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "imageInRotatedBlockTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_imageInRotatedBlockTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
-            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
-                ));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
+                "Desert.jpg"));
             image.SetWidth(200);
             Div div = new Div();
             div.SetHeight(100);
@@ -636,14 +639,14 @@ namespace iText.Layout {
             doc.Add(div);
             doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BlockWithBorderBoxSizingTest01() {
-            String outFileName = destinationFolder + "blockWithBorderBoxSizingTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_blockWithBorderBoxSizingTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "blockWithBorderBoxSizingTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_blockWithBorderBoxSizingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div();
@@ -656,15 +659,15 @@ namespace iText.Layout {
             div.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MarginsRotatedTest01() {
             //TODO: currently is incorrect. See DEVSIX-989
-            String outFileName = destinationFolder + "marginsRotatedTest01.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "marginsRotatedTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "marginsRotatedTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "marginsRotatedTest01.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
                 );
@@ -673,15 +676,15 @@ namespace iText.Layout {
                 , 100, 10).SetBorder(new SolidBorder(ColorConstants.BLUE, 5));
             doc.Add(d.Add(d1));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MarginsRotatedTest02() {
             //TODO: currently is incorrect. See DEVSIX-989
-            String outFileName = destinationFolder + "marginsRotatedTest02.pdf";
-            String cmpFileName = sourceFolder + cmpPrefix + "marginsRotatedTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "marginsRotatedTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "marginsRotatedTest02.pdf";
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
@@ -692,15 +695,15 @@ namespace iText.Layout {
             doc.Add(d.Add(d1).Add(new Paragraph("Hello").SetMargin(50).SetBorder(new SolidBorder(ColorConstants.GREEN, 
                 5))));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ZeroDegreeRotatedWithAlignmentParagraphInDivTest() {
             //TODO: update cmp file after fixing DEVSIX-4458
-            String outFileName = destinationFolder + "zeroDegreeRotatedWithAlignmentParagraphInDiv.pdf";
-            String cmpFileName = sourceFolder + "cmp_zeroDegreeRotatedWithAlignmentParagraphInDiv.pdf";
+            String outFileName = DESTINATION_FOLDER + "zeroDegreeRotatedWithAlignmentParagraphInDiv.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_zeroDegreeRotatedWithAlignmentParagraphInDiv.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
@@ -713,15 +716,15 @@ namespace iText.Layout {
                 (MathUtil.ToRadians(0)));
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void Rotated180DegreesWithAlignmentParagraphInDivTest() {
             //TODO: update cmp file after fixing DEVSIX-4458
-            String outFileName = destinationFolder + "rotated180DegreesWithAlignmentParagraphInDiv.pdf";
-            String cmpFileName = sourceFolder + "cmp_rotated180DegreesWithAlignmentParagraphInDiv.pdf";
+            String outFileName = DESTINATION_FOLDER + "rotated180DegreesWithAlignmentParagraphInDiv.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_rotated180DegreesWithAlignmentParagraphInDiv.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
@@ -734,15 +737,15 @@ namespace iText.Layout {
                 (MathUtil.ToRadians(180)));
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void Rotated90DegreesWithAlignmentParagraphInDivTest() {
             //TODO: update cmp file after fixing DEVSIX-4458
-            String outFileName = destinationFolder + "rotated90DegreesWithAlignmentParagraphInDiv.pdf";
-            String cmpFileName = sourceFolder + "cmp_rotated90DegreesWithAlignmentParagraphInDiv.pdf";
+            String outFileName = DESTINATION_FOLDER + "rotated90DegreesWithAlignmentParagraphInDiv.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_rotated90DegreesWithAlignmentParagraphInDiv.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.BLACK, 1));
@@ -755,15 +758,15 @@ namespace iText.Layout {
                 (MathUtil.ToRadians(90)));
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void RotatedWithAlignmentCellInTableTest() {
             //TODO: update cmp file after fixing DEVSIX-4458
-            String outFileName = destinationFolder + "rotatedWithAlignmentCellInTable.pdf";
-            String cmpFileName = sourceFolder + "cmp_rotatedWithAlignmentCellInTable.pdf";
+            String outFileName = DESTINATION_FOLDER + "rotatedWithAlignmentCellInTable.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_rotatedWithAlignmentCellInTable.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(1);
@@ -776,8 +779,41 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IgnorePageRotationForContentTest() {
+            String inputFile = SOURCE_FOLDER + "rotated.pdf";
+            String compareFile = SOURCE_FOLDER + "cmp_ignorePageRotationForContent.pdf";
+            String outputFile = DESTINATION_FOLDER + "ignorePageRotationForContent.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    PdfExtGState gs1 = new PdfExtGState().SetFillOpacity(0.5f);
+                    PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    Paragraph paragraph = new Paragraph("My watermark (text)").SetFont(font).SetFontSize(30);
+                    PdfPage pdfPage = pdfDoc.GetPage(1);
+                    Rectangle pageSize = pdfPage.GetPageSizeWithRotation();
+                    // When "true": in case the page has a rotation, then new content will be automatically rotated in the
+                    // opposite direction. On the rotated page this would look as if new content ignores page rotation.
+                    pdfPage.SetIgnorePageRotationForContent(true);
+                    float x = (pageSize.GetLeft() + pageSize.GetRight()) / 2;
+                    float y = (pageSize.GetTop() + pageSize.GetBottom()) / 2;
+                    PdfCanvas over = new PdfCanvas(pdfPage);
+                    over.SaveState();
+                    over.SetExtGState(gs1);
+                    // Each showTextAligned call creates new PdfCanvas instance for the same page.
+                    doc.ShowTextAligned(paragraph, x, y + 100, 1, TextAlignment.CENTER, VerticalAlignment.TOP, 0);
+                    doc.ShowTextAligned(paragraph, x, y, 1, TextAlignment.CENTER, VerticalAlignment.TOP, 0);
+                    doc.ShowTextAligned(paragraph, x, y - 100, 1, TextAlignment.CENTER, VerticalAlignment.TOP, 0);
+                    over.RestoreState();
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, compareFile, DESTINATION_FOLDER
+                ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outputFile, compareFile, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         private void DrawCross(PdfCanvas canvas, float x, float y) {

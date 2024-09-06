@@ -1427,7 +1427,7 @@ namespace iText.Forms.Fields {
         private static PdfString GenerateDefaultAppearance(PdfName font, float fontSize, Color textColor) {
             System.Diagnostics.Debug.Assert(font != null);
             MemoryStream output = new MemoryStream();
-            PdfOutputStream pdfStream = new PdfOutputStream(new OutputStream<Stream>(output));
+            PdfOutputStream pdfStream = new PdfOutputStream(new HighPrecisionOutputStream<Stream>(output));
             byte[] g = new byte[] { (byte)'g' };
             byte[] rg = new byte[] { (byte)'r', (byte)'g' };
             byte[] k = new byte[] { (byte)'k' };

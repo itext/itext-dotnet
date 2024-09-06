@@ -28,13 +28,13 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.IO.Source {
-    public class OutputStreamTest : ExtendedITextTest {
+    public class HighPrecisionOutputStreamTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/source/OSTEST.txt";
 
         private static Stream IO_EXCEPTION_OUTPUT_STREAM;
 
-        static OutputStreamTest() {
+        static HighPrecisionOutputStreamTest() {
             try {
                 IO_EXCEPTION_OUTPUT_STREAM = new FileStream(SOURCE_FOLDER, FileMode.Append);
                 IO_EXCEPTION_OUTPUT_STREAM.Dispose();
@@ -49,7 +49,7 @@ namespace iText.IO.Source {
             //the data is random
             double? expected = 2.002d;
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes, false)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes, false)) {
                     stream.SetLocalHighPrecision(true);
                     stream.WriteDouble((double)expected);
                     stream.Flush();
@@ -63,7 +63,7 @@ namespace iText.IO.Source {
             //the data is random
             double? expected = 2.002d;
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes, false)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes, false)) {
                     stream.SetLocalHighPrecision(false);
                     stream.WriteDouble((double)expected);
                     stream.Flush();
@@ -78,7 +78,7 @@ namespace iText.IO.Source {
             //the data is random
             String expected = "0";
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteDouble(double.NaN);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(expected, Encoding.UTF8.GetString(bytes.ToArray()));
@@ -91,7 +91,7 @@ namespace iText.IO.Source {
             //the data is random
             byte[] expected = new byte[] { (byte)68, (byte)14, (byte)173, (byte)105 };
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.Write(expected);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(expected, bytes.ToArray());
@@ -104,7 +104,7 @@ namespace iText.IO.Source {
             //the data is random
             byte expected = (byte)193;
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteByte(expected);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(new byte[] { expected }, bytes.ToArray());
@@ -117,7 +117,7 @@ namespace iText.IO.Source {
             //the data is random
             int expected = 1695609641;
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteInteger(expected);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(JavaUtil.IntegerToString(expected), Encoding.UTF8.GetString(bytes.ToArray()));
@@ -130,7 +130,7 @@ namespace iText.IO.Source {
             //the data is random
             long? expected = 1695609641552L;
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteLong((long)expected);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(Convert.ToString(expected), Encoding.UTF8.GetString(bytes.ToArray()));
@@ -143,7 +143,7 @@ namespace iText.IO.Source {
             //the data is random
             float[] expected = new float[] { 12.05f, 0.001f };
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteFloats(expected);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(expected[0] + " " + expected[1], Encoding.UTF8.GetString(bytes.ToArray()));
@@ -156,7 +156,7 @@ namespace iText.IO.Source {
             //the data is random
             byte[] expected = new byte[] { (byte)58, (byte)97 };
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteBytes(new byte[] { (byte)15, (byte)233, (byte)58, (byte)97 }, 2, 2);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(expected, bytes.ToArray());
@@ -169,7 +169,7 @@ namespace iText.IO.Source {
             NUnit.Framework.Assert.That(() =>  {
                 byte[] bytesToWrite = new byte[] { (byte)71 };
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.WriteBytes(bytesToWrite);
                     }
                 }
@@ -183,7 +183,7 @@ namespace iText.IO.Source {
             NUnit.Framework.Assert.That(() =>  {
                 byte byteToWrite = (byte)71;
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.WriteByte(byteToWrite);
                     }
                 }
@@ -198,7 +198,7 @@ namespace iText.IO.Source {
                 //the data is random
                 int byteToWrite = 71;
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.WriteByte(byteToWrite);
                     }
                 }
@@ -213,7 +213,7 @@ namespace iText.IO.Source {
                 //the data is random
                 double num = 55.55d;
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.WriteDouble(num);
                     }
                 }
@@ -228,7 +228,7 @@ namespace iText.IO.Source {
                 //the data is random
                 long num = 55L;
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.WriteLong(num);
                     }
                 }
@@ -241,7 +241,7 @@ namespace iText.IO.Source {
         public virtual void WriteValidStringTest() {
             String expected = "Test string to write";
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteString(expected);
                     stream.WriteNewLine();
                     stream.Flush();
@@ -252,7 +252,7 @@ namespace iText.IO.Source {
 
         [NUnit.Framework.Test]
         public virtual void GettersAndSettersTest() {
-            OutputStream<Stream> stream = new OutputStream<Stream>();
+            HighPrecisionOutputStream<Stream> stream = new HighPrecisionOutputStream<Stream>();
             stream.SetCloseStream(true);
             NUnit.Framework.Assert.IsTrue(stream.IsCloseStream());
             stream.SetCloseStream(false);
@@ -266,7 +266,7 @@ namespace iText.IO.Source {
             //the data is random
             byte[] expected = new byte[] { (byte)15, (byte)233, (byte)58, (byte)97 };
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteBytes(expected);
                     stream.Flush();
                     NUnit.Framework.Assert.AreEqual(expected, bytes.ToArray());
@@ -279,7 +279,7 @@ namespace iText.IO.Source {
             //the data is random
             byte[] expected = new byte[] { (byte)15, (byte)233, (byte)58, (byte)97 };
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.AssignBytes(expected, 4);
                     NUnit.Framework.Assert.AreEqual(expected, bytes.ToArray());
                 }
@@ -292,7 +292,7 @@ namespace iText.IO.Source {
                 //the data is random
                 byte[] bytes = new byte[] { (byte)15, (byte)233, (byte)58, (byte)97 };
                 using (Stream outputStream = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(outputStream)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(outputStream)) {
                         stream.AssignBytes(bytes, 4);
                     }
                 }
@@ -305,7 +305,7 @@ namespace iText.IO.Source {
         public virtual void ResetTestNoException() {
             byte[] expected = new byte[] {  };
             using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                     stream.WriteBytes(new byte[] { (byte)15, (byte)233, (byte)58, (byte)97 });
                     stream.Flush();
                     stream.Reset();
@@ -318,7 +318,7 @@ namespace iText.IO.Source {
         public virtual void ResetExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
-                    using (OutputStream<ByteArrayOutputStream> stream = new OutputStream<ByteArrayOutputStream>(bytes)) {
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.Reset();
                     }
                 }
@@ -330,15 +330,15 @@ namespace iText.IO.Source {
         [NUnit.Framework.Test]
         public virtual void LocalHighPrecisionOverridesGlobalTest() {
 
-            bool highPrecision = OutputStream<ByteArrayOutputStream>.GetHighPrecision();
+            bool highPrecision = HighPrecisionOutputStream<ByteArrayOutputStream>.GetHighPrecision();
 
             //the data is random
             double? numberToWrite = 2.002d;
             try {
                 using (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-                    using (OutputStream<ByteArrayOutputStream> stream =
-                           new OutputStream<ByteArrayOutputStream>(bytes, false)) {
-                        OutputStream<ByteArrayOutputStream>.SetHighPrecision(true);
+                    using (HighPrecisionOutputStream<ByteArrayOutputStream> stream =
+                           new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes, false)) {
+                        HighPrecisionOutputStream<ByteArrayOutputStream>.SetHighPrecision(true);
                         stream.SetLocalHighPrecision(false);
                         stream.WriteDouble((double)numberToWrite);
                         stream.Flush();
@@ -347,7 +347,7 @@ namespace iText.IO.Source {
                 }
             }
             finally {
-                OutputStream<ByteArrayOutputStream>.SetHighPrecision(highPrecision);
+                HighPrecisionOutputStream<ByteArrayOutputStream>.SetHighPrecision(highPrecision);
             }
         }
     }

@@ -71,11 +71,11 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal const short ORIGINAL_OBJECT_STREAM = 1 << 4;
 
-        /// <summary>For internal usage only.</summary>
+        /// <summary>Marks objects that shall be written to the output document.</summary>
         /// <remarks>
-        /// For internal usage only. Marks objects that shall be written to the output document.
-        /// Option is needed to build the correct PDF objects tree when closing the document.
-        /// As a result it avoids writing unused (removed) objects.
+        /// Marks objects that shall be written to the output document. Shouldn't be used on purpose
+        /// since this flag is handled internally: option is needed to build the correct PDF objects
+        /// tree when closing the document. As a result it avoids writing unused (removed) objects.
         /// </remarks>
         protected internal const short MUST_BE_FLUSHED = 1 << 5;
 

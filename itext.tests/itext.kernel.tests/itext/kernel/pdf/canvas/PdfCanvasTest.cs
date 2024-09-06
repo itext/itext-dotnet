@@ -57,8 +57,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_77 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_77() {
+        private sealed class _ContentProvider_76 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_76() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_77();
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_76();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -242,12 +242,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_378());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_377());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_378 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_378() {
+        private sealed class _ContentProvider_377 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_377() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -860,7 +860,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CanvasStreamFlushedNoException() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfStream stream = new _PdfStream_1112();
+            PdfStream stream = new _PdfStream_1111();
             stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 new PdfCanvas(stream, new PdfResources(), doc);
@@ -868,8 +868,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _PdfStream_1112 : PdfStream {
-            public _PdfStream_1112() {
+        private sealed class _PdfStream_1111 : PdfStream {
+            public _PdfStream_1111() {
                 this.isFlushed = false;
             }
 
@@ -889,7 +889,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             ReaderProperties properties = new ReaderProperties();
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1135();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1134();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
             properties.SetMemoryLimitsAwareHandler(handler);
             PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
@@ -900,8 +900,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_1135 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_1135() {
+        private sealed class _MemoryLimitsAwareHandler_1134 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1134() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -1212,6 +1212,28 @@ namespace iText.Kernel.Pdf.Canvas {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void IgnorePageRotationForContentTest() {
+            String outPdf = DESTINATION_FOLDER + "ignorePageRotationForContent.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_ignorePageRotationForContent.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
+                pdfDoc.GetDocumentInfo().SetAuthor(AUTHOR).SetCreator(CREATOR).SetTitle(TITLE);
+                PdfPage page = pdfDoc.AddNewPage().SetRotation(270);
+                // When "true": in case the page has a rotation, then new content will be automatically rotated in the
+                // opposite direction. On the rotated page this would look as if new content ignores page rotation.
+                page.SetIgnorePageRotationForContent(true);
+                PdfCanvas canvas = new PdfCanvas(page, false);
+                canvas.SaveState().BeginText().MoveText(180, 350).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA
+                    ), 30).ShowText("Page rotation is set to 270 degrees,").EndText().RestoreState();
+                PdfCanvas canvas2 = new PdfCanvas(page, false);
+                canvas2.SaveState().BeginText().MoveText(180, 250).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.
+                    HELVETICA), 30).ShowText("but new content ignores page rotation").EndText().RestoreState();
+                page.Flush();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
         private void CreateStandardDocument(PdfWriter writer, int pageCount, PdfCanvasTest.ContentProvider contentProvider
             ) {
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -1229,7 +1251,7 @@ namespace iText.Kernel.Pdf.Canvas {
         private void AssertStandardDocument(String filename, int pageCount) {
             PdfReader reader = CompareTool.CreateOutputReader(filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary info = pdfDocument.GetTrailer().GetAsDictionary(PdfName.Info);
             NUnit.Framework.Assert.AreEqual(AUTHOR, info.Get(PdfName.Author).ToString(), "Author");
             NUnit.Framework.Assert.AreEqual(CREATOR, info.Get(PdfName.Creator).ToString(), "Creator");

@@ -249,10 +249,10 @@ namespace iText.Kernel.Pdf.Canvas {
                 page.NewContentStreamBefore().GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("q\n"));
                 contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("Q\n"));
             }
-            if (page.GetRotation() != 0 && page.IsIgnorePageRotationForContent() && (wrapOldContent || !page.IsPageRotationInverseMatrixWritten
-                ())) {
+            if (page.GetRotation() != 0 && page.IsIgnorePageRotationForContent() && (wrapOldContent || !PageContentRotationHelper
+                .IsPageRotationInverseMatrixWritten(page))) {
                 ApplyRotation(page);
-                page.SetPageRotationInverseMatrixWritten();
+                PageContentRotationHelper.SetPageRotationInverseMatrixWritten(page);
             }
             this.drawingOnPage = true;
         }
