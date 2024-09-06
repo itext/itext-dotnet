@@ -170,10 +170,12 @@ namespace iText.Pdfua.Checkers.Utils.Headings {
                 checker = new HeadingsChecker(context);
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override bool NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 checker.CheckStructElement(elem);
-                return true;
             }
         }
     }

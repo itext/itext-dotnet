@@ -38,8 +38,6 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private readonly ICollection<ITagTreeIteratorHandler> handlerList;
 
-        private readonly TagTreeIteratorElementApprover approver;
-
         private readonly TagTreeIterator.TreeTraversalOrder traversalOrder;
 
         /// <summary>
@@ -49,35 +47,23 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <remarks>
         /// Creates a new instance of
         /// <see cref="TagTreeIterator"/>
-        /// . It will use
-        /// <see cref="TagTreeIteratorElementApprover"/>
-        /// to filter
-        /// elements and TreeTraversalOrder.PRE_ORDER for tree traversal.
+        /// . It will use TreeTraversalOrder.PRE_ORDER for tree traversal.
         /// </remarks>
         /// <param name="tagTreePointer">the tag tree pointer.</param>
         public TagTreeIterator(IStructureNode tagTreePointer)
-            : this(tagTreePointer, new TagTreeIteratorElementApprover(), TagTreeIterator.TreeTraversalOrder.PRE_ORDER) {
+            : this(tagTreePointer, TagTreeIterator.TreeTraversalOrder.PRE_ORDER) {
         }
 
         /// <summary>
         /// Creates a new instance of
         /// <see cref="TagTreeIterator"/>.
         /// </summary>
-        /// <param name="tagTreePointer">the tag tree pointer.</param>
-        /// <param name="approver">
-        /// a filter that will be called to let iterator know whether some particular element
-        /// should be traversed or not.
-        /// </param>
+        /// <param name="tagTreePointer">the tag tree pointer</param>
         /// <param name="traversalOrder">an order in which the tree will be traversed.</param>
-        public TagTreeIterator(IStructureNode tagTreePointer, TagTreeIteratorElementApprover approver, TagTreeIterator.TreeTraversalOrder
-             traversalOrder) {
+        public TagTreeIterator(IStructureNode tagTreePointer, TagTreeIterator.TreeTraversalOrder traversalOrder) {
             if (tagTreePointer == null) {
                 throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL
                     , "tagTreepointer"));
-            }
-            if (approver == null) {
-                throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL
-                    , "approver"));
             }
             if (traversalOrder == null) {
                 throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL
@@ -86,7 +72,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             this.pointer = tagTreePointer;
             this.traversalOrder = traversalOrder;
             handlerList = new HashSet<ITagTreeIteratorHandler>();
-            this.approver = approver;
         }
 
         /// <summary>Adds a handler that will be called for the elements during the traversal.</summary>
@@ -116,14 +101,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         private void Traverse(IStructureNode elem) {
-            if (!approver.Approve(elem)) {
-                return;
+            foreach (ITagTreeIteratorHandler handler in handlerList) {
+                if (!handler.Accept(elem)) {
+                    return;
+                }
             }
             if (traversalOrder == TagTreeIterator.TreeTraversalOrder.PRE_ORDER) {
                 foreach (ITagTreeIteratorHandler handler in handlerList) {
-                    if (!handler.NextElement(elem)) {
-                        return;
-                    }
+                    handler.ProcessElement(elem);
                 }
             }
             IList<IStructureNode> kids = elem.GetKids();
@@ -134,7 +119,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             if (traversalOrder == TagTreeIterator.TreeTraversalOrder.POST_ORDER) {
                 foreach (ITagTreeIteratorHandler handler in handlerList) {
-                    handler.NextElement(elem);
+                    handler.ProcessElement(elem);
                 }
             }
         }

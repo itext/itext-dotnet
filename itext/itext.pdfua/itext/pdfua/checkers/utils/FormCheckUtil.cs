@@ -48,19 +48,22 @@ namespace iText.Pdfua.Checkers.Utils {
                 : base(context) {
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override bool NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 PdfStructElem form = context.GetElementIfRoleMatches(PdfName.Form, elem);
                 if (form == null) {
-                    return true;
+                    return;
                 }
                 PdfDictionary formField = GetInteractiveKidForm(form);
                 if (formField == null) {
-                    return true;
+                    return;
                 }
                 // Check is not applicable for hidden annotations
                 if (!AnnotationCheckUtil.IsAnnotationVisible(formField)) {
-                    return true;
+                    return;
                 }
                 // Parent check is required for the case when form field and widget annotation are split up.
                 // It is still not 100% correct because TU is not inheritable thus shouldn't be taken into account
@@ -72,7 +75,6 @@ namespace iText.Pdfua.Checkers.Utils {
                 if (formField.Get(PdfName.TU) == null && !parentContainsTU && form.GetAlt() == null) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION);
                 }
-                return true;
             }
 
             /// <summary>Gets a widget annotation kid if it exists.</summary>

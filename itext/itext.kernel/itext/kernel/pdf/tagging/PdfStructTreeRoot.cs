@@ -587,8 +587,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private static void FlushAllKids(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot elem) {
-            TagTreeIterator iterator = new TagTreeIterator(elem, new TagTreeIteratorAvoidDuplicatesApprover(), TagTreeIterator.TreeTraversalOrder
-                .POST_ORDER);
+            TagTreeIterator iterator = new TagTreeIterator(elem, TagTreeIterator.TreeTraversalOrder.POST_ORDER);
             iterator.AddHandler(new TagTreeIteratorFlusher());
             iterator.Traverse();
         }

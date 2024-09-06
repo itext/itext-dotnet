@@ -33,18 +33,19 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// Is used to handle specific events during the traversal.
     /// </remarks>
     public interface ITagTreeIteratorHandler {
-        /// <summary>Called when the next element is reached during the traversal.</summary>
-        /// <param name="elem">the next element</param>
+        /// <summary>Checks whether the element should be traversed.</summary>
+        /// <param name="node">the element to check</param>
         /// <returns>
         /// 
         /// <see langword="true"/>
         /// if the iteration should be continued,
         /// <see langword="false"/>
-        /// otherwise. Note that this value
-        /// is relevant only in case
-        /// <see cref="TreeTraversalOrder.PRE_ORDER"/>
-        /// is used for the traversal
+        /// otherwise
         /// </returns>
-        bool NextElement(IStructureNode elem);
+        bool Accept(IStructureNode node);
+
+        /// <summary>Called when the next element is reached during the traversal to process it.</summary>
+        /// <param name="elem">the element to process</param>
+        void ProcessElement(IStructureNode elem);
     }
 }

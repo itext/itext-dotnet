@@ -20,37 +20,46 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
     /// <summary>
-    /// Element checker for
+    /// Handler for
     /// <see cref="TagTreeIterator"/>.
     /// </summary>
     /// <remarks>
-    /// Element checker for
+    /// Handler for
     /// <see cref="TagTreeIterator"/>.
     /// It is used to check whether specific element should be traversed.
+    /// It doesn't accept elements which have been traversed before.
     /// </remarks>
-    public class TagTreeIteratorElementApprover {
-        /// <summary>
-        /// Creates a new instance of
-        /// <see cref="TagTreeIteratorElementApprover"/>
-        /// </summary>
-        public TagTreeIteratorElementApprover() {
+    public abstract class AbstractAvoidDuplicatesTagTreeIteratorHandler : ITagTreeIteratorHandler {
+        private readonly ICollection<PdfObject> processedObjects = new HashSet<PdfObject>();
+
+        public virtual bool Accept(IStructureNode node) {
+            if (node is PdfStructTreeRoot) {
+                return true;
+            }
+            else {
+                if (!(node is PdfStructElem)) {
+                    return false;
+                }
+                else {
+                    PdfObject obj = ((PdfStructElem)node).GetPdfObject();
+                    bool isProcessed = processedObjects.Contains(obj);
+                    if (isProcessed) {
+                        return false;
+                    }
+                    else {
+                        processedObjects.Add(obj);
+                        return true;
+                    }
+                }
+            }
         }
 
-        // Empty constructor
-        /// <summary>Checks whether the element should be traversed.</summary>
-        /// <param name="elem">the element to check</param>
-        /// <returns>
-        /// 
-        /// <see langword="true"/>
-        /// if the element should be traversed,
-        /// <c>false otherwise</c>
-        /// </returns>
-        public virtual bool Approve(IStructureNode elem) {
-            return elem != null;
-        }
+        public abstract void ProcessElement(IStructureNode arg1);
     }
 }

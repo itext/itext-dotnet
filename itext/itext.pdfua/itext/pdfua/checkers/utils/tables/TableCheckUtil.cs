@@ -57,14 +57,16 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
                 : base(context) {
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override bool NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 PdfStructElem table = context.GetElementIfRoleMatches(PdfName.Table, elem);
                 if (table == null) {
-                    return true;
+                    return;
                 }
                 new StructTreeResultMatrix((PdfStructElem)elem, context).CheckValidTableTagging();
-                return true;
             }
         }
     }

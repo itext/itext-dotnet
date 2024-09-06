@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
@@ -27,21 +29,47 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// Class that flushes struct elements while iterating over struct tree root with
     /// <see cref="TagTreeIterator"/>.
     /// </summary>
-    public class TagTreeIteratorFlusher : ITagTreeIteratorHandler {
+    public class TagTreeIteratorFlusher : AbstractAvoidDuplicatesTagTreeIteratorHandler {
+        private ICollection<PdfDictionary> waitingTags;
+
+        private bool waitingTagsUsed = false;
+
         /// <summary>
         /// Creates a new instance of
-        /// <see cref="TagTreeIteratorFlusher"/>
+        /// <see cref="TagTreeIteratorFlusher"/>.
         /// </summary>
         public TagTreeIteratorFlusher() {
         }
 
         // Empty constructor
-        /// <summary><inheritDoc/></summary>
-        public virtual bool NextElement(IStructureNode elem) {
+        /// <summary>
+        /// Sets waiting tags for
+        /// <see cref="TagTreeIteratorFlusher"/>.
+        /// </summary>
+        /// <param name="waitingTags">waiting tags to set</param>
+        /// <returns>
+        /// this same
+        /// <see cref="TagTreeIteratorFlusher"/>
+        /// instance
+        /// </returns>
+        public virtual ITagTreeIteratorHandler SetWaitingTags(ICollection<PdfDictionary> waitingTags) {
+            this.waitingTags = waitingTags;
+            this.waitingTagsUsed = true;
+            return this;
+        }
+
+        public override bool Accept(IStructureNode node) {
+            if (waitingTagsUsed) {
+                return base.Accept(node) && node is PdfStructElem && (waitingTags == null || !waitingTags.Contains(((PdfStructElem
+                    )node).GetPdfObject()));
+            }
+            return base.Accept(node);
+        }
+
+        public override void ProcessElement(IStructureNode elem) {
             if (elem is PdfStructElem && !((PdfStructElem)elem).IsFlushed()) {
                 ((PdfStructElem)elem).Flush();
             }
-            return true;
         }
     }
 }

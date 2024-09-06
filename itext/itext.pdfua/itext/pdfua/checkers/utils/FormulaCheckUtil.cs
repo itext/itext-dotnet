@@ -61,17 +61,19 @@ namespace iText.Pdfua.Checkers.Utils {
                 : base(context) {
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override bool NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 PdfStructElem structElem = context.GetElementIfRoleMatches(PdfName.Formula, elem);
                 if (structElem == null) {
-                    return true;
+                    return;
                 }
                 PdfDictionary pdfObject = structElem.GetPdfObject();
                 if (HasInvalidValues(pdfObject.GetAsString(PdfName.Alt), pdfObject.GetAsString(PdfName.ActualText))) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.FORMULA_SHALL_HAVE_ALT);
                 }
-                return true;
             }
         }
     }

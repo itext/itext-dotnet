@@ -41,17 +41,6 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TagTreeIteratorApproverNull() {
-            String errorMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "approver"
-                );
-            PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream(), new WriterProperties()));
-            doc.SetTagged();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new TagTreeIterator(doc.GetStructTreeRoot
-                (), null, TagTreeIterator.TreeTraversalOrder.PRE_ORDER));
-            NUnit.Framework.Assert.AreEqual(e.Message, errorMessage);
-        }
-
-        [NUnit.Framework.Test]
         public virtual void TagTreeIteratorHandlerNull() {
             String errorMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "handler"
                 );
@@ -109,8 +98,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             tp.MoveToParent();
             tp.AddTag(StandardRoles.DIV);
             tp.AddTag(StandardRoles.CODE);
-            TagTreeIterator iterator = new TagTreeIterator(doc.GetStructTreeRoot(), new TagTreeIteratorElementApprover
-                (), TagTreeIterator.TreeTraversalOrder.POST_ORDER);
+            TagTreeIterator iterator = new TagTreeIterator(doc.GetStructTreeRoot(), TagTreeIterator.TreeTraversalOrder
+                .POST_ORDER);
             TagTreeIteratorTest.TestHandler handler = new TagTreeIteratorTest.TestHandler();
             iterator.AddHandler(handler);
             iterator.Traverse();
@@ -134,9 +123,10 @@ namespace iText.Kernel.Pdf.Tagutils {
             doc.GetStructTreeRoot().AddKid(kid2);
             kid1.AddKid(kid2);
             kid2.AddKid(kid1);
-            TagTreeIterator iterator = new TagTreeIterator(doc.GetStructTreeRoot(), new TagTreeIteratorAvoidDuplicatesApprover
-                (), TagTreeIterator.TreeTraversalOrder.POST_ORDER);
-            TagTreeIteratorTest.TestHandler handler = new TagTreeIteratorTest.TestHandler();
+            TagTreeIterator iterator = new TagTreeIterator(doc.GetStructTreeRoot(), TagTreeIterator.TreeTraversalOrder
+                .POST_ORDER);
+            TagTreeIteratorTest.TestHandlerAvoidDuplicates handler = new TagTreeIteratorTest.TestHandlerAvoidDuplicates
+                ();
             iterator.AddHandler(handler);
             iterator.Traverse();
             NUnit.Framework.Assert.AreEqual(3, handler.nodes.Count);
@@ -151,9 +141,24 @@ namespace iText.Kernel.Pdf.Tagutils {
             internal readonly IList<IStructureNode> nodes = new List<IStructureNode>();
 //\endcond
 
-            public virtual bool NextElement(IStructureNode elem) {
+            public virtual bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public virtual void ProcessElement(IStructureNode elem) {
                 nodes.Add(elem);
-                return true;
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal class TestHandlerAvoidDuplicates : AbstractAvoidDuplicatesTagTreeIteratorHandler {
+//\cond DO_NOT_DOCUMENT
+            internal readonly IList<IStructureNode> nodes = new List<IStructureNode>();
+//\endcond
+
+            public override void ProcessElement(IStructureNode elem) {
+                nodes.Add(elem);
             }
         }
 //\endcond

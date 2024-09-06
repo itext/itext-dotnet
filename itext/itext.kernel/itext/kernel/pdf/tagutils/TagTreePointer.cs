@@ -762,8 +762,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE);
             }
             TagTreePointer.RoleFinderHandler handler = new TagTreePointer.RoleFinderHandler(n, role);
-            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), new TagTreeIteratorAvoidDuplicatesApprover
-                (), TagTreeIterator.TreeTraversalOrder.PRE_ORDER);
+            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), TagTreeIterator.TreeTraversalOrder.
+                PRE_ORDER);
             iterator.AddHandler(handler);
             iterator.Traverse();
             PdfStructElem elem = handler.GetFoundElement();
@@ -1127,7 +1127,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private class RoleFinderHandler : ITagTreeIteratorHandler {
+        private class RoleFinderHandler : AbstractAvoidDuplicatesTagTreeIteratorHandler {
             private readonly int n;
 
             private readonly String role;
@@ -1143,19 +1143,22 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
 //\endcond
 
-            public virtual bool NextElement(IStructureNode elem) {
+            public virtual PdfStructElem GetFoundElement() {
+                return foundElem;
+            }
+
+            public override bool Accept(IStructureNode node) {
+                return GetFoundElement() == null && base.Accept(node);
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 if (foundElem != null) {
-                    return false;
+                    return;
                 }
                 String descendantRole = elem.GetRole().GetValue();
                 if (descendantRole.Equals(role) && foundIdx++ == n) {
                     foundElem = (PdfStructElem)elem;
                 }
-                return true;
-            }
-
-            public virtual PdfStructElem GetFoundElement() {
-                return foundElem;
             }
         }
     }

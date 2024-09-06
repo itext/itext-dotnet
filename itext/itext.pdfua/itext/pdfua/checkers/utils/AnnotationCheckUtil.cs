@@ -84,15 +84,18 @@ namespace iText.Pdfua.Checkers.Utils {
                 : base(context) {
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override bool NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 if (!(elem is PdfObjRef)) {
-                    return true;
+                    return;
                 }
                 PdfObjRef objRef = (PdfObjRef)elem;
                 PdfDictionary annotObj = objRef.GetReferencedObject();
                 if (annotObj == null) {
-                    return true;
+                    return;
                 }
                 if (annotObj.GetAsDictionary(PdfName.P) != null) {
                     PdfDictionary pageDict = annotObj.GetAsDictionary(PdfName.P);
@@ -103,7 +106,7 @@ namespace iText.Pdfua.Checkers.Utils {
                 }
                 PdfName subtype = annotObj.GetAsName(PdfName.Subtype);
                 if (!IsAnnotationVisible(annotObj) || PdfName.Popup.Equals(subtype)) {
-                    return true;
+                    return;
                 }
                 if (PdfName.PrinterMark.Equals(subtype)) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.PRINTER_MARK_IS_NOT_PERMITTED);
@@ -132,7 +135,6 @@ namespace iText.Pdfua.Checkers.Utils {
                     ActionCheckUtil.CheckAction(action);
                     CheckAAEntry(additionalActions);
                 }
-                return true;
             }
 
             private static void CheckAAEntry(PdfDictionary additionalActions) {

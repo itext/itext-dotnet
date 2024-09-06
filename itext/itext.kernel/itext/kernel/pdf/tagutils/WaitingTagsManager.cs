@@ -38,9 +38,9 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// Waiting state could also be perceived as a temporal association of the object to some particular tag.
     /// </remarks>
     public class WaitingTagsManager {
-        private IDictionary<Object, PdfStructElem> associatedObjToWaitingTag;
+        private readonly IDictionary<Object, PdfStructElem> associatedObjToWaitingTag;
 
-        private IDictionary<PdfDictionary, Object> waitingTagToAssociatedObj;
+        private readonly IDictionary<PdfDictionary, Object> waitingTagToAssociatedObj;
 
 //\cond DO_NOT_DOCUMENT
         internal WaitingTagsManager() {
@@ -222,9 +222,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (waitingTagToAssociatedObj.ContainsKey(elem.GetPdfObject())) {
                 return;
             }
-            TagTreeIterator iterator = new TagTreeIterator(elem, new WaitingTagsManager.WaitingTagsApprover(waitingTagToAssociatedObj
-                .Keys), TagTreeIterator.TreeTraversalOrder.POST_ORDER);
-            iterator.AddHandler(new TagTreeIteratorFlusher());
+            TagTreeIterator iterator = new TagTreeIterator(elem, TagTreeIterator.TreeTraversalOrder.POST_ORDER);
+            iterator.AddHandler(new TagTreeIteratorFlusher().SetWaitingTags(waitingTagToAssociatedObj.Keys));
             iterator.Traverse();
         }
 
@@ -235,20 +234,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (parent is PdfStructElem && ((PdfStructElem)parent).IsFlushed()) {
                     FlushStructElementAndItKids(structElem);
                 }
-            }
-        }
-
-        private class WaitingTagsApprover : TagTreeIteratorAvoidDuplicatesApprover {
-            private readonly ICollection<PdfDictionary> waitingTags;
-
-            public WaitingTagsApprover(ICollection<PdfDictionary> waitingTags)
-                : base() {
-                this.waitingTags = waitingTags;
-            }
-
-            public override bool Approve(IStructureNode elem) {
-                return base.Approve(elem) && elem is PdfStructElem && (waitingTags == null || !waitingTags.Contains(((PdfStructElem
-                    )elem).GetPdfObject()));
             }
         }
     }
