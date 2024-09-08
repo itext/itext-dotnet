@@ -616,5 +616,15 @@ namespace iText.Signatures.Validation {
                     (0).HasNumberOfLogs(0));
             }
         }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void PdfVersionAddedTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfVersionAdded.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
     }
 }

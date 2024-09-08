@@ -53,6 +53,20 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FormWithSameFieldReferencesTest() {
+            String srcFileName = SOURCE_FOLDER + "formWithSameFieldReferences.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_formWithSameFieldReferences.pdf";
+            String outFileName = DESTINATION_FOLDER + "formWithSameFieldReferences.pdf";
+            using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(sourceDoc, true);
+                NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
+                NUnit.Framework.Assert.IsNull(acroForm.GetField("Field").GetKids());
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MergeMergedFieldsWithTheSameNamesTest() {
             String srcFileName = SOURCE_FOLDER + "fieldMergedWithWidget.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_mergeMergedFieldsWithTheSameNames.pdf";

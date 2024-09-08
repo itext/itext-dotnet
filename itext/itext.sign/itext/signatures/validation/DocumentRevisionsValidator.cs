@@ -1693,6 +1693,7 @@ namespace iText.Signatures.Validation {
             catalogCopy.Remove(PdfName.AcroForm);
             catalogCopy.Remove(PdfName.Pages);
             catalogCopy.Remove(PdfName.StructTreeRoot);
+            catalogCopy.Remove(PdfName.Version);
             return catalogCopy;
         }
 
