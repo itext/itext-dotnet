@@ -29,6 +29,7 @@ using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto.Securityhandler;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Mac;
 using iText.Kernel.Pdf.Filters;
 using iText.Kernel.XMP;
 
@@ -1548,22 +1549,32 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             encrypted = true;
+            MacIntegrityProtector mac = null;
+            if (trailer.GetAsDictionary(PdfName.AuthCode) != null && trailer.GetAsDictionary(PdfName.AuthCode).GetAsString
+                (PdfName.MAC) != null) {
+                mac = new MacIntegrityProtector(pdfDocument, trailer.GetAsDictionary(PdfName.AuthCode));
+            }
             PdfName filter = enc.GetAsName(PdfName.Filter);
             if (PdfName.Adobe_PubSec.Equals(filter)) {
                 if (properties.certificate == null) {
                     throw new PdfException(KernelExceptionMessageConstant.CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE
                         );
                 }
-                decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate);
+                decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate, mac);
             }
             else {
                 if (PdfName.Standard.Equals(filter)) {
-                    decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId());
+                    decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId(), mac);
                 }
                 else {
                     throw new UnsupportedSecurityHandlerException(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_SECURITY_HANDLER
                         , filter));
                 }
+            }
+            decrypt.CheckEncryptionPermissions();
+            if (mac != null) {
+                decrypt.ConfigureEncryptionParameters(pdfDocument, false);
+                mac.ValidateMacToken(trailer.GetAsDictionary(PdfName.AuthCode));
             }
         }
 

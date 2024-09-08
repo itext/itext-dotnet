@@ -164,6 +164,12 @@ namespace iText.Kernel.Exceptions {
 
         public const String COLOR_SPACE_NOT_FOUND = "ColorSpace not found.";
 
+        public const String CONTAINER_EMBEDDING_EXCEPTION = "IOException occurred while trying to embed MAC container into document output stream.";
+
+        public const String CONTAINER_GENERATION_EXCEPTION = "Exception occurred during MAC container generation.";
+
+        public const String CONTAINER_PARSING_EXCEPTION = "Exception occurred during MAC container parsing.";
+
         public const String CONTENT_STREAM_MUST_NOT_INVOKE_OPERATORS_THAT_SPECIFY_COLORS_OR_OTHER_COLOR_RELATED_PARAMETERS
              = "Content stream must not invoke operators that specify colors or other color related parameters in "
              + "the graphics state.";
@@ -182,6 +188,8 @@ namespace iText.Kernel.Exceptions {
         public const String DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION = "/DefaultCryptFilter not found " + "(encryption).";
 
         public const String THIS_DICTIONARY_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
+
+        public const String DIGEST_NOT_SUPPORTED = "This digest algorithm is not supported for MAC integrity protection.";
 
         public const String DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA = "Dictionary doesn't have supported font "
              + "data.";
@@ -345,6 +353,16 @@ namespace iText.Kernel.Exceptions {
         public const String LZW_DECODER_EXCEPTION = "LZW decoder exception.";
 
         public const String LZW_FLAVOUR_NOT_SUPPORTED = "LZW flavour not supported.";
+
+        public const String MAC_ALGORITHM_NOT_SUPPORTED = "This MAC algorithm is not supported.";
+
+        public const String MAC_FOR_ENCRYPTION_5 = "MAC integrity protection is only supported for encryption algorithms of version 5 or higher.";
+
+        public const String MAC_FOR_PDF_2 = "MAC integrity protection is only supported for PDF 2.0 or higher.";
+
+        public const String MAC_PERMS_WITHOUT_MAC = "Permissions bit 13 is set to zero, " + "which indicates that MAC integrity protection is enabled. However MAC container wasn't found.";
+
+        public const String MAC_VALIDATION_FAILED = "MAC integrity protection was compromised. Document content was modified.";
 
         public const String MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY = "Missing required field {0} in font dictionary.";
 
@@ -524,12 +542,16 @@ namespace iText.Kernel.Exceptions {
 
         public const String UNSUPPORTED_XOBJECT_TYPE = "Unsupported XObject type.";
 
+        public const String VALIDATION_EXCEPTION = "Unexpected exception occurred during MAC token validation.";
+
         public const String WHEN_ADDING_OBJECT_REFERENCE_TO_THE_TAG_TREE_IT_MUST_BE_CONNECTED_TO_NOT_FLUSHED_OBJECT
              = "When adding object reference to the tag tree, it must be connected to not flushed object.";
 
         public const String WHITE_POINT_IS_INCORRECTLY_SPECIFIED = "White point is incorrectly specified.";
 
         public const String WMF_IMAGE_EXCEPTION = "WMF image exception.";
+
+        public const String WRAP_ALGORITHM_NOT_SUPPORTED = "This wrapping algorithm is not supported.";
 
         public const String WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS = "Wrong media box size: {0}. Need at least 4 "
              + "arguments";

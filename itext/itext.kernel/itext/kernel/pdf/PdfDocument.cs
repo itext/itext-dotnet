@@ -55,7 +55,8 @@ namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
     public class PdfDocument : IEventDispatcher, IDisposable {
         private static readonly PdfName[] PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER = new PdfName[] { PdfName.Encrypt
-            , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm };
+            , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm, PdfName.AuthCode
+             };
 
         private static readonly IPdfPageFactory pdfPageFactory = new PdfPageFactory();
 
@@ -2140,6 +2141,7 @@ namespace iText.Kernel.Pdf {
                 }
                 xref.InitFreeReferencesList(this);
                 if (writer != null) {
+                    EnableByteArrayWritingMode();
                     if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression == null) {
                         writer.properties.isFullCompression = true;
                     }
@@ -2161,7 +2163,7 @@ namespace iText.Kernel.Pdf {
                     }
                     // We keep the original trailer of the document to preserve the original document keys,
                     // but we have to remove all standard keys that can occur in the trailer to avoid invalid pdfs
-                    if (trailer.Size() > 0) {
+                    if (!trailer.IsEmpty()) {
                         foreach (PdfName key in iText.Kernel.Pdf.PdfDocument.PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER) {
                             trailer.Remove(key);
                         }
@@ -2211,6 +2213,10 @@ namespace iText.Kernel.Pdf {
                     writer.Write((byte)'\n');
                     OverrideFullCompressionInWriterProperties(writer.properties, reader.HasXrefStm());
                     writer.crypto = reader.decrypt;
+                    if (writer.crypto != null) {
+                        writer.crypto.CheckEncryptionRequirements(this);
+                        writer.crypto.ConfigureEncryptionParameters(this, true);
+                    }
                     if (newPdfVersion != null) {
                         // In PDF 1.4, a PDF version can also be specified in the Version entry of the document catalog,
                         // essentially updating the version associated with the file by overriding the one specified in
@@ -2244,7 +2250,7 @@ namespace iText.Kernel.Pdf {
                                 encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
                             }
                             writer.crypto.CheckEncryptionRequirements(this);
-                            writer.crypto.ConfigureEncryptionParameters(this);
+                            writer.crypto.ConfigureEncryptionParameters(this, true);
                         }
                     }
                 }
@@ -2446,6 +2452,20 @@ namespace iText.Kernel.Pdf {
             return GetCatalog().GetPdfObject().ContainsKey(PdfName.AcroForm);
         }
 //\endcond
+
+        private void EnableByteArrayWritingMode() {
+            if (properties.appendMode || properties.preserveEncryption) {
+                if (reader.decrypt != null && reader.decrypt.GetMacContainer() != null) {
+                    writer.EnableByteArrayWritingMode();
+                }
+            }
+            else {
+                if (writer.properties.encryptionProperties != null && writer.properties.encryptionProperties.macProperties
+                     != null) {
+                    writer.EnableByteArrayWritingMode();
+                }
+            }
+        }
 
         private void TryFlushTagStructure(bool isAppendMode) {
             try {

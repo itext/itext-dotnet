@@ -1207,6 +1207,13 @@ namespace iText.Bouncycastle {
             wrapper.Init(true, new KeyParameter(kek));
             return wrapper.Wrap(key, 0, key.Length);
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateDecryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
+            IWrapper wrapper = new AesWrapEngine();
+            wrapper.Init(false, new KeyParameter(kek));
+            return wrapper.Unwrap(key, 0, key.Length);
+        }
 
         public IGCMBlockCipher CreateGCMBlockCipher() {
             GcmBlockCipher cipher = new GcmBlockCipher(new AesEngine());

@@ -31,7 +31,7 @@ namespace iText.IO.Source {
 		
 		private bool? localHighPrecision;
 
-		private Stream outputStream = null;
+		protected Stream outputStream = null;
 
 		private long currentPos = 0;
 

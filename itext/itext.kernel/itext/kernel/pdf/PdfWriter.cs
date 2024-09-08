@@ -28,6 +28,7 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Events;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Mac;
 using iText.Kernel.Utils;
 
@@ -77,12 +78,27 @@ namespace iText.Kernel.Pdf {
             : this(os, new WriterProperties()) {
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfWriter"/>
+        /// instance, which writes to the passed
+        /// <see cref="System.IO.Stream"/>
+        /// ,
+        /// using provided
+        /// <see cref="WriterProperties"/>.
+        /// </summary>
+        /// <param name="os">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// in which writing should happen
+        /// </param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="WriterProperties"/>
+        /// to be used during the writing
+        /// </param>
         public PdfWriter(Stream os, WriterProperties properties)
-            : base(IsByteArrayWritingMode(properties) ? (Stream)new ByteArrayOutputStream() : new CountOutputStream(FileUtil
-                .WrapWithBufferedOutputStream(os))) {
-            if (IsByteArrayWritingMode(properties)) {
-                this.originalOutputStream = os;
-            }
+            : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
             this.properties = properties;
         }
 
@@ -105,7 +121,7 @@ namespace iText.Kernel.Pdf {
             if (document != null) {
                 document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_WRITER_FLUSH, document));
             }
-            if (IsByteArrayWritingMode(properties)) {
+            if (IsByteArrayWritingMode()) {
                 CompleteByteArrayWritingMode();
             }
         }
@@ -442,10 +458,26 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual void EnableByteArrayWritingMode() {
+            if (IsByteArrayWritingMode()) {
+                throw new PdfException("Byte array writing mode is already enabled");
+            }
+            else {
+                this.originalOutputStream = this.outputStream;
+                this.outputStream = new ByteArrayOutputStream();
+            }
+        }
+//\endcond
+
         private void CompleteByteArrayWritingMode() {
             byte[] baos = ((ByteArrayOutputStream)GetOutputStream()).ToArray();
             originalOutputStream.Write(baos, 0, baos.Length);
             originalOutputStream.Dispose();
+        }
+
+        private bool IsByteArrayWritingMode() {
+            return originalOutputStream != null;
         }
 
         private void MarkArrayContentToFlush(PdfArray array) {
@@ -486,10 +518,6 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
-        }
-
-        private static bool IsByteArrayWritingMode(WriterProperties properties) {
-            return properties.encryptionProperties.macProperties != null;
         }
 
         private static bool CheckTypeOfPdfDictionary(PdfObject dictionary, PdfName expectedType) {

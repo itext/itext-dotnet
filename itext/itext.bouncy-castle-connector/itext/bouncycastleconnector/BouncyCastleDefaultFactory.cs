@@ -739,6 +739,10 @@ namespace iText.Bouncycastleconnector {
         public byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+        
+        public byte[] GenerateDecryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
 
         public IGCMBlockCipher CreateGCMBlockCipher() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);

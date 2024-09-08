@@ -1674,6 +1674,14 @@ namespace iText.Commons.Bouncycastle {
         /// <returns>encrypted key.</returns>
         byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek);
 
+        /// <summary>
+        /// Generates decrypted key based on AES256 without padding unwrapping algorithm.
+        /// </summary>
+        /// <param name="key">key to be decrypted</param>
+        /// <param name="kek">key encryption key to be used</param>
+        /// <returns>decrypted key.</returns>
+        byte[] GenerateDecryptedKeyWithAES256NoPad(byte[] key, byte[] kek);
+
         IGCMBlockCipher CreateGCMBlockCipher();
     }
 }

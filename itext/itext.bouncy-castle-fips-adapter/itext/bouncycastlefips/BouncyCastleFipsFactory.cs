@@ -1249,6 +1249,11 @@ namespace iText.Bouncycastlefips {
         public byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
             throw new NotSupportedException("Encrypted key generation with AES256 is not supported in bouncy-castle FIPS mode.");
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public byte[] GenerateDecryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
+            throw new NotSupportedException("Encrypted key generation with AES256 is not supported in bouncy-castle FIPS mode.");
+        }
 
         public IGCMBlockCipher CreateGCMBlockCipher() {
             return new GCMBlockCipherBCFips();

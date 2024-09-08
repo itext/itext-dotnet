@@ -982,6 +982,10 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName M = CreateDirectName("M");
 
+        public static readonly iText.Kernel.Pdf.PdfName MAC = CreateDirectName("MAC");
+
+        public static readonly iText.Kernel.Pdf.PdfName MACLocation = CreateDirectName("MACLocation");
+
         public static readonly iText.Kernel.Pdf.PdfName MacExpertEncoding = CreateDirectName("MacExpertEncoding");
 
         public static readonly iText.Kernel.Pdf.PdfName MacRomanEncoding = CreateDirectName("MacRomanEncoding");
@@ -1499,6 +1503,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Square = CreateDirectName("Square");
 
         public static readonly iText.Kernel.Pdf.PdfName Squiggly = CreateDirectName("Squiggly");
+
+        public static readonly iText.Kernel.Pdf.PdfName Standalone = CreateDirectName("Standalone");
 
         public static readonly iText.Kernel.Pdf.PdfName St = CreateDirectName("St");
 

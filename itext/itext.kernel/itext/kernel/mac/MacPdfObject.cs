@@ -30,8 +30,8 @@ namespace iText.Kernel.Mac {
             : base(new PdfDictionary()) {
             PdfLiteral macPlaceholder = new PdfLiteral(macContainerSize);
             PdfLiteral byteRangePlaceholder = new PdfLiteral(80);
-            GetPdfObject().Put(new PdfName("MACLocation"), new PdfName("Standalone"));
-            GetPdfObject().Put(new PdfName("MAC"), macPlaceholder);
+            GetPdfObject().Put(PdfName.MACLocation, PdfName.Standalone);
+            GetPdfObject().Put(PdfName.MAC, macPlaceholder);
             GetPdfObject().Put(PdfName.ByteRange, byteRangePlaceholder);
         }
 //\endcond
@@ -53,7 +53,7 @@ namespace iText.Kernel.Mac {
 //\endcond
 
         private PdfLiteral GetMacPlaceholder() {
-            PdfObject mac = GetPdfObject().Get(new PdfName("MAC"));
+            PdfObject mac = GetPdfObject().Get(PdfName.MAC);
             return (PdfLiteral)mac;
         }
 

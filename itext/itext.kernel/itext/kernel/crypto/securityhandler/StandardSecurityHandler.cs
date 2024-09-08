@@ -26,11 +26,11 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public abstract class StandardSecurityHandler : SecurityHandler {
-        protected internal const int PERMS_MASK_1_FOR_REVISION_2 = unchecked((int)(0xffffffc0));
+        protected internal const int PERMS_MASK_1_FOR_REVISION_2 = -64;
 
-        protected internal const int PERMS_MASK_1_FOR_REVISION_3_OR_GREATER = unchecked((int)(0xfffff0c0));
+        protected internal const int PERMS_MASK_1_FOR_REVISION_3_OR_GREATER = -8000;
 
-        protected internal const int PERMS_MASK_2 = unchecked((int)(0xfffffffc));
+        protected internal const int PERMS_MASK_2 = -4;
 
         protected internal long permissions;
 

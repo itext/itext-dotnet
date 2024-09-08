@@ -54,7 +54,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
              encryptMetadata, bool embeddedFilesOnly) {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
             encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s5);
-            encryptionDictionary.Put(PdfName.R, new PdfNumber(5));
             encryptionDictionary.Put(PdfName.V, new PdfNumber(5));
             PdfArray recipients = CreateRecipientsArray();
             PdfDictionary stdcf = new PdfDictionary();

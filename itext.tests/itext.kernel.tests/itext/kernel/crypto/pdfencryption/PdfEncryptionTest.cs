@@ -363,7 +363,7 @@ namespace iText.Kernel.Crypto.Pdfencryption {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS)]
+        [LogMessage(VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS, Count = 2)]
         public virtual void EncryptWithPasswordAes128Pdf2() {
             String filename = "encryptWithPasswordAes128Pdf2.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;

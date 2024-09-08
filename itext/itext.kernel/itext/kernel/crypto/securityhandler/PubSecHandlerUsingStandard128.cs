@@ -41,13 +41,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             encryptionDictionary.Put(PdfName.Filter, PdfName.Adobe_PubSec);
             PdfArray recipients = CreateRecipientsArray();
             if (encryptMetadata) {
-                encryptionDictionary.Put(PdfName.R, new PdfNumber(3));
                 encryptionDictionary.Put(PdfName.V, new PdfNumber(2));
                 encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s4);
                 encryptionDictionary.Put(PdfName.Recipients, recipients);
             }
             else {
-                encryptionDictionary.Put(PdfName.R, new PdfNumber(4));
                 encryptionDictionary.Put(PdfName.V, new PdfNumber(4));
                 encryptionDictionary.Put(PdfName.SubFilter, PdfName.Adbe_pkcs7_s5);
                 PdfDictionary stdcf = new PdfDictionary();

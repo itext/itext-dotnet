@@ -98,7 +98,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
              encryptMetadata, bool embeddedFilesOnly) {
             base.SetPubSecSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly);
-            encryptionDictionary.Put(PdfName.R, new PdfNumber(6));
             encryptionDictionary.Put(PdfName.V, new PdfNumber(7));
         }
     }
