@@ -189,8 +189,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private void AssertTampered(String outFile) {
-            String cmpFile = SRC + "cmp_simpleDocument.pdf";
-            NUnit.Framework.Assert.Catch(typeof(Exception), () => TryCompare(outFile, cmpFile));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(outFile, new ReaderProperties().SetPassword("secret".GetBytes
+                (System.Text.Encoding.UTF8))));
+            PdfObject obj = pdfDoc.GetPdfObject(14);
+            if (obj != null && obj.IsStream()) {
+                // Get decoded stream bytes.
+                NUnit.Framework.Assert.Catch(typeof(Exception), () => ((PdfStream)obj).GetBytes());
+            }
         }
     }
 }
