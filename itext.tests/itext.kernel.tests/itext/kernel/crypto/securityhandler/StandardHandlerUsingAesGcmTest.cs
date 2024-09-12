@@ -77,8 +77,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void TestKnownOutput() {
             String srcFile = SRC + "encryptedDocument.pdf";
+            String outFile = DEST + "encryptedDocument.pdf";
             String cmpFile = SRC + "simpleDocument.pdf";
-            TryCompare(srcFile, cmpFile);
+            using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFile, new ReaderProperties().SetPassword("supersecret"
+                .GetBytes(System.Text.Encoding.UTF8))), new PdfWriter(outFile))) {
+            }
+            // We need to copy the source file to the destination folder to be able to compare pdf files in android.
+            TryCompare(outFile, cmpFile);
         }
 
         // In all these tampered files, the stream content of object 14 has been modified.
