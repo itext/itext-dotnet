@@ -22,12 +22,20 @@
  */
 using System;
 using System.IO;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Signatures.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures
 {
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class DigestAlgorithmsManualTest : ExtendedITextTest
     {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory();
+        private static readonly bool FIPS_MODE = "BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName());
+
         [NUnit.Framework.Test]
         public virtual void DigestSHA1SunPKCS11Test()
         {
@@ -53,6 +61,14 @@ namespace iText.Signatures
                 119, 61, 92, 110, 157, 105, 4, 97, 12, 127, 194
             };
             NUnit.Framework.Assert.AreEqual(expected, hash);
+        }
+
+        [LogMessage(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
+        [NUnit.Framework.Test]
+        public virtual void NotAllowedNameGetAllowedDigestTest() {
+            String name = "SM3";
+            String oid = "1.2.156.10197.1.401";
+            NUnit.Framework.Assert.AreEqual(FIPS_MODE ? null : oid, DigestAlgorithms.GetAllowedDigest(name));
         }
     }
 }

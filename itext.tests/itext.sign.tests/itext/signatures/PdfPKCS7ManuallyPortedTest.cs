@@ -77,5 +77,17 @@ namespace iText.Signatures {
         public virtual void VerifyRsaPssSha3SignatureTest() {
             VerifyIsoExtensionExample("RSASSA-PSS", "sample-pss-sha3_256.pdf");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyEd448SignatureTest() {
+            // SHAKE256 is not available in BCFIPS
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf"
+                    ));
+            }
+            else {
+                VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
+            }
+        }
     }
 }
