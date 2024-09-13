@@ -153,7 +153,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void PdfUA2RubberStampNoContentsAnnotationsTest() {
-            String outFile = DESTINATION_FOLDER + "pdfuaRubberstampAnnotationTest.pdf";
+            String outFile = DESTINATION_FOLDER + "pdfuaRubberstampNoContentAnnotationTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);

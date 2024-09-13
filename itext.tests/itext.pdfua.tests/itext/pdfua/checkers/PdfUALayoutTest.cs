@@ -82,7 +82,7 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void SimpleParagraphWithUnderlineTest() {
-            String outPdf = DESTINATION_FOLDER + "simpleParagraphTest.pdf";
+            String outPdf = DESTINATION_FOLDER + "simpleParagraphUnderlinesTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_simpleParagraphWithUnderlineTest.pdf";
             PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
