@@ -856,7 +856,8 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
             string allowedDigest, string policyOid) {
-            return new TimeStampTokenGeneratorBC(pk, certificate, allowedDigest, policyOid);
+            String digestOid = GetDigestAlgorithmOid(allowedDigest.ToUpperInvariant());
+            return new TimeStampTokenGeneratorBC(pk, certificate, digestOid, policyOid);
         }
 
         /// <summary><inheritDoc/></summary>

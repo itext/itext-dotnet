@@ -30,6 +30,6 @@
     <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
   </ItemGroup>
 </Project>
