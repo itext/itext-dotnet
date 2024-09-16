@@ -363,13 +363,13 @@ namespace iText.Kernel.Font {
             CMapCharsetEncoder encoder = StandardCMapCharsets.GetEncoder(cmapEncoding.GetCmapName());
             if (encoder == null) {
                 int totalByteCount = 0;
-                for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
                     totalByteCount += cmapEncoding.GetCmapBytesLength(glyphLine.Get(i).GetCode());
                 }
                 // perform actual conversion
                 byte[] bytes = new byte[totalByteCount];
                 int offset = 0;
-                for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
                     usedGlyphs.Add(glyphLine.Get(i).GetCode());
                     offset = cmapEncoding.FillCmapBytes(glyphLine.Get(i).GetCode(), bytes, offset);
                 }
@@ -377,7 +377,7 @@ namespace iText.Kernel.Font {
             }
             else {
                 MemoryStream baos = new MemoryStream();
-                for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
                     Glyph g = glyphLine.Get(i);
                     usedGlyphs.Add(g.GetCode());
                     byte[] encodedBit = encoder.EncodeUnicodeCodePoint(g.GetUnicode());
@@ -683,7 +683,7 @@ namespace iText.Kernel.Font {
         public override float GetContentWidth(PdfString content) {
             float width = 0;
             GlyphLine glyphLine = DecodeIntoGlyphLine(content);
-            for (int i = glyphLine.start; i < glyphLine.end; i++) {
+            for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
                 width += glyphLine.Get(i).GetWidth();
             }
             return width;

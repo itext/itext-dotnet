@@ -71,10 +71,10 @@ namespace iText.IO.Font.Otf {
                 (this, new OtfReadCommonTest.RandomAccesArrayTest(this, null), 0, null, null, 1);
             // at 15 we fill up all values
             GposValueRecord valueRecord = OtfReadCommon.ReadGposValueRecord(gposTableReader, 15);
-            NUnit.Framework.Assert.AreEqual(2000, valueRecord.XAdvance);
-            NUnit.Framework.Assert.AreEqual(2000, valueRecord.XPlacement);
-            NUnit.Framework.Assert.AreEqual(2000, valueRecord.YAdvance);
-            NUnit.Framework.Assert.AreEqual(2000, valueRecord.YPlacement);
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.GetXAdvance());
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.GetXPlacement());
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.GetYAdvance());
+            NUnit.Framework.Assert.AreEqual(2000, valueRecord.GetYPlacement());
         }
 
 //\cond DO_NOT_DOCUMENT

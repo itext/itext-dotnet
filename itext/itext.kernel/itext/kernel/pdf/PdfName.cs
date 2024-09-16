@@ -1838,7 +1838,7 @@ namespace iText.Kernel.Pdf {
         protected internal String value = null;
 
         /// <summary>map strings to all known static names</summary>
-        public static IDictionary<String, iText.Kernel.Pdf.PdfName> staticNames;
+        public static readonly IDictionary<String, iText.Kernel.Pdf.PdfName> staticNames;
 
         static PdfName() {
             staticNames = PdfNameLoader.LoadNames();

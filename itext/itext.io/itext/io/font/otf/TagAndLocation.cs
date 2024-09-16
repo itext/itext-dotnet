@@ -24,8 +24,32 @@ using System;
 
 namespace iText.IO.Font.Otf {
     public class TagAndLocation {
-        public String tag;
+        private String tag;
 
-        public int location;
+        private int location;
+
+        /// <summary>Retrieves the tag of the object.</summary>
+        /// <returns>tag</returns>
+        public virtual String GetTag() {
+            return tag;
+        }
+
+        /// <summary>Sets the tag of the object.</summary>
+        /// <param name="tag">tag</param>
+        public virtual void SetTag(String tag) {
+            this.tag = tag;
+        }
+
+        /// <summary>Retrieves the location of the object.</summary>
+        /// <returns>location</returns>
+        public virtual int GetLocation() {
+            return location;
+        }
+
+        /// <summary>Sets the location of the object.</summary>
+        /// <param name="location">location</param>
+        public virtual void SetLocation(int location) {
+            this.location = location;
+        }
     }
 }

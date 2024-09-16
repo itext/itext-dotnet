@@ -22,16 +22,42 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
     public class GposAnchor {
-        public int XCoordinate;
+        private int xCoordinate;
 
-        public int YCoordinate;
+        private int yCoordinate;
 
         public GposAnchor() {
         }
 
+        /// <summary>Creates a Gpos Anchor object based on a given Gpos Anchor object.</summary>
+        /// <param name="other">other Gpos Anchor object</param>
         public GposAnchor(iText.IO.Font.Otf.GposAnchor other) {
-            this.XCoordinate = other.XCoordinate;
-            this.YCoordinate = other.YCoordinate;
+            this.xCoordinate = other.xCoordinate;
+            this.yCoordinate = other.yCoordinate;
+        }
+
+        /// <summary>Retrieves the X coordinate of the Gpos Anchor.</summary>
+        /// <returns>X coordinate</returns>
+        public virtual int GetXCoordinate() {
+            return xCoordinate;
+        }
+
+        /// <summary>Sets the x coordinate of the Gpos Anchor.</summary>
+        /// <param name="xCoordinate">X coordinate</param>
+        public virtual void SetXCoordinate(int xCoordinate) {
+            this.xCoordinate = xCoordinate;
+        }
+
+        /// <summary>Retrieves the Y coordinate of the Gpos Anchor.</summary>
+        /// <returns>Y coordinate</returns>
+        public virtual int GetYCoordinate() {
+            return yCoordinate;
+        }
+
+        /// <summary>Sets the Y coordinate of the Gpos Anchor.</summary>
+        /// <param name="yCoordinate">Y coordinate</param>
+        public virtual void SetYCoordinate(int yCoordinate) {
+            this.yCoordinate = yCoordinate;
         }
     }
 }

@@ -36,11 +36,11 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return false;
             }
-            if (openReader.IsSkip(line.Get(line.idx).GetCode(), lookupFlag)) {
-                line.idx++;
+            if (openReader.IsSkip(line.Get(line.GetIdx()).GetCode(), lookupFlag)) {
+                line.SetIdx(line.GetIdx() + 1);
                 return false;
             }
             foreach (OpenTableLookup lookup in listRules) {
@@ -48,7 +48,7 @@ namespace iText.IO.Font.Otf {
                     return true;
                 }
             }
-            ++line.idx;
+            line.SetIdx(line.GetIdx() + 1);
             return false;
         }
 
@@ -82,24 +82,24 @@ namespace iText.IO.Font.Otf {
             }
 
             public override bool TransformOne(GlyphLine line) {
-                if (line.idx >= line.end || line.idx < line.start) {
+                if (line.GetIdx() >= line.GetEnd() || line.GetIdx() < line.GetStart()) {
                     return false;
                 }
                 bool changed = false;
-                Glyph g1 = line.Get(line.idx);
+                Glyph g1 = line.Get(line.GetIdx());
                 IDictionary<int, GposLookupType2.PairValueFormat> m = gposMap.Get(g1.GetCode());
                 if (m != null) {
                     OpenTableLookup.GlyphIndexer gi = new OpenTableLookup.GlyphIndexer();
-                    gi.line = line;
-                    gi.idx = line.idx;
+                    gi.SetLine(line);
+                    gi.SetIdx(line.GetIdx());
                     gi.NextGlyph(openReader, lookupFlag);
-                    if (gi.glyph != null) {
-                        GposLookupType2.PairValueFormat pv = m.Get(gi.glyph.GetCode());
+                    if (gi.GetGlyph() != null) {
+                        GposLookupType2.PairValueFormat pv = m.Get(gi.GetGlyph().GetCode());
                         if (pv != null) {
-                            Glyph g2 = gi.glyph;
-                            line.Set(line.idx, new Glyph(g1, 0, 0, pv.first.XAdvance, pv.first.YAdvance, 0));
-                            line.Set(gi.idx, new Glyph(g2, 0, 0, pv.second.XAdvance, pv.second.YAdvance, 0));
-                            line.idx = gi.idx;
+                            Glyph g2 = gi.GetGlyph();
+                            line.Set(line.GetIdx(), new Glyph(g1, 0, 0, pv.GetFirst().GetXAdvance(), pv.GetFirst().GetYAdvance(), 0));
+                            line.Set(gi.GetIdx(), new Glyph(g2, 0, 0, pv.GetSecond().GetXAdvance(), pv.GetSecond().GetYAdvance(), 0));
+                            line.SetIdx(gi.GetIdx());
                             changed = true;
                         }
                     }
@@ -123,8 +123,8 @@ namespace iText.IO.Font.Otf {
                     for (int j = 0; j < pairValueCount; ++j) {
                         int glyph2 = openReader.rf.ReadUnsignedShort();
                         GposLookupType2.PairValueFormat pair = new GposLookupType2.PairValueFormat();
-                        pair.first = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat1);
-                        pair.second = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat2);
+                        pair.SetFirst(OtfReadCommon.ReadGposValueRecord(openReader, valueFormat1));
+                        pair.SetSecond(OtfReadCommon.ReadGposValueRecord(openReader, valueFormat2));
                         pairs.Put(glyph2, pair);
                     }
                 }
@@ -151,10 +151,10 @@ namespace iText.IO.Font.Otf {
             }
 
             public override bool TransformOne(GlyphLine line) {
-                if (line.idx >= line.end || line.idx < line.start) {
+                if (line.GetIdx() >= line.GetEnd() || line.GetIdx() < line.GetStart()) {
                     return false;
                 }
-                Glyph g1 = line.Get(line.idx);
+                Glyph g1 = line.Get(line.GetIdx());
                 if (!coverageSet.Contains(g1.GetCode())) {
                     return false;
                 }
@@ -164,21 +164,21 @@ namespace iText.IO.Font.Otf {
                     return false;
                 }
                 OpenTableLookup.GlyphIndexer gi = new OpenTableLookup.GlyphIndexer();
-                gi.line = line;
-                gi.idx = line.idx;
+                gi.SetLine(line);
+                gi.SetIdx(line.GetIdx());
                 gi.NextGlyph(openReader, lookupFlag);
-                if (gi.glyph == null) {
+                if (gi.GetGlyph() == null) {
                     return false;
                 }
-                Glyph g2 = gi.glyph;
+                Glyph g2 = gi.GetGlyph();
                 int c2 = classDef2.GetOtfClass(g2.GetCode());
                 if (c2 >= pvs.Length) {
                     return false;
                 }
                 GposLookupType2.PairValueFormat pv = pvs[c2];
-                line.Set(line.idx, new Glyph(g1, 0, 0, pv.first.XAdvance, pv.first.YAdvance, 0));
-                line.Set(gi.idx, new Glyph(g2, 0, 0, pv.second.XAdvance, pv.second.YAdvance, 0));
-                line.idx = gi.idx;
+                line.Set(line.GetIdx(), new Glyph(g1, 0, 0, pv.GetFirst().GetXAdvance(), pv.GetFirst().GetYAdvance(), 0));
+                line.Set(gi.GetIdx(), new Glyph(g2, 0, 0, pv.GetSecond().GetXAdvance(), pv.GetSecond().GetYAdvance(), 0));
+                line.SetIdx(gi.GetIdx());
                 return true;
             }
 
@@ -195,8 +195,8 @@ namespace iText.IO.Font.Otf {
                     posSubs.Put(k, pairs);
                     for (int j = 0; j < class2Count; ++j) {
                         GposLookupType2.PairValueFormat pair = new GposLookupType2.PairValueFormat();
-                        pair.first = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat1);
-                        pair.second = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat2);
+                        pair.SetFirst(OtfReadCommon.ReadGposValueRecord(openReader, valueFormat1));
+                        pair.SetSecond(OtfReadCommon.ReadGposValueRecord(openReader, valueFormat2));
                         pairs[j] = pair;
                     }
                 }
@@ -211,9 +211,33 @@ namespace iText.IO.Font.Otf {
         }
 
         private class PairValueFormat {
-            public GposValueRecord first;
+            private GposValueRecord first;
 
-            public GposValueRecord second;
+            private GposValueRecord second;
+
+            /// <summary>Retrieves the first object of the pair.</summary>
+            /// <returns>first object</returns>
+            public virtual GposValueRecord GetFirst() {
+                return first;
+            }
+
+            /// <summary>Sets the first object of the pair.</summary>
+            /// <param name="first">first object</param>
+            public virtual void SetFirst(GposValueRecord first) {
+                this.first = first;
+            }
+
+            /// <summary>Retrieves the second object of the pair.</summary>
+            /// <returns>second object</returns>
+            public virtual GposValueRecord GetSecond() {
+                return second;
+            }
+
+            /// <summary>Sets the second object of the pair.</summary>
+            /// <param name="second">second object</param>
+            public virtual void SetSecond(GposValueRecord second) {
+                this.second = second;
+            }
         }
     }
 }

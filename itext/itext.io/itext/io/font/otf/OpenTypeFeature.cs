@@ -35,11 +35,11 @@ namespace iText.IO.Font.Otf {
             TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable);
             foreach (TagAndLocation tagLoc in tagsLocs) {
                 // +2 don't use FeatureParams
-                openTypeReader.rf.Seek(tagLoc.location + 2L);
+                openTypeReader.rf.Seek(tagLoc.GetLocation() + 2L);
                 int lookupCount = openTypeReader.rf.ReadUnsignedShort();
                 FeatureRecord rec = new FeatureRecord();
-                rec.tag = tagLoc.tag;
-                rec.lookups = openTypeReader.ReadUShortArray(lookupCount);
+                rec.SetTag(tagLoc.GetTag());
+                rec.SetLookups(openTypeReader.ReadUShortArray(lookupCount));
                 records.Add(rec);
             }
         }

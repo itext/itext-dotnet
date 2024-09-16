@@ -87,20 +87,20 @@ namespace iText.IO.Font.Otf {
         public static GposValueRecord ReadGposValueRecord(OpenTypeFontTableReader tableReader, int mask) {
             GposValueRecord vr = new GposValueRecord();
             if ((mask & 0x0001) != 0) {
-                vr.XPlacement = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
-                    ();
+                vr.SetXPlacement(FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ());
             }
             if ((mask & 0x0002) != 0) {
-                vr.YPlacement = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
-                    ();
+                vr.SetYPlacement(FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ());
             }
             if ((mask & 0x0004) != 0) {
-                vr.XAdvance = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
-                    ();
+                vr.SetXAdvance(FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ());
             }
             if ((mask & 0x0008) != 0) {
-                vr.YAdvance = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
-                    ();
+                vr.SetYAdvance(FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                    ());
             }
             if ((mask & 0x0010) != 0) {
                 tableReader.rf.Skip(2);
@@ -127,10 +127,10 @@ namespace iText.IO.Font.Otf {
             switch (format) {
                 default: {
                     t = new GposAnchor();
-                    t.XCoordinate = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
-                        ();
-                    t.YCoordinate = FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
-                        ();
+                    t.SetXCoordinate(FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                        ());
+                    t.SetYCoordinate(FontProgram.ConvertGlyphSpaceToTextSpace(tableReader.rf.ReadShort()) / tableReader.GetUnitsPerEm
+                        ());
                     break;
                 }
             }
@@ -150,8 +150,8 @@ namespace iText.IO.Font.Otf {
             IList<OtfMarkRecord> marks = new List<OtfMarkRecord>();
             for (int k = 0; k < markCount; ++k) {
                 OtfMarkRecord rec = new OtfMarkRecord();
-                rec.markClass = classes[k];
-                rec.anchor = ReadGposAnchor(tableReader, locations[k]);
+                rec.SetMarkClass(classes[k]);
+                rec.SetAnchor(ReadGposAnchor(tableReader, locations[k]));
                 marks.Add(rec);
             }
             return marks;

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using System.Text;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -29,6 +30,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -467,19 +469,19 @@ namespace iText.Layout.Renderer {
             Document doc = new Document(pdfDoc);
             Text text = new Text("If getNextRenderer() is not overridden and text overflows to the next line," + " then customizations are not applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_738(text));
+            text.SetNextRenderer(new _TextRenderer_742(text));
             doc.Add(new Paragraph(text));
             text = new Text("If getNextRenderer() is overridden and text overflows to the next line, " + "then customizations are applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_754(text));
+            text.SetNextRenderer(new _TextRenderer_758(text));
             doc.Add(new Paragraph(text));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
 
-        private sealed class _TextRenderer_738 : TextRenderer {
-            public _TextRenderer_738(Text baseArg1)
+        private sealed class _TextRenderer_742 : TextRenderer {
+            public _TextRenderer_742(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -490,8 +492,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_754 : TextRenderer {
-            public _TextRenderer_754(Text baseArg1)
+        private sealed class _TextRenderer_758 : TextRenderer {
+            public _TextRenderer_758(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -585,7 +587,7 @@ namespace iText.Layout.Renderer {
                 longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
             }
             iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
-            text.SetNextRenderer(new _TextRenderer_889(text));
+            text.SetNextRenderer(new _TextRenderer_893(text));
             doc.Add(new Paragraph(text));
             text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
             doc.Add(new Paragraph(text));
@@ -594,14 +596,112 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _TextRenderer_889 : TextRenderer {
-            public _TextRenderer_889(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_893 : TextRenderer {
+            public _TextRenderer_893(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
             public override void Draw(DrawContext drawContext) {
                 drawContext.GetCanvas().SaveState().SetFillColor(ColorConstants.RED).Rectangle(this.occupiedArea.GetBBox()
                     ).Fill().RestoreState();
+                base.Draw(drawContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((iText.Layout.Element.Text
+                    )this.modelElement);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 1)]
+        public virtual void DrawWithSkewAndHorizontalScalingTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                Document doc = new Document(pdfDocument);
+                iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRise(0).SetWordSpacing
+                    (0).SetSkew(10, 10).SetHorizontalScaling(2);
+                Paragraph paragraph = new Paragraph().Add(text);
+                paragraph.SetNextRenderer(new _TextRenderer_932(text));
+                doc.Add(paragraph);
+                String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
+                    (), System.Text.Encoding.UTF8);
+                NUnit.Framework.Assert.IsTrue(contentstream.Contains("test string"));
+            }
+        }
+
+        private sealed class _TextRenderer_932 : TextRenderer {
+            public _TextRenderer_932(iText.Layout.Element.Text baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().Rectangle(this.occupiedArea.GetBBox()).Fill().RestoreState();
+                base.Draw(drawContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((iText.Layout.Element.Text
+                    )this.modelElement);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 1)]
+        public virtual void DrawTextRenderingModeFillStrokeTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                Document doc = new Document(pdfDocument);
+                iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                    .FILL_STROKE);
+                Paragraph paragraph = new Paragraph().Add(text).SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetStrokeWidth
+                    (1f).SetStrokeColor(null).SetBorder(new SolidBorder(1));
+                paragraph.SetNextRenderer(new _TextRenderer_970(text));
+                doc.Add(paragraph);
+                String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
+                    (), System.Text.Encoding.UTF8);
+                NUnit.Framework.Assert.IsTrue(contentstream.Contains("test string"));
+            }
+        }
+
+        private sealed class _TextRenderer_970 : TextRenderer {
+            public _TextRenderer_970(iText.Layout.Element.Text baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().Rectangle(this.occupiedArea.GetBBox()).Fill().RestoreState();
+                base.Draw(drawContext);
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((iText.Layout.Element.Text
+                    )this.modelElement);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 1)]
+        public virtual void FontColorNullTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                Document doc = new Document(pdfDocument);
+                iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                    .FILL_STROKE);
+                Paragraph paragraph = new Paragraph().Add(text);
+                paragraph.SetNextRenderer(new _TextRenderer_1003(text));
+                doc.Add(paragraph);
+                String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
+                    (), System.Text.Encoding.UTF8);
+                NUnit.Framework.Assert.IsTrue(contentstream.Contains("test string"));
+            }
+        }
+
+        private sealed class _TextRenderer_1003 : TextRenderer {
+            public _TextRenderer_1003(iText.Layout.Element.Text baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override void Draw(DrawContext drawContext) {
+                drawContext.GetCanvas().SaveState().Rectangle(this.occupiedArea.GetBBox()).Fill().RestoreState();
+                this.SetProperty(Property.FONT_COLOR, new TransparentColor(ColorConstants.RED));
                 base.Draw(drawContext);
             }
 

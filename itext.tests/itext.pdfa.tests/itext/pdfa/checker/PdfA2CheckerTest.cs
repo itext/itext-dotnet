@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -713,6 +714,56 @@ namespace iText.Pdfa.Checker {
                 , e.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckColorSpaceWithIndexedTest() {
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.Indexed, 255, new PdfString(iText.Commons.Utils.JavaUtil.GetStringForBytes
+                ("".GetBytes(System.Text.Encoding.UTF8), System.Text.Encoding.UTF8)));
+            pdfA2Checker.CheckColorSpace(indexed, null, currentColorSpaces, true, false);
+        }
+
+        //Nothing to check, no error should be thrown.
+        [NUnit.Framework.Test]
+        public virtual void CheckColorSpaceWithUnColoredTilingTest() {
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCmykCs = new PdfSpecialCs.UncoloredTilingPattern(new PdfDeviceCs.Cmyk
+                ());
+            pdfA2Checker.CheckColorSpace(uncoloredTilingCmykCs, null, currentColorSpaces, true, false);
+        }
+
+        //Nothing to check, no error should be thrown.
+        [NUnit.Framework.Test]
+        public virtual void CheckExtGateTest() {
+            PdfExtGState egs = new PdfExtGState();
+            egs.SetOverprintMode(1);
+            egs.SetFillOverPrintFlag(true);
+            egs.SetSoftMask(new PdfDictionary());
+            egs.SetStrokeOpacity(0.3f);
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas canvas = new PdfCanvas(dummyDoc.AddNewPage());
+            canvas.SetExtGState(egs);
+            CanvasGraphicsState canvasGraphicsState = new CanvasGraphicsState(canvas.GetGraphicsState());
+            pdfA2Checker.CheckExtGState(canvasGraphicsState, null);
+            NUnit.Framework.Assert.AreEqual(0.3f, canvasGraphicsState.GetStrokeOpacity(), 0.00001);
+            NUnit.Framework.Assert.IsNotNull(canvasGraphicsState.GetSoftMask());
+            NUnit.Framework.Assert.IsTrue(canvasGraphicsState.GetSoftMask().IsDictionary());
+            NUnit.Framework.Assert.IsTrue(canvasGraphicsState.GetFillOverprint());
+            NUnit.Framework.Assert.AreEqual(1, canvasGraphicsState.GetOverprintMode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckExtGateOverprintModeTest() {
+            PdfExtGState egs = new PdfExtGState();
+            egs.SetSoftMask(new PdfDictionary());
+            egs.SetStrokeOpacity(0.3f);
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas canvas = new PdfCanvas(dummyDoc.AddNewPage());
+            canvas.SetExtGState(egs);
+            CanvasGraphicsState canvasGraphicsState = new CanvasGraphicsState(canvas.GetGraphicsState());
+            pdfA2Checker.CheckExtGState(canvasGraphicsState, null);
+        }
+
+        //Nothing to check, no error should be thrown.
         private static PdfDictionary CreateSignatureDict() {
             PdfDictionary signatureDict = new PdfDictionary();
             PdfDictionary reference = new PdfDictionary();

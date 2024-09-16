@@ -24,10 +24,46 @@ using System;
 
 namespace iText.IO.Font.Otf {
     public class LanguageRecord {
-        public String tag;
+        private String tag;
 
-        public int featureRequired;
+        private int featureRequired;
 
-        public int[] features;
+        private int[] features;
+
+        /// <summary>Retrieves the tag of the language record.</summary>
+        /// <returns>tag of record</returns>
+        public virtual String GetTag() {
+            return tag;
+        }
+
+        /// <summary>Sets the tag of the language record.</summary>
+        /// <param name="tag">tag of record</param>
+        public virtual void SetTag(String tag) {
+            this.tag = tag;
+        }
+
+        /// <summary>Retrieves the feature required of the language record.</summary>
+        /// <returns>feature required</returns>
+        public virtual int GetFeatureRequired() {
+            return featureRequired;
+        }
+
+        /// <summary>Sets the feature required of the language record.</summary>
+        /// <param name="featureRequired">feature required</param>
+        public virtual void SetFeatureRequired(int featureRequired) {
+            this.featureRequired = featureRequired;
+        }
+
+        /// <summary>Retrieves the features of the language record.</summary>
+        /// <returns>features</returns>
+        public virtual int[] GetFeatures() {
+            return features;
+        }
+
+        /// <summary>Sets the features of the language record.</summary>
+        /// <param name="features">features</param>
+        public virtual void SetFeatures(int[] features) {
+            this.features = features;
+        }
     }
 }

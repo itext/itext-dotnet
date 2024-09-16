@@ -39,22 +39,22 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return false;
             }
             bool changed = false;
-            Glyph g = line.Get(line.idx);
+            Glyph g = line.Get(line.GetIdx());
             bool match = false;
             if (ligatures.ContainsKey(g.GetCode()) && !openReader.IsSkip(g.GetCode(), lookupFlag)) {
                 OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-                gidx.line = line;
+                gidx.SetLine(line);
                 IList<int[]> ligs = ligatures.Get(g.GetCode());
                 foreach (int[] lig in ligs) {
                     match = true;
-                    gidx.idx = line.idx;
+                    gidx.SetIdx(line.GetIdx());
                     for (int j = 1; j < lig.Length; ++j) {
                         gidx.NextGlyph(openReader, lookupFlag);
-                        if (gidx.glyph == null || gidx.glyph.GetCode() != lig[j]) {
+                        if (gidx.GetGlyph() == null || gidx.GetGlyph().GetCode() != lig[j]) {
                             match = false;
                             break;
                         }
@@ -68,7 +68,7 @@ namespace iText.IO.Font.Otf {
             if (match) {
                 changed = true;
             }
-            line.idx++;
+            line.SetIdx(line.GetIdx() + 1);
             return changed;
         }
 

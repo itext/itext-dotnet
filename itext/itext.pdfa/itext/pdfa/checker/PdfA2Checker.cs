@@ -838,18 +838,18 @@ namespace iText.Pdfa.Checker {
                 *
                 * But, all the test files used in iText5 failed on this check, so may be my assumption is wrong.
                 */
-                if (!@params.isJp2) {
+                if (!@params.IsJp2()) {
                     /*|| !params.isJpxBaseline*/
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.ONLY_JPX_BASELINE_SET_OF_FEATURES_SHALL_BE_USED
                         );
                 }
-                if (@params.numOfComps != 1 && @params.numOfComps != 3 && @params.numOfComps != 4) {
+                if (@params.GetNumOfComps() != 1 && @params.GetNumOfComps() != 3 && @params.GetNumOfComps() != 4) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOUR_CHANNELS_IN_THE_JPEG2000_DATA_SHALL_BE_1_3_OR_4
                         );
                 }
-                if (@params.colorSpecBoxes != null && @params.colorSpecBoxes.Count > 1) {
+                if (@params.GetColorSpecBoxes() != null && @params.GetColorSpecBoxes().Count > 1) {
                     int numOfApprox0x01 = 0;
-                    foreach (Jpeg2000ImageData.ColorSpecBox colorSpecBox in @params.colorSpecBoxes) {
+                    foreach (Jpeg2000ImageData.ColorSpecBox colorSpecBox in @params.GetColorSpecBoxes()) {
                         if (colorSpecBox.GetApprox() == 1) {
                             ++numOfApprox0x01;
                             if (numOfApprox0x01 == 1 && colorSpecBox.GetMeth() != 1 && colorSpecBox.GetMeth() != 2 && colorSpecBox.GetMeth
@@ -899,7 +899,7 @@ namespace iText.Pdfa.Checker {
                 // The Bits Per Component box specifies the bit depth of each component.
                 // If the bit depth of all components in the codestream is the same (in both sign and precision),
                 // then this box shall not be found. Otherwise, this box specifies the bit depth of each individual component.
-                if (@params.bpcBoxData != null) {
+                if (@params.GetBpcBoxData() != null) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.ALL_COLOUR_CHANNELS_IN_THE_JPEG2000_DATA_SHALL_HAVE_THE_SAME_BIT_DEPTH
                         );
                 }

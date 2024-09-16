@@ -90,7 +90,7 @@ namespace iText.IO.Image {
                 Jpeg2000ImageHelper.Jpeg2000Box box = new Jpeg2000ImageHelper.Jpeg2000Box();
                 box.length = Cio_read(4, jpeg2000Stream);
                 if (box.length == 0x0000000c) {
-                    jp2.parameters.isJp2 = true;
+                    jp2.parameters.SetJp2(true);
                     box.type = Cio_read(4, jpeg2000Stream);
                     if (JP2_JP != box.type) {
                         throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.EXPECTED_JP_MARKER);
@@ -105,7 +105,7 @@ namespace iText.IO.Image {
                     StreamUtil.Skip(jpeg2000Stream, 8);
                     for (int i = 4; i < box.length / 4; ++i) {
                         if (Cio_read(4, jpeg2000Stream) == JPX_JPXB) {
-                            jp2.parameters.isJpxBaseline = true;
+                            jp2.parameters.SetJpxBaseline(true);
                         }
                     }
                     Jp2_read_boxhdr(box, jpeg2000Stream);
@@ -125,21 +125,23 @@ namespace iText.IO.Image {
                     }
                     jp2.SetHeight(Cio_read(4, jpeg2000Stream));
                     jp2.SetWidth(Cio_read(4, jpeg2000Stream));
-                    jp2.parameters.numOfComps = Cio_read(2, jpeg2000Stream);
+                    jp2.parameters.SetNumOfComps(Cio_read(2, jpeg2000Stream));
                     jp2.SetBpc(Cio_read(1, jpeg2000Stream));
                     StreamUtil.Skip(jpeg2000Stream, 3);
                     Jp2_read_boxhdr(box, jpeg2000Stream);
                     if (box.type == JP2_BPCC) {
-                        jp2.parameters.bpcBoxData = new byte[box.length - 8];
-                        jpeg2000Stream.JRead(jp2.parameters.bpcBoxData, 0, box.length - 8);
+                        jp2.parameters.SetBpcBoxData(new byte[box.length - 8]);
+                        jpeg2000Stream.JRead(jp2.parameters.GetBpcBoxData(), 0, box.length - 8);
                     }
                     else {
                         if (box.type == JP2_COLR) {
                             do {
-                                if (jp2.parameters.colorSpecBoxes == null) {
-                                    jp2.parameters.colorSpecBoxes = new List<Jpeg2000ImageData.ColorSpecBox>();
+                                if (jp2.parameters.GetColorSpecBoxes() == null) {
+                                    jp2.parameters.SetColorSpecBoxes(new List<Jpeg2000ImageData.ColorSpecBox>());
                                 }
-                                jp2.parameters.colorSpecBoxes.Add(Jp2_read_colr(box, jpeg2000Stream));
+                                IList<Jpeg2000ImageData.ColorSpecBox> colorSpecBoxes = jp2.parameters.GetColorSpecBoxes();
+                                colorSpecBoxes.Add(Jp2_read_colr(box, jpeg2000Stream));
+                                jp2.parameters.SetColorSpecBoxes(colorSpecBoxes);
                                 try {
                                     Jp2_read_boxhdr(box, jpeg2000Stream);
                                 }

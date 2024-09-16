@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
@@ -368,6 +369,55 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNull(thirdReverseRanges);
             NUnit.Framework.Assert.AreSame(dummyImage4, childRenderers[6]);
             NUnit.Framework.Assert.AreSame(dummyImage5, childRenderers[7]);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 2)]
+        public virtual void PercentFontSizeNotSupportedTest() {
+            LineRenderer lineRenderer = new LineRenderer();
+            Leading leading = new Leading(Leading.MULTIPLIED, 1);
+            lineRenderer.SetProperty(Property.FONT_SIZE, UnitValue.CreatePercentValue(35));
+            float topLeadingIndent = lineRenderer.GetTopLeadingIndent(leading);
+            float bottomLeadingIndent = lineRenderer.GetBottomLeadingIndent(leading);
+            NUnit.Framework.Assert.AreEqual(0.0, topLeadingIndent);
+            NUnit.Framework.Assert.AreEqual(7.0, bottomLeadingIndent);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LeadingTypeUnsupportedTest() {
+            LineRenderer lineRenderer = new LineRenderer();
+            Leading leading = new Leading(new Leading(3, 3).GetLeadingType(), 1);
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => lineRenderer.GetTopLeadingIndent(leading
+                ));
+            NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => lineRenderer.GetBottomLeadingIndent(
+                leading));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetGlyphTest() {
+            Document dummyDocument = CreateDummyDocument();
+            TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", dummyDocument);
+            LineRenderer.RendererGlyph rendererGlyph = new LineRenderer.RendererGlyph(null, textRenderer);
+            rendererGlyph.SetGlyph(new Glyph('\n', 0, '\n'));
+            Glyph glyph = rendererGlyph.GetGlyph();
+            NUnit.Framework.Assert.AreEqual(1, glyph.GetChars().Length);
+            NUnit.Framework.Assert.AreEqual(0, glyph.GetWidth());
+            NUnit.Framework.Assert.AreEqual(10, glyph.GetUnicode());
+            NUnit.Framework.Assert.AreEqual(10, glyph.GetCode());
+            NUnit.Framework.Assert.IsFalse(glyph.IsMark());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetRendererTest() {
+            Document dummyDocument = CreateDummyDocument();
+            LineRenderer.RendererGlyph rendererGlyph = new LineRenderer.RendererGlyph(new Glyph('\n', 0, '\n'), null);
+            TextRenderer textRenderer = CreateLayoutedTextRenderer("hello", dummyDocument);
+            rendererGlyph.SetRenderer(textRenderer);
+            TextRenderer renderer = rendererGlyph.GetRenderer();
+            NUnit.Framework.Assert.AreEqual("hello", renderer.GetText().ToString());
+            NUnit.Framework.Assert.AreEqual(0, renderer.GetText().GetStart());
+            NUnit.Framework.Assert.AreEqual(5, renderer.GetText().GetEnd());
+            NUnit.Framework.Assert.AreEqual(0, renderer.GetText().GetIdx());
         }
     }
 }

@@ -28,13 +28,6 @@ using iText.Commons.Utils;
 namespace iText.IO.Source {
     /// <summary>Class that is used to unify reading from random access files and arrays.</summary>
     public class RandomAccessFileOrArray {
-        /// <summary>When true the file access is not done through a memory mapped file.</summary>
-        /// <remarks>
-        /// When true the file access is not done through a memory mapped file. Use it if the file
-        /// is too big to be mapped in your address space.
-        /// </remarks>
-        public static bool plainRandomAccess = false;
-
         /// <summary>The source that backs this object</summary>
         private IRandomAccessSource byteSource;
 

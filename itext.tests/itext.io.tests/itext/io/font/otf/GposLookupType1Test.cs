@@ -41,7 +41,7 @@ namespace iText.IO.Font.Otf {
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(174)), new Glyph(fontProgram
                 .GetGlyphByCode(5)));
             GlyphLine gl = new GlyphLine(glyphs);
-            gl.idx = 0;
+            gl.SetIdx(0);
             NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
             NUnit.Framework.Assert.IsTrue(lookup.TransformOne(gl));
             NUnit.Framework.Assert.AreEqual(219, gl.Get(0).GetXAdvance());
@@ -56,7 +56,7 @@ namespace iText.IO.Font.Otf {
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(5)), new Glyph(fontProgram
                 .GetGlyphByCode(174)));
             GlyphLine gl = new GlyphLine(glyphs);
-            gl.idx = 0;
+            gl.SetIdx(0);
             NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
             NUnit.Framework.Assert.IsFalse(lookup.TransformOne(gl));
             NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());

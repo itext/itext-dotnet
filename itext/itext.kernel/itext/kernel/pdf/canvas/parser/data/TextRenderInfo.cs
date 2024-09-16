@@ -100,11 +100,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             if (text == null) {
                 GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
                 if (!IsReversedChars()) {
-                    text = gl.ToUnicodeString(gl.start, gl.end);
+                    text = gl.ToUnicodeString(gl.GetStart(), gl.GetEnd());
                 }
                 else {
-                    StringBuilder sb = new StringBuilder(gl.end - gl.start);
-                    for (int i = gl.end - 1; i >= gl.start; i--) {
+                    StringBuilder sb = new StringBuilder(gl.GetEnd() - gl.GetStart());
+                    for (int i = gl.GetEnd() - 1; i >= gl.GetStart(); i--) {
                         sb.Append(gl.Get(i).GetUnicodeChars());
                     }
                     text = sb.ToString();
@@ -528,7 +528,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 // Number of bytes forming one glyph can be arbitrary from [1; 4] range
                 IList<PdfString> strings = new List<PdfString>();
                 GlyphLine glyphLine = gs.GetFont().DecodeIntoGlyphLine(@string);
-                for (int i = glyphLine.start; i < glyphLine.end; i++) {
+                for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
                     strings.Add(new PdfString(gs.GetFont().ConvertToBytes(glyphLine.Get(i))));
                 }
                 return strings.ToArray(new PdfString[strings.Count]);

@@ -49,14 +49,14 @@ namespace iText.IO.Font.Otf {
             ScriptRecord scriptFound = null;
             ScriptRecord scriptDefault = null;
             foreach (ScriptRecord sr in records) {
-                if (DEFAULT_SCRIPT.Equals(sr.tag)) {
+                if (DEFAULT_SCRIPT.Equals(sr.GetTag())) {
                     scriptDefault = sr;
                     break;
                 }
             }
             foreach (String script in scripts) {
                 foreach (ScriptRecord sr in records) {
-                    if (sr.tag.Equals(script)) {
+                    if (sr.GetTag().Equals(script)) {
                         scriptFound = sr;
                         break;
                     }
@@ -75,36 +75,38 @@ namespace iText.IO.Font.Otf {
                 return null;
             }
             LanguageRecord lang = null;
-            foreach (LanguageRecord lr in scriptFound.languages) {
-                if (lr.tag.Equals(language)) {
+            foreach (LanguageRecord lr in scriptFound.GetLanguages()) {
+                if (lr.GetTag().Equals(language)) {
                     lang = lr;
                     break;
                 }
             }
             if (lang == null) {
-                lang = scriptFound.defaultLanguage;
+                lang = scriptFound.GetDefaultLanguage();
             }
             return lang;
         }
 
         private void ReadScriptRecord(TagAndLocation tagLoc) {
-            openTypeReader.rf.Seek(tagLoc.location);
+            openTypeReader.rf.Seek(tagLoc.GetLocation());
             int locationDefaultLanguage = openTypeReader.rf.ReadUnsignedShort();
             if (locationDefaultLanguage > 0) {
-                locationDefaultLanguage += tagLoc.location;
+                locationDefaultLanguage += tagLoc.GetLocation();
             }
-            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(tagLoc.location);
+            TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(tagLoc.GetLocation());
             ScriptRecord srec = new ScriptRecord();
-            srec.tag = tagLoc.tag;
-            srec.languages = new LanguageRecord[tagsLocs.Length];
+            srec.SetTag(tagLoc.GetTag());
+            srec.SetLanguages(new LanguageRecord[tagsLocs.Length]);
             for (int k = 0; k < tagsLocs.Length; ++k) {
-                srec.languages[k] = ReadLanguageRecord(tagsLocs[k]);
+                LanguageRecord[] languages = srec.GetLanguages();
+                languages[k] = ReadLanguageRecord(tagsLocs[k]);
+                srec.SetLanguages(languages);
             }
             if (locationDefaultLanguage > 0) {
                 TagAndLocation t = new TagAndLocation();
-                t.tag = "";
-                t.location = locationDefaultLanguage;
-                srec.defaultLanguage = ReadLanguageRecord(t);
+                t.SetTag("");
+                t.SetLocation(locationDefaultLanguage);
+                srec.SetDefaultLanguage(ReadLanguageRecord(t));
             }
             records.Add(srec);
         }
@@ -112,11 +114,11 @@ namespace iText.IO.Font.Otf {
         private LanguageRecord ReadLanguageRecord(TagAndLocation tagLoc) {
             LanguageRecord rec = new LanguageRecord();
             //skip lookup order
-            openTypeReader.rf.Seek(tagLoc.location + 2);
-            rec.featureRequired = openTypeReader.rf.ReadUnsignedShort();
+            openTypeReader.rf.Seek(tagLoc.GetLocation() + 2L);
+            rec.SetFeatureRequired(openTypeReader.rf.ReadUnsignedShort());
             int count = openTypeReader.rf.ReadUnsignedShort();
-            rec.features = openTypeReader.ReadUShortArray(count);
-            rec.tag = tagLoc.tag;
+            rec.SetFeatures(openTypeReader.ReadUShortArray(count));
+            rec.SetTag(tagLoc.GetTag());
             return rec;
         }
     }

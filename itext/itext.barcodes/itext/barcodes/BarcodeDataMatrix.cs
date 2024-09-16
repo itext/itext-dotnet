@@ -296,24 +296,24 @@ namespace iText.Barcodes {
                 ], new int[textSize - extOut], new int[textSize - extOut], new int[textSize - extOut] };
             if (height == 0 || width == 0) {
                 last = dmSizes[dmSizes.Length - 1];
-                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, last.dataSize - extCount, 
-                    options, false);
+                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, last.GetDataSize() - extCount
+                    , options, false);
                 if (e < 0) {
                     return DM_ERROR_TEXT_TOO_BIG;
                 }
                 e += extCount;
                 for (k = 0; k < dmSizes.Length; ++k) {
-                    if (dmSizes[k].dataSize >= e) {
+                    if (dmSizes[k].GetDataSize() >= e) {
                         break;
                     }
                 }
                 dm = dmSizes[k];
-                height = dm.height;
-                width = dm.width;
+                height = dm.GetHeight();
+                width = dm.GetWidth();
             }
             else {
                 for (k = 0; k < dmSizes.Length; ++k) {
-                    if (height == dmSizes[k].height && width == dmSizes[k].width) {
+                    if (height == dmSizes[k].GetHeight() && width == dmSizes[k].GetWidth()) {
                         break;
                     }
                 }
@@ -321,8 +321,8 @@ namespace iText.Barcodes {
                     return DM_ERROR_INVALID_SQUARE;
                 }
                 dm = dmSizes[k];
-                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, dm.dataSize - extCount, options
-                    , true);
+                e = GetEncodation(text, textOffset + extOut, textSize - extOut, data, extCount, dm.GetDataSize() - extCount
+                    , options, true);
                 if (e < 0) {
                     return DM_ERROR_TEXT_TOO_BIG;
                 }
@@ -331,12 +331,12 @@ namespace iText.Barcodes {
             if ((options & DM_TEST) != 0) {
                 return DM_NO_ERROR;
             }
-            image = new byte[(dm.width + 2 * ws + 7) / 8 * (dm.height + 2 * ws)];
-            MakePadding(data, e, dm.dataSize - e);
-            place = Placement.DoPlacement(dm.height - dm.height / dm.heightSection * 2, dm.width - dm.width / dm.widthSection
-                 * 2);
-            full = dm.dataSize + (dm.dataSize + 2) / dm.dataBlock * dm.errorBlock;
-            ReedSolomon.GenerateECC(data, dm.dataSize, dm.dataBlock, dm.errorBlock);
+            image = new byte[(dm.GetWidth() + 2 * ws + 7) / 8 * (dm.GetHeight() + 2 * ws)];
+            MakePadding(data, e, dm.GetDataSize() - e);
+            place = Placement.DoPlacement(dm.GetHeight() - dm.GetHeight() / dm.GetHeightSection() * 2, dm.GetWidth() -
+                 dm.GetWidth() / dm.GetWidthSection() * 2);
+            full = dm.GetDataSize() + (dm.GetDataSize() + 2) / dm.GetDataBlock() * dm.GetErrorBlock();
+            ReedSolomon.GenerateECC(data, dm.GetDataSize(), dm.GetDataBlock(), dm.GetErrorBlock());
             Draw(data, full, dm);
             return DM_NO_ERROR;
         }
@@ -831,8 +831,8 @@ namespace iText.Barcodes {
                 if (!sizeFixed && (symbolIndex == text.Length - 1 || symbolIndex < 0) && textLength % 4 < 3) {
                     dataSize = int.MaxValue;
                     for (int i = 0; i < dmSizes.Length; ++i) {
-                        if (dmSizes[i].dataSize >= dataRequired + textLength % 4) {
-                            dataSize = dmSizes[i].dataSize;
+                        if (dmSizes[i].GetDataSize() >= dataRequired + textLength % 4) {
+                            dataSize = dmSizes[i].GetDataSize();
                             break;
                         }
                     }
@@ -1000,8 +1000,8 @@ namespace iText.Barcodes {
             if (!sizeFixed && (symbolIndex == text.Length - 1 || symbolIndex < 0)) {
                 dataSize = int.MaxValue;
                 for (int i = 0; i < dmSizes.Length; ++i) {
-                    if (dmSizes[i].dataSize >= dataOffset + ptrOut + (3 - pedi / 6)) {
-                        dataSize = dmSizes[i].dataSize;
+                    if (dmSizes[i].GetDataSize() >= dataOffset + ptrOut + (3 - pedi / 6)) {
+                        dataSize = dmSizes[i].GetDataSize();
                         break;
                     }
                 }
@@ -1247,38 +1247,38 @@ namespace iText.Barcodes {
             int xs;
             int ys;
             int z;
-            int xByte = (dm.width + ws * 2 + 7) / 8;
+            int xByte = (dm.GetWidth() + ws * 2 + 7) / 8;
             JavaUtil.Fill(image, (byte)0);
             //alignment patterns
             //dotted horizontal line
-            for (i = ws; i < dm.height + ws; i += dm.heightSection) {
-                for (j = ws; j < dm.width + ws; j += 2) {
+            for (i = ws; i < dm.GetHeight() + ws; i += dm.GetHeightSection()) {
+                for (j = ws; j < dm.GetWidth() + ws; j += 2) {
                     SetBit(j, i, xByte);
                 }
             }
             //solid horizontal line
-            for (i = dm.heightSection - 1 + ws; i < dm.height + ws; i += dm.heightSection) {
-                for (j = ws; j < dm.width + ws; ++j) {
+            for (i = dm.GetHeightSection() - 1 + ws; i < dm.GetHeight() + ws; i += dm.GetHeightSection()) {
+                for (j = ws; j < dm.GetWidth() + ws; ++j) {
                     SetBit(j, i, xByte);
                 }
             }
             //solid vertical line
-            for (i = ws; i < dm.width + ws; i += dm.widthSection) {
-                for (j = ws; j < dm.height + ws; ++j) {
+            for (i = ws; i < dm.GetWidth() + ws; i += dm.GetWidthSection()) {
+                for (j = ws; j < dm.GetHeight() + ws; ++j) {
                     SetBit(i, j, xByte);
                 }
             }
             //dotted vertical line
-            for (i = dm.widthSection - 1 + ws; i < dm.width + ws; i += dm.widthSection) {
-                for (j = 1 + ws; j < dm.height + ws; j += 2) {
+            for (i = dm.GetWidthSection() - 1 + ws; i < dm.GetWidth() + ws; i += dm.GetWidthSection()) {
+                for (j = 1 + ws; j < dm.GetHeight() + ws; j += 2) {
                     SetBit(i, j, xByte);
                 }
             }
             p = 0;
-            for (ys = 0; ys < dm.height; ys += dm.heightSection) {
-                for (y = 1; y < dm.heightSection - 1; ++y) {
-                    for (xs = 0; xs < dm.width; xs += dm.widthSection) {
-                        for (x = 1; x < dm.widthSection - 1; ++x) {
+            for (ys = 0; ys < dm.GetHeight(); ys += dm.GetHeightSection()) {
+                for (y = 1; y < dm.GetHeightSection() - 1; ++y) {
+                    for (xs = 0; xs < dm.GetWidth(); xs += dm.GetWidthSection()) {
+                        for (x = 1; x < dm.GetWidthSection() - 1; ++x) {
                             z = place[p++];
                             if (z == 1 || z > 1 && (data[z / 8 - 1] & 0xff & 128 >> z % 8) != 0) {
                                 SetBit(x + xs + ws, y + ys + ws, xByte);

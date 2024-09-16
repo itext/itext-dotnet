@@ -35,10 +35,10 @@ namespace iText.Kernel.Pdf {
     /// </summary>
     public class PdfOutline {
         /// <summary>A flag for displaying the outline item’s text with italic font.</summary>
-        public static int FLAG_ITALIC = 1;
+        public const int FLAG_ITALIC = 1;
 
         /// <summary>A flag for displaying the outline item’s text with bold font.</summary>
-        public static int FLAG_BOLD = 2;
+        public const int FLAG_BOLD = 2;
 
         private IList<iText.Kernel.Pdf.PdfOutline> children = new List<iText.Kernel.Pdf.PdfOutline>();
 

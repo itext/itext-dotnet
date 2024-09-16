@@ -651,19 +651,19 @@ namespace iText.Kernel.Pdf.Canvas {
             IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
             for (int partIndex = 0; partIndex < glyphLineParts.Count; ++partIndex) {
                 GlyphLine.GlyphLinePart glyphLinePart = glyphLineParts[partIndex];
-                if (glyphLinePart.actualText != null) {
+                if (glyphLinePart.GetActualText() != null) {
                     PdfDictionary properties = new PdfDictionary();
-                    properties.Put(PdfName.ActualText, new PdfString(glyphLinePart.actualText, PdfEncodings.UNICODE_BIG).SetHexWriting
-                        (true));
+                    properties.Put(PdfName.ActualText, new PdfString(glyphLinePart.GetActualText(), PdfEncodings.UNICODE_BIG).
+                        SetHexWriting(true));
                     BeginMarkedContent(PdfName.Span, properties);
                 }
                 else {
-                    if (glyphLinePart.reversed) {
+                    if (glyphLinePart.IsReversed()) {
                         BeginMarkedContent(PdfName.ReversedChars);
                     }
                 }
-                int sub = glyphLinePart.start;
-                for (int i = glyphLinePart.start; i < glyphLinePart.end; i++) {
+                int sub = glyphLinePart.GetStart();
+                for (int i = glyphLinePart.GetStart(); i < glyphLinePart.GetEnd(); i++) {
                     Glyph glyph = text.Get(i);
                     if (glyph.HasOffsets()) {
                         if (i - 1 - sub >= 0) {
@@ -727,21 +727,21 @@ namespace iText.Kernel.Pdf.Canvas {
                         sub = i + 1;
                     }
                 }
-                if (glyphLinePart.end - sub > 0) {
-                    font.WriteText(text, sub, glyphLinePart.end - 1, contentStream.GetOutputStream());
+                if (glyphLinePart.GetEnd() - sub > 0) {
+                    font.WriteText(text, sub, glyphLinePart.GetEnd() - 1, contentStream.GetOutputStream());
                     contentStream.GetOutputStream().WriteBytes(Tj);
                 }
-                if (glyphLinePart.actualText != null) {
+                if (glyphLinePart.GetActualText() != null) {
                     EndMarkedContent();
                 }
                 else {
-                    if (glyphLinePart.reversed) {
+                    if (glyphLinePart.IsReversed()) {
                         EndMarkedContent();
                     }
                 }
-                if (glyphLinePart.end > sub && partIndex + 1 < glyphLineParts.Count) {
-                    contentStream.GetOutputStream().WriteFloat(GetSubrangeWidth(text, sub, glyphLinePart.end - 1), true).WriteSpace
-                        ().WriteFloat(0).WriteSpace().WriteBytes(Td);
+                if (glyphLinePart.GetEnd() > sub && partIndex + 1 < glyphLineParts.Count) {
+                    contentStream.GetOutputStream().WriteFloat(GetSubrangeWidth(text, sub, glyphLinePart.GetEnd() - 1), true).
+                        WriteSpace().WriteFloat(0).WriteSpace().WriteBytes(Td);
                 }
             }
             return this;

@@ -45,25 +45,6 @@ namespace iText.IO.Source {
             EndOfFile
         }
 
-        public static readonly bool[] delims = new bool[] { true, true, false, false, false, false, false, false, 
-            false, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, true, false, false, false, false, true
-            , false, false, true, true, false, false, false, false, false, true, false, false, false, false, false
-            , false, false, false, false, false, false, false, true, false, true, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, true, false, true, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false };
-
         public static readonly byte[] Obj = ByteUtils.GetIsoBytes("obj");
 
         public static readonly byte[] R = ByteUtils.GetIsoBytes("R");
@@ -100,6 +81,25 @@ namespace iText.IO.Source {
 
         /// <summary>Streams are closed automatically.</summary>
         private bool closeStream = true;
+
+        private static readonly bool[] delims = new bool[] { true, true, false, false, false, false, false, false, 
+            false, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, true, false, false, false, false, true
+            , false, false, true, true, false, false, false, false, false, true, false, false, false, false, false
+            , false, false, false, false, false, false, false, true, false, true, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, true, false, true, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false };
 
         /// <summary>
         /// Creates a PdfTokenizer for the specified

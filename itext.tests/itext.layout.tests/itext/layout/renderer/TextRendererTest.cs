@@ -110,8 +110,8 @@ namespace iText.Layout.Renderer {
                 glyphLine.Add(glyph);
             }
             renderer.SetText(new GlyphLine(), pdfFont);
-            glyphLine.start = 1;
-            glyphLine.end = 2;
+            glyphLine.SetStart(1);
+            glyphLine.SetEnd(2);
             renderer.SetText(glyphLine, pdfFont);
             GlyphLine actualLine = renderer.GetText();
             NUnit.Framework.Assert.IsFalse(actualLine == glyphLine);
@@ -120,8 +120,8 @@ namespace iText.Layout.Renderer {
             // Check that the glyph line has been processed using the replaceSpecialWhitespaceGlyphs method
             NUnit.Framework.Assert.AreEqual(space.GetCode(), glyph_1.GetCode());
             NUnit.Framework.Assert.AreEqual(space.GetWidth(), glyph_1.GetWidth());
-            NUnit.Framework.Assert.AreEqual(1, actualLine.start);
-            NUnit.Framework.Assert.AreEqual(2, actualLine.end);
+            NUnit.Framework.Assert.AreEqual(1, actualLine.GetStart());
+            NUnit.Framework.Assert.AreEqual(2, actualLine.GetEnd());
         }
 
         /// <summary>

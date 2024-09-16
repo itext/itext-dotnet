@@ -46,18 +46,60 @@ namespace iText.Barcodes.Dmcode {
             this.errorBlock = errorBlock;
         }
 
-        public int height;
+        private readonly int height;
 
-        public int width;
+        private readonly int width;
 
-        public int heightSection;
+        private readonly int heightSection;
 
-        public int widthSection;
+        private readonly int widthSection;
 
-        public int dataSize;
+        private readonly int dataSize;
 
-        public int dataBlock;
+        private readonly int dataBlock;
 
-        public int errorBlock;
+        private readonly int errorBlock;
+
+        /// <summary>Retrieves the height of DmParams object.</summary>
+        /// <returns>total height value</returns>
+        public virtual int GetHeight() {
+            return height;
+        }
+
+        /// <summary>Retrieves the width of DmParams object.</summary>
+        /// <returns>total width value</returns>
+        public virtual int GetWidth() {
+            return width;
+        }
+
+        /// <summary>Retrieves the height of a single section.</summary>
+        /// <returns>total height value</returns>
+        public virtual int GetHeightSection() {
+            return heightSection;
+        }
+
+        /// <summary>Retrieves the width of a single section.</summary>
+        /// <returns>total width value</returns>
+        public virtual int GetWidthSection() {
+            return widthSection;
+        }
+
+        /// <summary>Retrieves the size of the data.</summary>
+        /// <returns>data size value</returns>
+        public virtual int GetDataSize() {
+            return dataSize;
+        }
+
+        /// <summary>Retrieves the size of the data block.</summary>
+        /// <returns>data block size value</returns>
+        public virtual int GetDataBlock() {
+            return dataBlock;
+        }
+
+        /// <summary>Retrieves the size of the error block.</summary>
+        /// <returns>error block size value</returns>
+        public virtual int GetErrorBlock() {
+            return errorBlock;
+        }
     }
 }

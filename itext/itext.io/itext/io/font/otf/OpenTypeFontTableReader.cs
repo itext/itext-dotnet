@@ -77,7 +77,7 @@ namespace iText.IO.Font.Otf {
                 return null;
             }
             IList<FeatureRecord> ret = new List<FeatureRecord>();
-            foreach (int f in rec.features) {
+            foreach (int f in rec.GetFeatures()) {
                 ret.Add(featuresType.GetRecord(f));
             }
             return ret;
@@ -94,7 +94,7 @@ namespace iText.IO.Font.Otf {
             }
             IList<FeatureRecord> recs = new List<FeatureRecord>();
             foreach (FeatureRecord rec in features) {
-                if (hs.Contains(rec.tag)) {
+                if (hs.Contains(rec.GetTag())) {
                     recs.Add(rec);
                 }
             }
@@ -106,13 +106,13 @@ namespace iText.IO.Font.Otf {
             if (rec == null) {
                 return null;
             }
-            return featuresType.GetRecord(rec.featureRequired);
+            return featuresType.GetRecord(rec.GetFeatureRequired());
         }
 
         public virtual IList<OpenTableLookup> GetLookups(FeatureRecord[] features) {
             IntHashtable hash = new IntHashtable();
             foreach (FeatureRecord rec in features) {
-                foreach (int idx in rec.lookups) {
+                foreach (int idx in rec.GetLookups()) {
                     hash.Put(idx, 1);
                 }
             }
@@ -124,8 +124,8 @@ namespace iText.IO.Font.Otf {
         }
 
         public virtual IList<OpenTableLookup> GetLookups(FeatureRecord feature) {
-            IList<OpenTableLookup> ret = new List<OpenTableLookup>(feature.lookups.Length);
-            foreach (int idx in feature.lookups) {
+            IList<OpenTableLookup> ret = new List<OpenTableLookup>(feature.GetLookups().Length);
+            foreach (int idx in feature.GetLookups()) {
                 ret.Add(lookupList[idx]);
             }
             return ret;
@@ -152,14 +152,14 @@ namespace iText.IO.Font.Otf {
                 return null;
             }
             foreach (ScriptRecord record in GetScriptRecords()) {
-                if (!otfScriptTag.Equals(record.tag)) {
+                if (!otfScriptTag.Equals(record.GetTag())) {
                     continue;
                 }
                 if (langTag == null) {
-                    return record.defaultLanguage;
+                    return record.GetDefaultLanguage();
                 }
-                foreach (LanguageRecord lang in record.languages) {
-                    if (langTag.Equals(lang.tag)) {
+                foreach (LanguageRecord lang in record.GetLanguages()) {
+                    if (langTag.Equals(lang.GetTag())) {
                         return lang;
                     }
                 }
@@ -203,8 +203,8 @@ namespace iText.IO.Font.Otf {
             TagAndLocation[] tagslLocs = new TagAndLocation[count];
             for (int k = 0; k < count; ++k) {
                 TagAndLocation tl = new TagAndLocation();
-                tl.tag = rf.ReadString(4, "utf-8");
-                tl.location = rf.ReadUnsignedShort() + baseLocation;
+                tl.SetTag(rf.ReadString(4, "utf-8"));
+                tl.SetLocation(rf.ReadUnsignedShort() + baseLocation);
                 tagslLocs[k] = tl;
             }
             return tagslLocs;

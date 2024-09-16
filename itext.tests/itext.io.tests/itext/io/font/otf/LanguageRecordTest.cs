@@ -20,36 +20,31 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
+using iText.Test;
 
 namespace iText.IO.Font.Otf {
-    public class FeatureRecord {
-        private String tag;
-
-        private int[] lookups;
-
-        /// <summary>Retrieves the tag of the feature record.</summary>
-        /// <returns>tag</returns>
-        public virtual String GetTag() {
-            return tag;
+    [NUnit.Framework.Category("UnitTest")]
+    public class LanguageRecordTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void FeaturesRequiredTest() {
+            LanguageRecord languageRecord = new LanguageRecord();
+            languageRecord.SetFeatureRequired(1);
+            NUnit.Framework.Assert.AreEqual(1, languageRecord.GetFeatureRequired());
         }
 
-        /// <summary>Sets the tag of the feature record.</summary>
-        /// <param name="tag">tag</param>
-        public virtual void SetTag(String tag) {
-            this.tag = tag;
+        [NUnit.Framework.Test]
+        public virtual void TaggingTest() {
+            LanguageRecord languageRecord = new LanguageRecord();
+            languageRecord.SetTag("tagname");
+            NUnit.Framework.Assert.AreEqual("tagname", languageRecord.GetTag());
         }
 
-        /// <summary>Retrieves the lookups of the feature record.</summary>
-        /// <returns>lookups</returns>
-        public virtual int[] GetLookups() {
-            return lookups;
-        }
-
-        /// <summary>Sets the lookups of the feature record.</summary>
-        /// <param name="lookups">lookups</param>
-        public virtual void SetLookups(int[] lookups) {
-            this.lookups = lookups;
+        [NUnit.Framework.Test]
+        public virtual void FeaturesTest() {
+            LanguageRecord languageRecord = new LanguageRecord();
+            int[] features = new int[2];
+            languageRecord.SetFeatures(features);
+            NUnit.Framework.Assert.AreEqual(2, languageRecord.GetFeatures().Length);
         }
     }
 }

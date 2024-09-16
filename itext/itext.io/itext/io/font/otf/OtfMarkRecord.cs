@@ -22,8 +22,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
     public class OtfMarkRecord {
-        public int markClass;
+        private int markClass;
 
-        public GposAnchor anchor;
+        private GposAnchor anchor;
+
+        /// <summary>Retrieves the mark class of the OtfMarkRecord.</summary>
+        /// <returns>mark class</returns>
+        public virtual int GetMarkClass() {
+            return markClass;
+        }
+
+        /// <summary>Sets the mark class of the OtfMarkRecord.</summary>
+        /// <param name="markClass">mark class</param>
+        public virtual void SetMarkClass(int markClass) {
+            this.markClass = markClass;
+        }
+
+        /// <summary>Retrieves the anchor of the OtfMarkRecord.</summary>
+        /// <returns>anchor</returns>
+        public virtual GposAnchor GetAnchor() {
+            return anchor;
+        }
+
+        /// <summary>Sets the anchor of the OtfMarkRecord.</summary>
+        /// <param name="anchor">anchor</param>
+        public virtual void SetAnchor(GposAnchor anchor) {
+            this.anchor = anchor;
+        }
     }
 }

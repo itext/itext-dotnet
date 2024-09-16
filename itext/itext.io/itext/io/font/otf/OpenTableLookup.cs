@@ -43,8 +43,8 @@ namespace iText.IO.Font.Otf {
 
         public virtual bool TransformLine(GlyphLine line) {
             bool changed = false;
-            line.idx = line.start;
-            while (line.idx < line.end && line.idx >= line.start) {
+            line.SetIdx(line.GetStart());
+            while (line.GetIdx() < line.GetEnd() && line.GetIdx() >= line.GetStart()) {
                 changed = TransformOne(line) || changed;
             }
             return changed;
@@ -63,15 +63,51 @@ namespace iText.IO.Font.Otf {
         protected internal abstract void ReadSubTable(int subTableLocation);
 
         public class GlyphIndexer {
-            public GlyphLine line;
+            private GlyphLine line;
 
-            public Glyph glyph;
+            private Glyph glyph;
 
-            public int idx;
+            private int idx;
+
+            /// <summary>Retrieves the glyph line of the object.</summary>
+            /// <returns>glyph line</returns>
+            public virtual GlyphLine GetLine() {
+                return line;
+            }
+
+            /// <summary>Sets the glyph line of the object.</summary>
+            /// <param name="line">glyph line</param>
+            public virtual void SetLine(GlyphLine line) {
+                this.line = line;
+            }
+
+            /// <summary>Retrieves the glyph of the object.</summary>
+            /// <returns>glyph</returns>
+            public virtual Glyph GetGlyph() {
+                return glyph;
+            }
+
+            /// <summary>Sets the glyph of the object.</summary>
+            /// <param name="glyph">glyph</param>
+            public virtual void SetGlyph(Glyph glyph) {
+                this.glyph = glyph;
+            }
+
+            /// <summary>Retrieves the idx of the glyph indexer.</summary>
+            /// <returns>idx</returns>
+            public virtual int GetIdx() {
+                return idx;
+            }
+
+            /// <summary>Sets the idx of the glyph indexer.</summary>
+            /// <param name="idx">idx</param>
+            public virtual void SetIdx(int idx) {
+                this.idx = idx;
+            }
 
             public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
-                while (++idx < line.end) {
+                while (++idx < line.GetEnd()) {
                     Glyph g = line.Get(idx);
                     if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                         glyph = g;
@@ -82,7 +118,7 @@ namespace iText.IO.Font.Otf {
 
             public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
-                while (--idx >= line.start) {
+                while (--idx >= line.GetStart()) {
                     Glyph g = line.Get(idx);
                     if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                         glyph = g;

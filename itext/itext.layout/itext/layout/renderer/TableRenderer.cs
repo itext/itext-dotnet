@@ -477,16 +477,16 @@ namespace iText.Layout.Renderer {
                 // if cell is in the last row on the page, its borders shouldn't collapse with the next row borders
                 while (cellProcessingQueue.Count > 0) {
                     TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.JRemoveFirst();
-                    col = currentCellInfo.column;
-                    CellRenderer cell = currentCellInfo.cellRenderer;
+                    col = currentCellInfo.GetColumn();
+                    CellRenderer cell = currentCellInfo.GetCellRenderer();
                     int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                     int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                     if (1 != rowspan) {
                         cellWithBigRowspanAdded = true;
                     }
-                    targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
+                    targetOverflowRowIndex[col] = currentCellInfo.GetFinishRowInd();
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
-                    bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
+                    bool currentCellHasBigRowspan = (row != currentCellInfo.GetFinishRowInd());
                     if (cell.HasOwnOrModelProperty(Property.HEIGHT)) {
                         rowHasCellWithSetHeight = true;
                     }
@@ -499,7 +499,7 @@ namespace iText.Layout.Renderer {
                         colOffset += countedColumnWidth[l];
                     }
                     float rowspanOffset = 0;
-                    for (int m = row - 1; m > currentCellInfo.finishRowInd - rowspan && m >= 0; m--) {
+                    for (int m = row - 1; m > currentCellInfo.GetFinishRowInd() - rowspan && m >= 0; m--) {
                         rowspanOffset += (float)heights[m];
                     }
                     float cellLayoutBoxHeight = rowspanOffset + (!currentCellHasBigRowspan || hasContent ? layoutBox.GetHeight
@@ -516,8 +516,8 @@ namespace iText.Layout.Renderer {
                         cell.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(cellWidth));
                     }
                     // Apply cell borders
-                    float[] cellIndents = bordersHandler.GetCellBorderIndents(currentCellInfo.finishRowInd, col, rowspan, colspan
-                        );
+                    float[] cellIndents = bordersHandler.GetCellBorderIndents(currentCellInfo.GetFinishRowInd(), col, rowspan, 
+                        colspan);
                     if (!(bordersHandler is SeparatedTableBorders)) {
                         // Bottom indent to be applied consists of two parts which should be summed up:
                         // a) half of the border of the current row (in case it is the last row on the area)
@@ -592,9 +592,9 @@ namespace iText.Layout.Renderer {
                             currentRow[col] = (CellRenderer)cellResult.GetSplitRenderer();
                         }
                         else {
-                            rows[currentCellInfo.finishRowInd][col] = null;
+                            rows[currentCellInfo.GetFinishRowInd()][col] = null;
                             currentRow[col] = cell;
-                            rowMoves.Put(col, currentCellInfo.finishRowInd);
+                            rowMoves.Put(col, currentCellInfo.GetFinishRowInd());
                         }
                     }
                     else {
@@ -1880,11 +1880,11 @@ namespace iText.Layout.Renderer {
 
         /// <summary>This are a structs used for convenience in layout.</summary>
         private class CellRendererInfo {
-            public CellRenderer cellRenderer;
+            private readonly CellRenderer cellRenderer;
 
-            public int column;
+            private readonly int column;
 
-            public int finishRowInd;
+            private readonly int finishRowInd;
 
             public CellRendererInfo(CellRenderer cellRenderer, int column, int finishRow) {
                 this.cellRenderer = cellRenderer;
@@ -1892,6 +1892,24 @@ namespace iText.Layout.Renderer {
                 // When a cell has a rowspan, this is the index of the finish row of the cell.
                 // Otherwise, this is simply the index of the row of the cell in the {@link #rows} array.
                 this.finishRowInd = finishRow;
+            }
+
+            /// <summary>Retrieves the cell renderer.</summary>
+            /// <returns>cell renderer</returns>
+            public virtual CellRenderer GetCellRenderer() {
+                return cellRenderer;
+            }
+
+            /// <summary>Retrieves the column.</summary>
+            /// <returns>column</returns>
+            public virtual int GetColumn() {
+                return column;
+            }
+
+            /// <summary>Retrieves the finish row index.</summary>
+            /// <returns>finish row index</returns>
+            public virtual int GetFinishRowInd() {
+                return finishRowInd;
             }
         }
 

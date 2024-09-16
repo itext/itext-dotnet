@@ -30,17 +30,17 @@ namespace iText.IO.Font.Otf {
         }
 
         public override T GetMatchingContextRule(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return null;
             }
-            Glyph g = line.Get(line.idx);
+            Glyph g = line.Get(line.GetIdx());
             IList<T> rules = GetSetOfRulesForStartGlyph(g.GetCode());
             foreach (T rule in rules) {
                 int lastGlyphIndex = CheckIfContextMatch(line, rule);
                 if (lastGlyphIndex != -1 && CheckIfLookaheadContextMatch(line, rule, lastGlyphIndex) && CheckIfBacktrackContextMatch
                     (line, rule)) {
-                    line.start = line.idx;
-                    line.end = lastGlyphIndex + 1;
+                    line.SetStart(line.GetIdx());
+                    line.SetEnd(lastGlyphIndex + 1);
                     return rule;
                 }
             }
@@ -54,11 +54,11 @@ namespace iText.IO.Font.Otf {
         /// <returns>true if given glyph line at the given position matches given rule</returns>
         protected internal virtual bool CheckIfLookaheadContextMatch(GlyphLine line, T rule, int startIdx) {
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-            gidx.line = line;
-            gidx.idx = startIdx;
+            gidx.SetLine(line);
+            gidx.SetIdx(startIdx);
             for (int j = 0; j < rule.GetLookaheadContextLength(); ++j) {
                 gidx.NextGlyph(openReader, lookupFlag);
-                if (gidx.glyph == null || !rule.IsGlyphMatchesLookahead(gidx.glyph.GetCode(), j)) {
+                if (gidx.GetGlyph() == null || !rule.IsGlyphMatchesLookahead(gidx.GetGlyph().GetCode(), j)) {
                     return false;
                 }
             }
@@ -71,11 +71,11 @@ namespace iText.IO.Font.Otf {
         /// <returns>true if given glyph line matches given rule</returns>
         protected internal virtual bool CheckIfBacktrackContextMatch(GlyphLine line, T rule) {
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-            gidx.line = line;
-            gidx.idx = line.idx;
+            gidx.SetLine(line);
+            gidx.SetIdx(line.GetIdx());
             for (int j = 0; j < rule.GetBacktrackContextLength(); ++j) {
                 gidx.PreviousGlyph(openReader, lookupFlag);
-                if (gidx.glyph == null || !rule.IsGlyphMatchesBacktrack(gidx.glyph.GetCode(), j)) {
+                if (gidx.GetGlyph() == null || !rule.IsGlyphMatchesBacktrack(gidx.GetGlyph().GetCode(), j)) {
                     return false;
                 }
             }

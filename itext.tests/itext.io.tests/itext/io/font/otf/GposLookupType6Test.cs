@@ -28,25 +28,36 @@ using iText.Test;
 
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class GposLookupType4Test : ExtendedITextTest {
+    public class GposLookupType6Test : ExtendedITextTest {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType4Test/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/";
+
+        private static readonly String FREE_SANS_FONT_PATH = RESOURCE_FOLDER + "FreeSans.ttf";
 
         [NUnit.Framework.Test]
-        public virtual void VerifyMarkToBaseAttachment() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "Padauk-Regular.ttf"
-                );
+        public virtual void IdxEqualToEndLineGpos6Test() {
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FREE_SANS_FONT_PATH);
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
-            GposLookupType4 lookup = (GposLookupType4)gposTableReader.GetLookupTable(192);
-            IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(163)), new Glyph(fontProgram
-                .GetGlyphByCode(207)), new Glyph(fontProgram.GetGlyphByCode(213)));
+            GposLookupType6 lookup = new GposLookupType6(gposTableReader, 0, new int[0]);
+            IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(445)), new Glyph(fontProgram
+                .GetGlyphByCode(394)));
             GlyphLine gl = new GlyphLine(glyphs);
             gl.SetIdx(2);
-            NUnit.Framework.Assert.AreEqual(0, gl.Get(2).GetXPlacement());
-            NUnit.Framework.Assert.AreEqual(0, gl.Get(2).GetAnchorDelta());
-            lookup.TransformOne(gl);
-            NUnit.Framework.Assert.AreEqual(364, gl.Get(2).GetXPlacement());
-            NUnit.Framework.Assert.AreEqual(-2, gl.Get(2).GetAnchorDelta());
+            bool transform = lookup.TransformOne(gl);
+            NUnit.Framework.Assert.IsFalse(transform);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IdxSmallerThanEndLineGpos6Test() {
+            TrueTypeFont font = new TrueTypeFont(FREE_SANS_FONT_PATH);
+            GlyphPositioningTableReader gposTableReader = font.GetGposTable();
+            GposLookupType6 lookup = new GposLookupType6(gposTableReader, 0, new int[0]);
+            IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(font.GetGlyphByCode(174)), new Glyph(font.GetGlyphByCode
+                (5)));
+            GlyphLine gl = new GlyphLine(glyphs);
+            gl.SetIdx(0);
+            bool transform = lookup.TransformOne(gl);
+            NUnit.Framework.Assert.IsFalse(transform);
         }
     }
 }

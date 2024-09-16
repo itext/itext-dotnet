@@ -24,7 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -51,14 +53,17 @@ namespace iText.Kernel.Pdf.Canvas {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasTest/";
 
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+
         private const String AUTHOR = "iText Software";
 
         private const String CREATOR = "iText";
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_76 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_76() {
+        private sealed class _ContentProvider_86 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_86() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -68,7 +73,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_76();
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_86();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -242,12 +247,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_377());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_387());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_377 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_377() {
+        private sealed class _ContentProvider_387 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_387() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -860,7 +865,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CanvasStreamFlushedNoException() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfStream stream = new _PdfStream_1111();
+            PdfStream stream = new _PdfStream_1121();
             stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 new PdfCanvas(stream, new PdfResources(), doc);
@@ -868,8 +873,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _PdfStream_1111 : PdfStream {
-            public _PdfStream_1111() {
+        private sealed class _PdfStream_1121 : PdfStream {
+            public _PdfStream_1121() {
                 this.isFlushed = false;
             }
 
@@ -889,7 +894,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             ReaderProperties properties = new ReaderProperties();
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1134();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1144();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
             properties.SetMemoryLimitsAwareHandler(handler);
             PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
@@ -900,8 +905,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_1134 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_1134() {
+        private sealed class _MemoryLimitsAwareHandler_1144 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1144() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -1232,6 +1237,62 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetResourcesTest() {
+            String outPdf = DESTINATION_FOLDER + "getResourcesDoc.pdf";
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
+            PdfPage page1 = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            canvas.SaveState().BeginText().MoveText(150, 400).SetFontAndSize(PdfFontFactory.CreateFont(), 8).ShowText(
+                "test text").EndText().RestoreState();
+            PdfResources resources = canvas.GetResources();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual(1, resources.GetResourceNames().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AttachContentStreamTest() {
+            String outPdf = DESTINATION_FOLDER + "attachContentStreamDoc.pdf";
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
+            PdfPage page1 = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page1);
+            canvas.AttachContentStream(new PdfStream("test".GetBytes(System.Text.Encoding.UTF8)));
+            String contentFromStream = iText.Commons.Utils.JavaUtil.GetStringForBytes(canvas.GetContentStream().GetBytes
+                (), System.Text.Encoding.UTF8);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.AreEqual("test", contentFromStream);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GraphicStateFontNullTest() {
+            String outPdf = DESTINATION_FOLDER + "showTextDoc.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                GlyphLine glyphLine = new GlyphLine();
+                canvas.GetGraphicsState().SetFont(null);
+                ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => canvas.ShowText(glyphLine, actualTextIterator));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GlyphlineActualTextTest() {
+            String outFileName = DESTINATION_FOLDER + "glyphlineActualText.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);
+                IList<Glyph> glyphs = JavaCollectionsUtil.SingletonList(font.GetGlyph((int)'\u65E0'));
+                GlyphLine glyphLine = new GlyphLine(glyphs);
+                glyphLine.SetActualText(0, 1, "TEST");
+                PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
+                canvas.SaveState().BeginText().SetFontAndSize(font, 7).ShowText(glyphLine).EndText().RestoreState();
+                String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(canvas.GetContentStream().GetBytes()
+                    , System.Text.Encoding.UTF8);
+                canvas.Release();
+                NUnit.Framework.Assert.IsTrue(contentstream.Contains("/ActualText"));
+            }
         }
 
         private void CreateStandardDocument(PdfWriter writer, int pageCount, PdfCanvasTest.ContentProvider contentProvider

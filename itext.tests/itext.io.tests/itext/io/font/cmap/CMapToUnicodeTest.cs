@@ -20,28 +20,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.IO.Font.Constants {
-    /// <summary>Font descriptor flags</summary>
-    public sealed class FontDescriptorFlags {
-        private FontDescriptorFlags() {
+using iText.Test;
+
+namespace iText.IO.Font.Cmap {
+    [NUnit.Framework.Category("UnitTest")]
+    public class CMapToUnicodeTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void EmptyCmapVarTest() {
+            NUnit.Framework.Assert.IsNotNull(CMapToUnicode.EMPTY_CMAP);
+            NUnit.Framework.Assert.IsFalse(CMapToUnicode.EMPTY_CMAP.HasByteMappings(), "Cmap has no two byte mappings"
+                );
         }
-
-        public const int FIXED_PITCH = 1;
-
-        public const int SERIF = 1 << 1;
-
-        public const int SYMBOLIC = 1 << 2;
-
-        public const int SCRIPT = 1 << 3;
-
-        public const int NONSYMBOLIC = 1 << 5;
-
-        public const int ITALIC = 1 << 6;
-
-        public const int ALL_CAP = 1 << 16;
-
-        public const int SMALL_CAP = 1 << 17;
-
-        public const int FORCE_BOLD = 1 << 18;
     }
 }

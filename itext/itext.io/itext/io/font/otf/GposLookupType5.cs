@@ -37,43 +37,43 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return false;
             }
-            if (openReader.IsSkip(line.Get(line.idx).GetCode(), lookupFlag)) {
-                line.idx++;
+            if (openReader.IsSkip(line.Get(line.GetIdx()).GetCode(), lookupFlag)) {
+                line.SetIdx(line.GetIdx() + 1);
                 return false;
             }
             bool changed = false;
             OpenTableLookup.GlyphIndexer ligatureGlyphIndexer = null;
             foreach (GposLookupType5.MarkToLigature mb in marksligatures) {
-                OtfMarkRecord omr = mb.marks.Get(line.Get(line.idx).GetCode());
+                OtfMarkRecord omr = mb.marks.Get(line.Get(line.GetIdx()).GetCode());
                 if (omr == null) {
                     continue;
                 }
                 if (ligatureGlyphIndexer == null) {
                     ligatureGlyphIndexer = new OpenTableLookup.GlyphIndexer();
-                    ligatureGlyphIndexer.idx = line.idx;
-                    ligatureGlyphIndexer.line = line;
+                    ligatureGlyphIndexer.SetIdx(line.GetIdx());
+                    ligatureGlyphIndexer.SetLine(line);
                     while (true) {
                         ligatureGlyphIndexer.PreviousGlyph(openReader, lookupFlag);
-                        if (ligatureGlyphIndexer.glyph == null) {
+                        if (ligatureGlyphIndexer.GetGlyph() == null) {
                             break;
                         }
                         // not mark => ligature glyph
-                        if (!mb.marks.ContainsKey(ligatureGlyphIndexer.glyph.GetCode())) {
+                        if (!mb.marks.ContainsKey(ligatureGlyphIndexer.GetGlyph().GetCode())) {
                             break;
                         }
                     }
-                    if (ligatureGlyphIndexer.glyph == null) {
+                    if (ligatureGlyphIndexer.GetGlyph() == null) {
                         break;
                     }
                 }
-                IList<GposAnchor[]> componentAnchors = mb.ligatures.Get(ligatureGlyphIndexer.glyph.GetCode());
+                IList<GposAnchor[]> componentAnchors = mb.ligatures.Get(ligatureGlyphIndexer.GetGlyph().GetCode());
                 if (componentAnchors == null) {
                     continue;
                 }
-                int markClass = omr.markClass;
+                int markClass = omr.GetMarkClass();
                 // TODO DEVSIX-3732 For complex cases like (glyph1, glyph2, mark, glyph3) and
                 //  (glyph1, mark, glyph2, glyph3) when the base glyphs compose a ligature and the mark
                 //  is attached to the ligature afterwards, mark should be placed in the corresponding anchor
@@ -90,16 +90,17 @@ namespace iText.IO.Font.Otf {
                 for (int component = componentAnchors.Count - 1; component >= 0; component--) {
                     if (componentAnchors[component][markClass] != null) {
                         GposAnchor baseAnchor = componentAnchors[component][markClass];
-                        GposAnchor markAnchor = omr.anchor;
-                        line.Set(line.idx, new Glyph(line.Get(line.idx), baseAnchor.XCoordinate - markAnchor.XCoordinate, baseAnchor
-                            .YCoordinate - markAnchor.YCoordinate, 0, 0, ligatureGlyphIndexer.idx - line.idx));
+                        GposAnchor markAnchor = omr.GetAnchor();
+                        line.Set(line.GetIdx(), new Glyph(line.Get(line.GetIdx()), baseAnchor.GetXCoordinate() - markAnchor.GetXCoordinate
+                            (), baseAnchor.GetYCoordinate() - markAnchor.GetYCoordinate(), 0, 0, ligatureGlyphIndexer.GetIdx() - line
+                            .GetIdx()));
                         changed = true;
                         break;
                     }
                 }
                 break;
             }
-            line.idx++;
+            line.SetIdx(line.GetIdx() + 1);
             return changed;
         }
 
