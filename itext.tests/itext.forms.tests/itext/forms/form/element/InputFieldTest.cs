@@ -76,7 +76,7 @@ namespace iText.Forms.Form.Element {
                 InputField flattenInputField = new InputField("no value input field");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, null);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, null);
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -95,7 +95,7 @@ namespace iText.Forms.Form.Element {
                 InputField flattenInputField = new InputField("input field does not fit");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "input field does not fit");
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -111,7 +111,7 @@ namespace iText.Forms.Form.Element {
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "input field with lang");
                 flattenInputField.GetAccessibilityProperties().SetLanguage("random_lang");
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -127,7 +127,7 @@ namespace iText.Forms.Form.Element {
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "input field with null lang");
                 flattenInputField.GetAccessibilityProperties().SetLanguage(null);
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -141,13 +141,13 @@ namespace iText.Forms.Form.Element {
                 InputField formInputField = new InputField("form input field with password");
                 formInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "form input field with password");
-                formInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                formInputField.SetBorder(new SolidBorder(2f));
                 formInputField.SetProperty(FormProperty.FORM_FIELD_PASSWORD_FLAG, true);
                 document.Add(formInputField);
                 InputField flattenInputField = new InputField("flatten input field with password");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with password");
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_PASSWORD_FLAG, true);
                 document.Add(flattenInputField);
             }
@@ -163,7 +163,7 @@ namespace iText.Forms.Form.Element {
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with height");
                 flattenInputField.SetProperty(Property.HEIGHT, new UnitValue(UnitValue.POINT, 100));
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -178,7 +178,7 @@ namespace iText.Forms.Form.Element {
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with height");
                 flattenInputField.SetProperty(Property.MIN_HEIGHT, new UnitValue(UnitValue.POINT, 100));
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -193,7 +193,7 @@ namespace iText.Forms.Form.Element {
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with height");
                 flattenInputField.SetProperty(Property.MAX_HEIGHT, new UnitValue(UnitValue.POINT, 10));
-                flattenInputField.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenInputField.SetBorder(new SolidBorder(2f));
                 document.Add(flattenInputField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));

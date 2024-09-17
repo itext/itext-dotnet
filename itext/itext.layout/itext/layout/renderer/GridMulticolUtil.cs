@@ -62,41 +62,23 @@ namespace iText.Layout.Renderer {
             result += SafelyRetrieveFloatProperty(Property.PADDING_RIGHT, renderer);
             result += SafelyRetrieveFloatProperty(Property.MARGIN_LEFT, renderer);
             result += SafelyRetrieveFloatProperty(Property.MARGIN_RIGHT, renderer);
-            if (!renderer.HasOwnProperty(Property.BORDER) || renderer.GetProperty<Border>(Property.BORDER) == null) {
-                result += SafelyRetrieveFloatProperty(Property.BORDER_LEFT, renderer);
-            }
-            if (!renderer.HasOwnProperty(Property.BORDER) || renderer.GetProperty<Border>(Property.BORDER) == null) {
-                result += SafelyRetrieveFloatProperty(Property.BORDER_RIGHT, renderer);
-            }
-            result += SafelyRetrieveFloatProperty(Property.BORDER, renderer) * 2;
+            result += SafelyRetrieveFloatProperty(Property.BORDER_LEFT, renderer);
+            result += SafelyRetrieveFloatProperty(Property.BORDER_RIGHT, renderer);
             return result;
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static float UpdateOccupiedHeight(float initialHeight, bool isFull, bool isFirstLayout, AbstractRenderer
-             renderer) {
+        internal static float UpdateOccupiedHeight(float initialHeight, bool isFull, AbstractRenderer renderer) {
             float result = initialHeight;
             if (isFull) {
                 result += SafelyRetrieveFloatProperty(Property.PADDING_BOTTOM, renderer);
                 result += SafelyRetrieveFloatProperty(Property.MARGIN_BOTTOM, renderer);
-                if (!renderer.HasOwnProperty(Property.BORDER) || renderer.GetProperty<Border>(Property.BORDER) == null) {
-                    result += SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM, renderer);
-                }
+                result += SafelyRetrieveFloatProperty(Property.BORDER_BOTTOM, renderer);
             }
             result += SafelyRetrieveFloatProperty(Property.PADDING_TOP, renderer);
             result += SafelyRetrieveFloatProperty(Property.MARGIN_TOP, renderer);
-            if (!renderer.HasOwnProperty(Property.BORDER) || renderer.GetProperty<Border>(Property.BORDER) == null) {
-                result += SafelyRetrieveFloatProperty(Property.BORDER_TOP, renderer);
-            }
-            // isFirstLayout is necessary to handle the case when multicol container layouted in more
-            // than 2 pages, and on the last page layout result is full, but there is no bottom border
-            float TOP_AND_BOTTOM = isFull && isFirstLayout ? 2 : 1;
-            // Multicol container layouted in more than 3 pages, and there is a page where there are no bottom and top borders
-            if (!isFull && !isFirstLayout) {
-                TOP_AND_BOTTOM = 0;
-            }
-            result += SafelyRetrieveFloatProperty(Property.BORDER, renderer) * TOP_AND_BOTTOM;
+            result += SafelyRetrieveFloatProperty(Property.BORDER_TOP, renderer);
             return result;
         }
 //\endcond

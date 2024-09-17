@@ -65,8 +65,6 @@ namespace iText.Layout.Properties {
 
         public const int BOLD_SIMULATION = 8;
 
-        public const int BORDER = 9;
-
         public const int BORDER_BOTTOM = 10;
 
         public const int BORDER_BOTTOM_LEFT_RADIUS = 113;
@@ -76,8 +74,6 @@ namespace iText.Layout.Properties {
         public const int BORDER_COLLAPSE = 114;
 
         public const int BORDER_LEFT = 11;
-
-        public const int BORDER_RADIUS = 101;
 
         public const int BORDER_RIGHT = 12;
 
@@ -191,13 +187,13 @@ namespace iText.Layout.Properties {
 
         public const int GRID_COLUMN_START = 148;
 
-        public const int GRID_COLUMN_SPAN = 155;
+        public const int GRID_COLUMN_SPAN = 9;
 
         public const int GRID_ROW_END = 149;
 
         public const int GRID_ROW_START = 150;
 
-        public const int GRID_ROW_SPAN = 156;
+        public const int GRID_ROW_SPAN = 101;
 
         public const int GRID_TEMPLATE_COLUMNS = 145;
 
@@ -406,7 +402,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 156;
+        private const int MAX_INHERITED_PROPERTY_ID = 154;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];

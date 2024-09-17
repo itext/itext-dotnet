@@ -242,15 +242,14 @@ namespace iText.Layout.Renderer {
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle areaBBox = area.GetBBox();
-            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(containerHeight, isFull, isFirstLayout, 
-                this);
+            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(containerHeight, isFull, this);
             if (totalContainerHeight < areaBBox.GetHeight() || isFull) {
                 float? height = RetrieveHeight();
                 if (height == null) {
                     areaBBox.SetHeight(totalContainerHeight);
                 }
                 else {
-                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, isFirstLayout, this);
+                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, this);
                     areaBBox.SetHeight((float)height);
                 }
             }

@@ -334,7 +334,7 @@ namespace iText.Layout.Element {
 
         private Div CreateDefaultFlexContainer() {
             Div flexContainer = new FlexContainer();
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Paragraph p1 = new Paragraph(SHORT_TEXT).SetWidth(UnitValue.CreatePercentValue(25)).SetBackgroundColor(ColorConstants
                 .BLUE);
@@ -351,7 +351,7 @@ namespace iText.Layout.Element {
 
         private Div CreateDefaultFlexContainerForWrap() {
             Div flexContainer = new FlexContainer();
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Paragraph p1 = new Paragraph(SHORT_TEXT).SetWidth(UnitValue.CreatePercentValue(20)).SetBackgroundColor(ColorConstants
                 .BLUE);

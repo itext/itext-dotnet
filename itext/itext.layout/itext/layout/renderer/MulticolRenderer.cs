@@ -125,11 +125,16 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>
-        /// Performs the drawing operation for the border of this renderer, if
-        /// defined by any of the
-        /// <see cref="iText.Layout.Properties.Property.BORDER"/>
-        /// values in either the layout
-        /// element or this
+        /// Performs the drawing operation for the border of this renderer, if defined by the
+        /// <see cref="iText.Layout.Properties.Property.BORDER_TOP"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.BORDER_RIGHT"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.BORDER_BOTTOM"/>
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.BORDER_LEFT"/>
+        /// values in either
+        /// the layout element or this
         /// <see cref="IRenderer"/>
         /// itself.
         /// </summary>
@@ -332,13 +337,12 @@ namespace iText.Layout.Renderer {
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle areaBBox = area.GetBBox();
-            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(approximateHeight, isFull, isFirstLayout
-                , this);
+            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(approximateHeight, isFull, this);
             if (totalContainerHeight < areaBBox.GetHeight() || isFull) {
                 areaBBox.SetHeight(totalContainerHeight);
                 float? height = DetermineHeight(areaBBox);
                 if (height != null) {
-                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, isFirstLayout, this);
+                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, this);
                     areaBBox.SetHeight((float)height);
                 }
             }

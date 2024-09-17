@@ -173,7 +173,10 @@ namespace iText.Forms.Form.Renderer {
             paragraph.SetProperty(Property.BOX_SIZING, this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));
-            paragraph.SetBorder(this.GetProperty<Border>(Property.BORDER));
+            paragraph.SetBorderTop(this.GetProperty<Border>(Property.BORDER_TOP));
+            paragraph.SetBorderRight(this.GetProperty<Border>(Property.BORDER_RIGHT));
+            paragraph.SetBorderBottom(this.GetProperty<Border>(Property.BORDER_BOTTOM));
+            paragraph.SetBorderLeft(this.GetProperty<Border>(Property.BORDER_LEFT));
             paragraph.SetProperty(Property.BACKGROUND, this.GetProperty<Background>(Property.BACKGROUND));
             //In html 2 pdf rendering the boxes height width ratio is always 1:1
             // with chrome taking the max of the two as the size of the box

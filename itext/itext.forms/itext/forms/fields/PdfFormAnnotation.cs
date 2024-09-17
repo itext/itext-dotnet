@@ -439,15 +439,13 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfFormAnnotation"/>.
         /// </returns>
         public virtual iText.Forms.Fields.PdfFormAnnotation SetBorderWidth(float borderWidth) {
-            // Acrobat doesn't support float border width therefore we round it.
-            int roundedBorderWidth = (int)MathematicUtil.Round(borderWidth);
             PdfDictionary bs = GetWidget().GetBorderStyle();
             if (bs == null) {
                 bs = new PdfDictionary();
                 Put(PdfName.BS, bs);
             }
-            bs.Put(PdfName.W, new PdfNumber(roundedBorderWidth));
-            this.borderWidth = roundedBorderWidth;
+            bs.Put(PdfName.W, new PdfNumber(borderWidth));
+            this.borderWidth = borderWidth;
             RegenerateField();
             return this;
         }
@@ -463,7 +461,7 @@ namespace iText.Forms.Fields {
             Border border = FormBorderFactory.GetBorder(this.GetWidget().GetBorderStyle(), borderWidth, borderColor, backgroundColor
                 );
             if (border == null && borderWidth > 0 && borderColor != null) {
-                border = new SolidBorder(borderColor, Math.Max(1, borderWidth));
+                border = new SolidBorder(borderColor, borderWidth);
             }
             return border;
         }
@@ -530,10 +528,10 @@ namespace iText.Forms.Fields {
         /// <para />
         /// Also note that the model element won't be used for annotations for choice form field.
         /// </remarks>
-        /// <param name="element">model element to set.</param>
+        /// <param name="element">model element to set</param>
         /// <returns>
         /// this
-        /// <see cref="PdfFormAnnotation"/>.
+        /// <see cref="PdfFormAnnotation"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfFormAnnotation SetFormFieldElement(IFormField element) {
             this.formFieldElement = element;
@@ -1236,7 +1234,10 @@ namespace iText.Forms.Fields {
             if (backgroundColor != null) {
                 formFieldElement.SetProperty(Property.BACKGROUND, new Background(backgroundColor));
             }
-            formFieldElement.SetProperty(Property.BORDER, GetBorder());
+            formFieldElement.SetProperty(Property.BORDER_TOP, GetBorder());
+            formFieldElement.SetProperty(Property.BORDER_RIGHT, GetBorder());
+            formFieldElement.SetProperty(Property.BORDER_BOTTOM, GetBorder());
+            formFieldElement.SetProperty(Property.BORDER_LEFT, GetBorder());
             // Set fixed size
             BoxSizingPropertyValue? boxSizing = formFieldElement.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING
                 );

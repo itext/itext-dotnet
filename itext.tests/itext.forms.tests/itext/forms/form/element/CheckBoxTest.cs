@@ -530,6 +530,39 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SetBordersTest() {
+            String outPdf = DESTINATION_FOLDER + "checkBoxSetBorders.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxSetBorders.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                float?[] i = new float?[] { .1f, .2f, .3f, .4f };
+                document.Add(new Paragraph("Test different borders"));
+                for (int j = 0; j < 30; j++) {
+                    i[0] += .03f;
+                    i[1] += .05f;
+                    i[2] += .07f;
+                    i[3] += .09f;
+                    CheckBox checkBox = new CheckBox("test" + j);
+                    checkBox.SetChecked(true);
+                    checkBox.SetSize(20);
+                    if (j % 2 == 0) {
+                        checkBox.SetBorderRight(new SolidBorder(ColorConstants.GREEN, (float)i[0]));
+                    }
+                    if (j % 3 == 0) {
+                        checkBox.SetBorderLeft(new SolidBorder(ColorConstants.PINK, (float)i[1]));
+                    }
+                    if (j % 5 == 0 || j == 1 || j == 13 || j == 19 || j == 29) {
+                        checkBox.SetBorderTop(new SolidBorder(ColorConstants.CYAN, (float)i[2]));
+                    }
+                    if (j % 7 == 0 || j == 11 || j == 17 || j == 23) {
+                        checkBox.SetBorderBottom(new SolidBorder(ColorConstants.YELLOW, (float)i[3]));
+                    }
+                    document.Add(checkBox);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
         private IList<CheckBox> GenerateCheckBoxes(Document document, Action<CheckBox> alterFunction) {
             IList<CheckBox> checkBoxList = new List<CheckBox>();
             CheckBox formCheckbox = new CheckBox("checkbox_interactive_off_" + this.counter);

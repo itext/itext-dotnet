@@ -61,15 +61,8 @@ namespace iText.Layout.Minmaxwidth {
         }
 
         public static float GetBorderWidth(IPropertyContainer element) {
-            Border border = element.GetProperty<Border>(Property.BORDER);
             Border rightBorder = element.GetProperty<Border>(Property.BORDER_RIGHT);
             Border leftBorder = element.GetProperty<Border>(Property.BORDER_LEFT);
-            if (!element.HasOwnProperty(Property.BORDER_RIGHT)) {
-                rightBorder = border;
-            }
-            if (!element.HasOwnProperty(Property.BORDER_LEFT)) {
-                leftBorder = border;
-            }
             float rightBorderWidth = rightBorder != null ? rightBorder.GetWidth() : 0;
             float leftBorderWidth = leftBorder != null ? leftBorder.GetWidth() : 0;
             return rightBorderWidth + leftBorderWidth;

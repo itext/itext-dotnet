@@ -473,7 +473,10 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorder(Border border) {
-            SetProperty(Property.BORDER, border);
+            SetProperty(Property.BORDER_TOP, border);
+            SetProperty(Property.BORDER_RIGHT, border);
+            SetProperty(Property.BORDER_BOTTOM, border);
+            SetProperty(Property.BORDER_LEFT, border);
             return (T)(Object)this;
         }
 
@@ -528,7 +531,10 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorderRadius(BorderRadius borderRadius) {
-            SetProperty(Property.BORDER_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_BOTTOM_RIGHT_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_TOP_LEFT_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_TOP_RIGHT_RADIUS, borderRadius);
             return (T)(Object)this;
         }
 

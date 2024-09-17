@@ -70,7 +70,7 @@ namespace iText.Layout.Element {
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
             flexContainer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(40));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Div innerDiv = new Div();
@@ -95,7 +95,7 @@ namespace iText.Layout.Element {
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
             flexContainer.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(40));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(450));
@@ -122,7 +122,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
@@ -154,7 +154,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(300));
             Div innerDiv = new Div();
@@ -185,7 +185,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Div innerDiv = new Div();
             innerDiv.Add(CreateNewDiv()).Add(CreateNewDiv()).Add(CreateNewDiv());
@@ -221,7 +221,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }));
             for (int i = 0; i < 2; i++) {
@@ -254,7 +254,7 @@ namespace iText.Layout.Element {
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
             flexContainer.SetHeight(450);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }));
             for (int i = 0; i < 2; i++) {
@@ -286,7 +286,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Div innerFlex = new FlexContainer();
             innerFlex.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
@@ -314,7 +314,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             Div innerFlex1 = new FlexContainer();
             innerFlex1.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
@@ -348,7 +348,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(2));
+            flexContainer.SetBorder(new SolidBorder(2));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetProperty(Property.ROTATION_ANGLE, 20f);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
@@ -374,7 +374,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLUE, 30));
+            flexContainer.SetBorder(new SolidBorder(ColorConstants.BLUE, 30));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetWidth(250);
             flexContainer.SetHeight(400);
@@ -416,7 +416,7 @@ namespace iText.Layout.Element {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
-            flexContainer.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLUE, 30));
+            flexContainer.SetBorder(new SolidBorder(ColorConstants.BLUE, 30));
             flexContainer.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             flexContainer.SetWidth(450);
             flexContainer.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
@@ -546,7 +546,7 @@ namespace iText.Layout.Element {
 
         private static Div CreateNewDiv() {
             Div newDiv = new Div();
-            newDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+            newDiv.SetBorder(new SolidBorder(1));
             newDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
             newDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
             return newDiv;

@@ -125,7 +125,10 @@ namespace iText.Forms.Form.Renderer {
             Paragraph paragraph = new Paragraph().SetWidth(size).SetHeight(size).SetHorizontalAlignment(DEFAULT_HORIZONTAL_ALIGNMENT
                 ).SetVerticalAlignment(DEFAULT_VERTICAL_ALIGNMENT).SetMargin(0);
             paragraph.SetProperty(Property.BOX_SIZING, this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING));
-            paragraph.SetBorder(this.GetProperty<Border>(Property.BORDER));
+            paragraph.SetBorderTop(this.GetProperty<Border>(Property.BORDER_TOP));
+            paragraph.SetBorderRight(this.GetProperty<Border>(Property.BORDER_RIGHT));
+            paragraph.SetBorderBottom(this.GetProperty<Border>(Property.BORDER_BOTTOM));
+            paragraph.SetBorderLeft(this.GetProperty<Border>(Property.BORDER_LEFT));
             paragraph.SetProperty(Property.BACKGROUND, this.GetProperty<Background>(Property.BACKGROUND));
             paragraph.SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
             return new RadioRenderer.FlatParagraphRenderer(this, paragraph);
@@ -209,10 +212,13 @@ namespace iText.Forms.Form.Renderer {
                     canvas.OpenTag(tp.GetTagReference());
                 }
                 Rectangle rectangle = this.GetOccupiedArea().GetBBox().Clone();
-                Border border = this.GetProperty<Border>(Property.BORDER);
-                if (border != null) {
-                    rectangle.ApplyMargins(border.GetWidth(), border.GetWidth(), border.GetWidth(), border.GetWidth(), false);
-                }
+                Border borderTop = this.GetProperty<Border>(Property.BORDER_TOP);
+                Border borderRight = this.GetProperty<Border>(Property.BORDER_RIGHT);
+                Border borderBottom = this.GetProperty<Border>(Property.BORDER_BOTTOM);
+                Border borderLeft = this.GetProperty<Border>(Property.BORDER_LEFT);
+                rectangle.ApplyMargins(borderTop == null ? 0 : borderTop.GetWidth(), borderRight == null ? 0 : borderRight
+                    .GetWidth(), borderBottom == null ? 0 : borderBottom.GetWidth(), borderLeft == null ? 0 : borderLeft.GetWidth
+                    (), false);
                 float radius = Math.Min(rectangle.GetWidth(), rectangle.GetHeight()) / 2;
                 canvas.SaveState();
                 canvas.SetFillColor(RadioRenderer.DEFAULT_CHECKED_COLOR);

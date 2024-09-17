@@ -507,7 +507,7 @@ namespace iText.Layout {
                 flexContainerRenderer.SetParent(documentRenderer);
                 div.SetNextRenderer(flexContainerRenderer);
                 Div innerDiv = new Div();
-                innerDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                innerDiv.SetBorder(new SolidBorder(1));
                 innerDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
                 innerDiv.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
                 innerDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.GREEN));

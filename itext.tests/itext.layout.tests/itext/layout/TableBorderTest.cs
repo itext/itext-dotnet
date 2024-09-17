@@ -696,7 +696,10 @@ namespace iText.Layout {
             table.SetBorder(new SolidBorder(ColorConstants.YELLOW, 3));
             doc.Add(table);
             doc.Add(new AreaBreak());
-            table.DeleteOwnProperty(Property.BORDER);
+            table.DeleteOwnProperty(Property.BORDER_LEFT);
+            table.DeleteOwnProperty(Property.BORDER_BOTTOM);
+            table.DeleteOwnProperty(Property.BORDER_RIGHT);
+            table.DeleteOwnProperty(Property.BORDER_TOP);
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
@@ -1184,7 +1187,10 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 5)));
-            table.DeleteOwnProperty(Property.BORDER);
+            table.DeleteOwnProperty(Property.BORDER_LEFT);
+            table.DeleteOwnProperty(Property.BORDER_BOTTOM);
+            table.DeleteOwnProperty(Property.BORDER_RIGHT);
+            table.DeleteOwnProperty(Property.BORDER_TOP);
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 5)));
@@ -1196,7 +1202,10 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 5)));
-            table.DeleteOwnProperty(Property.BORDER);
+            table.DeleteOwnProperty(Property.BORDER_LEFT);
+            table.DeleteOwnProperty(Property.BORDER_BOTTOM);
+            table.DeleteOwnProperty(Property.BORDER_RIGHT);
+            table.DeleteOwnProperty(Property.BORDER_TOP);
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 5)));

@@ -32,7 +32,7 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("UnitTest")]
     public class FlexContainerRendererTest : ExtendedITextTest {
-        private static float EPS = 0.0001F;
+        private const float EPS = 0.0001F;
 
         [NUnit.Framework.Test]
         public virtual void WidthNotSetTest() {
@@ -77,7 +77,11 @@ namespace iText.Layout.Renderer {
             FlexContainerRenderer flexRenderer = new FlexContainerRenderer(new Div());
             DivRenderer divRenderer1 = new DivRenderer(new Div());
             divRenderer1.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
-            divRenderer1.SetProperty(Property.BORDER, new SolidBorder(5));
+            SolidBorder border = new SolidBorder(5);
+            divRenderer1.SetProperty(Property.BORDER_TOP, border);
+            divRenderer1.SetProperty(Property.BORDER_RIGHT, border);
+            divRenderer1.SetProperty(Property.BORDER_BOTTOM, border);
+            divRenderer1.SetProperty(Property.BORDER_LEFT, border);
             DivRenderer divRenderer2 = new DivRenderer(new Div());
             divRenderer2.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(40));
             divRenderer2.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(10));
@@ -100,7 +104,11 @@ namespace iText.Layout.Renderer {
             flexRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
             DivRenderer divRenderer1 = new DivRenderer(new Div());
             divRenderer1.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
-            divRenderer1.SetProperty(Property.BORDER, new SolidBorder(5));
+            SolidBorder border = new SolidBorder(5);
+            divRenderer1.SetProperty(Property.BORDER_TOP, border);
+            divRenderer1.SetProperty(Property.BORDER_RIGHT, border);
+            divRenderer1.SetProperty(Property.BORDER_BOTTOM, border);
+            divRenderer1.SetProperty(Property.BORDER_LEFT, border);
             DivRenderer divRenderer2 = new DivRenderer(new Div());
             divRenderer2.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(40));
             divRenderer2.SetProperty(Property.MARGIN_LEFT, UnitValue.CreatePointValue(10));
@@ -229,14 +237,14 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_273(new Div());
+            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_281(new Div());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(FlexContainerRenderer), flexContainerRenderer.GetNextRenderer().GetType
                 ());
         }
 
-        private sealed class _FlexContainerRenderer_273 : FlexContainerRenderer {
-            public _FlexContainerRenderer_273(Div baseArg1)
+        private sealed class _FlexContainerRenderer_281 : FlexContainerRenderer {
+            public _FlexContainerRenderer_281(Div baseArg1)
                 : base(baseArg1) {
             }
         }
@@ -265,7 +273,11 @@ namespace iText.Layout.Renderer {
             FlexContainerRenderer flexRenderer = new FlexContainerRenderer(new Div());
             flexRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
             flexRenderer.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePointValue(100));
-            flexRenderer.SetProperty(Property.BORDER, new SolidBorder(5));
+            SolidBorder border = new SolidBorder(5);
+            flexRenderer.SetProperty(Property.BORDER_TOP, border);
+            flexRenderer.SetProperty(Property.BORDER_RIGHT, border);
+            flexRenderer.SetProperty(Property.BORDER_BOTTOM, border);
+            flexRenderer.SetProperty(Property.BORDER_LEFT, border);
             // line 1
             DivRenderer divRenderer1 = new DivRenderer(new Div());
             divRenderer1.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(30));

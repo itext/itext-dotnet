@@ -964,15 +964,20 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>
-        /// Performs the drawing operation for the border of this renderer, if
-        /// defined by any of the
-        /// <see cref="iText.Layout.Properties.Property.BORDER"/>
-        /// values in either the layout
-        /// element or this
+        /// Performs the drawing operation for the border of this renderer, if defined by the
+        /// <see cref="iText.Layout.Properties.Property.BORDER_TOP"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.BORDER_RIGHT"/>
+        /// ,
+        /// <see cref="iText.Layout.Properties.Property.BORDER_BOTTOM"/>
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.BORDER_LEFT"/>
+        /// values in either
+        /// the layout element or this
         /// <see cref="IRenderer"/>
         /// itself.
         /// </summary>
-        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+        /// <param name="drawContext">the context (canvas, document, etc.) of this drawing operation</param>
         public virtual void DrawBorder(DrawContext drawContext) {
             Border[] borders = GetBorders();
             bool gotBorders = false;
@@ -1316,8 +1321,8 @@ namespace iText.Layout.Renderer {
                 if (transformProp != null) {
                     outlines.SetProperty(Property.TRANSFORM, transformProp);
                 }
-                outlines.SetProperty(Property.BORDER, outlineProp);
-                float offset = outlines.GetProperty<Border>(Property.BORDER).GetWidth();
+                outlines.SetBorder(outlineProp);
+                float offset = outlineProp.GetWidth();
                 if (abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET) != null) {
                     offset += (float)abstractChild.GetPropertyAsFloat(Property.OUTLINE_OFFSET);
                 }
@@ -1328,8 +1333,12 @@ namespace iText.Layout.Renderer {
                 divOccupiedArea.SetWidth(divOccupiedArea.GetWidth() + 2 * offset).SetHeight(divOccupiedArea.GetHeight() + 
                     2 * offset);
                 div.occupiedArea = new LayoutArea(abstractChild.GetOccupiedArea().GetPageNumber(), divOccupiedArea);
-                float outlineWidth = div.GetProperty<Border>(Property.BORDER).GetWidth();
-                if (divOccupiedArea.GetWidth() >= outlineWidth * 2 && divOccupiedArea.GetHeight() >= outlineWidth * 2) {
+                float outlineWidthTop = div.GetProperty<Border>(Property.BORDER_TOP).GetWidth();
+                float outlineWidthBottom = div.GetProperty<Border>(Property.BORDER_BOTTOM).GetWidth();
+                float outlineWidthLeft = div.GetProperty<Border>(Property.BORDER_LEFT).GetWidth();
+                float outlineWidthRight = div.GetProperty<Border>(Property.BORDER_RIGHT).GetWidth();
+                if (divOccupiedArea.GetWidth() >= (outlineWidthLeft + outlineWidthRight) && divOccupiedArea.GetHeight() >=
+                     (outlineWidthTop + outlineWidthBottom)) {
                     waitingDrawing.Add(div);
                 }
                 if (abstractChild.IsRelativePosition()) {
@@ -1971,7 +1980,8 @@ namespace iText.Layout.Renderer {
                 PdfLinkAnnotation link = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
                 if (link == null) {
                     link = (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetFlags(PdfAnnotation.PRINT);
-                    Border border = this.GetProperty<Border>(Property.BORDER);
+                    // For now, we set left border to an annotation, but appropriate borders for an element will be drawn.
+                    Border border = this.GetProperty<Border>(Property.BORDER_LEFT);
                     if (border != null) {
                         link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
                     }
@@ -2622,25 +2632,11 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal static Border[] GetBorders(IRenderer renderer) {
-            Border border = renderer.GetProperty<Border>(Property.BORDER);
             Border topBorder = renderer.GetProperty<Border>(Property.BORDER_TOP);
             Border rightBorder = renderer.GetProperty<Border>(Property.BORDER_RIGHT);
             Border bottomBorder = renderer.GetProperty<Border>(Property.BORDER_BOTTOM);
             Border leftBorder = renderer.GetProperty<Border>(Property.BORDER_LEFT);
-            Border[] borders = new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP)) {
-                borders[0] = border;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_RIGHT)) {
-                borders[1] = border;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM)) {
-                borders[2] = border;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_LEFT)) {
-                borders[3] = border;
-            }
-            return borders;
+            return new Border[] { topBorder, rightBorder, bottomBorder, leftBorder };
         }
 //\endcond
 
@@ -2996,26 +2992,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static BorderRadius[] GetBorderRadii(IRenderer renderer) {
-            BorderRadius radius = renderer.GetProperty<BorderRadius>(Property.BORDER_RADIUS);
             BorderRadius topLeftRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_TOP_LEFT_RADIUS);
             BorderRadius topRightRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_TOP_RIGHT_RADIUS);
             BorderRadius bottomRightRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_BOTTOM_RIGHT_RADIUS);
             BorderRadius bottomLeftRadius = renderer.GetProperty<BorderRadius>(Property.BORDER_BOTTOM_LEFT_RADIUS);
-            BorderRadius[] borderRadii = new BorderRadius[] { topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius
-                 };
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP_LEFT_RADIUS)) {
-                borderRadii[0] = radius;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_TOP_RIGHT_RADIUS)) {
-                borderRadii[1] = radius;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM_RIGHT_RADIUS)) {
-                borderRadii[2] = radius;
-            }
-            if (!HasOwnOrModelProperty(renderer, Property.BORDER_BOTTOM_LEFT_RADIUS)) {
-                borderRadii[3] = radius;
-            }
-            return borderRadii;
+            return new BorderRadius[] { topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius };
         }
 
         private static UnitValue[] GetPaddings(IRenderer renderer) {

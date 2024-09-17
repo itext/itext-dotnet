@@ -432,7 +432,11 @@ namespace iText.Pdfa {
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
                     IFormField formField = formFieldSupplier();
                     formField.SetProperty(Property.FONT, font);
-                    formField.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLACK, 1));
+                    SolidBorder border = new SolidBorder(ColorConstants.BLACK, 1);
+                    formField.SetProperty(Property.BORDER_TOP, border);
+                    formField.SetProperty(Property.BORDER_RIGHT, border);
+                    formField.SetProperty(Property.BORDER_BOTTOM, border);
+                    formField.SetProperty(Property.BORDER_LEFT, border);
                     formField.SetInteractive(true);
                     document.Add(formField);
                 }
@@ -449,7 +453,11 @@ namespace iText.Pdfa {
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
                     IFormField formField = formFieldSupplier();
                     formField.SetProperty(Property.FONT, font);
-                    formField.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLACK, 1));
+                    SolidBorder border = new SolidBorder(ColorConstants.BLACK, 1);
+                    formField.SetProperty(Property.BORDER_TOP, border);
+                    formField.SetProperty(Property.BORDER_RIGHT, border);
+                    formField.SetProperty(Property.BORDER_BOTTOM, border);
+                    formField.SetProperty(Property.BORDER_LEFT, border);
                     formField.SetInteractive(true);
                     document.Add(formField);
                 }
@@ -478,7 +486,11 @@ namespace iText.Pdfa {
                 document.SetFont(font);
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
                     IFormField formField = formFieldSupplier();
-                    formField.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLACK, 1));
+                    SolidBorder border = new SolidBorder(ColorConstants.BLACK, 1);
+                    formField.SetProperty(Property.BORDER_TOP, border);
+                    formField.SetProperty(Property.BORDER_RIGHT, border);
+                    formField.SetProperty(Property.BORDER_BOTTOM, border);
+                    formField.SetProperty(Property.BORDER_LEFT, border);
                     formField.SetProperty(Property.FONT, font);
                     formField.SetInteractive(true);
                     document.Add(formField);
@@ -497,7 +509,11 @@ namespace iText.Pdfa {
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
                     IFormField formField = formFieldSupplier();
                     formField.SetProperty(Property.FONT, font);
-                    formField.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLACK, 1));
+                    SolidBorder border = new SolidBorder(ColorConstants.BLACK, 1);
+                    formField.SetProperty(Property.BORDER_TOP, border);
+                    formField.SetProperty(Property.BORDER_RIGHT, border);
+                    formField.SetProperty(Property.BORDER_BOTTOM, border);
+                    formField.SetProperty(Property.BORDER_LEFT, border);
                     formField.SetInteractive(false);
                     document.Add(formField);
                 }
@@ -515,7 +531,11 @@ namespace iText.Pdfa {
                 document.SetFont(font);
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
                     IFormField formField = formFieldSupplier();
-                    formField.SetProperty(Property.BORDER, new SolidBorder(ColorConstants.BLACK, 1));
+                    SolidBorder border = new SolidBorder(ColorConstants.BLACK, 1);
+                    formField.SetProperty(Property.BORDER_TOP, border);
+                    formField.SetProperty(Property.BORDER_RIGHT, border);
+                    formField.SetProperty(Property.BORDER_BOTTOM, border);
+                    formField.SetProperty(Property.BORDER_LEFT, border);
                     formField.SetProperty(Property.FONT, font);
                     formField.SetInteractive(false);
                     document.Add(formField);

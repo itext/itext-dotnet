@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
@@ -35,10 +34,7 @@ namespace iText.Layout.Renderer {
         public static Border GetCellSideBorder(Cell cellModel, int borderType) {
             Border cellModelSideBorder = cellModel.GetProperty<Border>(borderType);
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
-                cellModelSideBorder = cellModel.GetProperty<Border>(Property.BORDER);
-                if (null == cellModelSideBorder && !cellModel.HasProperty(Property.BORDER)) {
-                    cellModelSideBorder = cellModel.GetDefaultProperty<Border>(Property.BORDER);
-                }
+                cellModelSideBorder = cellModel.GetDefaultProperty<Border>(borderType);
             }
             return cellModelSideBorder;
         }

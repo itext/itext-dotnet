@@ -38,11 +38,8 @@ namespace iText.Forms.Util {
         /// <param name="container">property container to apply border properties from.</param>
         /// <param name="annotation">the annotation to set border characteristics to.</param>
         public static void ApplyBorderProperty(IPropertyContainer container, PdfFormAnnotation annotation) {
-            Border border = container.GetProperty<Border>(Property.BORDER);
-            if (border == null) {
-                // For now, we set left border to an annotation, but appropriate borders for an element will be drawn.
-                border = container.GetProperty<Border>(Property.BORDER_LEFT);
-            }
+            // For now, we set left border to an annotation, but appropriate borders for an element will be drawn.
+            Border border = container.GetProperty<Border>(Property.BORDER_LEFT);
             if (border != null) {
                 annotation.SetBorderStyle(TransformBorderTypeToBorderStyleDictionary(border.GetBorderType()));
                 annotation.SetBorderColor(border.GetColor());

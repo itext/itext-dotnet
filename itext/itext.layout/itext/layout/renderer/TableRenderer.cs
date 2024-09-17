@@ -1810,7 +1810,6 @@ namespace iText.Layout.Renderer {
                     ));
                 headerOrFooterRenderer.SetProperty(Property.VERTICAL_BORDER_SPACING, this.GetPropertyAsFloat(Property.VERTICAL_BORDER_SPACING
                     ));
-                headerOrFooterRenderer.SetProperty(Property.BORDER, Border.NO_BORDER);
                 headerOrFooterRenderer.SetProperty(Property.BORDER_LEFT, Border.NO_BORDER);
                 headerOrFooterRenderer.SetProperty(Property.BORDER_TOP, Border.NO_BORDER);
                 headerOrFooterRenderer.SetProperty(Property.BORDER_RIGHT, Border.NO_BORDER);

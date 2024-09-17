@@ -78,7 +78,7 @@ namespace iText.Layout.Element {
                 ctx.SetProperty(Property.COLUMN_COUNT, 2);
                 Div div = new Div();
                 div.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
-                div.SetProperty(Property.BORDER, new SolidBorder(2));
+                div.SetBorder(new SolidBorder(2));
                 div.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(40));
                 div.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
                 div.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(450));
@@ -646,7 +646,7 @@ namespace iText.Layout.Element {
                     );
                 paragraph.SetBorder(new SolidBorder(2));
                 Div columnDiv = new Div();
-                columnDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                columnDiv.SetBorder(new SolidBorder(1));
                 columnDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.BLUE));
                 columnDiv.SetProperty(Property.KEEP_TOGETHER, true);
                 columnDiv.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
@@ -674,7 +674,7 @@ namespace iText.Layout.Element {
                     );
                 paragraph.SetBorder(new SolidBorder(2));
                 Div columnDiv = new Div();
-                columnDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                columnDiv.SetBorder(new SolidBorder(1));
                 columnDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.BLUE));
                 columnDiv.SetProperty(Property.KEEP_TOGETHER, true);
                 columnDiv.SetProperty(Property.MARGIN_BOTTOM, UnitValue.CreatePointValue(40));
@@ -703,7 +703,7 @@ namespace iText.Layout.Element {
                     );
                 paragraph.SetBorder(new SolidBorder(2));
                 Div columnDiv = new Div();
-                columnDiv.SetProperty(Property.BORDER, new SolidBorder(1));
+                columnDiv.SetBorder(new SolidBorder(1));
                 columnDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.BLUE));
                 columnDiv.SetProperty(Property.KEEP_TOGETHER, true);
                 columnDiv.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(40));
@@ -1216,7 +1216,7 @@ namespace iText.Layout.Element {
         private static Div CreateFirstPageFiller() {
             Div firstPageFiller = new Div();
             firstPageFiller.SetProperty(Property.MARGIN_TOP, UnitValue.CreatePointValue(50));
-            firstPageFiller.SetProperty(Property.BORDER, new SolidBorder(1));
+            firstPageFiller.SetBorder(new SolidBorder(1));
             firstPageFiller.SetProperty(Property.PADDING_LEFT, UnitValue.CreatePointValue(20));
             firstPageFiller.SetProperty(Property.BACKGROUND, new Background(ColorConstants.LIGHT_GRAY));
             firstPageFiller.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(450));

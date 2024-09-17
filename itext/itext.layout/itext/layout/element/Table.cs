@@ -904,20 +904,14 @@ namespace iText.Layout.Element {
         public virtual IList<Border> GetLastRowBottomBorder() {
             IList<Border> horizontalBorder = new List<Border>();
             if (lastAddedRow != null) {
-                for (int i = 0; i < lastAddedRow.Length; i++) {
-                    Cell cell = lastAddedRow[i];
+                foreach (Cell cell in lastAddedRow) {
                     Border border = null;
                     if (cell != null) {
                         if (cell.HasProperty(Property.BORDER_BOTTOM)) {
                             border = cell.GetProperty<Border>(Property.BORDER_BOTTOM);
                         }
                         else {
-                            if (cell.HasProperty(Property.BORDER)) {
-                                border = cell.GetProperty<Border>(Property.BORDER);
-                            }
-                            else {
-                                border = cell.GetDefaultProperty<Border>(Property.BORDER);
-                            }
+                            border = cell.GetDefaultProperty<Border>(Property.BORDER_BOTTOM);
                         }
                     }
                     horizontalBorder.Add(border);
