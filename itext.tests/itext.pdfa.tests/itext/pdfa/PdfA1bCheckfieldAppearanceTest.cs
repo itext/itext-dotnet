@@ -57,13 +57,13 @@ namespace iText.Pdfa {
             String diff = "diff_" + name + "_";
             PdfWriter writer = new PdfWriter(outPath);
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
-                , 50)).SetCheckType(CheckBoxType.CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
-                ().SetValue("Off");
+                , 50)).SetCheckType(CheckBoxType.CHECK).SetConformance(PdfConformance.PDF_A_1B).CreateCheckBox().SetValue
+                ("Off");
             chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);
@@ -80,13 +80,13 @@ namespace iText.Pdfa {
             String diff = "diff_" + name + "_";
             PdfWriter writer = new PdfWriter(outPath);
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             PdfFormField chk = new CheckBoxFormFieldBuilder(doc, "name").SetWidgetRectangle(new Rectangle(100, 500, 50
-                , 50)).SetCheckType(CheckBoxType.CHECK).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreateCheckBox
-                ().SetValue("On");
+                , 50)).SetCheckType(CheckBoxType.CHECK).SetConformance(PdfConformance.PDF_A_1B).CreateCheckBox().SetValue
+                ("On");
             chk.GetFirstFormAnnotation().SetBorderColor(ColorConstants.BLACK);
             chk.GetFirstFormAnnotation().SetBorderWidth(1);
             form.AddField(chk);

@@ -526,7 +526,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetDefaultConformanceLevelTest() {
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
-            NUnit.Framework.Assert.IsNull(document.GetConformanceLevel());
+            NUnit.Framework.Assert.IsNotNull(document.GetConformance());
+            NUnit.Framework.Assert.IsFalse(document.GetConformance().IsPdfAOrUa());
         }
 
         //TODO DEVSIX-8490 remove this test when implemented

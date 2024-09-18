@@ -252,21 +252,19 @@ namespace iText.Forms.Form.Renderer {
             return actualHeight;
         }
 
-        /// <summary>Gets the conformance level.</summary>
-        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-        ///     </remarks>
+        /// <summary>Gets the conformance.</summary>
+        /// <remarks>Gets the conformance. If the conformance is not set, the conformance of the document is used.</remarks>
         /// <param name="document">the document</param>
-        /// <returns>the conformance level or null if the conformance level is not set.</returns>
-        protected internal virtual IConformanceLevel GetConformanceLevel(PdfDocument document) {
-            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
-                );
-            if (conformanceLevel != null) {
-                return conformanceLevel;
+        /// <returns>the conformance or null if the conformance is not set.</returns>
+        protected internal virtual PdfConformance GetConformance(PdfDocument document) {
+            PdfConformance conformance = this.GetProperty<PdfConformance>(FormProperty.FORM_CONFORMANCE_LEVEL);
+            if (conformance != null) {
+                return conformance;
             }
             if (document == null) {
                 return null;
             }
-            return document.GetConformanceLevel();
+            return document.GetConformance();
         }
 
         /// <summary>Gets options that are marked as selected from the select field options subtree.</summary>

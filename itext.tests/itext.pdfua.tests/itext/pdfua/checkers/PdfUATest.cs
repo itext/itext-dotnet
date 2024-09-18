@@ -40,6 +40,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfua;
 using iText.Pdfua.Exceptions;
+using iText.Pdfua.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 using iText.Test.Pdfa;

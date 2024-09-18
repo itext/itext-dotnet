@@ -55,7 +55,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void TextTransparencyNoOutputIntentTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
-            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
+            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, null);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page1 = pdfDocument.AddNewPage();
@@ -75,7 +75,7 @@ namespace iText.Pdfa {
         public virtual void TransparentTextWithGroupColorSpaceTest() {
             String outPdf = destinationFolder + "transparencyAndCS.pdf";
             String cmpPdf = cmpFolder + "cmp_transparencyAndCS.pdf";
-            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_3B, null);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
@@ -104,8 +104,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ImageTransparencyTest() {
-            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(new MemoryStream()), PdfAConformanceLevel.PDF_A_3B, null
-                );
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(new MemoryStream()), PdfAConformance.PDF_A_3B, null);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
@@ -121,7 +120,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void NestedXObjectWithTransparencyTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
-            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_3B, null);
+            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, null);
             PdfFormXObject form1 = new PdfFormXObject(new Rectangle(0, 0, 50, 50));
             PdfCanvas canvas1 = new PdfCanvas(form1, pdfDocument);
             canvas1.SaveState();
@@ -155,7 +154,7 @@ namespace iText.Pdfa {
         public virtual void TestTransparencyObjectsAbsence() {
             String outPdf = destinationFolder + "transparencyObjectsAbsence.pdf";
             String cmpPdf = cmpFolder + "cmp_transparencyObjectsAbsence.pdf";
-            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformanceLevel.PDF_A_3B, null);
+            PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_3B, null);
             PdfPage page = pdfDocument.AddNewPage();
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);

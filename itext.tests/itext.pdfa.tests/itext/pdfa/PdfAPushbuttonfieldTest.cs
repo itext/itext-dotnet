@@ -60,7 +60,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
@@ -69,7 +69,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+                ("push").SetConformance(PdfConformance.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             form.AddField(button);
             doc.Close();
@@ -89,7 +89,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
@@ -98,7 +98,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+                ("push").SetConformance(PdfConformance.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             button.RegenerateField();
             form.AddField(button);
@@ -119,7 +119,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
             doc.SetTagged();
             doc.GetCatalog().SetLang(new PdfString("en-US"));
             doc.AddNewPage();
@@ -128,7 +128,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
-                ("push").SetConformanceLevel(PdfAConformanceLevel.PDF_A_1B).CreatePushButton();
+                ("push").SetConformance(PdfConformance.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             button.SetValue("button");
             form.AddField(button);

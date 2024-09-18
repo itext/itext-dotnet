@@ -110,7 +110,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithConformanceLevelTest() {
             PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateComboBox();
+                (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateComboBox();
             CompareChoices(new PdfDictionary(), choiceFormField, true);
         }
 
@@ -150,7 +150,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateListWithConformanceLevelTest() {
             PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateList();
+                (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateList();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
             CompareChoices(expectedDictionary, choiceFormField, true);

@@ -98,7 +98,7 @@ namespace iText.Kernel.Pdf {
 
         private XMPMeta xmpMeta;
 
-        private PdfAConformanceLevel pdfAConformanceLevel;
+        private PdfConformance pdfConformance;
 
         /// <summary>Constructs a new PdfReader.</summary>
         /// <param name="byteSource">source of bytes for the reader</param>
@@ -652,22 +652,16 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Gets the declared PDF/A conformance level of the source document that is being read.</summary>
+        /// <summary>Gets the declared PDF conformance of the source document that is being read.</summary>
         /// <remarks>
-        /// Gets the declared PDF/A conformance level of the source document that is being read.
+        /// Gets the declared PDF conformance of the source document that is being read.
         /// Note that this information is provided via XMP metadata and is not verified by iText.
-        /// <see cref="pdfAConformanceLevel"/>
-        /// is lazy initialized.
+        /// Conformance is lazy initialized.
         /// It will be initialized during the first call of this method.
         /// </remarks>
-        /// <returns>
-        /// conformance level of the source document, or
-        /// <see langword="null"/>
-        /// if no PDF/A
-        /// conformance level information is specified.
-        /// </returns>
-        public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
-            if (pdfAConformanceLevel == null) {
+        /// <returns>conformance of the source document</returns>
+        public virtual PdfConformance GetPdfConformance() {
+            if (pdfConformance == null) {
                 if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
                     throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
                 }
@@ -675,14 +669,12 @@ namespace iText.Kernel.Pdf {
                     if (xmpMeta == null && pdfDocument.GetXmpMetadata() != null) {
                         xmpMeta = pdfDocument.GetXmpMetadata();
                     }
-                    if (xmpMeta != null) {
-                        pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(xmpMeta);
-                    }
+                    pdfConformance = PdfConformance.GetConformance(xmpMeta);
                 }
                 catch (XMPException) {
                 }
             }
-            return pdfAConformanceLevel;
+            return pdfConformance;
         }
 
         /// <summary>Computes user password if standard encryption handler is used with Standard40, Standard128 or AES128 encryption algorithm.

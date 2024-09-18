@@ -26,23 +26,21 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("UnitTest")]
-    public class PdfAConformanceLevelTest : ExtendedITextTest {
+    public class PdfAConformanceTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetConformanceTest() {
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4, PdfAConformanceLevel.GetConformanceLevel("4"
-                , null));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4E, PdfAConformanceLevel.GetConformanceLevel("4"
-                , "E"));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4F, PdfAConformanceLevel.GetConformanceLevel("4"
-                , "F"));
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_4, PdfConformance.GetAConformance("4", null));
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_4E, PdfConformance.GetAConformance("4", "E"));
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_4F, PdfConformance.GetAConformance("4", "F"));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetXmpConformanceNullTest() {
             XMPMeta meta = new XMPMetaImpl();
             meta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, "4");
-            PdfAConformanceLevel level = PdfAConformanceLevel.GetConformanceLevel(meta);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_4, level);
+            PdfConformance level = PdfConformance.GetConformance(meta);
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_4, level.GetAConformance());
+            NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_A_4, level);
         }
 
         [NUnit.Framework.Test]
@@ -50,8 +48,9 @@ namespace iText.Kernel.Pdf {
             XMPMeta meta = new XMPMetaImpl();
             meta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, "2");
             meta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, "B");
-            PdfAConformanceLevel level = PdfAConformanceLevel.GetConformanceLevel(meta);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_2B, level);
+            PdfConformance level = PdfConformance.GetConformance(meta);
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_2B, level.GetAConformance());
+            NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_A_2B, level);
         }
     }
 }

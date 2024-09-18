@@ -54,7 +54,7 @@ namespace iText.Pdfa {
             Stream colorStream = FileUtil.GetInputStreamForFile(sourceFolder + "color/sRGB_CS_profile.icm");
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp/PdfA2LayoutOcgTest/cmp_" + fileName;
-            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outFileName), PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent
+            PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outFileName), PdfAConformance.PDF_A_2A, new PdfOutputIntent
                 ("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", colorStream));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));

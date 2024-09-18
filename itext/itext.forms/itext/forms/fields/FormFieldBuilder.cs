@@ -34,8 +34,8 @@ namespace iText.Forms.Fields {
         /// <summary>Name of the form field.</summary>
         private readonly String formFieldName;
 
-        /// <summary>Conformance level of the form field.</summary>
-        private IConformanceLevel conformanceLevel = null;
+        /// <summary>Conformance of the form field.</summary>
+        private PdfConformance conformance = null;
 
         /// <summary>
         /// Creates builder for
@@ -48,7 +48,7 @@ namespace iText.Forms.Fields {
             this.document = document;
             this.formFieldName = formFieldName;
             if (document != null) {
-                this.conformanceLevel = document.GetConformanceLevel();
+                this.conformance = document.GetConformance();
             }
         }
 
@@ -68,25 +68,25 @@ namespace iText.Forms.Fields {
             return formFieldName;
         }
 
-        /// <summary>Gets conformance level for form field creation.</summary>
+        /// <summary>Gets conformance for form field creation.</summary>
         /// <returns>
         /// instance of
-        /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfConformance"/>
         /// to be used for form field creation
         /// </returns>
-        public virtual IConformanceLevel GetConformanceLevel() {
-            return conformanceLevel;
+        public virtual PdfConformance GetConformance() {
+            return conformance;
         }
 
-        /// <summary>Sets conformance level for form field creation.</summary>
-        /// <param name="conformanceLevel">
+        /// <summary>Sets conformance for form field creation.</summary>
+        /// <param name="conformance">
         /// Instance of
-        /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfConformance"/>
         /// to be used for form field creation.
         /// </param>
         /// <returns>this builder</returns>
-        public virtual T SetConformanceLevel(IConformanceLevel conformanceLevel) {
-            this.conformanceLevel = conformanceLevel;
+        public virtual T SetConformance(PdfConformance conformance) {
+            this.conformance = conformance;
             return GetThis();
         }
 

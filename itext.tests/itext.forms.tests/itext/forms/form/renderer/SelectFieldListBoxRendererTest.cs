@@ -49,22 +49,23 @@ namespace iText.Forms.Form.Renderer {
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelTest() {
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
-            NUnit.Framework.Assert.IsNull(renderer.GetConformanceLevel(null));
+            NUnit.Framework.Assert.IsNull(renderer.GetConformance(null));
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelWithDocumentTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
-            NUnit.Framework.Assert.IsNull(renderer.GetConformanceLevel(pdfDocument));
+            NUnit.Framework.Assert.IsNotNull(renderer.GetConformance(pdfDocument));
+            NUnit.Framework.Assert.IsFalse(renderer.GetConformance(pdfDocument).IsPdfAOrUa());
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelWithConformanceLevelTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
-            renderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfAConformanceLevel.PDF_A_1B);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, renderer.GetConformanceLevel(pdfDocument));
+            renderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfConformance.PDF_A_1B);
+            NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_A_1B, renderer.GetConformance(pdfDocument));
         }
 
         private class CustomSelectFieldListBoxRenderer : SelectFieldListBoxRenderer {

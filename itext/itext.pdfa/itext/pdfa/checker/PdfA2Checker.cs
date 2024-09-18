@@ -106,13 +106,13 @@ namespace iText.Pdfa.Checker {
         private readonly IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>(
             );
 
-        /// <summary>Creates a PdfA2Checker with the required conformance level</summary>
-        /// <param name="conformanceLevel">
-        /// the required conformance level, <c>a</c> or
+        /// <summary>Creates a PdfA2Checker with the required conformance</summary>
+        /// <param name="aConformance">
+        /// the required conformance, <c>a</c> or
         /// <c>u</c> or <c>b</c>
         /// </param>
-        public PdfA2Checker(PdfAConformanceLevel conformanceLevel)
-            : base(conformanceLevel) {
+        public PdfA2Checker(PdfAConformance aConformance)
+            : base(aConformance) {
         }
 
         public override void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces) {
@@ -417,7 +417,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             CheckAnnotationAgainstActions(annotDic);
-            if (CheckStructure(conformanceLevel)) {
+            if (CheckStructure(conformance)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
                     logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
                         , subtype.GetValue()));

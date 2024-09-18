@@ -72,12 +72,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_122());
+            framework.AddSuppliers(new _Generator_118());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_122 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_122() {
+        private sealed class _Generator_118 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_118() {
             }
 
             public IBlockElement Generate() {
@@ -98,7 +98,7 @@ namespace iText.Pdfua {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
-                    (10, 650, 40, 20)).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).CreateCheckBox();
+                    (10, 650, 40, 20)).SetConformance(PdfConformance.PDF_UA_1).CreateCheckBox();
                 checkBox.SetAlternativeName("widget");
                 acroForm.AddField(checkBox);
             }
@@ -350,8 +350,7 @@ namespace iText.Pdfua {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 // The rest of the tests for widgets can be found in com.itextpdf.pdfua.checkers.PdfUAFormFieldsTest
                 PdfFormField button = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle
-                    (10, 650, 40, 20)).SetConformanceLevel(PdfUAConformanceLevel.PDFUA_1).SetFont(LoadFont()).CreatePushButton
-                    ();
+                    (10, 650, 40, 20)).SetConformance(PdfConformance.PDF_UA_1).SetFont(LoadFont()).CreatePushButton();
                 button.SetAlternativeName("widget");
                 acroForm.AddField(button);
             }

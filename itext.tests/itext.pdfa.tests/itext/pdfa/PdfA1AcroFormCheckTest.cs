@@ -49,8 +49,8 @@ namespace iText.Pdfa {
         public virtual void AcroFormCheck01() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfDictionary acroForm = new PdfDictionary();
             acroForm.Put(PdfName.NeedAppearances, new PdfBoolean(true));
@@ -66,8 +66,8 @@ namespace iText.Pdfa {
             String cmpPdf = cmpFolder + "cmp_pdfA1b_acroFormCheck02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfDictionary acroForm = new PdfDictionary();
             acroForm.Put(PdfName.NeedAppearances, new PdfBoolean(false));
@@ -82,8 +82,8 @@ namespace iText.Pdfa {
             String cmpPdf = cmpFolder + "cmp_pdfA1b_acroFormCheck03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             PdfDictionary acroForm = new PdfDictionary();
             doc.GetCatalog().Put(PdfName.AcroForm, acroForm);

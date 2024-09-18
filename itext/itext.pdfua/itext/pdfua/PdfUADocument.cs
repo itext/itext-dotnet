@@ -25,7 +25,7 @@ using iText.Commons;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
 using iText.Pdfua.Checkers;
-using iText.Pdfua.Exceptions;
+using iText.Pdfua.Logs;
 
 namespace iText.Pdfua {
     /// <summary>Creates a Pdf/UA document.</summary>
@@ -39,9 +39,9 @@ namespace iText.Pdfua {
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument));
 
-        private PdfUAConfig config;
-
         private bool warnedOnPageFlush = false;
+
+        private PdfConformance conformance;
 
         /// <summary>Creates a PdfUADocument instance.</summary>
         /// <param name="writer">The writer to write the PDF document.</param>
@@ -56,6 +56,7 @@ namespace iText.Pdfua {
         /// <param name="config">The configuration for the PDF/UA document.</param>
         public PdfUADocument(PdfWriter writer, DocumentProperties properties, PdfUAConfig config)
             : base(ConfigureWriterProperties(writer), properties) {
+            conformance = new PdfConformance(config.GetConformance());
             SetupUAConfiguration(config);
         }
 
@@ -64,8 +65,7 @@ namespace iText.Pdfua {
         /// <param name="writer">The writer to write the PDF document.</param>
         /// <param name="config">The configuration for the PDF/UA document.</param>
         public PdfUADocument(PdfReader reader, PdfWriter writer, PdfUAConfig config)
-            : base(reader, ConfigureWriterProperties(writer)) {
-            SetupUAConfiguration(config);
+            : this(reader, writer, new StampingProperties(), config) {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
@@ -76,17 +76,20 @@ namespace iText.Pdfua {
         public PdfUADocument(PdfReader reader, PdfWriter writer, StampingProperties properties, PdfUAConfig config
             )
             : base(reader, ConfigureWriterProperties(writer), properties) {
+            conformance = base.GetConformance();
             SetupUAConfiguration(config);
-        }
-
-        /// <summary>{inheritDoc}</summary>
-        public override IConformanceLevel GetConformanceLevel() {
-            return config.GetConformanceLevel();
+            if (!GetConformance().IsPdfUA()) {
+                LOGGER.LogWarning(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED);
+            }
         }
 
         /// <returns>The PageFactory for the PDF/UA document.</returns>
         protected override IPdfPageFactory GetPageFactory() {
             return pdfPageFactory;
+        }
+
+        public override PdfConformance GetConformance() {
+            return conformance;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -118,7 +121,6 @@ namespace iText.Pdfua {
 
         private void SetupUAConfiguration(PdfUAConfig config) {
             //basic configuration
-            this.config = config;
             this.SetTagged();
             this.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
             this.GetCatalog().SetLang(new PdfString(config.GetLanguage()));

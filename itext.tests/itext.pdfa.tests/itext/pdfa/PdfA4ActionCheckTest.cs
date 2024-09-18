@@ -55,7 +55,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_LAUNCH_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 doc.GetFirstPage().SetAdditionalAction(PdfName.O, PdfAction.CreateLaunch(new PdfStringFS("launch.sh")));
             }
@@ -67,7 +67,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_SOUND_ActionToPage_Test() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     Stream @is = null;
                     try {
                         @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sample.aif");
@@ -92,7 +92,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_MOVIE_ActionToPage_Test() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     doc.AddNewPage().SetAdditionalAction(PdfName.O, PdfAction.CreateMovie(null, "Some movie", PdfName.Play));
                 }
                 );
@@ -105,7 +105,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_RESETFORM_ActionToPage_Test() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     CheckBox checkBox = new CheckBox("test");
                     checkBox.SetChecked(true);
                     Document document = new Document(doc);
@@ -121,7 +121,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_IMPORTDATA_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 doc.AddNewPage();
                 PdfDictionary openActions = new PdfDictionary();
@@ -136,7 +136,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_HIDE_ActionToPage_Test() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     PdfAnnotation[] annotations = new PdfAnnotation[] { new PdfLineAnnotation(new Rectangle(10, 10, 200, 200), 
                         new float[] { 50, 750, 50, 750 }), new PdfLineAnnotation(new Rectangle(200, 200, 200, 200), new float[
                         ] { 50, 750, 50, 750 }) };
@@ -152,7 +152,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_RENDITION_ActionToPage_Test() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     doc.AddNewPage().SetAdditionalAction(PdfName.O, PdfAction.CreateRendition("empty", PdfFileSpec.CreateEmbeddedFileSpec
                         (doc, null, "bing", "bing", new PdfDictionary(), PdfName.AllOn), "something", new PdfCircleAnnotation(
                         new Rectangle(10, 10, 200, 200))));
@@ -166,7 +166,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_TRANS_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 PdfDictionary openActions = new PdfDictionary();
                 openActions.Put(PdfName.S, PdfName.Trans);
@@ -179,7 +179,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_SETSTATE_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 PdfDictionary action = new PdfDictionary();
                 action.Put(PdfName.S, PdfName.SetState);
@@ -192,7 +192,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_NOOP_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 PdfDictionary action = new PdfDictionary();
                 action.Put(PdfName.S, PdfName.NoOp);
@@ -205,7 +205,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_SETOCGSTATE_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 doc.AddNewPage().SetAdditionalAction(PdfName.O, PdfAction.CreateSetOcgState(new List<PdfActionOcgState>())
                     );
@@ -217,7 +217,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4ForbiddenActions_GOTO3DVIEW_ActionToPage_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4, null, (doc) => {
                 PdfDictionary action = new PdfDictionary();
                 action.Put(PdfName.S, PdfName.GoTo3DView);
@@ -231,7 +231,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4_SETOCGSTATE_InCatalog_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     doc.GetCatalog().SetAdditionalAction(PdfName.O, PdfAction.CreateSetOcgState(new List<PdfActionOcgState>())
                         );
                 }
@@ -246,7 +246,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4_SETOCGSTATE_Annotation_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     doc.AddNewPage().AddAnnotation(ConstructAnnotationWithAction(PdfName.SetOCGState));
                 }
                 );
@@ -261,7 +261,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4E_SETOCGSTATE_Annotation_Test() {
             String outPdf = DESTINATION_FOLDER + "pdfA4ESetOCGStateAnnotation.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4ESetOCGStateAnnotation.pdf";
-            GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4E, outPdf, (doc) => {
+            GeneratePdfADocument(PdfAConformance.PDF_A_4E, outPdf, (doc) => {
                 doc.AddNewPage().AddAnnotation(ConstructAnnotationWithAction(PdfName.SetOCGState));
             }
             );
@@ -271,7 +271,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4_SETGOTO3DVIEW_Annotation_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     doc.AddNewPage().AddAnnotation(ConstructAnnotationWithAction(PdfName.GoTo3DView));
                 }
                 );
@@ -286,7 +286,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4E_GOTO3DVIEW_Annotation_Test() {
             String outPdf = DESTINATION_FOLDER + "pdfA4ESetGoto3DViewAnnotation.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4EGoto3DViewAnnotation.pdf";
-            GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4E, outPdf, (doc) => {
+            GeneratePdfADocument(PdfAConformance.PDF_A_4E, outPdf, (doc) => {
                 doc.AddNewPage().AddAnnotation(ConstructAnnotationWithAction(PdfName.GoTo3DView));
             }
             );
@@ -299,7 +299,7 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AllowedNamedActions.pdf";
             IList<PdfName> annots = JavaUtil.ArraysAsList(PdfName.NextPage, PdfName.PrevPage, PdfName.FirstPage, PdfName
                 .LastPage);
-            GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, outPdf, (doc) => {
+            GeneratePdfADocument(PdfAConformance.PDF_A_4, outPdf, (doc) => {
                 PdfPage page = doc.GetFirstPage();
                 foreach (PdfName annot in annots) {
                     PdfAnnotation annotation = ConstructAnnotationWithAction(new PdfName(""));
@@ -317,7 +317,7 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4SpecialAllowedAction.pdf";
             IList<PdfName> annots = JavaUtil.ArraysAsList(PdfName.GoToR, PdfName.GoToE, PdfName.URI, PdfName.SubmitForm
                 );
-            GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, outPdf, (doc) => {
+            GeneratePdfADocument(PdfAConformance.PDF_A_4, outPdf, (doc) => {
                 PdfPage page = doc.GetFirstPage();
                 foreach (PdfName annot in annots) {
                     PdfAnnotation annotation = ConstructAnnotationWithAction(annot);
@@ -331,7 +331,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4F_SETOCGSTATE_InCatalog_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4F, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4F, null, (doc) => {
                     doc.GetCatalog().SetAdditionalAction(PdfName.O, PdfAction.CreateSetOcgState(new List<PdfActionOcgState>())
                         );
                 }
@@ -346,7 +346,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4E_SETOCGSTATE_InCatalog_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4E, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4E, null, (doc) => {
                     doc.GetCatalog().SetAdditionalAction(PdfName.O, PdfAction.CreateSetOcgState(new List<PdfActionOcgState>())
                         );
                 }
@@ -361,7 +361,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4_GOTO3DVIEW_InCatalog_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4, null, (doc) => {
                     PdfDictionary action = new PdfDictionary();
                     action.Put(PdfName.S, PdfName.GoTo3DView);
                     doc.GetCatalog().SetAdditionalAction(PdfName.O, new PdfAction(action));
@@ -377,7 +377,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA4F_GOTO3DView_InCatalog_Test() {
             Exception pdfa4Exception = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
-                GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4F, null, (doc) => {
+                GeneratePdfADocument(PdfAConformance.PDF_A_4F, null, (doc) => {
                     PdfDictionary action = new PdfDictionary();
                     action.Put(PdfName.S, PdfName.GoTo3DView);
                     doc.GetCatalog().SetAdditionalAction(PdfName.O, new PdfAction(action));
@@ -391,7 +391,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4E_GOTO3DView_InCatalog_Test() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => GeneratePdfADocument(PdfAConformance
                 .PDF_A_4E, null, (doc) => {
                 PdfDictionary action = new PdfDictionary();
                 action.Put(PdfName.S, PdfName.GoTo3DView);
@@ -406,7 +406,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4AAEntriesAllowedInAADocumentCatalog_Test() {
             String outPdf = DESTINATION_FOLDER + "pdfA4AAEntriesAllowedInAADocumentCatalog.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AAEntriesAllowedInAADocumentCatalog.pdf";
-            GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, outPdf, (doc) => {
+            GeneratePdfADocument(PdfAConformance.PDF_A_4, outPdf, (doc) => {
                 PdfDictionary allowedAA = new PdfDictionary();
                 allowedAA.Put(PdfName.E, new PdfName("HELLO"));
                 allowedAA.Put(PdfName.X, new PdfName("HELLO"));
@@ -424,7 +424,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4AAEntriesAllowedInAAPage_Test() {
             String outPdf = DESTINATION_FOLDER + "pdfA4AAEntriesAllowedInAAPage.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AAEntriesAllowedInAAPage.pdf";
-            GeneratePdfADocument(PdfAConformanceLevel.PDF_A_4, outPdf, (doc) => {
+            GeneratePdfADocument(PdfAConformance.PDF_A_4, outPdf, (doc) => {
                 PdfDictionary allowedAA = new PdfDictionary();
                 allowedAA.Put(PdfName.E, new PdfName("HELLO"));
                 allowedAA.Put(PdfName.X, new PdfName("HELLO"));
@@ -460,14 +460,14 @@ namespace iText.Pdfa {
             }
         }
 
-        private void GeneratePdfADocument(PdfAConformanceLevel conformanceLevel, String outPdf, System.Action<PdfDocument
-            > consumer) {
+        private void GeneratePdfADocument(PdfAConformance conformance, String outPdf, System.Action<PdfDocument> consumer
+            ) {
             String filename = DESTINATION_FOLDER + Guid.NewGuid().ToString() + ".pdf";
             if (outPdf != null) {
                 filename = outPdf;
             }
             PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
+            PdfADocument doc = new PdfADocument(writer, conformance, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"))
                 );
             doc.AddNewPage();

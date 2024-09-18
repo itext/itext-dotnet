@@ -76,7 +76,7 @@ namespace iText.Pdfa.Checker {
         [NUnit.Framework.Test]
         public virtual void CheckContentStreamPdfAText() {
             //TODO adapt after DEVSIX-5759 is fixed
-            PdfA1Checker testChecker = new PdfA1Checker(PdfAConformanceLevel.PDF_A_1B);
+            PdfA1Checker testChecker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
             PdfADocument pdfa = new PdfADocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "InlineImagesPdfA.pdf")), 
                 new PdfWriter(new MemoryStream()).SetSmartMode(true));
             PdfStream firstContentStream = pdfa.GetPage(1).GetFirstContentStream();

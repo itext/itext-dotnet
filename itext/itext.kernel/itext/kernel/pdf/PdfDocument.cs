@@ -1131,15 +1131,11 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Get the
-        /// <see cref="IConformanceLevel"/>
+        /// <see cref="PdfConformance"/>
         /// </summary>
-        /// <returns>
-        /// the
-        /// <see cref="IConformanceLevel"/>
-        /// will be null if the document does not have a conformance level specified
-        /// </returns>
-        public virtual IConformanceLevel GetConformanceLevel() {
-            return null;
+        /// <returns>the document conformance</returns>
+        public virtual PdfConformance GetConformance() {
+            return reader == null ? PdfConformance.PDF_NONE_CONFORMANCE : reader.GetPdfConformance();
         }
 
         /// <summary>
@@ -2315,8 +2311,8 @@ namespace iText.Kernel.Pdf {
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = GetXmpMetadata(true);
             XmpMetaInfoConverter.AppendDocumentInfoToMetadata(GetDocumentInfo(), xmpMeta);
-            if (IsTagged() && writer.properties.addUAXmpMetadata && !IsXmpMetaHasProperty(xmpMeta, XMPConst.NS_PDFUA_ID
-                , XMPConst.PART)) {
+            if (IsTagged() && writer.properties.addUAXmpMetadata && xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID, XMPConst
+                .PART) == null) {
                 xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
                     ));
             }
@@ -2664,10 +2660,6 @@ namespace iText.Kernel.Pdf {
                 }
             }
             properties.isFullCompression = readerHasXrefStream;
-        }
-
-        private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
-            return xmpMeta.GetProperty(schemaNS, propName) != null;
         }
 
         private class DestinationMutationInfo {

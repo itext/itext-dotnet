@@ -79,13 +79,13 @@ namespace iText.Pdfa.Checker {
 
         private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
 
-        /// <summary>Creates a PdfA1Checker with the required conformance level</summary>
-        /// <param name="conformanceLevel">
-        /// the required conformance level, <c>a</c> or
+        /// <summary>Creates a PdfA1Checker with the required conformance</summary>
+        /// <param name="aConformance">
+        /// the required conformance, <c>a</c> or
         /// <c>b</c>
         /// </param>
-        public PdfA1Checker(PdfAConformanceLevel conformanceLevel)
-            : base(conformanceLevel) {
+        public PdfA1Checker(PdfAConformance aConformance)
+            : base(aConformance) {
         }
 
         public override void CheckCanvasStack(char stackOperation) {
@@ -419,7 +419,7 @@ namespace iText.Pdfa.Checker {
         }
 
         protected internal override void CheckLogicalStructure(PdfDictionary catalog) {
-            if (CheckStructure(conformanceLevel)) {
+            if (CheckStructure(conformance)) {
                 PdfDictionary markInfo = catalog.GetAsDictionary(PdfName.MarkInfo);
                 if (markInfo == null || markInfo.GetAsBoolean(PdfName.Marked) == null || !markInfo.GetAsBoolean(PdfName.Marked
                     ).GetValue()) {
@@ -625,7 +625,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.AN_ANNOTATION_DICTIONARY_SHALL_NOT_CONTAIN_AA_KEY
                     );
             }
-            if (CheckStructure(conformanceLevel)) {
+            if (CheckStructure(conformance)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
                     logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
                         , subtype.GetValue()));

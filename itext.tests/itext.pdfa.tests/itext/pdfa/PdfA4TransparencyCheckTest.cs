@@ -61,7 +61,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "textTransparencyPageOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_textTransparencyPageOutputIntent.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page1 = pdfDocument.AddNewPage();
@@ -84,7 +84,7 @@ namespace iText.Pdfa {
         public virtual void TextTransparencyPageWrongOutputIntentTest() {
             String outPdf = DESTINATION_FOLDER + "textTransparencyPageWrongOutputIntent.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfDocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfDocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfOutputIntent outputIntent = CreateOutputIntent();
@@ -108,7 +108,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "transparencyAndCS.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_transparencyAndCS.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             Stream streamGray = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "BlackWhite.icc");
@@ -139,7 +139,7 @@ namespace iText.Pdfa {
         public virtual void BlendModeTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, CreateOutputIntent())) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, CreateOutputIntent())) {
                 PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
                 canvas.SaveState();
                 canvas.SetExtGState(new PdfExtGState().SetBlendMode(PdfName.Darken));
@@ -159,7 +159,7 @@ namespace iText.Pdfa {
         public virtual void BlendModeAnnotationTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
-            PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfDocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(100f, 100f));
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(formXObject, doc);
             canvas.GetPdfCanvas().Circle(50f, 50f, 40f);
@@ -180,7 +180,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "blendModeAnnotationOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_blendModeAnnotationOutputIntent.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            using (PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null)) {
+            using (PdfDocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null)) {
                 PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(100f, 100f));
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(formXObject, doc);
                 canvas.GetPdfCanvas().Circle(50f, 50f, 40f);
@@ -200,7 +200,7 @@ namespace iText.Pdfa {
         public virtual void ForbiddenBlendModeAnnotationTest() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, CreateOutputIntent());
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(0f, 0f));
             PdfAnnotation annotation = new PdfPopupAnnotation(new Rectangle(0f, 0f));
             annotation.SetNormalAppearance(formXObject.GetPdfObject());

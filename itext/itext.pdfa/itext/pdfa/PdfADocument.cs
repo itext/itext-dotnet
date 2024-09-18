@@ -46,17 +46,17 @@ namespace iText.Pdfa {
     /// that comply with the PDF/A standard.
     /// Client code is still responsible for making sure the file is actually PDF/A
     /// compliant: multiple steps must be undertaken (depending on the
-    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+    /// <see cref="iText.Kernel.Pdf.PdfConformance"/>
     /// ) to ensure that the PDF/A standard is followed.
     /// This class will throw exceptions, mostly
     /// <see cref="iText.Pdfa.Exceptions.PdfAConformanceException"/>
     /// ,
     /// and thus refuse to output a PDF/A file if at any point the document does not
     /// adhere to the PDF/A guidelines specified by the
-    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>.
+    /// <see cref="iText.Kernel.Pdf.PdfConformance"/>.
     /// </remarks>
     public class PdfADocument : PdfDocument {
-        private static IPdfPageFactory pdfAPageFactory = new PdfAPageFactory();
+        private static readonly IPdfPageFactory pdfAPageFactory = new PdfAPageFactory();
 
         protected internal PdfAChecker checker;
 
@@ -64,12 +64,12 @@ namespace iText.Pdfa {
 
         private bool alreadyLoggedThatPageFlushingWasNotPerformed = false;
 
-        private bool isPdfADocument = true;
+        private PdfConformance conformance;
 
         /// <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
         /// <remarks>
         /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
-        /// PDF/A file has a conformance level, and must have an explicit output
+        /// PDF/A file has a conformance, and must have an explicit output
         /// intent.
         /// </remarks>
         /// <param name="writer">
@@ -77,19 +77,19 @@ namespace iText.Pdfa {
         /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
         /// object to write to
         /// </param>
-        /// <param name="conformanceLevel">the generation and strictness level of the PDF/A that must be followed.</param>
+        /// <param name="aConformance">the generation and strictness level of the PDF/A that must be followed.</param>
         /// <param name="outputIntent">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfOutputIntent"/>
         /// </param>
-        public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent outputIntent)
-            : this(writer, conformanceLevel, outputIntent, new DocumentProperties()) {
+        public PdfADocument(PdfWriter writer, PdfAConformance aConformance, PdfOutputIntent outputIntent)
+            : this(writer, aConformance, outputIntent, new DocumentProperties()) {
         }
 
         /// <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
         /// <remarks>
         /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
-        /// PDF/A file has a conformance level, and must have an explicit output
+        /// PDF/A file has a conformance, and must have an explicit output
         /// intent.
         /// </remarks>
         /// <param name="writer">
@@ -97,7 +97,7 @@ namespace iText.Pdfa {
         /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
         /// object to write to
         /// </param>
-        /// <param name="conformanceLevel">the generation and strictness level of the PDF/A that must be followed.</param>
+        /// <param name="aConformance">the generation and strictness level of the PDF/A that must be followed.</param>
         /// <param name="outputIntent">
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfOutputIntent"/>
@@ -106,10 +106,11 @@ namespace iText.Pdfa {
         /// a
         /// <see cref="iText.Kernel.Pdf.DocumentProperties"/>
         /// </param>
-        public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent outputIntent, 
-            DocumentProperties properties)
+        public PdfADocument(PdfWriter writer, PdfAConformance aConformance, PdfOutputIntent outputIntent, DocumentProperties
+             properties)
             : base(writer, properties) {
-            SetChecker(conformanceLevel);
+            this.conformance = new PdfConformance(aConformance);
+            SetChecker(aConformance);
             AddOutputIntent(outputIntent);
         }
 
@@ -119,7 +120,7 @@ namespace iText.Pdfa {
         /// <see langword="null"/>.
         /// </returns>
         public override PdfFont GetDefaultFont() {
-            if (isPdfADocument) {
+            if (GetConformance().IsPdfA()) {
                 return null;
             }
             return base.GetDefaultFont();
@@ -143,29 +144,14 @@ namespace iText.Pdfa {
 //\cond DO_NOT_DOCUMENT
         internal PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties, bool tolerant)
             : base(reader, writer, properties) {
-            PdfAConformanceLevel conformanceLevel = reader.GetPdfAConformanceLevel();
-            if (conformanceLevel == null) {
-                if (tolerant) {
-                    isPdfADocument = false;
-                }
-                else {
-                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
-                        );
-                }
+            this.conformance = base.GetConformance();
+            if (!GetConformance().IsPdfA() && !tolerant) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.DOCUMENT_TO_READ_FROM_SHALL_BE_A_PDFA_CONFORMANT_FILE_WITH_VALID_XMP_METADATA
+                    );
             }
-            SetChecker(conformanceLevel);
+            SetChecker(GetConformance().GetAConformance());
         }
 //\endcond
-
-        /// <summary><inheritDoc/></summary>
-        public override IConformanceLevel GetConformanceLevel() {
-            if (isPdfADocument) {
-                return checker.GetConformanceLevel();
-            }
-            else {
-                return null;
-            }
-        }
 
         /// <summary><inheritDoc/></summary>
         /// <param name="outputIntent">
@@ -175,6 +161,10 @@ namespace iText.Pdfa {
         public override void AddOutputIntent(PdfOutputIntent outputIntent) {
             base.AddOutputIntent(outputIntent);
             checker.SetPdfAOutputIntentColorSpace(GetCatalog().GetPdfObject());
+        }
+
+        public override PdfConformance GetConformance() {
+            return conformance;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -189,7 +179,7 @@ namespace iText.Pdfa {
 //\endcond
 
         protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
-            if (!isPdfADocument) {
+            if (!GetConformance().IsPdfA()) {
                 base.AddCustomMetadataExtensions(xmpMeta);
                 return;
             }
@@ -208,19 +198,19 @@ namespace iText.Pdfa {
         }
 
         protected override void UpdateXmpMetadata() {
-            if (!isPdfADocument) {
+            if (!GetConformance().IsPdfA()) {
                 base.UpdateXmpMetadata();
                 return;
             }
             try {
                 XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
-                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel().GetPart());
-                if (checker.GetConformanceLevel().GetConformance() != null) {
-                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel().GetConformance
-                        ());
+                PdfAConformance aLevel = checker.GetAConformance();
+                xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, aLevel.GetPart());
+                if (aLevel.GetLevel() != null) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, aLevel.GetLevel());
                 }
-                if ("4".Equals(checker.GetConformanceLevel().GetPart())) {
-                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV, PdfAConformanceLevel.PDF_A_4_REVISION);
+                if ("4".Equals(aLevel.GetPart())) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV, PdfConformance.PDF_A_4_REVISION);
                 }
                 AddCustomMetadataExtensions(xmpMeta);
                 SetXmpMetadata(xmpMeta);
@@ -237,7 +227,7 @@ namespace iText.Pdfa {
         }
 
         protected override void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
-            if (!isPdfADocument) {
+            if (!GetConformance().IsPdfA()) {
                 base.FlushObject(pdfObject, canBeInObjStm);
                 return;
             }
@@ -257,21 +247,21 @@ namespace iText.Pdfa {
 
         /// <summary>
         /// Sets the checker that defines the requirements of the PDF/A standard
-        /// depending on conformance level.
+        /// depending on conformance.
         /// </summary>
-        /// <param name="conformanceLevel">
+        /// <param name="aConformance">
         /// 
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfAConformance"/>
         /// </param>
-        protected internal virtual void SetChecker(PdfAConformanceLevel conformanceLevel) {
-            if (!isPdfADocument) {
+        protected internal virtual void SetChecker(PdfAConformance aConformance) {
+            if (!GetConformance().IsPdfA()) {
                 return;
             }
-            SetChecker(GetCorrectCheckerFromConformance(conformanceLevel));
+            SetChecker(GetCorrectCheckerFromConformance(aConformance));
         }
 
         protected internal virtual void SetChecker(PdfAChecker checker) {
-            if (!isPdfADocument) {
+            if (!GetConformance().IsPdfA()) {
                 return;
             }
             this.checker = checker;
@@ -281,7 +271,7 @@ namespace iText.Pdfa {
         }
 
         private void SetCheckerIfChanged() {
-            if (!isPdfADocument) {
+            if (!GetConformance().IsPdfA()) {
                 return;
             }
             if (!GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
@@ -293,26 +283,26 @@ namespace iText.Pdfa {
             }
         }
 
-        private static PdfAChecker GetCorrectCheckerFromConformance(PdfAConformanceLevel conformanceLevel) {
+        private static PdfAChecker GetCorrectCheckerFromConformance(PdfAConformance aConformance) {
             PdfAChecker checker;
-            switch (conformanceLevel.GetPart()) {
+            switch (aConformance.GetPart()) {
                 case "1": {
-                    checker = new PdfA1Checker(conformanceLevel);
+                    checker = new PdfA1Checker(aConformance);
                     break;
                 }
 
                 case "2": {
-                    checker = new PdfA2Checker(conformanceLevel);
+                    checker = new PdfA2Checker(aConformance);
                     break;
                 }
 
                 case "3": {
-                    checker = new PdfA3Checker(conformanceLevel);
+                    checker = new PdfA3Checker(aConformance);
                     break;
                 }
 
                 case "4": {
-                    checker = new PdfA4Checker(conformanceLevel);
+                    checker = new PdfA4Checker(aConformance);
                     break;
                 }
 
@@ -325,8 +315,8 @@ namespace iText.Pdfa {
 
         /// <summary>Initializes tagStructureContext to track necessary information of document's tag structure.</summary>
         protected override void InitTagStructureContext() {
-            if (isPdfADocument) {
-                tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetConformanceLevel()));
+            if (GetConformance().IsPdfA()) {
+                tagStructureContext = new TagStructureContext(this, GetPdfVersionForPdfA(checker.GetAConformance()));
             }
             else {
                 base.InitTagStructureContext();
@@ -334,7 +324,7 @@ namespace iText.Pdfa {
         }
 
         protected override IPdfPageFactory GetPageFactory() {
-            if (isPdfADocument) {
+            if (GetConformance().IsPdfA()) {
                 return pdfAPageFactory;
             }
             else {
@@ -348,7 +338,7 @@ namespace iText.Pdfa {
         /// <inheritDoc/>
         /// </param>
         protected override void FlushInfoDictionary(bool appendMode) {
-            if (!isPdfADocument || (!"4".Equals(checker.GetConformanceLevel().GetPart()))) {
+            if (!GetConformance().IsPdfA() || (!"4".Equals(GetConformance().GetAConformance().GetPart()))) {
                 base.FlushInfoDictionary(appendMode);
             }
             else {
@@ -366,9 +356,9 @@ namespace iText.Pdfa {
         }
 //\endcond
 
-        private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel) {
+        private static PdfVersion GetPdfVersionForPdfA(PdfAConformance aConformance) {
             PdfVersion version;
-            switch (conformanceLevel.GetPart()) {
+            switch (aConformance.GetPart()) {
                 case "1": {
                     version = PdfVersion.PDF_1_4;
                     break;

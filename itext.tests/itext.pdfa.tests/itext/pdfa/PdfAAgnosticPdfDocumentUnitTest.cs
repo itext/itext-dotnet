@@ -56,7 +56,8 @@ namespace iText.Pdfa {
             pdfDoc.CheckIsoConformance(validationContext);
             // Does nothing for PdfDocument
             NUnit.Framework.Assert.IsFalse(pdfDoc.GetPageFactoryPublic() is PdfAPageFactory);
-            NUnit.Framework.Assert.IsNull(pdfDoc.GetConformanceLevel());
+            NUnit.Framework.Assert.IsNotNull(pdfDoc.GetConformance());
+            NUnit.Framework.Assert.IsFalse(pdfDoc.GetConformance().IsPdfAOrUa());
             pdfDoc.UpdateXmpMetadataPublic();
             XMPMeta xmpMeta = pdfDoc.GetXmpMetadata(true);
             NUnit.Framework.Assert.IsNull(xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART));
@@ -81,7 +82,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsFalse(pdfADoc.GetPage(1).GetPdfObject().IsFlushed());
             IValidationContext validationContext = new PdfDocumentValidationContext(pdfADoc, new List<PdfFont>());
             pdfADoc.CheckIsoConformance(validationContext);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_2B, pdfADoc.GetConformanceLevel());
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_2B, pdfADoc.GetConformance().GetAConformance());
             NUnit.Framework.Assert.IsTrue(pdfADoc.GetPageFactoryPublic() is PdfAPageFactory);
             pdfADoc.UpdateXmpMetadataPublic();
             XMPMeta xmpMeta = pdfADoc.GetXmpMetadata();

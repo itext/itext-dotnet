@@ -184,8 +184,8 @@ namespace iText.Pdfua {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-8571")]
         public virtual void NormalPdfSignerVisibleSignatureWithoutFont() {
+            // TODO DEVSIX-8623 Spike: Get rid of PdfADocument, PdfUADocument, PdfAAgnosticDocument in favour of one PdfDocument
             //This test should fail with the appropriate exception
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithoutFont", (signer) => {
@@ -224,8 +224,8 @@ namespace iText.Pdfua {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-8571")]
         public virtual void NormalPdfSignerVisibleSignatureWithFontEmptyTU() {
+            // TODO DEVSIX-8623 Spike: Get rid of PdfADocument, PdfUADocument, PdfAAgnosticDocument in favour of one PdfDocument
             //Should throw the correct exception if the font is not set
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             PdfFont font = PdfFontFactory.CreateFont(FONT);
@@ -269,8 +269,8 @@ namespace iText.Pdfua {
 
         private MemoryStream GenerateSimplePdfUA1Document() {
             MemoryStream @out = new MemoryStream();
-            PdfUADocument pdfUADocument = new PdfUADocument(new PdfWriter(@out), new PdfUAConfig(PdfUAConformanceLevel
-                .PDFUA_1, "Title", "en-US"));
+            PdfUADocument pdfUADocument = new PdfUADocument(new PdfWriter(@out), new PdfUAConfig(PdfUAConformance.PDF_UA_1
+                , "Title", "en-US"));
             pdfUADocument.AddNewPage();
             pdfUADocument.Close();
             return new MemoryStream(@out.ToArray());
@@ -323,7 +323,7 @@ namespace iText.Pdfua {
 
             protected override PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties properties
                 ) {
-                return new PdfUADocument(reader, writer, new PdfUAConfig(PdfUAConformanceLevel.PDFUA_1, "Title", "en-US"));
+                return new PdfUADocument(reader, writer, new PdfUAConfig(PdfUAConformance.PDF_UA_1, "Title", "en-US"));
             }
         }
 //\endcond

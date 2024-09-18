@@ -47,7 +47,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4fWithoutEmbeddedFilesTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4fWithoutEmbeddedFilesTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4F, CreateOutputIntent());
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.NAME_DICTIONARY_SHALL_CONTAIN_EMBEDDED_FILES_KEY
@@ -58,7 +58,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4fWithEmbeddedFilesWithoutFTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4fWithEmbeddedFilesWithoutFTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4F, CreateOutputIntent());
             doc.AddNewPage();
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
                 , null, null);
@@ -74,7 +74,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4fWithEmbeddedFilesWithoutUFTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4fWithEmbeddedFilesWithoutUFTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4F, CreateOutputIntent());
             doc.AddNewPage();
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
                 , null, null);
@@ -90,7 +90,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4fWithEmbeddedFilesWithoutAFRTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4fWithEmbeddedFilesWithoutAFRTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4F, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4F, CreateOutputIntent());
             doc.AddNewPage();
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
                 , null, null);
@@ -106,7 +106,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4eWithEmbeddedFilesWithoutFTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4eWithEmbeddedFilesWithoutFTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4E, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4E, CreateOutputIntent());
             doc.AddNewPage();
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
                 , null, null);
@@ -122,7 +122,7 @@ namespace iText.Pdfa {
         public virtual void PdfA4WithEmbeddedFilesWithoutAFRTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4WithEmbeddedFilesWithoutAFRTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, CreateOutputIntent());
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, CreateOutputIntent());
             doc.AddNewPage();
             PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
                 , null, null);

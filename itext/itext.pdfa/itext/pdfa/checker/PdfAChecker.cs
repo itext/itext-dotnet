@@ -92,7 +92,7 @@ namespace iText.Pdfa.Checker {
         /// </remarks>
         public const int maxGsStackDepth = 28;
 
-        protected internal PdfAConformanceLevel conformanceLevel;
+        protected internal PdfAConformance conformance;
 
         protected internal PdfStream pdfAOutputIntentDestProfile;
 
@@ -122,10 +122,10 @@ namespace iText.Pdfa.Checker {
 
         private bool fullCheckMode = false;
 
-        /// <summary>Creates a PdfAChecker with the required conformance level.</summary>
-        /// <param name="conformanceLevel">the required conformance level</param>
-        protected internal PdfAChecker(PdfAConformanceLevel conformanceLevel) {
-            this.conformanceLevel = conformanceLevel;
+        /// <summary>Creates a PdfAChecker with the required conformance.</summary>
+        /// <param name="aConformance">the required conformance</param>
+        protected internal PdfAChecker(PdfAConformance aConformance) {
+            this.conformance = aConformance;
         }
 
         /// <summary>
@@ -321,12 +321,12 @@ namespace iText.Pdfa.Checker {
 
         /// <summary>
         /// Gets the
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfAConformance"/>
         /// for this file.
         /// </summary>
-        /// <returns>the defined conformance level for this document.</returns>
-        public virtual PdfAConformanceLevel GetConformanceLevel() {
-            return conformanceLevel;
+        /// <returns>the defined conformance for this document.</returns>
+        public virtual PdfAConformance GetAConformance() {
+            return conformance;
         }
 
         /// <summary>In full check mode all objects will be tested for ISO conformance.</summary>
@@ -866,16 +866,16 @@ namespace iText.Pdfa.Checker {
             return (flags & flag) != 0;
         }
 
-        /// <summary>Checks conformance level of PDF/A standard.</summary>
-        /// <param name="conformanceLevel">
+        /// <summary>Checks conformance of PDF/A standard.</summary>
+        /// <param name="aConformance">
         /// the
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfAConformance"/>
         /// to be checked
         /// </param>
-        /// <returns>true if the specified conformanceLevel is <c>a</c> for PDF/A-1, PDF/A-2 or PDF/A-3</returns>
-        protected internal static bool CheckStructure(PdfAConformanceLevel conformanceLevel) {
-            return conformanceLevel == PdfAConformanceLevel.PDF_A_1A || conformanceLevel == PdfAConformanceLevel.PDF_A_2A
-                 || conformanceLevel == PdfAConformanceLevel.PDF_A_3A;
+        /// <returns>true if the specified aConformance is <c>a</c> for PDF/A-1, PDF/A-2 or PDF/A-3</returns>
+        protected internal static bool CheckStructure(PdfAConformance aConformance) {
+            return aConformance == PdfAConformance.PDF_A_1A || aConformance == PdfAConformance.PDF_A_2A || aConformance
+                 == PdfAConformance.PDF_A_3A;
         }
 
         /// <summary>Checks whether the specified dictionary has a transparency group.</summary>

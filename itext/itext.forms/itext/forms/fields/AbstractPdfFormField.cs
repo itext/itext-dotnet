@@ -68,7 +68,7 @@ namespace iText.Forms.Fields {
 
         protected internal Color color;
 
-        protected internal IConformanceLevel pdfConformanceLevel;
+        protected internal PdfConformance pdfConformance;
 
         /// <summary>Parent form field.</summary>
         protected internal PdfFormField parent;
@@ -200,13 +200,13 @@ namespace iText.Forms.Fields {
             return color == null && parent != null ? parent.GetColor() : color;
         }
 
-        /// <summary>Gets the declared conformance level.</summary>
+        /// <summary>Gets the declared conformance.</summary>
         /// <returns>
         /// the
-        /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfConformance"/>
         /// </returns>
-        public virtual IConformanceLevel GetPdfConformanceLevel() {
-            return pdfConformanceLevel == null && parent != null ? parent.GetPdfConformanceLevel() : pdfConformanceLevel;
+        public virtual PdfConformance GetPdfConformance() {
+            return pdfConformance == null && parent != null ? parent.GetPdfConformance() : pdfConformance;
         }
 
         /// <summary>This method regenerates appearance stream of the field.</summary>

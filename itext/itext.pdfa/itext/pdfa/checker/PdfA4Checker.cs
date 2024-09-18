@@ -91,10 +91,10 @@ namespace iText.Pdfa.Checker {
         private IDictionary<PdfObject, IList<PdfStream>> iccBasedCmykObjects = new Dictionary<PdfObject, IList<PdfStream
             >>();
 
-        /// <summary>Creates a PdfA4Checker with the required conformance level</summary>
-        /// <param name="conformanceLevel">the required conformance level</param>
-        public PdfA4Checker(PdfAConformanceLevel conformanceLevel)
-            : base(conformanceLevel) {
+        /// <summary>Creates a PdfA4Checker with the required conformance</summary>
+        /// <param name="aConformance">the required conformance</param>
+        public PdfA4Checker(PdfAConformance aConformance)
+            : base(aConformance) {
         }
 
         /// <summary><inheritDoc/></summary>
@@ -169,7 +169,7 @@ namespace iText.Pdfa.Checker {
                         );
                 }
             }
-            if ("F".Equals(conformanceLevel.GetConformance())) {
+            if ("F".Equals(conformance.GetLevel())) {
                 if (!catalog.NameTreeContainsKey(PdfName.EmbeddedFiles)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.NAME_DICTIONARY_SHALL_CONTAIN_EMBEDDED_FILES_KEY
                         );
@@ -340,11 +340,11 @@ namespace iText.Pdfa.Checker {
 
         /// <summary><inheritDoc/></summary>
         protected internal override ICollection<PdfName> GetForbiddenAnnotations() {
-            if ("E".Equals(conformanceLevel.GetConformance())) {
+            if ("E".Equals(conformance.GetLevel())) {
                 return forbiddenAnnotations4E;
             }
             else {
-                if ("F".Equals(conformanceLevel.GetConformance())) {
+                if ("F".Equals(conformance.GetLevel())) {
                     return forbiddenAnnotations4F;
                 }
             }
@@ -425,7 +425,7 @@ namespace iText.Pdfa.Checker {
 
         /// <summary><inheritDoc/></summary>
         protected internal override ICollection<PdfName> GetForbiddenActions() {
-            if ("E".Equals(conformanceLevel.GetConformance())) {
+            if ("E".Equals(conformance.GetLevel())) {
                 return forbiddenActionsE;
             }
             return base.GetForbiddenActions();
@@ -529,14 +529,14 @@ namespace iText.Pdfa.Checker {
         private void CheckVersionIdentification(XMPMeta meta) {
             try {
                 XMPProperty prop = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART);
-                if (prop == null || !GetConformanceLevel().GetPart().Equals(prop.GetValue())) {
+                if (prop == null || !GetAConformance().GetPart().Equals(prop.GetValue())) {
                     throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                        , GetConformanceLevel().GetPart()));
+                        , GetAConformance().GetPart()));
                 }
             }
             catch (XMPException) {
                 throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                    , GetConformanceLevel().GetPart()));
+                    , GetAConformance().GetPart()));
             }
             try {
                 XMPProperty prop = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV);

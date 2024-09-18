@@ -20,15 +20,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Kernel.Pdf {
-    /// <summary>Interface for PDF conformance level.</summary>
-    /// <remarks>
-    /// Interface for PDF conformance level.
-    /// <para />
-    /// Conformance levels are extended PDF specifications that define subsets of PDF
-    /// functionality. An example of a conformance level is PDF/A, which is used for long-term archiving
-    /// and PDF/UA, which is used for accessible documents.
-    /// </remarks>
-    public interface IConformanceLevel {
+using System;
+
+namespace iText.Pdfua.Logs {
+    /// <summary>Class containing the log message constants.</summary>
+    public sealed class PdfUALogMessageConstants {
+        public const String PAGE_FLUSHING_DISABLED = "Page flushing is disabled in PDF/UA mode to allow UA checks "
+             + "to be applied. Page will only be flushed on closing.";
+
+        public const String PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED = "PDF to PDF/UA conversion is not supported.";
+
+        private PdfUALogMessageConstants() {
+        }
+        // empty constructor
     }
 }

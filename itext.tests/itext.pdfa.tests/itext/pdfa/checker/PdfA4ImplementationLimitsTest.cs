@@ -30,7 +30,7 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA4ImplementationLimitsTest : ExtendedITextTest {
-        private PdfA4Checker pdfA4Checker = new PdfA4Checker(PdfAConformanceLevel.PDF_A_4);
+        private PdfA4Checker pdfA4Checker = new PdfA4Checker(PdfAConformance.PDF_A_4);
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
@@ -39,7 +39,7 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void IndependentLongStringTest() {
-            int maxAllowedLength = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B).GetMaxStringLength();
+            int maxAllowedLength = new PdfA2Checker(PdfAConformance.PDF_A_2B).GetMaxStringLength();
             int testLength = maxAllowedLength + 1;
             PdfString longString = PdfACheckerTestUtils.GetLongString(testLength);
             //An exception should not be thrown because pdf/a-4 spec allows any length strings
@@ -49,7 +49,7 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void LongStringInContentStreamTest() {
-            int maxAllowedLength = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B).GetMaxStringLength();
+            int maxAllowedLength = new PdfA2Checker(PdfAConformance.PDF_A_2B).GetMaxStringLength();
             int testLength = maxAllowedLength + 1;
             PdfString longString = PdfACheckerTestUtils.GetLongString(testLength);
             String newContentString = PdfACheckerTestUtils.GetStreamWithValue(longString);
@@ -62,7 +62,7 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void IndependentLargeRealTest() {
-            PdfNumber largeNumber = new PdfNumber(new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B).GetMaxRealValue());
+            PdfNumber largeNumber = new PdfNumber(new PdfA2Checker(PdfAConformance.PDF_A_2B).GetMaxRealValue());
             // An exception shall not be thrown pdf/a-4 has no number limits
             pdfA4Checker.CheckPdfObject(largeNumber);
             NUnit.Framework.Assert.AreEqual(float.MaxValue, largeNumber.FloatValue(), 0.001f);

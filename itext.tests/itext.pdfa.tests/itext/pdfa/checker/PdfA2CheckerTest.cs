@@ -35,7 +35,7 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA2CheckerTest : ExtendedITextTest {
-        private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
+        private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
 
         [NUnit.Framework.Test]
         public virtual void CheckNameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigs() {

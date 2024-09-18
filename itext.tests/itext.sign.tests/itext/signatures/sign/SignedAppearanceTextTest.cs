@@ -189,7 +189,7 @@ namespace iText.Signatures.Sign {
             String icmProfile = PDFA_FOLDER + "sRGB Color Space Profile.icm";
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , FileUtil.GetInputStreamForFile(icmProfile));
-            PdfDocument document = new PdfADocument(new PdfWriter(filename, writerProperties), PdfAConformanceLevel.PDF_A_4
+            PdfDocument document = new PdfADocument(new PdfWriter(filename, writerProperties), PdfAConformance.PDF_A_4
                 , outputIntent);
             Document doc = new Document(document);
             PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED

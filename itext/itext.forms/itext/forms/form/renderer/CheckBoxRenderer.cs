@@ -91,8 +91,8 @@ namespace iText.Forms.Form.Renderer {
         public virtual ICheckBoxRenderingStrategy CreateCheckBoxRenderStrategy() {
             // html rendering is PDFA compliant this means we don't have to check if its PDFA.
             ICheckBoxRenderingStrategy renderingStrategy;
-            bool isConformantPdfDocument = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL) !=
-                 null;
+            PdfConformance conformance = this.GetProperty<PdfConformance>(FormProperty.FORM_CONFORMANCE_LEVEL);
+            bool isConformantPdfDocument = conformance != null && conformance.IsPdfAOrUa();
             if (GetRenderingMode() == RenderingMode.HTML_MODE) {
                 renderingStrategy = new HtmlCheckBoxRenderingStrategy();
             }
@@ -194,8 +194,8 @@ namespace iText.Forms.Form.Renderer {
             Rectangle area = flatRenderer.GetOccupiedArea().GetBBox().Clone();
             IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
-            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformanceLevel
-                (this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL));
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetConformance
+                (this.GetProperty<PdfConformance>(FormProperty.FORM_CONFORMANCE_LEVEL));
             if (this.HasProperty(FormProperty.FORM_CHECKBOX_TYPE)) {
                 builder.SetCheckType((CheckBoxType)this.GetProperty<CheckBoxType?>(FormProperty.FORM_CHECKBOX_TYPE));
             }

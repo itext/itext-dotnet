@@ -87,23 +87,24 @@ namespace iText.Forms.Form.Renderer {
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelTest() {
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
-            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformanceLevel(null));
+            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformance(null));
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelWithDocumentTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
-            NUnit.Framework.Assert.IsNull(inputFieldRenderer.GetConformanceLevel(pdfDocument));
+            NUnit.Framework.Assert.IsNotNull(inputFieldRenderer.GetConformance(pdfDocument));
+            NUnit.Framework.Assert.IsFalse(inputFieldRenderer.GetConformance(pdfDocument).IsPdfAOrUa());
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfAConformanceLevelWithConformanceLevelTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
-            inputFieldRenderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfAConformanceLevel.PDF_A_1B);
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1B, inputFieldRenderer.GetConformanceLevel(pdfDocument
-                ));
+            inputFieldRenderer.SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, PdfConformance.PDF_A_1B);
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_1B, inputFieldRenderer.GetConformance(pdfDocument).GetAConformance
+                ());
         }
 
         [NUnit.Framework.Test]
@@ -112,21 +113,21 @@ namespace iText.Forms.Form.Renderer {
             IRenderer paragraphRender = inputFieldRendererWithoutPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             InputField inputFieldWithEmptyPlaceholder = new InputField("");
-            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_129());
+            inputFieldWithEmptyPlaceholder.SetPlaceholder(new _Paragraph_131());
             InputFieldRenderer inputFieldRendererWithEmptyPlaceholder = new InputFieldRenderer(inputFieldWithEmptyPlaceholder
                 );
             paragraphRender = inputFieldRendererWithEmptyPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is ParagraphRenderer);
             NUnit.Framework.Assert.IsFalse(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
             InputField inputFieldWithPlaceholder = new InputField("");
-            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_142());
+            inputFieldWithPlaceholder.SetPlaceholder(new _Paragraph_144());
             InputFieldRenderer inputFieldRendererWithPlaceholder = new InputFieldRenderer(inputFieldWithPlaceholder);
             paragraphRender = inputFieldRendererWithPlaceholder.CreateParagraphRenderer("");
             NUnit.Framework.Assert.IsTrue(paragraphRender is InputFieldRendererTest.CustomParagraphRenderer);
         }
 
-        private sealed class _Paragraph_129 : Paragraph {
-            public _Paragraph_129() {
+        private sealed class _Paragraph_131 : Paragraph {
+            public _Paragraph_131() {
             }
 
             public override IRenderer CreateRendererSubTree() {
@@ -134,8 +135,8 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        private sealed class _Paragraph_142 : Paragraph {
-            public _Paragraph_142() {
+        private sealed class _Paragraph_144 : Paragraph {
+            public _Paragraph_144() {
             }
 
             public override bool IsEmpty() {

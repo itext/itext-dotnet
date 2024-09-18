@@ -49,7 +49,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4CheckThatAsKeyIsAllowedTest.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4CheckThatAsKeyIsAllowedTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, CreateOutputIntent())) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, CreateOutputIntent())) {
                 doc.AddNewPage();
                 PdfArray configs = new PdfArray();
                 PdfDictionary config = new PdfDictionary();

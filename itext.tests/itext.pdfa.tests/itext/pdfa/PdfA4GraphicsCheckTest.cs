@@ -64,7 +64,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary colourantHalftone = new PdfDictionary();
@@ -89,7 +89,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary halftone = new PdfDictionary();
@@ -110,7 +110,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary colourantHalftone = new PdfDictionary();
@@ -137,7 +137,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary colourantHalftone = new PdfDictionary();
@@ -163,7 +163,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary halftone = new PdfDictionary();
@@ -183,7 +183,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary halftone = new PdfDictionary();
@@ -224,7 +224,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 float[] whitePoint = new float[] { 0.9505f, 1f, 1.089f };
                 float[] gamma = new float[] { 2.2f, 2.2f, 2.2f };
                 float[] matrix = new float[] { 0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
@@ -244,7 +244,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest2.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest2.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null)) {
                 float[] whitePoint = new float[] { 0.9505f, 1f, 1.089f };
                 float[] gamma = new float[] { 2.2f, 2.2f, 2.2f };
                 float[] matrix = new float[] { 0.4124f, 0.2126f, 0.0193f, 0.3576f, 0.7152f, 0.1192f, 0.1805f, 0.0722f, 0.9505f
@@ -271,7 +271,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
             canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
@@ -291,7 +291,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SetFillColor(ColorConstants.BLUE);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
@@ -317,7 +317,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = doc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -347,7 +347,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
@@ -372,7 +372,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = doc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -402,7 +402,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
@@ -427,7 +427,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = doc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -451,7 +451,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest10.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest10.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // Add page blending colorspace
             PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
@@ -471,7 +471,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest11.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest11.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // Add page blending colorspace
             PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
@@ -504,7 +504,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest12.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest12.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // Add page blending colorspace
             PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
@@ -523,7 +523,7 @@ namespace iText.Pdfa {
         public virtual void DefaultTextColorCheckTest() {
             String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
@@ -541,7 +541,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "defaultTextColorCheckWithPageOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_defaultTextColorCheckWithPageOutputIntent.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
@@ -560,7 +560,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_defaultColorCheckInvisibleText.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_defaultColorCheckInvisibleText.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
@@ -576,7 +576,7 @@ namespace iText.Pdfa {
         public virtual void DefaultStrokeColorCheckTest() {
             String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState();
@@ -605,7 +605,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -627,7 +627,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             // Add page blending colorspace
             PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
@@ -654,7 +654,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             // Add page blending colorspace
             PdfTransparencyGroup transparencyGroup = new PdfTransparencyGroup();
@@ -690,7 +690,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             // Create color
@@ -729,7 +729,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             // Create color
@@ -748,7 +748,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -772,7 +772,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfPage page = pdfDoc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -794,8 +794,8 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colourSpaceTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
             //Tint transformation function is a stream
@@ -819,8 +819,8 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colourSpaceTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
             //Tint transformation function is a dictionary
@@ -844,8 +844,8 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colourSpaceTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
-            PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, new PdfOutputIntent("Custom", ""
-                , "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
             PdfColorSpace alternateSpace = new PdfDeviceCs.Rgb();
             //Tint transformation function is a dictionary
@@ -875,7 +875,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "imageFailure.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_imageFailure.pdf";
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // This should suppress transparency issue
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
@@ -896,7 +896,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_image.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_image.pdf";
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // This should suppress transparency and device RGB
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil
@@ -914,7 +914,7 @@ namespace iText.Pdfa {
         public virtual void ImageJpeg20002ColorChannelsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // This should suppress transparency and device RGB
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil
@@ -934,7 +934,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_jpeg2000.pdf";
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)), PdfAConformanceLevel.PDF_A_4, null);
+                .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             // This should suppress transparency and device RGB
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil
@@ -953,7 +953,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsNoOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsNoOutputIntent.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             PdfAnnotation annot = new PdfCircleAnnotation(new Rectangle(100, 100, 100, 100));
             annot.SetFlag(PdfAnnotation.PRINT);
@@ -974,7 +974,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsWrongPageOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsWrongPageOutputIntent.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
@@ -999,7 +999,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4AnnotationsCorrectPageOutputIntent.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4AnnotationsCorrectPageOutputIntent.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil
                 .GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
@@ -1023,7 +1023,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowed.pdf";
             String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
             byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
                 ).Replace("prtr", "not_def").GetBytes(System.Text.Encoding.ASCII);
@@ -1041,7 +1041,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowedInPage.pdf";
             String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
             byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
@@ -1060,7 +1060,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowed.pdf";
             String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
             byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
                 ).Replace("CMYK", "not_def").GetBytes(System.Text.Encoding.ASCII);
@@ -1078,7 +1078,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowedInPage.pdf";
             String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, null);
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(isoFilePath));
             byte[] manipulatedBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes, System.Text.Encoding.ASCII
@@ -1095,9 +1095,9 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void DestOutputIntentRefNotAllowedTest() {
             String outPdf = DESTINATION_FOLDER + "PdfWithOutputIntentProfileRef.pdf";
-            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_4;
+            PdfAConformance conformance = PdfAConformance.PDF_A_4;
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            PdfADocument pdfADocument = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
+            PdfADocument pdfADocument = new PdfADocument(writer, conformance, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"))
                 );
             PdfPage page = pdfADocument.AddNewPage();
@@ -1118,7 +1118,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            using (PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_4, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent)) {
                 doc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(doc.GetLastPage());
                 PdfDictionary colourantHalftone = new PdfDictionary();

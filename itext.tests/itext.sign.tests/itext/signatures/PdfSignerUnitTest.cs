@@ -259,8 +259,8 @@ namespace iText.Signatures {
         public virtual void InitPdfaDocumentTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceLevel.PDF_A_1A, ((PdfAAgnosticPdfDocument)signer.GetDocument
-                ()).GetConformanceLevel());
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_1A, ((PdfAAgnosticPdfDocument)signer.GetDocument()).
+                GetConformance().GetAConformance());
         }
 
         [NUnit.Framework.Test]
@@ -499,7 +499,7 @@ namespace iText.Signatures {
             Stream @is = FileUtil.GetInputStreamForFile(PDFA_RESOURCES + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfDocument document = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, outputIntent);
+            PdfDocument document = new PdfADocument(writer, PdfAConformance.PDF_A_1A, outputIntent);
             document.SetTagged();
             document.GetCatalog().SetLang(new PdfString("en-US"));
             document.AddNewPage();

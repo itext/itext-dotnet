@@ -21,15 +21,24 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.Kernel.Pdf;
+using iText.Pdfua.Logs;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iText.Pdfua.Exceptions {
-    /// <summary>Class containing the log message constants.</summary>
-    public sealed class PdfUALogMessageConstants {
-        public const String PAGE_FLUSHING_DISABLED = "Page flushing is disabled in PDF/UA mode to allow UA checks "
-             + "to be applied. Page will only be flushed on closing.";
+namespace iText.Pdfua {
+    [NUnit.Framework.Category("IntegrationTest")]
+    public class PdfUADocumentTest : ExtendedITextTest {
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUADocumentTest/";
 
-        private PdfUALogMessageConstants() {
+        [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED, LogLevel = LogLevelConstants
+            .WARN)]
+        public virtual void OpenNotUaDocumentTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new PdfUADocument(new PdfReader(SOURCE_FOLDER + "usualPdf.pdf"), 
+                new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "simple doc", "eng")));
         }
-        // empty constructor
     }
 }

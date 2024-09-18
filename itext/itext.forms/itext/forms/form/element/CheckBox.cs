@@ -67,12 +67,11 @@ namespace iText.Forms.Form.Element {
             return this;
         }
 
-        /// <summary>Sets the conformance level for the checkbox.</summary>
-        /// <param name="conformanceLevel">The PDF/A conformance level to set.</param>
+        /// <summary>Sets the conformance for the checkbox.</summary>
+        /// <param name="conformance">The PDF conformance to set.</param>
         /// <returns>this checkbox instance</returns>
-        public virtual iText.Forms.Form.Element.CheckBox SetPdfConformanceLevel(IConformanceLevel conformanceLevel
-            ) {
-            SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, conformanceLevel);
+        public virtual iText.Forms.Form.Element.CheckBox SetPdfConformance(PdfConformance conformance) {
+            SetProperty(FormProperty.FORM_CONFORMANCE_LEVEL, conformance);
             return this;
         }
 

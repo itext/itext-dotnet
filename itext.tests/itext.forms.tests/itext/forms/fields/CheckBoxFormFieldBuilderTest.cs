@@ -70,7 +70,7 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void CreateCheckBoxWithConformanceLevelTest() {
             PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetConformanceLevel(PdfAConformanceLevel.PDF_A_1A).CreateCheckBox();
+                (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateCheckBox();
             CompareCheckBoxes(checkBoxFormField, true);
         }
 

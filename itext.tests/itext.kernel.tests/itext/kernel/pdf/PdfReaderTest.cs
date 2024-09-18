@@ -2056,17 +2056,17 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetPdfAConformanceLevelPdfDocumentNotReadTest() {
+        public virtual void GetPdfAConformancePdfDocumentNotReadTest() {
             PdfReader getModifiedFileIdReader = PdfDocumentNotReadTestInit();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getModifiedFileIdReader.GetPdfAConformanceLevel
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => getModifiedFileIdReader.GetPdfConformance
                 ());
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET, e.Message);
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetPdfAConformanceLevelNoMetadataTest() {
+        public virtual void GetPdfConformanceNoMetadataTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(CreatePdfDocumentForTest())));
-            NUnit.Framework.Assert.IsNull(pdfDoc.GetReader().GetPdfAConformanceLevel());
+            NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().GetPdfConformance().IsPdfAOrUa());
         }
 
         [NUnit.Framework.Test]
@@ -2419,7 +2419,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void ConformanceLevelCacheTest() {
+        public virtual void ConformanceCacheTest() {
             String filename = DESTINATION_FOLDER + "simpleDoc.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             XMPMeta xmp = XMPMetaFactory.Create();
@@ -2431,7 +2431,7 @@ namespace iText.Kernel.Pdf {
             PdfReaderTest.TestPdfDocumentCache pdfTestDoc = new PdfReaderTest.TestPdfDocumentCache(this, CompareTool.CreateOutputReader
                 (filename));
             for (int i = 0; i < 1000; ++i) {
-                pdfTestDoc.GetReader().GetPdfAConformanceLevel();
+                pdfTestDoc.GetReader().GetPdfConformance();
             }
             NUnit.Framework.Assert.AreEqual(1, pdfTestDoc.GetCounter());
         }
@@ -2616,6 +2616,14 @@ namespace iText.Kernel.Pdf {
                 .LENIENT);
             new PdfDocument(pdfReader);
             NUnit.Framework.Assert.IsTrue(pdfReader.HasRebuiltXref(), "Need rebuildXref()");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadAandUaDocumentTest() {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "bothAandUa.pdf"))) {
+                NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_2B, pdfDoc.GetConformance().GetAConformance());
+                NUnit.Framework.Assert.AreEqual(PdfUAConformance.PDF_UA_1, pdfDoc.GetConformance().GetUAConformance());
+            }
         }
 
         private static PdfDictionary GetTestPdfDictionary() {
