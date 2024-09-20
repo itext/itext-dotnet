@@ -42,6 +42,9 @@ namespace iText.Signatures.Validation {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/RevocationDataValidatorTest/";
 
+        private static readonly String CRL_TEST_SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/CRLValidatorTest/";
+
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         private static IX509Certificate caCert;
@@ -106,6 +109,82 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasLogItem((la) => la.WithCertificate
                 (checkCert).WithStatus(ReportItem.ReportItemStatus.INFO).WithMessage(CRLValidator.ONLY_SOME_REASONS_CHECKED
                 )));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlSignerIsValidatedCertificate() {
+            String rootCertFileName = CRL_TEST_SOURCE_FOLDER + "happyPath/ca.cert.pem";
+            String crlSignerKeyFileName = CRL_TEST_SOURCE_FOLDER + "keys/crl-key.pem";
+            String crlSignerFileName = CRL_TEST_SOURCE_FOLDER + "happyPath/crl-issuer.cert.pem";
+            String checkCertFileName = CRL_TEST_SOURCE_FOLDER + "happyPath/sign.cert.pem";
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
+            IX509Certificate crlSigner = (IX509Certificate)PemFileHelper.ReadFirstChain(crlSignerFileName)[0];
+            IPrivateKey crlPrivateKey = PemFileHelper.ReadFirstKey(crlSignerKeyFileName, PASSWORD);
+            IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(crlSigner));
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime revocationDate = checkDate.AddDays(-1);
+            TestCrlBuilder builder = new TestCrlBuilder(crlSigner, crlPrivateKey, checkDate);
+            builder.SetNextUpdate(checkDate.AddDays(10));
+            //builder.addCrlEntry(caCert, revocationDate, FACTORY.createCRLReason().getKeyCompromise());
+            //TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().addBuilderForCertIssuer(builder));
+            ValidationCrlClient crlClient = (ValidationCrlClient)parameters.GetCrlClients()[0];
+            crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(builder.MakeCrl()), checkDate, TimeBasedContext
+                .HISTORICAL);
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
+                .All(), SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE);
+            parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
+                (0));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validatorChainBuilder.WithRevocationDataValidatorFactory(() => validator);
+            validator.Validate(report, baseContext, crlSigner, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasLogItem((l) => l.WithMessage(
+                CRLValidator.CERTIFICATE_IN_ISSUER_CHAIN)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlSignerIssuerIsValidatedCertificate() {
+            String rootCertFileName = CRL_TEST_SOURCE_FOLDER + "crlSignerInValidatedChain/ca.cert.pem";
+            String intermediateFileName = CRL_TEST_SOURCE_FOLDER + "crlSignerInValidatedChain/intermediate.cert.pem";
+            String intermediate2FileName = CRL_TEST_SOURCE_FOLDER + "crlSignerInValidatedChain/intermediate2.cert.pem";
+            String crlSignerKeyFileName = CRL_TEST_SOURCE_FOLDER + "keys/crl-key.pem";
+            String crlSignerFileName = CRL_TEST_SOURCE_FOLDER + "crlSignerInValidatedChain/crl-issuer.cert.pem";
+            String checkCertFileName = CRL_TEST_SOURCE_FOLDER + "crlSignerInValidatedChain/sign.cert.pem";
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediateFileName)[0
+                ];
+            IX509Certificate intermediate2Cert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediate2FileName)
+                [0];
+            IX509Certificate crlSigner = (IX509Certificate)PemFileHelper.ReadFirstChain(crlSignerFileName)[0];
+            IPrivateKey crlPrivateKey = PemFileHelper.ReadFirstKey(crlSignerKeyFileName, PASSWORD);
+            IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(crlSigner));
+            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
+            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(intermediate2Cert));
+            DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
+            DateTime revocationDate = checkDate.AddDays(-1);
+            TestCrlBuilder builder = new TestCrlBuilder(crlSigner, crlPrivateKey, checkDate);
+            builder.SetNextUpdate(checkDate.AddDays(10));
+            //builder.addCrlEntry(caCert, revocationDate, FACTORY.createCRLReason().getKeyCompromise());
+            //TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().addBuilderForCertIssuer(builder));
+            ValidationCrlClient crlClient = (ValidationCrlClient)parameters.GetCrlClients()[0];
+            crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(builder.MakeCrl()), checkDate, TimeBasedContext
+                .HISTORICAL);
+            ValidationReport report = new ValidationReport();
+            //certificateRetriever.addTrustedCertificates(Collections.singletonList(caCert));
+            parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
+                .All(), SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE);
+            parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
+                (0));
+            RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
+            validatorChainBuilder.WithRevocationDataValidatorFactory(() => validator);
+            validator.Validate(report, baseContext, intermediateCert, checkDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasLogItem((l) => l.WithMessage(
+                CRLValidator.CERTIFICATE_IN_ISSUER_CHAIN)));
         }
     }
 }

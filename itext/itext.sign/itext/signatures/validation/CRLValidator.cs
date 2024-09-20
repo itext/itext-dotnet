@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
@@ -97,6 +98,11 @@ namespace iText.Signatures.Validation {
 
 //\cond DO_NOT_DOCUMENT
         internal const String UPDATE_DATE_BEFORE_CHECK_DATE = "nextUpdate: {0} of CRLResponse is before validation date {1}.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_IN_ISSUER_CHAIN = "Unable to validate CRL response: validated certificate is"
+             + " part of issuer certificate chain.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -304,6 +310,11 @@ namespace iText.Signatures.Validation {
             }
             if (certs == null || certs.Length == 0) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NOT_FOUND, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
+                return;
+            }
+            if (JavaUtil.ArraysToEnumerable(certs).Any((c) => c.Equals(certificate))) {
+                report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CERTIFICATE_IN_ISSUER_CHAIN, ReportItem.ReportItemStatus
                     .INDETERMINATE));
                 return;
             }
