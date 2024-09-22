@@ -74,6 +74,9 @@ namespace iText.Signatures {
         ///     </summary>
         private readonly ICollection<IAsn1Sequence> signedDataRevocationInfo = new List<IAsn1Sequence>();
 
+        private readonly IAsn1EncodableVector unsignedAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector
+            ();
+
         // Constructors for creating new signatures
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
         /// <param name="privKey">the private key</param>
@@ -386,6 +389,15 @@ namespace iText.Signatures {
             catch (Exception e) {
                 throw new PdfException(e);
             }
+        }
+
+        /// <summary>Get unsigned attributes associated with this PKCS7 signature container.</summary>
+        /// <returns>
+        /// unsigned attributes as
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1EncodableVector"/>
+        /// </returns>
+        public virtual IAsn1EncodableVector GetUnsignedAttributes() {
+            return unsignedAttributes;
         }
 
         /// <summary>Set signature policy identifier to be used during signature creation.</summary>
@@ -878,13 +890,11 @@ namespace iText.Signatures {
                 if (tsaClient != null) {
                     byte[] tsImprint = tsaClient.GetMessageDigest().Digest(signatureValue);
                     byte[] tsToken = tsaClient.GetTimeStampToken(tsImprint);
-                    if (tsToken != null) {
-                        IAsn1EncodableVector unauthAttributes = BuildUnauthenticatedAttributes(tsToken);
-                        if (unauthAttributes != null) {
-                            signerInfo.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(false, 1, BOUNCY_CASTLE_FACTORY.CreateDERSet(unauthAttributes
-                                )));
-                        }
-                    }
+                    AddTimestampTokenToUnsignedAttributes(tsToken);
+                }
+                if (unsignedAttributes.Size() > 0) {
+                    signerInfo.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(false, 1, BOUNCY_CASTLE_FACTORY.CreateDERSet(unsignedAttributes
+                        )));
                 }
                 // Finally build the body out of all the components above
                 IAsn1EncodableVector body = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
@@ -925,15 +935,10 @@ namespace iText.Signatures {
         /// handled by the (vendor supplied) TSA request/response interface).
         /// </remarks>
         /// <param name="timeStampToken">byte[] - time stamp token, DER encoded signedData</param>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.IAsn1EncodableVector"/>
-        /// </returns>
-        private IAsn1EncodableVector BuildUnauthenticatedAttributes(byte[] timeStampToken) {
+        private void AddTimestampTokenToUnsignedAttributes(byte[] timeStampToken) {
             if (timeStampToken == null) {
-                return null;
+                return;
             }
-            IAsn1EncodableVector unauthAttributes = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             IAsn1EncodableVector v = BOUNCY_CASTLE_FACTORY.CreateASN1EncodableVector();
             v.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_AA_TIME_STAMP_TOKEN));
             using (IAsn1InputStream tempstream = BOUNCY_CASTLE_FACTORY.CreateASN1InputStream(new MemoryStream(timeStampToken
@@ -941,8 +946,7 @@ namespace iText.Signatures {
                 IAsn1Sequence seq = BOUNCY_CASTLE_FACTORY.CreateASN1Sequence(tempstream.ReadObject());
                 v.Add(BOUNCY_CASTLE_FACTORY.CreateDERSet(seq));
             }
-            unauthAttributes.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
-            return unauthAttributes;
+            unsignedAttributes.Add(BOUNCY_CASTLE_FACTORY.CreateDERSequence(v));
         }
 
         // Authenticated attributes

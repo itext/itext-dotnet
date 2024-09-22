@@ -286,7 +286,7 @@ namespace iText.Signatures {
         /// </returns>
         public static IDerSet CreateRevocationInfoChoices(ICollection<IX509Crl> crls, ICollection<IBasicOcspResponse
             > ocsps, ICollection<IAsn1Sequence> otherRevocationInfoFormats) {
-            if (crls.Count == 0 && ocsps.Count == 0) {
+            if (crls.IsEmpty() && ocsps.IsEmpty()) {
                 return null;
             }
             IAsn1EncodableVector revocationInfoChoices = FACTORY.CreateASN1EncodableVector();

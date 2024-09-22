@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Commons.Utils;
 using iText.Kernel.DI.Pagetree;
+using iText.Kernel.Mac;
 
 namespace iText.Kernel.Utils {
     /// <summary>Registers a default instance for a dependency injection container for the kernel module.</summary>
@@ -40,6 +41,7 @@ namespace iText.Kernel.Utils {
             // sharp
             DIContainer.RegisterDefault(typeof(IPageTreeListFactory), () => new DefaultPageTreeListFactory(DEFAULT_PAGE_TREE_LIST_FACTORY_MAX_SAFE_ENTRIES
                 ));
+            DIContainer.RegisterDefault(typeof(IMacContainerLocator), () => new StandaloneMacContainerLocator());
         }
     }
 }

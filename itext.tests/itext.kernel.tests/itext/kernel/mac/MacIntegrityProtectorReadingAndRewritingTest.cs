@@ -168,6 +168,38 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ReadSignedMacProtectedDocumentWithoutAttributeTest() {
+            String message = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedMacProtectedDocWithoutAttribute.pdf"
+                    , new ReaderProperties().SetPassword(PASSWORD)))) {
+                }
+            }
+            ).Message;
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.MAC_ATTRIBUTE_NOT_SPECIFIED, message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MacProtectionStrippedTest() {
+            String message = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectionStrippedTest.pdf", 
+                    new ReaderProperties().SetPassword(PASSWORD)))) {
+                }
+            }
+            ).Message;
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.MAC_PERMS_WITHOUT_MAC, message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadSignedMacProtectedDocumentTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedMacProtectedDocument.pdf"
+                    , new ReaderProperties().SetPassword(PASSWORD)))) {
+                }
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReadThirdPartyMacProtectedDocumentTest() {
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyMacProtectedDocument.pdf"

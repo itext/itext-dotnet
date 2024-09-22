@@ -202,6 +202,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName AsIs = CreateDirectName("AsIs");
 
+        public static readonly iText.Kernel.Pdf.PdfName AttachedToSig = CreateDirectName("AttachedToSig");
+
         public static readonly iText.Kernel.Pdf.PdfName AuthEvent = CreateDirectName("AuthEvent");
 
         public static readonly iText.Kernel.Pdf.PdfName AuthCode = CreateDirectName("AuthCode");
@@ -1465,6 +1467,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName SigFlags = CreateDirectName("SigFlags");
 
         public static readonly iText.Kernel.Pdf.PdfName Signed = CreateDirectName("Signed");
+
+        public static readonly iText.Kernel.Pdf.PdfName SigObjRef = CreateDirectName("SigObjRef");
 
         public static readonly iText.Kernel.Pdf.PdfName SigRef = CreateDirectName("SigRef");
 

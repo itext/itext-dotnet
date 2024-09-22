@@ -76,5 +76,17 @@ namespace iText.Commons.Bouncycastle.Asn1 {
         /// </summary>
         /// <param name="element">AlgorithmIdentifier wrapper.</param>
         void AddOptional(IAlgorithmIdentifier element);
+
+        /// <summary>
+        /// Calls actual
+        /// <c>size</c>
+        /// method for the wrapped ASN1EncodableVector object.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// representing current vector size
+        /// </returns>
+        int Size();
     }
 }

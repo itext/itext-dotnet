@@ -39,6 +39,7 @@ using iText.IO.Util;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
@@ -47,10 +48,13 @@ using iText.Layout.Properties;
 using iText.Layout.Tagging;
 using iText.Pdfa;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Mac;
 
 namespace iText.Signatures {
     /// <summary>Takes care of the cryptographic options and appearances that form a signature.</summary>
     public class PdfSigner {
+        private const int MAXIMUM_MAC_SIZE = 788;
+
         /// <summary>Enum containing the Cryptographic Standards.</summary>
         /// <remarks>Enum containing the Cryptographic Standards. Possible values are "CMS" and "CADES".</remarks>
         public enum CryptoStandard {
@@ -167,6 +171,7 @@ namespace iText.Signatures {
         /// </param>
         public PdfSigner(PdfReader reader, Stream outputStream, String path, StampingProperties properties) {
             StampingProperties localProps = new StampingProperties(properties).PreserveEncryption();
+            localProps.RegisterDependency(typeof(IMacContainerLocator), new SignatureMacContainerLocator());
             if (path == null) {
                 this.temporaryOS = new MemoryStream();
                 this.document = InitDocument(reader, new PdfWriter(temporaryOS), localProps);
@@ -499,6 +504,10 @@ namespace iText.Signatures {
                 if (tsaClient != null) {
                     estimatedSize += tsaClient.GetTokenSizeEstimate() + 96;
                 }
+                if (document.GetTrailer().GetAsDictionary(PdfName.AuthCode) != null) {
+                    // if AuthCode is found in trailer, we assume MAC will be embedded and allocate additional space.
+                    estimatedSize += MAXIMUM_MAC_SIZE;
+                }
             }
             this.signerName = PdfSigner.GetSignerName((IX509Certificate)chain[0]);
             if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
@@ -546,6 +555,8 @@ namespace iText.Signatures {
             byte[] extSignature = externalSignature.Sign(sh);
             sgn.SetExternalSignatureValue(extSignature, null, externalSignature.GetSignatureAlgorithmName(), externalSignature
                 .GetSignatureMechanismParameters());
+            document.DispatchEvent(new SignatureContainerGenerationEvent(sgn.GetUnsignedAttributes(), extSignature, GetRangeStream
+                ()));
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException("Not enough space");
@@ -735,6 +746,8 @@ namespace iText.Signatures {
                 throw new PdfException(SignExceptionMessageConstant.NO_CRYPTO_DICTIONARY_DEFINED);
             }
             cryptoDictionary.GetPdfObject().MakeIndirect(document);
+            document.DispatchEvent(new SignatureDocumentClosingEvent(cryptoDictionary.GetPdfObject().GetIndirectReference
+                ()));
             if (fieldExist) {
                 fieldLock = PopulateExistingSignatureFormField(acroForm);
             }

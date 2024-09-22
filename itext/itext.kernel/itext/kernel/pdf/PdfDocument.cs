@@ -995,7 +995,6 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 catalog.GetPageTree().ClearPageRefs();
-                RemoveAllHandlers();
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_CLOSE_DOCUMENT, e, this);
@@ -2211,7 +2210,7 @@ namespace iText.Kernel.Pdf {
                     writer.crypto = reader.decrypt;
                     if (writer.crypto != null) {
                         writer.crypto.CheckEncryptionRequirements(this);
-                        writer.crypto.ConfigureEncryptionParameters(this, true);
+                        writer.crypto.ConfigureEncryptionParametersFromWriter(this);
                     }
                     if (newPdfVersion != null) {
                         // In PDF 1.4, a PDF version can also be specified in the Version entry of the document catalog,
@@ -2246,7 +2245,7 @@ namespace iText.Kernel.Pdf {
                                 encryptedEmbeddedStreamsHandler.StoreAllEmbeddedStreams();
                             }
                             writer.crypto.CheckEncryptionRequirements(this);
-                            writer.crypto.ConfigureEncryptionParameters(this, true);
+                            writer.crypto.ConfigureEncryptionParametersFromWriter(this);
                         }
                     }
                 }

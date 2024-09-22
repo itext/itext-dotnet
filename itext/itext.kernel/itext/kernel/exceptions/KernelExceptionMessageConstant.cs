@@ -356,11 +356,21 @@ namespace iText.Kernel.Exceptions {
 
         public const String MAC_ALGORITHM_NOT_SUPPORTED = "This MAC algorithm is not supported.";
 
+        public const String MAC_ATTRIBUTE_NOT_SPECIFIED = "Signature doesn't contain unsigned MAC attribute, which is required in \"attached to signature\" mode.";
+
+        public const String MAC_EXTRACTION_EXCEPTION = "Exception occurred during signature parsing. It is not possible to extract MAC.";
+
+        public const String MAC_LOCATION_NOT_SPECIFIED = "AuthCode dictionary doesn't contain MACLocation entry.";
+
+        public const String MAC_NOT_SPECIFIED = "AuthCode dictionary doesn't contain MAC entry, which is required in standalone mode.";
+
         public const String MAC_FOR_ENCRYPTION_5 = "MAC integrity protection is only supported for encryption algorithms of version 5 or higher.";
 
         public const String MAC_FOR_PDF_2 = "MAC integrity protection is only supported for PDF 2.0 or higher.";
 
         public const String MAC_PERMS_WITHOUT_MAC = "Permissions bit 13 is set to zero, " + "which indicates that MAC integrity protection is enabled. However MAC container wasn't found.";
+
+        public const String MAC_VALIDATION_EXCEPTION = "Unexpected exception occurred during MAC token validation.";
 
         public const String MAC_VALIDATION_FAILED = "MAC integrity protection was compromised. Document content was modified.";
 
@@ -463,6 +473,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String SHADING_TYPE_NOT_FOUND = "Shading type not found.";
 
+        public const String SIG_OBJ_REF_NOT_SPECIFIED = "AuthCode dictionary doesn't contain SigObjRef entry, which is required in signature mode.";
+
         public const String STDCF_NOT_FOUND_ENCRYPTION = "/StdCF not found (encryption)";
 
         public const String STREAM_SHALL_END_WITH_ENDSTREAM = "Stream shall end with endstream keyword.";
@@ -541,8 +553,6 @@ namespace iText.Kernel.Exceptions {
         public const String UNSUPPORTED_FONT_EMBEDDING_STRATEGY = "Unsupported font embedding strategy.";
 
         public const String UNSUPPORTED_XOBJECT_TYPE = "Unsupported XObject type.";
-
-        public const String VALIDATION_EXCEPTION = "Unexpected exception occurred during MAC token validation.";
 
         public const String WHEN_ADDING_OBJECT_REFERENCE_TO_THE_TAG_TREE_IT_MUST_BE_CONNECTED_TO_NOT_FLUSHED_OBJECT
              = "When adding object reference to the tag tree, it must be connected to not flushed object.";

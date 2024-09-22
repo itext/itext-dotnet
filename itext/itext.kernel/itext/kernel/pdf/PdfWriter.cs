@@ -204,8 +204,8 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
             EncryptionProperties encryptProps = properties.encryptionProperties;
-            MacIntegrityProtector mac = encryptProps.macProperties == null ? null : new MacIntegrityProtector(document
-                , encryptProps.macProperties);
+            AbstractMacIntegrityProtector mac = encryptProps.macProperties == null ? null : document.GetDiContainer().
+                GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document, encryptProps.macProperties);
             if (properties.IsStandardEncryptionUsed()) {
                 crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
                     , encryptProps.encryptionAlgorithm, ByteUtils.GetIsoBytes(this.document.GetOriginalDocumentId().GetValue

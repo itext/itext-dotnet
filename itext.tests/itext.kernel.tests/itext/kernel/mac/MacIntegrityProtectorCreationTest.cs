@@ -72,8 +72,7 @@ namespace iText.Kernel.Mac {
                 .HMAC_WITH_SHA_256, MacProperties.KeyWrappingAlgorithm.AES_256_NO_PADD);
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
-            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName, writerProperties
-                ))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outputFileName, writerProperties))) {
                 pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER

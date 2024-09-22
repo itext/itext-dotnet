@@ -64,11 +64,7 @@ namespace iText.Kernel.Pdf {
 
         private SecurityHandler securityHandler;
 
-        private readonly MacIntegrityProtector macContainer;
-
-        public virtual MacIntegrityProtector GetMacContainer() {
-            return macContainer;
-        }
+        private AbstractMacIntegrityProtector macContainer;
 
         /// <summary>Creates the encryption.</summary>
         /// <param name="userPassword">
@@ -201,11 +197,11 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="macContainer">
         /// 
-        /// <see cref="iText.Kernel.Mac.MacIntegrityProtector"/>
+        /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
         /// class for MAC integrity protection
         /// </param>
         public PdfEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, int encryptionType, byte[]
-             documentId, PdfVersion version, MacIntegrityProtector macContainer)
+             documentId, PdfVersion version, AbstractMacIntegrityProtector macContainer)
             : base(new PdfDictionary()) {
             this.macContainer = macContainer;
             this.documentId = documentId;
@@ -383,11 +379,11 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="macContainer">
         /// 
-        /// <see cref="iText.Kernel.Mac.MacIntegrityProtector"/>
+        /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
         /// class for MAC integrity protection
         /// </param>
         public PdfEncryption(IX509Certificate[] certs, int[] permissions, int encryptionType, PdfVersion version, 
-            MacIntegrityProtector macContainer)
+            AbstractMacIntegrityProtector macContainer)
             : base(new PdfDictionary()) {
             this.macContainer = macContainer;
             for (int i = 0; i < permissions.Length; i++) {
@@ -476,12 +472,11 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="macContainer">
         /// 
-        /// <see cref="iText.Kernel.Mac.MacIntegrityProtector"/>
-        /// , which is responsible for MAC integrity
-        /// protection and validation
+        /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
+        /// class for MAC integrity protection
         /// </param>
-        public PdfEncryption(PdfDictionary pdfDict, byte[] password, byte[] documentId, MacIntegrityProtector macContainer
-            )
+        public PdfEncryption(PdfDictionary pdfDict, byte[] password, byte[] documentId, AbstractMacIntegrityProtector
+             macContainer)
             : base(pdfDict) {
             SetForbidRelease();
             this.macContainer = macContainer;
@@ -594,10 +589,10 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="macContainer">
         /// 
-        /// <see cref="iText.Kernel.Mac.MacIntegrityProtector"/>
-        /// , which is responsible for MAC integrity protection and validation
+        /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
+        /// class for MAC integrity protection
         /// </param>
-        public PdfEncryption(PdfDictionary pdfDict, IPrivateKey certificateKey, IX509Certificate certificate, MacIntegrityProtector
+        public PdfEncryption(PdfDictionary pdfDict, IPrivateKey certificateKey, IX509Certificate certificate, AbstractMacIntegrityProtector
              macContainer)
             : base(pdfDict) {
             this.macContainer = macContainer;
@@ -1148,32 +1143,46 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void CheckEncryptionPermissions() {
-            if (macContainer == null && permissions != null && (permissions & MAC_DISABLED) == 0) {
-                throw new PdfException(KernelExceptionMessageConstant.MAC_PERMS_WITHOUT_MAC);
+        internal virtual void ConfigureEncryptionParametersFromWriter(PdfDocument document) {
+            if (macContainer != null) {
+                macContainer.SetFileEncryptionKey(securityHandler.GetMkey().Length == 0 ? securityHandler.GetNextObjectKey
+                    () : securityHandler.GetMkey());
+                document.GetDiContainer().GetInstance<IMacContainerLocator>().LocateMacContainer(macContainer);
+                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32004);
+                PdfString kdfSalt = GetPdfObject().GetAsString(PdfName.KDFSalt);
+                if (kdfSalt == null) {
+                    GetPdfObject().Put(PdfName.KDFSalt, new PdfString(macContainer.GetKdfSalt()).SetHexWriting(true));
+                }
+            }
+            if (GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_GCM) {
+                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32003);
             }
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void ConfigureEncryptionParameters(PdfDocument document, bool forWriting) {
-            if (macContainer != null) {
+        internal virtual AbstractMacIntegrityProtector GetMacContainer() {
+            return macContainer;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void ConfigureEncryptionParametersFromReader(PdfDocument document, PdfDictionary trailer) {
+            if (trailer.GetAsDictionary(PdfName.AuthCode) != null) {
+                macContainer = document.GetDiContainer().GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document
+                    , trailer.GetAsDictionary(PdfName.AuthCode));
                 macContainer.SetFileEncryptionKey(securityHandler.GetMkey().Length == 0 ? securityHandler.GetNextObjectKey
                     () : securityHandler.GetMkey());
                 PdfString kdfSalt = GetPdfObject().GetAsString(PdfName.KDFSalt);
                 if (kdfSalt != null) {
                     macContainer.SetKdfSalt(kdfSalt.GetValueBytes());
                 }
-                if (forWriting) {
-                    macContainer.PrepareDocument();
-                    document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32004);
-                    if (kdfSalt == null) {
-                        GetPdfObject().Put(PdfName.KDFSalt, new PdfString(macContainer.GetKdfSalt()).SetHexWriting(true));
-                    }
-                }
+                macContainer.ValidateMacToken();
             }
-            if (GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_GCM && forWriting) {
-                document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32003);
+            else {
+                if (permissions != null && (permissions & MAC_DISABLED) == 0) {
+                    throw new PdfException(KernelExceptionMessageConstant.MAC_PERMS_WITHOUT_MAC);
+                }
             }
         }
 //\endcond
