@@ -805,12 +805,14 @@ namespace iText.Forms.Fields {
             if (rectangle == null) {
                 return;
             }
+            bool multiselect = parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT);
             if (!(formFieldElement is ListBoxField)) {
                 // Create it once and reset properties during each widget regeneration.
-                formFieldElement = new ListBoxField("", 0, parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT));
+                formFieldElement = new ListBoxField(parent.GetPartialFieldName().ToUnicodeString(), 0, multiselect);
             }
-            formFieldElement.SetProperty(FormProperty.FORM_FIELD_MULTIPLE, parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT
-                ));
+            formFieldElement.SetProperty(FormProperty.FORM_FIELD_MULTIPLE, multiselect);
+            ((ListBoxField)formFieldElement).SetTopIndex(parent is PdfChoiceFormField && ((PdfChoiceFormField)parent).
+                GetTopIndex() != null ? ((PdfChoiceFormField)parent).GetTopIndex().IntValue() : 0);
             PdfArray indices = GetParent().GetAsArray(PdfName.I);
             PdfArray options = parent.GetOptions();
             for (int index = 0; index < options.Size(); ++index) {
@@ -835,13 +837,25 @@ namespace iText.Forms.Fields {
                 bool selected = indices != null && indices.Contains(new PdfNumber(index));
                 SelectFieldItem existingItem = ((ListBoxField)formFieldElement).GetOption(exportValue);
                 if (existingItem == null) {
-                    existingItem = new SelectFieldItem(exportValue, displayValue);
+                    existingItem = displayValue == null ? new SelectFieldItem(exportValue) : new SelectFieldItem(exportValue, 
+                        displayValue);
                     ((ListBoxField)formFieldElement).AddOption(existingItem);
                 }
                 existingItem.GetElement().SetProperty(Property.TEXT_ALIGNMENT, parent.GetJustification());
                 existingItem.GetElement().SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
                 existingItem.GetElement().SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                 existingItem.GetElement().SetProperty(FormProperty.FORM_FIELD_SELECTED, selected);
+                // Workaround for com.itextpdf.forms.form.renderer.SelectFieldListBoxRenderer.applySelectedStyle:
+                // in HTML rendering mode we want to draw gray background for flattened fields and blue one for interactive,
+                // but here we temporarily flatten formFieldElement, so blue background property is explicitly set to
+                // the selected item. We also need to clear background property for not selected items in case field
+                // is regenerated with modified indices list.
+                if (selected && (multiselect || index == indices.GetAsNumber(indices.Size() - 1).IntValue())) {
+                    existingItem.GetElement().SetProperty(Property.BACKGROUND, new Background(new DeviceRgb(169, 204, 225)));
+                }
+                else {
+                    existingItem.GetElement().SetProperty(Property.BACKGROUND, null);
+                }
             }
             formFieldElement.SetProperty(Property.FONT, GetFont());
             if (GetColor() != null) {
@@ -876,9 +890,18 @@ namespace iText.Forms.Fields {
                 formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
             }
             else {
-                formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize(new PdfArray(rectangle
-                    ), parent.GetValueAsString())));
+                float fontSize = GetFontSize(new PdfArray(rectangle), parent.GetValueAsString());
+                if (fontSize != 0) {
+                    // We want to always draw the text using the given font size even if it's not fit into layout area.
+                    // Without setting this property the height of the drawn field will be 0 which is unexpected.
+                    formFieldElement.SetProperty(Property.FORCED_PLACEMENT, true);
+                }
+                formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
                 value = iText.Commons.Utils.StringUtil.ReplaceAll(value, LINE_ENDINGS_REGEXP, " ");
+                ((InputField)formFieldElement).SetComb(this.IsCombTextFormField());
+                ((InputField)formFieldElement).SetMaxLen((parent is PdfTextFormField ? (PdfTextFormField)parent : PdfFormCreator
+                    .CreateTextFormField(parent.GetPdfObject())).GetMaxLen());
+                ((InputField)formFieldElement).UseAsPassword(parent.IsPassword());
             }
             formFieldElement.SetValue(value);
             formFieldElement.SetProperty(Property.FONT, GetFont());
@@ -913,7 +936,7 @@ namespace iText.Forms.Fields {
                 return;
             }
             if (!(formFieldElement is ComboBoxField)) {
-                formFieldElement = new ComboBoxField("");
+                formFieldElement = new ComboBoxField(parent.GetPartialFieldName().ToUnicodeString());
             }
             ComboBoxField comboBoxField = (ComboBoxField)formFieldElement;
             PrepareComboBoxFieldWithCorrectOptionsAndValues(comboBoxField);
@@ -1035,49 +1058,38 @@ namespace iText.Forms.Fields {
             }
             PdfName type = parent.GetFormType();
             RetrieveStyles();
-            if ((PdfName.Ch.Equals(type) && parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) || this.IsCombTextFormField
-                ()) {
-                if (parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO) && formFieldElement != null) {
+            if (PdfName.Ch.Equals(type)) {
+                if (parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
                     DrawComboBoxAndSaveAppearance();
                     return true;
                 }
-                return TextAndChoiceLegacyDrawer.RegenerateTextAndChoiceField(this);
+                DrawListFormFieldAndSaveAppearance();
+                return true;
             }
             else {
-                if (PdfName.Ch.Equals(type) && !parent.GetFieldFlag(PdfChoiceFormField.FF_COMBO)) {
-                    if (formFieldElement != null) {
-                        DrawListFormFieldAndSaveAppearance();
-                        return true;
-                    }
-                    else {
-                        return TextAndChoiceLegacyDrawer.RegenerateTextAndChoiceField(this);
-                    }
+                if (PdfName.Tx.Equals(type)) {
+                    DrawTextFormFieldAndSaveAppearance();
+                    return true;
                 }
                 else {
-                    if (PdfName.Tx.Equals(type)) {
-                        DrawTextFormFieldAndSaveAppearance();
+                    if (PdfName.Btn.Equals(type)) {
+                        if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
+                            DrawPushButtonFieldAndSaveAppearance();
+                        }
+                        else {
+                            if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
+                                DrawRadioButtonAndSaveAppearance(GetRadioButtonValue());
+                            }
+                            else {
+                                DrawCheckBoxAndSaveAppearance(GetCheckBoxValue());
+                            }
+                        }
                         return true;
                     }
                     else {
-                        if (PdfName.Btn.Equals(type)) {
-                            if (parent.GetFieldFlag(PdfButtonFormField.FF_PUSH_BUTTON)) {
-                                DrawPushButtonFieldAndSaveAppearance();
-                            }
-                            else {
-                                if (parent.GetFieldFlag(PdfButtonFormField.FF_RADIO)) {
-                                    DrawRadioButtonAndSaveAppearance(GetRadioButtonValue());
-                                }
-                                else {
-                                    DrawCheckBoxAndSaveAppearance(GetCheckBoxValue());
-                                }
-                            }
+                        if (PdfName.Sig.Equals(type)) {
+                            DrawSignatureFormFieldAndSaveAppearance();
                             return true;
-                        }
-                        else {
-                            if (PdfName.Sig.Equals(type)) {
-                                DrawSignatureFormFieldAndSaveAppearance();
-                                return true;
-                            }
                         }
                     }
                 }
@@ -1166,14 +1178,17 @@ namespace iText.Forms.Fields {
 
         private bool IsCombTextFormField() {
             PdfName type = parent.GetFormType();
-            if (PdfName.Tx.Equals(type) && parent.GetFieldFlag(PdfTextFormField.FF_COMB)) {
-                int maxLen = PdfFormCreator.CreateTextFormField(parent.GetPdfObject()).GetMaxLen();
-                if (maxLen == 0 || parent.IsMultiline()) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT
-                        ));
-                    return false;
+            if (PdfName.Tx.Equals(type)) {
+                PdfTextFormField textField = parent is PdfTextFormField ? (PdfTextFormField)parent : PdfFormCreator.CreateTextFormField
+                    (parent.GetPdfObject());
+                if (textField.IsComb()) {
+                    if (textField.GetMaxLen() == 0 || textField.IsMultiline() || textField.IsPassword() || textField.IsFileSelect
+                        ()) {
+                        LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT);
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
             }
             return false;
         }

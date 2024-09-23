@@ -49,11 +49,12 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="modelElement">the model element</param>
         protected internal AbstractSelectFieldRenderer(AbstractSelectField modelElement)
             : base(modelElement) {
-            AddChild(CreateFlatRenderer());
         }
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            childRenderers.Clear();
+            AddChild(CreateFlatRenderer());
             // Resolve width here in case it's relative, while parent width is still intact.
             // If it's inline-block context, relative width is already resolved.
             float? width = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());

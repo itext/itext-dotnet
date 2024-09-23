@@ -56,27 +56,6 @@ namespace iText.Forms.Form.Element {
             SetProperties();
         }
 
-        /// <summary>Determines, whether the input field will be password.</summary>
-        /// <remarks>
-        /// Determines, whether the input field will be password.
-        /// <para />
-        /// Usually means that instead of glyphs '*' will be shown in case of flatten field.
-        /// <para />
-        /// If the field is not flatten, value will be ignored.
-        /// </remarks>
-        /// <param name="isPassword">
-        /// 
-        /// <see langword="true"/>
-        /// is this field shall be considered as password,
-        /// <see langword="false"/>
-        /// otherwise
-        /// </param>
-        /// <returns>this input field</returns>
-        public virtual iText.Forms.Form.Element.TextArea UseAsPassword(bool isPassword) {
-            SetProperty(FormProperty.FORM_FIELD_PASSWORD_FLAG, isPassword);
-            return this;
-        }
-
         /* (non-Javadoc)
         * @see FormField#getDefaultProperty(int)
         */

@@ -196,7 +196,6 @@ namespace iText.Pdfa {
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD)]
         public virtual void PdfA1DocWithPdfA1ListFieldTest() {
             String name = "pdfA1DocWithPdfA1ListField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
@@ -214,6 +213,7 @@ namespace iText.Pdfa {
             f.SetValue("9").SetFont(fontFreeSans);
             f.SetValue("4");
             f.SetTopIndex(2);
+            f.SetMultiSelect(true);
             f.SetListSelected(new String[] { "3", "5" });
             form.AddField(f);
             pdfDoc.Close();

@@ -101,7 +101,9 @@ namespace iText.Forms.Form.Renderer {
             AbstractSelectField selectField = (AbstractSelectField)modelElement;
             IList<SelectFieldItem> options = selectField.GetOptions();
             Div optionsContainer = new Div();
-            foreach (SelectFieldItem option in options) {
+            int topIndex = (int)this.GetProperty<int?>(FormProperty.LIST_BOX_TOP_INDEX, 0);
+            IList<SelectFieldItem> visibleOptions = topIndex > 0 ? options.SubList(topIndex, options.Count) : options;
+            foreach (SelectFieldItem option in visibleOptions) {
                 optionsContainer.Add(option.GetElement());
             }
             String lang = GetLang();
@@ -183,6 +185,10 @@ namespace iText.Forms.Form.Renderer {
             choiceField.SetFontSize(fontSize.GetValue());
             choiceField.SetMultiSelect(IsMultiple());
             choiceField.SetListSelected(selectedOptions.ToArray(new String[selectedOptions.Count]));
+            int? topIndex = modelElement.GetOwnProperty<int?>(FormProperty.LIST_BOX_TOP_INDEX);
+            if (topIndex != null) {
+                choiceField.SetTopIndex((int)topIndex);
+            }
             TransparentColor color = GetPropertyAsTransparentColor(Property.FONT_COLOR);
             if (color != null) {
                 choiceField.SetColor(color.GetColor());
@@ -270,7 +276,14 @@ namespace iText.Forms.Form.Renderer {
         }
 
         private void ApplySelectedStyle(IRenderer selectedOption) {
-            selectedOption.SetProperty(Property.BACKGROUND, new Background(new DeviceRgb(0, 120, 215)));
+            RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            if (RenderingMode.HTML_MODE.Equals(mode) && IsFlatten() && selectedOption.GetProperty<Background>(Property
+                .BACKGROUND) == null) {
+                selectedOption.SetProperty(Property.BACKGROUND, new Background(new DeviceRgb(206, 206, 206)));
+            }
+            else {
+                selectedOption.SetProperty(Property.BACKGROUND, new Background(new DeviceRgb(169, 204, 225)));
+            }
             SetFontColorRecursively(selectedOption);
         }
 
@@ -280,7 +293,7 @@ namespace iText.Forms.Form.Renderer {
         /// otherwise it will be not applied due to the css resolving mechanism.
         /// </summary>
         private void SetFontColorRecursively(IRenderer selectedOption) {
-            selectedOption.SetProperty(Property.FONT_COLOR, new TransparentColor(ColorConstants.WHITE));
+            selectedOption.SetProperty(Property.FONT_COLOR, new TransparentColor(ColorConstants.BLACK));
             foreach (IRenderer renderer in selectedOption.GetChildRenderers()) {
                 SetFontColorRecursively(renderer);
             }
