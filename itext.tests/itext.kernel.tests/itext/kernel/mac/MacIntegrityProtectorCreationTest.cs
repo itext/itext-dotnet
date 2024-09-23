@@ -101,7 +101,7 @@ namespace iText.Kernel.Mac {
                 .HMAC_WITH_SHA_256, MacProperties.KeyWrappingAlgorithm.AES_256_NO_PADD);
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
-            MemoryStream unwritableStream = new _MemoryStream_120();
+            MemoryStream unwritableStream = new _MemoryStream_124();
             String exceptionMessage = NUnit.Framework.Assert.Catch(typeof(Exception), () => {
                 using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(unwritableStream, writerProperties))) {
                     pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
@@ -112,8 +112,8 @@ namespace iText.Kernel.Mac {
             unwritableStream.Dispose();
         }
 
-        private sealed class _MemoryStream_120 : MemoryStream {
-            public _MemoryStream_120() {
+        private sealed class _MemoryStream_124 : MemoryStream {
+            public _MemoryStream_124() {
             }
 
             public override void Write(byte[] b, int off, int len) {

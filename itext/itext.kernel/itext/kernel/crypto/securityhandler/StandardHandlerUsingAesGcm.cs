@@ -61,27 +61,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
             : base(encryptionDictionary, password) {
         }
 
-        /// <summary>Checks whether the document-level metadata stream will be encrypted.</summary>
-        /// <returns>
-        /// 
-        /// <see langword="true"/>
-        /// if the document-level metadata stream shall be encrypted,
-        /// <see langword="false"/>
-        /// otherwise
-        /// </returns>
-        public override bool IsEncryptMetadata() {
-            return encryptMetadata;
-        }
-
         public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
-            // make sure the same IV is never used twice in the same file
-            // we do this by turning the objId/objGen into a 5-byte nonce (with generation restricted
-            // to 1 byte instead of 2) plus an in-object 2-byte counter that increments each time
-            // a new string is encrypted within the same object.
-            // The remaining 5 bytes will be generated randomly using a strong PRNG.
-            // This is *very different* from the situation with AES-CBC, where randomness is paramount.
-            // GCM uses a variation of counter mode, so making sure the IV is unique is more important
-            // than randomness.
+            // Make sure the same IV is never used twice in the same file. We do this by turning the objId/objGen into a
+            // 5-byte nonce (with generation restricted to 1 byte instead of 2) plus an in-object 2-byte counter that
+            // increments each time a new string is encrypted within the same object. The remaining 5 bytes will be
+            // generated randomly using a strong PRNG.
+            // This is very different from the situation with AES-CBC, where randomness is paramount. GCM uses a variation
+            // of counter mode, so making sure the IV is unique is more important than randomness.
             this.inObjectNonceCounter = 0;
             this.noncePart = new byte[] { 0, 0, (byte)(objGeneration), (byte)((int)(((uint)objNumber) >> 24)), (byte)(
                 (int)(((uint)objNumber) >> 16)), (byte)((int)(((uint)objNumber) >> 8)), (byte)(objNumber) };
@@ -98,12 +84,21 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return new AesGcmDecryptor(nextObjectKey, 0, nextObjectKeySize);
         }
 
-        protected internal override void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte
-            [] ueKey, byte[] aes256Perms, bool encryptMetadata, bool embeddedFilesOnly) {
-            base.SetAES256DicEntries(encryptionDictionary, oeKey, ueKey, aes256Perms, encryptMetadata, embeddedFilesOnly
-                );
-            encryptionDictionary.Put(PdfName.R, new PdfNumber(7));
-            encryptionDictionary.Put(PdfName.V, new PdfNumber(6));
+//\cond DO_NOT_DOCUMENT
+        internal override void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte[] ueKey, 
+            byte[] aes256Perms, bool encryptMetadata, bool embeddedFilesOnly) {
+            int version = 6;
+            int revision = 7;
+            PdfName cryptoFilter = PdfName.AESV4;
+            SetEncryptionDictionaryEntries(encryptionDictionary, oeKey, ueKey, aes256Perms, encryptMetadata, embeddedFilesOnly
+                , version, revision, cryptoFilter);
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal override bool IsPdf2(PdfDictionary encryptionDictionary) {
+            return true;
+        }
+//\endcond
     }
 }

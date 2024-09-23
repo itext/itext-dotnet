@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -33,12 +34,16 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Crypto.Securityhandler {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class StandardHandlerUsingAesGcmTest : ExtendedITextTest {
-        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
         public static readonly String SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/securityhandler/StandardHandlerUsingAesGcmTest/";
 
         public static readonly String DEST = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/crypto/securityhandler/StandardHandlerUsingAesGcmTest/";
+
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private static readonly byte[] OWNER_PASSWORD = "supersecret".GetBytes(System.Text.Encoding.UTF8);
+
+        private static readonly byte[] USER_PASSWORD = "secret".GetBytes(System.Text.Encoding.UTF8);
 
         [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
@@ -46,64 +51,73 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(VersionConforming.NOT_SUPPORTED_AES_GCM, Ignore = true)]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void TestSimpleEncryptDecryptTest() {
+        public virtual void SimpleEncryptDecryptTest() {
             String srcFile = SRC + "simpleDocument.pdf";
-            String cmpFile = SRC + "cmp_simpleDocument.pdf";
-            String outFile = DEST + "simpleEncryptDecryptTest.pdf";
-            DoEncrypt(srcFile, outFile);
-            TryCompare(outFile, cmpFile);
+            String decryptedCmpFile = SRC + "cmp_simpleEncryptDecrypt.pdf";
+            String encryptedCmpFile = SRC + "cmp_encryptedSimpleDocument.pdf";
+            String outFile = DEST + "simpleEncryptDecrypt.pdf";
+            // Set usage permissions.
+            int perms = EncryptionConstants.ALLOW_PRINTING | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
+            WriterProperties wProps = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER_PASSWORD
+                , OWNER_PASSWORD, perms, EncryptionConstants.ENCRYPTION_AES_GCM);
+            // Instantiate input/output document.
+            using (PdfDocument docIn = new PdfDocument(new PdfReader(srcFile))) {
+                using (PdfDocument docOut = new PdfDocument(new PdfWriter(outFile, wProps))) {
+                    // Copy one page from input to output.
+                    docIn.CopyPagesTo(1, 1, docOut);
+                }
+            }
+            new CompareTool().CompareByContent(outFile, decryptedCmpFile, DEST, "diff", USER_PASSWORD, null);
+            new CompareTool().CompareByContent(outFile, encryptedCmpFile, DEST, "diff", USER_PASSWORD, USER_PASSWORD);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(VersionConforming.NOT_SUPPORTED_AES_GCM, Ignore = true)]
+        [LogMessage(VersionConforming.NOT_SUPPORTED_AES_GCM)]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void TestSimpleEncryptDecryptPdf15Test() {
+        public virtual void SimpleEncryptDecryptPdf15Test() {
             String srcFile = SRC + "simpleDocument.pdf";
-            String cmpFile = SRC + "cmp_simpleDocument.pdf";
+            String cmpFile = SRC + "cmp_simpleEncryptDecrypt.pdf";
             String outFile = DEST + "notSupportedVersionDocument.pdf";
-            byte[] userBytes = "secret".GetBytes(System.Text.Encoding.UTF8);
-            byte[] ownerBytes = "supersecret".GetBytes(System.Text.Encoding.UTF8);
             int perms = EncryptionConstants.ALLOW_PRINTING | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
-            WriterProperties wProps = new WriterProperties().SetStandardEncryption(userBytes, ownerBytes, perms, EncryptionConstants
-                .ENCRYPTION_AES_GCM);
+            WriterProperties wProps = new WriterProperties().SetStandardEncryption(USER_PASSWORD, OWNER_PASSWORD, perms
+                , EncryptionConstants.ENCRYPTION_AES_GCM);
             PdfDocument ignored = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile, wProps));
             ignored.Close();
-            TryCompare(outFile, cmpFile);
+            new CompareTool().CompareByContent(outFile, cmpFile, DEST, "diff", USER_PASSWORD, null);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void TestKnownOutput() {
+        public virtual void KnownOutputTest() {
             String srcFile = SRC + "encryptedDocument.pdf";
             String outFile = DEST + "encryptedDocument.pdf";
             String cmpFile = SRC + "simpleDocument.pdf";
-            using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFile, new ReaderProperties().SetPassword("supersecret"
-                .GetBytes(System.Text.Encoding.UTF8))), new PdfWriter(outFile))) {
+            using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFile, new ReaderProperties().SetPassword(OWNER_PASSWORD
+                )), new PdfWriter(outFile))) {
             }
             // We need to copy the source file to the destination folder to be able to compare pdf files in android.
-            TryCompare(outFile, cmpFile);
+            new CompareTool().CompareByContent(outFile, cmpFile, DEST, "diff", USER_PASSWORD, null);
         }
 
         // In all these tampered files, the stream content of object 14 has been modified.
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
-        public virtual void TestMacTampered() {
+        public virtual void MacTamperedTest() {
             String srcFile = SRC + "encryptedDocumentTamperedMac.pdf";
             AssertTampered(srcFile);
         }
 
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
-        public virtual void TestIVTampered() {
+        public virtual void InitVectorTamperedTest() {
             String srcFile = SRC + "encryptedDocumentTamperedIv.pdf";
             AssertTampered(srcFile);
         }
 
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
-        public virtual void TestCiphertextTampered() {
+        public virtual void CiphertextTamperedTest() {
             String srcFile = SRC + "encryptedDocumentTamperedCiphertext.pdf";
             AssertTampered(srcFile);
         }
@@ -125,6 +139,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
             encMap.Put(PdfName.StrF, PdfName.Identity);
             PdfDictionary embeddedFilesDict = new PdfDictionary();
             embeddedFilesDict.Put(PdfName.FlateDecode, new PdfDictionary());
+            PdfDictionary cfmDict = new PdfDictionary();
+            cfmDict.Put(PdfName.CFM, PdfName.AESV4);
+            embeddedFilesDict.Put(PdfName.StdCF, cfmDict);
             encMap.Put(PdfName.CF, embeddedFilesDict);
             encMap.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
             encMap.Put(PdfName.O, new PdfString("\u0006¡Ê\u009A<@\u009DÔG\u0013&\u008C5r\u0096\u0081i!\u0091\u000Fªìh=±\u0091\u0006Að¨\u008D\"¼\u0018?õ\u001DNó»{y\u0091)\u0090vâý"
@@ -155,6 +172,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
             encMap.Put(PdfName.StrF, PdfName.StdCF);
             PdfDictionary embeddedFilesDict = new PdfDictionary();
             embeddedFilesDict.Put(PdfName.FlateDecode, new PdfDictionary());
+            PdfDictionary cfmDict = new PdfDictionary();
+            cfmDict.Put(PdfName.CFM, PdfName.AESV4);
+            embeddedFilesDict.Put(PdfName.StdCF, cfmDict);
             encMap.Put(PdfName.CF, embeddedFilesDict);
             encMap.Put(PdfName.EncryptMetadata, PdfBoolean.TRUE);
             encMap.Put(PdfName.O, new PdfString("\u0006¡Ê\u009A<@\u009DÔG\u0013&\u008C5r\u0096\u0081i!\u0091\u000Fªìh=±\u0091\u0006Að¨\u008D\"¼\u0018?õ\u001DNó»{y\u0091)\u0090vâý"
@@ -171,35 +191,72 @@ namespace iText.Kernel.Crypto.Securityhandler {
             NUnit.Framework.Assert.IsTrue(encryption.IsMetadataEncrypted());
         }
 
-        private void DoEncrypt(String input, String output) {
-            // Pick user/owner password
-            byte[] userBytes = "secret".GetBytes(System.Text.Encoding.UTF8);
-            byte[] ownerBytes = "supersecret".GetBytes(System.Text.Encoding.UTF8);
-            // Set usage permissions
-            int perms = EncryptionConstants.ALLOW_PRINTING | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
-            WriterProperties wProps = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(userBytes
-                , ownerBytes, perms, EncryptionConstants.ENCRYPTION_AES_GCM);
-            // Instantiate input/output document
-            using (PdfDocument docIn = new PdfDocument(new PdfReader(input))) {
-                using (PdfDocument docOut = new PdfDocument(new PdfWriter(output, wProps))) {
-                    // Copy one page from input to output
-                    docIn.CopyPagesTo(1, 1, docOut);
-                }
-            }
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void EncryptPdfWithMissingCFTest() {
+            byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
+                (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };
+            byte[] password = new byte[] { (byte)115, (byte)101, (byte)99, (byte)114, (byte)101, (byte)116 };
+            Dictionary<PdfName, PdfObject> encMap = new Dictionary<PdfName, PdfObject>();
+            encMap.Put(PdfName.R, new PdfNumber(7));
+            encMap.Put(PdfName.V, new PdfNumber(6));
+            PdfDictionary dictionary = new PdfDictionary(encMap);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfEncryption(dictionary, password
+                , documentId));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.CF_NOT_FOUND_ENCRYPTION, e.Message);
         }
 
-        private void TryCompare(String outPdf, String cmpPdf) {
-            new CompareTool().CompareByContent(outPdf, cmpPdf, DEST, "diff", "secret".GetBytes(System.Text.Encoding.UTF8
-                ), null);
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void EncryptPdfWithMissingStdCFTest() {
+            byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
+                (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };
+            byte[] password = new byte[] { (byte)115, (byte)101, (byte)99, (byte)114, (byte)101, (byte)116 };
+            Dictionary<PdfName, PdfObject> encMap = new Dictionary<PdfName, PdfObject>();
+            encMap.Put(PdfName.R, new PdfNumber(7));
+            encMap.Put(PdfName.V, new PdfNumber(6));
+            PdfDictionary embeddedFilesDict = new PdfDictionary();
+            embeddedFilesDict.Put(PdfName.FlateDecode, new PdfDictionary());
+            PdfDictionary cfmDict = new PdfDictionary();
+            cfmDict.Put(PdfName.CFM, PdfName.AESV4);
+            encMap.Put(PdfName.CF, embeddedFilesDict);
+            PdfDictionary dictionary = new PdfDictionary(encMap);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfEncryption(dictionary, password
+                , documentId));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.STDCF_NOT_FOUND_ENCRYPTION, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void EncryptPdfWithMissingCFMTest() {
+            byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
+                (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };
+            byte[] password = new byte[] { (byte)115, (byte)101, (byte)99, (byte)114, (byte)101, (byte)116 };
+            Dictionary<PdfName, PdfObject> encMap = new Dictionary<PdfName, PdfObject>();
+            encMap.Put(PdfName.R, new PdfNumber(7));
+            encMap.Put(PdfName.V, new PdfNumber(6));
+            encMap.Put(PdfName.P, new PdfNumber(-1852));
+            encMap.Put(PdfName.StmF, PdfName.StdCF);
+            encMap.Put(PdfName.StrF, PdfName.StdCF);
+            PdfDictionary embeddedFilesDict = new PdfDictionary();
+            embeddedFilesDict.Put(PdfName.FlateDecode, new PdfDictionary());
+            PdfDictionary cfmDict = new PdfDictionary();
+            embeddedFilesDict.Put(PdfName.StdCF, cfmDict);
+            encMap.Put(PdfName.CF, embeddedFilesDict);
+            PdfDictionary dictionary = new PdfDictionary(encMap);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfEncryption(dictionary, password
+                , documentId));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.NO_COMPATIBLE_ENCRYPTION_FOUND, e.Message);
         }
 
         private void AssertTampered(String outFile) {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(outFile, new ReaderProperties().SetPassword("secret".GetBytes
-                (System.Text.Encoding.UTF8))));
-            PdfObject obj = pdfDoc.GetPdfObject(14);
-            if (obj != null && obj.IsStream()) {
-                // Get decoded stream bytes.
-                NUnit.Framework.Assert.Catch(typeof(Exception), () => ((PdfStream)obj).GetBytes());
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(outFile, new ReaderProperties().SetPassword(USER_PASSWORD
+                )))) {
+                PdfObject obj = pdfDoc.GetPdfObject(14);
+                if (obj != null && obj.IsStream()) {
+                    // Get decoded stream bytes.
+                    NUnit.Framework.Assert.Catch(typeof(Exception), () => ((PdfStream)obj).GetBytes());
+                }
             }
         }
     }

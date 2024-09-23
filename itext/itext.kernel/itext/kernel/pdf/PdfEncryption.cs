@@ -952,7 +952,24 @@ namespace iText.Kernel.Pdf {
                 }
 
                 case 7: {
-                    cryptoMode = EncryptionConstants.ENCRYPTION_AES_GCM;
+                    // (ISO/TS 32003) The security handler defines the use of encryption
+                    // and decryption in the same way as when the value of R is 6, and declares at least
+                    // one crypt filter using the AESV4 method.
+                    PdfDictionary cfDic = encDict.GetAsDictionary(PdfName.CF);
+                    if (cfDic == null) {
+                        throw new PdfException(KernelExceptionMessageConstant.CF_NOT_FOUND_ENCRYPTION);
+                    }
+                    cfDic = (PdfDictionary)cfDic.Get(PdfName.StdCF);
+                    if (cfDic == null) {
+                        throw new PdfException(KernelExceptionMessageConstant.STDCF_NOT_FOUND_ENCRYPTION);
+                    }
+                    if (PdfName.AESV4.Equals(cfDic.Get(PdfName.CFM))) {
+                        cryptoMode = EncryptionConstants.ENCRYPTION_AES_GCM;
+                        length = 256;
+                    }
+                    else {
+                        throw new PdfException(KernelExceptionMessageConstant.NO_COMPATIBLE_ENCRYPTION_FOUND);
+                    }
                     PdfBoolean em7 = encDict.GetAsBoolean(PdfName.EncryptMetadata);
                     if (em7 != null && !em7.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;

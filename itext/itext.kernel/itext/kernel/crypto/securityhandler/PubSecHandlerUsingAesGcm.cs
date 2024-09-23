@@ -79,6 +79,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
+            // Make sure the same IV is never used twice in the same file. We do this by turning the objId/objGen into a
+            // 5-byte nonce (with generation restricted to 1 byte instead of 2) plus an in-object 2-byte counter that
+            // increments each time a new string is encrypted within the same object. The remaining 5 bytes will be
+            // generated randomly using a strong PRNG.
+            // This is very different from the situation with AES-CBC, where randomness is paramount.
+            // GCM uses a variation of counter mode, so making sure the IV is unique is more important than randomness.
             this.inObjectNonceCounter = 0;
             this.noncePart = new byte[] { 0, 0, (byte)(objGeneration), (byte)((int)(((uint)objNumber) >> 24)), (byte)(
                 (int)(((uint)objNumber) >> 16)), (byte)((int)(((uint)objNumber) >> 8)), (byte)(objNumber) };
@@ -97,8 +103,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal override void SetPubSecSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool
              encryptMetadata, bool embeddedFilesOnly) {
-            base.SetPubSecSpecificHandlerDicEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly);
-            encryptionDictionary.Put(PdfName.V, new PdfNumber(7));
+            int version = 6;
+            PdfName filter = PdfName.AESV4;
+            SetEncryptionDictEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly, version, filter);
         }
     }
 }
