@@ -92,8 +92,8 @@ namespace iText.Signatures.Sign {
             String outPdf = DESTINATION_FOLDER + "defaultSignedAppearanceTextTest.pdf";
             Rectangle rect = new Rectangle(36, 648, 200, 100);
             String fieldName = "Signature1";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
-                ());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText());
             Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(new Rectangle(36, 676, 200, 15))));
@@ -106,8 +106,9 @@ namespace iText.Signatures.Sign {
             CreateSimplePDFADocument(srcFile).Close();
             Rectangle rect = new Rectangle(50, 70, 400, 200);
             String fieldName = "Signature1";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
-                ().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine("Test City"));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine
+                ("Test City"));
             String outPdf = DESTINATION_FOLDER + "signPDFADocumentWithoutSettingFont.pdf";
             Exception e = NUnit.Framework.Assert.Catch(typeof(Exception), () => {
                 Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
@@ -122,9 +123,9 @@ namespace iText.Signatures.Sign {
             CreateSimplePDFADocument(srcFile).Close();
             Rectangle rect = new Rectangle(50, 70, 400, 200);
             String fieldName = "Signature1";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFont(PdfFontFactory.CreateFont
-                (StandardFonts.COURIER)).SetContent(new SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil
-                .GetCurrentTime()).SetLocationLine("Test City"));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetFont(PdfFontFactory
+                .CreateFont(StandardFonts.COURIER)).SetContent(new SignedAppearanceText().SetSignedBy("Test").SetSignDate
+                (DateTimeUtil.GetCurrentTime()).SetLocationLine("Test City"));
             String outPdf = DESTINATION_FOLDER + "signPDFADocumentBadFont.pdf";
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
                 Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
@@ -146,9 +147,9 @@ namespace iText.Signatures.Sign {
             PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
             String fieldName = "Signature1";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFont(font).SetContent(new 
-                SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine(
-                "Test City"));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetFont(font
+                ).SetContent(new SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime())
+                .SetLocationLine("Test City"));
             Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -175,9 +176,9 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(50, 200, 400, 100);
             PdfFont font1 = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetFont(font1).SetContent(new 
-                SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime()).SetLocationLine(
-                "Test City"));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetFont(font1
+                ).SetContent(new SignedAppearanceText().SetSignedBy("Test").SetSignDate(DateTimeUtil.GetCurrentTime())
+                .SetLocationLine("Test City"));
             Sign(srcFile, fieldName, outPdf, "Test 1", "TestCity 1", rect, appearance);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -206,8 +207,8 @@ namespace iText.Signatures.Sign {
             String outPdf = DESTINATION_FOLDER + "defaultSignedAppearanceTextAndSignerTest.pdf";
             Rectangle rect = new Rectangle(36, 648, 200, 100);
             String fieldName = "Signature2";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent("", new SignedAppearanceText
-                ());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("", new SignedAppearanceText());
             Sign(srcFile, fieldName, outPdf, "Test 2", "TestCity 2", rect, appearance);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(new Rectangle(136, 686, 100, 25))));
@@ -223,8 +224,8 @@ namespace iText.Signatures.Sign {
             String outPdf = DESTINATION_FOLDER + "defaultSignedAppearanceTextWithImageTest.pdf";
             Rectangle rect = new Rectangle(36, 648, 300, 100);
             String fieldName = "Signature3";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
-                (), ImageDataFactory.Create(imagePath));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText(), ImageDataFactory.Create(imagePath));
             Sign(srcFile, fieldName, outPdf, "Test 3", "TestCity 3", rect, appearance);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(new Rectangle(186, 681, 150, 36))));
@@ -240,9 +241,9 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature4";
             String reason = "Test 4";
             String location = "TestCity 4";
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(fieldName).SetContent(new SignedAppearanceText
-                ().SetSignedBy("   wrong signer   ").SetReasonLine("   Signing reason: " + reason).SetLocationLine("   Signing location: "
-                 + location).SetSignDate(DateTimeUtil.GetCurrentTime()));
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText().SetSignedBy("   wrong signer   ").SetReasonLine("   Signing reason: " + reason
+                ).SetLocationLine("   Signing location: " + location).SetSignDate(DateTimeUtil.GetCurrentTime()));
             Sign(srcFile, fieldName, outPdf, reason, location, rect, appearance);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 , GetTestMap(new Rectangle(36, 676, 200, 15))));

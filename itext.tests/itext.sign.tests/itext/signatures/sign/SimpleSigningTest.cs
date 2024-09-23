@@ -156,8 +156,8 @@ namespace iText.Signatures.Sign {
 
         private static void CreateAppearance(PdfSigner signer, String signatureName, String reason, String location
             , bool setReuseAppearance, Rectangle rectangleForNewField, float? fontSize) {
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signatureName).SetContent(new SignedAppearanceText
-                ());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText());
             signer.GetSignerProperties().SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             if (rectangleForNewField != null) {
                 signer.GetSignerProperties().SetPageRect(rectangleForNewField);

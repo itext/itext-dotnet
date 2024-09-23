@@ -77,8 +77,7 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignature(inPdf, "invisibleSignatureWithTU", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 signer.GetSignerProperties().SetSignatureAppearance(appearance);
             }
@@ -92,8 +91,7 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignature(inPdf, "visibleSignatureWithTUButNotAFont", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 try {
                     appearance.SetFont(PdfFontFactory.CreateFont(FONT));
@@ -116,8 +114,7 @@ namespace iText.Pdfua {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 GenerateSignature(inPdf, "visibleSignatureWithoutTUFont", (signer) => {
                     signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                        ());
+                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                     appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                         ).SetSignedBy("Dummy"));
                     try {
@@ -140,8 +137,7 @@ namespace iText.Pdfua {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 GenerateSignature(inPdf, "visibleSignatureWithNoFontSelected", (signer) => {
                     signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                        ());
+                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                     appearance.SetContent("Some signature content");
                     signer.GetSignerProperties().SetPageNumber(1).SetPageRect(new Rectangle(36, 648, 200, 100));
                     appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
@@ -159,8 +155,7 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerInvisibleSignatureWithTU", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 signer.GetSignerProperties().SetSignatureAppearance(appearance);
             }
@@ -174,8 +169,7 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerInvisibleSignatureWithoutTU", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 signer.GetSignerProperties().SetSignatureAppearance(appearance);
             }
             );
@@ -190,8 +184,7 @@ namespace iText.Pdfua {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithoutFont", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                     ).SetSignedBy("Dummy"));
@@ -209,8 +202,7 @@ namespace iText.Pdfua {
             PdfFont font = PdfFontFactory.CreateFont(FONT);
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithFont", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 appearance.GetAccessibilityProperties().SetAlternateDescription("Some alternate description");
                 appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                     ).SetSignedBy("Dummy"));
@@ -231,8 +223,7 @@ namespace iText.Pdfua {
             PdfFont font = PdfFontFactory.CreateFont(FONT);
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithFontEmptyTU", (signer) => {
                 signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                    ());
+                SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                 appearance.GetAccessibilityProperties().SetAlternateDescription("");
                 appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                     ).SetSignedBy("Dummy"));
@@ -253,8 +244,7 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
                 GenerateSignature(inPdf, "pdfSignerVisibleSignatureWithFontEmptyTU", (signer) => {
                     signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature12"));
-                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                        ());
+                    SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
                     appearance.GetAccessibilityProperties().SetAlternateDescription("");
                     appearance.SetContent(new SignedAppearanceText().SetLocationLine("Dummy location").SetReasonLine("Dummy reason"
                         ).SetSignedBy("Dummy"));

@@ -69,8 +69,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(output), new StampingProperties());
             SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
             signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
-                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Signature field which signing is deferred.");
             signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
                 );
             IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
@@ -89,8 +89,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
             SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
             signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
-                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Signature field which signing is deferred.");
             signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
                 );
             IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
@@ -111,8 +111,8 @@ namespace iText.Signatures.Sign {
             PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
             SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
             signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
-                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Signature field which signing is deferred.");
             signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
                 );
             IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
@@ -163,8 +163,8 @@ namespace iText.Signatures.Sign {
             SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.NO_CHANGES_PERMITTED
                 ).SetFieldName(sigFieldName);
             signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(sigFieldName).SetContent("Signature field which signing is deferred."
-                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Signature field which signing is deferred.");
             signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
                 );
             SignDeferredTest.DigestCalcBlankSigner external = new SignDeferredTest.DigestCalcBlankSigner(filter, subFilter

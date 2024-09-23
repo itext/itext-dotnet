@@ -144,8 +144,8 @@ namespace iText.Signatures.Sign {
                 StampingProperties());
             SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1");
             signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signer.GetSignerProperties().GetFieldName
-                ()).SetContent("Approval test signature.\nCreated by iText.");
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Approval test signature.\nCreated by iText.");
             signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100)).SetReason("Test").SetLocation("TestCity").SetSignatureAppearance
                 (appearance);
             if (sigPolicyIdentifier != null) {

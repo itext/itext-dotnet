@@ -72,7 +72,7 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), 
                 new StampingProperties());
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance("Signature1")
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID)
                 .SetContent("Approval test signature.\nCreated by iText.");
             SignerProperties signerProperties = new SignerProperties()
                     .SetFieldName("Signature1")

@@ -888,8 +888,7 @@ namespace iText.Signatures {
         /// </returns>
         protected internal virtual SignatureFieldAppearance GetSignatureAppearance() {
             if (this.signerProperties.GetSignatureAppearance() == null) {
-                this.signerProperties.SetSignatureAppearance(new SignatureFieldAppearance(this.signerProperties.GetFieldName
-                    ()));
+                this.signerProperties.SetSignatureAppearance(new SignatureFieldAppearance(SignerProperties.IGNORED_ID));
                 SetContent();
             }
             else {

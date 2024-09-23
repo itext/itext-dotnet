@@ -29,6 +29,8 @@ using iText.Kernel.Geom;
 namespace iText.Signatures {
     /// <summary>Properties to be used in signing operations.</summary>
     public class SignerProperties {
+        public const String IGNORED_ID = "";
+
         private PdfSigFieldLock fieldLock;
 
         private SignatureFieldAppearance appearance;
@@ -76,6 +78,12 @@ namespace iText.Signatures {
         /// <summary>Sets the signature field layout element to customize the appearance of the signature.</summary>
         /// <remarks>
         /// Sets the signature field layout element to customize the appearance of the signature.
+        /// ID specified for
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// will be ignored and won't override field name, so
+        /// <see cref="IGNORED_ID"/>
+        /// could be used. To specify signature name use
+        /// <see cref="SetFieldName(System.String)"/>.
         /// <para />
         /// Note that if
         /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
@@ -180,6 +188,13 @@ namespace iText.Signatures {
         /// <remarks>
         /// Sets the name indicating the field to be signed. The field can already be presented in the
         /// document but shall not be signed. If the field is not presented in the document, it will be created.
+        /// <para />
+        /// Note that ID specified for
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// set by
+        /// <see cref="SetSignatureAppearance(iText.Forms.Form.Element.SignatureFieldAppearance)"/>
+        /// will be
+        /// ignored and won't override the field name.
         /// </remarks>
         /// <param name="fieldName">the name indicating the field to be signed</param>
         /// <returns>this instance to support fluent interface</returns>

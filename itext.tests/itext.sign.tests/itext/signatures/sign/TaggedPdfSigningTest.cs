@@ -114,8 +114,8 @@ namespace iText.Signatures.Sign {
                 (name);
             signer.SetSignerProperties(signerProperties);
             // Creating the appearance
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetContent(new SignedAppearanceText
-                ());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText());
             if (rectangleForNewField != null) {
                 signerProperties.SetPageRect(rectangleForNewField);
             }

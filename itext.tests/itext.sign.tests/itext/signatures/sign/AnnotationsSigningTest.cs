@@ -136,8 +136,8 @@ namespace iText.Signatures.Sign {
             SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(certificationLevel).SetFieldName
                 (name);
             // Creating the appearance
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(name).SetContent(new SignedAppearanceText
-                ());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText());
             signerProperties.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             if (rectangleForNewField != null) {
                 signerProperties.SetPageRect(rectangleForNewField);

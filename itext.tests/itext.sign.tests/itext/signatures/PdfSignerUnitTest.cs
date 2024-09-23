@@ -228,7 +228,7 @@ namespace iText.Signatures {
             SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1").SetPageNumber(1).SetPageRect
                 (new Rectangle(100, 100, 10, 10));
             signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName());
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
             appearance.SetContent("Some text");
             appearance.GetAccessibilityProperties().SetAlternateDescription("Alternate description");
             signerProperties.SetSignatureAppearance(appearance);

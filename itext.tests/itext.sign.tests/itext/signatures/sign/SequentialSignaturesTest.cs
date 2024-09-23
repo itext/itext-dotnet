@@ -62,8 +62,8 @@ namespace iText.Signatures.Sign {
             String signatureName = "Signature2";
             PdfSigner signer = new PdfSigner(new PdfReader(srcFileName), FileUtil.GetFileOutputStream(outFileName), new 
                 StampingProperties().UseAppendMode());
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signatureName).SetContent("Approval test signature.\nCreated by iText."
-                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Approval test signature.\nCreated by iText.");
             SignerProperties signerProperties = new SignerProperties().SetFieldName(signatureName).SetPageRect(new Rectangle
                 (50, 350, 200, 100)).SetReason("Test").SetLocation("TestCity").SetSignatureAppearance(appearance);
             signer.SetSignerProperties(signerProperties);
@@ -87,8 +87,8 @@ namespace iText.Signatures.Sign {
                 StampingProperties().UseAppendMode());
             PdfDocument document = signer.GetDocument();
             document.GetWriter().SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signatureName).SetContent("Approval test signature #2.\nCreated by iText."
-                );
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                ("Approval test signature #2.\nCreated by iText.");
             SignerProperties signerProperties = new SignerProperties().SetFieldName(signatureName).SetPageNumber(1).SetPageRect
                 (new Rectangle(50, 550, 200, 100)).SetReason("Test2").SetLocation("TestCity2").SetSignatureAppearance(
                 appearance);

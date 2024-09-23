@@ -291,7 +291,7 @@ namespace iText.Signatures.Sign {
             // and accessing that information requires APIs that are not available in older JDKs we still support.
             IExternalSignature pks = new PrivateKeySignature(signPrivateKey, digestAlgo, signatureAlgo, null);
             PdfSigner signer = new PdfSigner(new PdfReader(SOURCE_FILE), os, new StampingProperties());
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SIGNATURE_FIELD)
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID)
                 .SetContent("Approval test signature.\nCreated by iText.");
             SignerProperties signerProperties = new SignerProperties()
                 .SetFieldName(SIGNATURE_FIELD)

@@ -261,7 +261,7 @@ namespace iText.Signatures.Sign {
         private SignerProperties CreateSignerProperties() {
             SignerProperties signerProperties = new SignerProperties();
             signerProperties.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName())
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID)
                 .SetContent("Approval test signature.\nCreated by iText.");
             signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100))
                 .SetSignatureAppearance(appearance);
