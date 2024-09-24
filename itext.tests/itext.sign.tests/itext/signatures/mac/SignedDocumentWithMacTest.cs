@@ -30,11 +30,13 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Mac {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -56,11 +58,11 @@ namespace iText.Signatures.Mac {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
-            NUnit.Framework.Assume.That("BC".Equals(FACTORY.GetProviderName()));
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SignMacProtectedDocTest() {
             String fileName = "signMacProtectedDocTest.pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedDoc.pdf";
@@ -82,6 +84,7 @@ namespace iText.Signatures.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SignMacProtectedDocInAppendModeTest() {
             String fileName = "signMacProtectedDocInAppendModeTest.pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedDoc.pdf";
@@ -103,6 +106,7 @@ namespace iText.Signatures.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SignMacProtectedDocWithSHA3_384Test() {
             String fileName = "signMacProtectedDocWithSHA3_384Test.pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedDocSHA3_384.pdf";
@@ -124,7 +128,14 @@ namespace iText.Signatures.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SignMacPublicEncryptionDocTest() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
             String fileName = "signMacPublicEncryptionDocTest.pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedWithPublicHandlerDoc.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -147,10 +158,11 @@ namespace iText.Signatures.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ReadSignedMacProtectedInvalidDocTest() {
             String srcFileName = SOURCE_FOLDER + "signedMacProtectedInvalidDoc.pdf";
             String exceptionMessage = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName, new ReaderProperties().SetPassword
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFileName, new ReaderProperties().SetPassword
                     (ENCRYPTION_PASSWORD)))) {
                 }
             }
@@ -160,12 +172,13 @@ namespace iText.Signatures.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void UpdateSignedMacProtectedDocumentTest() {
             String fileName = "updateSignedMacProtectedDocumentTest.pdf";
             String srcFileName = SOURCE_FOLDER + "thirdPartyMacProtectedAndSignedDocument.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
-            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName, new ReaderProperties().SetPassword
+            using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFileName, new ReaderProperties().SetPassword
                 (ENCRYPTION_PASSWORD)), new PdfWriter(FileUtil.GetFileOutputStream(outputFileName)), new StampingProperties
                 ().UseAppendMode())) {
             }

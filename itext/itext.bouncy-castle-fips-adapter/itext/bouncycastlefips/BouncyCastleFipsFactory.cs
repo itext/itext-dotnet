@@ -1236,7 +1236,9 @@ namespace iText.Bouncycastlefips {
         
         /// <summary><inheritDoc/></summary>
         public byte[] GenerateHKDF(byte[] inputKey, byte[] salt, byte[] info) {
-            throw new NotSupportedException("HKDF algorithm is not supported in bouncy-castle FIPS mode.");
+            FipsKdf.HKdfKey key = FipsKdf.HKdfKeyBldr.WithSalt(salt).WithPrf(FipsPrfAlgorithm.Sha256HMac).Build(inputKey).WithIV(info);
+            IKdfCalculator<FipsKdf.AgreementKdfParameters> service = CryptoServicesRegistrar.CreateService(key);
+            return service.GetResult(inputKey.Length).Collect();
         }
         
         /// <summary><inheritDoc/></summary>
@@ -1247,12 +1249,18 @@ namespace iText.Bouncycastlefips {
         
         /// <summary><inheritDoc/></summary>
         public byte[] GenerateEncryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
-            throw new NotSupportedException("Encrypted key generation with AES256 is not supported in bouncy-castle FIPS mode.");
+            FipsAes.Key aesKey = new FipsAes.Key(kek);
+            IBlockCipherService provider = CryptoServicesRegistrar.CreateService((ICryptoServiceType<IBlockCipherService>) aesKey);
+            IKeyWrapper<FipsAes.WrapParameters> keyWrapper = provider.CreateKeyWrapper(FipsAes.KW);
+            return keyWrapper.Wrap(key).Collect();
         }
         
         /// <summary><inheritDoc/></summary>
         public byte[] GenerateDecryptedKeyWithAES256NoPad(byte[] key, byte[] kek) {
-            throw new NotSupportedException("Encrypted key generation with AES256 is not supported in bouncy-castle FIPS mode.");
+            FipsAes.Key aesKey = new FipsAes.Key(kek);
+            IBlockCipherService provider = CryptoServicesRegistrar.CreateService((ICryptoServiceType<IBlockCipherService>) aesKey);
+            IKeyUnwrapper<FipsAes.WrapParameters> keyWrapper = provider.CreateKeyUnwrapper(FipsAes.KW);
+            return keyWrapper.Unwrap(key, 0, key.Length).Collect();
         }
 
         public IGCMBlockCipher CreateGCMBlockCipher() {

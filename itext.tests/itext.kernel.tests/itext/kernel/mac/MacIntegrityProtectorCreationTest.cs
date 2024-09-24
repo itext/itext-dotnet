@@ -31,10 +31,12 @@ using iText.IO.Util;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Mac {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -54,7 +56,6 @@ namespace iText.Kernel.Mac {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            NUnit.Framework.Assume.That("BC".Equals(PROVIDER_NAME));
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
@@ -64,6 +65,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacStandardEncryptionTest() {
             String fileName = "standaloneMacStandardEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -80,6 +82,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void MacEncryptionWithAesGsmTest() {
             String fileName = "macEncryptionWithAesGsmTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -96,12 +99,13 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacUnwritableStreamTest() {
             MacProperties macProperties = new MacProperties(MacProperties.MacDigestAlgorithm.SHA_256, MacProperties.MacAlgorithm
                 .HMAC_WITH_SHA_256, MacProperties.KeyWrappingAlgorithm.AES_256_NO_PADD);
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
-            MemoryStream unwritableStream = new _MemoryStream_124();
+            MemoryStream unwritableStream = new _MemoryStream_129();
             String exceptionMessage = NUnit.Framework.Assert.Catch(typeof(Exception), () => {
                 using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(unwritableStream, writerProperties))) {
                     pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
@@ -112,8 +116,8 @@ namespace iText.Kernel.Mac {
             unwritableStream.Dispose();
         }
 
-        private sealed class _MemoryStream_124 : MemoryStream {
-            public _MemoryStream_124() {
+        private sealed class _MemoryStream_129 : MemoryStream {
+            public _MemoryStream_129() {
             }
 
             public override void Write(byte[] b, int off, int len) {
@@ -122,6 +126,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacWithAllHashAlgorithmsTest() {
             for (int i = 0; i < EnumUtil.GetAllValuesOfEnum<MacProperties.MacDigestAlgorithm>().Count; i++) {
                 String fileName = "standaloneMacWithAllHashAlgorithmsTest" + (i + 1) + ".pdf";
@@ -142,6 +147,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacPdfVersionNotSetTest() {
             String fileName = "standaloneMacPdfVersionNotSetTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -160,6 +166,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacOldEncryptionAlgorithmTest() {
             String fileName = "standaloneMacOldEncryptionAlgorithmTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -179,6 +186,13 @@ namespace iText.Kernel.Mac {
 
         [NUnit.Framework.Test]
         public virtual void StandaloneMacPublicKeyEncryptionTest() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
+            NUnit.Framework.Assume.That(!BouncyCastleFactoryCreator.GetFactory().IsInApprovedOnlyMode());
             String fileName = "standaloneMacPublicKeyEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;

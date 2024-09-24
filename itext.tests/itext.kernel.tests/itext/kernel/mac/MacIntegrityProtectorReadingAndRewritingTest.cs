@@ -29,10 +29,12 @@ using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Mac {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -52,7 +54,6 @@ namespace iText.Kernel.Mac {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            NUnit.Framework.Assume.That("BC".Equals(PROVIDER_NAME));
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
@@ -62,6 +63,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void AppendModeTest() {
             String fileName = "appendModeTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -76,6 +78,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void PreserveEncryptionTest() {
             String fileName = "preserveEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -90,6 +93,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void WriterPropertiesTest() {
             String fileName = "writerPropertiesTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -107,6 +111,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void MacShouldNotBePreservedWithEncryptionTest() {
             String fileName = "macShouldNotBePreservedWithEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -123,6 +128,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void MacShouldNotBePreservedTest() {
             String fileName = "macShouldNotBePreservedTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -136,6 +142,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void InvalidMacTokenTest() {
             String fileName = "invalidMacTokenTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -150,7 +157,14 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void InvalidPublicKeyMacProtectedDocumentTest() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
             String fileName = "invalidPublicKeyMacProtectedDocumentTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
             IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(CERTS_SRC +
@@ -168,9 +182,10 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ReadSignedMacProtectedDocumentWithoutAttributeTest() {
             String message = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedMacProtectedDocWithoutAttribute.pdf"
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedMacProtectedDocWithoutAttribute.pdf"
                     , new ReaderProperties().SetPassword(PASSWORD)))) {
                 }
             }
@@ -179,10 +194,11 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void MacProtectionStrippedTest() {
             String message = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectionStrippedTest.pdf", 
-                    new ReaderProperties().SetPassword(PASSWORD)))) {
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectionStrippedTest.pdf"
+                    , new ReaderProperties().SetPassword(PASSWORD)))) {
                 }
             }
             ).Message;
@@ -190,9 +206,10 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ReadSignedMacProtectedDocumentTest() {
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedMacProtectedDocument.pdf"
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedMacProtectedDocument.pdf"
                     , new ReaderProperties().SetPassword(PASSWORD)))) {
                 }
             }
@@ -200,9 +217,10 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ReadThirdPartyMacProtectedDocumentTest() {
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyMacProtectedDocument.pdf"
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyMacProtectedDocument.pdf"
                     , new ReaderProperties().SetPassword(PASSWORD)))) {
                 }
             }
@@ -210,13 +228,20 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ReadThirdPartyPublicKeyMacProtectedDocumentTest() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
             IPrivateKey privateKey = MacIntegrityProtectorCreationTest.GetPrivateKey(CERTS_SRC + "keyForEncryption.pem"
                 );
             IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(CERTS_SRC +
                  "certForEncryption.crt"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyPublicKeyMacProtectedDocument.pdf"
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyPublicKeyMacProtectedDocument.pdf"
                     , new ReaderProperties().SetPublicKeySecurityParams(certificate, privateKey)))) {
                 }
             }
@@ -224,9 +249,10 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void ReadMacProtectedPdf1_7() {
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectedDocumentPdf1_7.pdf"
+                using (PdfDocument ignored = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectedDocumentPdf1_7.pdf"
                     , new ReaderProperties().SetPassword(PASSWORD)))) {
                 }
             }
