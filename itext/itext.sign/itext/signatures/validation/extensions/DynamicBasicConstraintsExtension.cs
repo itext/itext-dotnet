@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 
 namespace iText.Signatures.Validation.Extensions {

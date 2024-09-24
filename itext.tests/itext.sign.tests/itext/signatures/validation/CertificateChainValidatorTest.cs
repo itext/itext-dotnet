@@ -24,6 +24,7 @@ using System;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Validation.Context;

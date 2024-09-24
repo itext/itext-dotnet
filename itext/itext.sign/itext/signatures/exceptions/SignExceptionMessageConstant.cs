@@ -99,8 +99,6 @@ namespace iText.Signatures.Exceptions {
         public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
              + "with name {0} is not the last. It doesn't cover the whole document.";
 
-        public const String THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL = "The name of the digest algorithm is null.";
-
         public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME = "There is no field in the document "
              + "with such name: {0}.";
 

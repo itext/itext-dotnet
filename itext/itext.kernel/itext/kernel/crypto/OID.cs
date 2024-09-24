@@ -24,9 +24,79 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 
-namespace iText.Signatures {
+namespace iText.Kernel.Crypto {
     /// <summary>Class containing all the OID values used by iText.</summary>
     public sealed class OID {
+        public const String PKCS7_DATA = "1.2.840.113549.1.7.1";
+
+        public const String PKCS7_SIGNED_DATA = "1.2.840.113549.1.7.2";
+
+        public const String RSA = "1.2.840.113549.1.1.1";
+
+        public const String RSASSA_PSS = "1.2.840.113549.1.1.10";
+
+        public const String RSA_WITH_SHA256 = "1.2.840.113549.1.1.11";
+
+        public const String AA_SIGNING_CERTIFICATE_V1 = "1.2.840.113549.1.9.16.2.12";
+
+        public const String AA_SIGNING_CERTIFICATE_V2 = "1.2.840.113549.1.9.16.2.47";
+
+        public const String MGF1 = "1.2.840.113549.1.1.8";
+
+        public const String AA_TIME_STAMP_TOKEN = "1.2.840.113549.1.9.16.2.14";
+
+        public const String AUTHENTICATED_DATA = "1.2.840.113549.1.9.16.1.2";
+
+        public const String CONTENT_TYPE = "1.2.840.113549.1.9.3";
+
+        public const String MESSAGE_DIGEST = "1.2.840.113549.1.9.4";
+
+        public const String SIGNING_TIME = "1.2.840.113549.1.9.5";
+
+        public const String CMS_ALGORITHM_PROTECTION = "1.2.840.113549.1.9.52";
+
+        public const String DSA = "1.2.840.10040.4.1";
+
+        public const String ECDSA = "1.2.840.10045.2.1";
+
+        public const String ADBE_REVOCATION = "1.2.840.113583.1.1.8";
+
+        public const String TSA = "1.2.840.113583.1.1.9.1";
+
+        public const String RSA_WITH_SHA3_512 = "2.16.840.1.101.3.4.3.16";
+
+        public const String SHA_224 = "2.16.840.1.101.3.4.2.4";
+
+        public const String SHA_256 = "2.16.840.1.101.3.4.2.1";
+
+        public const String SHA_384 = "2.16.840.1.101.3.4.2.2";
+
+        public const String SHA_512 = "2.16.840.1.101.3.4.2.3";
+
+        public const String SHA3_224 = "2.16.840.1.101.3.4.2.7";
+
+        public const String SHA3_256 = "2.16.840.1.101.3.4.2.8";
+
+        public const String SHA3_384 = "2.16.840.1.101.3.4.2.9";
+
+        public const String SHA3_512 = "2.16.840.1.101.3.4.2.10";
+
+        public const String SHAKE_256 = "2.16.840.1.101.3.4.2.12";
+
+        public const String ED25519 = "1.3.101.112";
+
+        public const String ED448 = "1.3.101.113";
+
+        public const String OCSP = "1.3.6.1.5.5.7.48.1";
+
+        public const String CA_ISSUERS = "1.3.6.1.5.5.7.48.2";
+
+        public const String RI_OCSP_RESPONSE = "1.3.6.1.5.5.7.16.2";
+
+        public const String KDF_PDF_MAC_WRAP_KDF = "1.0.32004.1.1";
+
+        public const String CT_PDF_MAC_INTEGRITY_INFO = "1.0.32004.1.0";
+
         private OID() {
         }
 

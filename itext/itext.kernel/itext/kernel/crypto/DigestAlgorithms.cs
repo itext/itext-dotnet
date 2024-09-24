@@ -28,10 +28,10 @@ using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Digest;
-using iText.Signatures.Exceptions;
-using iText.Signatures.Logs;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 
-namespace iText.Signatures {
+namespace iText.Kernel.Crypto {
     /// <summary>Class that contains a map with the different message digest algorithms.</summary>
     public class DigestAlgorithms {
         /// <summary>Algorithm available for signatures since PDF 1.3.</summary>
@@ -100,10 +100,10 @@ namespace iText.Signatures {
             digestNames.Put("1.2.840.113549.2.5", "MD5");
             digestNames.Put("1.2.840.113549.2.2", "MD2");
             digestNames.Put("1.3.14.3.2.26", "SHA1");
-            digestNames.Put("2.16.840.1.101.3.4.2.4", "SHA224");
-            digestNames.Put("2.16.840.1.101.3.4.2.1", "SHA256");
-            digestNames.Put("2.16.840.1.101.3.4.2.2", "SHA384");
-            digestNames.Put("2.16.840.1.101.3.4.2.3", "SHA512");
+            digestNames.Put(OID.SHA_224, "SHA224");
+            digestNames.Put(OID.SHA_256, "SHA256");
+            digestNames.Put(OID.SHA_384, "SHA384");
+            digestNames.Put(OID.SHA_512, "SHA512");
             digestNames.Put("1.3.36.3.2.2", "RIPEMD128");
             digestNames.Put("1.3.36.3.2.1", "RIPEMD160");
             digestNames.Put("1.3.36.3.2.3", "RIPEMD256");
@@ -114,8 +114,6 @@ namespace iText.Signatures {
             digestNames.Put("1.2.840.113549.1.1.11", "SHA256");
             digestNames.Put("1.2.840.113549.1.1.12", "SHA384");
             digestNames.Put("1.2.840.113549.1.1.13", "SHA512");
-            digestNames.Put("1.2.840.113549.2.5", "MD5");
-            digestNames.Put("1.2.840.113549.2.2", "MD2");
             digestNames.Put("1.2.840.10040.4.3", "SHA1");
             digestNames.Put("2.16.840.1.101.3.4.3.1", "SHA224");
             digestNames.Put("2.16.840.1.101.3.4.3.2", "SHA256");
@@ -125,11 +123,11 @@ namespace iText.Signatures {
             digestNames.Put("1.3.36.3.3.1.2", "RIPEMD160");
             digestNames.Put("1.3.36.3.3.1.4", "RIPEMD256");
             digestNames.Put("1.2.643.2.2.9", "GOST3411");
-            digestNames.Put("2.16.840.1.101.3.4.2.7", "SHA3-224");
-            digestNames.Put("2.16.840.1.101.3.4.2.8", "SHA3-256");
-            digestNames.Put("2.16.840.1.101.3.4.2.9", "SHA3-384");
-            digestNames.Put("2.16.840.1.101.3.4.2.10", "SHA3-512");
-            digestNames.Put("2.16.840.1.101.3.4.2.12", "SHAKE256");
+            digestNames.Put(OID.SHA3_224, "SHA3-224");
+            digestNames.Put(OID.SHA3_256, "SHA3-256");
+            digestNames.Put(OID.SHA3_384, "SHA3-384");
+            digestNames.Put(OID.SHA3_512, "SHA3-512");
+            digestNames.Put(OID.SHAKE_256, "SHAKE256");
             fixNames.Put("SHA256", SHA256);
             fixNames.Put("SHA384", SHA384);
             fixNames.Put("SHA512", SHA512);
@@ -139,14 +137,14 @@ namespace iText.Signatures {
             allowedDigests.Put("MD-5", "1.2.840.113549.2.5");
             allowedDigests.Put("SHA1", "1.3.14.3.2.26");
             allowedDigests.Put("SHA-1", "1.3.14.3.2.26");
-            allowedDigests.Put("SHA224", "2.16.840.1.101.3.4.2.4");
-            allowedDigests.Put("SHA-224", "2.16.840.1.101.3.4.2.4");
-            allowedDigests.Put("SHA256", "2.16.840.1.101.3.4.2.1");
-            allowedDigests.Put("SHA-256", "2.16.840.1.101.3.4.2.1");
-            allowedDigests.Put("SHA384", "2.16.840.1.101.3.4.2.2");
-            allowedDigests.Put("SHA-384", "2.16.840.1.101.3.4.2.2");
-            allowedDigests.Put("SHA512", "2.16.840.1.101.3.4.2.3");
-            allowedDigests.Put("SHA-512", "2.16.840.1.101.3.4.2.3");
+            allowedDigests.Put("SHA224", OID.SHA_224);
+            allowedDigests.Put("SHA-224", OID.SHA_224);
+            allowedDigests.Put("SHA256", OID.SHA_256);
+            allowedDigests.Put("SHA-256", OID.SHA_256);
+            allowedDigests.Put("SHA384", OID.SHA_384);
+            allowedDigests.Put("SHA-384", OID.SHA_384);
+            allowedDigests.Put("SHA512", OID.SHA_512);
+            allowedDigests.Put("SHA-512", OID.SHA_512);
             allowedDigests.Put("RIPEMD128", "1.3.36.3.2.2");
             allowedDigests.Put("RIPEMD-128", "1.3.36.3.2.2");
             allowedDigests.Put("RIPEMD160", "1.3.36.3.2.1");
@@ -154,11 +152,11 @@ namespace iText.Signatures {
             allowedDigests.Put("RIPEMD256", "1.3.36.3.2.3");
             allowedDigests.Put("RIPEMD-256", "1.3.36.3.2.3");
             allowedDigests.Put("GOST3411", "1.2.643.2.2.9");
-            allowedDigests.Put("SHA3-224", "2.16.840.1.101.3.4.2.7");
-            allowedDigests.Put("SHA3-256", "2.16.840.1.101.3.4.2.8");
-            allowedDigests.Put("SHA3-384", "2.16.840.1.101.3.4.2.9");
-            allowedDigests.Put("SHA3-512", "2.16.840.1.101.3.4.2.10");
-            allowedDigests.Put("SHAKE256", "2.16.840.1.101.3.4.2.12");
+            allowedDigests.Put("SHA3-224", OID.SHA3_224);
+            allowedDigests.Put("SHA3-256", OID.SHA3_256);
+            allowedDigests.Put("SHA3-384", OID.SHA3_384);
+            allowedDigests.Put("SHA3-512", OID.SHA3_512);
+            allowedDigests.Put("SHAKE256", OID.SHAKE_256);
             bitLengths.Put("MD2", 128);
             bitLengths.Put("MD-2", 128);
             bitLengths.Put("MD5", 128);
@@ -197,7 +195,7 @@ namespace iText.Signatures {
         /// <param name="hashAlgorithm">the algorithm you want to use to create a hash</param>
         /// <returns>a MessageDigest object</returns>
         public static IMessageDigest GetMessageDigest(String hashAlgorithm) {
-            return SignUtils.GetMessageDigest(hashAlgorithm);
+            return CryptoUtil.GetMessageDigest(hashAlgorithm);
         }
 
         /// <summary>Creates a hash using a specific digest algorithm and a provider.</summary>
@@ -209,7 +207,7 @@ namespace iText.Signatures {
             return Digest(data, messageDigest);
         }
 
-        /// <summary>Create a digest based on the inputstream.</summary>
+        /// <summary>Create a digest based on the input stream.</summary>
         /// <param name="data">data to be digested</param>
         /// <param name="messageDigest">algorithm to be used</param>
         /// <returns>digest of the data</returns>
@@ -230,7 +228,7 @@ namespace iText.Signatures {
             if (ret == null) {
                 try {
                     String digest = GetMessageDigest(oid).GetAlgorithmName();
-                    LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+                    LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
                     return digest;
                 }
                 catch (Exception) {
@@ -246,11 +244,11 @@ namespace iText.Signatures {
         /// Returns the id of a digest algorithms that is allowed in PDF,
         /// or null if it isn't allowed.
         /// </summary>
-        /// <param name="name">The name of the digest algorithm.</param>
-        /// <returns>An oid.</returns>
+        /// <param name="name">the name of the digest algorithm</param>
+        /// <returns>an oid</returns>
         public static String GetAllowedDigest(String name) {
             if (name == null) {
-                throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
+                throw new ArgumentException(KernelExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
             }
             String allowedDigest = allowedDigests.Get(name.ToUpperInvariant());
             if (allowedDigest != null) {
@@ -258,7 +256,7 @@ namespace iText.Signatures {
             }
             allowedDigest = BOUNCY_CASTLE_FACTORY.GetDigestAlgorithmOid(name.ToUpperInvariant());
             if (allowedDigest != null) {
-                LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+                LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
             }
             return allowedDigest;
         }
@@ -268,7 +266,7 @@ namespace iText.Signatures {
         /// <returns>the length of the output of the algorithm in bits</returns>
         public static int GetOutputBitLength(String name) {
             if (name == null) {
-                throw new ArgumentException(SignExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
+                throw new ArgumentException(KernelExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
             }
             return bitLengths.Get(name).Value;
         }

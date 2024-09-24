@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

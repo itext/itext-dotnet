@@ -25,6 +25,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 
 namespace iText.Signatures {

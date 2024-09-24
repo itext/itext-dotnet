@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Digest;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;

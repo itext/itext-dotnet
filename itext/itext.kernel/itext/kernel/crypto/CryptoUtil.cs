@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 
@@ -60,7 +61,9 @@ namespace iText.Kernel.Crypto {
                 MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_ASN1_ENCODING, asn1Encoding)
             );
         }
-
-
+        
+        internal static IMessageDigest GetMessageDigest(String hashAlgorithm) {
+            return FACTORY.CreateIDigest(hashAlgorithm);
+        }
     }
 }

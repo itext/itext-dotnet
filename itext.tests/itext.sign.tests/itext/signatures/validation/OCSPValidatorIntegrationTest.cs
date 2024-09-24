@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;

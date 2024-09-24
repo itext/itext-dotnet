@@ -33,6 +33,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.Kernel.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures;

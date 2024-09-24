@@ -30,6 +30,7 @@ using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Element;
 using iText.IO.Util;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

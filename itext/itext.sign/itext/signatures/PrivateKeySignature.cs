@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 
@@ -95,7 +96,7 @@ namespace iText.Signatures {
             }
             switch (this.signatureAlgorithm) {
                 case "Ed25519": {
-                    if (!SecurityIDs.ID_SHA512.Equals(digestAlgorithmOid)) {
+                    if (!OID.SHA_512.Equals(digestAlgorithmOid)) {
                         throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed25519"
                             , "SHA-512", this.hashAlgorithm);
                     }
@@ -104,7 +105,7 @@ namespace iText.Signatures {
                 }
 
                 case "Ed448": {
-                    if (!SecurityIDs.ID_SHAKE256.Equals(digestAlgorithmOid)) {
+                    if (!OID.SHAKE_256.Equals(digestAlgorithmOid)) {
                         throw new PdfException(SignExceptionMessageConstant.ALGO_REQUIRES_SPECIFIC_HASH).SetMessageParams("Ed448", 
                             "512-bit SHAKE256", this.hashAlgorithm);
                     }

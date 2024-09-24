@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Element;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

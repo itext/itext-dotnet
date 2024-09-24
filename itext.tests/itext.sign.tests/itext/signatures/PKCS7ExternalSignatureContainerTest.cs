@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Pdf;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;

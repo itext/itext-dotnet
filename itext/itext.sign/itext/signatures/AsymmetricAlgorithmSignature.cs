@@ -22,6 +22,7 @@
  */
 using System;
 using System.Security.Cryptography;
+using iText.Kernel.Crypto;
 
 namespace iText.Signatures {
     /// <summary>

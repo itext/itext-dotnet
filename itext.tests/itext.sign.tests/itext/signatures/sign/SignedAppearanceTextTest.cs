@@ -32,6 +32,7 @@ using iText.Forms.Form.Element;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;

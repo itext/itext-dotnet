@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -141,7 +142,7 @@ namespace iText.Signatures.Sign {
                 using (PdfDocument pdfDoc = new PdfDocument(r)) {
                     SignatureUtil u = new SignatureUtil(pdfDoc);
                     PdfPKCS7 data = u.ReadSignatureData(SIGNATURE_FIELD);
-                    NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSASSA_PSS, data.GetSignatureMechanismOid());
+                    NUnit.Framework.Assert.AreEqual(OID.RSASSA_PSS, data.GetSignatureMechanismOid());
                     NUnit.Framework.Assert.IsTrue(data.VerifySignatureIntegrityAndAuthenticity());
                 }
             }

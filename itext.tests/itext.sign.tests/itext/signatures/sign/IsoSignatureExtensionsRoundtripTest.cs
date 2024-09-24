@@ -32,6 +32,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -138,12 +139,12 @@ namespace iText.Signatures.Sign {
         public virtual void TestRsaWithSha3_512() {
             // For now we use a generic OID, but NISTObjectIdentifiers.id_rsassa_pkcs1_v1_5_with_sha3_512 would
             // be more appropriate
-            DoRoundTrip("rsa", DigestAlgorithms.SHA3_512, new DerObjectIdentifier(SecurityIDs.ID_RSA_WITH_SHA3_512));
+            DoRoundTrip("rsa", DigestAlgorithms.SHA3_512, new DerObjectIdentifier(OID.RSA_WITH_SHA3_512));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestRsaSsaPssWithSha3_256() {
-            DoRoundTrip("rsa", DigestAlgorithms.SHA3_256, "RSASSA-PSS", new DerObjectIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            DoRoundTrip("rsa", DigestAlgorithms.SHA3_256, "RSASSA-PSS", new DerObjectIdentifier(OID.RSASSA_PSS));
         }
 
         [NUnit.Framework.Test]

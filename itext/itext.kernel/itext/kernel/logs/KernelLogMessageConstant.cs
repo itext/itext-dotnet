@@ -96,6 +96,8 @@ namespace iText.Kernel.Logs {
 
         public const String FINGERPRINT_DISABLED_BUT_NO_REQUIRED_LICENCE = "Fingerprint disabling is only " + "available in non AGPL mode. Fingerprint will be added at the end of the document.";
 
+        public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
+
         private KernelLogMessageConstant() {
         }
         //Private constructor will prevent the instantiation of this class directly

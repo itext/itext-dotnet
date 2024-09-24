@@ -36,6 +36,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.IO.Util;
+using iText.Kernel.Crypto;
 using iText.Signatures.Logs;
 
 namespace iText.Signatures {
@@ -144,7 +145,7 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(crl, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
             }
             catch (System.IO.IOException) {
                 return null;
@@ -159,7 +160,7 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, SecurityIDs.ID_OCSP);
+                return GetValueFromAIAExtension(obj, OID.OCSP);
             }
             catch (System.IO.IOException) {
                 return null;
@@ -174,7 +175,7 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
             }
             catch (System.IO.IOException) {
                 return null;
@@ -186,7 +187,7 @@ namespace iText.Signatures {
         /// <param name="certificate">a certificate</param>
         /// <returns>a TSA URL</returns>
         public static String GetTSAURL(IX509Certificate certificate) {
-            byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA);
+            byte[] der = SignUtils.GetExtensionValueByOid(certificate, OID.TSA);
             if (der == null) {
                 return null;
             }
@@ -234,7 +235,7 @@ namespace iText.Signatures {
             while (revInfo.MoveNext()) {
                 IAsn1Sequence s = FACTORY.CreateASN1Sequence(revInfo.Current);
                 IDerObjectIdentifier o = FACTORY.CreateASN1ObjectIdentifier(s.GetObjectAt(0));
-                if (o != null && SecurityIDs.ID_RI_OCSP_RESPONSE.Equals(o.GetId())) {
+                if (o != null && OID.RI_OCSP_RESPONSE.Equals(o.GetId())) {
                     IAsn1Sequence ocspResp = FACTORY.CreateASN1Sequence(s.GetObjectAt(1));
                     IDerEnumerated respStatus = FACTORY.CreateASN1Enumerated(ocspResp.GetObjectAt(0));
                     if (respStatus.IntValueExact() == FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
@@ -299,7 +300,7 @@ namespace iText.Signatures {
             foreach (IBasicOcspResponse element in ocsps) {
                 IAsn1EncodableVector ocspResponseRevInfo = FACTORY.CreateASN1EncodableVector();
                 // Add otherRevInfoFormat (ID_RI_OCSP_RESPONSE)
-                ocspResponseRevInfo.Add(FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_RI_OCSP_RESPONSE));
+                ocspResponseRevInfo.Add(FACTORY.CreateASN1ObjectIdentifier(OID.RI_OCSP_RESPONSE));
                 IAsn1EncodableVector ocspResponse = FACTORY.CreateASN1EncodableVector();
                 ocspResponse.Add(FACTORY.CreateOCSPResponseStatus(FACTORY.CreateOCSPResponseStatus().GetSuccessful()).ToASN1Primitive
                     ());

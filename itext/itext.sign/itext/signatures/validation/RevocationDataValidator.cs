@@ -30,6 +30,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Report;

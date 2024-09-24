@@ -25,7 +25,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
-using iText.Signatures;
+using iText.Kernel.Crypto;
 
 namespace iText.Signatures.Validation.Extensions {
     /// <summary>Class representing "Key Usage" extenstion.</summary>

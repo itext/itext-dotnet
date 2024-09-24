@@ -36,6 +36,7 @@ using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;

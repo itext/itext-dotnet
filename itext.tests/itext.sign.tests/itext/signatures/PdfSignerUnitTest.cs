@@ -29,6 +29,7 @@ using iText.Forms;
 using iText.Forms.Fields;
 using iText.Forms.Form.Element;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Logs;

@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 

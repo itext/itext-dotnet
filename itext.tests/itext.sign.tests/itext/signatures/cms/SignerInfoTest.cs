@@ -30,8 +30,8 @@ using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
-using iText.Signatures;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
@@ -97,14 +97,14 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestSignedAttributesReadonlyModeActivatedByGettingSerializedData() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSA));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSA));
             si.SetSigningCertificate(signCert);
             List<byte[]> fakeOcspREsponses = new List<byte[]>();
             fakeOcspREsponses.Add(Convert.FromBase64String(CMSTestHelper.BASE64_OCSP_RESPONSE));
             si.SetMessageDigest(new byte[1024]);
             si.SetOcspResponses(fakeOcspREsponses);
             si.SetCrlResponses(testCrlResponse);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             si.SerializeSignedAttributes();
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.SetSerializedSignedAttributes(new 
                 byte[1235]));
@@ -115,16 +115,16 @@ namespace iText.Signatures.Cms {
             CmsAttribute attribute = new CmsAttribute("", FACTORY.CreateASN1Integer(1));
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.AddSignedAttribute(attribute));
             NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => si.AddSignerCertificateToSignedAttributes
-                (signCert, SecurityIDs.ID_SHA512));
+                (signCert, OID.SHA_512));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestGetSerializedBasicSignedAttributes() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificate(signCert);
             si.SetMessageDigest(MESSAGE_DIGEST);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             byte[] serRes = si.SerializeSignedAttributes();
             NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_1), SerializedAsString(serRes));
         }
@@ -132,14 +132,14 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestGetSerializedExtendedSignedAttributes() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificate(signCert);
             List<byte[]> fakeOcspREsponses = new List<byte[]>();
             fakeOcspREsponses.Add(Convert.FromBase64String(CMSTestHelper.BASE64_OCSP_RESPONSE));
             si.SetOcspResponses(fakeOcspREsponses);
             si.SetCrlResponses(testCrlResponse);
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             byte[] serRes = si.SerializeSignedAttributes();
             NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_2), SerializedAsString(serRes));
         }
@@ -147,11 +147,11 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestGetSerializedExtendedSignedAttributesCrlOnly() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificate(signCert);
             si.SetCrlResponses(testCrlResponse);
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             byte[] serRes = si.SerializeSignedAttributes();
             NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_5), SerializedAsString(serRes));
         }
@@ -159,30 +159,30 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestAddSignedAttribute() {
             SignerInfo si = new SignerInfo();
-            NUnit.Framework.Assert.IsFalse(si.GetSignedAttributes().Any((a) => Object.Equals(a.GetType(), SecurityIDs.
-                ID_SIGNING_TIME)));
-            CmsAttribute attrib = new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateNullASN1Set());
+            NUnit.Framework.Assert.IsFalse(si.GetSignedAttributes().Any((a) => Object.Equals(a.GetType(), OID.SIGNING_TIME
+                )));
+            CmsAttribute attrib = new CmsAttribute(OID.SIGNING_TIME, FACTORY.CreateNullASN1Set());
             si.AddSignedAttribute(attrib);
-            NUnit.Framework.Assert.IsTrue(si.GetSignedAttributes().Any((a) => Object.Equals(a.GetType(), SecurityIDs.ID_SIGNING_TIME
+            NUnit.Framework.Assert.IsTrue(si.GetSignedAttributes().Any((a) => Object.Equals(a.GetType(), OID.SIGNING_TIME
                 )));
         }
 
         [NUnit.Framework.Test]
         public virtual void TestAddUnsignedAttribute() {
             SignerInfo si = new SignerInfo();
-            CmsAttribute attrib = new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateNullASN1Set());
+            CmsAttribute attrib = new CmsAttribute(OID.SIGNING_TIME, FACTORY.CreateNullASN1Set());
             si.AddUnSignedAttribute(attrib);
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_SIGNING_TIME, SignTestPortUtil.GetFirstElement<CmsAttribute
-                >(si.GetUnSignedAttributes()).GetType());
+            NUnit.Framework.Assert.AreEqual(OID.SIGNING_TIME, SignTestPortUtil.GetFirstElement<CmsAttribute>(si.GetUnSignedAttributes
+                ()).GetType());
         }
 
         [NUnit.Framework.Test]
         public virtual void TestGetSerializedSignedAttributesWithCertificateId() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificate(signCert);
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             si.AddSignerCertificateToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
             byte[] serRes = si.SerializeSignedAttributes();
             NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_3), SerializedAsString(serRes));
@@ -191,10 +191,10 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestGetSerializedSignedAttributesWithCertificateIdTroughCertSetter() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             byte[] serRes = si.SerializeSignedAttributes();
             NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_3), SerializedAsString(serRes));
         }
@@ -202,12 +202,12 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestGetAsDerSequence() {
             SignerInfo si = new SignerInfo();
-            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
-                (123456))));
+            si.AddUnSignedAttribute(new CmsAttribute(OID.SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer(
+                123456))));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             si.SetSignature(new byte[512]);
             IDerSequence res = si.GetAsDerSequence();
             NUnit.Framework.Assert.AreEqual(SerializedAsString(EXPECTEDRESULT_4), SerializedAsString(res.GetEncoded())
@@ -217,12 +217,12 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestEstimatedSizeWithSignature() {
             SignerInfo si = new SignerInfo();
-            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
-                (123456))));
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.AddUnSignedAttribute(new CmsAttribute(OID.SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer(
+                123456))));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             si.SetSignature(new byte[512]);
             long res = si.GetEstimatedSize();
             NUnit.Framework.Assert.AreEqual(1973, res);
@@ -231,10 +231,10 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestSignedAttributesSerializationRoundTrip() {
             SignerInfo si = new SignerInfo();
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             si.SetSignature(new byte[512]);
             byte[] serialized = si.SerializeSignedAttributes();
             SignerInfo si2 = new SignerInfo();
@@ -250,12 +250,12 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestEstimatedSizeEstimatedSignature() {
             SignerInfo si = new SignerInfo();
-            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
-                (123456))));
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.AddUnSignedAttribute(new CmsAttribute(OID.SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer(
+                123456))));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             long res = si.GetEstimatedSize();
             NUnit.Framework.Assert.AreEqual(2485, res);
         }
@@ -263,12 +263,12 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestSerializeAndDeserializeSignerInfo() {
             SignerInfo si = new SignerInfo();
-            si.AddUnSignedAttribute(new CmsAttribute(SecurityIDs.ID_SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer
-                (123456))));
-            si.SetSignatureAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_RSASSA_PSS));
+            si.AddUnSignedAttribute(new CmsAttribute(OID.SIGNING_TIME, FACTORY.CreateDERSet(FACTORY.CreateASN1Integer(
+                123456))));
+            si.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSASSA_PSS));
             si.SetSigningCertificateAndAddToSignedAttributes(signCert, "2.16.840.1.101.3.4.2.3");
             si.SetMessageDigest(new byte[1024]);
-            si.SetDigestAlgorithm(new AlgorithmIdentifier(SecurityIDs.ID_SHA512));
+            si.SetDigestAlgorithm(new AlgorithmIdentifier(OID.SHA_512));
             IDerSequence encoded = si.GetAsDerSequence(false);
             SignerInfo si2 = new SignerInfo(encoded, JavaCollectionsUtil.SingletonList(signCert));
             NUnit.Framework.Assert.AreEqual(si.GetSignedAttributes().Count, si2.GetSignedAttributes().Count);
@@ -277,7 +277,7 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestSerializeAndDeserializeSignedAttributes() {
             SignerInfo si = new SignerInfo();
-            si.AddSignerCertificateToSignedAttributes(signCert, SecurityIDs.ID_SHA256);
+            si.AddSignerCertificateToSignedAttributes(signCert, OID.SHA_256);
             si.SetMessageDigest(new byte[20]);
             byte[] attribs = si.SerializeSignedAttributes();
             SignerInfo si2 = new SignerInfo();

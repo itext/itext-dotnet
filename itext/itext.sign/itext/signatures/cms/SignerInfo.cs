@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Signatures;
 using iText.Signatures.Exceptions;
@@ -67,8 +68,8 @@ namespace iText.Signatures.Cms {
 
         /// <summary>Creates an empty SignerInfo structure.</summary>
         public SignerInfo() {
-            CmsAttribute contentType = new CmsAttribute(SecurityIDs.ID_CONTENT_TYPE, BC_FACTORY.CreateDERSet(BC_FACTORY
-                .CreateASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA)));
+            CmsAttribute contentType = new CmsAttribute(OID.CONTENT_TYPE, BC_FACTORY.CreateDERSet(BC_FACTORY.CreateASN1ObjectIdentifier
+                (OID.PKCS7_DATA)));
             signedAttributes.Add(contentType);
             unSignedAttributes = new List<CmsAttribute>();
         }
@@ -132,8 +133,8 @@ namespace iText.Signatures.Cms {
             if (signedAttributesReadOnly) {
                 throw new InvalidOperationException(SignExceptionMessageConstant.CMS_SIGNERINFO_READONLY);
             }
-            CmsAttribute digestAttribute = new CmsAttribute(SecurityIDs.ID_MESSAGE_DIGEST, BC_FACTORY.CreateDERSet(BC_FACTORY
-                .CreateDEROctetString(digest)));
+            CmsAttribute digestAttribute = new CmsAttribute(OID.MESSAGE_DIGEST, BC_FACTORY.CreateDERSet(BC_FACTORY.CreateDEROctetString
+                (digest)));
             signedAttributes.Add(digestAttribute);
         }
 
@@ -211,7 +212,7 @@ namespace iText.Signatures.Cms {
             IMessageDigest md = DigestAlgorithms.GetMessageDigestFromOid(digestAlgorithmOid);
             IAsn1EncodableVector certContents = BC_FACTORY.CreateASN1EncodableVector();
             // don't add if it is the default value
-            if (!SecurityIDs.ID_SHA256.Equals(digestAlgorithmOid)) {
+            if (!OID.SHA_256.Equals(digestAlgorithmOid)) {
                 IAlgorithmIdentifier algoId = BC_FACTORY.CreateAlgorithmIdentifier(BC_FACTORY.CreateASN1ObjectIdentifier(digestAlgorithmOid
                     ));
                 certContents.Add(algoId);
@@ -232,8 +233,7 @@ namespace iText.Signatures.Cms {
             IDerSequence certContentsSeqSeq = BC_FACTORY.CreateDERSequence(certContentsSeq);
             IDerSequence certContentsSeqSeqSeq = BC_FACTORY.CreateDERSequence(certContentsSeqSeq);
             IDerSet certContentsSeqSeqSeqSet = BC_FACTORY.CreateDERSet(certContentsSeqSeqSeq);
-            CmsAttribute attribute = new CmsAttribute(SecurityIDs.ID_AA_SIGNING_CERTIFICATE_V2, certContentsSeqSeqSeqSet
-                );
+            CmsAttribute attribute = new CmsAttribute(OID.AA_SIGNING_CERTIFICATE_V2, certContentsSeqSeqSeqSet);
             signedAttributes.Add(attribute);
         }
 
@@ -488,13 +488,13 @@ namespace iText.Signatures.Cms {
         }
 
         private void SetRevocationInfo() {
-            signedAttributes.RemoveIf((a) => SecurityIDs.ID_ADBE_REVOCATION.Equals(a.GetType()));
+            signedAttributes.RemoveIf((a) => OID.ADBE_REVOCATION.Equals(a.GetType()));
             if (ContainsRevocationData()) {
                 IAsn1EncodableVector revocationV = BC_FACTORY.CreateASN1EncodableVector();
                 CreateCRLStructure(revocationV);
                 CreateOCPSStructure(revocationV);
-                CmsAttribute digestAttribute = new CmsAttribute(SecurityIDs.ID_ADBE_REVOCATION, BC_FACTORY.CreateDERSequence
-                    (revocationV));
+                CmsAttribute digestAttribute = new CmsAttribute(OID.ADBE_REVOCATION, BC_FACTORY.CreateDERSequence(revocationV
+                    ));
                 signedAttributes.Add(digestAttribute);
             }
         }

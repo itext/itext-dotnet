@@ -32,6 +32,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Crypto;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;
 using iText.Signatures.Testutils;

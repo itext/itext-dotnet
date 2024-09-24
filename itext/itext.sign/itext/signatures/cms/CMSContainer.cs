@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Signatures;
 using iText.Signatures.Exceptions;
@@ -291,7 +292,7 @@ namespace iText.Signatures.Cms {
             signerInfos SignerInfos SET
             */
             IAsn1EncodableVector contentInfoV = BC_FACTORY.CreateASN1EncodableVector();
-            contentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_SIGNED_DATA));
+            contentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(OID.PKCS7_SIGNED_DATA));
             IAsn1EncodableVector singedDataV = BC_FACTORY.CreateASN1EncodableVector();
             singedDataV.Add(BC_FACTORY.CreateASN1Integer(GetCmsVersion()));
             // version

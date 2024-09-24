@@ -36,6 +36,7 @@ using iText.Forms.Form.Element;
 using iText.Forms.Util;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;

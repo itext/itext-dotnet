@@ -511,6 +511,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String THERE_IS_NO_ASSOCIATE_PDF_WRITER_FOR_MAKING_INDIRECTS = "There is no associate " + "PdfWriter for making indirects.";
 
+        public const String THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL = "The name of the digest algorithm is null.";
+
         public const String THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED = "Decode parameter type {0} is not " + "supported.";
 
         public const String THIS_FILTER_IS_NOT_SUPPORTED = "Filter {0} is not supported.";

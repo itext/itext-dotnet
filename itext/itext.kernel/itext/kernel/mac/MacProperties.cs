@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+
 namespace iText.Kernel.Mac {
     /// <summary>Class which contains configurable properties for MAC integrity protection mechanism.</summary>
     public class MacProperties {
@@ -129,6 +131,37 @@ namespace iText.Kernel.Mac {
             SHA3_256,
             SHA3_384,
             SHA3_512
+        }
+
+        // We can't use here enum with fields, because .NET doesn't support it, and enum
+        // will be ported to class, and EnumUtil.getAllValuesOfEnum won't work with class
+        public static String MacDigestAlgorithmToString(MacProperties.MacDigestAlgorithm macDigestAlgorithm) {
+            switch (macDigestAlgorithm) {
+                case MacProperties.MacDigestAlgorithm.SHA_256: {
+                    return "SHA256";
+                }
+
+                case MacProperties.MacDigestAlgorithm.SHA_384: {
+                    return "SHA384";
+                }
+
+                case MacProperties.MacDigestAlgorithm.SHA_512: {
+                    return "SHA512";
+                }
+
+                case MacProperties.MacDigestAlgorithm.SHA3_256: {
+                    return "SHA3-256";
+                }
+
+                case MacProperties.MacDigestAlgorithm.SHA3_384: {
+                    return "SHA3-384";
+                }
+
+                case MacProperties.MacDigestAlgorithm.SHA3_512: {
+                    return "SHA3-512";
+                }
+            }
+            return null;
         }
 
         /// <summary>MAC algorithms, which can be used during integrity protection operation.</summary>

@@ -24,6 +24,8 @@ using System;
 using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Kernel.Crypto;
+using iText.Kernel.Logs;
 using iText.Signatures.Logs;
 using iText.Test;
 using iText.Test.Attributes;
@@ -63,7 +65,7 @@ namespace iText.Signatures
             NUnit.Framework.Assert.AreEqual(expected, hash);
         }
 
-        [LogMessage(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
+        [LogMessage(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void NotAllowedNameGetAllowedDigestTest() {
             String name = "SM3";

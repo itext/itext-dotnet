@@ -30,6 +30,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;

@@ -25,7 +25,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Utils;
-using iText.Signatures;
+using iText.Kernel.Crypto;
 using iText.Test;
 
 namespace iText.Signatures.Cms {
@@ -40,10 +40,10 @@ namespace iText.Signatures.Cms {
         [NUnit.Framework.Test]
         public virtual void TestDeserializationWithoutContent() {
             IAsn1EncodableVector v = FACTORY.CreateASN1EncodableVector();
-            v.Add(FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_PKCS7_DATA));
+            v.Add(FACTORY.CreateASN1ObjectIdentifier(OID.PKCS7_DATA));
             IAsn1Sequence testData = FACTORY.CreateDERSequence(v);
             EncapsulatedContentInfo sut = new EncapsulatedContentInfo(testData);
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_PKCS7_DATA, sut.GetContentType());
+            NUnit.Framework.Assert.AreEqual(OID.PKCS7_DATA, sut.GetContentType());
             NUnit.Framework.Assert.IsNull(sut.GetContent());
         }
 
@@ -57,16 +57,16 @@ namespace iText.Signatures.Cms {
 
         [NUnit.Framework.Test]
         public virtual void TestCreation() {
-            EncapsulatedContentInfo sut = new EncapsulatedContentInfo(SecurityIDs.ID_PKCS7_DATA);
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_PKCS7_DATA, sut.GetContentType());
+            EncapsulatedContentInfo sut = new EncapsulatedContentInfo(OID.PKCS7_DATA);
+            NUnit.Framework.Assert.AreEqual(OID.PKCS7_DATA, sut.GetContentType());
             NUnit.Framework.Assert.IsNull(sut.GetContent());
         }
 
         [NUnit.Framework.Test]
         public virtual void TestCreationWithContent() {
-            EncapsulatedContentInfo sut = new EncapsulatedContentInfo(SecurityIDs.ID_PKCS7_DATA, FACTORY.CreateDEROctetString
-                (new byte[20]));
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_PKCS7_DATA, sut.GetContentType());
+            EncapsulatedContentInfo sut = new EncapsulatedContentInfo(OID.PKCS7_DATA, FACTORY.CreateDEROctetString(new 
+                byte[20]));
+            NUnit.Framework.Assert.AreEqual(OID.PKCS7_DATA, sut.GetContentType());
             NUnit.Framework.Assert.IsNotNull(sut.GetContent());
         }
     }

@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -35,18 +36,6 @@ namespace iText.Kernel.Mac {
     /// <summary>Class responsible for integrity protection in encrypted documents, which uses MAC container.</summary>
     public abstract class AbstractMacIntegrityProtector {
         private static readonly IBouncyCastleFactory BC_FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
-        private const String ID_AUTHENTICATED_DATA = "1.2.840.113549.1.9.16.1.2";
-
-        private const String ID_KDF_PDF_MAC_WRAP_KDF = "1.0.32004.1.1";
-
-        private const String ID_CT_PDF_MAC_INTEGRITY_INFO = "1.0.32004.1.0";
-
-        private const String ID_CONTENT_TYPE = "1.2.840.113549.1.9.3";
-
-        private const String ID_CMS_ALGORITHM_PROTECTION = "1.2.840.113549.1.9.52";
-
-        private const String ID_MESSAGE_DIGEST = "1.2.840.113549.1.9.4";
 
         private const String PDF_MAC = "PDFMAC";
 
@@ -195,7 +184,8 @@ namespace iText.Kernel.Mac {
             if (inputStream == null) {
                 return null;
             }
-            IMessageDigest digest = GetMessageDigest();
+            String algorithm = MacProperties.MacDigestAlgorithmToString(macProperties.GetMacDigestAlgorithm());
+            IMessageDigest digest = DigestAlgorithms.GetMessageDigest(algorithm);
             byte[] buf = new byte[8192];
             int rd;
             while ((rd = inputStream.JRead(buf, 0, buf.Length)) > 0) {
@@ -227,12 +217,12 @@ namespace iText.Kernel.Mac {
         protected internal virtual IDerSequence CreateMacContainer(byte[] dataDigest, byte[] macKey, byte[] signature
             ) {
             IAsn1EncodableVector contentInfoV = BC_FACTORY.CreateASN1EncodableVector();
-            contentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(ID_AUTHENTICATED_DATA));
+            contentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(OID.AUTHENTICATED_DATA));
             // Recipient info
             IAsn1EncodableVector recInfoV = BC_FACTORY.CreateASN1EncodableVector();
             recInfoV.Add(BC_FACTORY.CreateASN1Integer(0));
             // version
-            recInfoV.Add(BC_FACTORY.CreateDERTaggedObject(0, BC_FACTORY.CreateASN1ObjectIdentifier(ID_KDF_PDF_MAC_WRAP_KDF
+            recInfoV.Add(BC_FACTORY.CreateDERTaggedObject(0, BC_FACTORY.CreateASN1ObjectIdentifier(OID.KDF_PDF_MAC_WRAP_KDF
                 )));
             recInfoV.Add(BC_FACTORY.CreateDERSequence(BC_FACTORY.CreateASN1ObjectIdentifier(GetKeyWrappingAlgorithmOid
                 ())));
@@ -246,7 +236,7 @@ namespace iText.Kernel.Mac {
                 ));
             // Encapsulated content info
             IAsn1EncodableVector encapContentInfoV = BC_FACTORY.CreateASN1EncodableVector();
-            encapContentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(ID_CT_PDF_MAC_INTEGRITY_INFO));
+            encapContentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(OID.CT_PDF_MAC_INTEGRITY_INFO));
             encapContentInfoV.Add(BC_FACTORY.CreateDERTaggedObject(0, BC_FACTORY.CreateDEROctetString(messageBytes)));
             IDerSet authAttrs = CreateAuthAttributes(messageBytes);
             // Create mac
@@ -259,77 +249,15 @@ namespace iText.Kernel.Mac {
             authDataV.Add(BC_FACTORY.CreateDERSet(BC_FACTORY.CreateDERTaggedObject(false, 3, BC_FACTORY.CreateDERSequence
                 (recInfoV))));
             authDataV.Add(BC_FACTORY.CreateDERSequence(BC_FACTORY.CreateASN1ObjectIdentifier(GetMacAlgorithmOid())));
+            String algorithm = MacProperties.MacDigestAlgorithmToString(macProperties.GetMacDigestAlgorithm());
+            String macDigestOid = DigestAlgorithms.GetAllowedDigest(algorithm);
             authDataV.Add(BC_FACTORY.CreateDERTaggedObject(false, 1, BC_FACTORY.CreateDERSequence(BC_FACTORY.CreateASN1ObjectIdentifier
-                (GetMacDigestOid()))));
+                (macDigestOid))));
             authDataV.Add(BC_FACTORY.CreateDERSequence(encapContentInfoV));
             authDataV.Add(BC_FACTORY.CreateDERTaggedObject(false, 2, authAttrs));
             authDataV.Add(BC_FACTORY.CreateDEROctetString(mac));
             contentInfoV.Add(BC_FACTORY.CreateDERTaggedObject(0, BC_FACTORY.CreateDERSequence(authDataV)));
             return BC_FACTORY.CreateDERSequence(contentInfoV);
-        }
-
-        private IMessageDigest GetMessageDigest() {
-            switch (macProperties.GetMacDigestAlgorithm()) {
-                case MacProperties.MacDigestAlgorithm.SHA_256: {
-                    return iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA256");
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA_384: {
-                    return iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA384");
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA_512: {
-                    return iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA512");
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA3_256: {
-                    return iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA3-256");
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA3_384: {
-                    return iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA3-384");
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA3_512: {
-                    return iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA3-512");
-                }
-
-                default: {
-                    throw new PdfException("This digest algorithm is not supported by MAC.");
-                }
-            }
-        }
-
-        private String GetMacDigestOid() {
-            switch (macProperties.GetMacDigestAlgorithm()) {
-                case MacProperties.MacDigestAlgorithm.SHA_256: {
-                    return "2.16.840.1.101.3.4.2.1";
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA_384: {
-                    return "2.16.840.1.101.3.4.2.2";
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA_512: {
-                    return "2.16.840.1.101.3.4.2.3";
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA3_256: {
-                    return "2.16.840.1.101.3.4.2.8";
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA3_384: {
-                    return "2.16.840.1.101.3.4.2.9";
-                }
-
-                case MacProperties.MacDigestAlgorithm.SHA3_512: {
-                    return "2.16.840.1.101.3.4.2.10";
-                }
-
-                default: {
-                    throw new PdfException(KernelExceptionMessageConstant.DIGEST_NOT_SUPPORTED);
-                }
-            }
         }
 
         private byte[] GenerateMac(byte[] macKey, byte[] data) {
@@ -395,13 +323,14 @@ namespace iText.Kernel.Mac {
         }
 
         private IDerSequence CreateMessageDigestSequence(byte[] messageBytes) {
+            String algorithm = MacProperties.MacDigestAlgorithmToString(macProperties.GetMacDigestAlgorithm());
             // Hash messageBytes to get messageDigest attribute
-            IMessageDigest digest = GetMessageDigest();
+            IMessageDigest digest = DigestAlgorithms.GetMessageDigest(algorithm);
             digest.Update(messageBytes);
             byte[] messageDigest = DigestBytes(messageBytes);
             // Message digest
             IAsn1EncodableVector messageDigestV = BC_FACTORY.CreateASN1EncodableVector();
-            messageDigestV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(ID_MESSAGE_DIGEST));
+            messageDigestV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(OID.MESSAGE_DIGEST));
             messageDigestV.Add(BC_FACTORY.CreateDERSet(BC_FACTORY.CreateDEROctetString(messageDigest)));
             return BC_FACTORY.CreateDERSequence(messageDigestV);
         }
@@ -409,17 +338,18 @@ namespace iText.Kernel.Mac {
         private IDerSet CreateAuthAttributes(byte[] messageBytes) {
             // Content type - mac integrity info
             IAsn1EncodableVector contentTypeInfoV = BC_FACTORY.CreateASN1EncodableVector();
-            contentTypeInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(ID_CONTENT_TYPE));
-            contentTypeInfoV.Add(BC_FACTORY.CreateDERSet(BC_FACTORY.CreateASN1ObjectIdentifier(ID_CT_PDF_MAC_INTEGRITY_INFO
+            contentTypeInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(OID.CONTENT_TYPE));
+            contentTypeInfoV.Add(BC_FACTORY.CreateDERSet(BC_FACTORY.CreateASN1ObjectIdentifier(OID.CT_PDF_MAC_INTEGRITY_INFO
                 )));
             IAsn1EncodableVector algorithmsInfoV = BC_FACTORY.CreateASN1EncodableVector();
-            algorithmsInfoV.Add(BC_FACTORY.CreateDERSequence(BC_FACTORY.CreateASN1ObjectIdentifier(GetMacDigestOid()))
-                );
+            String algorithm = MacProperties.MacDigestAlgorithmToString(macProperties.GetMacDigestAlgorithm());
+            String macDigestOid = DigestAlgorithms.GetAllowedDigest(algorithm);
+            algorithmsInfoV.Add(BC_FACTORY.CreateDERSequence(BC_FACTORY.CreateASN1ObjectIdentifier(macDigestOid)));
             algorithmsInfoV.Add(BC_FACTORY.CreateDERTaggedObject(2, BC_FACTORY.CreateASN1ObjectIdentifier(GetMacAlgorithmOid
                 ())));
             // CMS algorithm protection
             IAsn1EncodableVector algoProtectionInfoV = BC_FACTORY.CreateASN1EncodableVector();
-            algoProtectionInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(ID_CMS_ALGORITHM_PROTECTION));
+            algoProtectionInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(OID.CMS_ALGORITHM_PROTECTION));
             algoProtectionInfoV.Add(BC_FACTORY.CreateDERSet(BC_FACTORY.CreateDERSequence(algorithmsInfoV)));
             IAsn1EncodableVector authAttrsV = BC_FACTORY.CreateASN1EncodableVector();
             authAttrsV.Add(BC_FACTORY.CreateDERSequence(contentTypeInfoV));
@@ -447,27 +377,27 @@ namespace iText.Kernel.Mac {
 
         private static MacProperties.MacDigestAlgorithm GetMacDigestAlgorithm(String oid) {
             switch (oid) {
-                case "2.16.840.1.101.3.4.2.1": {
+                case OID.SHA_256: {
                     return MacProperties.MacDigestAlgorithm.SHA_256;
                 }
 
-                case "2.16.840.1.101.3.4.2.2": {
+                case OID.SHA_384: {
                     return MacProperties.MacDigestAlgorithm.SHA_384;
                 }
 
-                case "2.16.840.1.101.3.4.2.3": {
+                case OID.SHA_512: {
                     return MacProperties.MacDigestAlgorithm.SHA_512;
                 }
 
-                case "2.16.840.1.101.3.4.2.8": {
+                case OID.SHA3_256: {
                     return MacProperties.MacDigestAlgorithm.SHA3_256;
                 }
 
-                case "2.16.840.1.101.3.4.2.9": {
+                case OID.SHA3_384: {
                     return MacProperties.MacDigestAlgorithm.SHA3_384;
                 }
 
-                case "2.16.840.1.101.3.4.2.10": {
+                case OID.SHA3_512: {
                     return MacProperties.MacDigestAlgorithm.SHA3_512;
                 }
 

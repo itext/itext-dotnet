@@ -24,6 +24,7 @@ using iText.Signatures.Testutils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using iText.Kernel.Crypto;
 using iText.Test;
 using NUnit.Framework;
 
