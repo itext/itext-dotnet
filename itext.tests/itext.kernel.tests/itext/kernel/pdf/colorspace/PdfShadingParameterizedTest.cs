@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Colorspace {
@@ -41,8 +42,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfDictionary dict = new PdfDictionary();
             dict.Put(PdfName.ShadingType, new PdfNumber(shadingType));
             dict.Put(PdfName.ColorSpace, PdfName.DeviceRGB);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(dict), "Creating "
-                 + shadingName + " should throw PdfException.");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => AbstractPdfShading.MakeShading(dict
+                ), "Creating " + shadingName + " should throw PdfException.");
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE, e.Message);
         }
     }

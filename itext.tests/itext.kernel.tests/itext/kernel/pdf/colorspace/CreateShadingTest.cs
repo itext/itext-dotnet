@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Kernel.Pdf.Function;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -61,7 +62,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             int y1 = 400;
             PdfArray shadingVector = new PdfArray(new int[] { x0, y0, x1, y1 });
             PdfType3Function stitchingFunction = CreateStitchingCmykShadingFunction();
-            PdfShading.Axial axialShading = new PdfShading.Axial(new PdfDeviceCs.Cmyk(), shadingVector, stitchingFunction
+            PdfAxialShading axialShading = new PdfAxialShading(new PdfDeviceCs.Cmyk(), shadingVector, stitchingFunction
                 );
             pdfCanvas.PaintShading(axialShading);
             pdfDocument.Close();
@@ -78,9 +79,9 @@ namespace iText.Kernel.Pdf.Colorspace {
                 new StampingProperties().UseAppendMode());
             PdfResources resources = pdfDocument.GetPage(1).GetResources();
             foreach (PdfName resName in resources.GetResourceNames()) {
-                PdfShading shading = resources.GetShading(resName);
-                if (shading != null && shading.GetShadingType() == PdfShading.ShadingType.AXIAL) {
-                    PdfShading.Axial axialShading = (PdfShading.Axial)shading;
+                AbstractPdfShading shading = resources.GetShading(resName);
+                if (shading != null && shading.GetShadingType() == ShadingType.AXIAL) {
+                    PdfAxialShading axialShading = (PdfAxialShading)shading;
                     // "cut" shading and extend colors
                     axialShading.SetDomain(0.1f, 0.8f);
                     axialShading.SetExtend(true, true);
@@ -103,8 +104,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             int x1 = x0;
             int y1 = y0;
             int r1 = 50;
-            PdfShading.Radial radialShading = new PdfShading.Radial(new PdfDeviceCs.Gray(), x0, y0, r0, new float[] { 
-                0.9f }, x1, y1, r1, new float[] { 0.2f }, new bool[] { false, false });
+            PdfRadialShading radialShading = new PdfRadialShading(new PdfDeviceCs.Gray(), x0, y0, r0, new float[] { 0.9f
+                 }, x1, y1, r1, new float[] { 0.2f }, new bool[] { false, false });
             pdfCanvas.PaintShading(radialShading);
             pdfDocument.Close();
             AssertShadingDictionaryResult(outName, cmpName, "Sh1");
@@ -125,7 +126,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             int r1 = 50;
             PdfArray shadingVector = new PdfArray(new int[] { x0, y0, r0, x1, y1, r1 });
             PdfType3Function stitchingFunction = CreateStitchingCmykShadingFunction();
-            PdfShading.Radial radialShading = new PdfShading.Radial(new PdfDeviceCs.Cmyk(), shadingVector, stitchingFunction
+            PdfRadialShading radialShading = new PdfRadialShading(new PdfDeviceCs.Cmyk(), shadingVector, stitchingFunction
                 );
             pdfCanvas.PaintShading(radialShading);
             pdfDocument.Close();
@@ -142,9 +143,9 @@ namespace iText.Kernel.Pdf.Colorspace {
                 new StampingProperties().UseAppendMode());
             PdfResources resources = pdfDocument.GetPage(1).GetResources();
             foreach (PdfName resName in resources.GetResourceNames()) {
-                PdfShading shading = resources.GetShading(resName);
-                if (shading != null && shading.GetShadingType() == PdfShading.ShadingType.RADIAL) {
-                    PdfShading.Radial radialShading = (PdfShading.Radial)shading;
+                AbstractPdfShading shading = resources.GetShading(resName);
+                if (shading != null && shading.GetShadingType() == ShadingType.RADIAL) {
+                    PdfRadialShading radialShading = (PdfRadialShading)shading;
                     // "cut" shading and extend colors
                     radialShading.SetDomain(0.1f, 0.8f);
                     radialShading.SetExtend(true, true);

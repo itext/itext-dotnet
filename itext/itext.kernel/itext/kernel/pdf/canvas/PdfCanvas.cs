@@ -36,6 +36,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Tagutils;
@@ -1103,7 +1104,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Paints a shading object and adds it to the resources of this canvas</summary>
         /// <param name="shading">a shading object to be painted</param>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas PaintShading(PdfShading shading) {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas PaintShading(AbstractPdfShading shading) {
             PdfName shadingName = resources.AddShading(shading);
             contentStream.GetOutputStream().Write((PdfObject)shadingName).WriteSpace().WriteBytes(sh);
             return this;
