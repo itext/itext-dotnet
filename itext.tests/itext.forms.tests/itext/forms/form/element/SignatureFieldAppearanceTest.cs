@@ -125,6 +125,38 @@ namespace iText.Forms.Form.Element {
         }
 
         [NUnit.Framework.Test]
+        public virtual void EmptySigFieldAppearanceTest() {
+            String outPdf = DESTINATION_FOLDER + "emptySigFieldAppearance.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_emptySigFieldAppearance.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                SignedAppearanceText description = new SignedAppearanceText().SetSignedBy(null).SetLocationLine(null).SetReasonLine
+                    (null);
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("Signature1").SetContent(description);
+                formSigField.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                formSigField.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                formSigField.SetHeight(100).SetWidth(200);
+                document.Add(formSigField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IgnoreSignDateAndReasonInAppearanceTest() {
+            String outPdf = DESTINATION_FOLDER + "ignoreSignDateAndReasonInAppearance.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_ignoreSignDateAndReasonInAppearance.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                SignedAppearanceText description = new SignedAppearanceText().SetSignedBy("Signer Name").SetLocationLine("Test Location"
+                    ).SetReasonLine(null);
+                SignatureFieldAppearance formSigField = new SignatureFieldAppearance("Signature1").SetContent(description);
+                formSigField.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                formSigField.SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                formSigField.SetHeight(100).SetWidth(200);
+                document.Add(formSigField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void SignatureFieldVerticalAlignmentTest() {
             String outPdf = DESTINATION_FOLDER + "signatureFieldVerticalAlignment.pdf";
@@ -341,7 +373,7 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         public virtual void FontNullCustomCheck() {
             String outPdf = DESTINATION_FOLDER + "fontNullCustomCheck.pdf";
-            PdfDocument pdfDoc = new _PdfDocument_412(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new _PdfDocument_450(new PdfWriter(outPdf));
             Document document = new Document(pdfDoc);
             SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
             sigField.SetContent("test");
@@ -352,8 +384,8 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE, e.Message);
         }
 
-        private sealed class _PdfDocument_412 : PdfDocument {
-            public _PdfDocument_412(PdfWriter baseArg1)
+        private sealed class _PdfDocument_450 : PdfDocument {
+            public _PdfDocument_450(PdfWriter baseArg1)
                 : base(baseArg1) {
             }
 

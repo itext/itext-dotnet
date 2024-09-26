@@ -29,6 +29,13 @@ using iText.Kernel.Geom;
 namespace iText.Signatures {
     /// <summary>Properties to be used in signing operations.</summary>
     public class SignerProperties {
+        /// <summary>
+        /// This string could be used to create the
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// instance which will be used for signing
+        /// since its ID will be ignored anyway in that case, and specified ID won't override the field name.
+        /// </summary>
+        /// <seealso cref="SetSignatureAppearance(iText.Forms.Form.Element.SignatureFieldAppearance)"/>
         public const String IGNORED_ID = "";
 
         private PdfSigFieldLock fieldLock;

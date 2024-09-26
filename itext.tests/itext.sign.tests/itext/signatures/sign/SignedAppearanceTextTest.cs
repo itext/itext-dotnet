@@ -102,6 +102,30 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
+        public virtual void NoReasonLocationSignDateInAppearanceTextTest() {
+            String srcFile = SOURCE_FOLDER + "simpleDocument.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_noReasonLocationSignDateInAppearanceText.pdf";
+            String outPdf = DESTINATION_FOLDER + "noReasonLocationSignDateInAppearanceText.pdf";
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+            String fieldName = "Signature1";
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText().SetReasonLine(null).SetLocationLine(null));
+            PdfSigner signer = new PdfSigner(new PdfReader(srcFile), FileUtil.GetFileOutputStream(outPdf), new StampingProperties
+                ());
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(AccessPermissions.UNSPECIFIED
+                ).SetFieldName(fieldName).SetReason("Test 1").SetLocation("TestCity 1").SetSignatureAppearance(appearance
+                ).SetClaimedSignDate((DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE).SetPageRect(rect);
+            signer.SetSignerProperties(signerProperties);
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                , GetTestMap(new Rectangle(36, 676, 200, 15))));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SignPDFADocumentWithoutSettingFont() {
             String srcFile = DESTINATION_FOLDER + "simplePDFA.pdf";
             CreateSimplePDFADocument(srcFile).Close();

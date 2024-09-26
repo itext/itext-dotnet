@@ -530,7 +530,10 @@ namespace iText.Signatures {
             dic.SetLocation(this.signerProperties.GetLocation());
             dic.SetSignatureCreator(this.signerProperties.GetSignatureCreator());
             dic.SetContact(this.signerProperties.GetContact());
-            dic.SetDate(new PdfDate(this.signerProperties.GetClaimedSignDate()));
+            DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
+            if (claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
+                dic.SetDate(new PdfDate(claimedSignDate));
+            }
             // time-stamp will over-rule this
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
@@ -1254,8 +1257,9 @@ namespace iText.Signatures {
             dic.SetLocation(this.signerProperties.GetLocation());
             dic.SetSignatureCreator(this.signerProperties.GetSignatureCreator());
             dic.SetContact(this.signerProperties.GetContact());
-            if (includeDate) {
-                dic.SetDate(new PdfDate(this.signerProperties.GetClaimedSignDate()));
+            DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
+            if (includeDate && claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
+                dic.SetDate(new PdfDate(claimedSignDate));
             }
             // time-stamp will over-rule this
             return dic;
@@ -1310,23 +1314,37 @@ namespace iText.Signatures {
         }
 
         private SignedAppearanceText GenerateSignatureText() {
-            return new SignedAppearanceText().SetSignedBy(signerName).SetSignDate(this.signerProperties.GetClaimedSignDate
-                ()).SetReasonLine("Reason: " + this.signerProperties.GetReason()).SetLocationLine("Location: " + this.
-                signerProperties.GetLocation());
+            SignedAppearanceText signedAppearanceText = new SignedAppearanceText();
+            FillInAppearanceText(signedAppearanceText);
+            return signedAppearanceText;
         }
 
         private void PopulateExistingModelElement() {
             this.signerProperties.GetSignatureAppearance().SetSignerName(signerName);
-            SignedAppearanceText signedAppearanceText = this.signerProperties.GetSignatureAppearance().GetSignedAppearanceText
+            SignedAppearanceText appearanceText = this.signerProperties.GetSignatureAppearance().GetSignedAppearanceText
                 ();
-            if (signedAppearanceText != null) {
-                signedAppearanceText.SetSignedBy(signerName).SetSignDate(this.signerProperties.GetClaimedSignDate());
-                if (String.IsNullOrEmpty(signedAppearanceText.GetReasonLine())) {
-                    signedAppearanceText.SetReasonLine("Reason: " + this.signerProperties.GetReason());
-                }
-                if (String.IsNullOrEmpty(signedAppearanceText.GetLocationLine())) {
-                    signedAppearanceText.SetLocationLine("Location: " + this.signerProperties.GetLocation());
-                }
+            if (appearanceText != null) {
+                FillInAppearanceText(appearanceText);
+            }
+        }
+
+        private void FillInAppearanceText(SignedAppearanceText appearanceText) {
+            appearanceText.SetSignedBy(signerName);
+            DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
+            if (claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
+                appearanceText.SetSignDate(claimedSignDate);
+            }
+            String reason = signerProperties.GetReason();
+            bool setReason = appearanceText.GetReasonLine() != null && String.IsNullOrEmpty(appearanceText.GetReasonLine
+                ());
+            if (setReason && reason != null && !String.IsNullOrEmpty(reason)) {
+                appearanceText.SetReasonLine("Reason: " + reason);
+            }
+            String location = signerProperties.GetLocation();
+            bool setLocation = appearanceText.GetLocationLine() != null && String.IsNullOrEmpty(appearanceText.GetLocationLine
+                ());
+            if (setLocation && location != null && !String.IsNullOrEmpty(location)) {
+                appearanceText.SetLocationLine("Location: " + location);
             }
         }
 
