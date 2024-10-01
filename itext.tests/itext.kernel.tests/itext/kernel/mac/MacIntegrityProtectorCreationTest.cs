@@ -70,54 +70,66 @@ namespace iText.Kernel.Mac {
             String fileName = "standaloneMacStandardEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
-            MacProperties macProperties = new MacProperties(MacProperties.MacDigestAlgorithm.SHA_256, MacProperties.MacAlgorithm
-                .HMAC_WITH_SHA_256, MacProperties.KeyWrappingAlgorithm.AES_256_NO_PADD);
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
-                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outputFileName, writerProperties))) {
-                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
-            }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff", PASSWORD, PASSWORD));
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void MacEncryptionWithAesGsmTest() {
-            String fileName = "macEncryptionWithAesGsmTest.pdf";
-            String outputFileName = DESTINATION_FOLDER + fileName;
-            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
-            MacProperties macProperties = new MacProperties(MacProperties.MacDigestAlgorithm.SHA_256);
-            WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
-                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_GCM, macProperties);
+                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, new MacProperties(MacProperties.MacDigestAlgorithm
+                .SHA_256));
             using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName, writerProperties
                 ))) {
                 pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff", PASSWORD, PASSWORD));
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare(false).CompareByContent(outputFileName
+                , cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void StandaloneMacUnwritableStreamTest() {
-            MacProperties macProperties = new MacProperties(MacProperties.MacDigestAlgorithm.SHA_256, MacProperties.MacAlgorithm
-                .HMAC_WITH_SHA_256, MacProperties.KeyWrappingAlgorithm.AES_256_NO_PADD);
+        public virtual void NoMacProtectionTest() {
+            String fileName = "noMacProtectionTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
-                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
-            MemoryStream unwritableStream = new _MemoryStream_129();
-            String exceptionMessage = NUnit.Framework.Assert.Catch(typeof(Exception), () => {
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(unwritableStream, writerProperties))) {
-                    pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
-                }
+                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, null);
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName, writerProperties
+                ))) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
             }
-            ).Message;
-            NUnit.Framework.Assert.AreEqual("expected", exceptionMessage);
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare().CompareByContent(outputFileName, 
+                cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void MacEncryptionWithAesGcmTest() {
+            String fileName = "macEncryptionWithAesGsmTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
+                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_GCM, new MacProperties(MacProperties.MacDigestAlgorithm
+                .SHA_256));
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName, writerProperties
+                ))) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare(false).CompareByContent(outputFileName
+                , cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PDF_WRITER_CLOSING_FAILED)]
+        public virtual void StandaloneMacUnwritableStreamTest() {
+            WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
+                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, new MacProperties(MacProperties.MacDigestAlgorithm
+                .SHA_256));
+            MemoryStream unwritableStream = new _MemoryStream_152();
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(unwritableStream, writerProperties))) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
             unwritableStream.Dispose();
         }
 
-        private sealed class _MemoryStream_129 : MemoryStream {
-            public _MemoryStream_129() {
+        private sealed class _MemoryStream_152 : MemoryStream {
+            public _MemoryStream_152() {
             }
 
             public override void Write(byte[] b, int off, int len) {
@@ -141,8 +153,8 @@ namespace iText.Kernel.Mac {
                     ))) {
                     pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
                 }
-                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER
-                    , "diff", PASSWORD, PASSWORD));
+                NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare(false).CompareByContent(outputFileName
+                    , cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
             }
         }
 
@@ -167,6 +179,70 @@ namespace iText.Kernel.Mac {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void AddMacOnPreserveEncryptionTest() {
+            String fileName = "addMacOnPreserveEncryptionTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionDocument.pdf", new 
+                ReaderProperties().SetPassword(PASSWORD)), CompareTool.CreateTestPdfWriter(outputFileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption())) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare(false).CompareByContent(outputFileName
+                , cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void AddMacOnAppendModeTest() {
+            // MAC should not be added in append mode
+            String fileName = "addMacOnAppendModeTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionDocument.pdf", new 
+                ReaderProperties().SetPassword(PASSWORD)), CompareTool.CreateTestPdfWriter(outputFileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().UseAppendMode())) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare().CompareByContent(outputFileName, 
+                cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void AddMacOnPreserveEncryptionWhileDowngradingTest() {
+            String fileName = "addMacOnPreserveEncryptionWhileDowngradingTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionDocument.pdf", new 
+                ReaderProperties().SetPassword(PASSWORD)), CompareTool.CreateTestPdfWriter(outputFileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_1_7)), new StampingProperties().PreserveEncryption())) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare().CompareByContent(outputFileName, 
+                cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(VersionConforming.DEPRECATED_AES256_REVISION)]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void AddMacOnPreserveEncryptionFor17DocTest() {
+            // We can't embed MAC into encrypted documents during the conversion from earlier PDF version
+            // because their encryption does not support this. So WriterProperties should be used iso preserveEncryption
+            String fileName = "addMacOnPreserveEncryptionFor17DocTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionDocument_1_7.pdf"
+                , new ReaderProperties().SetPassword(PASSWORD)), CompareTool.CreateTestPdfWriter(outputFileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)), new StampingProperties().PreserveEncryption())) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare().CompareByContent(outputFileName, 
+                cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacOldEncryptionAlgorithmTest() {
             String fileName = "standaloneMacOldEncryptionAlgorithmTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -185,6 +261,7 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacPublicKeyEncryptionTest() {
             try {
                 BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
@@ -196,18 +273,46 @@ namespace iText.Kernel.Mac {
             String fileName = "standaloneMacPublicKeyEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
-            MacProperties macProperties = new MacProperties(MacProperties.MacDigestAlgorithm.SHA_256, MacProperties.MacAlgorithm
-                .HMAC_WITH_SHA_256, MacProperties.KeyWrappingAlgorithm.AES_256_NO_PADD);
             IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(CERTS_SRC +
                  "SHA256withRSA.cer"));
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetPublicKeyEncryption
-                (new IX509Certificate[] { certificate }, new int[] { -1 }, EncryptionConstants.ENCRYPTION_AES_256, macProperties
-                );
+                (new IX509Certificate[] { certificate }, new int[] { -1 }, EncryptionConstants.ENCRYPTION_AES_256, new 
+                MacProperties(MacProperties.MacDigestAlgorithm.SHA_256));
             using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName, writerProperties
                 ))) {
                 pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
             }
             IPrivateKey privateKey = GetPrivateKey(CERTS_SRC + "SHA256withRSA.key");
+            CompareTool compareTool = new CompareTool();
+            compareTool.GetCmpReaderProperties().SetPublicKeySecurityParams(certificate, privateKey);
+            compareTool.GetOutReaderProperties().SetPublicKeySecurityParams(certificate, privateKey);
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void AddMacOnPreservePublicKeyEncryptionTest() {
+            // TODO DEVSIX-8635 - Verify MAC permission and embed MAC in stamping mode for public key encryption
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
+            String fileName = "addMacOnPreservePublicKeyEncryptionTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(CERTS_SRC +
+                 "SHA256withRSA.cer"));
+            IPrivateKey privateKey = GetPrivateKey(CERTS_SRC + "SHA256withRSA.key");
+            ReaderProperties readerProperties = new ReaderProperties();
+            readerProperties.SetPublicKeySecurityParams(certificate, privateKey);
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionPublicKeyEncryptionDocument.pdf"
+                , readerProperties), CompareTool.CreateTestPdfWriter(outputFileName), new StampingProperties().PreserveEncryption
+                ())) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
             CompareTool compareTool = new CompareTool();
             compareTool.GetCmpReaderProperties().SetPublicKeySecurityParams(certificate, privateKey);
             compareTool.GetOutReaderProperties().SetPublicKeySecurityParams(certificate, privateKey);

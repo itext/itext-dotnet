@@ -993,6 +993,12 @@ namespace iText.Kernel.Pdf {
                         long amountOfBytes = ((CountOutputStream)writer.GetOutputStream()).GetAmountOfWrittenBytes();
                         manager.OnEvent(new SizeOfPdfStatisticsEvent(amountOfBytes, ITextCoreProductData.GetInstance()));
                     }
+                    else {
+                        if (writer.GetOutputStream() is ByteArrayOutputStream) {
+                            long amountOfBytes = ((ByteArrayOutputStream)writer.GetOutputStream()).Length;
+                            manager.OnEvent(new SizeOfPdfStatisticsEvent(amountOfBytes, ITextCoreProductData.GetInstance()));
+                        }
+                    }
                 }
                 catalog.GetPageTree().ClearPageRefs();
             }
@@ -1002,7 +1008,7 @@ namespace iText.Kernel.Pdf {
             finally {
                 if (writer != null && IsCloseWriter()) {
                     try {
-                        writer.Dispose();
+                        writer.Finish();
                     }
                     catch (Exception e) {
                         ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
@@ -2456,7 +2462,8 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 if (writer.properties.encryptionProperties != null && writer.properties.encryptionProperties.macProperties
-                     != null) {
+                     != null && writer.properties.pdfVersion != null && PdfVersion.PDF_2_0.CompareTo(writer.properties.pdfVersion
+                    ) <= 0) {
                     writer.EnableByteArrayWritingMode();
                 }
             }

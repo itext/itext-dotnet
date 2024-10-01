@@ -43,8 +43,8 @@ namespace iText.Kernel.Events {
         /// </remarks>
         public const String END_PAGE = "EndPdfPage";
 
-        /// <summary>Dispatched before writer is flushed to a document.</summary>
-        public const String END_WRITER_FLUSH = "EndWriterFlush";
+        /// <summary>Dispatched before writer is closed.</summary>
+        public const String START_WRITER_CLOSING = "StartWriterClosing";
 
         /// <summary>Dispatched after writer is flushed to a document.</summary>
         public const String START_DOCUMENT_CLOSING = "StartDocumentClosing";

@@ -79,6 +79,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return new AesDecryptor(nextObjectKey, 0, nextObjectKeySize);
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override void SetPermissions(int permissions, PdfDictionary encryptionDictionary) {
+            base.SetPermissions(permissions, encryptionDictionary);
+            byte[] aes256Perms = GetAes256Perms(permissions, IsEncryptMetadata());
+            encryptionDictionary.Put(PdfName.Perms, new PdfLiteral(StreamUtil.CreateEscapedString(aes256Perms)));
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal virtual void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte[] ueKey, 
             byte[] aes256Perms, bool encryptMetadata, bool embeddedFilesOnly) {
@@ -175,21 +182,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 ac = new AESCipherCBCnoPad(true, hash);
                 oeKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 10
-                byte[] permsp = IVGenerator.GetIV(16);
-                permsp[0] = (byte)permissions;
-                permsp[1] = (byte)(permissions >> 8);
-                permsp[2] = (byte)(permissions >> 16);
-                permsp[3] = (byte)(permissions >> 24);
-                permsp[4] = (byte)(255);
-                permsp[5] = (byte)(255);
-                permsp[6] = (byte)(255);
-                permsp[7] = (byte)(255);
-                permsp[8] = encryptMetadata ? (byte)'T' : (byte)'F';
-                permsp[9] = (byte)'a';
-                permsp[10] = (byte)'d';
-                permsp[11] = (byte)'b';
-                ac = new AESCipherCBCnoPad(true, nextObjectKey);
-                aes256Perms = ac.ProcessBlock(permsp, 0, permsp.Length);
+                aes256Perms = GetAes256Perms(permissions, encryptMetadata);
                 this.permissions = permissions;
                 this.encryptMetadata = encryptMetadata;
                 SetStandardHandlerDicEntries(encryptionDictionary, userKey, ownerKey);
@@ -198,6 +191,27 @@ namespace iText.Kernel.Crypto.Securityhandler {
             catch (Exception ex) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, ex);
             }
+        }
+
+        private byte[] GetAes256Perms(int permissions, bool encryptMetadata) {
+            byte[] aes256Perms;
+            AESCipherCBCnoPad ac;
+            byte[] permsp = IVGenerator.GetIV(16);
+            permsp[0] = (byte)permissions;
+            permsp[1] = (byte)(permissions >> 8);
+            permsp[2] = (byte)(permissions >> 16);
+            permsp[3] = (byte)(permissions >> 24);
+            permsp[4] = (byte)(255);
+            permsp[5] = (byte)(255);
+            permsp[6] = (byte)(255);
+            permsp[7] = (byte)(255);
+            permsp[8] = encryptMetadata ? (byte)'T' : (byte)'F';
+            permsp[9] = (byte)'a';
+            permsp[10] = (byte)'d';
+            permsp[11] = (byte)'b';
+            ac = new AESCipherCBCnoPad(true, nextObjectKey);
+            aes256Perms = ac.ProcessBlock(permsp, 0, permsp.Length);
+            return aes256Perms;
         }
 
         private void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, byte[] password) {
@@ -219,7 +233,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 byte[] ueValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.UE));
                 byte[] perms = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.Perms));
                 PdfNumber pValue = (PdfNumber)encryptionDictionary.Get(PdfName.P);
-                this.permissions = pValue.LongValue();
+                this.permissions = pValue.IntValue();
                 byte[] hash;
                 hash = ComputeHash(password, oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH, uValue);
                 usedOwnerPassword = EqualsArray(hash, oValue, 32);

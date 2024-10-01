@@ -51,7 +51,7 @@ namespace iText.Kernel.Mac {
         internal virtual void PrepareDocument() {
             document.AddEventHandler(PdfDocumentEvent.START_DOCUMENT_CLOSING, new StandaloneMacIntegrityProtector.StandaloneMacPdfObjectAdder
                 (this));
-            document.AddEventHandler(PdfDocumentEvent.END_WRITER_FLUSH, new StandaloneMacIntegrityProtector.StandaloneMacContainerEmbedder
+            document.AddEventHandler(PdfDocumentEvent.START_WRITER_CLOSING, new StandaloneMacIntegrityProtector.StandaloneMacContainerEmbedder
                 (this));
         }
 //\endcond

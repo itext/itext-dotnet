@@ -374,6 +374,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String MAC_VALIDATION_FAILED = "MAC integrity protection was compromised. Document content was modified.";
 
+        public const String MAC_VALIDATION_NO_SALT = "MAC token validation failed. Salt is not found.";
+
         public const String MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY = "Missing required field {0} in font dictionary.";
 
         public const String MUST_BE_A_TAGGED_DOCUMENT = "Must be a tagged document.";

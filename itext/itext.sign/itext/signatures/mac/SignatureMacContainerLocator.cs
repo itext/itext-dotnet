@@ -56,5 +56,10 @@ namespace iText.Signatures.Mac {
              authDictionary) {
             return new SignatureMacIntegrityProtector(document, authDictionary);
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void HandleMacValidationError(MacValidationException exception) {
+            throw exception;
+        }
     }
 }

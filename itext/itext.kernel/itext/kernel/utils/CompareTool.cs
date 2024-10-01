@@ -108,6 +108,8 @@ namespace iText.Kernel.Utils {
 
         private bool encryptionCompareEnabled = false;
 
+        private bool kdfSaltCompareEnabled = true;
+
         private bool useCachedPagesForComparison = true;
 
         private IMetaInfo metaInfo;
@@ -359,7 +361,31 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <returns>this CompareTool instance.</returns>
         public virtual iText.Kernel.Utils.CompareTool EnableEncryptionCompare() {
+            return EnableEncryptionCompare(true);
+        }
+
+        /// <summary>Enables the comparison of the encryption properties of the documents.</summary>
+        /// <remarks>
+        /// Enables the comparison of the encryption properties of the documents. Encryption properties comparison
+        /// results are returned along with all other comparison results.
+        /// <para />
+        /// IMPORTANT NOTE: this flag affects only the comparison performed by compareByContent methods!
+        /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
+        /// doesn't compare encryption properties
+        /// because encryption properties aren't part of the document's Catalog.
+        /// </remarks>
+        /// <param name="kdfSaltCompareEnabled">
+        /// set to
+        /// <see langword="true"/>
+        /// if
+        /// <see cref="iText.Kernel.Pdf.PdfName.KDFSalt"/>
+        /// entry must be compared,
+        /// {code false} otherwise
+        /// </param>
+        /// <returns>this CompareTool instance.</returns>
+        public virtual iText.Kernel.Utils.CompareTool EnableEncryptionCompare(bool kdfSaltCompareEnabled) {
             this.encryptionCompareEnabled = true;
+            this.kdfSaltCompareEnabled = kdfSaltCompareEnabled;
             return this;
         }
 
@@ -1415,6 +1441,7 @@ namespace iText.Kernel.Utils {
                                 (), catalogPath, compareResult, ignoredCatalogEntries);
                             if (encryptionCompareEnabled) {
                                 CompareDocumentsEncryption(outDocument, cmpDocument, compareResult);
+                                CompareDocumentsMac(outDocument, cmpDocument, compareResult);
                             }
                             if (generateCompareByContentXmlReport) {
                                 String outPdfName = new FileInfo(outPdf).Name;
@@ -1525,6 +1552,26 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        private void CompareDocumentsMac(PdfDocument outDocument, PdfDocument cmpDocument, CompareTool.CompareResult
+             compareResult) {
+            PdfDictionary outAuthCode = outDocument.GetTrailer().GetAsDictionary(PdfName.AuthCode);
+            PdfDictionary cmpAuthCode = cmpDocument.GetTrailer().GetAsDictionary(PdfName.AuthCode);
+            if (outAuthCode == null && cmpAuthCode == null) {
+                return;
+            }
+            ObjectPath trailerPath = new TrailerPath(cmpDocument, outDocument);
+            if (outAuthCode == null) {
+                compareResult.AddError(trailerPath, "Output document does not contain MAC.");
+                return;
+            }
+            if (cmpAuthCode == null) {
+                compareResult.AddError(trailerPath, "Output document contains MAC which is not expected.");
+                return;
+            }
+            CompareDictionariesExtended(outAuthCode, cmpAuthCode, trailerPath, compareResult, new HashSet<PdfName>(JavaUtil.ArraysAsList
+                (PdfName.ByteRange, PdfName.MAC)));
+        }
+
         private bool CompareStreams(Stream is1, Stream is2) {
             byte[] buffer1 = new byte[64 * 1024];
             byte[] buffer2 = new byte[64 * 1024];
@@ -1569,7 +1616,8 @@ namespace iText.Kernel.Utils {
                 if (excludedKeys != null && excludedKeys.Contains(key)) {
                     continue;
                 }
-                if (key.Equals(PdfName.Parent) || key.Equals(PdfName.P) || key.Equals(PdfName.ModDate)) {
+                if (key.Equals(PdfName.Parent) || key.Equals(PdfName.P) || key.Equals(PdfName.ModDate) || (key.Equals(PdfName
+                    .KDFSalt) && !kdfSaltCompareEnabled)) {
                     continue;
                 }
                 if (outDict.IsStream() && cmpDict.IsStream() && (key.Equals(PdfName.Filter) || key.Equals(PdfName.Length))

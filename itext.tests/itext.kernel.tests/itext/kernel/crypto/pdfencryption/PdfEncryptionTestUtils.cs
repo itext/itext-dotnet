@@ -52,7 +52,7 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         public virtual void CompareEncryptedPdf(String filename) {
             CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, PAGE_TEXT_CONTENT);
             CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, PAGE_TEXT_CONTENT);
-            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare(false);
             String compareResult = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + 
                 filename, destinationFolder, "diff_", USER, USER);
             if (compareResult != null) {

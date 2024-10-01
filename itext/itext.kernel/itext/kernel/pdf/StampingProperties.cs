@@ -26,6 +26,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool preserveEncryption = false;
 
+        protected internal bool disableMac = false;
+
         public StampingProperties() {
         }
 
@@ -65,6 +67,23 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.StampingProperties PreserveEncryption() {
             this.preserveEncryption = true;
+            return this;
+        }
+
+        /// <summary>Disables MAC token in the output PDF-2.0 document.</summary>
+        /// <remarks>
+        /// Disables MAC token in the output PDF-2.0 document.
+        /// By default, MAC token will be embedded.
+        /// This property does not remove MAC token from existing document in append mode because it removes MAC protection
+        /// from all previous revisions also.
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <see cref="StampingProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.StampingProperties DisableMac() {
+            this.disableMac = true;
             return this;
         }
     }

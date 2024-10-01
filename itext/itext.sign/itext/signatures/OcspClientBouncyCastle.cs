@@ -124,7 +124,6 @@ namespace iText.Signatures {
         /// </returns>
         protected internal static IOcspRequest GenerateOCSPRequest(IX509Certificate issuerCert, IBigInteger serialNumber
             ) {
-            //Add provider BC
             // Generate the id for the certificate we are looking for
             ICertID id = SignUtils.GenerateCertificateId(issuerCert, serialNumber, BOUNCY_CASTLE_FACTORY.CreateCertificateID
                 ().GetHashSha1());

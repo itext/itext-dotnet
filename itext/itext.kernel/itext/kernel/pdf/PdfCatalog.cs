@@ -376,11 +376,11 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Add an extensions dictionary containing developer prefix identification and version
+        /// Adds an extensions dictionary containing developer prefix identification and version
         /// numbers for developer extensions that occur in this document.
         /// </summary>
         /// <remarks>
-        /// Add an extensions dictionary containing developer prefix identification and version
+        /// Adds an extensions dictionary containing developer prefix identification and version
         /// numbers for developer extensions that occur in this document.
         /// See ISO 32000-1, Table 28 – Entries in the catalog dictionary.
         /// </remarks>
@@ -429,6 +429,41 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
+            }
+        }
+
+        /// <summary>
+        /// Removes an extensions dictionary containing developer prefix identification and version
+        /// numbers for developer extensions that do not occur in this document.
+        /// </summary>
+        /// <remarks>
+        /// Removes an extensions dictionary containing developer prefix identification and version
+        /// numbers for developer extensions that do not occur in this document.
+        /// See ISO 32000-1, Table 28 – Entries in the catalog dictionary.
+        /// </remarks>
+        /// <param name="extension">developer extension to be removed from the document</param>
+        public virtual void RemoveDeveloperExtension(PdfDeveloperExtension extension) {
+            PdfDictionary extensions = GetPdfObject().GetAsDictionary(PdfName.Extensions);
+            if (extensions == null) {
+                return;
+            }
+            if (extension.IsMultiValued()) {
+                PdfArray existingExtensionArray = extensions.GetAsArray(extension.GetPrefix());
+                if (existingExtensionArray == null) {
+                    return;
+                }
+                for (int i = 0; i < existingExtensionArray.Size(); i++) {
+                    PdfDictionary pdfDict = existingExtensionArray.GetAsDictionary(i);
+                    // for array-based extensions, we check for membership only, since comparison doesn't make sense
+                    if (pdfDict.GetAsNumber(PdfName.ExtensionLevel).IntValue() == extension.GetExtensionLevel()) {
+                        existingExtensionArray.Remove(i);
+                        existingExtensionArray.SetModified();
+                        return;
+                    }
+                }
+            }
+            else {
+                extensions.Remove(extension.GetPrefix());
             }
         }
 

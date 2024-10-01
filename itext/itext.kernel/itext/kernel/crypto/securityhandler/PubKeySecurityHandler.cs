@@ -177,14 +177,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
             //constants permissions: PdfWriter.AllowCopy | PdfWriter.AllowPrinting | PdfWriter.AllowScreenReaders |
             // PdfWriter.AllowAssembly;
             int permission = recipient.GetPermission();
-            // NOTE! Added while porting to itext
-            // Previous strange code was:
-            // int revision = 3;
-            // permission |= revision == 3 ? 0xfffff0c0 : 0xffffffc0;
-            // revision value never changed, so code have been replaced to this:
-            permission |= unchecked((int)(0xfffff0c0));
-            permission &= unchecked((int)(0xfffffffc));
-            permission += 1;
+            // Force set 1 to 1, 7, 8 bits and all bits above 13.
+            // Basically to all not used bits.
+            // Bit 13 we do not touch. It's handled separately in PdfEncryption.
+            // Not sure about bit 1. But we always set it to 1 so let's not change for now.
+            permission |= unchecked((int)(0xffffe0c1));
             byte[] pkcs7input = new byte[24];
             byte one = (byte)permission;
             byte two = (byte)(permission >> 8);

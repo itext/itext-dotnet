@@ -47,6 +47,11 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         protected internal MacProperties macProperties;
 
+//\cond DO_NOT_DOCUMENT
+        internal static readonly MacProperties DEFAULT_MAC_PROPERTIES = new MacProperties(MacProperties.MacDigestAlgorithm
+            .SHA3_512);
+//\endcond
+
         /// <summary>Sets the encryption options for the document.</summary>
         /// <param name="userPassword">
         /// the user password. Can be null or of zero length, which is equal to
@@ -108,7 +113,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual EncryptionProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword, int permissions
             , int encryptionAlgorithm) {
-            return SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm, null);
+            return SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm, DEFAULT_MAC_PROPERTIES
+                );
         }
 
         /// <summary>Sets the encryption options for the document.</summary>
@@ -169,7 +175,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="macProperties">
         /// 
         /// <see cref="iText.Kernel.Mac.MacProperties"/>
-        /// class to configure MAC integrity protection properties
+        /// class to configure MAC integrity protection properties.
+        /// Pass
+        /// <see langword="null"/>
+        /// if you want to disable MAC protection for any reason
         /// </param>
         /// <returns>
         /// this
@@ -249,7 +258,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="macProperties">
         /// 
         /// <see cref="iText.Kernel.Mac.MacProperties"/>
-        /// class to configure MAC integrity protection properties
+        /// class to configure MAC integrity protection properties.
+        /// Pass
+        /// <see langword="null"/>
+        /// if you want to disable MAC protection for any reason
         /// </param>
         /// <returns>
         /// this
@@ -263,69 +275,6 @@ namespace iText.Kernel.Pdf {
             this.encryptionAlgorithm = encryptionAlgorithm;
             this.macProperties = macProperties;
             return this;
-        }
-
-        /// <summary>Sets the certificate encryption options for the document.</summary>
-        /// <remarks>
-        /// Sets the certificate encryption options for the document.
-        /// <para />
-        /// An array of one or more public certificates must be provided together with an array of the same size
-        /// for the permissions for each certificate.
-        /// </remarks>
-        /// <param name="certs">the public certificates to be used for the encryption</param>
-        /// <param name="permissions">
-        /// the user permissions for each of the certificates
-        /// The open permissions for the document can be
-        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
-        /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
-        /// The permissions can be combined by ORing them
-        /// </param>
-        /// <param name="encryptionAlgorithm">
-        /// the type of encryption. It can be one of
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// ,
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
-        /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
-        /// Optionally
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be ORed to output the metadata in cleartext.
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// can be ORed as well.
-        /// Please be aware that the passed encryption types may override permissions:
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// implicitly sets
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// and
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// as false;
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// implicitly sets
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// as false;
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="EncryptionProperties"/>
-        /// </returns>
-        public virtual EncryptionProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions, int
-             encryptionAlgorithm) {
-            return SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm, null);
         }
 
 //\cond DO_NOT_DOCUMENT

@@ -123,7 +123,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void EncryptedDocumentTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck03.pdf";
+            String outPdf = destinationFolder + "pdfA4_encryptedDocument.pdf";
             byte[] userPassword = "user".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
             byte[] ownerPassword = "owner".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants.ALLOW_DEGRADED_PRINTING;

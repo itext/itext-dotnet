@@ -22,12 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using iText.Bouncycastleconnector;
-using iText.Bouncycastlefips;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
@@ -56,46 +57,48 @@ namespace iText.Kernel.Crypto.Securityhandler {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void TestSimpleEncryptDecryptTest() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
+            NUnit.Framework.Assume.That(!BouncyCastleFactoryCreator.GetFactory().IsInApprovedOnlyMode());
             String fileName = "simpleEncryptDecrypt.pdf";
             String srcFile = SOURCE_FOLDER + fileName;
             String outFile = DESTINATION_FOLDER + fileName;
-            if ("BCFIPS".Equals(FACTORY.GetProviderName())) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
-                    DoEncrypt(srcFile, outFile, true));
-                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
-            } else {
-                DoEncrypt(srcFile, outFile, true);
-                DecryptWithCertificate(fileName, DESTINATION_FOLDER, "test.cer", "test.pem");
-            }
+            DoEncrypt(srcFile, outFile, true);
+            DecryptWithCertificate(fileName, DESTINATION_FOLDER, "test.cer", "test.pem");
         }
 
         [LogMessage(VersionConforming.NOT_SUPPORTED_AES_GCM, Ignore = true)]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
-        public virtual void TestSimpleEncryptDecryptPdf15Test() {
-            String fileName = "simpleEncryptDecrypt.pdf";
+        public virtual void TestSimpleEncryptDecryptPdf17Test() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
+            NUnit.Framework.Assume.That(!BouncyCastleFactoryCreator.GetFactory().IsInApprovedOnlyMode());
+            String fileName = "simpleEncryptDecrypt_1_7.pdf";
             String srcFile = SOURCE_FOLDER + fileName;
             String outFile = DESTINATION_FOLDER + fileName;
-            if ("BCFIPS".Equals(FACTORY.GetProviderName())) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
-                    DoEncrypt(srcFile, outFile, false));
-                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
-            } else {
-                DoEncrypt(srcFile, outFile, false);
-                DecryptWithCertificate(fileName, DESTINATION_FOLDER, "test.cer", "test.pem");
-            }
+            DoEncrypt(srcFile, outFile, false);
+            DecryptWithCertificate(fileName, DESTINATION_FOLDER, "test.cer", "test.pem");
         }
 
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void DecryptExternalFileTest() {
-            if ("BCFIPS".Equals(FACTORY.GetProviderName())) {
-                Exception e = NUnit.Framework.Assert.Catch(typeof(UnsupportedEncryptionFeatureException), () =>
-                    DecryptWithCertificate("externalFile.pdf", SOURCE_FOLDER, "decrypter.cert.pem", "signerkey.pem"));
-                NUnit.Framework.Assert.AreEqual(UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS, e.Message);
-            } else {
-                DecryptWithCertificate("externalFile.pdf", SOURCE_FOLDER, "decrypter.cert.pem", "signerkey.pem");
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
             }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
+            DecryptWithCertificate("externalFile.pdf", SOURCE_FOLDER, "decrypter.cert.pem", "signerkey.pem");
         }
 
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]

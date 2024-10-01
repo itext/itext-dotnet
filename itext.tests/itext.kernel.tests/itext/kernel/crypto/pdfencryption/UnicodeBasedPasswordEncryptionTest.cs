@@ -185,7 +185,7 @@ namespace iText.Kernel.Crypto.Pdfencryption {
             document.Close();
             encryptionUtil.CheckDecryptedWithPasswordContent(destinationFolder + filename, ownerPassword, PdfEncryptionTestUtils
                 .PAGE_TEXT_CONTENT);
-            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare(false);
             String compareResult = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + 
                 filename, destinationFolder, "diff_", ownerPassword, ownerPassword);
             if (compareResult != null) {

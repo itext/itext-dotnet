@@ -28,6 +28,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Kernel.Utils.Objectpathitems;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -54,7 +55,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SimpleEncryptDecryptTest() {
             String srcFile = SRC + "simpleDocument.pdf";
-            String decryptedCmpFile = SRC + "cmp_simpleEncryptDecrypt.pdf";
             String encryptedCmpFile = SRC + "cmp_encryptedSimpleDocument.pdf";
             String outFile = DEST + "simpleEncryptDecrypt.pdf";
             // Set usage permissions.
@@ -68,7 +68,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     docIn.CopyPagesTo(1, 1, docOut);
                 }
             }
-            new CompareTool().CompareByContent(outFile, decryptedCmpFile, DEST, "diff", USER_PASSWORD, null);
+            new CToolNoDeveloperExtension().CompareByContent(outFile, srcFile, DEST, "diff", USER_PASSWORD, null);
             new CompareTool().CompareByContent(outFile, encryptedCmpFile, DEST, "diff", USER_PASSWORD, USER_PASSWORD);
         }
 
@@ -77,14 +77,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SimpleEncryptDecryptPdf15Test() {
             String srcFile = SRC + "simpleDocument.pdf";
-            String cmpFile = SRC + "cmp_simpleEncryptDecrypt.pdf";
             String outFile = DEST + "notSupportedVersionDocument.pdf";
             int perms = EncryptionConstants.ALLOW_PRINTING | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
             WriterProperties wProps = new WriterProperties().SetStandardEncryption(USER_PASSWORD, OWNER_PASSWORD, perms
                 , EncryptionConstants.ENCRYPTION_AES_GCM);
             PdfDocument ignored = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile, wProps));
             ignored.Close();
-            new CompareTool().CompareByContent(outFile, cmpFile, DEST, "diff", USER_PASSWORD, null);
+            new CToolNoDeveloperExtension().CompareByContent(outFile, srcFile, DEST, "diff", USER_PASSWORD, null);
         }
 
         [NUnit.Framework.Test]
@@ -260,4 +259,24 @@ namespace iText.Kernel.Crypto.Securityhandler {
             }
         }
     }
+
+//\cond DO_NOT_DOCUMENT
+    // Outside test class for porting
+    internal class CToolNoDeveloperExtension : CompareTool {
+        protected internal override bool CompareObjects(PdfObject outObj, PdfObject cmpObj, ObjectPath currentPath
+            , CompareTool.CompareResult compareResult) {
+            if (outObj != null && outObj.IsDictionary()) {
+                if (((PdfDictionary)outObj).Get(PdfName.ISO_) != null) {
+                    return true;
+                }
+            }
+            if (cmpObj != null && cmpObj.IsDictionary()) {
+                if (((PdfDictionary)cmpObj).Get(PdfName.ISO_) != null) {
+                    return true;
+                }
+            }
+            return base.CompareObjects(outObj, cmpObj, currentPath, compareResult);
+        }
+    }
+//\endcond
 }

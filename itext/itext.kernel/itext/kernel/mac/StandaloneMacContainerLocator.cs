@@ -51,5 +51,10 @@ namespace iText.Kernel.Mac {
              authDictionary) {
             return new StandaloneMacIntegrityProtector(document, authDictionary);
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual void HandleMacValidationError(MacValidationException exception) {
+            throw exception;
+        }
     }
 }

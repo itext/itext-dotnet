@@ -93,5 +93,13 @@ namespace iText.Kernel.Mac {
         /// </returns>
         AbstractMacIntegrityProtector CreateMacIntegrityProtector(PdfDocument document, PdfDictionary authDictionary
             );
+
+        /// <summary>Handles MAC validation error.</summary>
+        /// <param name="exception">
+        /// 
+        /// <see cref="MacValidationException"/>
+        /// to handle.
+        /// </param>
+        void HandleMacValidationError(MacValidationException exception);
     }
 }

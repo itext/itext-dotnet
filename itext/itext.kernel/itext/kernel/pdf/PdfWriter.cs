@@ -115,17 +115,6 @@ namespace iText.Kernel.Pdf {
             : this(FileUtil.GetBufferedOutputStream(filename), properties) {
         }
 
-        /// <summary><inheritDoc/></summary>
-        public override void Flush() {
-            base.Flush();
-            if (document != null) {
-                document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_WRITER_FLUSH, document));
-            }
-            if (IsByteArrayWritingMode()) {
-                CompleteByteArrayWritingMode();
-            }
-        }
-
         /// <summary>Indicates if to use full compression mode.</summary>
         /// <returns>true if to use full compression, false otherwise.</returns>
         public virtual bool IsFullCompression() {
@@ -204,6 +193,16 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
             EncryptionProperties encryptProps = properties.encryptionProperties;
+            // Suppress MAC properties for PDF version < 2.0 and old deprecated encryption algorithms
+            // if default ones have been passed to WriterProperties
+            int encryptionAlgorithm = crypto == null ? (encryptProps.encryptionAlgorithm & EncryptionConstants.ENCRYPTION_MASK
+                ) : crypto.GetEncryptionAlgorithm();
+            if (encryptProps.macProperties == EncryptionProperties.DEFAULT_MAC_PROPERTIES) {
+                if ((version == null || version.CompareTo(PdfVersion.PDF_2_0) < 0) || (encryptionAlgorithm != EncryptionConstants
+                    .ENCRYPTION_AES_256 && encryptionAlgorithm != EncryptionConstants.ENCRYPTION_AES_GCM)) {
+                    encryptProps.macProperties = null;
+                }
+            }
             AbstractMacIntegrityProtector mac = encryptProps.macProperties == null ? null : document.GetDiContainer().
                 GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document, encryptProps.macProperties);
             if (properties.IsStandardEncryptionUsed()) {
@@ -417,6 +416,19 @@ namespace iText.Kernel.Pdf {
                 objectStream = null;
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void Finish() {
+            if (document != null && !document.IsClosed()) {
+                // Writer is always closed as part of document closing
+                document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_WRITER_CLOSING, document));
+                if (IsByteArrayWritingMode()) {
+                    CompleteByteArrayWritingMode();
+                }
+            }
+            Dispose();
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current object stream.</summary>

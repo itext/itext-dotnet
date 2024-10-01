@@ -615,8 +615,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>.
         /// See ISO 32000-1, Table 22 for more details.
         /// </remarks>
-        /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
-        public virtual long GetPermissions() {
+        /// <returns>the encryption permissions.</returns>
+        public virtual int GetPermissions() {
             /* !pdfDocument.getXref().isReadingCompleted() can be used for encryption properties as well,
             * because decrypt object is initialized in private readDecryptObj method which is called in our code
             * in the next line after the setting isReadingCompleted line. This means that there's no way for users
@@ -625,9 +625,9 @@ namespace iText.Kernel.Pdf {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
                 throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
-            long perm = 0;
+            int perm = 0;
             if (encrypted && decrypt.GetPermissions() != null) {
-                perm = (long)decrypt.GetPermissions();
+                perm = decrypt.GetPermissions().Value;
             }
             return perm;
         }

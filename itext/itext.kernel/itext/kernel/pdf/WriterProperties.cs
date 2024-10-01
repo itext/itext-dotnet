@@ -214,7 +214,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
             , int permissions, int encryptionAlgorithm) {
-            return SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm, null);
+            return SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm, EncryptionProperties
+                .DEFAULT_MAC_PROPERTIES);
         }
 
         /// <summary>Sets the encryption options for the document.</summary>
@@ -276,7 +277,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="macProperties">
         /// 
         /// <see cref="iText.Kernel.Mac.MacProperties"/>
-        /// class to configure MAC integrity protection properties
+        /// class to configure MAC integrity protection properties.
+        /// Pass
+        /// <see langword="null"/>
+        /// if you want to disable MAC protection for any reason
         /// </param>
         /// <returns>
         /// this
@@ -350,7 +354,8 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(IX509Certificate[] certs, int[] permissions
             , int encryptionAlgorithm) {
-            return SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm, null);
+            return SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm, EncryptionProperties.DEFAULT_MAC_PROPERTIES
+                );
         }
 
         /// <summary>Sets the certificate encryption options for the document.</summary>
@@ -409,7 +414,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="macProperties">
         /// 
         /// <see cref="iText.Kernel.Mac.MacProperties"/>
-        /// class to configure MAC integrity protection properties
+        /// class to configure MAC integrity protection properties.
+        /// Pass
+        /// <see langword="null"/>
+        /// if you want to disable MAC protection for any reason
         /// </param>
         /// <returns>
         /// this

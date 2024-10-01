@@ -133,6 +133,9 @@ namespace iText.Kernel.Mac {
         /// introduced to the document in question, after MAC container is integrated.
         /// </remarks>
         public virtual void ValidateMacToken() {
+            if (kdfSalt == null) {
+                throw new MacValidationException(KernelExceptionMessageConstant.MAC_VALIDATION_NO_SALT);
+            }
             try {
                 byte[] macKey = GenerateDecryptedKey(macContainerReader.ParseMacKey());
                 long[] byteRange = macContainerReader.GetByteRange();
@@ -151,14 +154,14 @@ namespace iText.Kernel.Mac {
                 byte[] actualMac = macContainerReader.ParseMac();
                 if (!JavaUtil.ArraysEquals(expectedMac, actualMac) || !JavaUtil.ArraysEquals(expectedMessageDigest, actualMessageDigest
                     )) {
-                    throw new PdfException(KernelExceptionMessageConstant.MAC_VALIDATION_FAILED);
+                    throw new MacValidationException(KernelExceptionMessageConstant.MAC_VALIDATION_FAILED);
                 }
             }
             catch (PdfException e) {
                 throw;
             }
             catch (Exception e) {
-                throw new PdfException(KernelExceptionMessageConstant.MAC_VALIDATION_EXCEPTION, e);
+                throw new MacValidationException(KernelExceptionMessageConstant.MAC_VALIDATION_EXCEPTION, e);
             }
         }
 

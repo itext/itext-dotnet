@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf {
 
         private int cryptoMode;
 
-        private long? permissions;
+        private int? permissions;
 
         private bool encryptMetadata;
 
@@ -65,73 +65,6 @@ namespace iText.Kernel.Pdf {
         private SecurityHandler securityHandler;
 
         private AbstractMacIntegrityProtector macContainer;
-
-        /// <summary>Creates the encryption.</summary>
-        /// <param name="userPassword">
-        /// the user password. Can be null or of zero length, which is equal to
-        /// omitting the user password
-        /// </param>
-        /// <param name="ownerPassword">
-        /// the owner password. If it's null or empty, iText will generate
-        /// a random string to be used as the owner password
-        /// </param>
-        /// <param name="permissions">
-        /// the user permissions
-        /// The open permissions for the document can be
-        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
-        /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
-        /// The permissions can be combined by ORing them
-        /// </param>
-        /// <param name="encryptionType">
-        /// the type of encryption. It can be one of
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// ,
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
-        /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
-        /// Optionally
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be
-        /// ORed to output the metadata in cleartext.
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// can be ORed as well.
-        /// Please be aware that the passed encryption types may override permissions:
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// implicitly sets
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// and
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// as false;
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// implicitly sets
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// as false;
-        /// </param>
-        /// <param name="documentId">document id which will be used for encryption</param>
-        /// <param name="version">
-        /// the
-        /// <see cref="PdfVersion"/>
-        /// of the target document for encryption
-        /// </param>
-        public PdfEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, int encryptionType, byte[]
-             documentId, PdfVersion version)
-            : this(userPassword, ownerPassword, permissions, encryptionType, documentId, version, null) {
-        }
 
         /// <summary>Creates the encryption.</summary>
         /// <param name="userPassword">
@@ -313,70 +246,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfVersion"/>
         /// of the target document for encryption
         /// </param>
-        public PdfEncryption(IX509Certificate[] certs, int[] permissions, int encryptionType, PdfVersion version)
-            : this(certs, permissions, encryptionType, version, null) {
-        }
-
-        /// <summary>Creates the certificate encryption.</summary>
-        /// <remarks>
-        /// Creates the certificate encryption.
-        /// <para />
-        /// An array of one or more public certificates must be provided together with
-        /// an array of the same size for the permissions for each certificate.
-        /// </remarks>
-        /// <param name="certs">the public certificates to be used for the encryption</param>
-        /// <param name="permissions">
-        /// the user permissions for each of the certificates
-        /// The open permissions for the document can be
-        /// <see cref="EncryptionConstants.ALLOW_PRINTING"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_CONTENTS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_COPY"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_FILL_IN"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_SCREENREADERS"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ALLOW_ASSEMBLY"/>
-        /// and
-        /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>.
-        /// The permissions can be combined by ORing them
-        /// </param>
-        /// <param name="encryptionType">
-        /// the type of encryption. It can be one of
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// ,
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// ,
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
-        /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
-        /// Optionally
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// can be ORed
-        /// to output the metadata in cleartext.
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// can be ORed as well.
-        /// Please be aware that the passed encryption types may override permissions:
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_40"/>
-        /// implicitly sets
-        /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
-        /// and
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// as false;
-        /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
-        /// implicitly sets
-        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>
-        /// as false;
-        /// </param>
-        /// <param name="version">
-        /// the
-        /// <see cref="PdfVersion"/>
-        /// of the target document for encryption
-        /// </param>
         /// <param name="macContainer">
         /// 
         /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
@@ -444,42 +313,11 @@ namespace iText.Kernel.Pdf {
         /// <param name="documentId">
         /// original file ID, the first element in
         /// <see cref="PdfName.ID"/>
-        /// key of trailer.
-        /// </param>
-        public PdfEncryption(PdfDictionary pdfDict, byte[] password, byte[] documentId)
-            : this(pdfDict, password, documentId, null) {
-        }
-
-        /// <summary>
-        /// Creates
-        /// <see cref="PdfEncryption"/>
-        /// instance based on already existing standard encryption dictionary.
-        /// </summary>
-        /// <param name="pdfDict">
-        /// 
-        /// <see cref="PdfDictionary"/>
-        /// , which represents encryption dictionary
-        /// </param>
-        /// <param name="password">
-        /// 
-        /// <c>byte[]</c>
-        /// , which represents encryption password
-        /// </param>
-        /// <param name="documentId">
-        /// original file ID, the first element in
-        /// <see cref="PdfName.ID"/>
         /// key of trailer
         /// </param>
-        /// <param name="macContainer">
-        /// 
-        /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
-        /// class for MAC integrity protection
-        /// </param>
-        public PdfEncryption(PdfDictionary pdfDict, byte[] password, byte[] documentId, AbstractMacIntegrityProtector
-             macContainer)
+        public PdfEncryption(PdfDictionary pdfDict, byte[] password, byte[] documentId)
             : base(pdfDict) {
             SetForbidRelease();
-            this.macContainer = macContainer;
             this.documentId = documentId;
             int revision = ReadAndSetCryptoModeForStdHandler(pdfDict);
             switch (revision) {
@@ -555,47 +393,7 @@ namespace iText.Kernel.Pdf {
         /// the external decryption process to be used
         /// </param>
         public PdfEncryption(PdfDictionary pdfDict, IPrivateKey certificateKey, IX509Certificate certificate)
-            : this(pdfDict, certificateKey, certificate, null) {
-        }
-
-        /// <summary>
-        /// Creates
-        /// <see cref="PdfEncryption"/>
-        /// instance based on already existing public encryption dictionary.
-        /// </summary>
-        /// <param name="pdfDict">
-        /// 
-        /// <see cref="PdfDictionary"/>
-        /// , which represents encryption dictionary
-        /// </param>
-        /// <param name="certificateKey">
-        /// the recipient private
-        /// <see cref="iText.Commons.Bouncycastle.Crypto.IPrivateKey"/>
-        /// to the certificate
-        /// </param>
-        /// <param name="certificate">
-        /// the recipient
-        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
-        /// , which serves as recipient identifier
-        /// </param>
-        /// <param name="certificateKeyProvider">
-        /// the certificate key provider id for
-        /// <see cref="Java.Security.Security.GetProvider(System.String)"/>
-        /// </param>
-        /// <param name="externalDecryptionProcess">
-        /// 
-        /// <see cref="iText.Kernel.Security.IExternalDecryptionProcess"/>
-        /// the external decryption process to be used
-        /// </param>
-        /// <param name="macContainer">
-        /// 
-        /// <see cref="iText.Kernel.Mac.AbstractMacIntegrityProtector"/>
-        /// class for MAC integrity protection
-        /// </param>
-        public PdfEncryption(PdfDictionary pdfDict, IPrivateKey certificateKey, IX509Certificate certificate, AbstractMacIntegrityProtector
-             macContainer)
             : base(pdfDict) {
-            this.macContainer = macContainer;
             SetForbidRelease();
             int revision = ReadAndSetCryptoModeForPubSecHandler(pdfDict);
             switch (revision) {
@@ -708,7 +506,7 @@ namespace iText.Kernel.Pdf {
         /// See ISO 32000-1, Table 22 for more details.
         /// </remarks>
         /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
-        public virtual long? GetPermissions() {
+        public virtual int? GetPermissions() {
             return permissions;
         }
 
@@ -717,6 +515,13 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
             return cryptoMode;
+        }
+
+        /// <summary>Gets encryption algorithm.</summary>
+        /// <returns>the encryption algorithm</returns>
+        /// <seealso cref="EncryptionConstants"/>
+        public virtual int GetEncryptionAlgorithm() {
+            return cryptoMode & EncryptionConstants.ENCRYPTION_MASK;
         }
 
         public virtual bool IsMetadataEncrypted() {
@@ -1137,12 +942,13 @@ namespace iText.Kernel.Pdf {
                     throw new PdfException(KernelExceptionMessageConstant.MAC_FOR_ENCRYPTION_5);
                 }
             }
-            if (GetCryptoMode() < EncryptionConstants.ENCRYPTION_AES_256) {
+            int encryption = GetEncryptionAlgorithm();
+            if (encryption < EncryptionConstants.ENCRYPTION_AES_256) {
                 VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(document, PdfVersion.PDF_2_0, VersionConforming
                     .DEPRECATED_ENCRYPTION_ALGORITHMS);
             }
             else {
-                if (GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_256) {
+                if (encryption == EncryptionConstants.ENCRYPTION_AES_256) {
                     PdfNumber r = GetPdfObject().GetAsNumber(PdfName.R);
                     if (r != null && r.IntValue() == 5) {
                         VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogWarn(document, PdfVersion.PDF_2_0, VersionConforming
@@ -1150,7 +956,7 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 else {
-                    if (GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_GCM) {
+                    if (encryption == EncryptionConstants.ENCRYPTION_AES_GCM) {
                         VersionConforming.ValidatePdfVersionForNotSupportedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming
                             .NOT_SUPPORTED_AES_GCM);
                     }
@@ -1169,10 +975,17 @@ namespace iText.Kernel.Pdf {
                 PdfString kdfSalt = GetPdfObject().GetAsString(PdfName.KDFSalt);
                 if (kdfSalt == null) {
                     GetPdfObject().Put(PdfName.KDFSalt, new PdfString(macContainer.GetKdfSalt()).SetHexWriting(true));
+                    GetPdfObject().SetModified();
                 }
             }
-            if (GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_GCM) {
+            else {
+                document.GetCatalog().RemoveDeveloperExtension(PdfDeveloperExtension.ISO_32004);
+            }
+            if (GetEncryptionAlgorithm() == EncryptionConstants.ENCRYPTION_AES_GCM) {
                 document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ISO_32003);
+            }
+            else {
+                document.GetCatalog().RemoveDeveloperExtension(PdfDeveloperExtension.ISO_32003);
             }
         }
 //\endcond
@@ -1185,23 +998,75 @@ namespace iText.Kernel.Pdf {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void ConfigureEncryptionParametersFromReader(PdfDocument document, PdfDictionary trailer) {
-            if (trailer.GetAsDictionary(PdfName.AuthCode) != null) {
-                macContainer = document.GetDiContainer().GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document
-                    , trailer.GetAsDictionary(PdfName.AuthCode));
-                macContainer.SetFileEncryptionKey(securityHandler.GetMkey().Length == 0 ? securityHandler.GetNextObjectKey
-                    () : securityHandler.GetMkey());
-                PdfString kdfSalt = GetPdfObject().GetAsString(PdfName.KDFSalt);
-                if (kdfSalt != null) {
-                    macContainer.SetKdfSalt(kdfSalt.GetValueBytes());
-                }
-                macContainer.ValidateMacToken();
+            PdfVersion sourceVersion = document.GetReader().headerPdfVersion;
+            PdfVersion destVersion = sourceVersion;
+            if (document.GetWriter() != null && document.GetWriter().GetProperties().pdfVersion != null) {
+                destVersion = document.GetWriter().GetProperties().pdfVersion;
             }
-            else {
-                if (permissions != null && (permissions & MAC_DISABLED) == 0) {
-                    throw new PdfException(KernelExceptionMessageConstant.MAC_PERMS_WITHOUT_MAC);
+            try {
+                if (trailer.GetAsDictionary(PdfName.AuthCode) != null) {
+                    macContainer = document.GetDiContainer().GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document
+                        , trailer.GetAsDictionary(PdfName.AuthCode));
+                    macContainer.SetFileEncryptionKey(securityHandler.GetMkey().Length == 0 ? securityHandler.GetNextObjectKey
+                        () : securityHandler.GetMkey());
+                    PdfString kdfSalt = GetPdfObject().GetAsString(PdfName.KDFSalt);
+                    if (kdfSalt != null) {
+                        macContainer.SetKdfSalt(kdfSalt.GetValueBytes());
+                    }
+                    macContainer.ValidateMacToken();
+                    // Disable MAC for writing if explicitly requested. In append mode we cannot disable it because it will
+                    // remove MAC protection from all previous revisions also for knowledgeable attackers
+                    // TODO DEVSIX-8635 - Verify MAC permission and embed MAC in stamping mode for public key encryption
+                    if (document.properties.disableMac && !document.properties.appendMode && securityHandler is StandardSecurityHandler
+                        ) {
+                        macContainer = null;
+                        UpdateMacPermission();
+                    }
                 }
+                else {
+                    if (PdfVersion.PDF_2_0.CompareTo(destVersion) <= 0 && permissions != null && (permissions & MAC_DISABLED) 
+                        == 0) {
+                        // TODO DEVSIX-8635 - Verify MAC permission and embed MAC in stamping mode for public key encryption
+                        throw new MacValidationException(KernelExceptionMessageConstant.MAC_PERMS_WITHOUT_MAC);
+                    }
+                    else {
+                        if (!document.properties.disableMac && !document.properties.appendMode && securityHandler is StandardSecurityHandler
+                            ) {
+                            // TODO DEVSIX-8635 - Verify MAC permission and embed MAC in stamping mode for public key encryption
+                            // This is the branch responsible for embedding MAC into the documents without MAC
+                            // Do not embed MAC in append mode as it does not add extra security
+                            PdfNumber vValue = GetPdfObject().GetAsNumber(PdfName.V);
+                            if (vValue == null) {
+                                throw new PdfException(KernelExceptionMessageConstant.ILLEGAL_V_VALUE);
+                            }
+                            int v = vValue.IntValue();
+                            // We do not support MAC for increasing PDF version to 2.0 (old encryption do not support it)
+                            // and decreasing from 2.0 (not supported by the spec)
+                            // v >= 5 stands for supported encryption algorithms for MAC being used
+                            if (PdfVersion.PDF_2_0.CompareTo(destVersion) <= 0 && PdfVersion.PDF_2_0.CompareTo(sourceVersion) <= 0 && 
+                                v >= 5) {
+                                macContainer = document.GetDiContainer().GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document
+                                    , EncryptionProperties.DEFAULT_MAC_PROPERTIES);
+                                UpdateMacPermission();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (MacValidationException exception) {
+                document.GetDiContainer().GetInstance<IMacContainerLocator>().HandleMacValidationError(exception);
             }
         }
 //\endcond
+
+        private void UpdateMacPermission() {
+            // We don't parse permissions on reading for PubSec currently
+            if (permissions != null) {
+                permissions = ConfigureAccessibilityPermissionsForMac(permissions.Value);
+                if (securityHandler is StandardSecurityHandler) {
+                    ((StandardSecurityHandler)securityHandler).SetPermissions(permissions.Value, this.GetPdfObject());
+                }
+            }
+        }
     }
 }
