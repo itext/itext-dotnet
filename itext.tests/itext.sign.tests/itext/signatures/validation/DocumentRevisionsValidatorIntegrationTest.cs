@@ -79,10 +79,8 @@ namespace iText.Signatures.Validation {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "linearizedDoc.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
-                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
-                    ).HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
-                    .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.LINEARIZED_NOT_SUPPORTED).WithStatus(ReportItem.ReportItemStatus
-                    .INDETERMINATE)));
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0).HasNumberOfLogs(0));
                 NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
                     ));
             }

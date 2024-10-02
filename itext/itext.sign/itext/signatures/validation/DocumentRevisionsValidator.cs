@@ -104,10 +104,6 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String LINEARIZED_NOT_SUPPORTED = "Linearized PDF documents are not supported by DocumentRevisionsValidator.";
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
 //\endcond
 
@@ -390,6 +386,7 @@ namespace iText.Signatures.Validation {
                     .INDETERMINATE));
                 return report;
             }
+            MergeRevisionsInLinearizedDocument(document, documentRevisions);
             SignatureUtil signatureUtil = new SignatureUtil(document);
             IList<String> signatures = new List<String>(signatureUtil.GetSignatureNames());
             if (signatures.IsEmpty()) {
@@ -472,6 +469,29 @@ namespace iText.Signatures.Validation {
                 )));
         }
 //\endcond
+
+        private void MergeRevisionsInLinearizedDocument(PdfDocument document, IList<DocumentRevision> documentRevisions
+            ) {
+            if (documentRevisions.Count > 1) {
+                // We need to check if document is linearized in first revision
+                // We don't need to populate validation report in case of exceptions, it will happen later
+                CreateDocumentAndPerformOperation(documentRevisions[0], document, new ValidationReport(), (firstRevisionDocument
+                    ) => {
+                    if (IsLinearizedPdf(document)) {
+                        ICollection<PdfIndirectReference> mergedModifiedReferences = new HashSet<PdfIndirectReference>(documentRevisions
+                            [0].GetModifiedObjects());
+                        mergedModifiedReferences.AddAll(documentRevisions[1].GetModifiedObjects());
+                        DocumentRevision mergedRevision = new DocumentRevision(documentRevisions[0].GetEofOffset(), mergedModifiedReferences
+                            );
+                        documentRevisions.Add(0, mergedRevision);
+                        documentRevisions.JRemoveAt(1);
+                        documentRevisions.JRemoveAt(1);
+                    }
+                    return true;
+                }
+                );
+            }
+        }
 
         private bool ValidateRevision(ValidationReport validationReport, ValidationContext context, PdfDocument documentWithoutRevision
             , PdfDocument documentWithRevision, DocumentRevision currentRevision) {
@@ -737,25 +757,13 @@ namespace iText.Signatures.Validation {
                 }
             }
             catch (System.IO.IOException exception) {
-                if (IsLinearizedPdf(originalDocument)) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, LINEARIZED_NOT_SUPPORTED, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
-                else {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
                 return false;
             }
             catch (Exception exception) {
-                if (IsLinearizedPdf(originalDocument)) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, LINEARIZED_NOT_SUPPORTED, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
-                else {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
                 return false;
             }
         }
