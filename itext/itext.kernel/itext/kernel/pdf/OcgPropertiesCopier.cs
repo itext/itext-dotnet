@@ -40,30 +40,53 @@ namespace iText.Kernel.Pdf {
         }
 
         // Empty constructor
-        public static void CopyOCGProperties(PdfDocument fromDocument, PdfDocument toDocument, IDictionary<PdfPage
-            , PdfPage> page2page) {
+        /// <summary>Copy unique page OCGs stored inside annotations/xobjects/resources from source pages to destination pages.
+        ///     </summary>
+        /// <param name="sourceDocument">document from which OCGs should be copied</param>
+        /// <param name="destinationDocument">document to which OCGs should be copied</param>
+        /// <param name="sourceToDestPageMapping">page mapping, linking source pages to destination ones</param>
+        public static void CopyOCGProperties(PdfDocument sourceDocument, PdfDocument destinationDocument, IDictionary
+            <PdfPage, PdfPage> sourceToDestPageMapping) {
             try {
                 // Configs are not copied
-                PdfDictionary toOcProperties = toDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
+                PdfDictionary toOcProperties = destinationDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
                     );
-                ICollection<PdfIndirectReference> fromOcgsToCopy = iText.Kernel.Pdf.OcgPropertiesCopier.GetAllUsedNonFlushedOCGs
-                    (page2page, toOcProperties);
-                if (fromOcgsToCopy.IsEmpty()) {
+                ICollection<PdfIndirectReference> ocgsToCopy = iText.Kernel.Pdf.OcgPropertiesCopier.GetAllUsedNonFlushedOCGs
+                    (sourceToDestPageMapping, toOcProperties);
+                if (ocgsToCopy.IsEmpty()) {
                     return;
                 }
                 // Reset ocProperties field in order to create it a new at the
                 // method end using the new (merged) OCProperties dictionary
-                toOcProperties = toDocument.GetCatalog().FillAndGetOcPropertiesDictionary();
-                PdfDictionary fromOcProperties = fromDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
+                toOcProperties = destinationDocument.GetCatalog().FillAndGetOcPropertiesDictionary();
+                PdfDictionary fromOcProperties = sourceDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
                     );
-                iText.Kernel.Pdf.OcgPropertiesCopier.CopyOCGs(fromOcgsToCopy, toOcProperties, toDocument);
-                iText.Kernel.Pdf.OcgPropertiesCopier.CopyDDictionary(fromOcgsToCopy, fromOcProperties.GetAsDictionary(PdfName
-                    .D), toOcProperties, toDocument);
+                iText.Kernel.Pdf.OcgPropertiesCopier.CopyOCGs(ocgsToCopy, toOcProperties, destinationDocument);
+                iText.Kernel.Pdf.OcgPropertiesCopier.CopyDDictionary(ocgsToCopy, fromOcProperties.GetAsDictionary(PdfName.
+                    D), toOcProperties, destinationDocument);
             }
             catch (Exception e) {
                 LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, e.ToString(
                     )));
             }
+        }
+
+        /// <summary>Get all OCGs from a given page annotations/xobjects/resources, including ones already stored in catalog
+        ///     </summary>
+        /// <param name="page">where to search for OCGs.</param>
+        /// <returns>set of indirect references pointing to found OCGs.</returns>
+        public static ICollection<PdfIndirectReference> GetOCGsFromPage(PdfPage page) {
+            //Using linked hash set for elements order consistency (e.g. in tests)
+            ICollection<PdfIndirectReference> ocgs = new LinkedHashSet<PdfIndirectReference>();
+            IList<PdfAnnotation> annotations = page.GetAnnotations();
+            foreach (PdfAnnotation annotation in annotations) {
+                //Pass null instead of catalog OCProperties value, to include ocg clashing with catalog
+                GetUsedNonFlushedOCGsFromAnnotation(null, ocgs, annotation, annotation);
+            }
+            PdfDictionary resources = page.GetPdfObject().GetAsDictionary(PdfName.Resources);
+            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromResources(resources, resources, ocgs, null, 
+                new HashSet<PdfObject>());
+            return ocgs;
         }
 
         private static ICollection<PdfIndirectReference> GetAllUsedNonFlushedOCGs(IDictionary<PdfPage, PdfPage> page2page
@@ -81,19 +104,10 @@ namespace iText.Kernel.Pdf {
                 IList<PdfAnnotation> fromAnnotations = fromPage.GetAnnotations();
                 for (int j = 0; j < toAnnotations.Count; j++) {
                     if (!toAnnotations[j].IsFlushed()) {
-                        PdfDictionary toAnnotDict = toAnnotations[j].GetPdfObject();
-                        PdfDictionary fromAnnotDict = fromAnnotations[j].GetPdfObject();
                         PdfAnnotation toAnnot = toAnnotations[j];
                         PdfAnnotation fromAnnot = fromAnnotations[j];
-                        if (!toAnnotDict.IsFlushed()) {
-                            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromOcDict(toAnnotDict.GetAsDictionary(PdfName.OC
-                                ), fromAnnotDict.GetAsDictionary(PdfName.OC), fromUsedOcgs, toOcProperties);
-                            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetNormalAppearanceObject(), 
-                                fromAnnot.GetNormalAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
-                            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetRolloverAppearanceObject(
-                                ), fromAnnot.GetRolloverAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
-                            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetDownAppearanceObject(), fromAnnot
-                                .GetDownAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
+                        if (!toAnnot.GetPdfObject().IsFlushed()) {
+                            GetUsedNonFlushedOCGsFromAnnotation(toOcProperties, fromUsedOcgs, toAnnot, fromAnnot);
                         }
                     }
                 }
@@ -103,6 +117,18 @@ namespace iText.Kernel.Pdf {
                     , toOcProperties, new HashSet<PdfObject>());
             }
             return fromUsedOcgs;
+        }
+
+        private static void GetUsedNonFlushedOCGsFromAnnotation(PdfDictionary toOcProperties, ICollection<PdfIndirectReference
+            > fromUsedOcgs, PdfAnnotation toAnnot, PdfAnnotation fromAnnot) {
+            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromOcDict(toAnnot.GetPdfObject().GetAsDictionary
+                (PdfName.OC), fromAnnot.GetPdfObject().GetAsDictionary(PdfName.OC), fromUsedOcgs, toOcProperties);
+            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetNormalAppearanceObject(), 
+                fromAnnot.GetNormalAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
+            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetRolloverAppearanceObject(
+                ), fromAnnot.GetRolloverAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
+            iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetDownAppearanceObject(), fromAnnot
+                .GetDownAppearanceObject(), fromUsedOcgs, toOcProperties, new HashSet<PdfObject>());
         }
 
         private static void GetUsedNonFlushedOCGsFromResources(PdfDictionary toResources, PdfDictionary fromResources

@@ -31,6 +31,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
@@ -541,6 +542,24 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return CopyTo(page, toDocument, copier);
+        }
+
+        /// <summary>Get all pdf layers stored under this page's annotations/xobjects/resources.</summary>
+        /// <remarks>
+        /// Get all pdf layers stored under this page's annotations/xobjects/resources.
+        /// Note that it will include all layers, even those already stored under /OCProperties entry in catalog.
+        /// To get only unique layers, you can simply exclude ocgs, which already present in catalog.
+        /// </remarks>
+        /// <returns>set of pdf layers, associated with this page.</returns>
+        public virtual ICollection<PdfLayer> GetPdfLayers() {
+            ICollection<PdfIndirectReference> ocgs = OcgPropertiesCopier.GetOCGsFromPage(this);
+            ICollection<PdfLayer> result = new LinkedHashSet<PdfLayer>();
+            foreach (PdfIndirectReference ocg in ocgs) {
+                if (ocg.GetRefersTo() != null && ocg.GetRefersTo().IsDictionary()) {
+                    result.Add(new PdfLayer((PdfDictionary)ocg.GetRefersTo()));
+                }
+            }
+            return result;
         }
 
         /// <summary>Copies page as FormXObject to the specified document.</summary>
