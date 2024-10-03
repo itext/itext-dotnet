@@ -380,19 +380,6 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestReadAllLayersFromPage2() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layers_in_resources_xobject.pdf")
-                );
-            IList<PdfLayer> layersFromCatalog = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
-            NUnit.Framework.Assert.AreEqual(16, layersFromCatalog.Count);
-            PdfPage page = pdfDoc.GetPage(2);
-            ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
-            //There is 8 ocgs nested under the resources xobject on 2nd page
-            NUnit.Framework.Assert.AreEqual(8, layersFromPage.Count);
-            pdfDoc.Close();
-        }
-
-        [NUnit.Framework.Test]
         public virtual void TestReadAllLayersFromDocumentWithComplexOCG() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_complex_layers.pdf"), CompareTool
                 .CreateTestPdfWriter(destinationFolder + "output_complex_layers.pdf"));

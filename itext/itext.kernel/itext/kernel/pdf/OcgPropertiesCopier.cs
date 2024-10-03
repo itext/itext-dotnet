@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf {
             IList<PdfAnnotation> annotations = page.GetAnnotations();
             foreach (PdfAnnotation annotation in annotations) {
                 //Pass null instead of catalog OCProperties value, to include ocg clashing with catalog
-                GetUsedNonFlushedOCGsFromAnnotation(null, ocgs, annotation, annotation);
+                GetUsedNonFlushedOCGsFromAnnotation(annotation, annotation, ocgs, null);
             }
             PdfDictionary resources = page.GetPdfObject().GetAsDictionary(PdfName.Resources);
             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromResources(resources, resources, ocgs, null, 
@@ -107,7 +107,7 @@ namespace iText.Kernel.Pdf {
                         PdfAnnotation toAnnot = toAnnotations[j];
                         PdfAnnotation fromAnnot = fromAnnotations[j];
                         if (!toAnnot.GetPdfObject().IsFlushed()) {
-                            GetUsedNonFlushedOCGsFromAnnotation(toOcProperties, fromUsedOcgs, toAnnot, fromAnnot);
+                            GetUsedNonFlushedOCGsFromAnnotation(toAnnot, fromAnnot, fromUsedOcgs, toOcProperties);
                         }
                     }
                 }
@@ -119,8 +119,8 @@ namespace iText.Kernel.Pdf {
             return fromUsedOcgs;
         }
 
-        private static void GetUsedNonFlushedOCGsFromAnnotation(PdfDictionary toOcProperties, ICollection<PdfIndirectReference
-            > fromUsedOcgs, PdfAnnotation toAnnot, PdfAnnotation fromAnnot) {
+        private static void GetUsedNonFlushedOCGsFromAnnotation(PdfAnnotation toAnnot, PdfAnnotation fromAnnot, ICollection
+            <PdfIndirectReference> fromUsedOcgs, PdfDictionary toOcProperties) {
             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromOcDict(toAnnot.GetPdfObject().GetAsDictionary
                 (PdfName.OC), fromAnnot.GetPdfObject().GetAsDictionary(PdfName.OC), fromUsedOcgs, toOcProperties);
             iText.Kernel.Pdf.OcgPropertiesCopier.GetUsedNonFlushedOCGsFromXObject(toAnnot.GetNormalAppearanceObject(), 
