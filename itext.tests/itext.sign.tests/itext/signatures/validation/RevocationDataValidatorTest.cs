@@ -733,7 +733,7 @@ namespace iText.Signatures.Validation {
             mockOCSPValidator.OnCallDo((c) => c.report.AddReportItem(reportItem));
             validator.Validate(report, baseContext, checkCert, checkDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
-                ).HasLogItem((l) => l.WithMessage(RevocationDataValidator.ISSUER_RETRIEVAL_FAILED)));
+                ).HasLogItem((l) => l.WithMessage(RevocationDataValidator.UNABLE_TO_RETRIEVE_REV_DATA_ONLINE)));
         }
 
         [NUnit.Framework.Test]

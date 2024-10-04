@@ -22,6 +22,7 @@
  */
 using System;
 using System.Collections.Generic;
+using iText.Bouncycastle.Asn1.X509;
 using Org.BouncyCastle.Asn1.Ocsp;
 using iText.Bouncycastle.Cert.Ocsp;
 using iText.Bouncycastle.Crypto;
@@ -126,6 +127,11 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
         public IAsn1Encodable GetExtensionParsedValue(IDerObjectIdentifier objectIdentifier) {
             return new Asn1EncodableBC(GetBasicOcspResponse().TbsResponseData.ResponseExtensions
                 .GetExtensionParsedValue(((DerObjectIdentifierBC)objectIdentifier).GetDerObjectIdentifier()));
+        }
+
+        public IRespID GetResponderId()
+        {
+            return new RespIDBC(new X509NameBC(GetBasicOcspResponse().TbsResponseData.ResponderID.Name));
         }
     }
 }

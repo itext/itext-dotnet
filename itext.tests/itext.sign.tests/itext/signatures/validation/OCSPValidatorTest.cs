@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
@@ -94,6 +95,49 @@ namespace iText.Signatures.Validation {
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             ValidationReport report = ValidateTest(checkDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultipleIssuerCandidatesHappyPathTest() {
+            IX509Certificate candidateOcspIssuerCert1 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER +
+                 "candidate1-ocsp-issuer.cert.pem")[0];
+            IX509Certificate candidateOcspIssuerCert2 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER +
+                 "candidate2-ocsp-issuer.cert.pem")[0];
+            certificateRetriever.AddTrustedCertificates(JavaUtil.ArraysAsList(candidateOcspIssuerCert1, responderCert, 
+                candidateOcspIssuerCert2));
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetOcspCertsChain(new IX509Certificate[] { caCert });
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
+                GetEncoded(checkCert, caCert, null)));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
+            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultipleIssuerCandidatesFailingTest() {
+            IX509Certificate candidateOcspIssuerCert1 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER +
+                 "candidate1-ocsp-issuer.cert.pem")[0];
+            IX509Certificate candidateOcspIssuerCert2 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER +
+                 "candidate2-ocsp-issuer.cert.pem")[0];
+            certificateRetriever.AddTrustedCertificates(JavaUtil.ArraysAsList(candidateOcspIssuerCert1, candidateOcspIssuerCert2
+                ));
+            TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
+            builder.SetOcspCertsChain(new IX509Certificate[] { caCert });
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
+            IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient.
+                GetEncoded(checkCert, caCert, null)));
+            ValidationReport report = new ValidationReport();
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
+            validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ));
         }
 
         [NUnit.Framework.Test]
@@ -419,6 +463,12 @@ namespace iText.Signatures.Validation {
                 throw new Exception("Test isCertificateTrusted failure");
             }
             );
+            MockTrustedCertificatesStore mockTrustStore = new MockTrustedCertificatesStore();
+            mockTrustStore.OnIsCertificateTrustedForOcspDo((c) => {
+                throw new Exception("Test isCertificateTrusted failure");
+            }
+            );
+            mockCertificateRetriever.OnGetTrustedCertificatesStoreDo(() => mockTrustStore);
             ValidationReport report = ValidateTest(checkDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((l) => l.WithMessage(OCSPValidator.OCSP_RESPONDER_TRUST_NOT_RETRIEVED)));
@@ -500,8 +550,8 @@ namespace iText.Signatures.Validation {
                 this.issuerCertificate = PemFileHelper.ReadFirstChain(issuerPath)[0];
             }
 
-            public override IX509Certificate RetrieveIssuerCertificate(IX509Certificate certificate) {
-                return issuerCertificate;
+            public override IList<IX509Certificate> RetrieveIssuerCertificate(IX509Certificate certificate) {
+                return JavaCollectionsUtil.SingletonList((IX509Certificate)issuerCertificate);
             }
         }
     }

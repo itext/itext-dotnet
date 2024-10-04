@@ -51,5 +51,10 @@ namespace iText.Bouncycastlefips.Asn1.X500 {
         public virtual X500Name GetX500Name() {
             return (X500Name)GetEncodable();
         }
+
+        public string GetName()
+        {
+            return GetX500Name().ToString();
+        }
     }
 }

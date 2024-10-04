@@ -1054,6 +1054,19 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <returns>created X500 Name wrapper</returns>
         IX500Name CreateX500Name(String s);
+        
+        
+        /// <summary>
+        /// Create X500 Name wrapper from
+        /// <see cref="IAsn1Sequence"/>.
+        /// </summary>
+        /// <param name="s">
+        /// 
+        /// <see cref="IAsn1Sequence"/>
+        /// to create X500 Name wrapper from
+        /// </param>
+        /// <returns>created X500 Name wrapper</returns>
+        IX500Name CreateX500Name(IAsn1Sequence s);
 
         /// <summary>Create resp ID wrapper from X500 Name wrapper.</summary>
         /// <param name="x500Name">X500 Name wrapper to create resp ID wrapper from</param>

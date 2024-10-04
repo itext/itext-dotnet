@@ -39,13 +39,22 @@ namespace iText.Signatures {
         IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] chain);
 
         /// <summary>
-        /// Retrieves certificates that can be used to verify the signature on the CRL response using CRL
-        /// Authority Information Access (AIA) Extension.
+        /// Retrieves the certificate chain for the certificate that should be used to verify the signature on the
+        /// CRL response using CRL Authority Information Access (AIA) Extension and known certificates.
         /// </summary>
         /// <param name="crl">CRL response to retrieve issuer for.</param>
         /// <returns>certificates retrieved from CRL AIA extension or an empty list in case certificates cannot be retrieved.
         ///     </returns>
         IX509Certificate[] GetCrlIssuerCertificates(IX509Crl crl);
+
+        /// <summary>
+        /// Retrieves the certificate chaind for the certificates that could be used to verify the signature on the
+        /// CRL response using CRL Authority Information Access (AIA) Extension and known certificates.
+        /// </summary>
+        /// <param name="crl">CRL response to retrieve issuer for.</param>
+        /// <returns>certificates retrieved from CRL AIA extension or an empty list in case certificates cannot be retrieved.
+        ///     </returns>
+        IX509Certificate[][] GetCrlIssuerCertificatesByName(IX509Crl crl);
 
         /// <summary>Sets trusted certificate list to be used for the missing certificates retrieving by the issuer name.
         ///     </summary>

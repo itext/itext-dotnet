@@ -877,6 +877,11 @@ namespace iText.Bouncycastlefips {
             return new X500NameBCFips(new X500Name(s));
         }
 
+        public IX500Name CreateX500Name(IAsn1Sequence s)
+        {
+            return new X500NameBCFips(X500Name.GetInstance(((Asn1SequenceBCFips) s).GetAsn1Sequence()));
+        }
+
         /// <summary><inheritDoc/></summary>
         public virtual IRespID CreateRespID(IX500Name x500Name) {
             return new RespIDBCFips(x500Name);

@@ -80,9 +80,11 @@ namespace iText.Signatures.Validation {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateSignatures();
             }
-            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
-                (3, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage
-                (CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage
+                (CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())).HasLogItem((al) => al
+                .WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_TRUSTED)).HasLogItem
+                ((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_IS_CA)));
         }
 
         [NUnit.Framework.Test]
@@ -107,9 +109,9 @@ namespace iText.Signatures.Validation {
                 .UNEXPECTED_ENTRY_IN_XREF, (i) => 30)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
                 ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (i) => "timestampSig1")).HasLogItem((al) =>
                  al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME
-                , (i) => "Signature1")).HasLogItems(2, (al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator
+                , (i) => "Signature1")).HasLogItem((al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator
                 .CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN
-                ())).HasLogItems(4, (al) => al.WithCertificate(tsRootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                ())).HasLogItems(2, (al) => al.WithCertificate(tsRootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => tsRootCert.GetSubjectDN())));
         }
 
@@ -195,16 +197,18 @@ namespace iText.Signatures.Validation {
                 (4).HasNumberOfFailures(0).HasLogItem((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK
                 ).WithMessage(DocumentRevisionsValidator.UNEXPECTED_ENTRY_IN_XREF, (i) => 17).WithStatus(ReportItem.ReportItemStatus
                 .INFO)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(SignatureValidator
-                .VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItems(2, (al) => al.WithCertificate(rootCert).
-                WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED
-                , (i) => rootCert.GetSubjectDN())));
+                .VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItem((al) => al.WithCertificate(rootCert).WithCheckName
+                (CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED
+                , (i) => rootCert.GetSubjectDN())).HasLogItem((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage
+                (OCSPValidator.OCSP_RESPONDER_IS_CA)));
             AssertValidationReport.AssertThat(report2, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfLogs
                 (4).HasNumberOfFailures(1).HasLogItem((al) => al.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK
                 ).WithMessage(DocumentRevisionsValidator.PAGE_ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus
                 .INVALID)).HasLogItem((al) => al.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION).WithMessage(
-                SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature2")).HasLogItems(2, (al) => al.WithCertificate
+                SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature2")).HasLogItem((al) => al.WithCertificate
                 (rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
-                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())));
+                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())).HasLogItem((al) => al.WithCheckName(OCSPValidator
+                .OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_IS_CA)));
         }
 
         [NUnit.Framework.Test]
@@ -314,8 +318,8 @@ namespace iText.Signatures.Validation {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItems(2
-                , (la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItem((la
+                ) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
@@ -356,9 +360,11 @@ namespace iText.Signatures.Validation {
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateLatestSignature(document);
             }
-            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItems
-                (3, (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
-                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasLogItem
+                ((al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((al) => al
+                .WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_TRUSTED)).HasLogItem
+                ((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_IS_CA)));
         }
 
         [NUnit.Framework.Test]

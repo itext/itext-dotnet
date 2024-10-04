@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,41 +20,40 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
+using Org.BouncyCastle.Asn1.Ocsp;
+using iText.Bouncycastlefips.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X500;
-using Org.BouncyCastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 
-namespace iText.Bouncycastle.Asn1.X509 {
-    /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
-    /// </summary>
-    public class X509NameBC : Asn1EncodableBC, IX500Name {
+namespace iText.Bouncycastlefips.Cert.Ocsp {
+    public class ResponderIDBCFips : IResponderID {
+        private readonly ResponderID responderID;
+
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
         /// </summary>
-        /// <param name="x500Name">
+        /// <param name="responderID">
         /// 
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>
         /// to be wrapped
         /// </param>
-        public X509NameBC(X509Name x500Name)
-            : base(x500Name) {
+        public ResponderIDBCFips(ResponderID responderID) {
+            this.responderID = responderID;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IX500Name GetName() {
+            return new X500NameBCFips(responderID.Name);
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
         /// </returns>
-        public virtual X509Name GetX509Name() {
-            return (X509Name)GetEncodable();
-        }
-
-        public string GetName()
-        {
-            return GetX509Name().ToString();
+        public virtual ResponderID GetResponderID() {
+            return responderID;
         }
     }
 }

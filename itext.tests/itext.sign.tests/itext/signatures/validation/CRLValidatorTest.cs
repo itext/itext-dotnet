@@ -84,6 +84,46 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MultipleIssuersWithOneMatch() {
+            RetrieveTestResources("multipleCrlIssuerCandidates");
+            byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
+                TEST_DATE_TIME.AddDays(+5));
+            IX509Certificate candidateCrlIssuerCert1 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + 
+                "multipleCrlIssuerCandidates/crl-issuer-candidate1.cert.pem")[0];
+            IX509Certificate candidateCrlIssuerCert2 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + 
+                "multipleCrlIssuerCandidates/crl-issuer-candidate2.cert.pem")[0];
+            certificateRetriever.AddTrustedCertificates(JavaUtil.ArraysAsList(candidateCrlIssuerCert1, crlIssuerCert, 
+                candidateCrlIssuerCert2));
+            ValidationReport report = PerformValidation("multipleCrlIssuerCandidates", TimeTestUtil.TEST_DATE_TIME, crl
+                );
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            // expected the CRL validator to stop after correct issuer was found
+            NUnit.Framework.Assert.AreEqual(2, mockChainValidator.verificationCalls.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MultipleIssuersWithNoMatch() {
+            RetrieveTestResources("multipleCrlIssuerCandidates");
+            byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
+                TEST_DATE_TIME.AddDays(+5));
+            IX509Certificate candidateCrlIssuerCert1 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + 
+                "multipleCrlIssuerCandidates/crl-issuer-candidate1.cert.pem")[0];
+            IX509Certificate candidateCrlIssuerCert2 = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + 
+                "multipleCrlIssuerCandidates/crl-issuer-candidate2.cert.pem")[0];
+            certificateRetriever.AddTrustedCertificates(JavaUtil.ArraysAsList(candidateCrlIssuerCert1, candidateCrlIssuerCert2
+                ));
+            IX509Certificate certificateUnderTest = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "multipleCrlIssuerCandidates/sign.cert.pem"
+                )[0];
+            ValidationReport result = new ValidationReport();
+            ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
+                .SIGNER_CERT, TimeBasedContext.PRESENT);
+            validatorChainBuilder.GetCRLValidator().Validate(result, context, certificateUnderTest, (IX509Crl)CertificateUtil
+                .ParseCrlFromStream(new MemoryStream(crl)), TimeTestUtil.TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(result, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NextUpdateBeforeValidationTest() {
             RetrieveTestResources("happyPath");
             DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(-5);
@@ -334,7 +374,7 @@ namespace iText.Signatures.Validation {
             byte[] crl = CreateCrl(crlIssuerCert, crlIssuerKey, TimeTestUtil.TEST_DATE_TIME.AddDays(-5), TimeTestUtil.
                 TEST_DATE_TIME.AddDays(+5));
             MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
-            mockCertificateRetriever.OngetCrlIssuerCertificatesDo((c) => {
+            mockCertificateRetriever.OngetCrlIssuerCertificatesByNameDo((c) => {
                 throw new Exception("just testing");
             }
             );

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Validation;
 
@@ -35,6 +36,8 @@ namespace iText.Signatures.Validation.Mocks {
         public IList<IX509Certificate[]> retrieveMissingCertificatesCalls = new List<IX509Certificate[]>();
 
         public IList<IX509Crl> getCrlIssuerCertificatesCalls = new List<IX509Crl>();
+
+        public IList<IX509Crl> getCrlIssuerCertificatesByNameCalls = new List<IX509Crl>();
 
         public IList<IX509Certificate> retrieveIssuerCertificateCalls = new List<IX509Certificate>();
 
@@ -59,9 +62,11 @@ namespace iText.Signatures.Validation.Mocks {
 
         private Func<IX509Crl, IX509Certificate[]> getCrlIssuerCertificatesHandler;
 
+        private Func<IX509Crl, IX509Certificate[][]> getCrlIssuerCertificatesByNameHandler;
+
         private Func<IX509Certificate, IX509Certificate> retrieveIssuerCertificateHandler;
 
-        private Func<IBasicOcspResponse, IX509Certificate> retrieveOCSPResponderCertificateHandler;
+        private Func<IBasicOcspResponse, ICollection<IX509Certificate>> retrieveOCSPResponderCertificateHandler;
 
         private Action<ICollection<IX509Certificate>> setTrustedCertificatesHandler;
 
@@ -105,10 +110,22 @@ namespace iText.Signatures.Validation.Mocks {
             return new IX509Certificate[0];
         }
 
-        public override IX509Certificate RetrieveIssuerCertificate(IX509Certificate certificate) {
+        public override IX509Certificate[][] GetCrlIssuerCertificatesByName(IX509Crl crl) {
+            getCrlIssuerCertificatesByNameCalls.Add(crl);
+            if (getCrlIssuerCertificatesByNameHandler != null) {
+                return getCrlIssuerCertificatesByNameHandler.Invoke(crl);
+            }
+            if (wrapped != null) {
+                return wrapped.GetCrlIssuerCertificatesByName(crl);
+            }
+            return new IX509Certificate[0][];
+        }
+
+        public override IList<IX509Certificate> RetrieveIssuerCertificate(IX509Certificate certificate) {
             retrieveIssuerCertificateCalls.Add(certificate);
             if (retrieveIssuerCertificateHandler != null) {
-                return retrieveIssuerCertificateHandler.Invoke(certificate);
+                return JavaCollectionsUtil.SingletonList((IX509Certificate)retrieveIssuerCertificateHandler.Invoke(certificate
+                    ));
             }
             if (wrapped != null) {
                 return wrapped.RetrieveIssuerCertificate(certificate);
@@ -116,13 +133,14 @@ namespace iText.Signatures.Validation.Mocks {
             return null;
         }
 
-        public override IX509Certificate RetrieveOCSPResponderCertificate(IBasicOcspResponse ocspResp) {
+        public override ICollection<IX509Certificate> RetrieveOCSPResponderByNameCertificate(IBasicOcspResponse ocspResp
+            ) {
             retrieveOCSPResponderCertificateCalls.Add(ocspResp);
             if (retrieveOCSPResponderCertificateHandler != null) {
                 return retrieveOCSPResponderCertificateHandler.Invoke(ocspResp);
             }
             if (wrapped != null) {
-                return wrapped.RetrieveOCSPResponderCertificate(ocspResp);
+                return wrapped.RetrieveOCSPResponderByNameCertificate(ocspResp);
             }
             return null;
         }
@@ -202,6 +220,12 @@ namespace iText.Signatures.Validation.Mocks {
             return this;
         }
 
+        public virtual iText.Signatures.Validation.Mocks.MockIssuingCertificateRetriever OngetCrlIssuerCertificatesByNameDo
+            (Func<IX509Crl, IX509Certificate[][]> callback) {
+            getCrlIssuerCertificatesByNameHandler = callback;
+            return this;
+        }
+
         public virtual iText.Signatures.Validation.Mocks.MockIssuingCertificateRetriever OnRetrieveIssuerCertificateDo
             (Func<IX509Certificate, IX509Certificate> callback) {
             retrieveIssuerCertificateHandler = callback;
@@ -209,7 +233,7 @@ namespace iText.Signatures.Validation.Mocks {
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockIssuingCertificateRetriever OnRetrieveOCSPResponderCertificateDo
-            (Func<IBasicOcspResponse, IX509Certificate> callback) {
+            (Func<IBasicOcspResponse, ICollection<IX509Certificate>> callback) {
             retrieveOCSPResponderCertificateHandler = callback;
             return this;
         }

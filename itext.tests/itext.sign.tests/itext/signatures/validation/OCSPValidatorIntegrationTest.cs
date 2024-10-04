@@ -99,10 +99,11 @@ namespace iText.Signatures.Validation {
         [NUnit.Framework.Test]
         public virtual void ValidateAuthorizedOCSPResponderWithOcspTest() {
             ValidationReport report = VerifyResponderWithOcsp(false);
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItems(2
-                , (al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
-                .CERTIFICATE_TRUSTED, (l) => ((CertificateReportItem)l).GetCertificate().GetSubjectDN())).HasStatus(ValidationReport.ValidationResult
-                .VALID));
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((al
+                ) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
+                .CERTIFICATE_TRUSTED, (l) => ((CertificateReportItem)l).GetCertificate().GetSubjectDN())).HasLogItem((
+                al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_IS_CA)).HasStatus
+                (ValidationReport.ValidationResult.VALID));
         }
 
         [NUnit.Framework.Test]

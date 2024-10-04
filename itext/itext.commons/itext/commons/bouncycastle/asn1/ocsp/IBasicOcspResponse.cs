@@ -93,5 +93,7 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>Parsed extension value.</returns>
         IAsn1Encodable GetExtensionParsedValue(IDerObjectIdentifier getIdPkixOcspArchiveCutoff);
+
+        IRespID GetResponderId();
     }
 }

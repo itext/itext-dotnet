@@ -66,6 +66,10 @@ namespace iText.Signatures {
             return new IX509Certificate[0];
         }
 
+        public virtual IX509Certificate[][] GetCrlIssuerCertificatesByName(IX509Crl crl) {
+            return new IX509Certificate[0][];
+        }
+
         /// <summary><inheritDoc/></summary>
         /// <param name="certificates">
         /// 

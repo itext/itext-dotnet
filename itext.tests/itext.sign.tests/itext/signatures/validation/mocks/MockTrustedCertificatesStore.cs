@@ -63,17 +63,17 @@ namespace iText.Signatures.Validation.Mocks {
 
         private Func<IX509Certificate, bool> isCertificateTrustedForCAHandler;
 
-        private Func<String, IX509Certificate> getGenerallyTrustedCertificateHandler;
+        private Func<String, ICollection<IX509Certificate>> getGenerallyTrustedCertificateHandler;
 
-        private Func<String, IX509Certificate> getCertificateTrustedForOcspHandler;
+        private Func<String, ICollection<IX509Certificate>> getCertificateTrustedForOcspHandler;
 
-        private Func<String, IX509Certificate> getCertificateTrustedForCrlHandler;
+        private Func<String, ICollection<IX509Certificate>> getCertificateTrustedForCrlHandler;
 
-        private Func<String, IX509Certificate> getCertificateTrustedForTimestampHandler;
+        private Func<String, ICollection<IX509Certificate>> getCertificateTrustedForTimestampHandler;
 
-        private Func<String, IX509Certificate> getCertificateTrustedForCAHandler;
+        private Func<String, ICollection<IX509Certificate>> getCertificateTrustedForCAHandler;
 
-        private Func<String, IX509Certificate> getKnownCertificateHandler;
+        private Func<String, ICollection<IX509Certificate>> getKnownCertificateHandler;
 
         private Func<ICollection<IX509Certificate>> getAllTrustedCertificatesHandler;
 
@@ -140,68 +140,68 @@ namespace iText.Signatures.Validation.Mocks {
             return true;
         }
 
-        public override IX509Certificate GetGenerallyTrustedCertificate(String certificateName) {
+        public override ICollection<IX509Certificate> GetGenerallyTrustedCertificates(String certificateName) {
             getGenerallyTrustedCertificateCalls.Add(certificateName);
             if (getGenerallyTrustedCertificateHandler != null) {
                 return getGenerallyTrustedCertificateHandler.Invoke(certificateName);
             }
             if (wrapped != null) {
-                return wrapped.GetGenerallyTrustedCertificate(certificateName);
+                return wrapped.GetGenerallyTrustedCertificates(certificateName);
             }
             return null;
         }
 
-        public override IX509Certificate GetCertificateTrustedForOcsp(String certificateName) {
+        public override ICollection<IX509Certificate> GetCertificatesTrustedForOcsp(String certificateName) {
             getCertificateTrustedForOcspCalls.Add(certificateName);
             if (getCertificateTrustedForOcspHandler != null) {
                 return getCertificateTrustedForOcspHandler.Invoke(certificateName);
             }
             if (wrapped != null) {
-                return wrapped.GetCertificateTrustedForOcsp(certificateName);
+                return wrapped.GetCertificatesTrustedForOcsp(certificateName);
             }
             return null;
         }
 
-        public override IX509Certificate GetCertificateTrustedForCrl(String certificateName) {
+        public override ICollection<IX509Certificate> GetCertificatesTrustedForCrl(String certificateName) {
             getCertificateTrustedForCrlCalls.Add(certificateName);
             if (getCertificateTrustedForCrlHandler != null) {
                 return getCertificateTrustedForCrlHandler.Invoke(certificateName);
             }
             if (wrapped != null) {
-                return wrapped.GetCertificateTrustedForCrl(certificateName);
+                return wrapped.GetCertificatesTrustedForCrl(certificateName);
             }
             return null;
         }
 
-        public override IX509Certificate GetCertificateTrustedForTimestamp(String certificateName) {
+        public override ICollection<IX509Certificate> GetCertificatesTrustedForTimestamp(String certificateName) {
             getCertificateTrustedForTimestampCalls.Add(certificateName);
             if (getCertificateTrustedForTimestampHandler != null) {
                 return getCertificateTrustedForTimestampHandler.Invoke(certificateName);
             }
             if (wrapped != null) {
-                return wrapped.GetCertificateTrustedForTimestamp(certificateName);
+                return wrapped.GetCertificatesTrustedForTimestamp(certificateName);
             }
             return null;
         }
 
-        public override IX509Certificate GetCertificateTrustedForCA(String certificateName) {
+        public override ICollection<IX509Certificate> GetCertificatesTrustedForCA(String certificateName) {
             getCertificateTrustedForCACalls.Add(certificateName);
             if (getCertificateTrustedForCAHandler != null) {
                 return getCertificateTrustedForCAHandler.Invoke(certificateName);
             }
             if (wrapped != null) {
-                return wrapped.GetCertificateTrustedForCA(certificateName);
+                return wrapped.GetCertificatesTrustedForCA(certificateName);
             }
             return null;
         }
 
-        public override IX509Certificate GetKnownCertificate(String certificateName) {
+        public override ICollection<IX509Certificate> GetKnownCertificates(String certificateName) {
             getKnownCertificateCalls.Add(certificateName);
             if (getKnownCertificateHandler != null) {
                 return getKnownCertificateHandler.Invoke(certificateName);
             }
             if (wrapped != null) {
-                return wrapped.GetKnownCertificate(certificateName);
+                return wrapped.GetKnownCertificates(certificateName);
             }
             return null;
         }
@@ -248,37 +248,37 @@ namespace iText.Signatures.Validation.Mocks {
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockTrustedCertificatesStore OnGetGenerallyTrustedCertificateDo
-            (Func<String, IX509Certificate> callBack) {
+            (Func<String, ICollection<IX509Certificate>> callBack) {
             getGenerallyTrustedCertificateHandler = callBack;
             return this;
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockTrustedCertificatesStore OnGetCertificateTrustedForOcspDo
-            (Func<String, IX509Certificate> callBack) {
+            (Func<String, ICollection<IX509Certificate>> callBack) {
             getCertificateTrustedForOcspHandler = callBack;
             return this;
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockTrustedCertificatesStore OnGetCertificateTrustedForCrlDo
-            (Func<String, IX509Certificate> callBack) {
+            (Func<String, ICollection<IX509Certificate>> callBack) {
             getCertificateTrustedForCrlHandler = callBack;
             return this;
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockTrustedCertificatesStore OnGetCertificateTrustedForTimestampDo
-            (Func<String, IX509Certificate> callBack) {
+            (Func<String, ICollection<IX509Certificate>> callBack) {
             getCertificateTrustedForTimestampHandler = callBack;
             return this;
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockTrustedCertificatesStore OnGetCertificateTrustedForCADo
-            (Func<String, IX509Certificate> callBack) {
+            (Func<String, ICollection<IX509Certificate>> callBack) {
             getCertificateTrustedForCAHandler = callBack;
             return this;
         }
 
         public virtual iText.Signatures.Validation.Mocks.MockTrustedCertificatesStore OnGetKnownCertificateDo(Func
-            <String, IX509Certificate> callBack) {
+            <String, ICollection<IX509Certificate>> callBack) {
             getKnownCertificateHandler = callBack;
             return this;
         }

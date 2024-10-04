@@ -601,6 +601,7 @@ namespace iText.Signatures.Validation {
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID));
             NUnit.Framework.Assert.AreEqual(0, mockCertificateRetriever.getCrlIssuerCertificatesCalls.Count);
+            NUnit.Framework.Assert.AreEqual(0, mockCertificateRetriever.getCrlIssuerCertificatesByNameCalls.Count);
             NUnit.Framework.Assert.AreEqual(1, mockRevocationDataValidator.calls.Count);
         }
     }

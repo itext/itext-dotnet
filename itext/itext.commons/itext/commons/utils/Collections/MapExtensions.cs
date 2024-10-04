@@ -38,5 +38,14 @@ namespace iText.Commons.Utils.Collections
 
             return dict[key];
         }
+        
+        public static V GetOrDefault<K, V>(this IDictionary<K, V> dict, K key, V defaultValue)
+        {
+            if (!dict.ContainsKey(key))
+            {
+                return defaultValue;
+            }
+            return dict[key];
+        }
     }
 }

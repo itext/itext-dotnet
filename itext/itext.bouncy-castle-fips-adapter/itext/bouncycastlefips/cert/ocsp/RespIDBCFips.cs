@@ -95,5 +95,10 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         public override String ToString() {
             return respID.ToString();
         }
+
+        public IResponderID ToASN1Primitive()
+        {
+            return new ResponderIDBCFips(respID);
+        }
     }
 }

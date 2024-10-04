@@ -299,47 +299,60 @@ namespace iText.Signatures.Validation {
 
         private void VerifyCrlIntegrity(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , IX509Crl crl, DateTime responseGenerationDate) {
-            IX509Certificate[] certs = null;
+            IX509Certificate[][] certificateSets = null;
             try {
-                certs = certificateRetriever.GetCrlIssuerCertificates(crl);
+                certificateSets = certificateRetriever.GetCrlIssuerCertificatesByName(crl);
             }
             catch (Exception e) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_REQUEST_FAILED, e, ReportItem.ReportItemStatus
                     .INDETERMINATE));
                 return;
             }
-            if (certs == null || certs.Length == 0) {
+            if (certificateSets == null || certificateSets.Length == 0) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NOT_FOUND, ReportItem.ReportItemStatus
                     .INDETERMINATE));
                 return;
             }
-            if (JavaUtil.ArraysToEnumerable(certs).Any((c) => c.Equals(certificate))) {
-                report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CERTIFICATE_IN_ISSUER_CHAIN, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-                return;
+            ValidationReport[] candidateReports = new ValidationReport[certificateSets.Length];
+            for (int i = 0; i < certificateSets.Length; i++) {
+                ValidationReport candidateReport = new ValidationReport();
+                candidateReports[i] = candidateReport;
+                IX509Certificate[] certs = certificateSets[i];
+                if (JavaUtil.ArraysAsList(certs).Contains(certificate)) {
+                    candidateReport.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CERTIFICATE_IN_ISSUER_CHAIN
+                        , ReportItem.ReportItemStatus.INDETERMINATE));
+                    continue;
+                }
+                IX509Certificate crlIssuer = certs[0];
+                IList<IX509Certificate> crlIssuerRoots = GetRoots(crlIssuer);
+                IList<IX509Certificate> subjectRoots = GetRoots(certificate);
+                if (!crlIssuerRoots.Any((cert) => subjectRoots.Contains(cert))) {
+                    candidateReport.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NO_COMMON_ROOT, 
+                        ReportItem.ReportItemStatus.INDETERMINATE));
+                    continue;
+                }
+                SafeCalling.OnExceptionLog(() => crl.Verify(crlIssuer.GetPublicKey()), candidateReport, (e) => new CertificateReportItem
+                    (certificate, CRL_CHECK, CRL_INVALID, e, ReportItem.ReportItemStatus.INDETERMINATE));
+                ValidationReport responderReport = new ValidationReport();
+                SafeCalling.OnExceptionLog(() => builder.GetCertificateChainValidator().Validate(responderReport, context.
+                    SetCertificateSource(CertificateSource.CRL_ISSUER), (IX509Certificate)crlIssuer, responseGenerationDate
+                    ), candidateReport, (e) => new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_CHAIN_FAILED, 
+                    e, ReportItem.ReportItemStatus.INDETERMINATE));
+                AddResponderValidationReport(candidateReport, responderReport);
+                if (candidateReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
+                    report.Merge(candidateReport);
+                    return;
+                }
             }
-            IX509Certificate crlIssuer = certs[0];
-            IX509Certificate crlIssuerRoot = GetRoot(crlIssuer);
-            IX509Certificate subjectRoot = GetRoot(certificate);
-            if (!crlIssuerRoot.Equals(subjectRoot)) {
-                report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_NO_COMMON_ROOT, ReportItem.ReportItemStatus
-                    .INDETERMINATE));
-                return;
+            // if failed, add all logs
+            foreach (ValidationReport candidateReport in candidateReports) {
+                report.Merge(candidateReport);
             }
-            SafeCalling.OnExceptionLog(() => crl.Verify(crlIssuer.GetPublicKey()), report, (e) => new CertificateReportItem
-                (certificate, CRL_CHECK, CRL_INVALID, e, ReportItem.ReportItemStatus.INDETERMINATE));
-            ValidationReport responderReport = new ValidationReport();
-            SafeCalling.OnExceptionLog(() => builder.GetCertificateChainValidator().Validate(responderReport, context.
-                SetCertificateSource(CertificateSource.CRL_ISSUER), (IX509Certificate)crlIssuer, responseGenerationDate
-                ), report, (e) => new CertificateReportItem(certificate, CRL_CHECK, CRL_ISSUER_CHAIN_FAILED, e, ReportItem.ReportItemStatus
-                .INDETERMINATE));
-            AddResponderValidationReport(report, responderReport);
         }
 
-        private IX509Certificate GetRoot(IX509Certificate cert) {
-            IX509Certificate[] chain = certificateRetriever.RetrieveMissingCertificates(new IX509Certificate[] { cert }
-                );
-            return chain[chain.Length - 1];
+        private IList<IX509Certificate> GetRoots(IX509Certificate cert) {
+            IList<IX509Certificate[]> chains = certificateRetriever.BuildCertificateChains((IX509Certificate)cert);
+            return chains.Select((certArray) => certArray[certArray.Length - 1]).ToList();
         }
 
         private static void AddResponderValidationReport(ValidationReport report, ValidationReport responderReport

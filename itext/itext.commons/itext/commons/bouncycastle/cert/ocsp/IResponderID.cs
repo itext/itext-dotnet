@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2024 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,41 +20,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
 using iText.Commons.Bouncycastle.Asn1.X500;
-using Org.BouncyCastle.Asn1.X509;
 
-namespace iText.Bouncycastle.Asn1.X509 {
+namespace iText.Commons.Bouncycastle.Cert.Ocsp {
     /// <summary>
-    /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+    /// This interface represents the wrapper for ResponderID that provides the ability
+    /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public class X509NameBC : Asn1EncodableBC, IX500Name {
+    public interface IResponderID {
         /// <summary>
-        /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+        /// Calls actual
+        /// <c>getName</c>
+        /// method for the wrapped BasicOCSPResp object.
         /// </summary>
-        /// <param name="x500Name">
-        /// 
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>
-        /// to be wrapped
-        /// </param>
-        public X509NameBC(X509Name x500Name)
-            : base(x500Name) {
-        }
-
-        /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
-        /// <returns>
-        /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
-        /// </returns>
-        public virtual X509Name GetX509Name() {
-            return (X509Name)GetEncodable();
-        }
-
-        public string GetName()
-        {
-            return GetX509Name().ToString();
-        }
+        /// <returns>wrapped X500NAme.</returns>
+        IX500Name GetName();
     }
 }

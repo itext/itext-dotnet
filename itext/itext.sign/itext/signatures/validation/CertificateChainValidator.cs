@@ -305,37 +305,50 @@ namespace iText.Signatures.Validation {
 
         private void ValidateChain(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate, int certificateChainSize) {
-            IX509Certificate issuerCertificate = null;
+            IList<IX509Certificate> issuerCertificates;
             try {
-                issuerCertificate = (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate(certificate);
+                issuerCertificates = certificateRetriever.RetrieveIssuerCertificate(certificate);
             }
             catch (Exception e) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, ISSUER_RETRIEVAL_FAILED, e, 
                     ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
-            if (issuerCertificate == null) {
+            if (issuerCertificates.IsEmpty()) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_MISSING
                     , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
-            try {
-                certificate.Verify(issuerCertificate.GetPublicKey());
+            ValidationReport[] candidateReports = new ValidationReport[issuerCertificates.Count];
+            for (int i = 0; i < issuerCertificates.Count; i++) {
+                candidateReports[i] = new ValidationReport();
+                try {
+                    certificate.Verify(issuerCertificates[i].GetPublicKey());
+                }
+                catch (AbstractGeneralSecurityException e) {
+                    candidateReports[i].AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil
+                        .Format(ISSUER_CANNOT_BE_VERIFIED, issuerCertificates[i].GetSubjectDN(), certificate.GetSubjectDN()), 
+                        e, ReportItem.ReportItemStatus.INVALID));
+                    continue;
+                }
+                catch (Exception e) {
+                    candidateReports[i].AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil
+                        .Format(ISSUER_VERIFICATION_FAILED, issuerCertificates[i].GetSubjectDN(), certificate.GetSubjectDN()), 
+                        e, ReportItem.ReportItemStatus.INVALID));
+                    continue;
+                }
+                this.Validate(candidateReports[i], context.SetCertificateSource(CertificateSource.CERT_ISSUER), issuerCertificates
+                    [i], validationDate, certificateChainSize + 1);
+                if (candidateReports[i].GetValidationResult() == ValidationReport.ValidationResult.VALID) {
+                    // We found valid issuer, no need to try other ones.
+                    result.Merge(candidateReports[i]);
+                    return;
+                }
             }
-            catch (AbstractGeneralSecurityException e) {
-                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_CANNOT_BE_VERIFIED
-                    , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID
-                    ));
-                return;
+            // Valid issuer wasn't found, add all the reports
+            foreach (ValidationReport candidateReport in candidateReports) {
+                result.Merge(candidateReport);
             }
-            catch (Exception e) {
-                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_VERIFICATION_FAILED
-                    , issuerCertificate.GetSubjectDN(), certificate.GetSubjectDN()), e, ReportItem.ReportItemStatus.INVALID
-                    ));
-                return;
-            }
-            this.Validate(result, context.SetCertificateSource(CertificateSource.CERT_ISSUER), issuerCertificate, validationDate
-                , certificateChainSize + 1);
         }
     }
 }

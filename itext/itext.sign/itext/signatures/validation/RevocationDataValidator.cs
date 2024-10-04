@@ -97,6 +97,10 @@ namespace iText.Signatures.Validation {
         internal const String CRL_VALIDATOR_FAILURE = "Unexpected exception occurred in CRL validator.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String UNABLE_TO_RETRIEVE_REV_DATA_ONLINE = "Online revocation data wasn't generated: Unexpected exception occurred.";
+//\endcond
+
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
@@ -233,7 +237,13 @@ namespace iText.Signatures.Validation {
                     >();
                 IList<RevocationDataValidator.OcspResponseValidationInfo> onlineOcspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
                     >();
-                TryToFetchRevInfoOnline(report, context, certificate, onlineCrlResponses, onlineOcspResponses);
+                try {
+                    TryToFetchRevInfoOnline(report, context, certificate, onlineCrlResponses, onlineOcspResponses);
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, UNABLE_TO_RETRIEVE_REV_DATA_ONLINE
+                        , e, ReportItem.ReportItemStatus.INFO));
+                }
                 if (!onlineCrlResponses.IsEmpty() || !onlineOcspResponses.IsEmpty()) {
                     // Merge the report excluding NO_REVOCATION_DATA message.
                     foreach (ReportItem reportItem in revDataValidationReport.GetLogs()) {
@@ -330,9 +340,9 @@ namespace iText.Signatures.Validation {
              report, ValidationContext context, IX509Certificate certificate) {
             IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
                 >();
-            IX509Certificate issuerCert;
+            IList<IX509Certificate> issuerCerts;
             try {
-                issuerCert = (IX509Certificate)certificateRetriever.RetrieveIssuerCertificate(certificate);
+                issuerCerts = certificateRetriever.RetrieveIssuerCertificate(certificate);
             }
             catch (Exception e) {
                 report.AddReportItem(new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, ISSUER_RETRIEVAL_FAILED
@@ -349,24 +359,26 @@ namespace iText.Signatures.Validation {
                     }
                 }
                 else {
-                    byte[] basicOcspRespBytes = null;
-                    basicOcspRespBytes = SafeCalling.OnRuntimeExceptionLog(() => ocspClient.GetEncoded(certificate, issuerCert
-                        , null), null, report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil
-                        .Format(OCSP_CLIENT_FAILURE, ocspClient), e, ReportItem.ReportItemStatus.INFO));
-                    if (basicOcspRespBytes != null) {
-                        try {
-                            IBasicOcspResponse basicOCSPResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1Primitive
-                                (basicOcspRespBytes));
-                            FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                                );
-                        }
-                        catch (System.IO.IOException e) {
-                            report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
-                                ), e, ReportItem.ReportItemStatus.INFO));
-                        }
-                        catch (Exception e) {
-                            report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
-                                ), e, ReportItem.ReportItemStatus.INFO));
+                    foreach (IX509Certificate issuerCert in issuerCerts) {
+                        byte[] basicOcspRespBytes = null;
+                        basicOcspRespBytes = SafeCalling.OnRuntimeExceptionLog(() => ocspClient.GetEncoded(certificate, issuerCert
+                            , null), null, report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil
+                            .Format(OCSP_CLIENT_FAILURE, ocspClient), e, ReportItem.ReportItemStatus.INFO));
+                        if (basicOcspRespBytes != null) {
+                            try {
+                                IBasicOcspResponse basicOCSPResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1Primitive
+                                    (basicOcspRespBytes));
+                                FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                                    );
+                            }
+                            catch (System.IO.IOException e) {
+                                report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
+                                    ), e, ReportItem.ReportItemStatus.INFO));
+                            }
+                            catch (Exception e) {
+                                report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
+                                    ), e, ReportItem.ReportItemStatus.INFO));
+                            }
                         }
                     }
                 }
@@ -374,14 +386,16 @@ namespace iText.Signatures.Validation {
             SignatureValidationProperties.OnlineFetching onlineFetching = properties.GetRevocationOnlineFetching(context
                 .SetValidatorContext(ValidatorContext.OCSP_VALIDATOR));
             if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching) {
-                SafeCalling.OnRuntimeExceptionLog(() => {
-                    IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
-                        null);
-                    FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                        );
+                foreach (IX509Certificate issuerCert in issuerCerts) {
+                    SafeCalling.OnRuntimeExceptionLog(() => {
+                        IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
+                            null);
+                        FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                            );
+                    }
+                    , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
+                        , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
                 }
-                , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
-                    , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
             }
             return ocspResponses;
         }
@@ -415,19 +429,21 @@ namespace iText.Signatures.Validation {
             SignatureValidationProperties.OnlineFetching ocspOnlineFetching = properties.GetRevocationOnlineFetching(context
                 .SetValidatorContext(ValidatorContext.OCSP_VALIDATOR));
             if (SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE == ocspOnlineFetching) {
-                SafeCalling.OnRuntimeExceptionLog(() => {
-                    IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, (IX509Certificate
-                        )certificateRetriever.RetrieveIssuerCertificate(certificate), null);
-                    IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
-                        >();
-                    FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                        );
-                    // Sort all the OCSP responses available based on the most recent revocation data.
-                    onlineOcspResponses.AddAll(ocspResponses.Sorted((o1, o2) => o2.singleResp.GetThisUpdate().CompareTo(o1.singleResp
-                        .GetThisUpdate())).ToList());
+                foreach (IX509Certificate issuerCert in certificateRetriever.RetrieveIssuerCertificate(certificate)) {
+                    SafeCalling.OnRuntimeExceptionLog(() => {
+                        IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
+                            null);
+                        IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
+                            >();
+                        FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
+                            );
+                        // Sort all the OCSP responses available based on the most recent revocation data.
+                        onlineOcspResponses.AddAll(ocspResponses.Sorted((o1, o2) => o2.singleResp.GetThisUpdate().CompareTo(o1.singleResp
+                            .GetThisUpdate())).ToList());
+                    }
+                    , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
+                        , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
                 }
-                , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
-                    , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
             }
         }
 

@@ -875,6 +875,11 @@ namespace iText.Bouncycastle {
             return new X509NameBC(new X509Name(s));
         }
 
+        public IX500Name CreateX500Name(IAsn1Sequence s)
+        {
+            return new X509NameBC(X509Name.GetInstance(((Asn1SequenceBC) s).GetAsn1Sequence()));
+        }
+
         /// <summary><inheritDoc/></summary>
         public virtual IRespID CreateRespID(IX500Name x500Name) {
             return new RespIDBC(x500Name);
