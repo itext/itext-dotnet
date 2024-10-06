@@ -135,6 +135,22 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithCycleTagReferenceTest() {
+            String filename1 = sourceFolder + "doc1.pdf";
+            String filename2 = sourceFolder + "pdfWithCycleRefInParentTag.pdf";
+            String resultFile = destinationFolder + "pdfWithCycleRefInParentTag.pdf";
+            using (PdfDocument pdfDocument1 = new PdfDocument(new PdfReader(filename2))) {
+                using (PdfDocument pdfDocument2 = new PdfDocument(new PdfReader(filename1), CompareTool.CreateTestPdfWriter
+                    (resultFile).SetSmartMode(true))) {
+                    PdfMerger merger = new PdfMerger(pdfDocument2);
+                    merger.Merge(pdfDocument1, 1, pdfDocument1.GetNumberOfPages());
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_pdfWithCycleRefInParentTag.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeDocumentTest03() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";

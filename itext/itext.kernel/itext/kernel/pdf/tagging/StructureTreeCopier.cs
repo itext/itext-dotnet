@@ -634,11 +634,12 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private static IList<PdfDictionary> RetrieveParents(PdfMcr mcr, bool all) {
-            IList<PdfDictionary> parents = new List<PdfDictionary>();
+            ICollection<PdfDictionary> parents = new LinkedHashSet<PdfDictionary>();
             IStructureNode firstParent = mcr.GetParent();
             PdfDictionary previous = null;
             PdfDictionary current = firstParent is PdfStructElem ? ((PdfStructElem)firstParent).GetPdfObject() : null;
-            while (current != null && !PdfName.StructTreeRoot.Equals(current.GetAsName(PdfName.Type))) {
+            while (current != null && !PdfName.StructTreeRoot.Equals(current.GetAsName(PdfName.Type)) && !parents.Contains
+                (current)) {
                 if (all) {
                     parents.Add(current);
                 }
@@ -648,7 +649,7 @@ namespace iText.Kernel.Pdf.Tagging {
             if (!all) {
                 parents.Add(previous);
             }
-            return parents;
+            return new List<PdfDictionary>(parents);
         }
 
 //\cond DO_NOT_DOCUMENT
