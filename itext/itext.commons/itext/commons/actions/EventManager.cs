@@ -43,7 +43,7 @@ namespace iText.Commons.Actions {
             handlers.Add(ProductEventHandler.INSTANCE);
         }
 
-        /// <summary>Allows an access to the instance of EventManager.</summary>
+        /// <summary>Allows access to the instance of EventManager.</summary>
         /// <returns>the instance of the class</returns>
         public static iText.Commons.Actions.EventManager GetInstance() {
             return INSTANCE;

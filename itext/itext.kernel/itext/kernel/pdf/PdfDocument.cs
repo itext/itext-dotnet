@@ -33,7 +33,6 @@ using iText.IO.Source;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Colors;
-using iText.Kernel.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -41,6 +40,7 @@ using iText.Kernel.Logs;
 using iText.Kernel.Numbering;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Collection;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Statistics;
@@ -53,7 +53,7 @@ using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Main enter point to work with PDF document.</summary>
-    public class PdfDocument : IEventDispatcher, IDisposable {
+    public class PdfDocument : IDisposable {
         private static readonly PdfName[] PDF_NAMES_TO_REMOVE_FROM_ORIGINAL_TRAILER = new PdfName[] { PdfName.Encrypt
             , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm, PdfName.AuthCode
              };
@@ -70,6 +70,8 @@ namespace iText.Kernel.Pdf {
         private readonly IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference
             , PdfFont>();
 
+        private readonly ICollection<IEventHandler> documentHandlers = new LinkedHashSet<IEventHandler>();
+
         private readonly SequenceId documentId;
 
         /// <summary>To be adjusted destinations.</summary>
@@ -80,8 +82,6 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         private readonly IList<PdfDocument.DestinationMutationInfo> pendingDestinationMutations = new List<PdfDocument.DestinationMutationInfo
             >();
-
-        protected internal EventDispatcher eventDispatcher = new EventDispatcher();
 
         /// <summary>PdfWriter associated with the document.</summary>
         /// <remarks>
@@ -732,34 +732,57 @@ namespace iText.Kernel.Pdf {
             defaultPageSize = pageSize;
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual void AddEventHandler(String type, iText.Kernel.Events.IEventHandler handler) {
-            eventDispatcher.AddEventHandler(type, handler);
+        /// <summary>Adds new event handler.</summary>
+        /// <param name="type">a type of event to be handled</param>
+        /// <param name="handler">event handler</param>
+        public virtual void AddEventHandler(String type, AbstractPdfDocumentEventHandler handler) {
+            handler.AddType(type);
+            documentHandlers.Add(handler);
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(Event @event) {
-            eventDispatcher.DispatchEvent(@event);
+        /// <summary>Dispatches an event.</summary>
+        /// <param name="event">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Event.AbstractPdfDocumentEvent"/>
+        /// to be dispatched
+        /// </param>
+        public virtual void DispatchEvent(AbstractPdfDocumentEvent @event) {
+            @event.SetDocument(this);
+            foreach (IEventHandler handler in documentHandlers) {
+                handler.OnEvent(@event);
+            }
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual void DispatchEvent(Event @event, bool delayed) {
-            eventDispatcher.DispatchEvent(@event, delayed);
+        /// <summary>Checks if provided event handler assigned for this document.</summary>
+        /// <param name="handler">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Event.AbstractPdfDocumentEventHandler"/>
+        /// to check
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if event handler is assigned for this document,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool HasEventHandler(AbstractPdfDocumentEventHandler handler) {
+            return documentHandlers.Contains(handler);
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual bool HasEventHandler(String type) {
-            return eventDispatcher.HasEventHandler(type);
+        /// <summary>Removes event handler.</summary>
+        /// <param name="handler">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Event.AbstractPdfDocumentEventHandler"/>
+        /// event handler to remove for this document
+        /// </param>
+        public virtual void RemoveEventHandler(AbstractPdfDocumentEventHandler handler) {
+            documentHandlers.Remove(handler);
         }
 
-        /// <summary><inheritDoc/></summary>
-        public virtual void RemoveEventHandler(String type, iText.Kernel.Events.IEventHandler handler) {
-            eventDispatcher.RemoveEventHandler(type, handler);
-        }
-
-        /// <summary><inheritDoc/></summary>
+        /// <summary>Removes all event handlers for this document.</summary>
         public virtual void RemoveAllHandlers() {
-            eventDispatcher.RemoveAllHandlers();
+            documentHandlers.Clear();
         }
 
         /// <summary>
@@ -840,7 +863,7 @@ namespace iText.Kernel.Pdf {
                         .GetInstance()));
                     // The event will prepare document for flushing, i.e. will set an appropriate producer line
                     manager.OnEvent(new FlushPdfDocumentEvent(this));
-                    DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_DOCUMENT_CLOSING, this));
+                    DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_DOCUMENT_CLOSING));
                     UpdateXmpMetadata();
                     // In PDF 2.0, all the values except CreationDate and ModDate are deprecated. Remove them now
                     if (pdfVersion.CompareTo(PdfVersion.PDF_2_0) >= 0) {

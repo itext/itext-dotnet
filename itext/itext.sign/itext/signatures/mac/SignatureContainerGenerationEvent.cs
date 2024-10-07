@@ -23,11 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Commons.Bouncycastle.Asn1;
-using iText.Kernel.Events;
+using iText.Kernel.Pdf.Event;
 
 namespace iText.Signatures.Mac {
     /// <summary>Represents an event firing before creating signature container.</summary>
-    public class SignatureContainerGenerationEvent : Event {
+    public class SignatureContainerGenerationEvent : AbstractPdfDocumentEvent {
         public const String START_SIGNATURE_CONTAINER_GENERATION = "StartSignatureContainerGeneration";
 
         private readonly IAsn1EncodableVector unsignedAttributes;

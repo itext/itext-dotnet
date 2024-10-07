@@ -27,9 +27,9 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Mac;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
@@ -421,7 +421,7 @@ namespace iText.Kernel.Pdf {
         internal virtual void Finish() {
             if (document != null && !document.IsClosed()) {
                 // Writer is always closed as part of document closing
-                document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_WRITER_CLOSING, document));
+                document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_WRITER_CLOSING));
                 if (IsByteArrayWritingMode()) {
                     CompleteByteArrayWritingMode();
                 }

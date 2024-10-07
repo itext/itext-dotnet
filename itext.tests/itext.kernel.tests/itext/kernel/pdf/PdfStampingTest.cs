@@ -24,12 +24,12 @@ using System;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -1239,8 +1239,8 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal class WatermarkEventHandler : iText.Kernel.Events.IEventHandler {
-            public virtual void HandleEvent(Event @event) {
+        internal class WatermarkEventHandler : AbstractPdfDocumentEventHandler {
+            protected internal override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
                 PdfPage page = pdfEvent.GetPage();
                 PdfCanvas pdfCanvas = new PdfCanvas(page);

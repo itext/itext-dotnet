@@ -24,9 +24,9 @@ using System;
 using System.IO;
 using iText.Commons.Bouncycastle.Security;
 using iText.IO.Source;
-using iText.Kernel.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Event;
 
 namespace iText.Kernel.Mac {
 //\cond DO_NOT_DOCUMENT
@@ -108,8 +108,8 @@ namespace iText.Kernel.Mac {
             return ((MemoryStream)document.GetWriter().GetOutputStream());
         }
 
-        private sealed class StandaloneMacPdfObjectAdder : iText.Kernel.Events.IEventHandler {
-            public void HandleEvent(Event @event) {
+        private sealed class StandaloneMacPdfObjectAdder : AbstractPdfDocumentEventHandler {
+            protected internal override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 this._enclosing.macPdfObject = new MacPdfObject(this._enclosing.GetContainerSizeEstimate());
                 this._enclosing.document.GetTrailer().Put(PdfName.AuthCode, this._enclosing.macPdfObject.GetPdfObject());
             }
@@ -121,8 +121,8 @@ namespace iText.Kernel.Mac {
             private readonly StandaloneMacIntegrityProtector _enclosing;
         }
 
-        private sealed class StandaloneMacContainerEmbedder : iText.Kernel.Events.IEventHandler {
-            public void HandleEvent(Event @event) {
+        private sealed class StandaloneMacContainerEmbedder : AbstractPdfDocumentEventHandler {
+            protected internal override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 try {
                     this._enclosing.EmbedMacContainerInTrailer();
                 }

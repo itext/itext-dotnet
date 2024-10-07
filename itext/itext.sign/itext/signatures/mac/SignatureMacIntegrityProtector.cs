@@ -26,10 +26,10 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Security;
-using iText.Kernel.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Event;
 
 namespace iText.Signatures.Mac {
 //\cond DO_NOT_DOCUMENT
@@ -77,8 +77,8 @@ namespace iText.Signatures.Mac {
             unsignedAttributes.Add(BC_FACTORY.CreateDERSequence(macAttribute));
         }
 
-        private sealed class SignatureMacPdfObjectAdder : iText.Kernel.Events.IEventHandler {
-            public void HandleEvent(Event @event) {
+        private sealed class SignatureMacPdfObjectAdder : AbstractPdfDocumentEventHandler {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 if (@event is SignatureDocumentClosingEvent) {
                     PdfDictionary signatureMacDictionary = new PdfDictionary();
                     signatureMacDictionary.Put(PdfName.MACLocation, PdfName.AttachedToSig);
@@ -95,8 +95,8 @@ namespace iText.Signatures.Mac {
             private readonly SignatureMacIntegrityProtector _enclosing;
         }
 
-        private sealed class SignatureMacContainerEmbedder : iText.Kernel.Events.IEventHandler {
-            public void HandleEvent(Event @event) {
+        private sealed class SignatureMacContainerEmbedder : AbstractPdfDocumentEventHandler {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 if (@event is SignatureContainerGenerationEvent) {
                     SignatureContainerGenerationEvent signatureEvent = (SignatureContainerGenerationEvent)@event;
                     try {

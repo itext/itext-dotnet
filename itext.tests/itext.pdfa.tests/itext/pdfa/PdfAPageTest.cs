@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
-using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Event;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfa.Logs;
@@ -174,7 +174,7 @@ namespace iText.Pdfa {
 
 //\cond DO_NOT_DOCUMENT
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
-        internal class EndPageEventHandler : iText.Kernel.Events.IEventHandler {
+        internal class EndPageEventHandler : AbstractPdfDocumentEventHandler {
             private int counter = 0;
 
 //\cond DO_NOT_DOCUMENT
@@ -186,7 +186,7 @@ namespace iText.Pdfa {
                 return counter;
             }
 
-            public virtual void HandleEvent(Event @event) {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 counter++;
             }
         }

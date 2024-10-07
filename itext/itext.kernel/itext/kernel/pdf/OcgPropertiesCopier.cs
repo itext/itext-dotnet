@@ -71,11 +71,12 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Get all OCGs from a given page annotations/xobjects/resources, including ones already stored in catalog
         ///     </summary>
         /// <param name="page">where to search for OCGs.</param>
         /// <returns>set of indirect references pointing to found OCGs.</returns>
-        public static ICollection<PdfIndirectReference> GetOCGsFromPage(PdfPage page) {
+        internal static ICollection<PdfIndirectReference> GetOCGsFromPage(PdfPage page) {
             //Using linked hash set for elements order consistency (e.g. in tests)
             ICollection<PdfIndirectReference> ocgs = new LinkedHashSet<PdfIndirectReference>();
             IList<PdfAnnotation> annotations = page.GetAnnotations();
@@ -88,6 +89,7 @@ namespace iText.Kernel.Pdf {
                 new HashSet<PdfObject>());
             return ocgs;
         }
+//\endcond
 
         private static ICollection<PdfIndirectReference> GetAllUsedNonFlushedOCGs(IDictionary<PdfPage, PdfPage> page2page
             , PdfDictionary toOcProperties) {

@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Pdf;
 
-namespace iText.Kernel.Events {
+namespace iText.Kernel.Pdf.Event {
     /// <summary>Event dispatched by PdfDocument.</summary>
-    public class PdfDocumentEvent : Event {
+    public class PdfDocumentEvent : AbstractPdfDocumentEvent {
         /// <summary>Dispatched after page is created.</summary>
         public const String START_PAGE = "StartPdfPage";
 
@@ -52,15 +52,10 @@ namespace iText.Kernel.Events {
         /// <summary>The PdfPage associated with this event.</summary>
         protected internal PdfPage page;
 
-        /// <summary>The PdfDocument associated with this event.</summary>
-        private PdfDocument document;
-
         /// <summary>Creates a PdfDocumentEvent.</summary>
         /// <param name="type">type of the event that fired this event</param>
-        /// <param name="document">document that fired this event</param>
-        public PdfDocumentEvent(String type, PdfDocument document)
+        public PdfDocumentEvent(String type)
             : base(type) {
-            this.document = document;
         }
 
         /// <summary>Creates a PdfDocumentEvent.</summary>
@@ -69,13 +64,6 @@ namespace iText.Kernel.Events {
         public PdfDocumentEvent(String type, PdfPage page)
             : base(type) {
             this.page = page;
-            this.document = page.GetDocument();
-        }
-
-        /// <summary>Returns the PdfDocument associated with this event.</summary>
-        /// <returns>the PdfDocument associated with this event</returns>
-        public virtual PdfDocument GetDocument() {
-            return document;
         }
 
         /// <summary>Returns the PdfPage associated with this event.</summary>

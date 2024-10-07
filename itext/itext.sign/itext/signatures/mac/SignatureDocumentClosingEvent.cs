@@ -21,12 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Kernel.Events;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Event;
 
 namespace iText.Signatures.Mac {
     /// <summary>Represents an event firing before embedding the signature into the document.</summary>
-    public class SignatureDocumentClosingEvent : Event {
+    public class SignatureDocumentClosingEvent : AbstractPdfDocumentEvent {
         public const String START_SIGNATURE_PRE_CLOSE = "StartSignaturePreClose";
 
         private readonly PdfIndirectReference signatureReference;
