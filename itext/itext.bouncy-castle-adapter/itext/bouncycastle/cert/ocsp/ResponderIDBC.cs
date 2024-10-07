@@ -26,6 +26,10 @@ using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 
 namespace iText.Bouncycastle.Cert.Ocsp {
+    /// <summary>
+    /// Wrapper class for
+    /// <see cref="Org.BouncyCastle.Asn1.Ocsp.ResponderID"/>.
+    /// </summary>
     public class ResponderIDBC : IResponderID {
         private readonly ResponderID responderID;
 
