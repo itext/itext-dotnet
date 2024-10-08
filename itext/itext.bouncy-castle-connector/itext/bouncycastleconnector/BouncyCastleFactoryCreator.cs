@@ -48,8 +48,8 @@ namespace iText.Bouncycastleconnector {
     public sealed class BouncyCastleFactoryCreator {
         private static IBouncyCastleFactory factory;
 
-        private static IDictionary<String, Func<IBouncyCastleFactory>> factories = new LinkedDictionary<String, Func
-            <IBouncyCastleFactory>>();
+        private static readonly IDictionary<String, Func<IBouncyCastleFactory>> FACTORIES = new LinkedDictionary<String
+            , Func<IBouncyCastleFactory>>();
 
         private const String FACTORY_ENVIRONMENT_VARIABLE_NAME = "ITEXT_BOUNCY_CASTLE_FACTORY_NAME";
 
@@ -59,11 +59,11 @@ namespace iText.Bouncycastleconnector {
         static BouncyCastleFactoryCreator() {
             PopulateFactoriesMap();
             String factoryName = SystemUtil.GetEnvironmentVariable(FACTORY_ENVIRONMENT_VARIABLE_NAME);
-            Func<IBouncyCastleFactory> systemVariableFactoryCreator = factories.Get(factoryName);
+            Func<IBouncyCastleFactory> systemVariableFactoryCreator = FACTORIES.Get(factoryName);
             if (systemVariableFactoryCreator != null) {
                 TryCreateFactory(systemVariableFactoryCreator);
             }
-            foreach (Func<IBouncyCastleFactory> factorySupplier in factories.Values) {
+            foreach (Func<IBouncyCastleFactory> factorySupplier in FACTORIES.Values) {
                 if (factory != null) {
                     break;
                 }
@@ -121,8 +121,8 @@ namespace iText.Bouncycastleconnector {
         }
 
         private static void PopulateFactoriesMap() {
-            factories.Put("bouncy-castle", () => new BouncyCastleFactory());
-            factories.Put("bouncy-castle-fips", () => new BouncyCastleFipsFactory());
+            FACTORIES.Put("bouncy-castle", () => new BouncyCastleFactory());
+            FACTORIES.Put("bouncy-castle-fips", () => new BouncyCastleFipsFactory());
         }
         // Android-Conversion-Skip-Line (BC FIPS isn't supported on Android)
     }

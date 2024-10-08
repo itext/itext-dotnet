@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using iText.Bouncycastleconnector;
@@ -32,9 +33,9 @@ using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
-using iText.Kernel.Utils;
 using iText.Signatures;
 using iText.Signatures.Testutils;
+using iText.Signatures.Testutils.Client;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -61,13 +62,19 @@ namespace iText.Signatures.Mac {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
+        public static IEnumerable<Object[]> CreateParameters() {
+            return JavaUtil.ArraysAsList(new Object[] { "signCertRsa01.pem", "signDetached" }, new Object[] { "tsaCert.pem"
+                , "timestamping" }, new Object[] { "signCertRsa01.pem", "signExternalContainerReal" }, new Object[] { 
+                "signCertRsa01.pem", "signExternalContainerBlank" });
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignMacProtectedDocTest() {
-            String fileName = "signMacProtectedDocTest.pdf";
+        public virtual void SignMacProtectedDocTest(String certName, String signingOperation) {
+            String fileName = "signMacProtectedDocTest_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedDoc.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -75,21 +82,29 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    if (signingOperation.Equals("signExternalContainerBlank")) {
+                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
+                            , signRsaPrivateKey, signRsaChain));
+                    }
+                    else {
+                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
+                    }
                 }
             }
-            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignNotMacProtectedDocTest() {
-            String fileName = "signNotMacProtectedDocTest.pdf";
+        public virtual void SignNotMacProtectedDocTest(String certName, String signingOperation) {
+            String fileName = "signNotMacProtectedDocTest_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "noMacProtectionDocument.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -97,21 +112,29 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    if (signingOperation.Equals("signExternalContainerBlank")) {
+                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
+                            , signRsaPrivateKey, signRsaChain));
+                    }
+                    else {
+                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
+                    }
                 }
             }
-            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignNotMacProtectedDoc17Test() {
-            String fileName = "signNotMacProtectedDoc17Test.pdf";
+        public virtual void SignNotMacProtectedDoc17Test(String certName, String signingOperation) {
+            String fileName = "signNotMacProtectedDoc17Test_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "noMacProtectionDocument_1_7.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -119,22 +142,25 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            // TODO DEVSIX-8637 Add else statement for empty signature container
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignNotMacProtectedDocInAppendModeTest() {
+        public virtual void SignNotMacProtectedDocInAppendModeTest(String certName, String signingOperation) {
             // MAC should not be added in append mode
-            String fileName = "signNotMacProtectedDocInAppendModeTest.pdf";
+            String fileName = "signNotMacProtectedDocInAppendModeTest_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "noMacProtectionDocument.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -142,21 +168,24 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties().UseAppendMode());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            // TODO DEVSIX-8637 Add else statement for empty signature container
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignMacProtectedDocInAppendModeTest() {
-            String fileName = "signMacProtectedDocInAppendModeTest.pdf";
+        public virtual void SignMacProtectedDocInAppendModeTest(String certName, String signingOperation) {
+            String fileName = "signMacProtectedDocInAppendModeTest_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedDoc.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -164,21 +193,29 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties().UseAppendMode());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    if (signingOperation.Equals("signExternalContainerBlank")) {
+                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
+                            , signRsaPrivateKey, signRsaChain));
+                    }
+                    else {
+                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
+                    }
                 }
             }
-            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignMacProtectedDocWithSHA3_384Test() {
-            String fileName = "signMacProtectedDocWithSHA3_384Test.pdf";
+        public virtual void SignMacProtectedDocWithSHA3_384Test(String certName, String signingOperation) {
+            String fileName = "signMacProtectedDocWithSHA3_384Test_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedDocSHA3_384.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -186,27 +223,35 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    if (signingOperation.Equals("signExternalContainerBlank")) {
+                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
+                            , signRsaPrivateKey, signRsaChain));
+                    }
+                    else {
+                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
+                    }
                 }
             }
-            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void SignMacPublicEncryptionDocTest() {
+        public virtual void SignMacPublicEncryptionDocTest(String certName, String signingOperation) {
             try {
                 BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
             }
             catch (Exception) {
                 NUnit.Framework.Assume.That(false);
             }
-            String fileName = "signMacPublicEncryptionDocTest.pdf";
+            String fileName = "signMacPublicEncryptionDocTest_" + signingOperation + ".pdf";
             String srcFileName = SOURCE_FOLDER + "macEncryptedWithPublicHandlerDoc.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
-            String signCertFileName = CERTS_SRC + "signCertRsa01.pem";
+            String signCertFileName = CERTS_SRC + certName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
             IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PRIVATE_KEY_PASSWORD);
@@ -217,50 +262,65 @@ namespace iText.Signatures.Mac {
             using (PdfReader reader = new PdfReader(srcFileName, properties)) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    PerformSignDetached(pdfSigner, signRsaPrivateKey, signRsaChain);
+                    if (signingOperation.Equals("signExternalContainerBlank")) {
+                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
+                            , signRsaPrivateKey, signRsaChain));
+                    }
+                    else {
+                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
+                    }
                 }
             }
-            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                , properties));
+            if (!signingOperation.Equals("signExternalContainerBlank")) {
+                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                    , properties));
+            }
         }
 
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void ReadSignedMacProtectedInvalidDocTest() {
-            String srcFileName = SOURCE_FOLDER + "signedMacProtectedInvalidDoc.pdf";
-            String exceptionMessage = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFileName, new ReaderProperties().SetPassword
-                    (ENCRYPTION_PASSWORD)))) {
+        private static void PerformSigningOperation(String signingOperation, PdfSigner pdfSigner, IPrivateKey privateKey
+            , IX509Certificate[] chain) {
+            switch (signingOperation) {
+                case "signDetached": {
+                    PerformSignDetached(pdfSigner, privateKey, chain);
+                    break;
+                }
+
+                case "timestamping": {
+                    PerformTimestamping(pdfSigner, privateKey, chain);
+                    break;
+                }
+
+                case "signExternalContainerReal": {
+                    PerformSignExternalContainerReal(pdfSigner, privateKey, chain);
+                    break;
+                }
+
+                case "signExternalContainerBlank": {
+                    PerformSignExternalContainerBlank(pdfSigner);
+                    break;
                 }
             }
-            ).Message;
-            // Do nothing.
-            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.MAC_VALIDATION_FAILED, exceptionMessage);
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
-        public virtual void UpdateSignedMacProtectedDocumentTest() {
-            String fileName = "updateSignedMacProtectedDocumentTest.pdf";
-            String srcFileName = SOURCE_FOLDER + "thirdPartyMacProtectedAndSignedDocument.pdf";
-            String outputFileName = DESTINATION_FOLDER + fileName;
-            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
-            using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFileName, new ReaderProperties().SetPassword
-                (ENCRYPTION_PASSWORD)), new PdfWriter(FileUtil.GetFileOutputStream(outputFileName)), new StampingProperties
-                ().UseAppendMode())) {
-            }
-            // Do nothing.
-            // This call produces INFO log from AESCipher caused by exception while decrypting. The reason is that,
-            // while comparing encrypted signed documents, CompareTool needs to mark signature value as unencrypted.
-            // Instead, it tries to decrypt not encrypted value which results in exception.
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER
-                , "diff", ENCRYPTION_PASSWORD, ENCRYPTION_PASSWORD));
         }
 
         private static void PerformSignDetached(PdfSigner pdfSigner, IPrivateKey privateKey, IX509Certificate[] chain
             ) {
             pdfSigner.SignDetached(new PrivateKeySignature(privateKey, DigestAlgorithms.SHA256), chain, null, null, null
                 , 0, PdfSigner.CryptoStandard.CADES);
+        }
+
+        private static void PerformSignExternalContainerReal(PdfSigner pdfSigner, IPrivateKey privateKey, IX509Certificate
+            [] chain) {
+            pdfSigner.SignExternalContainer(new PKCS7ExternalSignatureContainer(privateKey, chain, "SHA-512"), 5000);
+        }
+
+        private static void PerformSignExternalContainerBlank(PdfSigner pdfSigner) {
+            pdfSigner.SignExternalContainer(new ExternalBlankSignatureContainer(PdfName.Adobe_PPKLite, PdfName.Adbe_pkcs7_detached
+                ), 5000);
+        }
+
+        private static void PerformTimestamping(PdfSigner pdfSigner, IPrivateKey privateKey, IX509Certificate[] chain
+            ) {
+            pdfSigner.Timestamp(new TestTsaClient(JavaUtil.ArraysAsList(chain), privateKey), "timestamp1");
         }
     }
 }

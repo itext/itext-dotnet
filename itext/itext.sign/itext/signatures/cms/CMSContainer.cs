@@ -82,6 +82,8 @@ namespace iText.Signatures.Cms {
         /// <summary>This class only supports one signer per signature field.</summary>
         private SignerInfo signerInfo = new SignerInfo();
 
+        private int version = 1;
+
         /// <summary>Creates an empty SignedData structure.</summary>
         public CMSContainer() {
         }
@@ -95,6 +97,7 @@ namespace iText.Signatures.Cms {
                     IAsn1Sequence contentInfo = BC_FACTORY.CreateASN1Sequence(@is.ReadObject());
                     IAsn1Sequence signedData = BC_FACTORY.CreateASN1Sequence(BC_FACTORY.CreateASN1TaggedObject(contentInfo.GetObjectAt
                         (1)).GetObject());
+                    version = BC_FACTORY.CreateASN1Integer(signedData.GetObjectAt(0)).GetValue().GetIntValue();
                     // The digest algorithm is retrieved from SignerInfo later on, here we just validate
                     // that there is exactly 1 digest algorithm.
                     IAsn1Set digestAlgorithms = BC_FACTORY.CreateASN1Set(signedData.GetObjectAt(1));
@@ -150,10 +153,10 @@ namespace iText.Signatures.Cms {
             return result.Length;
         }
 
-        /// <summary>Only version 1 is supported by this class.</summary>
-        /// <returns>1 as CMSversion</returns>
+        /// <summary>The version of the CMS container.</summary>
+        /// <returns>version of the CMS container</returns>
         public virtual int GetCmsVersion() {
-            return 1;
+            return version;
         }
 
         /// <summary>The digest algorithm OID and parameters used by the signer.</summary>
@@ -302,7 +305,7 @@ namespace iText.Signatures.Cms {
             IAsn1EncodableVector encapContentInfoV = BC_FACTORY.CreateASN1EncodableVector();
             encapContentInfoV.Add(BC_FACTORY.CreateASN1ObjectIdentifier(encapContentInfo.GetContentType()));
             if (encapContentInfo.GetContent() != null) {
-                encapContentInfoV.Add(encapContentInfo.GetContent());
+                encapContentInfoV.Add(BC_FACTORY.CreateDERTaggedObject(0, encapContentInfo.GetContent()));
             }
             singedDataV.Add(BC_FACTORY.CreateDERSequence(encapContentInfoV));
             IAsn1EncodableVector certificateSetV = BC_FACTORY.CreateASN1EncodableVector();

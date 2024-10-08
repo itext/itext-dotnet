@@ -321,6 +321,16 @@ namespace iText.Signatures.Cms {
             unSignedAttributes.Add(attribute);
         }
 
+        /// <summary>Removes unsigned attribute from signer info object based on attribute type.</summary>
+        /// <param name="type">
+        /// 
+        /// <see cref="System.String"/>
+        /// attribute type
+        /// </param>
+        public virtual void RemoveUnSignedAttribute(String type) {
+            unSignedAttributes.RemoveIf((cmsAttribute) => cmsAttribute.GetType().Equals(type));
+        }
+
         /// <summary>Retrieves the encoded signed attributes of the signer info.</summary>
         /// <remarks>
         /// Retrieves the encoded signed attributes of the signer info.

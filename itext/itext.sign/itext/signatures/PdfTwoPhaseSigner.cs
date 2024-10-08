@@ -26,6 +26,7 @@ using System.IO;
 using iText.Commons.Digest;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
@@ -172,6 +173,9 @@ namespace iText.Signatures {
             }
             PdfSigner pdfSigner = CreatePdfSigner(signerProperties);
             PdfDocument document = pdfSigner.GetDocument();
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                throw new PdfException(SignExceptionMessageConstant.NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE);
+            }
             if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
                 document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }

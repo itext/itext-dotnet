@@ -48,6 +48,16 @@ namespace iText.Kernel.Mac {
         /// </param>
         void LocateMacContainer(AbstractMacIntegrityProtector macIntegrityProtector);
 
+        /// <summary>Indicates, if MAC container was already located.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if MAC container was already located,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        bool IsMacContainerLocated();
+
         /// <summary>
         /// Creates
         /// <see cref="AbstractMacIntegrityProtector"/>

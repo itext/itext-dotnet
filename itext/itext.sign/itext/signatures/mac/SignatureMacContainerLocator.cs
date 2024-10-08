@@ -34,11 +34,21 @@ namespace iText.Signatures.Mac {
     /// This strategy locates MAC container in signature unsigned attributes.
     /// </remarks>
     public class SignatureMacContainerLocator : IMacContainerLocator {
+        private bool macContainerLocated = false;
+
         /// <summary>
         /// <inheritDoc/>.
         /// </summary>
         public virtual void LocateMacContainer(AbstractMacIntegrityProtector macIntegrityProtector) {
             ((SignatureMacIntegrityProtector)macIntegrityProtector).PrepareDocument();
+            macContainerLocated = true;
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public virtual bool IsMacContainerLocated() {
+            return macContainerLocated;
         }
 
         /// <summary>

@@ -92,6 +92,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String NOT_ENOUGH_SPACE = "Not enough space.";
 
+        public const String NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE = "It was not possible to embed MAC token into signature. Most likely signature container is empty.";
+
         public const String PATH_IS_NOT_DIRECTORY = "Provided path: {0} is not a directory. " + "Please provide a directory path to store temporary pdf files which are required for signing.";
 
         public const String PROVIDED_TSA_CLIENT_IS_NULL = "Provided TSA client is null. TSA client is required for timestamp signing.";

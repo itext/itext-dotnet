@@ -24,6 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -48,13 +50,20 @@ using iText.Kernel.Validation.Context;
 using iText.Layout.Properties;
 using iText.Layout.Tagging;
 using iText.Pdfa;
+using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Mac;
 
 namespace iText.Signatures {
     /// <summary>Takes care of the cryptographic options and appearances that form a signature.</summary>
     public class PdfSigner {
-        private const int MAXIMUM_MAC_SIZE = 788;
+//\cond DO_NOT_DOCUMENT
+        internal const int MAXIMUM_MAC_SIZE = 788;
+//\endcond
+
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        private const String ID_ATTR_PDF_MAC_DATA = "1.0.32004.1.2";
 
         /// <summary>Enum containing the Cryptographic Standards.</summary>
         /// <remarks>Enum containing the Cryptographic Standards. Possible values are "CMS" and "CADES".</remarks>
@@ -505,8 +514,8 @@ namespace iText.Signatures {
                 if (tsaClient != null) {
                     estimatedSize += tsaClient.GetTokenSizeEstimate() + 96;
                 }
-                if (document.GetTrailer().GetAsDictionary(PdfName.AuthCode) != null) {
-                    // if AuthCode is found in trailer, we assume MAC will be embedded and allocate additional space.
+                if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                    // If MAC container was located, we presume MAC will be embedded and allocate additional space.
                     estimatedSize += MAXIMUM_MAC_SIZE;
                 }
             }
@@ -591,11 +600,16 @@ namespace iText.Signatures {
             PdfSignature dic = CreateSignatureDictionary(true);
             externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
             cryptoDictionary = dic;
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                // If MAC container was located, we presume MAC will be embedded and allocate additional space.
+                estimatedSize += MAXIMUM_MAC_SIZE;
+            }
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
             byte[] encodedSig = externalSignatureContainer.Sign(data);
+            encodedSig = EmbedMacTokenIntoSignatureContainer(encodedSig);
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException(SignExceptionMessageConstant.NOT_ENOUGH_SPACE);
             }
@@ -627,6 +641,10 @@ namespace iText.Signatures {
                 throw new PdfException(SignExceptionMessageConstant.PROVIDED_TSA_CLIENT_IS_NULL);
             }
             int contentEstimated = tsa.GetTokenSizeEstimate();
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                // If MAC container was located, we presume MAC will be embedded and allocate additional space.
+                contentEstimated += MAXIMUM_MAC_SIZE;
+            }
             if (!IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
             }
@@ -653,6 +671,7 @@ namespace iText.Signatures {
                 throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
                     .Message, e);
             }
+            tsToken = EmbedMacTokenIntoSignatureContainer(tsToken);
             if (contentEstimated + 2 < tsToken.Length) {
                 throw new System.IO.IOException(MessageFormatUtil.Format(SignExceptionMessageConstant.TOKEN_ESTIMATION_SIZE_IS_NOT_LARGE_ENOUGH
                     , contentEstimated, tsToken.Length));
@@ -1204,6 +1223,22 @@ namespace iText.Signatures {
             return pageNumber;
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfSignature CreateSignatureDictionary(bool includeDate) {
+            PdfSignature dic = new PdfSignature();
+            dic.SetReason(this.signerProperties.GetReason());
+            dic.SetLocation(this.signerProperties.GetLocation());
+            dic.SetSignatureCreator(this.signerProperties.GetSignatureCreator());
+            dic.SetContact(this.signerProperties.GetContact());
+            DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
+            if (includeDate && claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
+                dic.SetDate(new PdfDate(claimedSignDate));
+            }
+            // time-stamp will over-rule this
+            return dic;
+        }
+//\endcond
+
         private static String GetSignerName(IX509Certificate certificate) {
             String name = null;
             CertificateInfo.X500Name x500name = CertificateInfo.GetSubjectFields(certificate);
@@ -1250,22 +1285,6 @@ namespace iText.Signatures {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual PdfSignature CreateSignatureDictionary(bool includeDate) {
-            PdfSignature dic = new PdfSignature();
-            dic.SetReason(this.signerProperties.GetReason());
-            dic.SetLocation(this.signerProperties.GetLocation());
-            dic.SetSignatureCreator(this.signerProperties.GetSignatureCreator());
-            dic.SetContact(this.signerProperties.GetContact());
-            DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
-            if (includeDate && claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
-                dic.SetDate(new PdfDate(claimedSignDate));
-            }
-            // time-stamp will over-rule this
-            return dic;
-        }
-//\endcond
-
         protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, IAccessibleElement modelElement
             , PdfDocument pdfDocument) {
             if (!pdfDocument.IsTagged()) {
@@ -1276,6 +1295,30 @@ namespace iText.Signatures {
             if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
                 formField.SetAlternativeName(alternativeDescription);
             }
+        }
+
+        private byte[] EmbedMacTokenIntoSignatureContainer(byte[] signatureContainer) {
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                try {
+                    CMSContainer cmsContainer = new CMSContainer(signatureContainer);
+                    // If MAC is in the signature already, we regenerate it anyway.
+                    cmsContainer.GetSignerInfo().RemoveUnSignedAttribute(ID_ATTR_PDF_MAC_DATA);
+                    IAsn1EncodableVector unsignedVector = FACTORY.CreateASN1EncodableVector();
+                    document.DispatchEvent(new SignatureContainerGenerationEvent(unsignedVector, cmsContainer.GetSignerInfo().
+                        GetSignatureData(), GetRangeStream()));
+                    if (FACTORY.CreateDERSequence(unsignedVector).Size() != 0) {
+                        IAsn1Sequence sequence = FACTORY.CreateASN1Sequence(FACTORY.CreateDERSequence(unsignedVector).GetObjectAt(
+                            0));
+                        cmsContainer.GetSignerInfo().AddUnSignedAttribute(new CmsAttribute(FACTORY.CreateASN1ObjectIdentifier(sequence
+                            .GetObjectAt(0)).GetId(), sequence.GetObjectAt(1).ToASN1Primitive()));
+                        return cmsContainer.Serialize();
+                    }
+                }
+                catch (Exception exception) {
+                    throw new PdfException(SignExceptionMessageConstant.NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE, exception);
+                }
+            }
+            return signatureContainer;
         }
 
         private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {

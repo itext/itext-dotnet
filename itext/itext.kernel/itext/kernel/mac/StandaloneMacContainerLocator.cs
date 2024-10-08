@@ -29,11 +29,21 @@ namespace iText.Kernel.Mac {
     /// location strategy, which locates MAC container in document's trailer.
     /// </summary>
     public class StandaloneMacContainerLocator : IMacContainerLocator {
+        private bool macContainerLocated = false;
+
         /// <summary>
         /// <inheritDoc/>.
         /// </summary>
         public virtual void LocateMacContainer(AbstractMacIntegrityProtector macIntegrityProtector) {
             ((StandaloneMacIntegrityProtector)macIntegrityProtector).PrepareDocument();
+            macContainerLocated = true;
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public virtual bool IsMacContainerLocated() {
+            return macContainerLocated;
         }
 
         /// <summary>

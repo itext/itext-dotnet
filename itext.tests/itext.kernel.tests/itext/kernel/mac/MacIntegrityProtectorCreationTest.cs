@@ -210,6 +210,25 @@ namespace iText.Kernel.Mac {
 
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void AddMacWithDisableMacPropertyTest() {
+            // MAC should not be added in disable MAC mode even if it was provided with writer properties
+            String fileName = "addMacWithDisableMacPropertyTest.pdf";
+            String outputFileName = DESTINATION_FOLDER + fileName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
+            MacProperties macProperties = new MacProperties(MacProperties.MacDigestAlgorithm.SHA_384);
+            WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
+                (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionDocument.pdf", new 
+                ReaderProperties().SetPassword(PASSWORD)), new PdfWriter(outputFileName, writerProperties), new StampingProperties
+                ().DisableMac())) {
+                pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare().CompareByContent(outputFileName, 
+                cmpFileName, DESTINATION_FOLDER, "diff", PASSWORD, PASSWORD));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void AddMacOnPreserveEncryptionWhileDowngradingTest() {
             String fileName = "addMacOnPreserveEncryptionWhileDowngradingTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
