@@ -294,9 +294,9 @@ namespace iText.Signatures.Validation {
             foreach (String fieldName in signatureNames) {
                 ValidationReport subReport = new ValidationReport();
                 try {
-                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName)).SetStrictnessLevel
-                        (PdfReader.StrictnessLevel.CONSERVATIVE), new DocumentProperties().SetEventCountingMetaInfo(metaInfo))
-                        ) {
+                    using (PdfDocument doc = new PdfDocument(new PdfReader(util.ExtractRevision(fieldName), originalDocument.GetReader
+                        ().GetPropertiesCopy()).SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE), new DocumentProperties
+                        ().SetEventCountingMetaInfo(metaInfo))) {
                         subReport.Merge(ValidateLatestSignature(doc));
                     }
                 }

@@ -98,6 +98,8 @@ namespace iText.Kernel.Logs {
 
         public const String ALGORITHM_NOT_FROM_SPEC = "Requested algorithm might not be supported by the pdf specification.";
 
+        public const String MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD = "MemoryLimitsAwareHandler#createNewInstance method must be overriden.";
+
         private KernelLogMessageConstant() {
         }
         //Private constructor will prevent the instantiation of this class directly

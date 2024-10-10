@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("UnitTest")]
@@ -46,15 +48,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void OverridenMemoryHandler() {
             MemoryLimitsAwareHandler defaultHandler = new MemoryLimitsAwareHandler();
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_58();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_64();
             PdfArray filters = new PdfArray();
             filters.Add(PdfName.FlateDecode);
             NUnit.Framework.Assert.IsFalse(defaultHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
             NUnit.Framework.Assert.IsTrue(customHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_58 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_58() {
+        private sealed class _MemoryLimitsAwareHandler_64 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_64() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -142,6 +144,54 @@ namespace iText.Kernel.Pdf {
             int capacityToSet = 2;
             NUnit.Framework.Assert.DoesNotThrow(() => memoryLimitsAwareHandler.CheckIfXrefStructureExceedsTheLimit(capacityToSet
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD)]
+        public virtual void CreateCopyMemoryHandlerWarningTest() {
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_173();
+            customHandler.SetMaxNumberOfElementsInXrefStructure(1);
+            customHandler.SetMaxXObjectsSizePerPage(2);
+            customHandler.SetMaxSizeOfDecompressedPdfStreamsSum(3);
+            customHandler.SetMaxSizeOfSingleDecompressedPdfStream(4);
+            MemoryLimitsAwareHandler copy = customHandler.CreateNewInstance();
+            NUnit.Framework.Assert.AreEqual(1, copy.GetMaxNumberOfElementsInXrefStructure());
+            NUnit.Framework.Assert.AreEqual(2, copy.GetMaxXObjectsSizePerPage());
+            NUnit.Framework.Assert.AreEqual(3, copy.GetMaxSizeOfDecompressedPdfStreamsSum());
+            NUnit.Framework.Assert.AreEqual(4, copy.GetMaxSizeOfSingleDecompressedPdfStream());
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_173 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_173() {
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateCopyMemoryHandlerNoWarningTest() {
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_190();
+            customHandler.SetMaxNumberOfElementsInXrefStructure(1);
+            customHandler.SetMaxXObjectsSizePerPage(2);
+            customHandler.SetMaxSizeOfDecompressedPdfStreamsSum(3);
+            customHandler.SetMaxSizeOfSingleDecompressedPdfStream(4);
+            MemoryLimitsAwareHandler copy = customHandler.CreateNewInstance();
+            NUnit.Framework.Assert.AreEqual(1, copy.GetMaxNumberOfElementsInXrefStructure());
+            NUnit.Framework.Assert.AreEqual(2, copy.GetMaxXObjectsSizePerPage());
+            NUnit.Framework.Assert.AreEqual(3, copy.GetMaxSizeOfDecompressedPdfStreamsSum());
+            NUnit.Framework.Assert.AreEqual(4, copy.GetMaxSizeOfSingleDecompressedPdfStream());
+        }
+
+        private sealed class _MemoryLimitsAwareHandler_190 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_190() {
+            }
+
+            public override MemoryLimitsAwareHandler CreateNewInstance() {
+                MemoryLimitsAwareHandler to = new MemoryLimitsAwareHandler();
+                to.SetMaxSizeOfSingleDecompressedPdfStream(this.GetMaxSizeOfSingleDecompressedPdfStream());
+                to.SetMaxSizeOfDecompressedPdfStreamsSum(this.GetMaxSizeOfDecompressedPdfStreamsSum());
+                to.SetMaxNumberOfElementsInXrefStructure(this.GetMaxNumberOfElementsInXrefStructure());
+                to.SetMaxXObjectsSizePerPage(this.GetMaxXObjectsSizePerPage());
+                return to;
+            }
         }
 
         private static void TestSingleStream(MemoryLimitsAwareHandler handler) {

@@ -22,11 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Testutils;
@@ -36,6 +39,7 @@ using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Mocks;
 using iText.Signatures.Validation.Report;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Validation {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -85,6 +89,58 @@ namespace iText.Signatures.Validation {
                 (CertificateChainValidator.CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN())).HasLogItem((al) => al
                 .WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_TRUSTED)).HasLogItem
                 ((al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_IS_CA)));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void ValidateSignatureInEncryptedDocumentTest() {
+            String chainName = CERTS_SRC + "signCertRsa01.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[1];
+            ValidationReport report;
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "encryptedDoc.pdf", new ReaderProperties
+                ().SetPassword("123".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateSignatures();
+            }
+            NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                ).WithMessage(CertificateChainValidator.ISSUER_MISSING, (i) => rootCert.GetSubjectDN())).HasLogItem((al
+                ) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
+                .NO_REVOCATION_DATA)).HasLogItem((al) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK
+                ).WithMessage(RevocationDataValidator.SELF_SIGNED_CERTIFICATE)));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        public virtual void ValidateSignatureInEncryptedPubKeyDocumentTest() {
+            try {
+                BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);
+            }
+            catch (Exception) {
+                NUnit.Framework.Assume.That(false);
+            }
+            String chainName = CERTS_SRC + "signCertRsa01.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[1];
+            ValidationReport report;
+            IX509Certificate certificate = CryptoUtil.ReadPublicCertificate(FileUtil.GetInputStreamForFile(CERTS_SRC +
+                 "SHA256withRSA.cer"));
+            IPrivateKey privateKey = PemFileHelper.ReadFirstKey(CERTS_SRC + "SHA256withRSA.key", PASSWORD);
+            ReaderProperties properties = new ReaderProperties().SetPublicKeySecurityParams(certificate, privateKey);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "encryptedPublicKeyDocTest.pdf"
+                , properties))) {
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                report = signatureValidator.ValidateSignatures();
+            }
+            NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
+                ).HasLogItem((al) => al.WithCertificate(rootCert).WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                ).WithMessage(CertificateChainValidator.ISSUER_MISSING, (i) => rootCert.GetSubjectDN())).HasLogItem((al
+                ) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
+                .NO_REVOCATION_DATA)).HasLogItem((al) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK
+                ).WithMessage(RevocationDataValidator.SELF_SIGNED_CERTIFICATE)));
         }
 
         [NUnit.Framework.Test]

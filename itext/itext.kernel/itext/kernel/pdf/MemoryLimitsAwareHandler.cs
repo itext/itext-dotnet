@@ -22,7 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Logs;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -43,6 +46,9 @@ namespace iText.Kernel.Pdf {
     /// </remarks>
     /// <seealso cref="ReaderProperties.SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler)"/>
     public class MemoryLimitsAwareHandler {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.MemoryLimitsAwareHandler
+            ));
+
         private const int SINGLE_SCALE_COEFFICIENT = 100;
 
         private const int SUM_SCALE_COEFFICIENT = 500;
@@ -113,6 +119,29 @@ namespace iText.Kernel.Pdf {
             this.maxSizeOfDecompressedPdfStreamsSum = maxSizeOfDecompressedPdfStreamsSum;
             this.maxNumberOfElementsInXrefStructure = maxNumberOfElementsInXrefStructure;
             this.maxXObjectsSizePerPage = maxXObjectsSizePerPage;
+        }
+
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="MemoryLimitsAwareHandler"/>
+        /// by copying settings from this instance
+        /// of
+        /// <see cref="MemoryLimitsAwareHandler"/>.
+        /// </summary>
+        /// <returns>
+        /// a new instance of
+        /// <see cref="MemoryLimitsAwareHandler"/>.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler CreateNewInstance() {
+            iText.Kernel.Pdf.MemoryLimitsAwareHandler to = new iText.Kernel.Pdf.MemoryLimitsAwareHandler();
+            to.maxSizeOfSingleDecompressedPdfStream = this.maxSizeOfSingleDecompressedPdfStream;
+            to.maxSizeOfDecompressedPdfStreamsSum = this.maxSizeOfDecompressedPdfStreamsSum;
+            to.maxNumberOfElementsInXrefStructure = this.maxNumberOfElementsInXrefStructure;
+            to.maxXObjectsSizePerPage = this.maxXObjectsSizePerPage;
+            if (this.GetType() != typeof(iText.Kernel.Pdf.MemoryLimitsAwareHandler)) {
+                LOGGER.LogWarning(KernelLogMessageConstant.MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD);
+            }
+            return to;
         }
 
         /// <summary>Gets the maximum allowed size which can be occupied by a single decompressed pdf stream.</summary>

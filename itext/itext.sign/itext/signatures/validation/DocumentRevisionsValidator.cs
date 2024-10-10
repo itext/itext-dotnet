@@ -747,8 +747,8 @@ namespace iText.Signatures.Validation {
              report, Func<PdfDocument, bool> operation) {
             try {
                 using (Stream inputStream = CreateInputStreamFromRevision(originalDocument, revision)) {
-                    using (PdfReader reader = new PdfReader(inputStream).SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE
-                        )) {
+                    using (PdfReader reader = new PdfReader(inputStream, originalDocument.GetReader().GetPropertiesCopy()).SetStrictnessLevel
+                        (PdfReader.StrictnessLevel.CONSERVATIVE)) {
                         using (PdfDocument documentWithRevision = new PdfDocument(reader, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
                             return (bool)operation.Invoke(documentWithRevision);

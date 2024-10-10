@@ -770,6 +770,22 @@ namespace iText.Kernel.Pdf {
             return encrypted;
         }
 
+        /// <summary>
+        /// Gets a copy of
+        /// <see cref="ReaderProperties"/>
+        /// used to create this instance of
+        /// <see cref="PdfReader"/>.
+        /// </summary>
+        /// <returns>
+        /// a copy of
+        /// <see cref="ReaderProperties"/>
+        /// used to create this instance of
+        /// <see cref="PdfReader"/>
+        /// </returns>
+        public virtual ReaderProperties GetPropertiesCopy() {
+            return new ReaderProperties(properties);
+        }
+
         /// <summary>Parses the entire PDF</summary>
         protected internal virtual void ReadPdf() {
             String version = tokens.CheckPdfHeader();
