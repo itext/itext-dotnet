@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
 using iText.Test;
@@ -65,6 +66,10 @@ namespace iText.Kernel.Utils {
                 else {
                     objectValidationPerformed = true;
                 }
+            }
+
+            public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+                return true;
             }
         }
     }

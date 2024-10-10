@@ -193,6 +193,10 @@ namespace iText.Kernel.Pdf.Canvas {
                     gState = glyphsContext.GetGraphicsState();
                 }
             }
+
+            public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+                return true;
+            }
         }
     }
 }

@@ -98,7 +98,7 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckSignatureTest() {
             PdfDictionary dict = new PdfDictionary();
             pdfA1Checker.CheckSignature(dict);
-            NUnit.Framework.Assert.IsTrue(pdfA1Checker.ObjectIsChecked(dict));
+            NUnit.Framework.Assert.IsTrue(pdfA1Checker.IsPdfObjectReadyToFlush(dict));
         }
 
         [NUnit.Framework.Test]

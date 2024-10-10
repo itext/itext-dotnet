@@ -378,6 +378,10 @@ namespace iText.Kernel.Pdf {
                     documentValidationPerformed = true;
                 }
             }
+
+            public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+                return true;
+            }
         }
     }
 }

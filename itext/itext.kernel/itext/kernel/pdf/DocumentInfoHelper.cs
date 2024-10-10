@@ -20,35 +20,36 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Kernel.Pdf;
-
-namespace iText.Kernel.Validation {
-    /// <summary>Used to check if a PDF document is compliant to a specific validation profile.</summary>
-    public interface IValidationChecker {
-        /// <summary>
-        /// Validate the provided
-        /// <see cref="IValidationContext"/>.
-        /// </summary>
-        /// <param name="validationContext">
-        /// the
-        /// <see cref="IValidationContext"/>
-        /// to validate
-        /// </param>
-        void Validate(IValidationContext validationContext);
-
-        /// <summary>
-        /// Is
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// ready to flush.
-        /// </summary>
-        /// <param name="object">the pdf object to check</param>
+namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// The class is helper which used inside
+    /// <see cref="PdfDocument"/>
+    /// to properly configure PDF document's info dictionary.
+    /// </summary>
+    public class DocumentInfoHelper {
+        /// <summary>If document info dictionary should be added to the trailer.</summary>
         /// <returns>
         /// 
         /// <see langword="true"/>
-        /// if the object is ready to flush,
+        /// if should be added, otherwise
         /// <see langword="false"/>
-        /// otherwise
         /// </returns>
-        bool IsPdfObjectReadyToFlush(PdfObject @object);
+        public virtual bool ShouldAddDocumentInfoToTrailer() {
+            return true;
+        }
+
+        /// <summary>
+        /// Adjusts document info before it's flushing and adding to the trailer
+        /// if required, see
+        /// <see cref="ShouldAddDocumentInfoToTrailer()"/>.
+        /// </summary>
+        /// <param name="documentInfo">
+        /// the
+        /// <see cref="PdfDocumentInfo"/>
+        /// instance to adjust
+        /// </param>
+        public virtual void AdjustDocumentInfo(PdfDocumentInfo documentInfo) {
+        }
+        // do nothing
     }
 }

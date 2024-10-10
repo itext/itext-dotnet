@@ -46,10 +46,12 @@ using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
 using iText.Layout.Properties;
 using iText.Layout.Tagging;
 using iText.Pdfa;
+using iText.Pdfa.Checker;
 using iText.Signatures.Cms;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Mac;
@@ -237,7 +239,9 @@ namespace iText.Signatures {
         /// </returns>
         protected internal virtual PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
              properties) {
-            return new PdfAAgnosticPdfDocument(reader, writer, properties);
+            // TODO DEVSIX-8676 Enable keeping A and UA conformance in PdfSigner
+            // TODO DEVSIX-8677 let users preserve document's conformance without knowing upfront their conformance
+            return new PdfSigner.PdfSignerDocument(reader, writer, properties);
         }
 
         /// <summary>Sets the properties to be used in signing operations.</summary>
@@ -1466,5 +1470,21 @@ namespace iText.Signatures {
 //\endcond
 
         internal delegate byte[] ISignatureDataProvider(PdfSigner.SignatureApplier applier);
+
+        private class PdfSignerDocument : PdfDocument {
+            public PdfSignerDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
+                : base(reader, writer, properties) {
+                if (GetConformance().IsPdfA()) {
+                    PdfAChecker checker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
+                    ValidationContainer validationContainer = new ValidationContainer();
+                    validationContainer.AddChecker(checker);
+                    GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+                    this.pdfPageFactory = new PdfAPageFactory(checker);
+                    this.documentInfoHelper = new PdfADocumentInfoHelper(this);
+                    this.defaultFontStrategy = new PdfADefaultFontStrategy(this);
+                    SetFlushUnusedObjects(true);
+                }
+            }
+        }
     }
 }

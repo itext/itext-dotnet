@@ -68,8 +68,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithoutAlternativeDescription_ThrowsInLayout() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(DOG));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
@@ -86,8 +85,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithEmptyAlternativeDescription_ThrowsInLayout() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             img.GetAccessibilityProperties().SetAlternateDescription("");
@@ -105,12 +103,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_126());
+            framework.AddSuppliers(new _Generator_121());
             framework.AssertBothValid("imageWithCustomRoleOk");
         }
 
-        private sealed class _Generator_126 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_126() {
+        private sealed class _Generator_121 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_121() {
             }
 
             public IBlockElement Generate() {
@@ -135,12 +133,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_150());
+            framework.AddSuppliers(new _Generator_145());
             framework.AssertBothValid("imageWithDoubleMapping");
         }
 
-        private sealed class _Generator_150 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_150() {
+        private sealed class _Generator_145 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_145() {
             }
 
             public IBlockElement Generate() {
@@ -164,12 +162,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_173());
+            framework.AddSuppliers(new _Generator_168());
             framework.AssertBothFail("imageWithCustomRoleAndNoDescription");
         }
 
-        private sealed class _Generator_173 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_173() {
+        private sealed class _Generator_168 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_168() {
             }
 
             public IBlockElement Generate() {
@@ -193,12 +191,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_196());
+            framework.AddSuppliers(new _Generator_191());
             framework.AssertBothFail("imageCustomDoubleMapping_Throws");
         }
 
-        private sealed class _Generator_196 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_196() {
+        private sealed class _Generator_191 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_191() {
             }
 
             public IBlockElement Generate() {
@@ -217,8 +215,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void ImageWithValidAlternativeDescription_OK() {
             String OUTPUT_FILE = DESTINATION_FOLDER + "imageWithValidAlternativeDescription_OK.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE, new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             img.GetAccessibilityProperties().SetAlternateDescription("Alternative description");
@@ -233,8 +230,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void ImageWithValidActualText_OK() {
             String OUTPUT_FILE = DESTINATION_FOLDER + "imageWithValidActualText_OK.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE, new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             img.GetAccessibilityProperties().SetActualText("Actual text");
@@ -249,8 +245,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void ImageWithCaption_OK() {
             String OUTPUT_FILE = DESTINATION_FOLDER + "imageWithCaption_OK.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE, new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE));
             Document document = new Document(pdfDoc);
             Div imgWithCaption = new Div();
             imgWithCaption.GetAccessibilityProperties().SetRole(StandardRoles.FIGURE);
@@ -272,8 +267,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithCaptionWithoutAlternateDescription_Throws() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDoc);
             Div imgWithCaption = new Div();
             imgWithCaption.GetAccessibilityProperties().SetRole(StandardRoles.FIGURE);
@@ -295,8 +289,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithoutActualText_ThrowsInLayout() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             img.GetAccessibilityProperties().SetActualText(null);
@@ -309,8 +302,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithEmptyActualText_ThrowsInLayout() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             img.GetAccessibilityProperties().SetActualText("");
@@ -320,8 +312,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void ImageDirectlyOnCanvas_OK() {
             String OUTPUT_FILE = DESTINATION_FOLDER + "imageDirectlyOnCanvas_OK.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE, new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(OUTPUT_FILE));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             img.GetAccessibilityProperties().SetAlternateDescription("Hello");
@@ -352,8 +343,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageDirectlyOnCanvasWithoutAlternateDescription_ThrowsOnClose() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             TagTreePointer pointerForImage = new TagTreePointer(pdfDoc);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -371,8 +361,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ImageDirectlyOnCanvasWithEmptyActualText_OK() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             TagTreePointer pointerForImage = new TagTreePointer(pdfDoc);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -387,8 +376,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void TestOverflowImage() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             Document document = new Document(pdfDoc);
             document.Add(new Div().SetHeight(730).SetBackgroundColor(ColorConstants.CYAN));
@@ -400,8 +388,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void TestEmbeddedImageInTable() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             Document document = new Document(pdfDoc);
             Table table = new Table(2);
@@ -417,8 +404,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void TestEmbeddedImageInDiv() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             Document document = new Document(pdfDoc);
             Div div = new Div();
@@ -431,8 +417,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void TestEmbeddedImageInParagraph() {
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().AddUAXmpMetadata
-                ().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             Document document = new Document(pdfDoc);
             Div div = new Div();

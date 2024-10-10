@@ -260,8 +260,8 @@ namespace iText.Signatures {
         public virtual void InitPdfaDocumentTest() {
             PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimplePdfaDocument())), new ByteArrayOutputStream
                 (), new StampingProperties());
-            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_1A, ((PdfAAgnosticPdfDocument)signer.GetDocument()).
-                GetConformance().GetAConformance());
+            NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_1A, signer.GetDocument().GetConformance().GetAConformance
+                ());
         }
 
         [NUnit.Framework.Test]

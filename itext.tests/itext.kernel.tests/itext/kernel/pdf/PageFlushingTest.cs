@@ -395,6 +395,10 @@ namespace iText.Kernel.Pdf {
                     page = ((PdfPageValidationContext)validationContext).GetPage();
                 }
             }
+
+            public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+                return true;
+            }
         }
 
         private static void Test(String filename, PageFlushingTest.DocMode docMode, PageFlushingTest.FlushMode flushMode

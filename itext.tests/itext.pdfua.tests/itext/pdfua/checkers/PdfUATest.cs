@@ -77,25 +77,6 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void FlushingOnPageWarningDisabledDoesntLog() {
-            String outPdf = DESTINATION_FOLDER + "flushingOnPageCloseLogsWarningDisabledTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_flushingOnPageCloseLogsWarningDisabledTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            pdfDoc.DisablePageFlushingWarning();
-            Document document = new Document(pdfDoc);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-                );
-            document.SetFont(font);
-            for (int i = 0; i < 40; i++) {
-                document.Add(new Paragraph("Hello World!"));
-            }
-            pdfDoc.GetPage(1).Flush();
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
-                ));
-        }
-
-        [NUnit.Framework.Test]
         public virtual void CheckPoint01_007_suspectsHasEntryTrue() {
             PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
             PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
@@ -155,8 +136,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoLangEntryTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithNoLangEntryTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_1).SetPdfVersion(PdfVersion.PDF_1_7)));
             pdfDoc.SetTagged();
             ValidationContainer validationContainer = new ValidationContainer();
             validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
@@ -172,8 +153,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void DocumentWithEmptyStringLangEntryTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithEmptyStringLangEntryTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_1).SetPdfVersion(PdfVersion.PDF_1_7)));
             pdfDoc.SetTagged();
             ValidationContainer validationContainer = new ValidationContainer();
             validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
@@ -190,16 +171,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void DocumentWithComplexLangEntryTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithComplexLangEntryTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
-            pdfDoc.SetTagged();
-            ValidationContainer validationContainer = new ValidationContainer();
-            validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
-            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-            pdfDoc.GetCatalog().SetLang(new PdfString("qaa-Qaaa-QM-x-southern"));
-            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
-            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
-            info.SetTitle("English pangram");
+            PdfDocument pdfDoc = new PdfUADocument(new PdfWriter(outPdf), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "English pangram"
+                , "qaa-Qaaa-QM-x-southern"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_documentWithComplexLangEntryTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
@@ -210,8 +183,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void DocumentWithoutViewerPreferencesTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithoutViewerPreferencesTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_1).SetPdfVersion(PdfVersion.PDF_1_7)));
             pdfDoc.SetTagged();
             ValidationContainer validationContainer = new ValidationContainer();
             validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
@@ -226,8 +199,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void DocumentWithEmptyViewerPreferencesTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_1).SetPdfVersion(PdfVersion.PDF_1_7)));
             pdfDoc.SetTagged();
             ValidationContainer validationContainer = new ValidationContainer();
             validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
@@ -243,8 +216,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidViewerPreferencesTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_1).SetPdfVersion(PdfVersion.PDF_1_7)));
             pdfDoc.SetTagged();
             ValidationContainer validationContainer = new ValidationContainer();
             validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
@@ -413,8 +386,9 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void ManualPdfUaCreation() {
             String outPdf = DESTINATION_FOLDER + "manualPdfUaCreation.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddUAXmpMetadata().SetPdfVersion
-                (PdfVersion.PDF_1_7)));
+            WriterProperties properties = new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_1).SetPdfVersion
+                (PdfVersion.PDF_1_7);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, properties));
             Document document = new Document(pdfDoc, PageSize.A4.Rotate());
             //TAGGED PDF
             //Make document tagged

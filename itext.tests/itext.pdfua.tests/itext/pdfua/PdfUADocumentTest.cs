@@ -40,5 +40,14 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.DoesNotThrow(() => new PdfUADocument(new PdfReader(SOURCE_FOLDER + "usualPdf.pdf"), 
                 new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "simple doc", "eng")));
         }
+
+        [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN, LogLevel = LogLevelConstants
+            .WARN)]
+        public virtual void SettingWrongPdfVersionTest() {
+            PdfUADocument doc = new PdfUADocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_1_4)), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "en-us", "title"));
+            doc.Close();
+        }
     }
 }

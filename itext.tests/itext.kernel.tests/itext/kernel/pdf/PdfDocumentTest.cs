@@ -586,6 +586,18 @@ namespace iText.Kernel.Pdf {
                 , "27 0 R"), e.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CreatePdfDocumentWithAAndUaMetadataTest() {
+            String outputPdf = "pdfDocWithAAndUaMetadata.pdf";
+            WriterProperties writerProperties = new WriterProperties().AddPdfAXmpMetadata(PdfAConformance.PDF_A_3A).AddPdfUaXmpMetadata
+                (PdfUAConformance.PDF_UA_1);
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + outputPdf, writerProperties));
+            doc.AddNewPage();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outputPdf, SOURCE_FOLDER
+                 + "cmp_" + outputPdf, DESTINATION_FOLDER));
+        }
+
         private class IgnoreTagStructurePdfDocument : PdfDocument {
 //\cond DO_NOT_DOCUMENT
             internal IgnoreTagStructurePdfDocument(PdfReader reader)

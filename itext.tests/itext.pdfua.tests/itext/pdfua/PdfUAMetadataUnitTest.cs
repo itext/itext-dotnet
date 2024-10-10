@@ -101,8 +101,9 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidPdfVersionTest() {
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties(
-                ).SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfUAMetadataUnitTest.PdfDocumentCustomVersion pdfDocument = new PdfUAMetadataUnitTest.PdfDocumentCustomVersion
+                (new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "en-us", "title"));
+            pdfDocument.SetPdfVersion(PdfVersion.PDF_2_0);
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.INVALID_PDF_VERSION, e.Message);
@@ -137,6 +138,16 @@ namespace iText.Pdfua {
 
             protected internal override void CheckMetadata(PdfCatalog catalog) {
                 base.CheckMetadata(catalog);
+            }
+        }
+
+        private class PdfDocumentCustomVersion : PdfUADocument {
+            public PdfDocumentCustomVersion(PdfWriter writer, PdfUAConfig config)
+                : base(writer, config) {
+            }
+
+            public virtual void SetPdfVersion(PdfVersion pdfVersion) {
+                this.pdfVersion = pdfVersion;
             }
         }
     }

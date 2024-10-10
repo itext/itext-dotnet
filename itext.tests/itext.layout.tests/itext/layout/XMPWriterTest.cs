@@ -83,8 +83,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void AddUAXMPMetaDataNotTaggedTest() {
             String fileName = "addUAXMPMetaDataNotTaggedTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties().AddUAXmpMetadata
-                ()));
+            WriterProperties writerProperties = new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_1);
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, writerProperties));
             ManipulatePdf(pdf, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(destinationFolder + fileName, sourceFolder + "cmp_"
                  + fileName, true));
@@ -93,8 +93,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void AddUAXMPMetaDataTaggedTest() {
             String fileName = "addUAXMPMetaDataTaggedTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties().AddUAXmpMetadata
-                ()));
+            WriterProperties writerProperties = new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_1);
+            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + fileName, writerProperties));
             ManipulatePdf(pdf, true);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(destinationFolder + fileName, sourceFolder + "cmp_"
                  + fileName, true));

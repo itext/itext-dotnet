@@ -25,6 +25,8 @@ using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Event;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfa.Logs;
@@ -162,7 +164,7 @@ namespace iText.Pdfa {
             int pageCount = 3;
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
-                pdfDoc.checker.CheckSinglePage(page);
+                pdfDoc.GetDiContainer().GetInstance<ValidationContainer>().Validate(new PdfPageValidationContext(page));
                 page.Flush(false);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc.GetNumberOfPages());

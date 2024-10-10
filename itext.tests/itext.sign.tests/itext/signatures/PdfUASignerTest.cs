@@ -23,7 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using iText.Bouncycastleconnector;
 using iText.Commons;
+using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -34,25 +36,29 @@ using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Pdfua;
 using iText.Pdfua.Exceptions;
-using iText.Signatures;
+using iText.Signatures.Testutils;
 using iText.Test;
 using iText.Test.Pdfa;
 
-namespace iText.Pdfua {
+namespace iText.Signatures {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUASignerTest : ExtendedITextTest {
+        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
+            ();
+
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUASignerTest/";
+             + "/test/itext/signatures/PdfUASignerTest/";
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/font/FreeSans.ttf";
 
         private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfUASignerTest));
 
         public static readonly String CERTIFICATE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/certificates/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
@@ -180,7 +186,7 @@ namespace iText.Pdfua {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NormalPdfSignerVisibleSignatureWithoutFont() {
-            // TODO DEVSIX-8623 Spike: Get rid of PdfADocument, PdfUADocument, PdfAAgnosticDocument in favour of one PdfDocument
+            // TODO DEVSIX-8676 Enable keeping A and UA conformance in PdfSigner
             //This test should fail with the appropriate exception
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             String outPdf = GenerateSignatureNormal(inPdf, "normalPdfSignerVisibleSignatureWithoutFont", (signer) => {
@@ -218,7 +224,7 @@ namespace iText.Pdfua {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NormalPdfSignerVisibleSignatureWithFontEmptyTU() {
-            // TODO DEVSIX-8623 Spike: Get rid of PdfADocument, PdfUADocument, PdfAAgnosticDocument in favour of one PdfDocument
+            // TODO DEVSIX-8676 Enable keeping A and UA conformance in PdfSigner
             //Should throw the correct exception if the font is not set
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
             PdfFont font = PdfFontFactory.CreateFont(FONT);
@@ -312,8 +318,8 @@ namespace iText.Pdfua {
                 : base(reader, outputStream, path, properties) {
             }
 
-            protected override PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties properties
-                ) {
+            protected internal override PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
+                 properties) {
                 return new PdfUADocument(reader, writer, new PdfUAConfig(PdfUAConformance.PDF_UA_1, "Title", "en-US"));
             }
         }

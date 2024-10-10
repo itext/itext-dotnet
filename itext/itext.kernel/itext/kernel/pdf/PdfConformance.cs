@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 using iText.Kernel.XMP.Properties;
 
 namespace iText.Kernel.Pdf {
@@ -239,6 +240,40 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfConformance(aLevel, uaLevel);
         }
 
+        /// <summary>Sets required fields into XMP metadata according to passed PDF conformance.</summary>
+        /// <param name="xmpMeta">the xmp metadata to which required PDF conformance fields will be set</param>
+        /// <param name="conformance">the PDF conformance according to which XMP will be updated</param>
+        public static void SetConformanceToXmp(XMPMeta xmpMeta, iText.Kernel.Pdf.PdfConformance conformance) {
+            if (conformance == null) {
+                return;
+            }
+            // Don't set any property if property value was set, so if
+            // smth was invalid in source document, it will be left as is.
+            // But if e.g. for PDF/A-4 revision wasn't specified, we will fix it.
+            if (conformance.IsPdfUA()) {
+                if (xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID, XMPConst.PART) == null) {
+                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
+                        ));
+                }
+            }
+            if (conformance.IsPdfA()) {
+                PdfAConformance aLevel = conformance.GetAConformance();
+                if (xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART) == null) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, aLevel.GetPart());
+                }
+                if (aLevel.GetLevel() != null && xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE) == null) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, aLevel.GetLevel());
+                }
+                if ("4".Equals(aLevel.GetPart()) && xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV) == null) {
+                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV, iText.Kernel.Pdf.PdfConformance.PDF_A_4_REVISION);
+                }
+                if (xmpMeta.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART) != null) {
+                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PDF_UA_EXTENSION);
+                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                }
+            }
+        }
+
         /// <summary>
         /// Gets an instance of
         /// <see cref="PdfAConformance"/>
@@ -316,5 +351,23 @@ namespace iText.Kernel.Pdf {
             }
             return null;
         }
+
+        private const String PDF_UA_EXTENSION = "    <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "      <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
+             + "        <rdf:Description rdf:about=\"\" xmlns:pdfaExtension=\"http://www.aiim.org/pdfa/ns/extension/\" xmlns:pdfaSchema=\"http://www.aiim.org/pdfa/ns/schema#\" xmlns:pdfaProperty=\"http://www.aiim.org/pdfa/ns/property#\">\n"
+             + "          <pdfaExtension:schemas>\n" + "            <rdf:Bag>\n" + "              <rdf:li rdf:parseType=\"Resource\">\n"
+             + "                <pdfaSchema:namespaceURI rdf:resource=\"http://www.aiim.org/pdfua/ns/id/\"/>\n" + 
+            "                <pdfaSchema:prefix>pdfuaid</pdfaSchema:prefix>\n" + "                <pdfaSchema:schema>PDF/UA identification schema</pdfaSchema:schema>\n"
+             + "                <pdfaSchema:property>\n" + "                  <rdf:Seq>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n"
+             + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n" + "                      <pdfaProperty:description>PDF/UA version identifier</pdfaProperty:description>\n"
+             + "                      <pdfaProperty:name>part</pdfaProperty:name>\n" + "                      <pdfaProperty:valueType>Integer</pdfaProperty:valueType>\n"
+             + "                    </rdf:li>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n" + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n"
+             + "                      <pdfaProperty:description>PDF/UA amendment identifier</pdfaProperty:description>\n"
+             + "                      <pdfaProperty:name>amd</pdfaProperty:name>\n" + "                      <pdfaProperty:valueType>Text</pdfaProperty:valueType>\n"
+             + "                    </rdf:li>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n" + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n"
+             + "                      <pdfaProperty:description>PDF/UA corrigenda identifier</pdfaProperty:description>\n"
+             + "                      <pdfaProperty:name>corr</pdfaProperty:name>\n" + "                      <pdfaProperty:valueType>Text</pdfaProperty:valueType>\n"
+             + "                    </rdf:li>\n" + "                  </rdf:Seq>\n" + "                </pdfaSchema:property>\n"
+             + "              </rdf:li>\n" + "            </rdf:Bag>\n" + "          </pdfaExtension:schemas>\n" +
+             "        </rdf:Description>\n" + "      </rdf:RDF>\n" + "    </x:xmpmeta>";
     }
 }

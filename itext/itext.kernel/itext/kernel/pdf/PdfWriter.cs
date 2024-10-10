@@ -149,6 +149,12 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Gets defined pdf version for the document.</summary>
+        /// <returns>version for the document</returns>
+        public virtual PdfVersion GetPdfVersion() {
+            return properties.pdfVersion;
+        }
+
         /// <summary>Gets the writer properties.</summary>
         /// <returns>
         /// The

@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.IO.Colors;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -30,6 +32,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
+using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
     /// <summary>
@@ -122,6 +125,10 @@ namespace iText.Pdfa.Checker {
 
         private bool fullCheckMode = false;
 
+        private bool alreadyLoggedThatPageFlushingWasNotPerformed = false;
+
+        private bool alreadyLoggedThatObjectFlushingWasNotPerformed = false;
+
         /// <summary>Creates a PdfAChecker with the required conformance.</summary>
         /// <param name="aConformance">the required conformance</param>
         protected internal PdfAChecker(PdfAConformance aConformance) {
@@ -156,6 +163,9 @@ namespace iText.Pdfa.Checker {
             CheckOpenAction(catalogDict.Get(PdfName.OpenAction));
         }
 
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
         public virtual void Validate(IValidationContext context) {
             CanvasGraphicsState gState = null;
             if (context is IGraphicStateValidationParameter) {
@@ -262,11 +272,38 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+            if (checkedObjects.Contains(@object)) {
+                return true;
+            }
+            if (@object is PdfDictionary && PdfName.Page.Equals(((PdfDictionary)@object).GetAsName(PdfName.Type))) {
+                if (!alreadyLoggedThatPageFlushingWasNotPerformed) {
+                    alreadyLoggedThatPageFlushingWasNotPerformed = true;
+                    // This log message will be printed once for one instance of the document.
+                    ITextLogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfAChecker)).LogWarning(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED
+                        );
+                }
+            }
+            else {
+                if (!alreadyLoggedThatObjectFlushingWasNotPerformed) {
+                    alreadyLoggedThatObjectFlushingWasNotPerformed = true;
+                    // This log message will be printed once for one instance of the document.
+                    ITextLogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfAChecker)).LogWarning(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED
+                        );
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// This method checks all requirements that must be fulfilled by a page in a
         /// PDF/A document.
         /// </summary>
         /// <param name="page">the page that must be checked</param>
         public virtual void CheckSinglePage(PdfPage page) {
+            SetPdfAOutputIntentColorSpace(page.GetDocument().GetCatalog().GetPdfObject());
             CheckPage(page);
         }
 
@@ -351,16 +388,6 @@ namespace iText.Pdfa.Checker {
         /// <seealso cref="iText.Kernel.Pdf.PdfObject.IsModified()"/>
         public virtual void SetFullCheckMode(bool fullCheckMode) {
             this.fullCheckMode = fullCheckMode;
-        }
-
-        /// <summary>
-        /// Remembers which objects have already been checked, in order to avoid
-        /// redundant checks.
-        /// </summary>
-        /// <param name="object">the object to check</param>
-        /// <returns>whether or not the object has already been checked</returns>
-        public virtual bool ObjectIsChecked(PdfObject @object) {
-            return checkedObjects.Contains(@object);
         }
 
         /// <summary>

@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
@@ -37,6 +39,7 @@ using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Checkers.Utils.Headings;
 using iText.Pdfua.Checkers.Utils.Tables;
 using iText.Pdfua.Exceptions;
+using iText.Pdfua.Logs;
 
 namespace iText.Pdfua.Checkers {
     /// <summary>The class defines the requirements of the PDF/UA-1 standard.</summary>
@@ -54,6 +57,8 @@ namespace iText.Pdfua.Checkers {
 
         private readonly PdfUAValidationContext context;
 
+        private bool warnedOnPageFlush = false;
+
         /// <summary>Creates PdfUA1Checker instance with PDF document which will be validated against PDF/UA-1 standard.
         ///     </summary>
         /// <param name="pdfDocument">the document to validate</param>
@@ -64,6 +69,9 @@ namespace iText.Pdfua.Checkers {
             this.headingsChecker = new HeadingsChecker(context);
         }
 
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
         public virtual void Validate(IValidationContext context) {
             switch (context.GetType()) {
                 case ValidationType.PDF_DOCUMENT: {
@@ -117,6 +125,22 @@ namespace iText.Pdfua.Checkers {
                     throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
                         , idContext.GetId()));
                 }
+            }
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+            return true;
+        }
+
+        /// <summary>Logs a warn on page flushing that page flushing is disabled in PDF/UA mode.</summary>
+        public virtual void WarnOnPageFlush() {
+            if (!warnedOnPageFlush) {
+                ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUA1Checker)).LogWarning(PdfUALogMessageConstants.
+                    PAGE_FLUSHING_DISABLED);
+                warnedOnPageFlush = true;
             }
         }
 

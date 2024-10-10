@@ -20,20 +20,30 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
 
-namespace iText.Pdfua.Logs {
-    /// <summary>Class containing the log message constants.</summary>
-    public sealed class PdfUALogMessageConstants {
-        public const String PAGE_FLUSHING_DISABLED = "Page flushing is disabled in PDF/UA mode to allow UA checks "
-             + "to be applied. Page will only be flushed on closing.";
-
-        public const String PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED = "PDF to PDF/UA conversion is not supported.";
-
-        public const String WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN = "Pdf version from writer properties isn't compatible with specified PDF/UA conformance, it was overridden to {0} version.";
-
-        private PdfUALogMessageConstants() {
+namespace iText.Pdfa {
+    /// <summary>
+    /// The class presents default font strategy for PDF/A documents which
+    /// doesn't provide default font because all used fonts must be embedded.
+    /// </summary>
+    public class PdfADefaultFontStrategy : DefaultFontStrategy {
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="PdfADefaultFontStrategy"/>
+        /// instance based on the document which will use that strategy.
+        /// </summary>
+        /// <param name="pdfDocument">the pdf document which will use that strategy</param>
+        public PdfADefaultFontStrategy(PdfDocument pdfDocument)
+            : base(pdfDocument) {
         }
-        // empty constructor
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public override PdfFont GetFont() {
+            return null;
+        }
     }
 }

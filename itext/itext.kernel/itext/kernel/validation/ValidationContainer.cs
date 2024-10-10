@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
+using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Validation {
     /// <summary>
@@ -111,6 +112,30 @@ namespace iText.Kernel.Validation {
         /// </returns>
         public virtual bool ContainsChecker(IValidationChecker checker) {
             return validationCheckers.Contains(checker);
+        }
+
+        /// <summary>
+        /// Is
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// ready to flush according to all added
+        /// <see cref="IValidationChecker"/>
+        /// implementations.
+        /// </summary>
+        /// <param name="pdfObject">the pdf object to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the object is ready to flush,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsPdfObjectChecked(PdfObject pdfObject) {
+            foreach (IValidationChecker checker in validationCheckers) {
+                if (!checker.IsPdfObjectReadyToFlush(pdfObject)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

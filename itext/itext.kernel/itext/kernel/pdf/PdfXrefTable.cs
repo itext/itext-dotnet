@@ -282,7 +282,9 @@ namespace iText.Kernel.Pdf {
                 int offsetSize = GetOffsetSize(Math.Max(startxref, Size()));
                 xrefStream.Put(PdfName.W, new PdfArray(JavaUtil.ArraysAsList((PdfObject)new PdfNumber(1), new PdfNumber(offsetSize
                     ), new PdfNumber(2))));
-                xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
+                if (document.GetTrailer().Get(PdfName.Info) != null) {
+                    xrefStream.Put(PdfName.Info, document.GetTrailer().Get(PdfName.Info));
+                }
                 xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
                 PdfArray index = new PdfArray();
                 foreach (int? section in sections) {

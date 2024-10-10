@@ -349,7 +349,7 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckSignatureTest() {
             PdfDictionary signatureDict = CreateSignatureDict();
             pdfA2Checker.CheckSignature(signatureDict);
-            NUnit.Framework.Assert.IsTrue(pdfA2Checker.ObjectIsChecked(signatureDict));
+            NUnit.Framework.Assert.IsTrue(pdfA2Checker.IsPdfObjectReadyToFlush(signatureDict));
         }
 
         [NUnit.Framework.Test]

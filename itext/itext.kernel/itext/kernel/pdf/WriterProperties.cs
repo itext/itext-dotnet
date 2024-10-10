@@ -40,7 +40,9 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool addXmpMetadata;
 
-        protected internal bool addUAXmpMetadata;
+        protected internal PdfAConformance addPdfAXmpMetadata = null;
+
+        protected internal PdfUAConformance addPdfUaXmpMetadata = null;
 
         protected internal PdfVersion pdfVersion;
 
@@ -54,7 +56,6 @@ namespace iText.Kernel.Pdf {
 
         public WriterProperties() {
             smartMode = false;
-            addUAXmpMetadata = false;
             compressionLevel = CompressionConstants.DEFAULT_COMPRESSION;
             isFullCompression = null;
             encryptionProperties = new EncryptionProperties();
@@ -111,6 +112,54 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties AddXmpMetadata() {
             this.addXmpMetadata = true;
+            return this;
+        }
+
+        /// <summary>Adds PDF/A XMP metadata to the PDF document.</summary>
+        /// <remarks>
+        /// Adds PDF/A XMP metadata to the PDF document.
+        /// <para />
+        /// This method calls
+        /// <see cref="AddXmpMetadata()"/>
+        /// implicitly.
+        /// <para />
+        /// NOTE: Calling this method only affects the XMP metadata, but doesn't enable any additional checks that the
+        /// created document meets all PDF/A requirements. When using this method make sure you are familiar with PDF/A
+        /// document requirements. If you are not sure, use dedicated iText PDF/A module to create valid PDF/A documents.
+        /// </remarks>
+        /// <param name="aConformance">the PDF/A conformance which will be added to XMP metadata</param>
+        /// <returns>
+        /// this
+        /// <see cref="WriterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties AddPdfAXmpMetadata(PdfAConformance aConformance) {
+            this.addPdfAXmpMetadata = aConformance;
+            AddXmpMetadata();
+            return this;
+        }
+
+        /// <summary>Adds PDF/UA XMP metadata to the PDF document.</summary>
+        /// <remarks>
+        /// Adds PDF/UA XMP metadata to the PDF document.
+        /// <para />
+        /// This method calls
+        /// <see cref="AddXmpMetadata()"/>
+        /// implicitly.
+        /// <para />
+        /// NOTE: Calling this method only affects the XMP metadata, but doesn't enable any additional checks that the
+        /// created document meets all PDF/UA requirements. When using this method make sure you are familiar with PDF/UA
+        /// document requirements. If you are not sure, use dedicated iText PDF/UA module to create valid PDF/UA documents.
+        /// </remarks>
+        /// <param name="uaConformance">the PDF/UA conformance which will be added to XMP metadata</param>
+        /// <returns>
+        /// this
+        /// <see cref="WriterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties AddPdfUaXmpMetadata(PdfUAConformance uaConformance) {
+            this.addPdfUaXmpMetadata = uaConformance;
+            AddXmpMetadata();
             return this;
         }
 
@@ -468,25 +517,6 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.WriterProperties SetModifiedDocumentId(PdfString modifiedDocumentId) {
             this.modifiedDocumentId = modifiedDocumentId;
             return this;
-        }
-
-        /// <summary>This method marks the document as PDF/UA and sets related flags is XMPMetaData.</summary>
-        /// <remarks>
-        /// This method marks the document as PDF/UA and sets related flags is XMPMetaData.
-        /// This method calls
-        /// <see cref="AddXmpMetadata()"/>
-        /// implicitly.
-        /// NOTE: iText does not validate PDF/UA, which means we don't check if created PDF meets all PDF/UA requirements.
-        /// Don't use this method if you are not familiar with PDF/UA specification in order to avoid creation of non-conformant PDF/UA file.
-        /// </remarks>
-        /// <returns>
-        /// this
-        /// <see cref="WriterProperties"/>
-        /// instance
-        /// </returns>
-        public virtual iText.Kernel.Pdf.WriterProperties AddUAXmpMetadata() {
-            this.addUAXmpMetadata = true;
-            return AddXmpMetadata();
         }
 
 //\cond DO_NOT_DOCUMENT

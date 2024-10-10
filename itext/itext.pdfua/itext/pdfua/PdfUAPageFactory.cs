@@ -22,14 +22,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Pdfua.Checkers;
 
 namespace iText.Pdfua {
 //\cond DO_NOT_DOCUMENT
+    /// <summary>The class implements PDF page factory which is used for creating correct PDF/UA documents.</summary>
     internal class PdfUAPageFactory : IPdfPageFactory {
-        public PdfUAPageFactory() {
+        private readonly PdfUA1Checker checker;
+
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="PdfUAPageFactory"/>
+        /// instance based on
+        /// <see cref="iText.Pdfua.Checkers.PdfUA1Checker"/>.
+        /// </summary>
+        /// <param name="checker">the PDF/UA checker</param>
+        public PdfUAPageFactory(PdfUA1Checker checker) {
+            this.checker = checker;
         }
 
-        //empty constructor
         /// <param name="pdfObject">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -39,7 +50,7 @@ namespace iText.Pdfua {
         /// </param>
         /// <returns>The pdf page.</returns>
         public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
-            return new PdfUAPage(pdfObject);
+            return new PdfUAPage(pdfObject, checker);
         }
 
         /// <param name="pdfDocument">
@@ -54,7 +65,7 @@ namespace iText.Pdfua {
         /// </param>
         /// <returns>The Pdf page.</returns>
         public virtual PdfPage CreatePdfPage(PdfDocument pdfDocument, PageSize pageSize) {
-            return new PdfUAPage(pdfDocument, pageSize);
+            return new PdfUAPage(pdfDocument, pageSize, checker);
         }
     }
 //\endcond

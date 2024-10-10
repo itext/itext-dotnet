@@ -137,13 +137,14 @@ namespace iText.Pdfa {
         }
 
         private void GeneratePdfAWithUA(Stream os) {
-            WriterProperties wp = new WriterProperties().AddUAXmpMetadata();
+            WriterProperties wp = new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_1);
             using (PdfWriter w = new PdfWriter(os, wp)) {
                 PdfOutputIntent outputIntent;
                 using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
                     outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
                 }
-                PdfDocument pdfDoc = new PdfADocument(w, PdfAConformance.PDF_A_2A, outputIntent).SetTagged();
+                PdfDocument pdfDoc = new PdfADocument(w, PdfAConformance.PDF_A_2A, outputIntent);
+                pdfDoc.SetTagged();
                 pdfDoc.GetDocumentInfo().SetTitle("Test document");
                 pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
                 pdfDoc.GetCatalog().SetLang(new PdfString("en"));
