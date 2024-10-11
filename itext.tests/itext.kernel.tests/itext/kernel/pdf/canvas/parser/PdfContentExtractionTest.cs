@@ -29,22 +29,38 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Canvas.Parser {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfContentExtractionTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfContentExtractionTest/";
 
         [NUnit.Framework.Test]
         public virtual void ContentExtractionInDocWithBigCoordinatesTest() {
-            //TODO: remove the expected exception construct once the issue is fixed (DEVSIX-1279)
-            String inputFileName = sourceFolder + "docWithBigCoordinates.pdf";
-            //In this document the CTM shrinks coordinates and this coordinates are large numbers.
+            String inputFileName = SOURCE_FOLDER + "docWithBigCoordinates.pdf";
+            // In this document the CTM shrinks coordinates and these coordinates are large numbers.
             // At the moment creation of this test clipper has a problem with handling large numbers
             // since internally it deals with integers and has to multiply large numbers even more
             // for internal purposes
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName));
-            PdfDocumentContentParser contentParser = new PdfDocumentContentParser(pdfDocument);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ClipperException), () => contentParser.ProcessContent(1, 
-                new LocationTextExtractionStrategy()));
-            NUnit.Framework.Assert.AreEqual(ClipperExceptionConstant.COORDINATE_OUTSIDE_ALLOWED_RANGE, e.Message);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName))) {
+                PdfDocumentContentParser contentParser = new PdfDocumentContentParser(pdfDocument);
+                NUnit.Framework.Assert.DoesNotThrow(() => contentParser.ProcessContent(1, new LocationTextExtractionStrategy
+                    ()));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContentExtractionInDocWithStaticFloatMultiplierTest() {
+            String inputFileName = SOURCE_FOLDER + "docWithBigCoordinates.pdf";
+            // In this document the CTM shrinks coordinates and these coordinates are large numbers.
+            // At the moment creation of this test clipper has a problem with handling large numbers
+            // since internally it deals with integers and has to multiply large numbers even more
+            // for internal purposes
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName))) {
+                PdfDocumentContentParser contentParser = new PdfDocumentContentParser(pdfDocument);
+                ClipperBridge.floatMultiplier = Math.Pow(10, 14);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(ClipperException), () => contentParser.ProcessContent(1, 
+                    new LocationTextExtractionStrategy()));
+                NUnit.Framework.Assert.AreEqual(ClipperExceptionConstant.COORDINATE_OUTSIDE_ALLOWED_RANGE, e.Message);
+                ClipperBridge.floatMultiplier = null;
+            }
         }
     }
 }

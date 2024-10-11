@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using System.Linq;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
@@ -48,11 +49,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             Path rectanglePath = new Path();
             rectanglePath.AddSubpath(rectangleSubpath);
             Clipper clipper = new Clipper();
-            ClipperBridge.AddPath(clipper, squarePath, PolyType.SUBJECT);
-            ClipperBridge.AddPath(clipper, rectanglePath, PolyType.CLIP);
+            ClipperBridge clipperBridge = new ClipperBridge(squarePath, rectanglePath);
+            clipperBridge.AddPath(clipper, squarePath, PolyType.SUBJECT);
+            clipperBridge.AddPath(clipper, rectanglePath, PolyType.CLIP);
             PolyTree polyTree = new PolyTree();
             clipper.Execute(ClipType.UNION, polyTree);
-            Path result = ClipperBridge.ConvertToPath(polyTree);
+            Path result = clipperBridge.ConvertToPath(polyTree);
             NUnit.Framework.Assert.AreEqual(new Point(20, 40), result.GetCurrentPoint());
             NUnit.Framework.Assert.AreEqual(2, result.GetSubpaths().Count);
             Subpath closedPath = result.GetSubpaths()[0];
@@ -95,14 +97,34 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         public virtual void LongRectWidthTest() {
             IntRect longRect = new IntRect(14900000000000000L, 21275000000000000L, 71065802001953128L, 71075000000000000L
                 );
-            NUnit.Framework.Assert.AreEqual(561.658, ClipperBridge.LongRectCalculateWidth(longRect), 0.001f);
+            NUnit.Framework.Assert.AreEqual(561.658, new ClipperBridge().LongRectCalculateWidth(longRect), 0.001f);
         }
 
         [NUnit.Framework.Test]
         public virtual void LongRectHeightTest() {
             IntRect longRect = new IntRect(14900000000000000L, 21275000000000000L, 71065802001953128L, 71075000000000000L
                 );
-            NUnit.Framework.Assert.AreEqual(498, ClipperBridge.LongRectCalculateHeight(longRect), 0.001f);
+            NUnit.Framework.Assert.AreEqual(498, new ClipperBridge().LongRectCalculateHeight(longRect), 0.001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DynamicFloatMultiplierCalculationsSmallValuesTest() {
+            Point[] points = new Point[] { new Point(1e-10, 0), new Point(0, 1e-13) };
+            NUnit.Framework.Assert.AreEqual(1.8014398509481984e26, new ClipperBridge(points).GetFloatMultiplier(), 0e+10
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DynamicFloatMultiplierCalculationsBigValuesTest() {
+            Point[] points = new Point[] { new Point(1e+11, 10), new Point(10, 1e+10) };
+            NUnit.Framework.Assert.AreEqual(180143, new ClipperBridge(points).GetFloatMultiplier(), 0.001f);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SmallFloatMultiplierCoefficientTest() {
+            Point[] points = new Point[] { new Point(1e-10, 1e+10) };
+            NUnit.Framework.Assert.AreEqual(new IntPoint(0, 18014390000000000L), new ClipperBridge(points).ConvertToLongPoints
+                (JavaUtil.ArraysAsList(points))[0]);
         }
 
         private bool AreShapesEqual(IShape expected, IShape actual) {
