@@ -28,12 +28,12 @@ using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// <summary>
-    /// This class contains variety of methods allowing to convert iText
-    /// abstractions into the abstractions of the Clipper library and vise versa.
+    /// This class contains a variety of methods allowing the conversion of iText
+    /// abstractions into abstractions of the Clipper library, and vice versa.
     /// </summary>
     /// <remarks>
-    /// This class contains variety of methods allowing to convert iText
-    /// abstractions into the abstractions of the Clipper library and vise versa.
+    /// This class contains a variety of methods allowing the conversion of iText
+    /// abstractions into abstractions of the Clipper library, and vice versa.
     /// <para />
     /// For example:
     /// <list type="bullet">
@@ -55,6 +55,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// </list>
     /// </remarks>
     public sealed class ClipperBridge {
+        private const long MAX_ALLOWED_VALUE = 0x3FFFFFFFFFFFFFL;
+
         /// <summary>
         /// Since the clipper library uses integer coordinates, we should convert
         /// our floating point numbers into fixed point numbers by multiplying by
@@ -64,15 +66,97 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// Since the clipper library uses integer coordinates, we should convert
         /// our floating point numbers into fixed point numbers by multiplying by
         /// this coefficient. Vary it to adjust the preciseness of the calculations.
+        /// <para />
+        /// Note that if this value is specified, it will be used for all ClipperBridge instances and
+        /// dynamic float multiplier calculation will be disabled.
         /// </remarks>
-        public static double floatMultiplier = Math
-                //TODO DEVSIX-5770 make this constant a single non-static configuration
-                .Pow(10, 14);
+        public static double? floatMultiplier;
 
-        private ClipperBridge() {
+        private double approximatedFloatMultiplier = Math.Pow(10, 14);
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="ClipperBridge"/>
+        /// instance with default float multiplier value which is 10^14.
+        /// </summary>
+        /// <remarks>
+        /// Creates new
+        /// <see cref="ClipperBridge"/>
+        /// instance with default float multiplier value which is 10^14.
+        /// <para />
+        /// Since the clipper library uses integer coordinates, we should convert our floating point numbers into fixed
+        /// point numbers by multiplying by float multiplier coefficient. It is possible to vary it to adjust the preciseness
+        /// of the calculations: if static
+        /// <see cref="floatMultiplier"/>
+        /// is specified, it will be used for all ClipperBridge
+        /// instances and default value will be ignored.
+        /// </remarks>
+        public ClipperBridge() {
         }
 
-        //empty constructor
+        // Empty constructor.
+        /// <summary>
+        /// Creates new
+        /// <see cref="ClipperBridge"/>
+        /// instance with adjusted float multiplier value.
+        /// </summary>
+        /// <remarks>
+        /// Creates new
+        /// <see cref="ClipperBridge"/>
+        /// instance with adjusted float multiplier value. This instance will work
+        /// correctly with the provided paths only.
+        /// <para />
+        /// Since the clipper library uses integer coordinates, we should convert our floating point numbers into fixed
+        /// point numbers by multiplying by float multiplier coefficient. It is calculated automatically, however
+        /// it is possible to vary it to adjust the preciseness of the calculations: if static
+        /// <see cref="floatMultiplier"/>
+        /// is
+        /// specified, it will be used for all ClipperBridge instances and automatic calculation won't work.
+        /// </remarks>
+        /// <param name="paths">paths to calculate multiplier coefficient to convert floating point numbers into fixed point numbers
+        ///     </param>
+        public ClipperBridge(params Path[] paths) {
+            if (floatMultiplier == null) {
+                IList<Point> pointsList = new List<Point>();
+                foreach (Path path in paths) {
+                    foreach (Subpath subpath in path.GetSubpaths()) {
+                        if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen()) {
+                            pointsList.AddAll(subpath.GetPiecewiseLinearApproximation());
+                        }
+                    }
+                }
+                CalculateFloatMultiplier(pointsList.ToArray(new Point[0]));
+            }
+        }
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="ClipperBridge"/>
+        /// instance with adjusted float multiplier value.
+        /// </summary>
+        /// <remarks>
+        /// Creates new
+        /// <see cref="ClipperBridge"/>
+        /// instance with adjusted float multiplier value. This instance will work
+        /// correctly with the provided point only.
+        /// <para />
+        /// Since the clipper library uses integer coordinates, we should convert our floating point numbers into fixed
+        /// point numbers by multiplying by float multiplier coefficient. It is calculated automatically, however
+        /// it is possible to vary it to adjust the preciseness of the calculations: if static
+        /// <see cref="floatMultiplier"/>
+        /// is
+        /// specified, it will be used for all ClipperBridge instances and automatic calculation won't work.
+        /// </remarks>
+        /// <param name="points">
+        /// points to calculate multiplier coefficient to convert floating point numbers
+        /// into fixed point numbers
+        /// </param>
+        public ClipperBridge(params Point[][] points) {
+            if (floatMultiplier == null) {
+                CalculateFloatMultiplier(points);
+            }
+        }
+
         /// <summary>
         /// Converts Clipper library
         /// <see cref="PolyTree"/>
@@ -90,7 +174,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="iText.Kernel.Geom.Path"/>
         /// object
         /// </returns>
-        public static Path ConvertToPath(PolyTree result) {
+        public Path ConvertToPath(PolyTree result) {
             Path path = new Path();
             PolyNode node = result.GetFirst();
             while (node != null) {
@@ -122,7 +206,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// See
         /// <see cref="PolyType"/>.
         /// </param>
-        public static void AddPath(Clipper clipper, Path path, PolyType polyType) {
+        public void AddPath(Clipper clipper, Path path, PolyType polyType) {
             foreach (Subpath subpath in path.GetSubpaths()) {
                 if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen()) {
                     IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
@@ -186,7 +270,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="iText.Kernel.Geom.Subpath"/>
         /// s of the path.
         /// </returns>
-        public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType, EndType endType) {
+        public IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType, EndType endType) {
             IList<Subpath> degenerateSubpaths = new List<Subpath>();
             foreach (Subpath subpath in path.GetSubpaths()) {
                 if (subpath.IsDegenerate()) {
@@ -226,10 +310,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="iText.Kernel.Geom.Point"/>
         /// objects.
         /// </returns>
-        public static IList<Point> ConvertToFloatPoints(IList<IntPoint> points) {
+        public IList<Point> ConvertToFloatPoints(IList<IntPoint> points) {
             IList<Point> convertedPoints = new List<Point>(points.Count);
             foreach (IntPoint point in points) {
-                convertedPoints.Add(new Point(point.X / floatMultiplier, point.Y / floatMultiplier));
+                convertedPoints.Add(new Point(point.X / GetFloatMultiplier(), point.Y / GetFloatMultiplier()));
             }
             return convertedPoints;
         }
@@ -251,10 +335,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// <see cref="IntPoint"/>
         /// objects.
         /// </returns>
-        public static IList<IntPoint> ConvertToLongPoints(IList<Point> points) {
+        public IList<IntPoint> ConvertToLongPoints(IList<Point> points) {
             IList<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
             foreach (Point point in points) {
-                convertedPoints.Add(new IntPoint(floatMultiplier * point.GetX(), floatMultiplier * point.GetY()));
+                convertedPoints.Add(new IntPoint(GetFloatMultiplier() * point.GetX(), GetFloatMultiplier() * point.GetY())
+                    );
             }
             return convertedPoints;
         }
@@ -372,7 +457,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// path is a subject of clipping or a part of the clipping polygon.
         /// </param>
         /// <returns>true if polygon path was successfully added, false otherwise.</returns>
-        public static bool AddPolygonToClipper(Clipper clipper, Point[] polyVertices, PolyType polyType) {
+        public bool AddPolygonToClipper(Clipper clipper, Point[] polyVertices, PolyType polyType) {
             return clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(polyVertices
                 )))), polyType, true);
         }
@@ -418,7 +503,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// to clipper path and added to the clipper instance.
         /// </param>
         /// <returns>true if polyline path was successfully added, false otherwise.</returns>
-        public static bool AddPolylineSubjectToClipper(Clipper clipper, Point[] lineVertices) {
+        public bool AddPolylineSubjectToClipper(Clipper clipper, Point[] lineVertices) {
             return clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(lineVertices
                 )))), PolyType.SUBJECT, false);
         }
@@ -434,9 +519,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// object representing the rectangle.
         /// </param>
         /// <returns>the width of the rectangle.</returns>
-        public static float LongRectCalculateWidth(IntRect rect) {
-            return (float)(Math.Abs(rect.left - rect.right) / iText.Kernel.Pdf.Canvas.Parser.ClipperLib.ClipperBridge.
-                floatMultiplier);
+        public float LongRectCalculateWidth(IntRect rect) {
+            return (float)(Math.Abs(rect.left - rect.right) / GetFloatMultiplier());
         }
 
         /// <summary>
@@ -450,13 +534,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// object representing the rectangle.
         /// </param>
         /// <returns>the height of the rectangle.</returns>
-        public static float LongRectCalculateHeight(IntRect rect) {
-            return (float)(Math.Abs(rect.top - rect.bottom) / iText.Kernel.Pdf.Canvas.Parser.ClipperLib.ClipperBridge.
-                floatMultiplier);
+        public float LongRectCalculateHeight(IntRect rect) {
+            return (float)(Math.Abs(rect.top - rect.bottom) / GetFloatMultiplier());
+        }
+
+        /// <summary>Gets multiplier coefficient for converting our floating point numbers into fixed point numbers.</summary>
+        /// <returns>multiplier coefficient for converting our floating point numbers into fixed point numbers</returns>
+        public double GetFloatMultiplier() {
+            if (floatMultiplier == null) {
+                return approximatedFloatMultiplier;
+            }
+            return (double)floatMultiplier;
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal static void AddContour(Path path, IList<IntPoint> contour, bool close) {
+        internal void AddContour(Path path, IList<IntPoint> contour, bool close) {
             IList<Point> floatContour = ConvertToFloatPoints(contour);
             Point point = floatContour[0];
             path.MoveTo((float)point.GetX(), (float)point.GetY());
@@ -469,5 +561,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             }
         }
 //\endcond
+
+        private void CalculateFloatMultiplier(params Point[][] points) {
+            double maxPoint = 0;
+            foreach (Point[] pointsArray in points) {
+                foreach (Point point in pointsArray) {
+                    maxPoint = Math.Max(maxPoint, Math.Abs(point.GetX()));
+                    maxPoint = Math.Max(maxPoint, Math.Abs(point.GetY()));
+                }
+            }
+            // The significand of the double type is approximately 15 to 17 decimal digits for most platforms.
+            double epsilon = 1E-16;
+            if (maxPoint > epsilon) {
+                this.approximatedFloatMultiplier = Math.Floor(MAX_ALLOWED_VALUE / maxPoint);
+            }
+        }
     }
 }

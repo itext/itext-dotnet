@@ -61,12 +61,12 @@ namespace iText.Forms.Form.Element {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Form.Element.ComboBoxField SetSelected(int index) {
-            if (index < 0 || index >= this.GetItems().Count) {
-                String message = MessageFormatUtil.Format(FormsExceptionMessageConstant.INDEX_OUT_OF_BOUNDS, index, this.GetItems
+            if (index < 0 || index >= this.GetOptions().Count) {
+                String message = MessageFormatUtil.Format(FormsExceptionMessageConstant.INDEX_OUT_OF_BOUNDS, index, this.GetOptions
                     ().Count);
                 throw new IndexOutOfRangeException(message);
             }
-            SetSelected(this.GetItems()[index]);
+            SetSelected(this.GetOptions()[index]);
             return this;
         }
 
@@ -81,7 +81,7 @@ namespace iText.Forms.Form.Element {
             ClearSelected();
             selectedExportValue = value;
             bool found = false;
-            foreach (SelectFieldItem option in this.GetItems()) {
+            foreach (SelectFieldItem option in this.GetOptions()) {
                 if (option.GetExportValue().Equals(value)) {
                     if (!found) {
                         option.GetElement().SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
@@ -121,7 +121,7 @@ namespace iText.Forms.Form.Element {
         /// </param>
         public override void AddOption(SelectFieldItem option) {
             bool found = false;
-            foreach (SelectFieldItem item in this.GetItems()) {
+            foreach (SelectFieldItem item in this.GetOptions()) {
                 if (item.GetExportValue().Equals(option.GetExportValue())) {
                     found = true;
                     break;
@@ -139,7 +139,7 @@ namespace iText.Forms.Form.Element {
             if (selectedExportValue == null) {
                 return null;
             }
-            foreach (SelectFieldItem option in this.GetItems()) {
+            foreach (SelectFieldItem option in this.GetOptions()) {
                 if (option.GetExportValue().Equals(selectedExportValue)) {
                     return option;
                 }
@@ -162,7 +162,7 @@ namespace iText.Forms.Form.Element {
 
         private void ClearSelected() {
             this.selectedExportValue = null;
-            foreach (SelectFieldItem option in this.GetItems()) {
+            foreach (SelectFieldItem option in this.GetOptions()) {
                 option.GetElement().DeleteOwnProperty(FormProperty.FORM_FIELD_SELECTED);
             }
         }

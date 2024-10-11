@@ -26,6 +26,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -75,7 +76,8 @@ namespace iText.Signatures.Sign {
             PdfReader reader = new PdfReader(srcFile, new ReaderProperties().SetPassword(ownerPass));
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(outPdf), new StampingProperties().UseAppendMode
                 ());
-            signer.SetFieldName(fieldName);
+            SignerProperties signerProperties = new SignerProperties().SetFieldName(fieldName);
+            signer.SetSignerProperties(signerProperties);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES

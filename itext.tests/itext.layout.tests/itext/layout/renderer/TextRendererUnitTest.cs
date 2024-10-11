@@ -30,13 +30,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            TextRenderer textRenderer = new _TextRenderer_44(new Text("tet"));
+            TextRenderer textRenderer = new _TextRenderer_43(new Text("tet"));
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(TextRenderer), textRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _TextRenderer_44 : TextRenderer {
-            public _TextRenderer_44(Text baseArg1)
+        private sealed class _TextRenderer_43 : TextRenderer {
+            public _TextRenderer_43(Text baseArg1)
                 : base(baseArg1) {
             }
         }

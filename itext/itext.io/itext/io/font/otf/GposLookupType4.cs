@@ -37,60 +37,61 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return false;
             }
-            if (openReader.IsSkip(line.Get(line.idx).GetCode(), lookupFlag)) {
-                line.idx++;
+            if (openReader.IsSkip(line.Get(line.GetIdx()).GetCode(), lookupFlag)) {
+                line.SetIdx(line.GetIdx() + 1);
                 return false;
             }
             bool changed = false;
             OpenTableLookup.GlyphIndexer gi = null;
             foreach (GposLookupType4.MarkToBase mb in marksbases) {
-                OtfMarkRecord omr = mb.marks.Get(line.Get(line.idx).GetCode());
+                OtfMarkRecord omr = mb.marks.Get(line.Get(line.GetIdx()).GetCode());
                 if (omr == null) {
                     continue;
                 }
                 if (gi == null) {
                     gi = new OpenTableLookup.GlyphIndexer();
-                    gi.idx = line.idx;
-                    gi.line = line;
+                    gi.SetIdx(line.GetIdx());
+                    gi.SetLine(line);
                     while (true) {
                         gi.PreviousGlyph(openReader, lookupFlag);
-                        if (gi.glyph == null) {
+                        if (gi.GetGlyph() == null) {
                             break;
                         }
                         // not mark => base glyph
-                        if (openReader.GetGlyphClass(gi.glyph.GetCode()) != OtfClass.GLYPH_MARK) {
+                        if (openReader.GetGlyphClass(gi.GetGlyph().GetCode()) != OtfClass.GLYPH_MARK) {
                             break;
                         }
                     }
-                    if (gi.glyph == null) {
+                    if (gi.GetGlyph() == null) {
                         break;
                     }
                 }
-                GposAnchor[] gpas = mb.bases.Get(gi.glyph.GetCode());
+                GposAnchor[] gpas = mb.bases.Get(gi.GetGlyph().GetCode());
                 if (gpas == null) {
                     continue;
                 }
-                int markClass = omr.markClass;
+                int markClass = omr.GetMarkClass();
                 int xPlacement = 0;
                 int yPlacement = 0;
                 GposAnchor baseAnchor = gpas[markClass];
                 if (baseAnchor != null) {
-                    xPlacement = baseAnchor.XCoordinate;
-                    yPlacement = baseAnchor.YCoordinate;
+                    xPlacement = baseAnchor.GetXCoordinate();
+                    yPlacement = baseAnchor.GetYCoordinate();
                 }
-                GposAnchor markAnchor = omr.anchor;
+                GposAnchor markAnchor = omr.GetAnchor();
                 if (markAnchor != null) {
-                    xPlacement -= markAnchor.XCoordinate;
-                    yPlacement -= markAnchor.YCoordinate;
+                    xPlacement -= markAnchor.GetXCoordinate();
+                    yPlacement -= markAnchor.GetYCoordinate();
                 }
-                line.Set(line.idx, new Glyph(line.Get(line.idx), xPlacement, yPlacement, 0, 0, gi.idx - line.idx));
+                line.Set(line.GetIdx(), new Glyph(line.Get(line.GetIdx()), xPlacement, yPlacement, 0, 0, gi.GetIdx() - line
+                    .GetIdx()));
                 changed = true;
                 break;
             }
-            line.idx++;
+            line.SetIdx(line.GetIdx() + 1);
             return changed;
         }
 

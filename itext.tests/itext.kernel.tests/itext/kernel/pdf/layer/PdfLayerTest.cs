@@ -24,9 +24,14 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
+using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 
@@ -353,6 +358,129 @@ namespace iText.Kernel.Pdf.Layer {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "output_layered.pdf", 
                 sourceFolder + "cmp_output_layered.pdf", destinationFolder, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestReadAllLayersFromPage1() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), CompareTool.CreateTestPdfWriter
+                (destinationFolder + "output_layered_2.pdf"));
+            PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
+            //create layer on page
+            PdfLayer newLayer = new PdfLayer("appended", pdfDoc);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
+            PdfLayerTestUtils.AddTextInsideLayer(newLayer, canvas, "APPENDED CONTENT", 200, 600);
+            IList<PdfLayer> layersFromCatalog = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
+            NUnit.Framework.Assert.AreEqual(13, layersFromCatalog.Count);
+            PdfPage page = pdfDoc.GetPage(1);
+            ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
+            NUnit.Framework.Assert.AreEqual(11, layersFromPage.Count);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "output_layered_2.pdf"
+                , sourceFolder + "cmp_output_layered_2.pdf", destinationFolder, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestReadAllLayersFromDocumentWithComplexOCG() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_complex_layers.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "output_complex_layers.pdf"));
+            IList<PdfLayer> layersFromCatalog = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
+            NUnit.Framework.Assert.AreEqual(12, layersFromCatalog.Count);
+            PdfPage page = pdfDoc.GetPage(1);
+            ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
+            NUnit.Framework.Assert.AreEqual(10, layersFromPage.Count);
+            pdfDoc.Close();
+        }
+
+        //Read OCGs from different locations (annotations, content streams, xObjects) test block
+        [NUnit.Framework.Test]
+        public virtual void TestReadOcgFromStreamProperties() {
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfPage page = document.AddNewPage();
+                    PdfResources pdfResource = page.GetResources();
+                    pdfResource.AddProperties(new PdfLayer("name", document).GetPdfObject());
+                    pdfResource.MakeIndirect(document);
+                    ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
+                    NUnit.Framework.Assert.AreEqual(1, layersFromPage.Count);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestReadOcgFromAnnotation() {
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument fromDocument = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfPage page = fromDocument.AddNewPage();
+                    PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(50, 10));
+                    annotation.SetLayer(new PdfLayer("name", fromDocument));
+                    page.AddAnnotation(annotation);
+                    ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
+                    NUnit.Framework.Assert.AreEqual(1, layersFromPage.Count);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestReadOcgFromFlushedAnnotation() {
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument fromDocument = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfPage page = fromDocument.AddNewPage();
+                    PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(50, 10));
+                    annotation.SetLayer(new PdfLayer("name", fromDocument));
+                    page.AddAnnotation(annotation);
+                    annotation.Flush();
+                    ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
+                    NUnit.Framework.Assert.AreEqual(1, layersFromPage.Count);
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestReadOcgFromApAnnotation() {
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument fromDocument = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfPage page = fromDocument.AddNewPage();
+                    PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(50, 10));
+                    PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(50, 10));
+                    formXObject.SetLayer(new PdfLayer("someName1", fromDocument));
+                    formXObject.MakeIndirect(fromDocument);
+                    PdfDictionary nDict = new PdfDictionary();
+                    nDict.Put(PdfName.ON, formXObject.GetPdfObject());
+                    annotation.SetAppearance(PdfName.N, nDict);
+                    formXObject = new PdfFormXObject(new Rectangle(50, 10));
+                    formXObject.SetLayer(new PdfLayer("someName2", fromDocument));
+                    PdfResources formResources = formXObject.GetResources();
+                    formResources.AddProperties(new PdfLayer("someName3", fromDocument).GetPdfObject());
+                    formXObject.MakeIndirect(fromDocument);
+                    PdfDictionary rDict = new PdfDictionary();
+                    rDict.Put(PdfName.OFF, formXObject.GetPdfObject());
+                    annotation.SetAppearance(PdfName.R, rDict);
+                    formXObject = new PdfFormXObject(new Rectangle(50, 10));
+                    formXObject.SetLayer(new PdfLayer("someName4", fromDocument));
+                    formXObject.MakeIndirect(fromDocument);
+                    annotation.SetAppearance(PdfName.D, formXObject.GetPdfObject());
+                    page.AddAnnotation(annotation);
+                    ICollection<PdfLayer> layersFromPage = page.GetPdfLayers();
+                    NUnit.Framework.Assert.AreEqual(4, layersFromPage.Count);
+                }
+            }
+        }
+
+        //TODO DEVSIX-8490 remove this test when implemented
+        [NUnit.Framework.Test]
+        public virtual void AddSecondParentlayerTest() {
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument doc = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfLayer childLayer = new PdfLayer("childLayer", doc);
+                    PdfLayer parentLayer1 = new PdfLayer("firstParentLayer", doc);
+                    PdfLayer parentLayer2 = new PdfLayer("secondParentLayer", doc);
+                    parentLayer1.AddChild(childLayer);
+                    PdfIndirectReference @ref = childLayer.GetIndirectReference();
+                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => parentLayer2.AddChild(childLayer));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_ADD_SECOND_PARENT_LAYER
+                        , @ref.ToString()), e.Message);
+                }
+            }
         }
     }
 }

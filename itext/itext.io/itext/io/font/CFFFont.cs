@@ -365,7 +365,13 @@ namespace iText.IO.Font {
         }
 
         protected internal abstract class OffsetItem : CFFFont.Item {
-            public int value;
+            private int offset;
+
+            /// <summary>Retrieves offset of an OffsetItem object.</summary>
+            /// <returns>offset value</returns>
+            public virtual int GetOffset() {
+                return offset;
+            }
 
             /// <summary>Set the value of an offset item that was initially unknown.</summary>
             /// <remarks>
@@ -373,18 +379,18 @@ namespace iText.IO.Font {
             /// It will be fixed up latex by a call to xref on some marker.
             /// </remarks>
             /// <param name="offset">offset to set</param>
-            public virtual void Set(int offset) {
-                this.value = offset;
+            public virtual void SetOffset(int offset) {
+                this.offset = offset;
             }
         }
 
         /// <summary>A range item.</summary>
         protected internal sealed class RangeItem : CFFFont.Item {
-            public int offset;
+            private readonly int offset;
 
-            public int length;
+            private readonly int length;
 
-            private RandomAccessFileOrArray buf;
+            private readonly RandomAccessFileOrArray buf;
 
             public RangeItem(RandomAccessFileOrArray buf, int offset, int length) {
                 this.offset = offset;
@@ -421,11 +427,11 @@ namespace iText.IO.Font {
         /// variable-size representation.
         /// </remarks>
         protected internal sealed class IndexOffsetItem : CFFFont.OffsetItem {
-            public readonly int size;
+            private readonly int size;
 
             public IndexOffsetItem(int size, int value) {
                 this.size = size;
-                this.value = value;
+                this.SetOffset(value);
             }
 
             public IndexOffsetItem(int size) {
@@ -440,7 +446,7 @@ namespace iText.IO.Font {
             public override void Emit(byte[] buffer) {
                 if (size >= 1 && size <= 4) {
                     for (int i = 0; i < size; i++) {
-                        buffer[myOffset + i] = (byte)((int)(((uint)value) >> ((size - 1 - i) << 3)) & 0xFF);
+                        buffer[myOffset + i] = (byte)((int)(((uint)base.GetOffset()) >> ((size - 1 - i) << 3)) & 0xFF);
                     }
                 }
             }
@@ -452,9 +458,9 @@ namespace iText.IO.Font {
         }
 
         protected internal sealed class IndexMarkerItem : CFFFont.Item {
-            private CFFFont.OffsetItem offItem;
+            private readonly CFFFont.OffsetItem offItem;
 
-            private CFFFont.IndexBaseItem indexBase;
+            private readonly CFFFont.IndexBaseItem indexBase;
 
             public IndexMarkerItem(CFFFont.OffsetItem offItem, CFFFont.IndexBaseItem indexBase) {
                 this.offItem = offItem;
@@ -463,14 +469,14 @@ namespace iText.IO.Font {
 
             public override void Xref() {
                 //System.err.println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
-                offItem.Set(this.myOffset - indexBase.myOffset + 1);
+                offItem.SetOffset(this.myOffset - indexBase.myOffset + 1);
             }
         }
 
         protected internal sealed class SubrMarkerItem : CFFFont.Item {
-            private CFFFont.OffsetItem offItem;
+            private readonly CFFFont.OffsetItem offItem;
 
-            private CFFFont.IndexBaseItem indexBase;
+            private readonly CFFFont.IndexBaseItem indexBase;
 
             public SubrMarkerItem(CFFFont.OffsetItem offItem, CFFFont.IndexBaseItem indexBase) {
                 this.offItem = offItem;
@@ -479,7 +485,7 @@ namespace iText.IO.Font {
 
             public override void Xref() {
                 //System.err.println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
-                offItem.Set(this.myOffset - indexBase.myOffset);
+                offItem.SetOffset(this.myOffset - indexBase.myOffset);
             }
         }
 
@@ -504,17 +510,17 @@ namespace iText.IO.Font {
             public override void Emit(byte[] buffer) {
                 if (size == 5) {
                     buffer[myOffset] = 29;
-                    buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 24) & 0xff);
-                    buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 16) & 0xff);
-                    buffer[myOffset + 3] = (byte)((int)(((uint)value) >> 8) & 0xff);
-                    buffer[myOffset + 4] = (byte)((int)(((uint)value) >> 0) & 0xff);
+                    buffer[myOffset + 1] = (byte)((int)(((uint)base.GetOffset()) >> 24) & 0xff);
+                    buffer[myOffset + 2] = (byte)((int)(((uint)base.GetOffset()) >> 16) & 0xff);
+                    buffer[myOffset + 3] = (byte)((int)(((uint)base.GetOffset()) >> 8) & 0xff);
+                    buffer[myOffset + 4] = (byte)((int)(((uint)base.GetOffset()) >> 0) & 0xff);
                 }
             }
         }
 
         /// <summary>Card24 item.</summary>
         protected internal sealed class UInt24Item : CFFFont.Item {
-            public int value;
+            private readonly int value;
 
             public UInt24Item(int value) {
                 this.value = value;
@@ -535,7 +541,7 @@ namespace iText.IO.Font {
 
         /// <summary>Card32 item.</summary>
         protected internal sealed class UInt32Item : CFFFont.Item {
-            public int value;
+            private readonly int value;
 
             public UInt32Item(int value) {
                 this.value = value;
@@ -557,7 +563,7 @@ namespace iText.IO.Font {
 
         /// <summary>A SID or Card16 item.</summary>
         protected internal sealed class UInt16Item : CFFFont.Item {
-            public char value;
+            private readonly char value;
 
             public UInt16Item(char value) {
                 this.value = value;
@@ -580,7 +586,7 @@ namespace iText.IO.Font {
 
         /// <summary>A Card8 item.</summary>
         protected internal sealed class UInt8Item : CFFFont.Item {
-            public char value;
+            private readonly char value;
 
             public UInt8Item(char value) {
                 this.value = value;
@@ -599,7 +605,7 @@ namespace iText.IO.Font {
         }
 
         protected internal sealed class StringItem : CFFFont.Item {
-            public String s;
+            private readonly String s;
 
             public StringItem(String s) {
                 this.s = s;
@@ -624,12 +630,24 @@ namespace iText.IO.Font {
         /// representation.
         /// </remarks>
         protected internal sealed class DictNumberItem : CFFFont.Item {
-            public readonly int value;
+            private readonly int value;
 
-            public int size = 5;
+            private int size = 5;
 
             public DictNumberItem(int value) {
                 this.value = value;
+            }
+
+            /// <summary>Retrieves the size of a DictNumberItem.</summary>
+            /// <returns>size value</returns>
+            public int GetSize() {
+                return size;
+            }
+
+            /// <summary>Sets the size of a DictNumberItem.</summary>
+            /// <param name="size">size value</param>
+            public void SetSize(int size) {
+                this.size = size;
             }
 
             public override void Increment(int[] currentOffset) {
@@ -664,7 +682,7 @@ namespace iText.IO.Font {
             }
 
             public override void Xref() {
-                p.Set(this.myOffset);
+                p.SetOffset(this.myOffset);
             }
         }
 
@@ -702,7 +720,7 @@ namespace iText.IO.Font {
             //throws java.io.FileNotFoundException
             int j;
             for (j = 0; j < fonts.Length; j++) {
-                if (fontName.Equals(fonts[j].name)) {
+                if (fontName.Equals(fonts[j].GetName())) {
                     break;
                 }
             }
@@ -719,9 +737,9 @@ namespace iText.IO.Font {
             l.AddLast(new CFFFont.RangeItem(buf, 0, hdrSize));
             int nglyphs = -1;
             int nstrings = -1;
-            if (!fonts[j].isCID) {
+            if (!fonts[j].IsCID()) {
                 // count the glyphs
-                Seek(fonts[j].charstringsOffset);
+                Seek(fonts[j].GetCharstringsOffset());
                 nglyphs = GetCard16();
                 Seek(stringIndexOffset);
                 nstrings = GetCard16() + standardStrings.Length;
@@ -734,8 +752,8 @@ namespace iText.IO.Font {
             l.AddLast(new CFFFont.UInt8Item((char)1));
             // first offset
             l.AddLast(new CFFFont.UInt8Item((char)1));
-            l.AddLast(new CFFFont.UInt8Item((char)(1 + fonts[j].name.Length)));
-            l.AddLast(new CFFFont.StringItem(fonts[j].name));
+            l.AddLast(new CFFFont.UInt8Item((char)(1 + fonts[j].GetName().Length)));
+            l.AddLast(new CFFFont.StringItem(fonts[j].GetName()));
             // create the topdict Index
             // count
             l.AddLast(new CFFFont.UInt16Item((char)1));
@@ -759,7 +777,7 @@ namespace iText.IO.Font {
             CFFFont.OffsetItem charstringsRef = new CFFFont.DictOffsetItem();
             CFFFont.OffsetItem fdarrayRef = new CFFFont.DictOffsetItem();
             CFFFont.OffsetItem fdselectRef = new CFFFont.DictOffsetItem();
-            if (!fonts[j].isCID) {
+            if (!fonts[j].IsCID()) {
                 // create a ROS key
                 l.AddLast(new CFFFont.DictNumberItem(nstrings));
                 l.AddLast(new CFFFont.DictNumberItem(nstrings + 1));
@@ -804,11 +822,11 @@ namespace iText.IO.Font {
             // Copy the string index and append new strings.
             // We need 3 more strings: Registry, Ordering, and a FontName for one FD.
             // The total length is at most "Adobe"+"Identity"+63 = 76
-            if (fonts[j].isCID) {
+            if (fonts[j].IsCID()) {
                 l.AddLast(GetEntireIndexRange(stringIndexOffset));
             }
             else {
-                String fdFontName = fonts[j].name + "-OneRange";
+                String fdFontName = fonts[j].GetName() + "-OneRange";
                 if (fdFontName.Length > 127) {
                     fdFontName = fdFontName.JSubstring(0, 127);
                 }
@@ -853,7 +871,7 @@ namespace iText.IO.Font {
             // copy the global subroutine index
             l.AddLast(GetEntireIndexRange(gsubrIndexOffset));
             // deal with fdarray, fdselect, and the font descriptors
-            if (fonts[j].isCID) {
+            if (fonts[j].IsCID()) {
             }
             else {
                 // copy the FDArray, FDSelect, charset
@@ -896,7 +914,7 @@ namespace iText.IO.Font {
                 //l.addLast(new DictNumberItem((standardStrings.length+(stringOffsets.length-1)+2)));
                 //l.addLast(new UInt8Item((char)12));
                 //l.addLast(new UInt8Item((char)38)); // FontName
-                l.AddLast(new CFFFont.DictNumberItem(fonts[j].privateLength));
+                l.AddLast(new CFFFont.DictNumberItem(fonts[j].GetPrivateLength()));
                 CFFFont.OffsetItem privateRef = new CFFFont.DictOffsetItem();
                 l.AddLast(privateRef);
                 // Private
@@ -907,15 +925,15 @@ namespace iText.IO.Font {
                 // copy the private dict and the local subroutines.
                 // the length of the private dict seems to NOT include
                 // the local subroutines.
-                l.AddLast(new CFFFont.RangeItem(buf, fonts[j].privateOffset, fonts[j].privateLength));
-                if (fonts[j].privateSubrs >= 0) {
+                l.AddLast(new CFFFont.RangeItem(buf, fonts[j].GetPrivateOffset(), fonts[j].GetPrivateLength()));
+                if (fonts[j].GetPrivateSubrs() >= 0) {
                     //System.err.println("has subrs="+fonts[j].privateSubrs+" ,len="+fonts[j].privateLength);
-                    l.AddLast(GetEntireIndexRange(fonts[j].privateSubrs));
+                    l.AddLast(GetEntireIndexRange(fonts[j].GetPrivateSubrs()));
                 }
             }
             // copy the charstring index
             l.AddLast(new CFFFont.MarkerItem(charstringsRef));
-            l.AddLast(GetEntireIndexRange(fonts[j].charstringsOffset));
+            l.AddLast(GetEntireIndexRange(fonts[j].GetCharstringsOffset()));
             // now create the new CFF font
             int[] currentOffset = new int[1];
             currentOffset[0] = 0;
@@ -940,8 +958,8 @@ namespace iText.IO.Font {
         public virtual bool IsCID(String fontName) {
             int j;
             for (j = 0; j < fonts.Length; j++) {
-                if (fontName.Equals(fonts[j].name)) {
-                    return fonts[j].isCID;
+                if (fontName.Equals(fonts[j].GetName())) {
+                    return fonts[j].IsCID();
                 }
             }
             return false;
@@ -950,7 +968,7 @@ namespace iText.IO.Font {
         public virtual bool Exists(String fontName) {
             int j;
             for (j = 0; j < fonts.Length; j++) {
-                if (fontName.Equals(fonts[j].name)) {
+                if (fontName.Equals(fonts[j].GetName())) {
                     return true;
                 }
             }
@@ -960,7 +978,7 @@ namespace iText.IO.Font {
         public virtual String[] GetNames() {
             String[] names = new String[fonts.Length];
             for (int i = 0; i < fonts.Length; i++) {
-                names[i] = fonts[i].name;
+                names[i] = fonts[i].GetName();
             }
             return names;
         }
@@ -968,7 +986,7 @@ namespace iText.IO.Font {
         /// <summary>A random Access File or an array</summary>
         protected internal RandomAccessFileOrArray buf;
 
-        private int offSize;
+        private readonly int offSize;
 
         protected internal int nameIndexOffset;
 
@@ -987,70 +1005,430 @@ namespace iText.IO.Font {
         protected internal int[] gsubrOffsets;
 
         protected internal sealed class Font {
-            public String name;
+            private String name;
 
-            public String fullName;
+            private String fullName;
 
-            public bool isCID = false;
-
-            // only if not CID
-            public int privateOffset = -1;
+            private bool isCID = false;
 
             // only if not CID
-            public int privateLength = -1;
+            private int privateOffset = -1;
 
-            public int privateSubrs = -1;
+            // only if not CID
+            private int privateLength = -1;
 
-            public int charstringsOffset = -1;
+            private int privateSubrs = -1;
 
-            public int encodingOffset = -1;
+            private int charstringsOffset = -1;
 
-            public int charsetOffset = -1;
+            private int encodingOffset = -1;
+
+            private int charsetOffset = -1;
 
             // only if CID
-            public int fdarrayOffset = -1;
+            private int fdarrayOffset = -1;
 
             // only if CID
-            public int fdselectOffset = -1;
+            private int fdselectOffset = -1;
 
-            public int[] fdprivateOffsets;
+            private int[] fdprivateOffsets;
 
-            public int[] fdprivateLengths;
+            private int[] fdprivateLengths;
 
-            public int[] fdprivateSubrs;
+            private int[] fdprivateSubrs;
 
             // Added by Oren & Ygal
-            public int nglyphs;
+            private int nglyphs;
 
-            public int nstrings;
+            private int nstrings;
 
-            public int CharsetLength;
+            private int charsetLength;
 
-            public int[] charstringsOffsets;
+            private int[] charstringsOffsets;
 
-            public int[] charset;
+            private int[] charset;
 
-            public int[] FDSelect;
+            private int[] FDSelect;
 
-            public int FDSelectLength;
+            private int FDSelectLength;
 
-            public int FDSelectFormat;
+            private int FDSelectFormat;
 
-            public int CharstringType = 2;
+            private int charstringType = 2;
 
-            public int FDArrayCount;
+            private int FDArrayCount;
 
-            public int FDArrayOffsize;
+            private int FDArrayOffsize;
 
-            public int[] FDArrayOffsets;
+            private int[] FDArrayOffsets;
 
-            public int[] PrivateSubrsOffset;
+            private int[] privateSubrsOffset;
 
-            public int[][] PrivateSubrsOffsetsArray;
+            private int[][] privateSubrsOffsetsArray;
 
-            public int[] SubrsOffsets;
+            private int[] subrsOffsets;
 
-            public int[] gidToCid;
+            private int[] gidToCid;
+
+            /// <summary>Retrieves the name of the font.</summary>
+            /// <returns>font name</returns>
+            public String GetName() {
+                return this.name;
+            }
+
+            /// <summary>Sets the name of the font.</summary>
+            /// <param name="name">font name</param>
+            public void SetName(String name) {
+                this.name = name;
+            }
+
+            /// <summary>Retrieves the full name of the font.</summary>
+            /// <returns>full font name</returns>
+            public String GetFullName() {
+                return this.fullName;
+            }
+
+            /// <summary>Sets the full name of the font.</summary>
+            /// <param name="fullName">full font name</param>
+            public void SetFullName(String fullName) {
+                this.fullName = fullName;
+            }
+
+            /// <summary>Retrieves whether the font is a CID font.</summary>
+            /// <returns>true if font is CID font, false otherwise</returns>
+            public bool IsCID() {
+                return this.isCID;
+            }
+
+            /// <summary>Sets if font is CID font.</summary>
+            /// <param name="CID">true if font is CID font, false otherwise</param>
+            public void SetCID(bool CID) {
+                this.isCID = CID;
+            }
+
+            /// <summary>Retrieves the private offset of the font.</summary>
+            /// <returns>private offset value</returns>
+            public int GetPrivateOffset() {
+                return this.privateOffset;
+            }
+
+            /// <summary>Sets the private offset of the font.</summary>
+            /// <param name="privateOffset">private offset value</param>
+            public void SetPrivateOffset(int privateOffset) {
+                this.privateOffset = privateOffset;
+            }
+
+            /// <summary>Retrieves the private length of the font.</summary>
+            /// <returns>private length value</returns>
+            public int GetPrivateLength() {
+                return this.privateLength;
+            }
+
+            /// <summary>Sets the private length of the font.</summary>
+            /// <param name="privateLength">private length value</param>
+            public void SetPrivateLength(int privateLength) {
+                this.privateLength = privateLength;
+            }
+
+            /// <summary>Retrieves the private subrs of the font.</summary>
+            /// <returns>private subrs value</returns>
+            public int GetPrivateSubrs() {
+                return this.privateSubrs;
+            }
+
+            /// <summary>Sets the private subrs of the font.</summary>
+            /// <param name="privateSubrs">private subrs value</param>
+            public void SetPrivateSubrs(int privateSubrs) {
+                this.privateSubrs = privateSubrs;
+            }
+
+            /// <summary>Retrieves the char string offset of the font.</summary>
+            /// <returns>char string offset</returns>
+            public int GetCharstringsOffset() {
+                return this.charstringsOffset;
+            }
+
+            /// <summary>Sets the char string offset of the font.</summary>
+            /// <param name="charstringsOffset">char string offset</param>
+            public void SetCharstringsOffset(int charstringsOffset) {
+                this.charstringsOffset = charstringsOffset;
+            }
+
+            /// <summary>Retrieves the encoding offset of the font.</summary>
+            /// <returns>encoding offset</returns>
+            public int GetEncodingOffset() {
+                return this.encodingOffset;
+            }
+
+            /// <summary>Sets the encoding offset of the font.</summary>
+            /// <param name="encodingOffset">encoding offset</param>
+            public void SetEncodingOffset(int encodingOffset) {
+                this.encodingOffset = encodingOffset;
+            }
+
+            /// <summary>Retrieves the charset offset of the font.</summary>
+            /// <returns>charset offset</returns>
+            public int GetCharsetOffset() {
+                return this.charsetOffset;
+            }
+
+            /// <summary>Sets the charset offset of the font.</summary>
+            /// <param name="charsetOffset">charset offset</param>
+            public void SetCharsetOffset(int charsetOffset) {
+                this.charsetOffset = charsetOffset;
+            }
+
+            /// <summary>Retrieves the font dictionary array offset of the object.</summary>
+            /// <returns>FD array offset</returns>
+            public int GetFdarrayOffset() {
+                return this.fdarrayOffset;
+            }
+
+            /// <summary>Sets the font dictionary array offset of the object.</summary>
+            /// <param name="fdarrayOffset">FD array offset</param>
+            public void SetFdarrayOffset(int fdarrayOffset) {
+                this.fdarrayOffset = fdarrayOffset;
+            }
+
+            /// <summary>Retrieves the font dictionary select offset of the object.</summary>
+            /// <returns>FD select offset</returns>
+            public int GetFdselectOffset() {
+                return this.fdselectOffset;
+            }
+
+            /// <summary>Sets the font dictionary select offset of the object.</summary>
+            /// <param name="fdselectOffset">FD select offset</param>
+            public void SetFdselectOffset(int fdselectOffset) {
+                this.fdselectOffset = fdselectOffset;
+            }
+
+            /// <summary>Retrieves the font dictionary private offsets of the object.</summary>
+            /// <returns>FD private offsets</returns>
+            public int[] GetFdprivateOffsets() {
+                return this.fdprivateOffsets;
+            }
+
+            /// <summary>Sets the font dictionary private offsets of the object.</summary>
+            /// <param name="fdprivateOffsets">FD private offsets</param>
+            public void SetFdprivateOffsets(int[] fdprivateOffsets) {
+                this.fdprivateOffsets = fdprivateOffsets;
+            }
+
+            /// <summary>Retrieves the font dictionary private lengths of the object.</summary>
+            /// <returns>FD private lengths</returns>
+            public int[] GetFdprivateLengths() {
+                return this.fdprivateLengths;
+            }
+
+            /// <summary>Sets the font dictionary private lengths of the object.</summary>
+            /// <param name="fdprivateLengths">FD private lengths</param>
+            public void SetFdprivateLengths(int[] fdprivateLengths) {
+                this.fdprivateLengths = fdprivateLengths;
+            }
+
+            /// <summary>Retrieves the font dictionary private subrs of the object.</summary>
+            /// <returns>FD private subrs</returns>
+            public int[] GetFdprivateSubrs() {
+                return this.fdprivateSubrs;
+            }
+
+            /// <summary>Sets the font dictionary private subrs of the object.</summary>
+            /// <param name="fdprivateSubrs">FD private subrs</param>
+            public void SetFdprivateSubrs(int[] fdprivateSubrs) {
+                this.fdprivateSubrs = fdprivateSubrs;
+            }
+
+            /// <summary>Retrieves the number of glyphs of the font.</summary>
+            /// <returns>number of glyphs</returns>
+            public int GetNglyphs() {
+                return this.nglyphs;
+            }
+
+            /// <summary>Sets the number of glyphs of the font.</summary>
+            /// <param name="nglyphs">number of glyphs</param>
+            public void SetNglyphs(int nglyphs) {
+                this.nglyphs = nglyphs;
+            }
+
+            /// <summary>Retrieves the number of strings of the font.</summary>
+            /// <returns>number of strings</returns>
+            public int GetNstrings() {
+                return this.nstrings;
+            }
+
+            /// <summary>Sets the number of strings of the font.</summary>
+            /// <param name="nstrings">number of strings</param>
+            public void SetNstrings(int nstrings) {
+                this.nstrings = nstrings;
+            }
+
+            /// <summary>Retrieves the charset length of the font.</summary>
+            /// <returns>charset length</returns>
+            public int GetCharsetLength() {
+                return this.charsetLength;
+            }
+
+            /// <summary>Sets the charset length of the font.</summary>
+            /// <param name="charsetLength">charset length</param>
+            public void SetCharsetLength(int charsetLength) {
+                this.charsetLength = charsetLength;
+            }
+
+            /// <summary>Retrieves the char strings offsets of the font.</summary>
+            /// <returns>char strings offsets</returns>
+            public int[] GetCharstringsOffsets() {
+                return this.charstringsOffsets;
+            }
+
+            /// <summary>Sets the char strings offsets of the font.</summary>
+            /// <param name="charstringsOffsets">char strings offsets</param>
+            public void SetCharstringsOffsets(int[] charstringsOffsets) {
+                this.charstringsOffsets = charstringsOffsets;
+            }
+
+            /// <summary>Retrieves the charset of the font.</summary>
+            /// <returns>charset</returns>
+            public int[] GetCharset() {
+                return this.charset;
+            }
+
+            /// <summary>Sets the charset of the font.</summary>
+            /// <param name="charset">charset</param>
+            public void SetCharset(int[] charset) {
+                this.charset = charset;
+            }
+
+            /// <summary>Retrieves the font dictionary select of the object.</summary>
+            /// <returns>FD select</returns>
+            public int[] GetFDSelect() {
+                return this.FDSelect;
+            }
+
+            /// <summary>Sets the font dictionary select of the object.</summary>
+            /// <param name="FDSelect">FD select</param>
+            public void SetFDSelect(int[] FDSelect) {
+                this.FDSelect = FDSelect;
+            }
+
+            /// <summary>Retrieves the font dictionary select length of the object.</summary>
+            /// <returns>FD select length</returns>
+            public int GetFDSelectLength() {
+                return this.FDSelectLength;
+            }
+
+            /// <summary>Sets the font dictionary select length of the object.</summary>
+            /// <param name="FDSelectLength">FD select length</param>
+            public void SetFDSelectLength(int FDSelectLength) {
+                this.FDSelectLength = FDSelectLength;
+            }
+
+            /// <summary>Retrieves the font dictionary select format of the object.</summary>
+            /// <returns>FD select format</returns>
+            public int GetFDSelectFormat() {
+                return this.FDSelectFormat;
+            }
+
+            /// <summary>Sets the font dictionary select format of the object.</summary>
+            /// <param name="FDSelectFormat">FD select format</param>
+            public void SetFDSelectFormat(int FDSelectFormat) {
+                this.FDSelectFormat = FDSelectFormat;
+            }
+
+            /// <summary>Retrieves the char string type of the font.</summary>
+            /// <returns>char string type</returns>
+            public int GetCharstringType() {
+                return this.charstringType;
+            }
+
+            /// <summary>Sets the char string type of the font.</summary>
+            /// <param name="charstringType">char string type</param>
+            public void SetCharstringType(int charstringType) {
+                this.charstringType = charstringType;
+            }
+
+            /// <summary>Retrieves the font dictionary array count of the object.</summary>
+            /// <returns>FD array count</returns>
+            public int GetFDArrayCount() {
+                return this.FDArrayCount;
+            }
+
+            /// <summary>Sets the font dictionary array count of the object.</summary>
+            /// <param name="FDArrayCount">FD array count</param>
+            public void SetFDArrayCount(int FDArrayCount) {
+                this.FDArrayCount = FDArrayCount;
+            }
+
+            /// <summary>Retrieves the font dictionary array offsize of the object.</summary>
+            /// <returns>FD array offsize</returns>
+            public int GetFDArrayOffsize() {
+                return this.FDArrayOffsize;
+            }
+
+            /// <summary>Sets the font dictionary array offsize of the object.</summary>
+            /// <param name="FDArrayOffsize">FD array offsize</param>
+            public void SetFDArrayOffsize(int FDArrayOffsize) {
+                this.FDArrayOffsize = FDArrayOffsize;
+            }
+
+            /// <summary>Retrieves the font dictionary array offsets of the object.</summary>
+            /// <returns>FD array offsets</returns>
+            public int[] GetFDArrayOffsets() {
+                return this.FDArrayOffsets;
+            }
+
+            /// <summary>Sets the font dictionary array offsets of the object.</summary>
+            /// <param name="FDArrayOffsets">FD array offsets</param>
+            public void SetFDArrayOffsets(int[] FDArrayOffsets) {
+                this.FDArrayOffsets = FDArrayOffsets;
+            }
+
+            /// <summary>Retrieves the private subrs offset of the font.</summary>
+            /// <returns>private subrs offset</returns>
+            public int[] GetPrivateSubrsOffset() {
+                return this.privateSubrsOffset;
+            }
+
+            /// <summary>Set the private subrs offset of the font</summary>
+            /// <param name="privateSubrsOffset">private subrs offset</param>
+            public void SetPrivateSubrsOffset(int[] privateSubrsOffset) {
+                this.privateSubrsOffset = privateSubrsOffset;
+            }
+
+            /// <summary>Retrieves the private subrs offsets array of the font.</summary>
+            /// <returns>private subrs offsets array</returns>
+            public int[][] GetPrivateSubrsOffsetsArray() {
+                return this.privateSubrsOffsetsArray;
+            }
+
+            /// <summary>Sets the private subrs offsets array of the font.</summary>
+            /// <param name="privateSubrsOffsetsArray">private subrs offsets array</param>
+            public void SetPrivateSubrsOffsetsArray(int[][] privateSubrsOffsetsArray) {
+                this.privateSubrsOffsetsArray = privateSubrsOffsetsArray;
+            }
+
+            /// <summary>Retrieves the subrs offsets of the font.</summary>
+            /// <returns>subrs offsets</returns>
+            public int[] GetSubrsOffsets() {
+                return this.subrsOffsets;
+            }
+
+            /// <summary>Sets the subrs offsets of the font.</summary>
+            /// <param name="subrsOffsets">subrs offsets</param>
+            public void SetSubrsOffsets(int[] subrsOffsets) {
+                this.subrsOffsets = subrsOffsets;
+            }
+
+            /// <summary>Retrieves the glyphs to character id array of the font.</summary>
+            /// <returns>glyphs to character id array</returns>
+            public int[] GetGidToCid() {
+                return this.gidToCid;
+            }
+
+            /// <summary>Sets the glyphs to character id array of the font.</summary>
+            /// <param name="gidToCid">glyphs to character id array</param>
+            public void SetGidToCid(int[] gidToCid) {
+                this.gidToCid = gidToCid;
+            }
 
             internal Font(CFFFont _enclosing) {
                 this._enclosing = _enclosing;
@@ -1101,9 +1479,9 @@ namespace iText.IO.Font {
             for (int j = 0; j < nameOffsets.Length - 1; j++) {
                 fonts[j] = new CFFFont.Font(this);
                 Seek(nameOffsets[j]);
-                fonts[j].name = "";
+                fonts[j].SetName("");
                 for (int k = nameOffsets[j]; k < nameOffsets[j + 1]; k++) {
-                    fonts[j].name += GetCard8();
+                    fonts[j].SetName(fonts[j].GetName() + GetCard8());
                 }
             }
             //System.err.println("name["+j+"]=<"+fonts[j].name+">");
@@ -1129,21 +1507,21 @@ namespace iText.IO.Font {
                     GetDictItem();
                     if (key == "FullName") {
                         //System.err.println("getting fullname sid = "+((Integer)args[0]).intValue());
-                        fonts[j].fullName = GetString((char)((int?)args[0]).Value);
+                        fonts[j].SetFullName(GetString((char)((int?)args[0]).Value));
                     }
                     else {
                         //System.err.println("got it");
                         if (key == "ROS") {
-                            fonts[j].isCID = true;
+                            fonts[j].SetCID(true);
                         }
                         else {
                             if (key == "Private") {
-                                fonts[j].privateLength = (int)((int?)args[0]).Value;
-                                fonts[j].privateOffset = (int)((int?)args[1]).Value;
+                                fonts[j].SetPrivateLength((int)((int?)args[0]).Value);
+                                fonts[j].SetPrivateOffset((int)((int?)args[1]).Value);
                             }
                             else {
                                 if (key == "charset") {
-                                    fonts[j].charsetOffset = (int)((int?)args[0]).Value;
+                                    fonts[j].SetCharsetOffset((int)((int?)args[0]).Value);
                                 }
                                 else {
                                     //                else if (key=="Encoding"){
@@ -1154,24 +1532,24 @@ namespace iText.IO.Font {
                                     //                    }
                                     //                }
                                     if (key == "CharStrings") {
-                                        fonts[j].charstringsOffset = (int)((int?)args[0]).Value;
+                                        fonts[j].SetCharstringsOffset((int)((int?)args[0]).Value);
                                         //System.err.println("charstrings "+fonts[j].charstringsOffset);
                                         // Added by Oren & Ygal
                                         int p = GetPosition();
-                                        fonts[j].charstringsOffsets = GetIndex(fonts[j].charstringsOffset);
+                                        fonts[j].SetCharstringsOffsets(GetIndex(fonts[j].GetCharstringsOffset()));
                                         Seek(p);
                                     }
                                     else {
                                         if (key == "FDArray") {
-                                            fonts[j].fdarrayOffset = (int)((int?)args[0]).Value;
+                                            fonts[j].SetFdarrayOffset((int)((int?)args[0]).Value);
                                         }
                                         else {
                                             if (key == "FDSelect") {
-                                                fonts[j].fdselectOffset = (int)((int?)args[0]).Value;
+                                                fonts[j].SetFdselectOffset((int)((int?)args[0]).Value);
                                             }
                                             else {
                                                 if (key == "CharstringType") {
-                                                    fonts[j].CharstringType = (int)((int?)args[0]).Value;
+                                                    fonts[j].SetCharstringType((int)((int?)args[0]).Value);
                                                 }
                                             }
                                         }
@@ -1182,31 +1560,35 @@ namespace iText.IO.Font {
                     }
                 }
                 // private dict
-                if (fonts[j].privateOffset >= 0) {
+                if (fonts[j].GetPrivateOffset() >= 0) {
                     //System.err.println("PRIVATE::");
-                    Seek(fonts[j].privateOffset);
-                    while (GetPosition() < fonts[j].privateOffset + fonts[j].privateLength) {
+                    Seek(fonts[j].GetPrivateOffset());
+                    while (GetPosition() < fonts[j].GetPrivateOffset() + fonts[j].GetPrivateLength()) {
                         GetDictItem();
                         if (key == "Subrs") {
                             //Add the private offset to the lsubrs since the offset is
                             // relative to the beginning of the PrivateDict
-                            fonts[j].privateSubrs = (int)((int?)args[0]).Value + fonts[j].privateOffset;
+                            fonts[j].SetPrivateSubrs((int)((int?)args[0]).Value + fonts[j].GetPrivateOffset());
                         }
                     }
                 }
                 // fdarray index
-                if (fonts[j].fdarrayOffset >= 0) {
-                    int[] fdarrayOffsets = GetIndex(fonts[j].fdarrayOffset);
-                    fonts[j].fdprivateOffsets = new int[fdarrayOffsets.Length - 1];
-                    fonts[j].fdprivateLengths = new int[fdarrayOffsets.Length - 1];
+                if (fonts[j].GetFdarrayOffset() >= 0) {
+                    int[] fdarrayOffsets = GetIndex(fonts[j].GetFdarrayOffset());
+                    fonts[j].SetFdprivateOffsets(new int[fdarrayOffsets.Length - 1]);
+                    fonts[j].SetFdprivateLengths(new int[fdarrayOffsets.Length - 1]);
                     //System.err.println("FD Font::");
                     for (int k = 0; k < fdarrayOffsets.Length - 1; k++) {
                         Seek(fdarrayOffsets[k]);
                         while (GetPosition() < fdarrayOffsets[k + 1]) {
                             GetDictItem();
                             if (key == "Private") {
-                                fonts[j].fdprivateLengths[k] = (int)((int?)args[0]).Value;
-                                fonts[j].fdprivateOffsets[k] = (int)((int?)args[1]).Value;
+                                int[] fdprivateLengths = fonts[j].GetFdprivateLengths();
+                                fdprivateLengths[k] = (int)((int?)args[0]).Value;
+                                fonts[j].SetFdprivateLengths(fdprivateLengths);
+                                int[] fdprivateOffsets = fonts[j].GetFdprivateOffsets();
+                                fdprivateOffsets[k] = (int)((int?)args[1]).Value;
+                                fonts[j].SetFdprivateOffsets(fdprivateOffsets);
                             }
                         }
                     }

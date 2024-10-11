@@ -328,23 +328,10 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyBorderAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
-            bool specificBorderProperties = renderer.GetProperty<Border>(Property.BORDER_TOP) != null || renderer.GetProperty
+            bool borderPropertiesSet = renderer.GetProperty<Border>(Property.BORDER_TOP) != null || renderer.GetProperty
                 <Border>(Property.BORDER_RIGHT) != null || renderer.GetProperty<Border>(Property.BORDER_BOTTOM) != null
                  || renderer.GetProperty<Border>(Property.BORDER_LEFT) != null;
-            bool generalBorderProperties = !specificBorderProperties && renderer.GetProperty<Object>(Property.BORDER) 
-                != null;
-            if (generalBorderProperties) {
-                Border generalBorder = renderer.GetProperty<Border>(Property.BORDER);
-                Color generalBorderColor = generalBorder.GetColor();
-                int borderType = generalBorder.GetBorderType();
-                float borderWidth = generalBorder.GetWidth();
-                if (generalBorderColor is DeviceRgb) {
-                    attributes.Put(PdfName.BorderColor, new PdfArray(generalBorderColor.GetColorValue()));
-                    attributes.Put(PdfName.BorderStyle, TransformBorderTypeToName(borderType));
-                    attributes.Put(PdfName.BorderThickness, new PdfNumber(borderWidth));
-                }
-            }
-            if (specificBorderProperties) {
+            if (borderPropertiesSet) {
                 PdfArray borderColors = new PdfArray();
                 PdfArray borderTypes = new PdfArray();
                 PdfArray borderWidths = new PdfArray();

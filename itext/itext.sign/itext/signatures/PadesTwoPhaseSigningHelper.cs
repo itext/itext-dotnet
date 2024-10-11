@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;
@@ -396,8 +397,7 @@ namespace iText.Signatures {
             byte[] timestamp = tsaClient.GetTimeStampToken(signatureDigest);
             using (IAsn1InputStream tempStream = FACTORY.CreateASN1InputStream(new MemoryStream(timestamp))) {
                 IAsn1Sequence seq = FACTORY.CreateASN1Sequence(tempStream.ReadObject());
-                CmsAttribute timestampAttribute = new CmsAttribute(SecurityIDs.ID_AA_TIME_STAMP_TOKEN, FACTORY.CreateDERSet
-                    (seq));
+                CmsAttribute timestampAttribute = new CmsAttribute(OID.AA_TIME_STAMP_TOKEN, FACTORY.CreateDERSet(seq));
                 cmsContainer.GetSignerInfo().AddUnSignedAttribute(timestampAttribute);
             }
             try {

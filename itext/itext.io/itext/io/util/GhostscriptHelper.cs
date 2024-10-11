@@ -44,11 +44,6 @@ namespace iText.IO.Util {
         public const String GHOSTSCRIPT_ENVIRONMENT_VARIABLE = "ITEXT_GS_EXEC";
 
 //\cond DO_NOT_DOCUMENT
-        [Obsolete]
-        internal const String GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY = "gsExec";
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal const String GHOSTSCRIPT_KEYWORD = "GPL Ghostscript";
 //\endcond
 
@@ -82,9 +77,6 @@ namespace iText.IO.Util {
             gsExec = newGsExec;
             if (gsExec == null) {
                 gsExec = SystemUtil.GetEnvironmentVariable(GHOSTSCRIPT_ENVIRONMENT_VARIABLE);
-                if (gsExec == null) {
-                    gsExec = SystemUtil.GetEnvironmentVariable(GHOSTSCRIPT_ENVIRONMENT_VARIABLE_LEGACY);
-                }
             }
             if (!CliCommandUtil.IsVersionCommandExecutable(gsExec, GHOSTSCRIPT_KEYWORD)) {
                 throw new ArgumentException(IoExceptionMessageConstant.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED);

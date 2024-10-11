@@ -29,6 +29,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Kernel.Pdf.Function;
 
 namespace iText.Kernel.Colors.Gradients {
@@ -158,7 +159,7 @@ namespace iText.Kernel.Colors.Gradients {
                         );
                 }
             }
-            PdfShading.Axial axial = CreateAxialShading(baseCoordinatesVector, this.stops, this.spreadMethod, targetBoundingBox
+            PdfAxialShading axial = CreateAxialShading(baseCoordinatesVector, this.stops, this.spreadMethod, targetBoundingBox
                 );
             if (axial == null) {
                 return null;
@@ -267,13 +268,13 @@ namespace iText.Kernel.Colors.Gradients {
             double xDiff = baseVector[1].GetX() - baseVector[0].GetX();
             double yDiff = baseVector[1].GetY() - baseVector[0].GetY();
             Point[] targetCoords = new Point[] { baseVector[0].GetLocation(), baseVector[1].GetLocation() };
-            targetCoords[0].Translate(xDiff * newDomain[0], yDiff * newDomain[0]);
-            targetCoords[1].Translate(xDiff * (newDomain[1] - 1), yDiff * (newDomain[1] - 1));
+            targetCoords[0].Move(xDiff * newDomain[0], yDiff * newDomain[0]);
+            targetCoords[1].Move(xDiff * (newDomain[1] - 1), yDiff * (newDomain[1] - 1));
             return targetCoords;
         }
 
-        private static PdfShading.Axial CreateAxialShading(Point[] baseCoordinatesVector, IList<GradientColorStop>
-             stops, GradientSpreadMethod spreadMethod, Rectangle targetBoundingBox) {
+        private static PdfAxialShading CreateAxialShading(Point[] baseCoordinatesVector, IList<GradientColorStop> 
+            stops, GradientSpreadMethod spreadMethod, Rectangle targetBoundingBox) {
             double baseVectorLength = baseCoordinatesVector[1].Distance(baseCoordinatesVector[0]);
             IList<GradientColorStop> stopsToConstruct = NormalizeStops(stops, baseVectorLength);
             double[] coordinatesDomain = new double[] { 0, 1 };
@@ -313,7 +314,7 @@ namespace iText.Kernel.Colors.Gradients {
                 System.Diagnostics.Debug.Assert(coordinatesDomain[0] <= coordinatesDomain[1]);
                 actualCoordinates = CreateCoordinatesForNewDomain(coordinatesDomain, baseCoordinatesVector);
             }
-            return new PdfShading.Axial(new PdfDeviceCs.Rgb(), CreateCoordsPdfArray(actualCoordinates), new PdfArray(coordinatesDomain
+            return new PdfAxialShading(new PdfDeviceCs.Rgb(), CreateCoordsPdfArray(actualCoordinates), new PdfArray(coordinatesDomain
                 ), ConstructFunction(stopsToConstruct));
         }
 

@@ -62,12 +62,24 @@ namespace iText.Forms.Form.Element {
         /// <see cref="SignatureFieldAppearance"/>
         /// instance.
         /// </summary>
-        /// <param name="id">the id.</param>
+        /// <param name="id">
+        /// signature field name if you use this
+        /// <see cref="SignatureFieldAppearance"/>
+        /// in pure layout for the new
+        /// interactive signature field creation. ID will be ignored if this
+        /// <see cref="SignatureFieldAppearance"/>
+        /// is used for signing or for existing signature field
+        /// </param>
         public SignatureFieldAppearance(String id)
             : base(
-                        // We should support signing of existing fields with dots in name.
+                        // ID is required for the new interactive signature field creation. We can't provide parameterless constructor
+                        
+                        // since the user might misuse it for unintended purpose, and we have to generate a unique field name
+                        
+                        // that doesn't exist in the document acroform, which we don't have access to at this level.
                         id != null && id.Contains(".") ? "" : id) {
             if (id.Contains(".")) {
+                // We should support signing of existing fields with dots in name.
                 idWithDots = id;
             }
             // Draw the borders inside the element by default

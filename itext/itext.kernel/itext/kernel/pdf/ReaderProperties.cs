@@ -22,20 +22,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>The class representing various properties used to read PDF documents.</summary>
     public class ReaderProperties {
-        //added by ujihara for decryption
         protected internal byte[] password;
 
-        //added by Aiken Sam for certificate decryption
         protected internal IPrivateKey certificateKey;
 
-        //added by Aiken Sam for certificate decryption
         protected internal IX509Certificate certificate;
 
-        //added by Aiken Sam for certificate decryption
         protected internal MemoryLimitsAwareHandler memoryLimitsAwareHandler;
+
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="ReaderProperties"/>.
+        /// </summary>
+        public ReaderProperties() {
+        }
+
+//\cond DO_NOT_DOCUMENT
+        // Empty constructor
+        internal ReaderProperties(iText.Kernel.Pdf.ReaderProperties readerProperties) {
+            this.password = readerProperties.password == null ? null : JavaUtil.ArraysCopyOf(readerProperties.password
+                , readerProperties.password.Length);
+            this.certificateKey = readerProperties.certificateKey;
+            this.certificate = readerProperties.certificate;
+            this.memoryLimitsAwareHandler = readerProperties.memoryLimitsAwareHandler == null ? null : readerProperties
+                .memoryLimitsAwareHandler.CreateNewInstance();
+        }
+//\endcond
 
         /// <summary>Defines the password which will be used if the document is encrypted with standard encryption.</summary>
         /// <remarks>
@@ -48,7 +65,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="ReaderProperties"/>
         /// instance
         /// </returns>
-        public virtual ReaderProperties SetPassword(byte[] password) {
+        public virtual iText.Kernel.Pdf.ReaderProperties SetPassword(byte[] password) {
             ClearEncryptionParams();
             this.password = password;
             return this;
@@ -74,8 +91,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="ReaderProperties"/>
         /// instance
         /// </returns>
-        public virtual ReaderProperties SetPublicKeySecurityParams(IX509Certificate certificate, IPrivateKey certificateKey
-            ) {
+        public virtual iText.Kernel.Pdf.ReaderProperties SetPublicKeySecurityParams(IX509Certificate certificate, 
+            IPrivateKey certificateKey) {
             ClearEncryptionParams();
             this.certificate = certificate;
             this.certificateKey = certificateKey;
@@ -97,16 +114,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="ReaderProperties"/>
         /// instance
         /// </returns>
-        public virtual ReaderProperties SetPublicKeySecurityParams(IX509Certificate certificate) {
+        public virtual iText.Kernel.Pdf.ReaderProperties SetPublicKeySecurityParams(IX509Certificate certificate) {
             ClearEncryptionParams();
             this.certificate = certificate;
             return this;
-        }
-
-        private void ClearEncryptionParams() {
-            this.password = null;
-            this.certificate = null;
-            this.certificateKey = null;
         }
 
         /// <summary>Sets the memory handler which will be used to handle decompressed PDF streams.</summary>
@@ -117,10 +128,16 @@ namespace iText.Kernel.Pdf {
         /// <see cref="ReaderProperties"/>
         /// instance
         /// </returns>
-        public virtual ReaderProperties SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler memoryLimitsAwareHandler
+        public virtual iText.Kernel.Pdf.ReaderProperties SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler memoryLimitsAwareHandler
             ) {
             this.memoryLimitsAwareHandler = memoryLimitsAwareHandler;
             return this;
+        }
+
+        private void ClearEncryptionParams() {
+            this.password = null;
+            this.certificate = null;
+            this.certificateKey = null;
         }
     }
 }

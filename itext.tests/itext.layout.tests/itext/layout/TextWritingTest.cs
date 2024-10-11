@@ -30,6 +30,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Test;
 
@@ -210,12 +211,12 @@ namespace iText.Layout {
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());
             document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(ColorConstants.GREEN)
-                ).SetBold());
+                ).SimulateBold());
             document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(ColorConstants.GREEN
-                )).SetItalic());
+                )).SimulateItalic());
             document.Add(new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
                  + "such a long description will cause me to occupy two lines").SetBackgroundColor(ColorConstants.GREEN
-                )).SetItalic().SetBold().SetUnderline().SetLineThrough());
+                )).SimulateItalic().SimulateBold().SetUnderline().SetLineThrough());
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -293,6 +294,12 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextInitializationWithNullValueThrowsException() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new Text(null));
+            NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.TEXT_CONTENT_CANNOT_BE_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]

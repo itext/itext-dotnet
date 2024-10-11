@@ -24,11 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Colors;
-using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -241,8 +241,8 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        private class ParagraphAdderHandler : iText.Kernel.Events.IEventHandler {
-            public virtual void HandleEvent(Event @event) {
+        private class ParagraphAdderHandler : AbstractPdfDocumentEventHandler {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 PdfDocumentEvent docEvent = (PdfDocumentEvent)@event;
                 PdfPage page = docEvent.GetPage();
                 PdfDocument pdfDoc = ((PdfDocumentEvent)@event).GetDocument();
@@ -257,12 +257,12 @@ namespace iText.Layout {
             }
         }
 
-        private class PageRemoverHandler : iText.Kernel.Events.IEventHandler {
-            public virtual void HandleEvent(Event @event) {
+        private class PageRemoverHandler : AbstractPdfDocumentEventHandler {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 PdfDocumentEvent docEvent = (PdfDocumentEvent)@event;
                 PdfPage page = docEvent.GetPage();
-                PdfDocument pdfDoc = ((PdfDocumentEvent)@event).GetDocument();
-                pdfDoc.RemovePage(1);
+                PdfDocument pdfDoc = @event.GetDocument();
+                pdfDoc.RemovePage(page);
             }
         }
     }

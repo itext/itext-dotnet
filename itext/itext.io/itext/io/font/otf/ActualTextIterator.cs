@@ -35,7 +35,7 @@ namespace iText.IO.Font.Otf
 		public ActualTextIterator(GlyphLine glyphLine)
 		{
 			this.glyphLine = glyphLine;
-			this.pos = glyphLine.start;
+			this.pos = glyphLine.GetStart();
 		}
 
 		public ActualTextIterator(GlyphLine glyphLine, int start, int end)
@@ -61,25 +61,25 @@ namespace iText.IO.Font.Otf
 
 	    public GlyphLine.GlyphLinePart Next() {
             if (glyphLine.actualText == null) {
-                GlyphLine.GlyphLinePart result = new GlyphLine.GlyphLinePart(pos, glyphLine.end,
+                GlyphLine.GlyphLinePart result = new GlyphLine.GlyphLinePart(pos, glyphLine.GetEnd(),
                     null);
-                pos = glyphLine.end;
+                pos = glyphLine.GetEnd();
                 return result;
             } else {
                 GlyphLine.GlyphLinePart currentResult = NextGlyphLinePart(pos);
                 if (currentResult == null) {
                     return null;
                 }
-                pos = currentResult.end;
+                pos = currentResult.GetEnd();
 
                 if (!GlyphLinePartNeedsActualText(currentResult)) {
-                    currentResult.actualText = null;
+                    currentResult.SetActualText(null);
                     // Try to add more pieces without "actual text"
-                    while (pos < glyphLine.end) {
+                    while (pos < glyphLine.GetEnd()) {
                         GlyphLine.GlyphLinePart nextResult = NextGlyphLinePart(pos);
                         if (nextResult != null && !GlyphLinePartNeedsActualText(nextResult)) {
-                            currentResult.end = nextResult.end;
-                            pos = nextResult.end;
+                            currentResult.SetEnd(nextResult.GetEnd());
+                            pos = nextResult.GetEnd();
                         } else {
                             break;
                         }
@@ -91,7 +91,7 @@ namespace iText.IO.Font.Otf
         }
 
 	    public bool HasNext() {
-            return pos < glyphLine.end;
+            return pos < glyphLine.GetEnd();
         }
 
 
@@ -104,29 +104,29 @@ namespace iText.IO.Font.Otf
 
 		private GlyphLine.GlyphLinePart NextGlyphLinePart(int pos)
 		{
-			if (pos >= glyphLine.end)
+			if (pos >= glyphLine.GetEnd())
 			{
 				return null;
 			}
 			int startPos = pos;
 			GlyphLine.ActualText startActualText = glyphLine.actualText[pos];
-			while (pos < glyphLine.end && glyphLine.actualText[pos] == startActualText)
+			while (pos < glyphLine.GetEnd() && glyphLine.actualText[pos] == startActualText)
 			{
 				pos++;
 			}
 			return new GlyphLine.GlyphLinePart(startPos, pos, startActualText != null ? startActualText
-				.value : null);
+				.GetValue() : null);
 		}
 
 		private bool GlyphLinePartNeedsActualText(GlyphLine.GlyphLinePart glyphLinePart)
 		{
-			if (glyphLinePart.actualText == null)
+			if (glyphLinePart.GetActualText() == null)
 			{
 				return false;
 			}
 			bool needsActualText = false;
 			StringBuilder toUnicodeMapResult = new StringBuilder();
-			for (int i = glyphLinePart.start; i < glyphLinePart.end; i++)
+			for (int i = glyphLinePart.GetStart(); i < glyphLinePart.GetEnd(); i++)
 			{
 				Glyph currentGlyph = glyphLine.glyphs[i];
                 if (!currentGlyph.HasValidUnicode())
@@ -136,7 +136,7 @@ namespace iText.IO.Font.Otf
 				}
 				toUnicodeMapResult.Append(TextUtil.ConvertFromUtf32(currentGlyph.GetUnicode()));
 			}
-			return needsActualText || !toUnicodeMapResult.ToString().Equals(glyphLinePart.actualText
+			return needsActualText || !toUnicodeMapResult.ToString().Equals(glyphLinePart.GetActualText()
 				);
 		}
 

@@ -110,8 +110,8 @@ namespace iText.Layout.Renderer {
                 glyphLine.Add(glyph);
             }
             renderer.SetText(new GlyphLine(), pdfFont);
-            glyphLine.start = 1;
-            glyphLine.end = 2;
+            glyphLine.SetStart(1);
+            glyphLine.SetEnd(2);
             renderer.SetText(glyphLine, pdfFont);
             GlyphLine actualLine = renderer.GetText();
             NUnit.Framework.Assert.IsFalse(actualLine == glyphLine);
@@ -120,8 +120,8 @@ namespace iText.Layout.Renderer {
             // Check that the glyph line has been processed using the replaceSpecialWhitespaceGlyphs method
             NUnit.Framework.Assert.AreEqual(space.GetCode(), glyph_1.GetCode());
             NUnit.Framework.Assert.AreEqual(space.GetWidth(), glyph_1.GetWidth());
-            NUnit.Framework.Assert.AreEqual(1, actualLine.start);
-            NUnit.Framework.Assert.AreEqual(2, actualLine.end);
+            NUnit.Framework.Assert.AreEqual(1, actualLine.GetStart());
+            NUnit.Framework.Assert.AreEqual(2, actualLine.GetEnd());
         }
 
         /// <summary>
@@ -263,7 +263,6 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereBoldSimulationMaxWidth() {
             Text text = new Text("wow");
-            text.SetBold();
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
@@ -275,7 +274,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void OverflowWrapAnywhereItalicSimulationMaxWidth() {
             Text text = new Text("wow");
-            text.SetItalic();
+            text.SimulateItalic();
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float maxWidthNoOverflowWrap = textRenderer.GetMinMaxWidth().GetMaxWidth();
@@ -291,7 +290,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float minWidthNoBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
-            text.SetBold();
+            text.SimulateBold();
             float minWidthAndBoldSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             NUnit.Framework.Assert.IsTrue(minWidthAndBoldSimulation > minWidthNoBoldSimulation);
         }
@@ -303,7 +302,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = (TextRenderer)text.GetRenderer();
             textRenderer.SetParent(CreateDummyDocument().GetRenderer());
             float minWidthNoItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
-            text.SetItalic();
+            text.SimulateItalic();
             float minWidthAndItalicSimulation = textRenderer.GetMinMaxWidth().GetMinWidth();
             NUnit.Framework.Assert.IsTrue(minWidthAndItalicSimulation > minWidthNoItalicSimulation);
         }

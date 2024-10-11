@@ -42,11 +42,6 @@ namespace iText.IO.Util {
         public const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE = "ITEXT_MAGICK_COMPARE_EXEC";
 
 //\cond DO_NOT_DOCUMENT
-        [Obsolete]
-        internal const String MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY = "compareExec";
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal const String MAGICK_COMPARE_KEYWORD = "ImageMagick Studio LLC";
 //\endcond
 
@@ -75,9 +70,6 @@ namespace iText.IO.Util {
             compareExec = newCompareExec;
             if (compareExec == null) {
                 compareExec = SystemUtil.GetEnvironmentVariable(MAGICK_COMPARE_ENVIRONMENT_VARIABLE);
-                if (compareExec == null) {
-                    compareExec = SystemUtil.GetEnvironmentVariable(MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY);
-                }
             }
             if (!CliCommandUtil.IsVersionCommandExecutable(compareExec, MAGICK_COMPARE_KEYWORD)) {
                 throw new ArgumentException(IoExceptionMessageConstant.COMPARE_COMMAND_SPECIFIED_INCORRECTLY);

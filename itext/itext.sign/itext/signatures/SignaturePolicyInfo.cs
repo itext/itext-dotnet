@@ -26,6 +26,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 
 namespace iText.Signatures {
     /// <summary>Class that encapsulates the signature policy information</summary>

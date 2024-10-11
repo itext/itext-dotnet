@@ -26,5 +26,12 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
     public interface IRespID {
+        /// <summary>
+        /// Calls actual
+        /// <c>toASN1Primitive</c>
+        /// method for the wrapped BasicOCSPResp object.
+        /// </summary>
+        /// <returns>Responder ID as a ASN1 primitive.</returns>
+        IResponderID ToASN1Primitive();
     }
 }

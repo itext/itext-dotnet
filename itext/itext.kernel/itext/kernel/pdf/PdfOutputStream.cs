@@ -30,7 +30,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf {
-    public class PdfOutputStream : OutputStream<iText.Kernel.Pdf.PdfOutputStream> {
+    public class PdfOutputStream : HighPrecisionOutputStream<iText.Kernel.Pdf.PdfOutputStream> {
         private static readonly byte[] stream = ByteUtils.GetIsoBytes("stream\n");
 
         private static readonly byte[] endstream = ByteUtils.GetIsoBytes("\nendstream");

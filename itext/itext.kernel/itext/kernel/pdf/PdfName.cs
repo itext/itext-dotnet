@@ -122,6 +122,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName AESV3 = CreateDirectName("AESV3");
 
+        public static readonly iText.Kernel.Pdf.PdfName AESV4 = CreateDirectName("AESV4");
+
         public static readonly iText.Kernel.Pdf.PdfName AF = CreateDirectName("AF");
 
         public static readonly iText.Kernel.Pdf.PdfName AFRelationship = CreateDirectName("AFRelationship");
@@ -200,7 +202,11 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName AsIs = CreateDirectName("AsIs");
 
+        public static readonly iText.Kernel.Pdf.PdfName AttachedToSig = CreateDirectName("AttachedToSig");
+
         public static readonly iText.Kernel.Pdf.PdfName AuthEvent = CreateDirectName("AuthEvent");
+
+        public static readonly iText.Kernel.Pdf.PdfName AuthCode = CreateDirectName("AuthCode");
 
         public static readonly iText.Kernel.Pdf.PdfName Author = CreateDirectName("Author");
 
@@ -886,6 +892,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName K = CreateDirectName("K");
 
+        public static readonly iText.Kernel.Pdf.PdfName KDFSalt = CreateDirectName("KDFSalt");
+
         public static readonly iText.Kernel.Pdf.PdfName Keywords = CreateDirectName("Keywords");
 
         public static readonly iText.Kernel.Pdf.PdfName Kids = CreateDirectName("Kids");
@@ -975,6 +983,10 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName LZWDecode = CreateDirectName("LZWDecode");
 
         public static readonly iText.Kernel.Pdf.PdfName M = CreateDirectName("M");
+
+        public static readonly iText.Kernel.Pdf.PdfName MAC = CreateDirectName("MAC");
+
+        public static readonly iText.Kernel.Pdf.PdfName MACLocation = CreateDirectName("MACLocation");
 
         public static readonly iText.Kernel.Pdf.PdfName MacExpertEncoding = CreateDirectName("MacExpertEncoding");
 
@@ -1456,6 +1468,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Signed = CreateDirectName("Signed");
 
+        public static readonly iText.Kernel.Pdf.PdfName SigObjRef = CreateDirectName("SigObjRef");
+
         public static readonly iText.Kernel.Pdf.PdfName SigRef = CreateDirectName("SigRef");
 
         public static readonly iText.Kernel.Pdf.PdfName Simplex = CreateDirectName("Simplex");
@@ -1493,6 +1507,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Square = CreateDirectName("Square");
 
         public static readonly iText.Kernel.Pdf.PdfName Squiggly = CreateDirectName("Squiggly");
+
+        public static readonly iText.Kernel.Pdf.PdfName Standalone = CreateDirectName("Standalone");
 
         public static readonly iText.Kernel.Pdf.PdfName St = CreateDirectName("St");
 
@@ -1826,7 +1842,7 @@ namespace iText.Kernel.Pdf {
         protected internal String value = null;
 
         /// <summary>map strings to all known static names</summary>
-        public static IDictionary<String, iText.Kernel.Pdf.PdfName> staticNames;
+        public static readonly IDictionary<String, iText.Kernel.Pdf.PdfName> staticNames;
 
         static PdfName() {
             staticNames = PdfNameLoader.LoadNames();

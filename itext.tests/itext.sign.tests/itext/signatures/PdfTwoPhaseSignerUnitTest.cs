@@ -25,6 +25,7 @@ using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Pdf;
 using iText.Test;
 

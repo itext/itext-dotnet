@@ -64,8 +64,11 @@ namespace iText.Kernel.Pdf.Tagging {
             }
 
             //empty constructor
-            /// <summary><inheritDoc/></summary>
-            public virtual void NextElement(IStructureNode elem) {
+            public virtual bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public virtual void ProcessElement(IStructureNode elem) {
                 if ((elem is PdfMcr)) {
                     haveMcr = true;
                 }

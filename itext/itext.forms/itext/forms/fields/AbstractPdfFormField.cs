@@ -68,10 +68,7 @@ namespace iText.Forms.Fields {
 
         protected internal Color color;
 
-        [System.ObsoleteAttribute(@"since 8.0.4, this is not used anymore! Use pdfConformanceLevel instead")]
-        protected internal PdfAConformanceLevel pdfAConformanceLevel;
-
-        protected internal IConformanceLevel pdfConformanceLevel;
+        protected internal PdfConformance pdfConformance;
 
         /// <summary>Parent form field.</summary>
         protected internal PdfFormField parent;
@@ -203,35 +200,13 @@ namespace iText.Forms.Fields {
             return color == null && parent != null ? parent.GetColor() : color;
         }
 
-        /// <summary>Gets the declared conformance level.</summary>
-        /// <remarks>
-        /// Gets the declared conformance level.
-        /// Deprecated  use
-        /// <see cref="AbstractPdfFormField"/>
-        /// getPdfConformanceLevel
-        /// </remarks>
+        /// <summary>Gets the declared conformance.</summary>
         /// <returns>
         /// the
-        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfConformance"/>
         /// </returns>
-        [Obsolete]
-        public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
-            if (pdfConformanceLevel == null && parent != null) {
-                return parent.GetPdfAConformanceLevel();
-            }
-            if (pdfConformanceLevel is PdfAConformanceLevel) {
-                return (PdfAConformanceLevel)pdfConformanceLevel;
-            }
-            return null;
-        }
-
-        /// <summary>Gets the declared conformance level.</summary>
-        /// <returns>
-        /// the
-        /// <see cref="iText.Kernel.Pdf.IConformanceLevel"/>
-        /// </returns>
-        public virtual IConformanceLevel GetPdfConformanceLevel() {
-            return pdfConformanceLevel == null && parent != null ? parent.GetPdfConformanceLevel() : pdfConformanceLevel;
+        public virtual PdfConformance GetPdfConformance() {
+            return pdfConformance == null && parent != null ? parent.GetPdfConformance() : pdfConformance;
         }
 
         /// <summary>This method regenerates appearance stream of the field.</summary>

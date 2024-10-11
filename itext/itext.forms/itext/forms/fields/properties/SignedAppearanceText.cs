@@ -71,7 +71,10 @@ namespace iText.Forms.Fields.Properties {
         /// instance.
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetReasonLine(String reason) {
-            this.reason = reason.Trim();
+            if (reason != null) {
+                reason = reason.Trim();
+            }
+            this.reason = reason;
             return this;
         }
 
@@ -89,14 +92,17 @@ namespace iText.Forms.Fields.Properties {
         /// <c>PdfSigner#setLocation</c>
         /// will be used.
         /// </remarks>
-        /// <param name="location">new signing location.</param>
+        /// <param name="location">new signing location</param>
         /// <returns>
         /// this same
         /// <see cref="SignedAppearanceText"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetLocationLine(String location) {
-            this.location = location.Trim();
+            if (location != null) {
+                location = location.Trim();
+            }
+            this.location = location;
             return this;
         }
 
@@ -106,19 +112,22 @@ namespace iText.Forms.Fields.Properties {
         /// <para />
         /// Note, that the signer name will be replaced by the one from the signing certificate during the actual signing.
         /// </remarks>
-        /// <param name="signedBy">name of the signer.</param>
+        /// <param name="signedBy">name of the signer</param>
         /// <returns>
         /// this same
         /// <see cref="SignedAppearanceText"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetSignedBy(String signedBy) {
-            this.signedBy = signedBy.Trim();
+            if (signedBy != null) {
+                signedBy = signedBy.Trim();
+            }
+            this.signedBy = signedBy;
             return this;
         }
 
         /// <summary>Gets the name of the signer from the certificate.</summary>
-        /// <returns>signedBy name of the signer.</returns>
+        /// <returns>signedBy name of the signer</returns>
         public virtual String GetSignedBy() {
             return signedBy;
         }
@@ -137,11 +146,11 @@ namespace iText.Forms.Fields.Properties {
         /// <c>PdfSigner</c>
         /// during the signing.
         /// </remarks>
-        /// <param name="signDate">new signature date.</param>
+        /// <param name="signDate">new signature date</param>
         /// <returns>
         /// this same
         /// <see cref="SignedAppearanceText"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Forms.Fields.Properties.SignedAppearanceText SetSignDate(DateTime signDate) {
             this.signDate = signDate;
@@ -150,7 +159,7 @@ namespace iText.Forms.Fields.Properties {
         }
 
         /// <summary>Generates the signature description text based on the provided parameters.</summary>
-        /// <returns>signature description.</returns>
+        /// <returns>signature description</returns>
         public virtual String GenerateDescriptionText() {
             StringBuilder buf = new StringBuilder();
             if (signedBy != null && !String.IsNullOrEmpty(signedBy)) {

@@ -118,7 +118,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRendererFirst = new TextRenderer(new Text(""));
             textRendererFirst.SetProperty(Property.FONT, pdfFont);
             textRendererFirst.SetText(thai.JSubstring(0, 8));
-            textRendererFirst.text.start = 3;
+            textRendererFirst.text.SetStart(3);
             textRendererFirst.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(3, 8)));
             textRendererFirst.SetParent(document.GetRenderer());
             float longestWordLength = textRendererFirst.GetMinMaxWidth().GetMaxWidth();

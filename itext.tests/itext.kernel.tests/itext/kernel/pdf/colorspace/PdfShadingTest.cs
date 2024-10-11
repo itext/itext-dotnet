@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Kernel.Pdf.Function;
 using iText.Test;
 
@@ -33,8 +34,8 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void AxialShadingConstructorNullExtendArgumentTest() {
             bool[] extendArray = null;
             PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(color, 0f
-                , 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfAxialShading(color, 0f, 
+                0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
@@ -42,8 +43,8 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void AxialShadingConstructorInvalidExtendArgumentTest() {
             bool[] extendArray = new bool[] { true };
             PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Axial(color, 0f
-                , 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfAxialShading(color, 0f, 
+                0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
 
@@ -51,7 +52,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void RadialShadingConstructorNullExtendArgumentTest() {
             bool[] extendArray = null;
             PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(color, 0f
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfRadialShading(color, 0f
                 , 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
@@ -60,7 +61,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void RadialShadingConstructorInvalidExtendArgumentTest() {
             bool[] extendArray = new bool[] { true, false, false };
             PdfDeviceCs.Rgb color = new PdfDeviceCs.Rgb();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.Radial(color, 0f
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfRadialShading(color, 0f
                 , 0f, 0f, new float[] { 0f, 0f, 0f }, 0.5f, 0.5f, 10f, new float[] { 0.5f, 0.5f, 0.5f }, extendArray));
             NUnit.Framework.Assert.AreEqual("extend", e.Message);
         }
@@ -70,13 +71,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0.5f, 0.5f };
             float[] domainArray = new float[] { 0f, 0.8f };
             bool[] extendArray = new bool[] { true, false };
-            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
+            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, ShadingType
                 .AXIAL);
-            PdfShading.Axial axial = new PdfShading.Axial(axialShadingDictionary);
+            PdfAxialShading axial = new PdfAxialShading(axialShadingDictionary);
             iText.Test.TestUtil.AreEqual(coordsArray, axial.GetCoords().ToFloatArray(), 0f);
             iText.Test.TestUtil.AreEqual(domainArray, axial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(extendArray, axial.GetExtend().ToBooleanArray());
-            NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.AXIAL, axial.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(ShadingType.AXIAL, axial.GetShadingType());
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, axial.GetColorSpace());
         }
 
@@ -85,9 +86,9 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0.5f, 0.5f };
             float[] domainArray = new float[] { 0f, 0.8f };
             bool[] extendArray = new bool[] { true, false };
-            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
+            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, ShadingType
                 .AXIAL);
-            PdfShading.Axial axial = new PdfShading.Axial(axialShadingDictionary);
+            PdfAxialShading axial = new PdfAxialShading(axialShadingDictionary);
             NUnit.Framework.Assert.IsTrue(axial.GetFunction() is PdfDictionary);
             byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
                 );
@@ -106,13 +107,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0.5f, 0.5f };
             float[] domainArray = new float[] { 0f, 0.8f };
             bool[] extendArray = new bool[] { true, false };
-            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
+            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, ShadingType
                 .AXIAL);
-            PdfShading.Axial axial = (PdfShading.Axial)PdfShading.MakeShading(axialShadingDictionary);
+            PdfAxialShading axial = (PdfAxialShading)AbstractPdfShading.MakeShading(axialShadingDictionary);
             iText.Test.TestUtil.AreEqual(coordsArray, axial.GetCoords().ToFloatArray(), 0f);
             iText.Test.TestUtil.AreEqual(domainArray, axial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(extendArray, axial.GetExtend().ToBooleanArray());
-            NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.AXIAL, axial.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(ShadingType.AXIAL, axial.GetShadingType());
         }
 
         [NUnit.Framework.Test]
@@ -120,13 +121,12 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0.5f, 0.5f };
             float[] defaultDomainArray = new float[] { 0f, 1f };
             bool[] defaultExtendArray = new bool[] { false, false };
-            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
-                .AXIAL);
-            PdfShading.Axial axial = new PdfShading.Axial(axialShadingDictionary);
+            PdfDictionary axialShadingDictionary = InitShadingDictionary(coordsArray, null, null, ShadingType.AXIAL);
+            PdfAxialShading axial = new PdfAxialShading(axialShadingDictionary);
             iText.Test.TestUtil.AreEqual(coordsArray, axial.GetCoords().ToFloatArray(), 0f);
             iText.Test.TestUtil.AreEqual(defaultDomainArray, axial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(defaultExtendArray, axial.GetExtend().ToBooleanArray());
-            NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.AXIAL, axial.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(ShadingType.AXIAL, axial.GetShadingType());
         }
 
         [NUnit.Framework.Test]
@@ -134,13 +134,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
             float[] domainArray = new float[] { 0f, 0.8f };
             bool[] extendArray = new bool[] { true, false };
-            PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
+            PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, ShadingType
                 .RADIAL);
-            PdfShading.Radial radial = new PdfShading.Radial(radialShadingDictionary);
+            PdfRadialShading radial = new PdfRadialShading(radialShadingDictionary);
             iText.Test.TestUtil.AreEqual(coordsArray, radial.GetCoords().ToFloatArray(), 0f);
             iText.Test.TestUtil.AreEqual(domainArray, radial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(extendArray, radial.GetExtend().ToBooleanArray());
-            NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.RADIAL, radial.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(ShadingType.RADIAL, radial.GetShadingType());
         }
 
         [NUnit.Framework.Test]
@@ -148,13 +148,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
             float[] domainArray = new float[] { 0f, 0.8f };
             bool[] extendArray = new bool[] { true, false };
-            PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, PdfShading.ShadingType
+            PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, domainArray, extendArray, ShadingType
                 .RADIAL);
-            PdfShading.Radial radial = (PdfShading.Radial)PdfShading.MakeShading(radialShadingDictionary);
+            PdfRadialShading radial = (PdfRadialShading)AbstractPdfShading.MakeShading(radialShadingDictionary);
             iText.Test.TestUtil.AreEqual(coordsArray, radial.GetCoords().ToFloatArray(), 0f);
             iText.Test.TestUtil.AreEqual(domainArray, radial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(extendArray, radial.GetExtend().ToBooleanArray());
-            NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.RADIAL, radial.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(ShadingType.RADIAL, radial.GetShadingType());
         }
 
         [NUnit.Framework.Test]
@@ -162,20 +162,20 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
             float[] defaultDomainArray = new float[] { 0f, 1f };
             bool[] defaultExtendArray = new bool[] { false, false };
-            PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, null, null, PdfShading.ShadingType
-                .RADIAL);
-            PdfShading.Radial radial = new PdfShading.Radial(radialShadingDictionary);
+            PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, null, null, ShadingType.RADIAL);
+            PdfRadialShading radial = new PdfRadialShading(radialShadingDictionary);
             iText.Test.TestUtil.AreEqual(coordsArray, radial.GetCoords().ToFloatArray(), 0f);
             iText.Test.TestUtil.AreEqual(defaultDomainArray, radial.GetDomain().ToFloatArray(), 0f);
             NUnit.Framework.Assert.AreEqual(defaultExtendArray, radial.GetExtend().ToBooleanArray());
-            NUnit.Framework.Assert.AreEqual(PdfShading.ShadingType.RADIAL, radial.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(ShadingType.RADIAL, radial.GetShadingType());
         }
 
         [NUnit.Framework.Test]
         public virtual void MakeShadingShouldFailOnMissingShadeType() {
             PdfDictionary shade = new PdfDictionary();
             shade.Put(PdfName.ColorSpace, new PdfArray());
-            Exception error = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(shade));
+            Exception error = NUnit.Framework.Assert.Catch(typeof(PdfException), () => AbstractPdfShading.MakeShading(
+                shade));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.SHADING_TYPE_NOT_FOUND, error.Message);
         }
 
@@ -183,7 +183,8 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void MakeShadingShouldFailOnMissingColorSpace() {
             PdfDictionary shade = new PdfDictionary();
             shade.Put(PdfName.ShadingType, new PdfArray());
-            Exception error = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(shade));
+            Exception error = NUnit.Framework.Assert.Catch(typeof(PdfException), () => AbstractPdfShading.MakeShading(
+                shade));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.COLOR_SPACE_NOT_FOUND, error.Message);
         }
 
@@ -194,8 +195,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             IPdfFunction function = new PdfType4Function(new float[] { 0, 1000, 0, 1000 }, new float[] { 0, 1, 0, 1, 0
                 , 1 }, ps);
             PdfSpecialCs.Pattern colorSpace = new PdfSpecialCs.Pattern();
-            Exception ex = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfShading.FunctionBased(
-                colorSpace, function));
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new PdfFunctionBasedShading(colorSpace
+                , function));
             NUnit.Framework.Assert.AreEqual("colorSpace", ex.Message);
         }
 
@@ -206,7 +207,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             float[] domain = new float[] { 0, 1000, 0, 1000 };
             float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
             IPdfFunction function = new PdfType4Function(domain, range, ps);
-            PdfShading.FunctionBased shade = new PdfShading.FunctionBased(new PdfDeviceCs.Rgb(), function);
+            PdfFunctionBasedShading shade = new PdfFunctionBasedShading(new PdfDeviceCs.Rgb(), function);
             PdfDictionary @object = shade.GetPdfObject();
             NUnit.Framework.Assert.AreEqual(1, @object.GetAsInt(PdfName.ShadingType).Value);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, @object.GetAsName(PdfName.ColorSpace));
@@ -234,7 +235,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             shadingDict.Put(PdfName.Function, stream);
             stream.SetData(ps);
             shadingDict.Put(PdfName.Function, stream);
-            PdfShading shade = PdfShading.MakeShading(shadingDict);
+            AbstractPdfShading shade = AbstractPdfShading.MakeShading(shadingDict);
             PdfDictionary @object = shade.GetPdfObject();
             NUnit.Framework.Assert.AreEqual(1, @object.GetAsInt(PdfName.ShadingType).Value);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, @object.GetAsName(PdfName.ColorSpace));
@@ -251,7 +252,7 @@ namespace iText.Kernel.Pdf.Colorspace {
         public virtual void MakeShadingWithInvalidShadeType() {
             float[] coordsArray = new float[] { 0f, 0f, 0f, 0.5f, 0.5f, 10f };
             PdfDictionary radialShadingDictionary = InitShadingDictionary(coordsArray, null, null, 21);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(radialShadingDictionary
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => AbstractPdfShading.MakeShading(radialShadingDictionary
                 ));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE, e.Message);
         }
@@ -273,7 +274,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             stream.Put(PdfName.Decode, new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 
                 3)), 0, 1, 0, 1, 0, 1 }));
             stream.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0, 0, -1, 0, 0 }));
-            PdfShading.FreeFormGouraudShadedTriangleMesh shade = (PdfShading.FreeFormGouraudShadedTriangleMesh)PdfShading
+            PdfFreeFormGouraudShadedTriangleShading shade = (PdfFreeFormGouraudShadedTriangleShading)AbstractPdfShading
                 .MakeShading(stream);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
             NUnit.Framework.Assert.AreEqual(4, shade.GetShadingType());
@@ -300,7 +301,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             stream.Put(PdfName.Decode, new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 
                 3)), 0, 1, 0, 1, 0, 1 }));
             stream.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0, 0, -1, 0, 0 }));
-            PdfShading.LatticeFormGouraudShadedTriangleMesh shade = (PdfShading.LatticeFormGouraudShadedTriangleMesh)PdfShading
+            PdfLatticeFormGouraudShadedTriangleShading shade = (PdfLatticeFormGouraudShadedTriangleShading)AbstractPdfShading
                 .MakeShading(stream);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
             NUnit.Framework.Assert.AreEqual(5, shade.GetShadingType());
@@ -385,7 +386,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             stream.Put(PdfName.Decode, new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 
                 3)), 0, 1, 0, 1, 0, 1 }));
             stream.Put(PdfName.Matrix, new PdfArray(new float[] { 1, 0, 0, -1, 0, 0 }));
-            PdfShading.CoonsPatchMesh shade = (PdfShading.CoonsPatchMesh)PdfShading.MakeShading(stream);
+            PdfCoonsPatchShading shade = (PdfCoonsPatchShading)AbstractPdfShading.MakeShading(stream);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
             NUnit.Framework.Assert.AreEqual(6, shade.GetShadingType());
             NUnit.Framework.Assert.AreEqual(32, shade.GetBitsPerCoordinate());
@@ -485,8 +486,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             stream.Put(PdfName.Decode, new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 
                 3)), 0, 1, 0, 1, 0, 1 }));
             stream.Put(PdfName.Matrix, new PdfArray(new float[] { -1, 0, 0, 1, 0, 0 }));
-            PdfShading.TensorProductPatchMesh shade = (PdfShading.TensorProductPatchMesh)PdfShading.MakeShading(stream
-                );
+            PdfTensorProductPatchShading shade = (PdfTensorProductPatchShading)AbstractPdfShading.MakeShading(stream);
             NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
             NUnit.Framework.Assert.AreEqual(7, shade.GetShadingType());
             NUnit.Framework.Assert.AreEqual(32, shade.GetBitsPerCoordinate());
@@ -500,8 +500,131 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfDictionary dict = new PdfDictionary();
             dict.Put(PdfName.ShadingType, new PdfNumber(8));
             dict.Put(PdfName.ColorSpace, PdfName.DeviceRGB);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfShading.MakeShading(dict));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => AbstractPdfShading.MakeShading(dict
+                ));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNEXPECTED_SHADING_TYPE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicCoonsPathMeshTest() {
+            int x = 36;
+            int y = 400;
+            int side = 500;
+            PdfArray decode = new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 3)), 0, 1
+                , 0, 1, 0, 1 });
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfCoonsPatchShading coonsPatchMesh = new PdfCoonsPatchShading(cs, 32, 16, 8, decode);
+            NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, coonsPatchMesh.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(6, coonsPatchMesh.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(32, coonsPatchMesh.GetBitsPerCoordinate());
+            NUnit.Framework.Assert.AreEqual(16, coonsPatchMesh.GetBitsPerComponent());
+            NUnit.Framework.Assert.AreEqual(8, coonsPatchMesh.GetBitsPerFlag());
+            NUnit.Framework.Assert.AreEqual(y, coonsPatchMesh.GetDecode().GetAsNumber(2).IntValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicFreeFormGouraudShadedTriangleMeshTest() {
+            int x = 36;
+            int y = 400;
+            int side = 500;
+            PdfArray pdfArray = new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 3)), 0, 
+                1, 0, 1, 0, 1 });
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfFreeFormGouraudShadedTriangleShading shade = new PdfFreeFormGouraudShadedTriangleShading(cs, 32, 8, 8, 
+                pdfArray);
+            NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(4, shade.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(32, shade.GetBitsPerCoordinate());
+            NUnit.Framework.Assert.AreEqual(8, shade.GetBitsPerComponent());
+            NUnit.Framework.Assert.AreEqual(8, shade.GetBitsPerFlag());
+            NUnit.Framework.Assert.AreEqual(y, shade.GetDecode().GetAsNumber(2).IntValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicTensorProductPatchMeshTest() {
+            int x = 36;
+            int y = 400;
+            int side = 500;
+            PdfArray pdfArray = new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 3)), 0, 
+                1, 0, 1, 0, 1 });
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfTensorProductPatchShading shade = new PdfTensorProductPatchShading(cs, 32, 8, 8, pdfArray);
+            NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(7, shade.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(32, shade.GetBitsPerCoordinate());
+            NUnit.Framework.Assert.AreEqual(8, shade.GetBitsPerComponent());
+            NUnit.Framework.Assert.AreEqual(8, shade.GetBitsPerFlag());
+            NUnit.Framework.Assert.AreEqual(y, shade.GetDecode().GetAsNumber(2).IntValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicLatticeFormGouraudShadedTriangleMeshTest() {
+            int x = 36;
+            int y = 400;
+            int side = 500;
+            PdfArray pdfArray = new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 3)), 0, 
+                1, 0, 1, 0, 1 });
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfLatticeFormGouraudShadedTriangleShading shade = new PdfLatticeFormGouraudShadedTriangleShading(cs, 32, 
+                8, 2, pdfArray);
+            NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(5, shade.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(32, shade.GetBitsPerCoordinate());
+            NUnit.Framework.Assert.AreEqual(8, shade.GetBitsPerComponent());
+            NUnit.Framework.Assert.AreEqual(2, shade.GetVerticesPerRow());
+            NUnit.Framework.Assert.AreEqual(y, shade.GetDecode().GetAsNumber(2).IntValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BasicFunctionBasedShadingTest() {
+            byte[] ps = "{2 copy sin abs sin abs 3 index 10 mul sin  1 sub abs}".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
+                );
+            float[] domain = new float[] { 0, 1000, 0, 1000 };
+            float[] range = new float[] { 0, 1, 0, 1, 0, 1 };
+            float[] transformMatrix = new float[] { 1, 0, 0, 1, 0, 0 };
+            IPdfFunction function = new PdfType4Function(domain, range, ps);
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfFunctionBasedShading shade = new PdfFunctionBasedShading(cs, function);
+            shade.SetDomain(1, 4, 1, 4);
+            shade.SetMatrix(transformMatrix);
+            NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(1, shade.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(transformMatrix, shade.GetMatrix().ToFloatArray());
+            NUnit.Framework.Assert.AreEqual(new float[] { 1, 4, 1, 4 }, shade.GetDomain().ToFloatArray());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChangeFreeFormGouraudShadedTriangleMeshTest() {
+            int x = 36;
+            int y = 400;
+            int side = 500;
+            float[] decode = new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 3)), 0, 1, 0, 1, 0, 1 };
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfFreeFormGouraudShadedTriangleShading shade = new PdfFreeFormGouraudShadedTriangleShading(cs, 16, 8, 8, 
+                new PdfArray());
+            shade.SetDecode(decode);
+            shade.SetBitsPerComponent(16);
+            shade.SetBitsPerCoordinate(32);
+            shade.SetBitsPerFlag(4);
+            NUnit.Framework.Assert.AreEqual(PdfName.DeviceRGB, shade.GetColorSpace());
+            NUnit.Framework.Assert.AreEqual(4, shade.GetShadingType());
+            NUnit.Framework.Assert.AreEqual(32, shade.GetBitsPerCoordinate());
+            NUnit.Framework.Assert.AreEqual(16, shade.GetBitsPerComponent());
+            NUnit.Framework.Assert.AreEqual(4, shade.GetBitsPerFlag());
+            NUnit.Framework.Assert.AreEqual(y, shade.GetDecode().GetAsNumber(2).IntValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetDecodeCoonsPatchMeshTest() {
+            int x = 36;
+            int y = 400;
+            int side = 500;
+            PdfArray decode = new PdfArray(new float[] { x, x + side, y, y + (int)(side * Math.Sin(Math.PI / 3)), 0, 1
+                , 0, 1, 0, 1 });
+            PdfColorSpace cs = PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB);
+            PdfCoonsPatchShading coonsPatchMesh = new PdfCoonsPatchShading(cs, 32, 16, 16, new PdfArray());
+            coonsPatchMesh.SetDecode(decode);
+            NUnit.Framework.Assert.AreEqual(y, coonsPatchMesh.GetDecode().GetAsNumber(2).IntValue());
         }
 
         private static PdfDictionary InitShadingDictionary(float[] coordsArray, float[] domainArray, bool[] extendArray

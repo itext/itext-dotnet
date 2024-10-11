@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Colorspace.Shading;
 
 namespace iText.Kernel.Pdf.Colorspace {
     /// <summary>
@@ -440,11 +441,11 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>Creates a new instance of Shading Pattern.</summary>
             /// <param name="shading">
             /// the
-            /// <see cref="PdfShading"/>
+            /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
             /// that specifies the details of a particular
             /// gradient fill
             /// </param>
-            public Shading(PdfShading shading)
+            public Shading(AbstractPdfShading shading)
                 : base(new PdfDictionary()) {
                 GetPdfObject().Put(PdfName.Type, PdfName.Pattern);
                 GetPdfObject().Put(PdfName.PatternType, new PdfNumber(2));
@@ -453,11 +454,11 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             /// <summary>
             /// Gets the dictionary of the pattern's
-            /// <see cref="PdfShading"/>.
+            /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>.
             /// </summary>
             /// <returns>
             /// the dictionary of the pattern's
-            /// <see cref="PdfShading"/>
+            /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
             /// </returns>
             public virtual PdfDictionary GetShading() {
                 return (PdfDictionary)GetPdfObject().Get(PdfName.Shading);
@@ -465,15 +466,15 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             /// <summary>
             /// Sets the
-            /// <see cref="PdfShading"/>
+            /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
             /// that specifies the details of a particular gradient fill.
             /// </summary>
             /// <param name="shading">
             /// the
-            /// <see cref="PdfShading"/>
+            /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
             /// that specifies the details of a particular gradient fill
             /// </param>
-            public virtual void SetShading(PdfShading shading) {
+            public virtual void SetShading(AbstractPdfShading shading) {
                 GetPdfObject().Put(PdfName.Shading, shading.GetPdfObject());
                 SetModified();
             }
@@ -481,7 +482,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// <summary>Sets the dictionary which specifies the details of a particular gradient fill.</summary>
             /// <param name="shading">
             /// the dictionary of the pattern's
-            /// <see cref="PdfShading"/>
+            /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
             /// </param>
             public virtual void SetShading(PdfDictionary shading) {
                 GetPdfObject().Put(PdfName.Shading, shading);

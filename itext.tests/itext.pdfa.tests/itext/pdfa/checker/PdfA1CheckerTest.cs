@@ -31,7 +31,7 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA1CheckerTest : ExtendedITextTest {
-        private PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformanceLevel.PDF_A_1B);
+        private PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
@@ -89,7 +89,7 @@ namespace iText.Pdfa.Checker {
             pattern.SetShading(dictionary);
             Color color = new PatternColor(pattern);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                pdfA1Checker.CheckColor(color, new PdfDictionary(), true, null);
+                pdfA1Checker.CheckColor(null, color, new PdfDictionary(), true, null);
             }
             );
         }
@@ -98,7 +98,7 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckSignatureTest() {
             PdfDictionary dict = new PdfDictionary();
             pdfA1Checker.CheckSignature(dict);
-            NUnit.Framework.Assert.IsTrue(pdfA1Checker.ObjectIsChecked(dict));
+            NUnit.Framework.Assert.IsTrue(pdfA1Checker.IsPdfObjectReadyToFlush(dict));
         }
 
         [NUnit.Framework.Test]

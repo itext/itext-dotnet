@@ -22,12 +22,60 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
     public class GposValueRecord {
-        public int XPlacement;
+        private int xPlacement;
 
-        public int YPlacement;
+        private int yPlacement;
 
-        public int XAdvance;
+        private int xAdvance;
 
-        public int YAdvance;
+        private int yAdvance;
+
+        /// <summary>Retrieves the X placement of the Gpos value record.</summary>
+        /// <returns>X placement</returns>
+        public virtual int GetXPlacement() {
+            return xPlacement;
+        }
+
+        /// <summary>Sets the X placement of the Gpos value record.</summary>
+        /// <param name="xPlacement">X placement</param>
+        public virtual void SetXPlacement(int xPlacement) {
+            this.xPlacement = xPlacement;
+        }
+
+        /// <summary>Retrieves the Y placement of the Gpos value record.</summary>
+        /// <returns>Y placement</returns>
+        public virtual int GetYPlacement() {
+            return yPlacement;
+        }
+
+        /// <summary>Sets the Y placement of the Gpos value record.</summary>
+        /// <param name="yPlacement">Y placement</param>
+        public virtual void SetYPlacement(int yPlacement) {
+            this.yPlacement = yPlacement;
+        }
+
+        /// <summary>Retrieves the X advance of the Gpos value record.</summary>
+        /// <returns>x advance</returns>
+        public virtual int GetXAdvance() {
+            return xAdvance;
+        }
+
+        /// <summary>Sets the X advance of the Gpos value record.</summary>
+        /// <param name="xAdvance">X advance</param>
+        public virtual void SetXAdvance(int xAdvance) {
+            this.xAdvance = xAdvance;
+        }
+
+        /// <summary>Retrieves the Y advance of the Gpos value record.</summary>
+        /// <returns>Y advance</returns>
+        public virtual int GetYAdvance() {
+            return yAdvance;
+        }
+
+        /// <summary>Sets the Y advance of the Gpos value record.</summary>
+        /// <param name="yAdvance">Y advance</param>
+        public virtual void SetYAdvance(int yAdvance) {
+            this.yAdvance = yAdvance;
+        }
     }
 }

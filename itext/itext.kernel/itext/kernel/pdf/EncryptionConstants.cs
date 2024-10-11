@@ -46,6 +46,11 @@ namespace iText.Kernel.Pdf {
         /// <remarks>Type of encryption. AES encryption algorithm will be used with the key length of 256 bits.</remarks>
         public const int ENCRYPTION_AES_256 = 3;
 
+        /// <summary>Type of encryption.</summary>
+        /// <remarks>Type of encryption. Advanced Encryption Standard-Galois/Counter Mode (AES-GCM) encryption algorithm.
+        ///     </remarks>
+        public const int ENCRYPTION_AES_GCM = 4;
+
         /// <summary>Add this to the mode to keep the metadata in clear text.</summary>
         public const int DO_NOT_ENCRYPT_METADATA = 8;
 

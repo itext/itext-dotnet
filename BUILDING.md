@@ -1,3 +1,6 @@
+
+# Building and testing **iText Community**
+
 To build **iText Community**, you need to build `itextsharp/itextcore/iTextCore.sln`.
 To run tests, [Ghostscript][1] and [Imagemagick][2] must be installed.  
 Some of the tests compare generated PDF files with template files that show the correct results, and these tools are used to
@@ -13,6 +16,18 @@ environment variables. Examples of paths on Windows:
 
 If you have a new version of ImageMagick, then there is no compare.exe utility there, wrap the path to magick.exe in quotes and call compare command:
 ITEXT_MAGICK_COMPARE_EXEC=`"C:\Program Files\ImageMagick-7.0.9-Q16\magick.exe" compare`
+
+
+# Deploying iText
+
+When using **iText Community** in a project and want to deploy it you have to consider a few things for different deployments.
+
+- **FrameworkDependend**: No additional parameters are required.
+- **SelfContained**: No additional parameters are required.
+- **PublishSingleFile**: When using `-p:PublishSingleFile=true` you will also need to add `-p:IncludeAllContentForSelfExtract=true`. This is important when using `hyph` or `font-asian` modules.
+- **AssemblyTrimming**: Using `-p:PublishTrimmed=true` is currently not supported.
+
+
 
 [1]: https://www.ghostscript.com/
 [2]: https://www.imagemagick.org/

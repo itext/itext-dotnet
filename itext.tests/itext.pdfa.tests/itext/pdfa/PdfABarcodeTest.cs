@@ -171,8 +171,8 @@ namespace iText.Pdfa {
         private Document CreatePdfATaggedDocument(String outPdf) {
             PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
-            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
+            PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", 
+                "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             Document doc = new Document(pdfDocument);
             pdfDocument.SetTagged();
             return doc;

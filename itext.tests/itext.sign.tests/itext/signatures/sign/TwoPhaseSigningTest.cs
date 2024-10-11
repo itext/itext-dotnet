@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Cms;
@@ -302,7 +303,7 @@ namespace iText.Signatures.Sign {
                     // Phase 1.1 prepare the CMS
                     CMSContainer cms = new CMSContainer();
                     SignerInfo signerInfo = new SignerInfo();
-                    //signerInfo.setSigningCertificateAndAddToSignedAttributes(chain[0], SecurityIDs.ID_SHA384);
+                    //signerInfo.setSigningCertificateAndAddToSignedAttributes(chain[0], OID.ID_SHA384);
                     signerInfo.SetSigningCertificate(chain[0]);
                     // in the two phase scenario,; we don't have the private key! So we start from the signing certificate
                     

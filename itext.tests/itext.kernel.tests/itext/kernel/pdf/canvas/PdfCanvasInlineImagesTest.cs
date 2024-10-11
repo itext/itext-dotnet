@@ -145,7 +145,6 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void InlineImagesPngTest() {
-            //TODO update cmp-files after DEVSIX-3564 will be fixed
             String filename = "inlineImagePng.pdf";
             PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
@@ -159,7 +158,6 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void InlineImagesPngErrorWhileOpenTest() {
-            //TODO update cmp-files after DEVSIX-3564 will be fixed
             String filename = "inlineImagePngErrorWhileOpen.pdf";
             PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();

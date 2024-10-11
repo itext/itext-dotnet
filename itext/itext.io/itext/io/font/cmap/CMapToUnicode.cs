@@ -30,8 +30,8 @@ using iText.IO.Util;
 namespace iText.IO.Font.Cmap {
     /// <summary>This class represents a CMap file.</summary>
     public class CMapToUnicode : AbstractCMap {
-        public static iText.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iText.IO.Font.Cmap.CMapToUnicode
-            (true);
+        public static readonly iText.IO.Font.Cmap.CMapToUnicode EMPTY_CMAP = new iText.IO.Font.Cmap.CMapToUnicode(
+            true);
 
         private readonly IDictionary<int, char[]> byteMappings;
 

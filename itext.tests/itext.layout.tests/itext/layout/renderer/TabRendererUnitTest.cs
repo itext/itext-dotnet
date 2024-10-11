@@ -30,13 +30,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            TabRenderer tabRenderer = new _TabRenderer_44(new Tab());
+            TabRenderer tabRenderer = new _TabRenderer_43(new Tab());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(TabRenderer), tabRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _TabRenderer_44 : TabRenderer {
-            public _TabRenderer_44(Tab baseArg1)
+        private sealed class _TabRenderer_43 : TabRenderer {
+            public _TabRenderer_43(Tab baseArg1)
                 : base(baseArg1) {
             }
         }

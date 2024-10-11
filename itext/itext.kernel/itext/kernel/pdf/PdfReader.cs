@@ -65,8 +65,6 @@ namespace iText.Kernel.Pdf {
         //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
         private PdfIndirectReference currentIndirectReference;
 
-        private XMPMeta xmpMeta;
-
         private PdfReader.XrefProcessor xrefProcessor = new PdfReader.XrefProcessor();
 
         protected internal PdfTokenizer tokens;
@@ -85,8 +83,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfDocument pdfDocument;
 
-        protected internal PdfAConformanceLevel pdfAConformanceLevel;
-
         protected internal ReaderProperties properties;
 
         protected internal bool encrypted = false;
@@ -98,6 +94,10 @@ namespace iText.Kernel.Pdf {
         protected internal bool fixedXref = false;
 
         protected internal bool xrefStm = false;
+
+        private XMPMeta xmpMeta;
+
+        private PdfConformance pdfConformance;
 
         /// <summary>Constructs a new PdfReader.</summary>
         /// <param name="byteSource">source of bytes for the reader</param>
@@ -615,8 +615,8 @@ namespace iText.Kernel.Pdf {
         /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>.
         /// See ISO 32000-1, Table 22 for more details.
         /// </remarks>
-        /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
-        public virtual long GetPermissions() {
+        /// <returns>the encryption permissions.</returns>
+        public virtual int GetPermissions() {
             /* !pdfDocument.getXref().isReadingCompleted() can be used for encryption properties as well,
             * because decrypt object is initialized in private readDecryptObj method which is called in our code
             * in the next line after the setting isReadingCompleted line. This means that there's no way for users
@@ -625,9 +625,9 @@ namespace iText.Kernel.Pdf {
             if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
                 throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
             }
-            long perm = 0;
+            int perm = 0;
             if (encrypted && decrypt.GetPermissions() != null) {
-                perm = (long)decrypt.GetPermissions();
+                perm = decrypt.GetPermissions().Value;
             }
             return perm;
         }
@@ -651,37 +651,29 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Gets the declared PDF/A conformance level of the source document that is being read.</summary>
+        /// <summary>Gets the declared PDF conformance of the source document that is being read.</summary>
         /// <remarks>
-        /// Gets the declared PDF/A conformance level of the source document that is being read.
+        /// Gets the declared PDF conformance of the source document that is being read.
         /// Note that this information is provided via XMP metadata and is not verified by iText.
-        /// <see cref="pdfAConformanceLevel"/>
-        /// is lazy initialized.
+        /// Conformance is lazy initialized.
         /// It will be initialized during the first call of this method.
         /// </remarks>
-        /// <returns>
-        /// conformance level of the source document, or
-        /// <see langword="null"/>
-        /// if no PDF/A
-        /// conformance level information is specified.
-        /// </returns>
-        public virtual PdfAConformanceLevel GetPdfAConformanceLevel() {
-            if (pdfAConformanceLevel == null) {
+        /// <returns>conformance of the source document</returns>
+        public virtual PdfConformance GetPdfConformance() {
+            if (pdfConformance == null) {
                 if (pdfDocument == null || !pdfDocument.GetXref().IsReadingCompleted()) {
                     throw new PdfException(KernelExceptionMessageConstant.DOCUMENT_HAS_NOT_BEEN_READ_YET);
                 }
                 try {
                     if (xmpMeta == null && pdfDocument.GetXmpMetadata() != null) {
-                        xmpMeta = XMPMetaFactory.ParseFromBuffer(pdfDocument.GetXmpMetadata());
+                        xmpMeta = pdfDocument.GetXmpMetadata();
                     }
-                    if (xmpMeta != null) {
-                        pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(xmpMeta);
-                    }
+                    pdfConformance = PdfConformance.GetConformance(xmpMeta);
                 }
                 catch (XMPException) {
                 }
             }
-            return pdfAConformanceLevel;
+            return pdfConformance;
         }
 
         /// <summary>Computes user password if standard encryption handler is used with Standard40, Standard128 or AES128 encryption algorithm.
@@ -778,6 +770,22 @@ namespace iText.Kernel.Pdf {
             return encrypted;
         }
 
+        /// <summary>
+        /// Gets a copy of
+        /// <see cref="ReaderProperties"/>
+        /// used to create this instance of
+        /// <see cref="PdfReader"/>.
+        /// </summary>
+        /// <returns>
+        /// a copy of
+        /// <see cref="ReaderProperties"/>
+        /// used to create this instance of
+        /// <see cref="PdfReader"/>
+        /// </returns>
+        public virtual ReaderProperties GetPropertiesCopy() {
+            return new ReaderProperties(properties);
+        }
+
         /// <summary>Parses the entire PDF</summary>
         protected internal virtual void ReadPdf() {
             String version = tokens.CheckPdfHeader();
@@ -804,8 +812,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception ex) {
                 if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                    logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
+                    LogXrefException(ex);
                     RebuildXref();
                 }
                 else {
@@ -917,8 +924,8 @@ namespace iText.Kernel.Pdf {
                         return CreatePdfNullInstance(readAsDirect);
                     }
                     else {
-                        throw new PdfException(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, MessageFormatUtil.Format
-                            ("{0} {1} R", reference.GetObjNumber(), reference.GetGenNumber()));
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                            reference.GetObjNumber(), reference.GetGenNumber()), reference);
                     }
                 }
             }
@@ -1566,6 +1573,7 @@ namespace iText.Kernel.Pdf {
                         , filter));
                 }
             }
+            decrypt.ConfigureEncryptionParametersFromReader(pdfDocument, trailer);
         }
 
         private PdfObject ReadObject(PdfIndirectReference reference, bool fixXref) {
@@ -1734,6 +1742,23 @@ namespace iText.Kernel.Pdf {
             }
             finally {
                 tokens.Seek(currentPosition);
+            }
+        }
+
+        private static void LogXrefException(Exception ex) {
+            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+            if (ex.InnerException != null) {
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
+                    , ex.InnerException.Message));
+            }
+            else {
+                if (ex.Message != null) {
+                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
+                        , ex.Message));
+                }
+                else {
+                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
+                }
             }
         }
 

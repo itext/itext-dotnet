@@ -42,7 +42,7 @@ namespace iText.Pdfua {
         }
 
         private static PdfUAConfig CreateConfig() {
-            return new PdfUAConfig(PdfUAConformanceLevel.PDFUA_1, "English pangram", "en-US");
+            return new PdfUAConfig(PdfUAConformance.PDF_UA_1, "English pangram", "en-US");
         }
     }
 }

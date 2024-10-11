@@ -31,7 +31,7 @@ namespace iText.Kernel.Pdf {
             PdfName.Subject, PdfName.Keywords, PdfName.Creator, PdfName.Producer, PdfName.Trapped };
 //\endcond
 
-        private PdfDictionary infoDictionary;
+        private readonly PdfDictionary infoDictionary;
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Create a PdfDocumentInfo based on the passed PdfDictionary.</summary>
@@ -41,14 +41,6 @@ namespace iText.Kernel.Pdf {
             if (pdfDocument.GetWriter() != null) {
                 infoDictionary.MakeIndirect(pdfDocument);
             }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Create a default, empty PdfDocumentInfo and link it to the passed PdfDocument</summary>
-        /// <param name="pdfDocument">document the info will belong to</param>
-        internal PdfDocumentInfo(PdfDocument pdfDocument)
-            : this(new PdfDictionary(), pdfDocument) {
         }
 //\endcond
 

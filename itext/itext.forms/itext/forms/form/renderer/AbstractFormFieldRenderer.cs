@@ -234,48 +234,32 @@ namespace iText.Forms.Form.Renderer {
                 .VISIBLE));
         }
 
-        /// <summary>Gets the accessibility language.</summary>
+        /// <summary>
+        /// Gets the accessibility language using
+        /// <see cref="iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties()"/>.
+        /// </summary>
         /// <returns>the accessibility language.</returns>
-        [System.ObsoleteAttribute(@"use iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties() instead"
-            )]
         protected internal virtual String GetLang() {
             String language = null;
             if (this.GetModelElement() is IAccessibleElement) {
                 language = ((IAccessibleElement)this.GetModelElement()).GetAccessibilityProperties().GetLanguage();
             }
-            if (language == null) {
-                language = this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
-            }
             return language;
         }
 
-        /// <summary>Gets the conformance level.</summary>
-        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-        ///     </remarks>
+        /// <summary>Gets the conformance.</summary>
+        /// <remarks>Gets the conformance. If the conformance is not set, the conformance of the document is used.</remarks>
         /// <param name="document">the document</param>
-        /// <returns>the conformance level or null if the conformance level is not set.</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will return iText.Kernel.Pdf.IConformanceLevel")]
-        protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
-            return PdfAConformanceLevel.GetPDFAConformance(this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
-                ), document);
-        }
-
-        /// <summary>Gets the conformance level.</summary>
-        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-        ///     </remarks>
-        /// <param name="document">the document</param>
-        /// <returns>the conformance level or null if the conformance level is not set.</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will be renamed to getConformanceLevel()")]
-        protected internal virtual IConformanceLevel GetGenericConformanceLevel(PdfDocument document) {
-            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
-                );
-            if (conformanceLevel != null) {
-                return conformanceLevel;
+        /// <returns>the conformance or null if the conformance is not set.</returns>
+        protected internal virtual PdfConformance GetConformance(PdfDocument document) {
+            PdfConformance conformance = this.GetProperty<PdfConformance>(FormProperty.FORM_CONFORMANCE_LEVEL);
+            if (conformance != null) {
+                return conformance;
             }
             if (document == null) {
                 return null;
             }
-            return document.GetConformanceLevel();
+            return document.GetConformance();
         }
 
         /// <summary>Determines, whether the layout is based in the renderer itself or flat renderer.</summary>

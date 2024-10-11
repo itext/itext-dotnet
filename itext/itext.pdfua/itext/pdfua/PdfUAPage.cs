@@ -22,25 +22,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Pdfua.Checkers;
 
 namespace iText.Pdfua {
 //\cond DO_NOT_DOCUMENT
     internal class PdfUAPage : PdfPage {
-        protected internal PdfUAPage(PdfDictionary pdfObject)
+        private readonly PdfUA1Checker checker;
+
+        protected internal PdfUAPage(PdfDictionary pdfObject, PdfUA1Checker checker)
             : base(pdfObject) {
+            this.checker = checker;
         }
 
-        protected internal PdfUAPage(PdfDocument pdfDocument, PageSize pageSize)
+        protected internal PdfUAPage(PdfDocument pdfDocument, PageSize pageSize, PdfUA1Checker checker)
             : base(pdfDocument, pageSize) {
+            this.checker = checker;
         }
 
         public override void Flush(bool flushResourcesContentStreams) {
-            PdfDocument document = GetDocument();
-            if (((PdfUADocument)document).IsClosing()) {
+            if (GetDocument().IsClosing()) {
                 base.Flush(flushResourcesContentStreams);
                 return;
             }
-            ((PdfUADocument)document).WarnOnPageFlush();
+            checker.WarnOnPageFlush();
         }
     }
 //\endcond

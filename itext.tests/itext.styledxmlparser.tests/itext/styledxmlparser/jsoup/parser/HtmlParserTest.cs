@@ -87,7 +87,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             // this (used to; now gets cleaner) gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
             // NOTE: per spec this should be the test case. but impacts too many ppl
-            // Assert.assertEquals("<p =a>One<a <p>Something</a></p>\n<a <p>Else</a>", doc.body().html());
+            // Assertions.assertEquals("<p =a>One<a <p>Something</a></p>\n<a <p>Else</a>", doc.body().html());
             NUnit.Framework.Assert.AreEqual("<p =a>One<a></a></p><p><a>Something</a></p><a>Else</a>", TextUtil.StripNewlines
                 (doc.Body().Html()));
             doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p .....>");

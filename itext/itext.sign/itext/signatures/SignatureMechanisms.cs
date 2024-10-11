@@ -26,7 +26,8 @@ using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
-using iText.Signatures.Logs;
+using iText.Kernel.Crypto;
+using iText.Kernel.Logs;
 
 namespace iText.Signatures {
     /// <summary>
@@ -110,10 +111,10 @@ namespace iText.Signatures {
             * the digest is required to be specified in the algorithm params anyway,
             * and the OID does not depend on the digest. BouncyCastle accepts both.
             */
-            algorithmNames.Put(SecurityIDs.ID_RSASSA_PSS, "RSASSA-PSS");
+            algorithmNames.Put(OID.RSASSA_PSS, "RSASSA-PSS");
             // EdDSA
-            algorithmNames.Put(SecurityIDs.ID_ED25519, "Ed25519");
-            algorithmNames.Put(SecurityIDs.ID_ED448, "Ed448");
+            algorithmNames.Put(OID.ED25519, "Ed25519");
+            algorithmNames.Put(OID.ED448, "Ed448");
             rsaOidsByDigest.Put("SHA224", "1.2.840.113549.1.1.14");
             rsaOidsByDigest.Put("SHA256", "1.2.840.113549.1.1.11");
             rsaOidsByDigest.Put("SHA384", "1.2.840.113549.1.1.12");
@@ -158,7 +159,7 @@ namespace iText.Signatures {
             switch (signatureAlgorithmName) {
                 case "RSA": {
                     String oId = rsaOidsByDigest.Get(digestAlgorithmName);
-                    resultingOId = oId == null ? SecurityIDs.ID_RSA : oId;
+                    resultingOId = oId == null ? OID.RSA : oId;
                     break;
                 }
 
@@ -173,18 +174,18 @@ namespace iText.Signatures {
                 }
 
                 case "Ed25519": {
-                    resultingOId = SecurityIDs.ID_ED25519;
+                    resultingOId = OID.ED25519;
                     break;
                 }
 
                 case "Ed448": {
-                    resultingOId = SecurityIDs.ID_ED448;
+                    resultingOId = OID.ED448;
                     break;
                 }
 
                 case "RSASSA-PSS":
                 case "RSA/PSS": {
-                    resultingOId = SecurityIDs.ID_RSASSA_PSS;
+                    resultingOId = OID.RSASSA_PSS;
                     break;
                 }
 
@@ -196,7 +197,7 @@ namespace iText.Signatures {
             if (resultingOId != null) {
                 return resultingOId;
             }
-            LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+            LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
             resultingOId = BOUNCY_CASTLE_FACTORY.GetAlgorithmOid(digestAlgorithmName + "with" + signatureAlgorithmName
                 );
             if (resultingOId == null) {
@@ -229,7 +230,7 @@ namespace iText.Signatures {
             if (!algorithm.Equals(oid)) {
                 return digest + "with" + algorithm;
             }
-            LOGGER.LogWarning(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+            LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
             return BOUNCY_CASTLE_FACTORY.GetAlgorithmName(oid);
         }
     }

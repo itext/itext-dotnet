@@ -28,11 +28,14 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Logs;
 
 namespace iText.Signatures {
     /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
+    [System.ObsoleteAttribute(@"starting from 9.0.0.iText.Signatures.Validation.CertificateChainValidator should be used instead."
+        )]
     public class CertificateVerification {
         public const String HAS_UNSUPPORTED_EXTENSIONS = "Has unsupported critical extension";
 
@@ -62,7 +65,7 @@ namespace iText.Signatures {
         /// </returns>
         public static String VerifyCertificate(IX509Certificate cert, ICollection<IX509Crl> crls, DateTime calendar
             ) {
-            if (SignUtils.HasUnsupportedCriticalExtension(cert)) {
+            if (HasUnsupportedCriticalExtension(cert)) {
                 return CertificateVerification.HAS_UNSUPPORTED_EXTENSIONS;
             }
             try {
@@ -235,6 +238,29 @@ namespace iText.Signatures {
                 exceptionsThrown.Add(e);
             }
             LogExceptionMessages(exceptionsThrown);
+            return false;
+        }
+
+        /// <summary>Check if the provided certificate has a critical extension that iText doesn't support.</summary>
+        /// <param name="cert">X509Certificate instance to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if there are unsupported critical extensions, false if there are none
+        /// </returns>
+        protected internal static bool HasUnsupportedCriticalExtension(IX509Certificate cert) {
+            if (cert == null) {
+                throw new ArgumentException("X509Certificate can't be null.");
+            }
+            ICollection<String> criticalExtensionsSet = cert.GetCriticalExtensionOids();
+            if (criticalExtensionsSet != null) {
+                foreach (String oid in criticalExtensionsSet) {
+                    if (OID.X509Extensions.SUPPORTED_CRITICAL_EXTENSIONS.Contains(oid)) {
+                        continue;
+                    }
+                    return true;
+                }
+            }
             return false;
         }
 

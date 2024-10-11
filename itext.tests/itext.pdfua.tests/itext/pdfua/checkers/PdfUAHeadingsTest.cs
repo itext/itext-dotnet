@@ -34,6 +34,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfua;
 using iText.Pdfua.Exceptions;
+using iText.Pdfua.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 using iText.Test.Pdfa;
@@ -66,12 +67,12 @@ namespace iText.Pdfua.Checkers {
         // -------- Negative tests --------
         [NUnit.Framework.Test]
         public virtual void AddH2AsFirstHeaderTest() {
-            framework.AddSuppliers(new _Generator_83());
+            framework.AddSuppliers(new _Generator_81());
             framework.AssertBothFail("addH2FirstHeaderTest", PdfUAExceptionMessageConstants.H1_IS_SKIPPED);
         }
 
-        private sealed class _Generator_83 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_83() {
+        private sealed class _Generator_81 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_81() {
             }
 
             public IBlockElement Generate() {
@@ -84,14 +85,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void BrokenHnParallelSequenceTest() {
-            framework.AddSuppliers(new _Generator_99());
-            framework.AddSuppliers(new _Generator_108());
+            framework.AddSuppliers(new _Generator_97());
+            framework.AddSuppliers(new _Generator_106());
             framework.AssertBothFail("brokenHnParallelSequenceTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                 .HN_IS_SKIPPED, 2));
         }
 
-        private sealed class _Generator_99 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_99() {
+        private sealed class _Generator_97 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_97() {
             }
 
             public IBlockElement Generate() {
@@ -102,8 +103,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_108 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_108() {
+        private sealed class _Generator_106 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_106() {
             }
 
             public IBlockElement Generate() {
@@ -116,13 +117,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void BrokenHnInheritedSequenceTest1() {
-            framework.AddSuppliers(new _Generator_123());
+            framework.AddSuppliers(new _Generator_121());
             framework.AssertBothFail("brokenHnInheritedSequenceTest1", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                 .HN_IS_SKIPPED, 2));
         }
 
-        private sealed class _Generator_123 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_123() {
+        private sealed class _Generator_121 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_121() {
             }
 
             public IBlockElement Generate() {
@@ -139,13 +140,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void BrokenHnMixedSequenceTest() {
-            framework.AddSuppliers(new _Generator_143());
+            framework.AddSuppliers(new _Generator_141());
             framework.AssertBothFail("brokenHnMixedSequenceTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                 .HN_IS_SKIPPED, 3));
         }
 
-        private sealed class _Generator_143 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_143() {
+        private sealed class _Generator_141 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_141() {
             }
 
             public IBlockElement Generate() {
@@ -166,13 +167,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void BrokenHnMixedSequenceTest2() {
-            framework.AddSuppliers(new _Generator_168());
+            framework.AddSuppliers(new _Generator_166());
             framework.AssertBothFail("brokenHnMixedSequenceTest2", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                 .HN_IS_SKIPPED, 3));
         }
 
-        private sealed class _Generator_168 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_168() {
+        private sealed class _Generator_166 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_166() {
             }
 
             public IBlockElement Generate() {
@@ -196,12 +197,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void FewHInOneNodeTest() {
-            framework.AddSuppliers(new _Generator_197());
+            framework.AddSuppliers(new _Generator_195());
             framework.AssertBothFail("fewHInOneNodeTest", PdfUAExceptionMessageConstants.MORE_THAN_ONE_H_TAG);
         }
 
-        private sealed class _Generator_197 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_197() {
+        private sealed class _Generator_195 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_195() {
             }
 
             public IBlockElement Generate() {
@@ -221,13 +222,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void FewHInDocumentTest() {
-            framework.AddSuppliers(new _Generator_222());
-            framework.AddSuppliers(new _Generator_231());
+            framework.AddSuppliers(new _Generator_220());
+            framework.AddSuppliers(new _Generator_229());
             framework.AssertBothFail("fewHInDocumentTest", PdfUAExceptionMessageConstants.MORE_THAN_ONE_H_TAG);
         }
 
-        private sealed class _Generator_222 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_222() {
+        private sealed class _Generator_220 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_220() {
             }
 
             public IBlockElement Generate() {
@@ -238,8 +239,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_231 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_231() {
+        private sealed class _Generator_229 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_229() {
             }
 
             public IBlockElement Generate() {
@@ -252,14 +253,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HAndHnInDocumentTest1() {
-            framework.AddSuppliers(new _Generator_246());
-            framework.AddSuppliers(new _Generator_255());
+            framework.AddSuppliers(new _Generator_244());
+            framework.AddSuppliers(new _Generator_253());
             framework.AssertBothFail("hAndHnInDocumentTest1", PdfUAExceptionMessageConstants.DOCUMENT_USES_BOTH_H_AND_HN
                 );
         }
 
-        private sealed class _Generator_246 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_246() {
+        private sealed class _Generator_244 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_244() {
             }
 
             public IBlockElement Generate() {
@@ -270,8 +271,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_255 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_255() {
+        private sealed class _Generator_253 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_253() {
             }
 
             public IBlockElement Generate() {
@@ -284,14 +285,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HAndHnInDocumentTest2() {
-            framework.AddSuppliers(new _Generator_270());
-            framework.AddSuppliers(new _Generator_279());
+            framework.AddSuppliers(new _Generator_268());
+            framework.AddSuppliers(new _Generator_277());
             framework.AssertBothFail("hAndHnInDocumentTest2", PdfUAExceptionMessageConstants.DOCUMENT_USES_BOTH_H_AND_HN
                 );
         }
 
-        private sealed class _Generator_270 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_270() {
+        private sealed class _Generator_268 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_268() {
             }
 
             public IBlockElement Generate() {
@@ -302,8 +303,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_279 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_279() {
+        private sealed class _Generator_277 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_277() {
             }
 
             public IBlockElement Generate() {
@@ -316,13 +317,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HAndHnInDocumentTest3() {
-            framework.AddSuppliers(new _Generator_294());
+            framework.AddSuppliers(new _Generator_292());
             framework.AssertBothFail("hAndHnInDocumentTest3", PdfUAExceptionMessageConstants.DOCUMENT_USES_BOTH_H_AND_HN
                 );
         }
 
-        private sealed class _Generator_294 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_294() {
+        private sealed class _Generator_292 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_292() {
             }
 
             public IBlockElement Generate() {
@@ -343,7 +344,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void RoleMappingTest() {
-            framework.AddSuppliers(new _Generator_319());
+            framework.AddSuppliers(new _Generator_317());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 root.AddRoleMapping("header1", StandardRoles.H1);
@@ -353,8 +354,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("rolemappingTest");
         }
 
-        private sealed class _Generator_319 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_319() {
+        private sealed class _Generator_317 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_317() {
             }
 
             public IBlockElement Generate() {
@@ -371,7 +372,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void RoleMappingTestValid() {
-            framework.AddSuppliers(new _Generator_344());
+            framework.AddSuppliers(new _Generator_342());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 root.AddRoleMapping("header1", StandardRoles.H1);
@@ -381,8 +382,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothValid("rolemappingValid");
         }
 
-        private sealed class _Generator_344 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_344() {
+        private sealed class _Generator_342 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_342() {
             }
 
             public IBlockElement Generate() {
@@ -462,12 +463,12 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void HnInheritedSequenceTest() {
-            framework.AddSuppliers(new _Generator_449());
+            framework.AddSuppliers(new _Generator_447());
             framework.AssertBothValid("hnInheritedSequenceTest");
         }
 
-        private sealed class _Generator_449 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_449() {
+        private sealed class _Generator_447 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_447() {
             }
 
             public IBlockElement Generate() {
@@ -488,13 +489,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnCompareWithLastFromAnotherBranchTest() {
-            framework.AddSuppliers(new _Generator_473());
-            framework.AddSuppliers(new _Generator_497());
+            framework.AddSuppliers(new _Generator_471());
+            framework.AddSuppliers(new _Generator_495());
             framework.AssertBothValid("hnInheritedSequenceTest");
         }
 
-        private sealed class _Generator_473 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_473() {
+        private sealed class _Generator_471 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_471() {
             }
 
             public IBlockElement Generate() {
@@ -517,8 +518,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_497 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_497() {
+        private sealed class _Generator_495 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_495() {
             }
 
             public IBlockElement Generate() {
@@ -531,13 +532,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnCompareWithLastFromAnotherBranchTest2() {
-            framework.AddSuppliers(new _Generator_511());
-            framework.AddSuppliers(new _Generator_535());
+            framework.AddSuppliers(new _Generator_509());
+            framework.AddSuppliers(new _Generator_533());
             framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest2");
         }
 
-        private sealed class _Generator_511 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_511() {
+        private sealed class _Generator_509 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_509() {
             }
 
             public IBlockElement Generate() {
@@ -560,8 +561,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_535 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_535() {
+        private sealed class _Generator_533 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_533() {
             }
 
             public IBlockElement Generate() {
@@ -574,12 +575,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnInheritedSequenceTest2() {
-            framework.AddSuppliers(new _Generator_549());
+            framework.AddSuppliers(new _Generator_547());
             framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest2");
         }
 
-        private sealed class _Generator_549 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_549() {
+        private sealed class _Generator_547 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_547() {
             }
 
             public IBlockElement Generate() {
@@ -604,14 +605,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnParallelSequenceTest() {
-            framework.AddSuppliers(new _Generator_578());
-            framework.AddSuppliers(new _Generator_587());
-            framework.AddSuppliers(new _Generator_596());
+            framework.AddSuppliers(new _Generator_576());
+            framework.AddSuppliers(new _Generator_585());
+            framework.AddSuppliers(new _Generator_594());
             framework.AssertBothValid("hnParallelSequenceTest");
         }
 
-        private sealed class _Generator_578 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_578() {
+        private sealed class _Generator_576 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_576() {
             }
 
             public IBlockElement Generate() {
@@ -622,8 +623,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_587 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_587() {
+        private sealed class _Generator_585 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_585() {
             }
 
             public IBlockElement Generate() {
@@ -634,8 +635,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_596 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_596() {
+        private sealed class _Generator_594 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_594() {
             }
 
             public IBlockElement Generate() {
@@ -675,15 +676,15 @@ namespace iText.Pdfua.Checkers {
         // with the same code, but div role is replaced by section role
         [NUnit.Framework.Test]
         public virtual void UsualHTest2() {
-            framework.AddSuppliers(new _Generator_644());
-            framework.AddSuppliers(new _Generator_653());
+            framework.AddSuppliers(new _Generator_642());
+            framework.AddSuppliers(new _Generator_651());
             // The test code is the same as in usualHTest with one exception:
             // the next line where another grouping element is defined.
             framework.AssertBothValid("hnParallelSequenceTest");
         }
 
-        private sealed class _Generator_644 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_644() {
+        private sealed class _Generator_642 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_642() {
             }
 
             public IBlockElement Generate() {
@@ -694,8 +695,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_653 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_653() {
+        private sealed class _Generator_651 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_651() {
             }
 
             public IBlockElement Generate() {
@@ -714,12 +715,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnMixedSequenceTest() {
-            framework.AddSuppliers(new _Generator_676());
+            framework.AddSuppliers(new _Generator_674());
             framework.AssertBothValid("hnMixedSequenceTest");
         }
 
-        private sealed class _Generator_676 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_676() {
+        private sealed class _Generator_674 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_674() {
             }
 
             public IBlockElement Generate() {
@@ -745,12 +746,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnMixedSequenceTest2() {
-            framework.AddSuppliers(new _Generator_706());
+            framework.AddSuppliers(new _Generator_704());
             framework.AssertBothValid("hnMixedSequenceTest2");
         }
 
-        private sealed class _Generator_706 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_706() {
+        private sealed class _Generator_704 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_704() {
             }
 
             public IBlockElement Generate() {
@@ -771,12 +772,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void HnMixedSequenceTest3() {
-            framework.AddSuppliers(new _Generator_730());
+            framework.AddSuppliers(new _Generator_728());
             framework.AssertBothValid("hnMixedSequenceTest3");
         }
 
-        private sealed class _Generator_730 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_730() {
+        private sealed class _Generator_728 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_728() {
             }
 
             public IBlockElement Generate() {

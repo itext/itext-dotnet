@@ -49,11 +49,12 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="modelElement">the model element</param>
         protected internal AbstractSelectFieldRenderer(AbstractSelectField modelElement)
             : base(modelElement) {
-            AddChild(CreateFlatRenderer());
         }
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            childRenderers.Clear();
+            AddChild(CreateFlatRenderer());
             // Resolve width here in case it's relative, while parent width is still intact.
             // If it's inline-block context, relative width is already resolved.
             float? width = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
@@ -122,15 +123,15 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        /// <summary>Gets the accessibility language.</summary>
+        /// <summary>
+        /// Gets the accessibility language using
+        /// <see cref="iText.Layout.Tagging.IAccessibleElement.GetAccessibilityProperties()"/>.
+        /// </summary>
         /// <returns>the accessibility language.</returns>
         protected internal virtual String GetLang() {
             String language = null;
             if (this.GetModelElement() is IAccessibleElement) {
                 language = ((IAccessibleElement)this.GetModelElement()).GetAccessibilityProperties().GetLanguage();
-            }
-            if (language == null) {
-                language = this.GetProperty<String>(FormProperty.FORM_ACCESSIBILITY_LANGUAGE);
             }
             return language;
         }
@@ -206,7 +207,7 @@ namespace iText.Forms.Form.Renderer {
         /// </param>
         protected internal virtual void SetupBuilderValues(ChoiceFormFieldBuilder builder, AbstractSelectField field
             ) {
-            IList<SelectFieldItem> options = field.GetItems();
+            IList<SelectFieldItem> options = field.GetOptions();
             if (options.IsEmpty()) {
                 builder.SetOptions(new String[0]);
                 return;
@@ -252,33 +253,19 @@ namespace iText.Forms.Form.Renderer {
             return actualHeight;
         }
 
-        /// <summary>Gets the conformance level.</summary>
-        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-        ///     </remarks>
+        /// <summary>Gets the conformance.</summary>
+        /// <remarks>Gets the conformance. If the conformance is not set, the conformance of the document is used.</remarks>
         /// <param name="document">the document</param>
-        /// <returns>the conformance level or null if the conformance level is not set.</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will be return iText.Kernel.Pdf.IConformanceLevel")]
-        protected internal virtual PdfAConformanceLevel GetConformanceLevel(PdfDocument document) {
-            return PdfAConformanceLevel.GetPDFAConformance(this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
-                ), document);
-        }
-
-        /// <summary>Gets the conformance level.</summary>
-        /// <remarks>Gets the conformance level. If the conformance level is not set, the conformance level of the document is used.
-        ///     </remarks>
-        /// <param name="document">the document</param>
-        /// <returns>the conformance level or null if the conformance level is not set.</returns>
-        [System.ObsoleteAttribute(@"since 8.0.4 will be renamed to getConformanceLevel()")]
-        protected internal virtual IConformanceLevel GetGenericConformanceLevel(PdfDocument document) {
-            IConformanceLevel conformanceLevel = this.GetProperty<IConformanceLevel>(FormProperty.FORM_CONFORMANCE_LEVEL
-                );
-            if (conformanceLevel != null) {
-                return conformanceLevel;
+        /// <returns>the conformance or null if the conformance is not set.</returns>
+        protected internal virtual PdfConformance GetConformance(PdfDocument document) {
+            PdfConformance conformance = this.GetProperty<PdfConformance>(FormProperty.FORM_CONFORMANCE_LEVEL);
+            if (conformance != null) {
+                return conformance;
             }
             if (document == null) {
                 return null;
             }
-            return document.GetConformanceLevel();
+            return document.GetConformance();
         }
 
         /// <summary>Gets options that are marked as selected from the select field options subtree.</summary>

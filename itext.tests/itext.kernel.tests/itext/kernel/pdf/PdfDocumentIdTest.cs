@@ -326,8 +326,8 @@ namespace iText.Kernel.Pdf {
         //        PdfString originalId = new PdfString("Original ID 56789");
         //        PdfWriter initialWriter = CompareTool.createTestPdfWriter(baos, new WriterProperties().setInitialDocumentId(originalId));
         //
-        //        Assert.assertNotEquals();
-        //        Assert.assertEquals();
+        //        Assertions.assertNotEquals();
+        //        Assertions.assertEquals();
         //
         //    }
     }

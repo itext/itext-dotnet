@@ -36,6 +36,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.IO.Util;
+using iText.Kernel.Crypto;
 using iText.Signatures.Logs;
 
 namespace iText.Signatures {
@@ -49,14 +50,6 @@ namespace iText.Signatures {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateUtil));
 
         // Certificate Revocation Lists
-        /// <summary>Gets a CRL from an X509 certificate.</summary>
-        /// <param name="certificate">the X509Certificate to extract the CRL from</param>
-        /// <returns>CRL or null if there's no CRL available</returns>
-        [System.ObsoleteAttribute(@"use GetCRLs(iText.Commons.Bouncycastle.Cert.IX509Certificate) .")]
-        public static IX509Crl GetCRL(IX509Certificate certificate) {
-            return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
-        }
-
         /// <summary>Gets a CRLs from the X509 certificate.</summary>
         /// <param name="certificate">the X509Certificate to extract the CRLs from</param>
         /// <returns>CRL list or null if there's no CRL available</returns>
@@ -66,15 +59,6 @@ namespace iText.Signatures {
                 crls.Add(CertificateUtil.GetCRL(crlUrl));
             }
             return crls;
-        }
-
-        /// <summary>Gets the URL of the Certificate Revocation List for a Certificate</summary>
-        /// <param name="certificate">the Certificate</param>
-        /// <returns>the String where you can check if the certificate was revoked.</returns>
-        [System.ObsoleteAttribute(@"use GetCRLURLs(iText.Commons.Bouncycastle.Cert.IX509Certificate) .")]
-        public static String GetCRLURL(IX509Certificate certificate) {
-            IList<String> urls = GetCRLURLs(certificate);
-            return urls.IsEmpty() ? null : urls[0];
         }
 
         /// <summary>Gets the list of the Certificate Revocation List URLs for a Certificate.</summary>
@@ -161,7 +145,7 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(crl, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
             }
             catch (System.IO.IOException) {
                 return null;
@@ -176,7 +160,7 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, SecurityIDs.ID_OCSP);
+                return GetValueFromAIAExtension(obj, OID.OCSP);
             }
             catch (System.IO.IOException) {
                 return null;
@@ -191,7 +175,7 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, SecurityIDs.ID_CA_ISSUERS);
+                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
             }
             catch (System.IO.IOException) {
                 return null;
@@ -203,7 +187,7 @@ namespace iText.Signatures {
         /// <param name="certificate">a certificate</param>
         /// <returns>a TSA URL</returns>
         public static String GetTSAURL(IX509Certificate certificate) {
-            byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA);
+            byte[] der = SignUtils.GetExtensionValueByOid(certificate, OID.TSA);
             if (der == null) {
                 return null;
             }
@@ -251,7 +235,7 @@ namespace iText.Signatures {
             while (revInfo.MoveNext()) {
                 IAsn1Sequence s = FACTORY.CreateASN1Sequence(revInfo.Current);
                 IDerObjectIdentifier o = FACTORY.CreateASN1ObjectIdentifier(s.GetObjectAt(0));
-                if (o != null && SecurityIDs.ID_RI_OCSP_RESPONSE.Equals(o.GetId())) {
+                if (o != null && OID.RI_OCSP_RESPONSE.Equals(o.GetId())) {
                     IAsn1Sequence ocspResp = FACTORY.CreateASN1Sequence(s.GetObjectAt(1));
                     IDerEnumerated respStatus = FACTORY.CreateASN1Enumerated(ocspResp.GetObjectAt(0));
                     if (respStatus.IntValueExact() == FACTORY.CreateOCSPResponseStatus().GetSuccessful()) {
@@ -303,7 +287,7 @@ namespace iText.Signatures {
         /// </returns>
         public static IDerSet CreateRevocationInfoChoices(ICollection<IX509Crl> crls, ICollection<IBasicOcspResponse
             > ocsps, ICollection<IAsn1Sequence> otherRevocationInfoFormats) {
-            if (crls.Count == 0 && ocsps.Count == 0) {
+            if (crls.IsEmpty() && ocsps.IsEmpty()) {
                 return null;
             }
             IAsn1EncodableVector revocationInfoChoices = FACTORY.CreateASN1EncodableVector();
@@ -316,7 +300,7 @@ namespace iText.Signatures {
             foreach (IBasicOcspResponse element in ocsps) {
                 IAsn1EncodableVector ocspResponseRevInfo = FACTORY.CreateASN1EncodableVector();
                 // Add otherRevInfoFormat (ID_RI_OCSP_RESPONSE)
-                ocspResponseRevInfo.Add(FACTORY.CreateASN1ObjectIdentifier(SecurityIDs.ID_RI_OCSP_RESPONSE));
+                ocspResponseRevInfo.Add(FACTORY.CreateASN1ObjectIdentifier(OID.RI_OCSP_RESPONSE));
                 IAsn1EncodableVector ocspResponse = FACTORY.CreateASN1EncodableVector();
                 ocspResponse.Add(FACTORY.CreateOCSPResponseStatus(FACTORY.CreateOCSPResponseStatus().GetSuccessful()).ToASN1Primitive
                     ());

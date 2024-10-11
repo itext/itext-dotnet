@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SeveralUnicodesWithinOneGlyphTest() {
             // TODO DEVSIX-3634. In the output now we don't expect the \u2F46 unicode range.
-            // TODO DEVSIX-3634. SUBSTITUTE "Assert.assertEquals("\u2F46"..." to "Assert.assertEquals("\u65E0"..." after the fix
+            // TODO DEVSIX-3634. SUBSTITUTE "Assertions.assertEquals("\u2F46"..." to "Assertions.assertEquals("\u65E0"..." after the fix
             String outFileName = destinationFolder + "severalUnicodesWithinOneGlyphTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);

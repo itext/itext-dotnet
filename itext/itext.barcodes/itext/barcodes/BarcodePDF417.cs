@@ -1085,7 +1085,7 @@ namespace iText.Barcodes {
             if (segment == null) {
                 return false;
             }
-            return segment.type == type;
+            return segment.GetType() == type;
         }
 
         /// <summary>Calculates the length of the given segment</summary>
@@ -1095,7 +1095,7 @@ namespace iText.Barcodes {
             if (segment == null) {
                 return 0;
             }
-            return segment.end - segment.start;
+            return segment.GetEnd() - segment.GetStart();
         }
 
         /// <summary>Compacts the code words.</summary>
@@ -1142,24 +1142,24 @@ namespace iText.Barcodes {
             cwPtr = 1;
             for (k = 0; k < segmentList.Size(); ++k) {
                 BarcodePDF417.Segment v = segmentList.Get(k);
-                switch (v.type) {
+                switch (v.GetType()) {
                     case 'T': {
                         if (k != 0) {
                             codewords[cwPtr++] = TEXT_MODE;
                         }
-                        TextCompaction(v.start, GetSegmentLength(v));
+                        TextCompaction(v.GetStart(), GetSegmentLength(v));
                         break;
                     }
 
                     case 'N': {
                         codewords[cwPtr++] = NUMERIC_MODE;
-                        NumberCompaction(v.start, GetSegmentLength(v));
+                        NumberCompaction(v.GetStart(), GetSegmentLength(v));
                         break;
                     }
 
                     case 'B': {
                         codewords[cwPtr++] = GetSegmentLength(v) % 6 != 0 ? BYTE_MODE : BYTE_MODE_6;
-                        ByteCompaction(v.start, GetSegmentLength(v));
+                        ByteCompaction(v.GetStart(), GetSegmentLength(v));
                         break;
                     }
                 }
@@ -1195,13 +1195,13 @@ namespace iText.Barcodes {
                 int len = GetSegmentLength(v);
                 char[] c = new char[len];
                 for (int j = 0; j < len; ++j) {
-                    c[j] = (char)(code[v.start + j] & 0xff);
+                    c[j] = (char)(code[v.GetStart() + j] & 0xff);
                     if (c[j] == '\r') {
                         c[j] = '\n';
                     }
                 }
                 StringBuilder sb = new StringBuilder();
-                sb.Append(v.type);
+                sb.Append(v.GetType());
                 sb.Append(c);
                 System.Console.Out.WriteLine(sb.ToString());
             }
@@ -1324,7 +1324,7 @@ namespace iText.Barcodes {
                 if (CheckSegmentType(v, 'B') && GetSegmentLength(v) == 1) {
                     if (CheckSegmentType(vp, 'T') && CheckSegmentType(vn, 'T') && GetSegmentLength(vp) + GetSegmentLength(vn) 
                         >= 3) {
-                        vp.end = vn.end;
+                        vp.SetEnd(vn.GetEnd());
                         segmentList.Remove(k);
                         segmentList.Remove(k);
                         k = -1;
@@ -1341,13 +1341,13 @@ namespace iText.Barcodes {
                     bool redo = false;
                     if (CheckSegmentType(vp, 'B') && GetSegmentLength(vp) == 1 || CheckSegmentType(vp, 'T')) {
                         redo = true;
-                        v.start = vp.start;
+                        v.SetStart(vp.GetStart());
                         segmentList.Remove(k - 1);
                         --k;
                     }
                     if (CheckSegmentType(vn, 'B') && GetSegmentLength(vn) == 1 || CheckSegmentType(vn, 'T')) {
                         redo = true;
-                        v.end = vn.end;
+                        v.SetEnd(vn.GetEnd());
                         segmentList.Remove(k + 1);
                     }
                     if (redo) {
@@ -1365,13 +1365,13 @@ namespace iText.Barcodes {
                     bool redo = false;
                     if (CheckSegmentType(vp, 'T') && GetSegmentLength(vp) < 5 || CheckSegmentType(vp, 'B')) {
                         redo = true;
-                        v.start = vp.start;
+                        v.SetStart(vp.GetStart());
                         segmentList.Remove(k - 1);
                         --k;
                     }
                     if (CheckSegmentType(vn, 'T') && GetSegmentLength(vn) < 5 || CheckSegmentType(vn, 'B')) {
                         redo = true;
-                        v.end = vn.end;
+                        v.SetEnd(vn.GetEnd());
                         segmentList.Remove(k + 1);
                     }
                     if (redo) {
@@ -1381,15 +1381,15 @@ namespace iText.Barcodes {
                 }
             }
             // check if all numbers
-            if (segmentList.Size() == 1 && (v = segmentList.Get(0)).type == 'T' && GetSegmentLength(v) >= 8) {
-                for (k = v.start; k < v.end; ++k) {
+            if (segmentList.Size() == 1 && (v = segmentList.Get(0)).GetType() == 'T' && GetSegmentLength(v) >= 8) {
+                for (k = v.GetStart(); k < v.GetEnd(); ++k) {
                     c = (char)(code[k] & 0xff);
                     if (c < '0' || c > '9') {
                         break;
                     }
                 }
-                if (k == v.end) {
-                    v.type = 'N';
+                if (k == v.GetEnd()) {
+                    v.SetType('N');
                 }
             }
         }
@@ -1655,11 +1655,11 @@ namespace iText.Barcodes {
 
         /// <summary>A container that encapsulates all data needed for a segment.</summary>
         protected internal class Segment {
-            public char type;
+            private char type;
 
-            public int start;
+            private int start;
 
-            public int end;
+            private int end;
 
             /// <summary>
             /// Creates a new
@@ -1672,6 +1672,42 @@ namespace iText.Barcodes {
             public Segment(char type, int start, int end) {
                 this.type = type;
                 this.start = start;
+                this.end = end;
+            }
+
+            /// <summary>Retrieves the type of the segment.</summary>
+            /// <returns>segment type</returns>
+            public virtual char GetType() {
+                return type;
+            }
+
+            /// <summary>Sets the type of the segment.</summary>
+            /// <param name="type">segment type</param>
+            public virtual void SetType(char type) {
+                this.type = type;
+            }
+
+            /// <summary>Retrieves the start of the segment.</summary>
+            /// <returns>segment start</returns>
+            public virtual int GetStart() {
+                return start;
+            }
+
+            /// <summary>Sets the start of the segment.</summary>
+            /// <param name="start">segment start</param>
+            public virtual void SetStart(int start) {
+                this.start = start;
+            }
+
+            /// <summary>Retrieves the end of the segment.</summary>
+            /// <returns>segment end</returns>
+            public virtual int GetEnd() {
+                return end;
+            }
+
+            /// <summary>Sets the end of the segment.</summary>
+            /// <param name="end">segment end</param>
+            public virtual void SetEnd(int end) {
                 this.end = end;
             }
         }

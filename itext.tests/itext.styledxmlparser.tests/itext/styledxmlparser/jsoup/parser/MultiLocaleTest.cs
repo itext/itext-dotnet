@@ -23,14 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
     [NUnit.Framework.Category("UnitTest")]
-    [NUnit.Framework.TestFixtureSource("LocalesTestFixtureData")]
     public class MultiLocaleTest : ExtendedITextTest {
         private readonly CultureInfo defaultLocale = System.Threading.Thread.CurrentThread.CurrentUICulture;
 
@@ -39,27 +37,13 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
                 ));
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> LocalesTestFixtureData() {
-            return Locales().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
         [NUnit.Framework.TearDown]
         public virtual void SetDefaultLocale() {
             System.Threading.Thread.CurrentThread.CurrentUICulture = defaultLocale;
         }
 
-        private CultureInfo locale;
-
-        public MultiLocaleTest(CultureInfo locale) {
-            this.locale = locale;
-        }
-
-        public MultiLocaleTest(CultureInfo[] array)
-            : this(array[0]) {
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CaseSupport() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void CaseSupport(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             ParseSettings bothOn = new ParseSettings(true, true);
             ParseSettings bothOff = new ParseSettings(false, false);
@@ -75,16 +59,16 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("ID", attrOn.NormalizeAttribute("ID"));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AttributeCaseNormalization() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void AttributeCaseNormalization(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             ParseSettings parseSettings = new ParseSettings(false, false);
             String normalizedAttribute = parseSettings.NormalizeAttribute("HIDDEN");
             NUnit.Framework.Assert.AreEqual("hidden", normalizedAttribute);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AttributesCaseNormalization() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void AttributesCaseNormalization(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             ParseSettings parseSettings = new ParseSettings(false, false);
             Attributes attributes = new Attributes();
@@ -93,8 +77,8 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.AreEqual("item", normalizedAttributes.AsList()[0].Key);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CanBeInsensitive() {
+        [NUnit.Framework.TestCaseSource("Locales")]
+        public virtual void CanBeInsensitive(CultureInfo locale) {
             System.Threading.Thread.CurrentThread.CurrentUICulture = locale;
             iText.StyledXmlParser.Jsoup.Parser.Tag script1 = iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("script", 
                 ParseSettings.htmlDefault);

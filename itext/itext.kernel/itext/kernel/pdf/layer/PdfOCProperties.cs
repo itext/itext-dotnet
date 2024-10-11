@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Font;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -50,6 +51,12 @@ namespace iText.Kernel.Pdf.Layer {
 //\endcond
 
         private IList<PdfLayer> layers = new List<PdfLayer>();
+
+        //TODO DEVSIX-8490 remove this field when implemented
+        private ICollection<PdfIndirectReference> references;
+
+        //TODO DEVSIX-8490 remove this field when implemented
+        private bool isDuplicateRemoved;
 
         /// <summary>Creates a new PdfOCProperties instance.</summary>
         /// <param name="document">the document the optional content belongs to</param>
@@ -406,7 +413,14 @@ namespace iText.Kernel.Pdf.Layer {
                 }
                 PdfArray orderArray = d.GetAsArray(PdfName.Order);
                 if (orderArray != null && !orderArray.IsEmpty()) {
+                    references = new HashSet<PdfIndirectReference>();
+                    isDuplicateRemoved = false;
                     ReadOrderFromDictionary(null, orderArray, layerMap);
+                    //TODO DEVSIX-8490 remove this check when implemented
+                    if (isDuplicateRemoved) {
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Layer.PdfOCProperties));
+                        logger.LogWarning(KernelLogMessageConstant.DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED);
+                    }
                 }
             }
             // Add the layers which should not be displayed on the panel to the order list
@@ -424,7 +438,25 @@ namespace iText.Kernel.Pdf.Layer {
                 PdfObject item = orderArray.Get(i);
                 if (item.GetObjectType() == PdfObject.DICTIONARY) {
                     PdfLayer layer = layerMap.Get(item.GetIndirectReference());
-                    if (layer != null) {
+                    if (layer == null) {
+                        continue;
+                    }
+                    //TODO DEVSIX-8490 remove this check and it statement when implemented
+                    if (references.Contains(layer.GetIndirectReference())) {
+                        //We want to check if this duplicate layer has childLayers, if it has - throw an exception,
+                        // else just don't add this layer.
+                        if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject.ARRAY) {
+                            PdfArray nextArray = orderArray.GetAsArray(i + 1);
+                            if (nextArray.Size() > 0 && nextArray.Get(0).GetObjectType() != PdfObject.STRING) {
+                                PdfIndirectReference @ref = layer.GetIndirectReference();
+                                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_REMOVE_DUPLICATE_LAYER
+                                    , @ref.ToString()));
+                            }
+                        }
+                        isDuplicateRemoved = true;
+                    }
+                    else {
+                        references.Add(layer.GetIndirectReference());
                         layers.Add(layer);
                         layer.onPanel = true;
                         if (parent != null) {

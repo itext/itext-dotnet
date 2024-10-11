@@ -28,13 +28,6 @@ using iText.Commons.Utils;
 namespace iText.IO.Source {
     /// <summary>Class that is used to unify reading from random access files and arrays.</summary>
     public class RandomAccessFileOrArray {
-        /// <summary>When true the file access is not done through a memory mapped file.</summary>
-        /// <remarks>
-        /// When true the file access is not done through a memory mapped file. Use it if the file
-        /// is too big to be mapped in your address space.
-        /// </remarks>
-        public static bool plainRandomAccess = false;
-
         /// <summary>The source that backs this object</summary>
         private IRandomAccessSource byteSource;
 
@@ -96,6 +89,44 @@ namespace iText.IO.Source {
                 return back & 0xff;
             }
             return byteSource.Get(byteSourcePosition++);
+        }
+
+        /// <summary>Gets the next byte without moving current position.</summary>
+        /// <returns>the next byte, or -1 if EOF is reached</returns>
+        public virtual int Peek() {
+            if (isBack) {
+                return back & 0xff;
+            }
+            return byteSource.Get(byteSourcePosition);
+        }
+
+        /// <summary>
+        /// Gets the next
+        /// <c>buffer.length</c>
+        /// bytes without moving current position.
+        /// </summary>
+        /// <param name="buffer">buffer to store read bytes</param>
+        /// <returns>
+        /// the number of read bytes. If it is less than
+        /// <c>buffer.length</c>
+        /// it means EOF has been reached.
+        /// </returns>
+        public virtual int Peek(byte[] buffer) {
+            int offset = 0;
+            int length = buffer.Length;
+            int count = 0;
+            if (isBack && length > 0) {
+                buffer[offset++] = back;
+                --length;
+                ++count;
+            }
+            if (length > 0) {
+                int byteSourceCount = byteSource.Get(byteSourcePosition, buffer, offset, length);
+                if (byteSourceCount > 0) {
+                    count += byteSourceCount;
+                }
+            }
+            return count;
         }
 
         /// <summary>Reads the specified amount of bytes to the buffer applying the offset.</summary>

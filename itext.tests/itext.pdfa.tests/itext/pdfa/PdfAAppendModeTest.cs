@@ -72,8 +72,8 @@ namespace iText.Pdfa {
 
         private static void CreateInputPdfADocument(String docName) {
             PdfWriter writer = new PdfWriter(docName);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));

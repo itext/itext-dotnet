@@ -27,13 +27,16 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
+using iText.Kernel.Mac;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
-        private static readonly byte[] obj = ByteUtils.GetIsoBytes(" obj\n");
+        private static readonly byte[] OBJ = ByteUtils.GetIsoBytes(" obj\n");
 
-        private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
+        private static readonly byte[] ENDOBJ = ByteUtils.GetIsoBytes("\nendobj\n");
 
         protected internal WriterProperties properties;
 
@@ -55,11 +58,13 @@ namespace iText.Kernel.Pdf {
         /// It stores hashes of the indirect reference from the source document and the corresponding
         /// indirect references of the copied objects from the new document.
         /// </remarks>
-        private IDictionary<PdfIndirectReference, PdfIndirectReference> copiedObjects = new LinkedDictionary<PdfIndirectReference
-            , PdfIndirectReference>();
+        private readonly IDictionary<PdfIndirectReference, PdfIndirectReference> copiedObjects = new LinkedDictionary
+            <PdfIndirectReference, PdfIndirectReference>();
 
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
-        private SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
+        private readonly SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
+
+        private Stream originalOutputStream;
 
         /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
         /// <param name="file">File to write to.</param>
@@ -73,6 +78,25 @@ namespace iText.Kernel.Pdf {
             : this(os, new WriterProperties()) {
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfWriter"/>
+        /// instance, which writes to the passed
+        /// <see cref="System.IO.Stream"/>
+        /// ,
+        /// using provided
+        /// <see cref="WriterProperties"/>.
+        /// </summary>
+        /// <param name="os">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// in which writing should happen
+        /// </param>
+        /// <param name="properties">
+        /// 
+        /// <see cref="WriterProperties"/>
+        /// to be used during the writing
+        /// </param>
         public PdfWriter(Stream os, WriterProperties properties)
             : base(new CountOutputStream(FileUtil.WrapWithBufferedOutputStream(os))) {
             this.properties = properties;
@@ -125,6 +149,12 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Gets defined pdf version for the document.</summary>
+        /// <returns>version for the document</returns>
+        public virtual PdfVersion GetPdfVersion() {
+            return properties.pdfVersion;
+        }
+
         /// <summary>Gets the writer properties.</summary>
         /// <returns>
         /// The
@@ -156,17 +186,43 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Initializes
+        /// <see cref="PdfEncryption"/>
+        /// object if any encryption is specified in
+        /// <see cref="WriterProperties"/>.
+        /// </summary>
+        /// <param name="version">
+        /// 
+        /// <see cref="PdfVersion"/>
+        /// version of the document in question
+        /// </param>
         protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
             EncryptionProperties encryptProps = properties.encryptionProperties;
+            // Suppress MAC properties for PDF version < 2.0 and old deprecated encryption algorithms
+            // if default ones have been passed to WriterProperties
+            int encryptionAlgorithm = crypto == null ? (encryptProps.encryptionAlgorithm & EncryptionConstants.ENCRYPTION_MASK
+                ) : crypto.GetEncryptionAlgorithm();
+            if (document.properties.disableMac) {
+                encryptProps.macProperties = null;
+            }
+            if (encryptProps.macProperties == EncryptionProperties.DEFAULT_MAC_PROPERTIES) {
+                if (version == null || version.CompareTo(PdfVersion.PDF_2_0) < 0 || encryptionAlgorithm < EncryptionConstants
+                    .ENCRYPTION_AES_256) {
+                    encryptProps.macProperties = null;
+                }
+            }
+            AbstractMacIntegrityProtector mac = encryptProps.macProperties == null ? null : document.GetDiContainer().
+                GetInstance<IMacContainerLocator>().CreateMacIntegrityProtector(document, encryptProps.macProperties);
             if (properties.IsStandardEncryptionUsed()) {
                 crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
                     , encryptProps.encryptionAlgorithm, ByteUtils.GetIsoBytes(this.document.GetOriginalDocumentId().GetValue
-                    ()), version);
+                    ()), version, mac);
             }
             else {
                 if (properties.IsPublicKeyEncryptionUsed()) {
                     crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
-                        .encryptionAlgorithm, version);
+                        .encryptionAlgorithm, version, mac);
                 }
             }
         }
@@ -293,9 +349,9 @@ namespace iText.Kernel.Pdf {
                     .GetGenNumber());
             }
             WriteInteger(pdfObj.GetIndirectReference().GetObjNumber()).WriteSpace().WriteInteger(pdfObj.GetIndirectReference
-                ().GetGenNumber()).WriteBytes(obj);
+                ().GetGenNumber()).WriteBytes(OBJ);
             Write(pdfObj);
-            WriteBytes(endobj);
+            WriteBytes(ENDOBJ);
         }
 
         /// <summary>Writes PDF header.</summary>
@@ -371,6 +427,19 @@ namespace iText.Kernel.Pdf {
         }
 
 //\cond DO_NOT_DOCUMENT
+        internal virtual void Finish() {
+            if (document != null && !document.IsClosed()) {
+                // Writer is always closed as part of document closing
+                document.DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.START_WRITER_CLOSING));
+                if (IsByteArrayWritingMode()) {
+                    CompleteByteArrayWritingMode();
+                }
+            }
+            Dispose();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the current object stream.</summary>
         /// <returns>object stream.</returns>
         internal virtual PdfObjectStream GetObjectStream() {
@@ -409,6 +478,28 @@ namespace iText.Kernel.Pdf {
             }
         }
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void EnableByteArrayWritingMode() {
+            if (IsByteArrayWritingMode()) {
+                throw new PdfException("Byte array writing mode is already enabled");
+            }
+            else {
+                this.originalOutputStream = this.outputStream;
+                this.outputStream = new ByteArrayOutputStream();
+            }
+        }
+//\endcond
+
+        private void CompleteByteArrayWritingMode() {
+            byte[] baos = ((ByteArrayOutputStream)GetOutputStream()).ToArray();
+            originalOutputStream.Write(baos, 0, baos.Length);
+            originalOutputStream.Dispose();
+        }
+
+        private bool IsByteArrayWritingMode() {
+            return originalOutputStream != null;
+        }
 
         private void MarkArrayContentToFlush(PdfArray array) {
             for (int i = 0; i < array.Size(); i++) {

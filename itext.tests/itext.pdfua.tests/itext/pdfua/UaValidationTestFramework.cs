@@ -26,7 +26,7 @@ using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
-using iText.Kernel.Utils;
+using iText.Kernel.Validation;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfua.Exceptions;

@@ -97,6 +97,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String CANNOT_FIND_IMAGE_DATA_OR_EI = "Cannot find image data or EI.";
 
+        public const String UNSUPPORTED_ENCODING_FOR_INLINE_IMAGE = "Cannot parse inline image: {0} encoding is unsupported.";
+
         public const String CANNOT_FLUSH_DOCUMENT_ROOT_TAG_BEFORE_DOCUMENT_IS_CLOSED = "Cannot flush document root "
              + "tag before document is closed.";
 
@@ -162,6 +164,12 @@ namespace iText.Kernel.Exceptions {
 
         public const String COLOR_SPACE_NOT_FOUND = "ColorSpace not found.";
 
+        public const String CONTAINER_EMBEDDING_EXCEPTION = "IOException occurred while trying to embed MAC container into document output stream.";
+
+        public const String CONTAINER_GENERATION_EXCEPTION = "Exception occurred during MAC container generation.";
+
+        public const String CONTAINER_PARSING_EXCEPTION = "Exception occurred during MAC container parsing.";
+
         public const String CONTENT_STREAM_MUST_NOT_INVOKE_OPERATORS_THAT_SPECIFY_COLORS_OR_OTHER_COLOR_RELATED_PARAMETERS
              = "Content stream must not invoke operators that specify colors or other color related parameters in "
              + "the graphics state.";
@@ -180,6 +188,8 @@ namespace iText.Kernel.Exceptions {
         public const String DEFAULT_CRYPT_FILTER_NOT_FOUND_ENCRYPTION = "/DefaultCryptFilter not found " + "(encryption).";
 
         public const String THIS_DICTIONARY_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
+
+        public const String DIGEST_NOT_SUPPORTED = "This digest algorithm is not supported for MAC integrity protection.";
 
         public const String DICTIONARY_DOES_NOT_HAVE_SUPPORTED_FONT_DATA = "Dictionary doesn't have supported font "
              + "data.";
@@ -282,7 +292,7 @@ namespace iText.Kernel.Exceptions {
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry "
              + "in this xref subsection.";
 
-        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0}.";
+        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R.";
 
         public const String INVALID_INPUT_FOR_TYPE_2_FUNCTION = "Invalid input value for PDF Type 2 Function, value should be a single number.";
 
@@ -343,6 +353,28 @@ namespace iText.Kernel.Exceptions {
         public const String LZW_DECODER_EXCEPTION = "LZW decoder exception.";
 
         public const String LZW_FLAVOUR_NOT_SUPPORTED = "LZW flavour not supported.";
+
+        public const String MAC_ALGORITHM_NOT_SUPPORTED = "This MAC algorithm is not supported.";
+
+        public const String MAC_ATTRIBUTE_NOT_SPECIFIED = "Signature doesn't contain unsigned MAC attribute, which is required in \"attached to signature\" mode.";
+
+        public const String MAC_EXTRACTION_EXCEPTION = "Exception occurred during signature parsing. It is not possible to extract MAC.";
+
+        public const String MAC_LOCATION_NOT_SPECIFIED = "AuthCode dictionary doesn't contain MACLocation entry.";
+
+        public const String MAC_NOT_SPECIFIED = "AuthCode dictionary doesn't contain MAC entry, which is required in standalone mode.";
+
+        public const String MAC_FOR_ENCRYPTION_5 = "MAC integrity protection is only supported for encryption algorithms of version 5 or higher.";
+
+        public const String MAC_FOR_PDF_2 = "MAC integrity protection is only supported for PDF 2.0 or higher.";
+
+        public const String MAC_PERMS_WITHOUT_MAC = "Permissions bit 13 is set to zero, " + "which indicates that MAC integrity protection is enabled. However MAC container wasn't found.";
+
+        public const String MAC_VALIDATION_EXCEPTION = "Unexpected exception occurred during MAC token validation.";
+
+        public const String MAC_VALIDATION_FAILED = "MAC integrity protection was compromised. Document content was modified.";
+
+        public const String MAC_VALIDATION_NO_SALT = "MAC token validation failed. Salt is not found.";
 
         public const String MISSING_REQUIRED_FIELD_IN_FONT_DICTIONARY = "Missing required field {0} in font dictionary.";
 
@@ -443,6 +475,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String SHADING_TYPE_NOT_FOUND = "Shading type not found.";
 
+        public const String SIG_OBJ_REF_NOT_SPECIFIED = "AuthCode dictionary doesn't contain SigObjRef entry, which is required in signature mode.";
+
         public const String STDCF_NOT_FOUND_ENCRYPTION = "/StdCF not found (encryption)";
 
         public const String STREAM_SHALL_END_WITH_ENDSTREAM = "Stream shall end with endstream keyword.";
@@ -479,6 +513,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String THERE_IS_NO_ASSOCIATE_PDF_WRITER_FOR_MAKING_INDIRECTS = "There is no associate " + "PdfWriter for making indirects.";
 
+        public const String THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL = "The name of the digest algorithm is null.";
+
         public const String THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED = "Decode parameter type {0} is not " + "supported.";
 
         public const String THIS_FILTER_IS_NOT_SUPPORTED = "Filter {0} is not supported.";
@@ -499,8 +535,6 @@ namespace iText.Kernel.Exceptions {
         public const String UNBALANCED_LAYER_OPERATORS = "Unbalanced layer operators.";
 
         public const String UNBALANCED_SAVE_RESTORE_STATE_OPERATORS = "Unbalanced save restore state operators.";
-
-        public const String UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} " + "found after ID in inline image.";
 
         public const String UNEXPECTED_COLOR_SPACE = "Unexpected ColorSpace: {0}.";
 
@@ -530,6 +564,8 @@ namespace iText.Kernel.Exceptions {
         public const String WHITE_POINT_IS_INCORRECTLY_SPECIFIED = "White point is incorrectly specified.";
 
         public const String WMF_IMAGE_EXCEPTION = "WMF image exception.";
+
+        public const String WRAP_ALGORITHM_NOT_SUPPORTED = "This wrapping algorithm is not supported.";
 
         public const String WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS = "Wrong media box size: {0}. Need at least 4 "
              + "arguments";
@@ -618,6 +654,16 @@ namespace iText.Kernel.Exceptions {
         public const String UNABLE_TO_READ_STREAM_BYTES = "Unable to read stream bytes because stream is null.";
 
         public const String INVALID_OBJECT_STREAM_NUMBER = "Unable to read object {0} with object stream " + "number {1} and index {2} from object stream.";
+
+        //TODO DEVSIX-8490 remove this exception message when implemented
+        public const String UNABLE_TO_ADD_SECOND_PARENT_LAYER = "Unable to add second parent layer to " + "{0} ocg layer";
+
+        //TODO DEVSIX-8490 remove this exception message when implemented
+        public const String UNABLE_TO_REMOVE_DUPLICATE_LAYER = "Unable to remove duplicated layer {0} " + "because it has child layers.";
+
+        public const String TYPE_SHOULD_NOT_BE_NULL = "ClassArgument type should not be null";
+
+        public const String INSTANCE_SHOULD_NOT_BE_NULL = "Instance should not be null";
 
         private KernelExceptionMessageConstant() {
         }

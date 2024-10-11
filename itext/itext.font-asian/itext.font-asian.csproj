@@ -46,6 +46,7 @@
     <EmbeddedResource Include="Adobe-CNS1-4" />
     <EmbeddedResource Include="Adobe-CNS1-5" />
     <EmbeddedResource Include="Adobe-CNS1-6" />
+    <EmbeddedResource Include="Adobe-CNS1-7" />
     <EmbeddedResource Include="Adobe-GB1-0" />
     <EmbeddedResource Include="Adobe-GB1-1" />
     <EmbeddedResource Include="Adobe-GB1-2" />
@@ -59,9 +60,20 @@
     <EmbeddedResource Include="Adobe-Japan1-4" />
     <EmbeddedResource Include="Adobe-Japan1-5" />
     <EmbeddedResource Include="Adobe-Japan1-6" />
+    <EmbeddedResource Include="Adobe-Japan1-7" />
     <EmbeddedResource Include="Adobe-Korea1-0" />
     <EmbeddedResource Include="Adobe-Korea1-1" />
     <EmbeddedResource Include="Adobe-Korea1-2" />
+    <EmbeddedResource Include="Adobe-KR-0" />
+    <EmbeddedResource Include="Adobe-KR-1" />
+    <EmbeddedResource Include="Adobe-KR-2" />
+    <EmbeddedResource Include="Adobe-KR-3" />
+    <EmbeddedResource Include="Adobe-KR-4" />
+    <EmbeddedResource Include="Adobe-KR-5" />
+    <EmbeddedResource Include="Adobe-KR-6" />
+    <EmbeddedResource Include="Adobe-KR-7" />
+    <EmbeddedResource Include="Adobe-KR-8" />
+    <EmbeddedResource Include="Adobe-KR-9" />
     <EmbeddedResource Include="B5-H" />
     <EmbeddedResource Include="B5-V" />
     <EmbeddedResource Include="B5pc-H" />
@@ -75,6 +87,8 @@
     <EmbeddedResource Include="CNS2-V" />
     <EmbeddedResource Include="ETen-B5-H" />
     <EmbeddedResource Include="ETen-B5-V" />
+    <EmbeddedResource Include="Identity-H" />
+    <EmbeddedResource Include="Identity-V" />
     <EmbeddedResource Include="ETenms-B5-H" />
     <EmbeddedResource Include="ETenms-B5-V" />
     <EmbeddedResource Include="ETHK-B5-H" />
@@ -145,6 +159,9 @@
     <EmbeddedResource Include="RKSJ-H" />
     <EmbeddedResource Include="RKSJ-V" />
     <EmbeddedResource Include="Roman" />
+    <EmbeddedResource Include="UniAKR-UTF8-H" />
+    <EmbeddedResource Include="UniAKR-UTF16-H" />
+    <EmbeddedResource Include="UniAKR-UTF32-H" />
     <EmbeddedResource Include="STSong-Light.properties" />
     <EmbeddedResource Include="STSongStd-Light.properties" />
     <EmbeddedResource Include="UniCNS-UCS2-H" />

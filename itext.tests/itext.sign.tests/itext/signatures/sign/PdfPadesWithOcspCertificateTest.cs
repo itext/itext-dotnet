@@ -75,7 +75,7 @@ namespace iText.Signatures.Sign {
             IPrivateKey ocspPrivateKey = PemFileHelper.ReadFirstKey(ocspCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
+            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient();
             ocspClient.AddBuilderForCertIssuer(signRsaCert, ocspCert, ocspPrivateKey);
             ocspClient.AddBuilderForCertIssuer(ocspCert, ocspCert, ocspPrivateKey);
             MemoryStream outputStream = new MemoryStream();
@@ -114,7 +114,7 @@ namespace iText.Signatures.Sign {
             IPrivateKey ocspPrivateKey = PemFileHelper.ReadFirstKey(ocspCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
+            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient();
             ocspClient.AddBuilderForCertIssuer((IX509Certificate)signRsaCert, (IX509Certificate)ocspCert, ocspPrivateKey
                 );
             ocspClient.AddBuilderForCertIssuer((IX509Certificate)ocspCert, (IX509Certificate)ocspCert, ocspPrivateKey);
@@ -141,7 +141,7 @@ namespace iText.Signatures.Sign {
             IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
+            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient();
             ocspClient.AddBuilderForCertIssuer(signRsaCert, signRsaCert, signRsaPrivateKey);
             MemoryStream outputStream = new MemoryStream();
             PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
@@ -166,7 +166,7 @@ namespace iText.Signatures.Sign {
         private SignerProperties CreateSignerProperties() {
             SignerProperties signerProperties = new SignerProperties();
             signerProperties.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName()).SetContent
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
                 ("Approval test signature.\nCreated by iText.");
             signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100)).SetSignatureAppearance(appearance);
             return signerProperties;

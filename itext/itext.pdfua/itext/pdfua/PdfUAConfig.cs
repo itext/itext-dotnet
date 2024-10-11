@@ -26,29 +26,29 @@ using iText.Kernel.Pdf;
 namespace iText.Pdfua {
     /// <summary>Class that holds the configuration for the PDF/UA document.</summary>
     public class PdfUAConfig {
-        private readonly PdfUAConformanceLevel conformanceLevel;
+        private readonly PdfUAConformance conformance;
 
         private readonly String title;
 
         private readonly String language;
 
         /// <summary>Creates a new PdfUAConfig instance.</summary>
-        /// <param name="conformanceLevel">The conformance level of the PDF/UA document.</param>
-        /// <param name="title">The title of the PDF/UA document.</param>
-        /// <param name="language">The language of the PDF/UA document.</param>
-        public PdfUAConfig(PdfUAConformanceLevel conformanceLevel, String title, String language) {
-            this.conformanceLevel = conformanceLevel;
+        /// <param name="conformance">the conformance of the PDF/UA document</param>
+        /// <param name="title">the title of the PDF/UA document</param>
+        /// <param name="language">the language of the PDF/UA document</param>
+        public PdfUAConfig(PdfUAConformance conformance, String title, String language) {
+            this.conformance = conformance;
             this.title = title;
             this.language = language;
         }
 
-        /// <summary>Gets the conformance level.</summary>
+        /// <summary>Gets the UA conformance.</summary>
         /// <returns>
         /// The
-        /// <see cref="iText.Kernel.Pdf.PdfUAConformanceLevel"/>.
+        /// <see cref="iText.Kernel.Pdf.PdfUAConformance"/>.
         /// </returns>
-        public virtual PdfUAConformanceLevel GetConformanceLevel() {
-            return conformanceLevel;
+        public virtual PdfUAConformance GetConformance() {
+            return conformance;
         }
 
         /// <summary>Gets the title.</summary>

@@ -24,6 +24,7 @@ using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
+using iText.Kernel.Crypto;
 
 namespace iText.Signatures.Cms {
     /// <summary>This class represents the signed content.</summary>
@@ -31,7 +32,7 @@ namespace iText.Signatures.Cms {
         private static readonly IBouncyCastleFactory BC_FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         /// <summary>Object identifier of the content field</summary>
-        private String eContentType = "1.2.840.113549.1.7.1";
+        private String eContentType = OID.PKCS7_DATA;
 
         /// <summary>Optional.</summary>
         /// <remarks>

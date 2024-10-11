@@ -974,7 +974,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (child is TextRenderer) {
                     GlyphLine childLine = ((TextRenderer)child).line;
-                    for (int i = childLine.start; i < childLine.end; i++) {
+                    for (int i = childLine.GetStart(); i < childLine.GetEnd(); i++) {
                         if (iText.IO.Util.TextUtil.IsNewLine(childLine.Get(i))) {
                             newLineFound = true;
                             break;
@@ -999,7 +999,7 @@ namespace iText.Layout.Renderer {
             IList<LineRenderer.RendererGlyph> lineGlyphs = splitLineIntoGlyphsResult.GetLineGlyphs();
             int initialPos = 0;
             for (int offset = initialPos; offset < lineGlyphs.Count; offset = initialPos) {
-                TextRenderer renderer = lineGlyphs[offset].renderer;
+                TextRenderer renderer = lineGlyphs[offset].GetRenderer();
                 TextRenderer newRenderer = new TextRenderer(renderer).RemoveReversedRanges();
                 toProcess.AddChildRenderer(newRenderer);
                 // Insert non-text renderers
@@ -1007,11 +1007,11 @@ namespace iText.Layout.Renderer {
                 newRenderer.line = new GlyphLine(newRenderer.line);
                 IList<Glyph> replacementGlyphs = new List<Glyph>();
                 bool reversed = false;
-                for (int pos = offset; pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer; ++pos) {
-                    replacementGlyphs.Add(lineGlyphs[pos].glyph);
-                    if (pos + 1 < lineGlyphs.Count && lineGlyphs[pos + 1].renderer == renderer && newOrder[pos] == newOrder[pos
-                         + 1] + 1 && !iText.IO.Util.TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos + 1].glyph) && !iText.IO.Util.TextUtil
-                        .IsSpaceOrWhitespace(lineGlyphs[pos].glyph)) {
+                for (int pos = offset; pos < lineGlyphs.Count && lineGlyphs[pos].GetRenderer() == renderer; ++pos) {
+                    replacementGlyphs.Add(lineGlyphs[pos].GetGlyph());
+                    if (pos + 1 < lineGlyphs.Count && lineGlyphs[pos + 1].GetRenderer() == renderer && newOrder[pos] == newOrder
+                        [pos + 1] + 1 && !iText.IO.Util.TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos + 1].GetGlyph()) && !iText.IO.Util.TextUtil
+                        .IsSpaceOrWhitespace(lineGlyphs[pos].GetGlyph())) {
                         reversed = true;
                         continue;
                     }
@@ -1247,9 +1247,9 @@ namespace iText.Layout.Renderer {
                     TextRenderer textRenderer = (TextRenderer)renderer;
                     GlyphLine currentText = textRenderer.GetText();
                     if (currentText != null) {
-                        int prevTextStart = currentText.start;
+                        int prevTextStart = currentText.GetStart();
                         textRenderer.TrimFirst();
-                        int numOfTrimmedGlyphs = textRenderer.GetText().start - prevTextStart;
+                        int numOfTrimmedGlyphs = textRenderer.GetText().GetStart() - prevTextStart;
                         totalNumberOfTrimmedGlyphs += numOfTrimmedGlyphs;
                     }
                     trimFinished = textRenderer.Length() > 0;
@@ -1535,7 +1535,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (child is TextRenderer) {
                         GlyphLine text = ((TextRenderer)child).GetText();
-                        for (int i = text.start; i < text.end; i++) {
+                        for (int i = text.GetStart(); i < text.GetEnd(); i++) {
                             Glyph glyph = text.Get(i);
                             if (iText.IO.Util.TextUtil.IsNewLine(glyph)) {
                                 newLineFound = true;
@@ -1628,13 +1628,37 @@ namespace iText.Layout.Renderer {
         }
 
         public class RendererGlyph {
-            public Glyph glyph;
+            private Glyph glyph;
 
-            public TextRenderer renderer;
+            private TextRenderer renderer;
 
             public RendererGlyph(Glyph glyph, TextRenderer textRenderer) {
                 this.glyph = glyph;
                 this.renderer = textRenderer;
+            }
+
+            /// <summary>Sets the glyph of the object.</summary>
+            /// <param name="glyph">glyph</param>
+            public virtual void SetGlyph(Glyph glyph) {
+                this.glyph = glyph;
+            }
+
+            /// <summary>Retrieves the glyph of the object.</summary>
+            /// <returns>glyph</returns>
+            public virtual Glyph GetGlyph() {
+                return glyph;
+            }
+
+            /// <summary>Sets the renderer of the object.</summary>
+            /// <param name="renderer">renderer</param>
+            public virtual void SetRenderer(TextRenderer renderer) {
+                this.renderer = renderer;
+            }
+
+            /// <summary>Retrieves the renderer of the object.</summary>
+            /// <returns>renderer</returns>
+            public virtual TextRenderer GetRenderer() {
+                return renderer;
             }
         }
 

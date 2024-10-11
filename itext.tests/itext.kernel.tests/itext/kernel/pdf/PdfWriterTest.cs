@@ -530,13 +530,13 @@ namespace iText.Kernel.Pdf {
             int streamIndirectNumber = stream.GetIndirectReference().GetObjNumber();
             document.Close();
             //        com.itextpdf.text.pdf.PdfReader reader = new PdfReader(filename);
-            //        Assert.assertEquals("Rebuilt", false, reader.isRebuilt());
-            //        Assert.assertNotNull(reader.getPageN(1));
+            //        Assertions.assertEquals("Rebuilt", false, reader.isRebuilt());
+            //        Assertions.assertNotNull(reader.getPageN(1));
             //        String date = reader.getDocumentInfo().get("CreationDate");
             //        Calendar cl = com.itextpdf.text.pdf.PdfDate.decode(date);
             //        long diff = new GregorianCalendar().getTimeInMillis() - cl.getTimeInMillis();
             //        String message = "Unexpected creation date. Different from now is " + (float)diff/1000 + "s";
-            //        Assert.assertTrue(message, diff < 5000);
+            //        Assertions.assertTrue(diff < 5000, message);
             //        reader.close();
             PdfReader reader6 = CompareTool.CreateOutputReader(filename);
             document = new PdfDocument(reader6);

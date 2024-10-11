@@ -34,7 +34,50 @@ namespace iText.IO.Font.Otf {
             ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
             GlyphLine.GlyphLinePart part = actualTextIterator.Next();
             // When actual text is the same as the result by text extraction, we should omit redundant actual text in the content stream
-            NUnit.Framework.Assert.IsNull(part.actualText);
+            NUnit.Framework.Assert.IsNull(part.GetActualText());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NextCurrentResNullTest() {
+            Glyph glyph = new Glyph(200, 200, '\u002d');
+            GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyph, null, glyph));
+            glyphLine.SetActualText(0, 1, "\u002d");
+            ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+            actualTextIterator.Next();
+            GlyphLine.GlyphLinePart secondNext = actualTextIterator.Next();
+            NUnit.Framework.Assert.IsNull(secondNext);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NextIterationTest() {
+            Glyph glyph = new Glyph(200, 200, '\u002d');
+            GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyph, glyph, glyph));
+            glyphLine.SetActualText(0, 1, "\u002d");
+            ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+            GlyphLine.GlyphLinePart next = actualTextIterator.Next();
+            NUnit.Framework.Assert.AreEqual(3, next.GetEnd());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NextWithNegativeEndTest() {
+            Glyph glyph = new Glyph(200, 200, '\u002d');
+            GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyph, glyph, glyph));
+            glyphLine.SetActualText(0, 1, "\u002d");
+            glyphLine.SetEnd(-1);
+            ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+            GlyphLine.GlyphLinePart next = actualTextIterator.Next();
+            NUnit.Framework.Assert.IsNull(next);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NextWithInvalidUnicodeTest() {
+            Glyph glyph = new Glyph(200, 200, 0);
+            Glyph glyphinvalid = new Glyph(200, 200, null);
+            GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(glyph, glyphinvalid));
+            glyphLine.SetActualText(1, 2, "X");
+            ActualTextIterator actualTextIterator = new ActualTextIterator(glyphLine);
+            GlyphLine.GlyphLinePart next = actualTextIterator.Next();
+            NUnit.Framework.Assert.IsNull(next.GetActualText());
         }
     }
 }

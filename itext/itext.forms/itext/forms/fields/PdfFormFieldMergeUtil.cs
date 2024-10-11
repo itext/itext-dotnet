@@ -49,7 +49,7 @@ namespace iText.Forms.Fields {
                 return;
             }
             PdfArray kids = parent.GetAsArray(PdfName.Kids);
-            if (kids == null || kids.Size() == 0) {
+            if (kids == null || kids.IsEmpty()) {
                 return;
             }
             IDictionary<String, AbstractPdfFormField> addedKids = new LinkedDictionary<String, AbstractPdfFormField>();
@@ -83,6 +83,10 @@ namespace iText.Forms.Fields {
         /// <returns>true if fields is successfully merged, false otherwise.</returns>
         public static bool MergeTwoFieldsWithTheSameNames(PdfFormField firstField, PdfFormField secondField, bool 
             throwExceptionOnError) {
+            if (firstField.GetPdfObject() == secondField.GetPdfObject()) {
+                // We don't need to perform any strategy on duplicated references, we can just always remove them.
+                return true;
+            }
             OnDuplicateFormFieldNameStrategy onDuplicateFormFieldNameStrategy = firstField.GetDocument().GetDiContainer
                 ().GetInstance<OnDuplicateFormFieldNameStrategy>();
             return onDuplicateFormFieldNameStrategy.Execute(firstField, secondField, throwExceptionOnError);

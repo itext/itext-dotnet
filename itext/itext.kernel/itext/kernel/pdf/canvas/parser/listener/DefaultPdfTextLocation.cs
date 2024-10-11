@@ -26,43 +26,50 @@ using iText.Kernel.Geom;
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>This class acts as a default implementation of IPdfTextLocation</summary>
     public class DefaultPdfTextLocation : IPdfTextLocation {
-        private int pageNr;
-
         private Rectangle rectangle;
 
         private String text;
 
-        public DefaultPdfTextLocation(int pageNr, Rectangle rect, String text) {
-            this.pageNr = pageNr;
+        /// <summary>Creates new pdf text location.</summary>
+        /// <param name="rect">text rectangle on pdf canvas</param>
+        /// <param name="text">actual text on designated area of canvas</param>
+        public DefaultPdfTextLocation(Rectangle rect, String text) {
             this.rectangle = rect;
             this.text = text;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual Rectangle GetRectangle() {
             return rectangle;
         }
 
+        /// <summary>Sets text rectangle (occupied area) for this pdf text location.</summary>
+        /// <param name="rectangle">new text rectangle</param>
+        /// <returns>
+        /// this
+        /// <c>DefaultPdfTextLocation</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.DefaultPdfTextLocation SetRectangle(Rectangle rectangle
             ) {
             this.rectangle = rectangle;
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual String GetText() {
             return text;
         }
 
+        /// <summary>Sets text for this pdf text location.</summary>
+        /// <param name="text">new text</param>
+        /// <returns>
+        /// this
+        /// <c>DefaultPdfTextLocation</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.DefaultPdfTextLocation SetText(String text) {
             this.text = text;
-            return this;
-        }
-
-        public virtual int GetPageNumber() {
-            return pageNr;
-        }
-
-        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.DefaultPdfTextLocation SetPageNr(int pageNr) {
-            this.pageNr = pageNr;
             return this;
         }
     }

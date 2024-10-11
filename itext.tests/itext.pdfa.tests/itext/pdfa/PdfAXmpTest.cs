@@ -54,7 +54,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(new PdfWriter(outFile), PdfAConformanceLevel.PDF_A_1B, outputIntent);
+            PdfADocument doc = new PdfADocument(new PdfWriter(outFile), PdfAConformance.PDF_A_1B, outputIntent);
             doc.AddNewPage();
             doc.GetDocumentInfo().SetKeywords("key1, key2 , key3;key4,key5");
             doc.Close();
@@ -71,7 +71,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
-            PdfADocument doc = new PdfADocument(new PdfWriter(outFile), PdfAConformanceLevel.PDF_A_2B, outputIntent);
+            PdfADocument doc = new PdfADocument(new PdfWriter(outFile), PdfAConformance.PDF_A_2B, outputIntent);
             doc.AddNewPage();
             doc.GetDocumentInfo().SetKeywords("key1, key2 , key3;key4,key5");
             doc.Close();
@@ -85,18 +85,18 @@ namespace iText.Pdfa {
         public virtual void SaveAndReadDocumentWithCanonicalXmpMetadata() {
             String outFile = destinationFolder + "saveAndReadDocumentWithCanonicalXmpMetadata.pdf";
             String cmpFile = cmpFolder + "cmp_saveAndReadDocumentWithCanonicalXmpMetadata.pdf";
-            PdfAConformanceLevel conformanceLevel = PdfAConformanceLevel.PDF_A_2B;
+            PdfAConformance conformance = PdfAConformance.PDF_A_2B;
             PdfOutputIntent outputIntent;
             using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
                 outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
             }
-            using (PdfADocument doc = new PdfADocument(new PdfWriter(outFile), conformanceLevel, outputIntent)) {
+            using (PdfADocument doc = new PdfADocument(new PdfWriter(outFile), conformance, outputIntent)) {
                 doc.AddNewPage();
                 XMPMeta xmp = XMPMetaFactory.Create();
-                xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, conformanceLevel.GetPart(), new PropertyOptions().SetSchemaNode
+                xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, conformance.GetPart(), new PropertyOptions().SetSchemaNode
                     (true));
-                xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, conformanceLevel.GetConformance(), new PropertyOptions
-                    ().SetSchemaNode(true));
+                xmp.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, conformance.GetLevel(), new PropertyOptions().SetSchemaNode
+                    (true));
                 SerializeOptions options = new SerializeOptions().SetUseCanonicalFormat(true).SetUseCompactFormat(false);
                 doc.SetXmpMetadata(xmp, options);
                 doc.SetTagged();
@@ -104,8 +104,8 @@ namespace iText.Pdfa {
             // Closing document and reopening it to flush it XMP metadata ModifyDate
             using (PdfDocument doc_1 = new PdfDocument(new PdfReader(outFile))) {
                 using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpFile))) {
-                    byte[] rdf = doc_1.GetXmpMetadata();
-                    byte[] expectedRdf = cmpDoc.GetXmpMetadata();
+                    byte[] rdf = doc_1.GetXmpMetadataBytes();
+                    byte[] expectedRdf = cmpDoc.GetXmpMetadataBytes();
                     // Comparing angle brackets, since it's the main difference between canonical and compact format.
                     NUnit.Framework.Assert.AreEqual(Count(expectedRdf, (byte)'<'), Count(rdf, (byte)'<'));
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(cmpFile, outFile, true));
@@ -130,20 +130,21 @@ namespace iText.Pdfa {
             GeneratePdfAWithUA(baos);
             // check whether the pdfuaid NS URI was properly encoded as a URI with rdf:resource
             PdfDocument readDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
-            String xmpString = iText.Commons.Utils.JavaUtil.GetStringForBytes(readDoc.GetXmpMetadata(), System.Text.Encoding
+            String xmpString = iText.Commons.Utils.JavaUtil.GetStringForBytes(readDoc.GetXmpMetadataBytes(), System.Text.Encoding
                 .UTF8);
             NUnit.Framework.Assert.IsTrue(xmpString.Contains("<pdfaSchema:namespaceURI rdf:resource=\"http://www.aiim.org/pdfua/ns/id/\"/>"
                 ), "Did not find expected namespaceURI definition");
         }
 
         private void GeneratePdfAWithUA(Stream os) {
-            WriterProperties wp = new WriterProperties().AddUAXmpMetadata();
+            WriterProperties wp = new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_1);
             using (PdfWriter w = new PdfWriter(os, wp)) {
                 PdfOutputIntent outputIntent;
                 using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
                     outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is);
                 }
-                PdfDocument pdfDoc = new PdfADocument(w, PdfAConformanceLevel.PDF_A_2A, outputIntent).SetTagged();
+                PdfDocument pdfDoc = new PdfADocument(w, PdfAConformance.PDF_A_2A, outputIntent);
+                pdfDoc.SetTagged();
                 pdfDoc.GetDocumentInfo().SetTitle("Test document");
                 pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
                 pdfDoc.GetCatalog().SetLang(new PdfString("en"));

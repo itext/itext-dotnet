@@ -37,9 +37,9 @@ namespace iText.Barcodes {
     /// point is added, usually being the last two digits of the address or PO box number.
     /// </remarks>
     public class BarcodePostnet : Barcode1D {
-        public static int TYPE_POSTNET = 1;
+        public const int TYPE_POSTNET = 1;
 
-        public static int TYPE_PLANET = 2;
+        public const int TYPE_PLANET = 2;
 
         /// <summary>The bars for each character.</summary>
         private static readonly byte[][] BARS = new byte[][] { new byte[] { 1, 1, 0, 0, 0 }, new byte[] { 0, 0, 0, 

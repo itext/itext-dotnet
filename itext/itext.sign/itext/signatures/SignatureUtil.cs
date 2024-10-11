@@ -408,9 +408,29 @@ namespace iText.Signatures {
                 rangeIsCorrect = false;
                 PdfDictionary signature = (PdfDictionary)signatureField.GetValue();
                 int[] byteRange = ((PdfArray)signature.Get(PdfName.ByteRange)).ToIntArray();
-                if (4 != byteRange.Length || 0 != byteRange[0] || tokens.GetSafeFile().Length() != byteRange[2] + byteRange
-                    [3]) {
+                if (4 != byteRange.Length || 0 != byteRange[0]) {
                     return false;
+                }
+                if (tokens.GetSafeFile().Length() < byteRange[2] + byteRange[3]) {
+                    return false;
+                }
+                else {
+                    // We allow up to 4 EOL bytes to not be included into byte range.
+                    tokens.Seek(byteRange[2] + byteRange[3]);
+                    try {
+                        String remainingBytes = tokens.ReadString(5);
+                        if (remainingBytes.Length > 4) {
+                            return false;
+                        }
+                        foreach (byte b in remainingBytes.GetBytes(System.Text.Encoding.UTF8)) {
+                            if (b != '\n' && b != '\r') {
+                                return false;
+                            }
+                        }
+                    }
+                    catch (System.IO.IOException) {
+                        return false;
+                    }
                 }
                 rangeExclusionStart = byteRange[1];
                 rangeExlusionEnd = byteRange[2];

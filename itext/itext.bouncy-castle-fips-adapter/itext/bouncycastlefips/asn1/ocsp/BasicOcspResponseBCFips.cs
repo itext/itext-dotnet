@@ -129,5 +129,10 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
             return new Asn1EncodableBCFips(GetBasicOcspResponse().TbsResponseData.ResponseExtensions.GetExtension(
                 ((DerObjectIdentifierBCFips)objectIdentifier).GetDerObjectIdentifier())?.GetParsedValue());
         }
+        
+        public IRespID GetResponderId()
+        {
+            return new RespIDBCFips(GetBasicOcspResponse().TbsResponseData.ResponderID);
+        }
     }
 }

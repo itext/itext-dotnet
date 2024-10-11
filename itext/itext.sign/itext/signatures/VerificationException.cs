@@ -30,6 +30,8 @@ using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>An exception that is thrown when something is wrong with a certificate.</summary>
+    [System.ObsoleteAttribute(@"starting from 9.0.0 since all the classes that use this one are also deprecated in favour of new signature validation logic in the iText.Signatures.Validation package."
+        )]
     public class VerificationException : AbstractGeneralSecurityException {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();

@@ -105,11 +105,41 @@ namespace iText.Kernel.Pdf {
                 .GetExtensionLevel(), MULTI_EXTENSION_2.GetExtensionLevel()));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void RemoveSingleValuedExtensionTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(baos))) {
+                pdfDoc.GetCatalog().AddDeveloperExtension(SIMPLE_EXTENSION_L5);
+                pdfDoc.GetCatalog().RemoveDeveloperExtension(SIMPLE_EXTENSION_L5);
+            }
+            AssertNoExtensionWithPrefix(baos.ToArray(), SIMPLE_EXTENSION_L5.GetPrefix());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveMultivaluedExtensionTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(baos))) {
+                pdfDoc.GetCatalog().AddDeveloperExtension(MULTI_EXTENSION_1);
+                pdfDoc.GetCatalog().AddDeveloperExtension(MULTI_EXTENSION_2);
+                pdfDoc.GetCatalog().RemoveDeveloperExtension(MULTI_EXTENSION_2);
+            }
+            AssertMultiExtension(baos.ToArray(), MULTI_EXTENSION_1.GetPrefix(), JavaUtil.ArraysAsList(MULTI_EXTENSION_1
+                .GetExtensionLevel()));
+        }
+
         private void AssertSimpleExtension(byte[] docData, PdfName prefix, int expectedLevel) {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(docData)))) {
                 PdfDictionary extDict = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Extensions).GetAsDictionary
                     (prefix);
                 NUnit.Framework.Assert.AreEqual(expectedLevel, extDict.GetAsNumber(PdfName.ExtensionLevel).IntValue());
+            }
+        }
+
+        private void AssertNoExtensionWithPrefix(byte[] docData, PdfName prefix) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(docData)))) {
+                PdfDictionary extDict = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Extensions).GetAsDictionary
+                    (prefix);
+                NUnit.Framework.Assert.IsNull(extDict);
             }
         }
 

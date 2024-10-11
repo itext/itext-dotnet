@@ -193,7 +193,7 @@ namespace iText.Layout.Renderer {
                             break;
                         }
                         if (textLayoutResult.IsContainsPossibleBreak() && textLayoutResult.GetStatus() != LayoutResult.NOTHING) {
-                            textRenderer.SetIndexOfFirstCharacterToBeForcedToOverflow(textRenderer.line.end);
+                            textRenderer.SetIndexOfFirstCharacterToBeForcedToOverflow(textRenderer.line.GetEnd());
                             LayoutArea layoutArea = textRenderer.GetOccupiedArea().Clone();
                             layoutArea.GetBBox().IncreaseHeight(OCCUPIED_AREA_RELAYOUT_EPS).IncreaseWidth(OCCUPIED_AREA_RELAYOUT_EPS);
                             // Here we relayout the child with the possible break using its own occupied area as
@@ -287,8 +287,8 @@ namespace iText.Layout.Renderer {
                         GlyphLine splitText = splitTextRenderer.text;
                         if (splitTextRenderer.Length() > 0) {
                             fittingLengthWithTrailingRightSideSpaces = splitTextRenderer.Length();
-                            while (splitText.end + amountOfTrailingRightSideSpaces < splitText.Size() && iText.IO.Util.TextUtil.IsWhitespace
-                                (splitText.Get(splitText.end + amountOfTrailingRightSideSpaces))) {
+                            while (splitText.GetEnd() + amountOfTrailingRightSideSpaces < splitText.Size() && iText.IO.Util.TextUtil.IsWhitespace
+                                (splitText.Get(splitText.GetEnd() + amountOfTrailingRightSideSpaces))) {
                                 fittingLengthWithTrailingRightSideSpaces++;
                                 amountOfTrailingRightSideSpaces++;
                             }
@@ -300,10 +300,10 @@ namespace iText.Layout.Renderer {
                     IList<int> breakPoints = textRenderer.GetSpecialScriptsWordBreakPoints();
                     if (breakPoints != null && breakPoints.Count > 0 && breakPoints[0] != -1) {
                         int possibleBreakPointPosition = TextRenderer.FindPossibleBreaksSplitPosition(textRenderer.GetSpecialScriptsWordBreakPoints
-                            (), fittingLengthWithTrailingRightSideSpaces + textRenderer.text.start, false);
+                            (), fittingLengthWithTrailingRightSideSpaces + textRenderer.text.GetStart(), false);
                         if (possibleBreakPointPosition > -1) {
                             splitPosition = breakPoints[possibleBreakPointPosition] - amountOfTrailingRightSideSpaces;
-                            needToSplitRendererContainingLastFullyFittingWord = splitPosition != textRenderer.text.end;
+                            needToSplitRendererContainingLastFullyFittingWord = splitPosition != textRenderer.text.GetEnd();
                             if (!needToSplitRendererContainingLastFullyFittingWord) {
                                 analyzedTextRendererIndex++;
                             }
@@ -349,7 +349,7 @@ namespace iText.Layout.Renderer {
                     ];
                 if (needToSplitRendererContainingLastFullyFittingWord) {
                     int amountOfFitOnTheFirstLayout = fittingLengthWithTrailingRightSideSpaces - amountOfTrailingRightSideSpaces
-                         + childRenderer.text.start;
+                         + childRenderer.text.GetStart();
                     if (amountOfFitOnTheFirstLayout != splitPosition) {
                         LayoutArea layoutArea = childRenderer.GetOccupiedArea().Clone();
                         layoutArea.GetBBox().IncreaseHeight(OCCUPIED_AREA_RELAYOUT_EPS).IncreaseWidth(OCCUPIED_AREA_RELAYOUT_EPS);
@@ -700,15 +700,15 @@ namespace iText.Layout.Renderer {
             while (actualTextIterator.HasNext()) {
                 GlyphLine.GlyphLinePart part = actualTextIterator.Next();
                 int amountOfCharsWithinCurrentActualTextOrGlyph = 0;
-                if (part.actualText != null) {
-                    amountOfCharsWithinCurrentActualTextOrGlyph = part.actualText.Length;
+                if (part.GetActualText() != null) {
+                    amountOfCharsWithinCurrentActualTextOrGlyph = part.GetActualText().Length;
                     int nextAmountOfChars = amountOfCharsWithinCurrentActualTextOrGlyph + amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph;
                     amountOfCharsBetweenTextStartAndActualTextChunk.Add(nextAmountOfChars);
-                    glyphLineBasedIndicesOfActualTextChunkEnds.Add(part.end);
+                    glyphLineBasedIndicesOfActualTextChunkEnds.Add(part.GetEnd());
                     amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph = nextAmountOfChars;
                 }
                 else {
-                    for (int j = part.start; j < part.end; j++) {
+                    for (int j = part.GetStart(); j < part.GetEnd(); j++) {
                         char[] chars = glyphLine.Get(j).GetChars();
                         amountOfCharsWithinCurrentActualTextOrGlyph = chars != null ? chars.Length : 0;
                         int nextAmountOfChars = amountOfCharsWithinCurrentActualTextOrGlyph + amountOfCharsBetweenTextStartAndCurrentActualTextStartOrGlyph;

@@ -73,7 +73,7 @@ namespace iText.Signatures.Sign {
             MemoryStream outputStream = new MemoryStream();
             PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
             TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
-            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient(null);
+            AdvancedTestOcspClient ocspClient = new AdvancedTestOcspClient();
             ocspClient.AddBuilderForCertIssuer((IX509Certificate)tsaChain[0], caCert, caPrivateKey);
             ocspClient.AddBuilderForCertIssuer((IX509Certificate)tsaChain[1], caCert, caPrivateKey);
             padesSigner.SetOcspClient(ocspClient);
@@ -101,7 +101,7 @@ namespace iText.Signatures.Sign {
         private SignerProperties CreateSignerProperties() {
             SignerProperties signerProperties = new SignerProperties();
             signerProperties.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName()).SetContent
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
                 ("Approval test signature.\nCreated by iText.");
             signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100)).SetSignatureAppearance(appearance);
             return signerProperties;

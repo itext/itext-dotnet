@@ -38,7 +38,6 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -978,10 +977,13 @@ namespace iText.Forms {
             // list
             PdfChoiceFormField f = new ChoiceFormFieldBuilder(pdfDoc, "combo").SetWidgetRectangle(new Rectangle(36, 556
                 , 50, 100)).SetOptions(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }).CreateList();
+            f.DisableFieldRegeneration();
             f.SetValue("9", true);
             f.SetValue("4");
             f.SetTopIndex(2);
             f.SetListSelected(new String[] { "3", "5" });
+            f.SetMultiSelect(true);
+            f.EnableFieldRegeneration();
             form.AddField(f);
             // push button
             form.AddField(new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle(36, 526
@@ -1139,7 +1141,6 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         // Acrobat removes /NeedAppearances flag when document is opened and suggests to resave the document at once.
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [LogMessage(FormsLogMessageConstants.INPUT_FIELD_DOES_NOT_FIT)]
         public virtual void AppendModeAppearance() {
             String inputFile = "appendModeAppearance.pdf";

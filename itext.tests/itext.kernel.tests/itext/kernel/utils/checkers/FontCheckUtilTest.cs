@@ -35,12 +35,12 @@ namespace iText.Kernel.Utils.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckFontAvailable() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-            NUnit.Framework.Assert.AreEqual(-1, FontCheckUtil.CheckGlyphsOfText("123", font, new _CharacterChecker_48(
+            NUnit.Framework.Assert.AreEqual(-1, FontCheckUtil.CheckGlyphsOfText("123", font, new _CharacterChecker_47(
                 )));
         }
 
-        private sealed class _CharacterChecker_48 : FontCheckUtil.CharacterChecker {
-            public _CharacterChecker_48() {
+        private sealed class _CharacterChecker_47 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_47() {
             }
 
             public bool Check(int ch, PdfFont fontToCheck) {
@@ -51,12 +51,12 @@ namespace iText.Kernel.Utils.Checkers {
         [NUnit.Framework.Test]
         public virtual void CheckFontNotAvailable() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-            NUnit.Framework.Assert.AreEqual(2, FontCheckUtil.CheckGlyphsOfText("hi⫊", font, new _CharacterChecker_60()
+            NUnit.Framework.Assert.AreEqual(2, FontCheckUtil.CheckGlyphsOfText("hi⫊", font, new _CharacterChecker_59()
                 ));
         }
 
-        private sealed class _CharacterChecker_60 : FontCheckUtil.CharacterChecker {
-            public _CharacterChecker_60() {
+        private sealed class _CharacterChecker_59 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_59() {
             }
 
             public bool Check(int ch, PdfFont fontToCheck) {
@@ -68,12 +68,12 @@ namespace iText.Kernel.Utils.Checkers {
         public virtual void CheckUnicodeMappingNotAvailable() {
             PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONTS_FOLDER + "cmr10.afm", FONTS_FOLDER
                  + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
-            int index = FontCheckUtil.CheckGlyphsOfText("h i", font, new _CharacterChecker_73());
+            int index = FontCheckUtil.CheckGlyphsOfText("h i", font, new _CharacterChecker_72());
             NUnit.Framework.Assert.AreEqual(1, index);
         }
 
-        private sealed class _CharacterChecker_73 : FontCheckUtil.CharacterChecker {
-            public _CharacterChecker_73() {
+        private sealed class _CharacterChecker_72 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_72() {
             }
 
             public bool Check(int ch, PdfFont fontToCheck) {
@@ -90,12 +90,12 @@ namespace iText.Kernel.Utils.Checkers {
         public virtual void CheckUnicodeMappingAvailable() {
             PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONTS_FOLDER + "cmr10.afm", FONTS_FOLDER
                  + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
-            int index = FontCheckUtil.CheckGlyphsOfText("hi", font, new _CharacterChecker_91());
+            int index = FontCheckUtil.CheckGlyphsOfText("hi", font, new _CharacterChecker_90());
             NUnit.Framework.Assert.AreEqual(-1, index);
         }
 
-        private sealed class _CharacterChecker_91 : FontCheckUtil.CharacterChecker {
-            public _CharacterChecker_91() {
+        private sealed class _CharacterChecker_90 : FontCheckUtil.CharacterChecker {
+            public _CharacterChecker_90() {
             }
 
             public bool Check(int ch, PdfFont fontToCheck) {

@@ -30,13 +30,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            DivRenderer divRenderer = new _DivRenderer_44(new Div());
+            DivRenderer divRenderer = new _DivRenderer_43(new Div());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(DivRenderer), divRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _DivRenderer_44 : DivRenderer {
-            public _DivRenderer_44(Div baseArg1)
+        private sealed class _DivRenderer_43 : DivRenderer {
+            public _DivRenderer_43(Div baseArg1)
                 : base(baseArg1) {
             }
         }

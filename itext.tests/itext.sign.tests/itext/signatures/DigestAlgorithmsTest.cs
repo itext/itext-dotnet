@@ -23,7 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
-using iText.Signatures.Logs;
+using iText.Kernel.Crypto;
+using iText.Kernel.Logs;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -66,20 +67,12 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => DigestAlgorithms.GetAllowedDigest(null));
         }
 
-        [LogMessage(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
+        [LogMessage(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void NotAllowedOidGetDigestTest() {
             String name = "SM3";
             String oid = "1.2.156.10197.1.401";
             NUnit.Framework.Assert.AreEqual(FIPS_MODE ? oid : name, DigestAlgorithms.GetDigest(oid));
-        }
-
-        [LogMessage(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
-        [NUnit.Framework.Test]
-        public virtual void NotAllowedNameGetAllowedDigestTest() {
-            String name = "SM3";
-            String oid = "1.2.156.10197.1.401";
-            NUnit.Framework.Assert.AreEqual(FIPS_MODE ? null : oid, DigestAlgorithms.GetAllowedDigest(name));
         }
     }
 }

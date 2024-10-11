@@ -22,9 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Utils;
-using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Event;
+using iText.Kernel.Validation;
+using iText.Kernel.Validation.Context;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfa.Logs;
@@ -53,8 +55,8 @@ namespace iText.Pdfa {
             // Expected log message that page flushing was not performed
             String outPdf = destinationFolder + "checkThatFlushingPreventedWhenAddingElementToDocument.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
@@ -83,8 +85,8 @@ namespace iText.Pdfa {
             // Expected log message that page flushing was not performed
             String outPdf = destinationFolder + "checkThatFlushingPreventedWithFalseFlushResourcesContentStreams.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
@@ -106,8 +108,8 @@ namespace iText.Pdfa {
         public virtual void CheckFlushingWhenPdfDocumentIsClosing() {
             String outPdf = destinationFolder + "checkFlushingWhenPdfDocumentIsClosing.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
@@ -129,8 +131,8 @@ namespace iText.Pdfa {
         public virtual void CheckFlushingWithTrueFlushResourcesContentStreams() {
             String outPdf = destinationFolder + "checkFlushingWithTrueFlushResourcesContentStreams.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
@@ -152,8 +154,8 @@ namespace iText.Pdfa {
         public virtual void CheckFlushingOfCheckedPage() {
             String outPdf = destinationFolder + "checkFlushingOfCheckedPage.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1A, new PdfOutputIntent("Custom"
-                , "", "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+            PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
@@ -162,7 +164,7 @@ namespace iText.Pdfa {
             int pageCount = 3;
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
-                pdfDoc.checker.CheckSinglePage(page);
+                pdfDoc.GetDiContainer().GetInstance<ValidationContainer>().Validate(new PdfPageValidationContext(page));
                 page.Flush(false);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc.GetNumberOfPages());
@@ -174,7 +176,7 @@ namespace iText.Pdfa {
 
 //\cond DO_NOT_DOCUMENT
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
-        internal class EndPageEventHandler : iText.Kernel.Events.IEventHandler {
+        internal class EndPageEventHandler : AbstractPdfDocumentEventHandler {
             private int counter = 0;
 
 //\cond DO_NOT_DOCUMENT
@@ -186,7 +188,7 @@ namespace iText.Pdfa {
                 return counter;
             }
 
-            public virtual void HandleEvent(Event @event) {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 counter++;
             }
         }

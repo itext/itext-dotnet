@@ -23,86 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using iText.IO.Font.Cmap;
 
 namespace iText.IO.Font {
     public class FontCache {
-        private static IDictionary<FontCacheKey, FontProgram> fontCache = new ConcurrentDictionary<FontCacheKey, FontProgram
-            >();
-
-        /// <summary>
-        /// Checks if the font with the given name and encoding is one
-        /// of the predefined CID fonts.
-        /// </summary>
-        /// <param name="fontName">the font name.</param>
-        /// <returns>
-        /// 
-        /// <see langword="true"/>
-        /// if it is CJKFont.
-        /// </returns>
-        [System.ObsoleteAttribute(@"in favour of CjkResourceLoader .")]
-        protected internal static bool IsPredefinedCidFont(String fontName) {
-            return CjkResourceLoader.IsPredefinedCidFont(fontName);
-        }
-
-        /// <summary>Finds a CJK font family which is compatible to the given CMap.</summary>
-        /// <param name="cmap">a name of the CMap for which compatible font is searched.</param>
-        /// <returns>a CJK font name if there's known compatible font for the given cmap name, or null otherwise.</returns>
-        [System.ObsoleteAttribute(@"in favour of CjkResourceLoader .")]
-        public static String GetCompatibleCidFont(String cmap) {
-            return CjkResourceLoader.GetCompatibleCidFont(cmap);
-        }
-
-        /// <summary>
-        /// Finds all CMap names that belong to the same registry to which a given
-        /// font belongs.
-        /// </summary>
-        /// <param name="fontName">a name of the font for which CMap's are searched.</param>
-        /// <returns>a set of CMap names corresponding to the given font.</returns>
-        [System.ObsoleteAttribute(@"in favour of CjkResourceLoader .")]
-        public static ICollection<String> GetCompatibleCmaps(String fontName) {
-            return CjkResourceLoader.GetCompatibleCmaps(fontName);
-        }
-
-        [Obsolete]
-        public static IDictionary<String, IDictionary<String, Object>> GetAllPredefinedCidFonts() {
-            return CjkResourceLoader.GetAllPredefinedCidFonts();
-        }
-
-        [Obsolete]
-        public static IDictionary<String, ICollection<String>> GetRegistryNames() {
-            return CjkResourceLoader.GetRegistryNames();
-        }
-
-        /// <summary>Parses CMap with a given name producing it in a form of cid to unicode mapping.</summary>
-        /// <param name="uniMap">a CMap name. It is expected that CMap identified by this name defines unicode to cid mapping.
-        ///     </param>
-        /// <returns>an object for convenient mapping from cid to unicode. If no CMap was found for provided name an exception is thrown.
-        ///     </returns>
-        [System.ObsoleteAttribute(@"in favour of CjkResourceLoader .")]
-        public static CMapCidUni GetCid2UniCmap(String uniMap) {
-            return CjkResourceLoader.GetCid2UniCmap(uniMap);
-        }
-
-        [Obsolete]
-        public static CMapUniCid GetUni2CidCmap(String uniMap) {
-            return CjkResourceLoader.GetUni2CidCmap(uniMap);
-        }
-
-        [Obsolete]
-        public static CMapByteCid GetByte2CidCmap(String cmap) {
-            return CjkResourceLoader.GetByte2CidCmap(cmap);
-        }
-
-        [Obsolete]
-        public static CMapCidToCodepoint GetCidToCodepointCmap(String cmap) {
-            return CjkResourceLoader.GetCidToCodepointCmap(cmap);
-        }
-
-        [Obsolete]
-        public static CMapCodepointToCid GetCodepointToCidCmap(String uniMap) {
-            return CjkResourceLoader.GetCodepointToCidCmap(uniMap);
-        }
+        private static readonly IDictionary<FontCacheKey, FontProgram> fontCache = new ConcurrentDictionary<FontCacheKey
+            , FontProgram>();
 
         /// <summary>
         /// Clears the cache by removing fonts that were added via

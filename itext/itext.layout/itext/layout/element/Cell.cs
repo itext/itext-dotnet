@@ -189,7 +189,10 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case Property.BORDER: {
+                case Property.BORDER_TOP:
+                case Property.BORDER_RIGHT:
+                case Property.BORDER_BOTTOM:
+                case Property.BORDER_LEFT: {
                     return (T1)(Object)DEFAULT_BORDER;
                 }
 

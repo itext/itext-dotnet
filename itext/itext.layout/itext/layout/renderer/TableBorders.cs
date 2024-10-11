@@ -157,9 +157,7 @@ namespace iText.Layout.Renderer {
         protected internal abstract float GetCellVerticalAddition(float[] indents);
 
         // endregion
-        [System.ObsoleteAttribute(@"Remove rowspansToDeduct parameter which is not used anymore.")]
-        protected internal abstract void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct
-            );
+        protected internal abstract void BuildBordersArrays(CellRenderer cell, int row, int col);
 
         protected internal abstract iText.Layout.Renderer.TableBorders UpdateBordersOnNewPage(bool isOriginalNonSplitRenderer
             , bool isFooterOrHeader, TableRenderer currentRenderer, TableRenderer headerRenderer, TableRenderer footerRenderer
@@ -183,7 +181,7 @@ namespace iText.Layout.Renderer {
                                 row -= numOfRowsToRemove;
                                 numOfRowsToRemove = 0;
                             }
-                            BuildBordersArrays(currentRow[col], row, col, null);
+                            BuildBordersArrays(currentRow[col], row, col);
                             hasCells = true;
                             int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
                             col += colspan - 1;

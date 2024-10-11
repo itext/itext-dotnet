@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -35,7 +36,7 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA2CheckerTest : ExtendedITextTest {
-        private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
+        private PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
 
         [NUnit.Framework.Test]
         public virtual void CheckNameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigs() {
@@ -69,7 +70,7 @@ namespace iText.Pdfa.Checker {
             catalog.Put(PdfName.OCProperties, ocProperties);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckCatalogValidEntries
                 (catalog));
-            NUnit.Framework.Assert.AreEqual(PdfAConformanceException.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.THE_AS_KEY_SHALL_NOT_APPEAR_IN_ANY_OPTIONAL_CONTENT_CONFIGURATION_DICTIONARY
                 , e.Message);
         }
 
@@ -323,7 +324,7 @@ namespace iText.Pdfa.Checker {
             pattern.SetShading(dictionary);
             Color color = new PatternColor(pattern);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                pdfA2Checker.CheckColor(color, new PdfDictionary(), true, null);
+                pdfA2Checker.CheckColor(null, color, new PdfDictionary(), true, null);
             }
             );
         }
@@ -348,7 +349,7 @@ namespace iText.Pdfa.Checker {
         public virtual void CheckSignatureTest() {
             PdfDictionary signatureDict = CreateSignatureDict();
             pdfA2Checker.CheckSignature(signatureDict);
-            NUnit.Framework.Assert.IsTrue(pdfA2Checker.ObjectIsChecked(signatureDict));
+            NUnit.Framework.Assert.IsTrue(pdfA2Checker.IsPdfObjectReadyToFlush(signatureDict));
         }
 
         [NUnit.Framework.Test]
@@ -684,7 +685,7 @@ namespace iText.Pdfa.Checker {
                 .GetPdfObject());
             PdfDictionary currentColorSpaces = new PdfDictionary();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
-                (new PdfSpecialCs.DeviceN(deviceNAsArray), currentColorSpaces, true, false));
+                (new PdfSpecialCs.DeviceN(deviceNAsArray), null, currentColorSpaces, true, false));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
                 , e.Message);
         }
@@ -708,11 +709,61 @@ namespace iText.Pdfa.Checker {
             PdfDictionary attributes = new PdfDictionary();
             deviceNAsArray.Add(attributes);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
-                (new PdfSpecialCs.DeviceN(deviceNAsArray), currentColorSpaces, true, false));
+                (new PdfSpecialCs.DeviceN(deviceNAsArray), null, currentColorSpaces, true, false));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
                 , e.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckColorSpaceWithIndexedTest() {
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.Indexed, 255, new PdfString(iText.Commons.Utils.JavaUtil.GetStringForBytes
+                ("".GetBytes(System.Text.Encoding.UTF8), System.Text.Encoding.UTF8)));
+            pdfA2Checker.CheckColorSpace(indexed, null, currentColorSpaces, true, false);
+        }
+
+        //Nothing to check, no error should be thrown.
+        [NUnit.Framework.Test]
+        public virtual void CheckColorSpaceWithUnColoredTilingTest() {
+            PdfDictionary currentColorSpaces = new PdfDictionary();
+            PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCmykCs = new PdfSpecialCs.UncoloredTilingPattern(new PdfDeviceCs.Cmyk
+                ());
+            pdfA2Checker.CheckColorSpace(uncoloredTilingCmykCs, null, currentColorSpaces, true, false);
+        }
+
+        //Nothing to check, no error should be thrown.
+        [NUnit.Framework.Test]
+        public virtual void CheckExtGateTest() {
+            PdfExtGState egs = new PdfExtGState();
+            egs.SetOverprintMode(1);
+            egs.SetFillOverPrintFlag(true);
+            egs.SetSoftMask(new PdfDictionary());
+            egs.SetStrokeOpacity(0.3f);
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas canvas = new PdfCanvas(dummyDoc.AddNewPage());
+            canvas.SetExtGState(egs);
+            CanvasGraphicsState canvasGraphicsState = new CanvasGraphicsState(canvas.GetGraphicsState());
+            pdfA2Checker.CheckExtGState(canvasGraphicsState, null);
+            NUnit.Framework.Assert.AreEqual(0.3f, canvasGraphicsState.GetStrokeOpacity(), 0.00001);
+            NUnit.Framework.Assert.IsNotNull(canvasGraphicsState.GetSoftMask());
+            NUnit.Framework.Assert.IsTrue(canvasGraphicsState.GetSoftMask().IsDictionary());
+            NUnit.Framework.Assert.IsTrue(canvasGraphicsState.GetFillOverprint());
+            NUnit.Framework.Assert.AreEqual(1, canvasGraphicsState.GetOverprintMode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckExtGateOverprintModeTest() {
+            PdfExtGState egs = new PdfExtGState();
+            egs.SetSoftMask(new PdfDictionary());
+            egs.SetStrokeOpacity(0.3f);
+            PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfCanvas canvas = new PdfCanvas(dummyDoc.AddNewPage());
+            canvas.SetExtGState(egs);
+            CanvasGraphicsState canvasGraphicsState = new CanvasGraphicsState(canvas.GetGraphicsState());
+            pdfA2Checker.CheckExtGState(canvasGraphicsState, null);
+        }
+
+        //Nothing to check, no error should be thrown.
         private static PdfDictionary CreateSignatureDict() {
             PdfDictionary signatureDict = new PdfDictionary();
             PdfDictionary reference = new PdfDictionary();

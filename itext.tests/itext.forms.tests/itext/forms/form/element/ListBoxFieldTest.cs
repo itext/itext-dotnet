@@ -91,7 +91,7 @@ namespace iText.Forms.Form.Element {
                 flattenListBoxFieldWithMultipleSelection.SetInteractive(false);
                 flattenListBoxFieldWithMultipleSelection.AddOption("option 1", false);
                 flattenListBoxFieldWithMultipleSelection.AddOption("option 2", true);
-                flattenListBoxFieldWithMultipleSelection.AddOption(option3);
+                flattenListBoxFieldWithMultipleSelection.AddOption(new SelectFieldItem("option 3", option3));
                 document.Add(flattenListBoxFieldWithMultipleSelection);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -149,8 +149,8 @@ namespace iText.Forms.Form.Element {
                 ListBoxField listBoxField = new ListBoxField("list box field with margins", 1, false);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
-                listBoxField.AddOption(option1);
-                listBoxField.AddOption(option2);
+                listBoxField.AddOption(new SelectFieldItem("option 1", option1));
+                listBoxField.AddOption(new SelectFieldItem("option 2", option2));
                 document.Add(listBoxField);
                 document.Add(new Paragraph("line break"));
                 document.Add(listBoxField);
@@ -250,8 +250,8 @@ namespace iText.Forms.Form.Element {
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
                 listBoxField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(600));
                 listBoxField.SetBorder(new SolidBorder(20));
-                listBoxField.AddOption(option1);
-                listBoxField.AddOption(option2);
+                listBoxField.AddOption(new SelectFieldItem("option 1", option1));
+                listBoxField.AddOption(new SelectFieldItem("option 2", option2));
                 document.Add(listBoxField);
                 document.Add(new Paragraph("Line break"));
                 document.Add(listBoxField.SetInteractive(true));
@@ -270,7 +270,7 @@ namespace iText.Forms.Form.Element {
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
                 listBoxField.AddOption("option 1");
                 listBoxField.AddOption("option 2");
-                listBoxField.SetProperty(FormProperty.FORM_ACCESSIBILITY_LANGUAGE, "random_lang");
+                listBoxField.GetAccessibilityProperties().SetLanguage("random_lang");
                 document.Add(listBoxField);
                 document.Add(new Paragraph("Line break"));
                 document.Add(listBoxField.SetInteractive(true));

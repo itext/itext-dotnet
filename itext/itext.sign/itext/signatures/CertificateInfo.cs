@@ -138,7 +138,7 @@ namespace iText.Signatures {
             }
 
             /// <summary>A Map with values.</summary>
-            public IDictionary<String, IList<String>> values = new Dictionary<String, IList<String>>();
+            private readonly IDictionary<String, IList<String>> values = new Dictionary<String, IList<String>>();
 
             /// <summary>Constructs an X509 name.</summary>
             /// <param name="seq">an ASN1 Sequence</param>

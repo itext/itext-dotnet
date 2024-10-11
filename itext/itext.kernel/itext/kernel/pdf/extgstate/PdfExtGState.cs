@@ -31,67 +31,67 @@ namespace iText.Kernel.Pdf.Extgstate {
     public class PdfExtGState : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_NORMAL = PdfName.Normal;
+        public static readonly PdfName BM_NORMAL = PdfName.Normal;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_MULTIPLY = PdfName.Multiply;
+        public static readonly PdfName BM_MULTIPLY = PdfName.Multiply;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_SCREEN = PdfName.Screen;
+        public static readonly PdfName BM_SCREEN = PdfName.Screen;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_OVERLAY = PdfName.Overlay;
+        public static readonly PdfName BM_OVERLAY = PdfName.Overlay;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_DARKEN = PdfName.Darken;
+        public static readonly PdfName BM_DARKEN = PdfName.Darken;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_LIGHTEN = PdfName.Lighten;
+        public static readonly PdfName BM_LIGHTEN = PdfName.Lighten;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_COLOR_DODGE = PdfName.ColorDodge;
+        public static readonly PdfName BM_COLOR_DODGE = PdfName.ColorDodge;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_COLOR_BURN = PdfName.ColorBurn;
+        public static readonly PdfName BM_COLOR_BURN = PdfName.ColorBurn;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_HARD_LIGHT = PdfName.HardLight;
+        public static readonly PdfName BM_HARD_LIGHT = PdfName.HardLight;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_SOFT_LIGHT = PdfName.SoftLight;
+        public static readonly PdfName BM_SOFT_LIGHT = PdfName.SoftLight;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_DIFFERENCE = PdfName.Difference;
+        public static readonly PdfName BM_DIFFERENCE = PdfName.Difference;
 
         /// <summary>Standard separable blend mode.</summary>
         /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
-        public static PdfName BM_EXCLUSION = PdfName.Exclusion;
+        public static readonly PdfName BM_EXCLUSION = PdfName.Exclusion;
 
         /// <summary>Standard nonseparable blend mode.</summary>
         /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
-        public static PdfName BM_HUE = PdfName.Hue;
+        public static readonly PdfName BM_HUE = PdfName.Hue;
 
         /// <summary>Standard nonseparable blend mode.</summary>
         /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
-        public static PdfName BM_SATURATION = PdfName.Saturation;
+        public static readonly PdfName BM_SATURATION = PdfName.Saturation;
 
         /// <summary>Standard nonseparable blend mode.</summary>
         /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
-        public static PdfName BM_COLOR = PdfName.Color;
+        public static readonly PdfName BM_COLOR = PdfName.Color;
 
         /// <summary>Standard nonseparable blend mode.</summary>
         /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
-        public static PdfName BM_LUMINOSITY = PdfName.Luminosity;
+        public static readonly PdfName BM_LUMINOSITY = PdfName.Luminosity;
 
         /// <summary>
         /// Create instance of graphics state parameter dictionary wrapper

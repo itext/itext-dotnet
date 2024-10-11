@@ -29,6 +29,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf.Tagging {
     /// <summary>A wrapper for structure element dictionaries (ISO-32000 14.7.2 "Structure Hierarchy").</summary>
@@ -593,7 +594,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             PdfDocument doc = GetDocument();
             if (doc != null) {
-                doc.CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
+                doc.CheckIsoConformance(new TagStructElementValidationContext(GetPdfObject()));
             }
             base.Flush();
         }

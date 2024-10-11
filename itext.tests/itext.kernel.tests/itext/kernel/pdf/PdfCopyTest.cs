@@ -87,7 +87,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
             PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copying1_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary trailer = pdfDocument.GetTrailer();
             PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
             PdfName b = info.GetAsName(new PdfName("a"));
@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
             PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copying2_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 0; i < 5; i++) {
                 byte[] bytes = pdfDocument.GetPage(i + 1).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + (i * 2 + 1).ToString() + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
@@ -142,7 +142,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "copying3_1.pdf");
             pdfDoc = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary dic0 = pdfDoc.GetPage(1).GetPdfObject().GetAsDictionary(new PdfName("HelloWorld"));
             NUnit.Framework.Assert.AreEqual(4, dic0.GetIndirectReference().GetObjNumber());
             NUnit.Framework.Assert.AreEqual(0, dic0.GetIndirectReference().GetGenNumber());

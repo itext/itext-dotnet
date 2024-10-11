@@ -30,6 +30,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
@@ -54,8 +55,8 @@ namespace iText.Signatures.Testutils.Client {
             return 4096;
         }
 
-        public virtual IDigest GetMessageDigest() {
-            return (IDigest)SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
+        public virtual IMessageDigest GetMessageDigest() {
+            return SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
         }
 
         public virtual byte[] GetTimeStampToken(byte[] imprint) {

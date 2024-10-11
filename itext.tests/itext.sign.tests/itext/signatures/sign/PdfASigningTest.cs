@@ -26,6 +26,9 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms;
+using iText.Forms.Fields.Properties;
+using iText.Forms.Form.Element;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -81,7 +84,7 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(x, y, w, h);
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
-                , rect, false, false, PdfSigner.NOT_CERTIFIED, 12f);
+                , rect, false, false, AccessPermissions.UNSPECIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
@@ -96,8 +99,9 @@ namespace iText.Signatures.Sign {
             String @out = destinationFolder + "signedPdfA2Document.pdf";
             PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(src));
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(@out), new StampingProperties());
-            signer.SetFieldLockDict(new PdfSigFieldLock());
-            signer.SetCertificationLevel(PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
+            SignerProperties signerProperties = new SignerProperties().SetFieldLockDict(new PdfSigFieldLock()).SetCertificationLevel
+                (AccessPermissions.NO_CHANGES_PERMITTED);
+            signer.SetSignerProperties(signerProperties);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
                 );
@@ -113,7 +117,7 @@ namespace iText.Signatures.Sign {
             String fieldName = "Signature1";
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => Sign(srcFile, fieldName
                 , outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CMS, "Test 1", "TestCity", rect
-                , false, true, PdfSigner.NOT_CERTIFIED, 12f));
+                , false, true, AccessPermissions.UNSPECIFIED, 12f));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.SIGNATURE_SHALL_CONFORM_TO_ONE_OF_THE_PADES_PROFILE
                 , e.Message);
         }
@@ -126,7 +130,7 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(30, 200, 200, 100);
             String fieldName = "Signature1";
             Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
-                , "TestCity", rect, false, true, PdfSigner.NOT_CERTIFIED, 12f);
+                , "TestCity", rect, false, true, AccessPermissions.UNSPECIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_"
                 , GetTestMap(rect)));
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
@@ -140,8 +144,9 @@ namespace iText.Signatures.Sign {
             String @out = destinationFolder + "signedPdfADocument2.pdf";
             PdfReader reader = new PdfReader(FileUtil.GetInputStreamForFile(src));
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(@out), new StampingProperties());
-            signer.SetFieldLockDict(new PdfSigFieldLock());
-            signer.SetCertificationLevel(PdfSigner.NOT_CERTIFIED);
+            SignerProperties signerProperties = new SignerProperties().SetFieldLockDict(new PdfSigFieldLock()).SetCertificationLevel
+                (AccessPermissions.UNSPECIFIED);
+            signer.SetSignerProperties(signerProperties);
             int x = 36;
             int y = 548;
             int w = 200;
@@ -149,8 +154,11 @@ namespace iText.Signatures.Sign {
             Rectangle rect = new Rectangle(x, y, w, h);
             PdfFont font = PdfFontFactory.CreateFont("Helvetica", "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
-            signer.SetPageRect(rect).GetSignatureAppearance().SetReason("pdfA test").SetLocation("TestCity").SetLayer2Font
-                (font).SetReuseAppearance(false);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText()).SetFont(font);
+            signerProperties.SetPageRect(rect).SetReason("pdfA test").SetLocation("TestCity").SetSignatureAppearance(appearance
+                );
+            signer.GetSignatureField().SetReuseAppearance(false);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => signer.SignDetached(new 
                 BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES));
@@ -162,32 +170,36 @@ namespace iText.Signatures.Sign {
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
              rectangleForNewField, bool setReuseAppearance, bool isAppendMode) {
             Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField, setReuseAppearance
-                , isAppendMode, PdfSigner.NOT_CERTIFIED, null);
+                , isAppendMode, AccessPermissions.UNSPECIFIED, null);
         }
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
              pk, String digestAlgorithm, PdfSigner.CryptoStandard subfilter, String reason, String location, Rectangle
-             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, int certificationLevel, float? fontSize
-            ) {
+             rectangleForNewField, bool setReuseAppearance, bool isAppendMode, AccessPermissions certificationLevel
+            , float? fontSize) {
             PdfReader reader = new PdfReader(src);
             StampingProperties properties = new StampingProperties();
             if (isAppendMode) {
                 properties.UseAppendMode();
             }
             PdfSigner signer = new PdfSigner(reader, FileUtil.GetFileOutputStream(dest), properties);
-            signer.SetCertificationLevel(certificationLevel);
+            SignerProperties signerProperties = new SignerProperties().SetCertificationLevel(certificationLevel).SetFieldName
+                (name);
+            signer.SetSignerProperties(signerProperties);
             PdfFont font = PdfFontFactory.CreateFont(FONT, "WinAnsi", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                 );
-            signer.SetFieldName(name);
             // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
-                ).SetLayer2Font(font).SetReuseAppearance(setReuseAppearance);
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
+                (new SignedAppearanceText());
+            appearance.SetFont(font);
+            signerProperties.SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);
             if (rectangleForNewField != null) {
-                signer.SetPageRect(rectangleForNewField);
+                signerProperties.SetPageRect(rectangleForNewField);
             }
             if (fontSize != null) {
-                appearance.SetLayer2FontSize((float)fontSize);
+                appearance.SetFontSize((float)fontSize);
             }
+            signer.GetSignatureField().SetReuseAppearance(setReuseAppearance);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);

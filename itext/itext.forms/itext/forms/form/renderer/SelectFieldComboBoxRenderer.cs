@@ -94,7 +94,7 @@ namespace iText.Forms.Form.Renderer {
             PdfPage page = doc.GetPage(occupiedArea.GetPageNumber());
             PdfFont font = GetResolvedFont(doc);
             ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(doc, name).SetWidgetRectangle(area).SetFont(font
-                ).SetGenericConformanceLevel(GetGenericConformanceLevel(doc));
+                ).SetConformance(GetConformance(doc));
             ApplyMargins(area, false);
             IDictionary<int, Object> properties = FormFieldRendererUtil.RemoveProperties(this.modelElement);
             modelElement.SetProperty(Property.FONT_PROVIDER, this.GetProperty<FontProvider>(Property.FONT_PROVIDER));
@@ -152,7 +152,7 @@ namespace iText.Forms.Form.Renderer {
 
         private IRenderer CreateFlatRenderer(bool addAllOptionsToChildren) {
             AbstractSelectField selectField = (AbstractSelectField)modelElement;
-            IList<SelectFieldItem> options = selectField.GetItems();
+            IList<SelectFieldItem> options = selectField.GetOptions();
             Div pseudoContainer = new Div();
             foreach (SelectFieldItem option in options) {
                 pseudoContainer.Add(option.GetElement());
@@ -253,7 +253,7 @@ namespace iText.Forms.Form.Renderer {
             IPropertyContainer propertyContainer = originalOptionRenderer.GetModelElement();
             if (propertyContainer is IAccessibleElement) {
                 String lang = ((IAccessibleElement)propertyContainer).GetAccessibilityProperties().GetLanguage();
-                AccessibilityProperties properties = ((IAccessibleElement)optionFlatElement).GetAccessibilityProperties();
+                AccessibilityProperties properties = optionFlatElement.GetAccessibilityProperties();
                 if (properties.GetLanguage() == null) {
                     properties.SetLanguage(lang);
                 }

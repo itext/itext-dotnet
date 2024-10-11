@@ -72,7 +72,7 @@ namespace iText.Layout {
                 PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 Paragraph paragraph = new Paragraph("Hello PdfUA2").SetFont(font);
-                byte[] byteMetaData = pdfDocument.GetXmpMetadata();
+                byte[] byteMetaData = pdfDocument.GetXmpMetadataBytes();
                 documentMetaData = iText.Commons.Utils.JavaUtil.GetStringForBytes(byteMetaData);
                 document.Add(paragraph);
             }

@@ -369,18 +369,6 @@ namespace iText.Kernel.Pdf.Tagging {
             return GetParentTreeHandler().FindMcrByMcid(pageDict, mcid);
         }
 
-        public virtual PdfMcr FindMcrByMcid(PdfDocument document, int mcid) {
-            int amountOfPages = document.GetNumberOfPages();
-            for (int i = 1; i <= amountOfPages; ++i) {
-                PdfPage page = document.GetPage(i);
-                PdfMcr mcr = FindMcrByMcid(page.GetPdfObject(), mcid);
-                if (mcr != null) {
-                    return mcr;
-                }
-            }
-            return null;
-        }
-
         public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex) {
             return GetParentTreeHandler().FindObjRefByStructParentIndex(pageDict, structParentIndex);
         }
@@ -599,8 +587,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private static void FlushAllKids(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot elem) {
-            TagTreeIterator iterator = new TagTreeIterator(elem, new TagTreeIteratorAvoidDuplicatesApprover(), TagTreeIterator.TreeTraversalOrder
-                .POST_ORDER);
+            TagTreeIterator iterator = new TagTreeIterator(elem, TagTreeIterator.TreeTraversalOrder.POST_ORDER);
             iterator.AddHandler(new TagTreeIteratorFlusher());
             iterator.Traverse();
         }

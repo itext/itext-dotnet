@@ -67,12 +67,13 @@ namespace iText.Forms.Form.Renderer.Checkboximpl {
             if (!checkBoxRenderer.IsBoxChecked()) {
                 return;
             }
-            float borderWidth = CheckBoxRenderer.DEFAULT_BORDER_WIDTH;
-            Border border = checkBoxRenderer.GetProperty<Border>(Property.BORDER);
-            if (border != null) {
-                borderWidth = border.GetWidth();
-                rectangle.ApplyMargins(borderWidth, borderWidth, borderWidth, borderWidth, true);
-            }
+            Border borderTop = checkBoxRenderer.GetProperty<Border>(Property.BORDER_TOP);
+            Border borderRight = checkBoxRenderer.GetProperty<Border>(Property.BORDER_RIGHT);
+            Border borderBottom = checkBoxRenderer.GetProperty<Border>(Property.BORDER_BOTTOM);
+            Border borderLeft = checkBoxRenderer.GetProperty<Border>(Property.BORDER_LEFT);
+            rectangle.ApplyMargins(borderTop == null ? 0 : borderTop.GetWidth(), borderRight == null ? 0 : borderRight
+                .GetWidth(), borderBottom == null ? 0 : borderBottom.GetWidth(), borderLeft == null ? 0 : borderLeft.GetWidth
+                (), true);
             PdfCanvas canvas = drawContext.GetCanvas();
             canvas.SaveState();
             canvas.SetFillColor(ColorConstants.BLACK);
@@ -81,16 +82,38 @@ namespace iText.Forms.Form.Renderer.Checkboximpl {
             canvas.ConcatMatrix(1, 0, 0, 1, rectangle.GetLeft(), rectangle.GetBottom());
             CheckBoxType checkBoxType = checkBoxRenderer.GetCheckBoxType();
             if (checkBoxType == CheckBoxType.CROSS || checkBoxType == null) {
-                float customBorderWidth = border == null ? 1 : borderWidth;
+                float customBorderWidth = RetrieveBorderWidth(1, borderTop, borderRight, borderBottom, borderLeft);
                 DrawingUtil.DrawCross(canvas, rectangle.GetWidth(), rectangle.GetHeight(), customBorderWidth);
             }
             else {
                 String text = ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(checkBoxType);
                 PdfFont fontContainingSymbols = LoadFontContainingSymbols();
-                float fontSize = CalculateFontSize(checkBoxRenderer, fontContainingSymbols, text, rectangle, borderWidth);
+                float fontSize = CalculateFontSize(checkBoxRenderer, fontContainingSymbols, text, rectangle, RetrieveBorderWidth
+                    (CheckBoxRenderer.DEFAULT_BORDER_WIDTH, borderTop, borderRight, borderBottom, borderLeft));
                 DrawZapfdingbatsIcon(fontContainingSymbols, text, fontSize, rectangle, canvas);
             }
             canvas.RestoreState();
+        }
+
+        private static float RetrieveBorderWidth(float defaultWidth, Border borderTop, Border borderRight, Border 
+            borderBottom, Border borderLeft) {
+            if (borderTop == null && borderRight == null && borderBottom == null && borderLeft == null) {
+                return defaultWidth;
+            }
+            float borderWidth = 0;
+            if (borderTop != null) {
+                borderWidth = Math.Max(borderWidth, borderTop.GetWidth());
+            }
+            if (borderRight != null) {
+                borderWidth = Math.Max(borderWidth, borderRight.GetWidth());
+            }
+            if (borderBottom != null) {
+                borderWidth = Math.Max(borderWidth, borderBottom.GetWidth());
+            }
+            if (borderLeft != null) {
+                borderWidth = Math.Max(borderWidth, borderLeft.GetWidth());
+            }
+            return borderWidth;
         }
 
         private PdfFont LoadFontContainingSymbols() {

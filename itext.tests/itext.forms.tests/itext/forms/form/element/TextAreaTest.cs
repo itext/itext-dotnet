@@ -92,7 +92,7 @@ namespace iText.Forms.Form.Element {
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten\ntext area\nwith height");
                 flattenTextArea.SetProperty(Property.HEIGHT, new UnitValue(UnitValue.POINT, 100));
-                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenTextArea.SetBorder(new SolidBorder(2f));
                 document.Add(flattenTextArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -107,7 +107,7 @@ namespace iText.Forms.Form.Element {
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten\ntext area\nwith height");
                 flattenTextArea.SetProperty(Property.MIN_HEIGHT, new UnitValue(UnitValue.POINT, 100));
-                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenTextArea.SetBorder(new SolidBorder(2f));
                 document.Add(flattenTextArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -163,7 +163,7 @@ namespace iText.Forms.Form.Element {
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "some text to not\nbe able to fit in on the page\nmore text just text\nreally big height"
                     );
                 textArea.SetHeight(50);
-                textArea.SetProperty(Property.BORDER, new SolidBorder(2f));
+                textArea.SetBorder(new SolidBorder(2f));
                 document.Add(textArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -179,7 +179,7 @@ namespace iText.Forms.Form.Element {
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
                     );
-                textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                textArea.SetBorder(new SolidBorder(1f));
                 textArea.SetFontSize(0);
                 textArea.SetHeight(75);
                 document.Add(textArea);
@@ -188,7 +188,7 @@ namespace iText.Forms.Form.Element {
                 flattenTextArea.SetInteractive(false);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
                     );
-                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                flattenTextArea.SetBorder(new SolidBorder(1f));
                 flattenTextArea.SetFontSize(0);
                 flattenTextArea.SetHeight(75);
                 document.Add(flattenTextArea);
@@ -205,7 +205,7 @@ namespace iText.Forms.Form.Element {
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
                     );
-                textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                textArea.SetBorder(new SolidBorder(1f));
                 textArea.SetFontSize(0);
                 textArea.SetHeight(75);
                 document.Add(textArea);
@@ -213,7 +213,7 @@ namespace iText.Forms.Form.Element {
                 flattenTextArea.SetInteractive(false);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
                     );
-                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                flattenTextArea.SetBorder(new SolidBorder(1f));
                 flattenTextArea.SetFontSize(0);
                 flattenTextArea.SetHeight(75);
                 document.Add(flattenTextArea);
@@ -230,14 +230,14 @@ namespace iText.Forms.Form.Element {
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not " + "\nbe approximated\nbased on the content\nbecause height is not set"
                     );
-                textArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                textArea.SetBorder(new SolidBorder(1f));
                 textArea.SetFontSize(0);
                 document.Add(textArea);
                 TextArea flattenTextArea = new TextArea("text area");
                 flattenTextArea.SetInteractive(false);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not " + 
                     "\nbe approximated\nbased on the content\nbecause height is not set");
-                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(1f));
+                flattenTextArea.SetBorder(new SolidBorder(1f));
                 flattenTextArea.SetFontSize(0);
                 document.Add(flattenTextArea);
             }
@@ -253,7 +253,7 @@ namespace iText.Forms.Form.Element {
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Is border visible?\nAnd after clicking on the field?\nIt should be by the way"
                     );
-                textArea.SetProperty(Property.BORDER, new SolidBorder(0.5f));
+                textArea.SetBorder(new SolidBorder(0.5f));
                 document.Add(textArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
@@ -307,7 +307,7 @@ namespace iText.Forms.Form.Element {
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten\ntext area\nwith height");
                 flattenTextArea.SetProperty(Property.MAX_HEIGHT, new UnitValue(UnitValue.POINT, 28));
-                flattenTextArea.SetProperty(Property.BORDER, new SolidBorder(2f));
+                flattenTextArea.SetBorder(new SolidBorder(2f));
                 document.Add(flattenTextArea);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));

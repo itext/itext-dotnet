@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
@@ -72,7 +73,7 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual(expectedOid, pkcs7.GetDigestAlgorithmOid());
             NUnit.Framework.Assert.AreEqual(chain[0], pkcs7.GetSigningCertificate());
             NUnit.Framework.Assert.AreEqual(chain, pkcs7.GetCertificates());
-            NUnit.Framework.Assert.AreEqual(SecurityIDs.ID_RSA_WITH_SHA256, pkcs7.GetSignatureMechanismOid());
+            NUnit.Framework.Assert.AreEqual(OID.RSA_WITH_SHA256, pkcs7.GetSignatureMechanismOid());
         }
 
         [NUnit.Framework.Test]
@@ -284,18 +285,6 @@ namespace iText.Signatures {
                 );
             NUnit.Framework.Assert.AreEqual("SHA256withRSA", pkcs7.GetSignatureMechanismName());
             NUnit.Framework.Assert.AreEqual(SerializedAsString(bytes), SerializedAsString(cmpBytes));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void VerifyEd448SignatureTest() {
-            // SHAKE256 is not available in BCFIPS
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf"
-                    ));
-            }
-            else {
-                VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
-            }
         }
 
         [NUnit.Framework.Test]

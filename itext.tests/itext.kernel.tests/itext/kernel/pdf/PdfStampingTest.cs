@@ -24,14 +24,13 @@ using System;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Events;
 using iText.Kernel.Font;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Utils;
-using iText.Kernel.XMP;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -75,13 +74,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "stamping1_2.pdf");
             PdfDocument document = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary trailer = document.GetTrailer();
             PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
             PdfString creator = info.GetAsString(PdfName.Creator);
@@ -117,13 +116,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + "stamping2_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%page 1\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
@@ -155,13 +154,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%page 1\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
@@ -192,13 +191,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i = 1; i < pdfDocument.GetNumberOfPages(); i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
@@ -233,13 +232,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i = 1; i < pdfDocument.GetNumberOfPages(); i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
@@ -270,13 +269,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%page 1\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
@@ -306,13 +305,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%page 1\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
@@ -345,13 +344,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -385,13 +384,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -425,13 +424,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -465,13 +464,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -508,13 +507,13 @@ namespace iText.Kernel.Pdf {
             PdfDictionary root = pdfPage.GetPdfObject().GetAsDictionary(PdfName.Parent);
             NUnit.Framework.Assert.AreEqual(newPageCount, root.GetAsArray(PdfName.Kids).Size(), "PdfPages kids count");
             NUnit.Framework.Assert.AreEqual(newPageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -555,13 +554,13 @@ namespace iText.Kernel.Pdf {
             PdfArray rootKids = pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject().GetAsArray(PdfName.Kids);
             NUnit.Framework.Assert.AreEqual(2, rootKids.Size(), "Page root kids count");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -594,7 +593,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -689,16 +688,15 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
-                );
+            NUnit.Framework.Assert.IsNotNull(pdfDoc3.GetXmpMetadata(), "XmpMetadata not found");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -732,16 +730,15 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
-                );
+            NUnit.Framework.Assert.IsNotNull(pdfDoc3.GetXmpMetadata(), "XmpMetadata not found");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -770,13 +767,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             PdfDictionary trailer = pdfDocument.GetTrailer();
             PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
             PdfString creator = info.GetAsString(PdfName.Creator);
@@ -812,13 +809,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%page 1\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
@@ -848,13 +845,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
             NUnit.Framework.Assert.AreEqual("%page 1\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
@@ -885,13 +882,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i = 1; i < pdfDocument.GetNumberOfPages(); i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
@@ -927,13 +924,13 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i = 1; i < pdfDocument.GetNumberOfPages(); i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
@@ -966,13 +963,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -1007,13 +1004,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -1048,13 +1045,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -1088,13 +1085,13 @@ namespace iText.Kernel.Pdf {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(false, reader3.HasFixedXref(), "Fixed");
+            NUnit.Framework.Assert.IsFalse(reader3.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader3.HasFixedXref(), "Fixed");
             VerifyPdfPagesCount(pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject());
             pdfDoc3.Close();
             PdfReader reader = CompareTool.CreateOutputReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
             for (int i = 1; i <= pageCount; i++) {
                 byte[] bytes = pdfDocument.GetPage(i).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i + "\n", iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes)
@@ -1242,8 +1239,8 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal class WatermarkEventHandler : iText.Kernel.Events.IEventHandler {
-            public virtual void HandleEvent(Event @event) {
+        internal class WatermarkEventHandler : AbstractPdfDocumentEventHandler {
+            protected internal override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 PdfDocumentEvent pdfEvent = (PdfDocumentEvent)@event;
                 PdfPage page = pdfEvent.GetPage();
                 PdfCanvas pdfCanvas = new PdfCanvas(page);

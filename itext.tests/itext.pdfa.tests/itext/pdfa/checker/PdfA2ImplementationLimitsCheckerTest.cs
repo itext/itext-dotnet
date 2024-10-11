@@ -35,7 +35,7 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            pdfA2Checker = new PdfA2Checker(PdfAConformanceLevel.PDF_A_2B);
+            pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
             pdfA2Checker.SetFullCheckMode(true);
         }
 

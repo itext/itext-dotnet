@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
 
@@ -335,16 +336,16 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Adds
-        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfShading"/>
+        /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
         /// object to the resources.
         /// </summary>
         /// <param name="shading">
         /// the
-        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfShading"/>
+        /// <see cref="iText.Kernel.Pdf.Colorspace.Shading.AbstractPdfShading"/>
         /// to add.
         /// </param>
         /// <returns>added shading resource name.</returns>
-        public virtual PdfName AddShading(PdfShading shading) {
+        public virtual PdfName AddShading(AbstractPdfShading shading) {
             return AddResource(shading, shadingNamesGen);
         }
 
@@ -363,9 +364,9 @@ namespace iText.Kernel.Pdf {
             return AddResource(shading, shadingNamesGen);
         }
 
-        public virtual PdfShading GetShading(PdfName name) {
+        public virtual AbstractPdfShading GetShading(PdfName name) {
             PdfObject shading = GetResourceObject(PdfName.Shading, name);
-            return shading is PdfDictionary ? PdfShading.MakeShading((PdfDictionary)shading) : null;
+            return shading is PdfDictionary ? AbstractPdfShading.MakeShading((PdfDictionary)shading) : null;
         }
 
         protected internal virtual bool IsReadOnly() {

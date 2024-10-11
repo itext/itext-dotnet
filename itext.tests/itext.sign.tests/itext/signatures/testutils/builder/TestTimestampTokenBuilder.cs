@@ -30,6 +30,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Utils;
+using iText.Kernel.Crypto;
 
 namespace iText.Signatures.Testutils.Builder {
     public class TestTimestampTokenBuilder {

@@ -55,8 +55,8 @@ namespace iText.Svg.Renderers.Path.Impl {
             }
             this.coordinates = new String[] { inputCoordinates[0], inputCoordinates[1] };
             if (IsRelative()) {
-                this.coordinates = copier.MakeCoordinatesAbsolute(coordinates, new double[] { startPoint.x, startPoint.y }
-                    );
+                this.coordinates = copier.MakeCoordinatesAbsolute(coordinates, new double[] { startPoint.GetX(), startPoint
+                    .GetY() });
             }
         }
     }

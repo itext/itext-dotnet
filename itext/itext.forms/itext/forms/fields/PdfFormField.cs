@@ -270,9 +270,8 @@ namespace iText.Forms.Fields {
                 }
             }
             field.MakeIndirect(document);
-            if (document != null && document.GetReader() != null && document.GetReader().GetPdfAConformanceLevel() != 
-                null) {
-                field.pdfConformanceLevel = document.GetReader().GetPdfAConformanceLevel();
+            if (document != null) {
+                field.pdfConformance = document.GetConformance();
             }
             return field;
         }
@@ -1190,7 +1189,7 @@ namespace iText.Forms.Fields {
                 checkType = CheckBoxType.CROSS;
             }
             this.checkType = new NullableContainer<CheckBoxType>(checkType);
-            if (GetPdfConformanceLevel() != null) {
+            if (GetPdfConformance() != null && GetPdfConformance().IsPdfAOrUa()) {
                 return this;
             }
             try {
@@ -1427,7 +1426,7 @@ namespace iText.Forms.Fields {
         private static PdfString GenerateDefaultAppearance(PdfName font, float fontSize, Color textColor) {
             System.Diagnostics.Debug.Assert(font != null);
             MemoryStream output = new MemoryStream();
-            PdfOutputStream pdfStream = new PdfOutputStream(new OutputStream<Stream>(output));
+            PdfOutputStream pdfStream = new PdfOutputStream(new HighPrecisionOutputStream<Stream>(output));
             byte[] g = new byte[] { (byte)'g' };
             byte[] rg = new byte[] { (byte)'r', (byte)'g' };
             byte[] k = new byte[] { (byte)'k' };

@@ -22,17 +22,36 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Pdfa.Checker;
 
 namespace iText.Pdfa {
-//\cond DO_NOT_DOCUMENT
-    internal class PdfAPageFactory : IPdfPageFactory {
-        public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
-            return new PdfAPage(pdfObject);
+    /// <summary>The class implements PDF page factory which is used for creating correct PDF/A documents.</summary>
+    public class PdfAPageFactory : IPdfPageFactory {
+        private readonly PdfAChecker checker;
+
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="PdfAPageFactory"/>
+        /// instance based on
+        /// <see cref="iText.Pdfa.Checker.PdfAChecker"/>.
+        /// </summary>
+        /// <param name="checker">the PDF/A checker</param>
+        public PdfAPageFactory(PdfAChecker checker) {
+            this.checker = checker;
         }
 
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
+            return new PdfAPage(pdfObject, checker);
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
         public virtual PdfPage CreatePdfPage(PdfDocument pdfDocument, PageSize pageSize) {
-            return new PdfAPage(pdfDocument, pageSize);
+            return new PdfAPage(pdfDocument, pageSize, checker);
         }
     }
-//\endcond
 }

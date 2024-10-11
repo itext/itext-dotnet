@@ -101,6 +101,14 @@ namespace iText.Forms.Form.Element {
                     return (T1)(Object)20;
                 }
 
+                case FormProperty.TEXT_FIELD_COMB_FLAG: {
+                    return (T1)(Object)false;
+                }
+
+                case FormProperty.TEXT_FIELD_MAX_LEN: {
+                    return (T1)(Object)0;
+                }
+
                 default: {
                     return base.GetDefaultProperty<T1>(property);
                 }
@@ -117,17 +125,54 @@ namespace iText.Forms.Form.Element {
         /// <param name="rotation">
         /// new rotation value, counterclockwise. Must be a multiple of 90 degrees.
         /// It has sense only in interactive mode, see
-        /// <see cref="FormField{T}.SetInteractive(bool)"/>.
+        /// <see cref="FormField{T}.SetInteractive(bool)"/>
         /// </param>
         /// <returns>
         /// the edited
-        /// <see cref="InputField"/>.
+        /// <see cref="InputField"/>
         /// </returns>
         public virtual iText.Forms.Form.Element.InputField SetRotation(int rotation) {
             if (rotation % 90 != 0) {
                 throw new ArgumentException(FormsExceptionMessageConstant.INVALID_ROTATION_VALUE);
             }
             this.rotation = rotation;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <c>Comb</c>
+        /// flag for the text field.
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <c>Comb</c>
+        /// flag for the text field. Meaningful only if the MaxLen entry is present in the text field
+        /// dictionary and if the Multiline, Password and FileSelect flags are clear.
+        /// <para />
+        /// If true, the field is automatically divided into as many equally spaced positions, or combs,
+        /// as the value of MaxLen, and the text is laid out into those combs.
+        /// </remarks>
+        /// <param name="isComb">boolean value specifying whether to enable combing</param>
+        /// <returns>
+        /// this
+        /// <see cref="InputField"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Forms.Form.Element.InputField SetComb(bool isComb) {
+            SetProperty(FormProperty.TEXT_FIELD_COMB_FLAG, isComb);
+            return this;
+        }
+
+        /// <summary>Sets the maximum length of the field's text, in characters.</summary>
+        /// <param name="maxLen">the current maximum text length</param>
+        /// <returns>
+        /// this
+        /// <see cref="InputField"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Forms.Form.Element.InputField SetMaxLen(int maxLen) {
+            SetProperty(FormProperty.TEXT_FIELD_MAX_LEN, maxLen);
             return this;
         }
 

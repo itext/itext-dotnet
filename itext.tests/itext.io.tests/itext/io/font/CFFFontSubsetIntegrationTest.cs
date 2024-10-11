@@ -104,7 +104,7 @@ namespace iText.IO.Font {
             CFFFont result = new CFFFont(cffSubsetBytes);
             int expectedCharsetLength = 255;
             // skip over the format ID (1 byte) and the first SID (2 bytes)
-            result.Seek(result.fonts[0].charsetOffset + 3);
+            result.Seek(result.fonts[0].GetCharsetOffset() + 3);
             NUnit.Framework.Assert.AreEqual(expectedCharsetLength - 2, result.GetCard16());
         }
 

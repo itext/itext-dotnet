@@ -128,29 +128,29 @@ namespace iText.IO.Codec {
 
         /// <summary>Inner class that holds information about a JBIG2 segment.</summary>
         public class Jbig2Segment : IComparable<Jbig2SegmentReader.Jbig2Segment> {
-            public readonly int segmentNumber;
+            private readonly int segmentNumber;
 
-            public long dataLength = -1;
+            private long dataLength = -1;
 
-            public int page = -1;
+            private int page = -1;
 
-            public int[] referredToSegmentNumbers = null;
+            private int[] referredToSegmentNumbers = null;
 
-            public bool[] segmentRetentionFlags = null;
+            private bool[] segmentRetentionFlags = null;
 
-            public int type = -1;
+            private int type = -1;
 
-            public bool deferredNonRetain = false;
+            private bool deferredNonRetain = false;
 
-            public int countOfReferredToSegments = -1;
+            private int countOfReferredToSegments = -1;
 
-            public byte[] data = null;
+            private byte[] data = null;
 
-            public byte[] headerData = null;
+            private byte[] headerData = null;
 
-            public bool page_association_size = false;
+            private bool pageAssociationSize = false;
 
-            public int page_association_offset = -1;
+            private int pageAssociationOffset = -1;
 
             public Jbig2Segment(int segment_number) {
                 this.segmentNumber = segment_number;
@@ -159,24 +159,196 @@ namespace iText.IO.Codec {
             public virtual int CompareTo(Jbig2SegmentReader.Jbig2Segment s) {
                 return this.segmentNumber - s.segmentNumber;
             }
+
+            /// <summary>Retrieves the data length of a JBig2Segment object.</summary>
+            /// <returns>data length value</returns>
+            public virtual long GetDataLength() {
+                return dataLength;
+            }
+
+            /// <summary>Sets the data length of a JBig2Segment object.</summary>
+            /// <param name="dataLength">data length value</param>
+            public virtual void SetDataLength(long dataLength) {
+                this.dataLength = dataLength;
+            }
+
+            /// <summary>Retrieves the page number of a JBig2Segment object.</summary>
+            /// <returns>page number</returns>
+            public virtual int GetPage() {
+                return page;
+            }
+
+            /// <summary>Sets the page number of a JBig2Segment object.</summary>
+            /// <param name="page">page number</param>
+            public virtual void SetPage(int page) {
+                this.page = page;
+            }
+
+            /// <summary>Retrieves the referred-to segment numbers of a JBig2Segment object.</summary>
+            /// <returns>Every referred-to segment number</returns>
+            public virtual int[] GetReferredToSegmentNumbers() {
+                return referredToSegmentNumbers;
+            }
+
+            /// <summary>Sets the referred-to segment numbers of a JBig2Segment object.</summary>
+            /// <param name="referredToSegmentNumbers">Referred-to segment numbers</param>
+            public virtual void SetReferredToSegmentNumbers(int[] referredToSegmentNumbers) {
+                this.referredToSegmentNumbers = referredToSegmentNumbers;
+            }
+
+            /// <summary>Retrieves segment retention flags of a JBig2Segment object.</summary>
+            /// <returns>Every segment retention flag value</returns>
+            public virtual bool[] GetSegmentRetentionFlags() {
+                return segmentRetentionFlags;
+            }
+
+            /// <summary>Sets segment retention flags of a JBig2Segment object.</summary>
+            /// <param name="segmentRetentionFlags">Segment retention flag values</param>
+            public virtual void SetSegmentRetentionFlags(bool[] segmentRetentionFlags) {
+                this.segmentRetentionFlags = segmentRetentionFlags;
+            }
+
+            /// <summary>Retrieves type of the JBig2Segment object.</summary>
+            /// <returns>Type value</returns>
+            public virtual int GetType() {
+                return type;
+            }
+
+            /// <summary>Sets type of the JBig2Segment object.</summary>
+            /// <param name="type">Type value</param>
+            public virtual void SetType(int type) {
+                this.type = type;
+            }
+
+            /// <summary>Retrieves whether the object is deferred without retention.</summary>
+            /// <remarks>
+            /// Retrieves whether the object is deferred without retention.
+            /// Default value is false.
+            /// </remarks>
+            /// <returns>true if deferred without retention, false otherwise</returns>
+            public virtual bool IsDeferredNonRetain() {
+                return deferredNonRetain;
+            }
+
+            /// <summary>Sets whether the JBig2Segments object is deferred without retention.</summary>
+            /// <param name="deferredNonRetain">true for deferred without retention, false otherwise</param>
+            public virtual void SetDeferredNonRetain(bool deferredNonRetain) {
+                this.deferredNonRetain = deferredNonRetain;
+            }
+
+            /// <summary>Retrieves the count of the referred-to segments.</summary>
+            /// <returns>count of referred-to segments</returns>
+            public virtual int GetCountOfReferredToSegments() {
+                return countOfReferredToSegments;
+            }
+
+            /// <summary>Sets the count of referred-to segments of the JBig2Segment object.</summary>
+            /// <param name="countOfReferredToSegments">count of referred segments</param>
+            public virtual void SetCountOfReferredToSegments(int countOfReferredToSegments) {
+                this.countOfReferredToSegments = countOfReferredToSegments;
+            }
+
+            /// <summary>Retrieves data of the JBig2Segment object.</summary>
+            /// <returns>data bytes</returns>
+            public virtual byte[] GetData() {
+                return data;
+            }
+
+            /// <summary>Sets data of the JBig2Segment object.</summary>
+            /// <param name="data">data bytes</param>
+            public virtual void SetData(byte[] data) {
+                this.data = data;
+            }
+
+            /// <summary>Retrieves header data of the JBig2Segment object.</summary>
+            /// <returns>header data bytes</returns>
+            public virtual byte[] GetHeaderData() {
+                return headerData;
+            }
+
+            /// <summary>Sets header data of the JBig2Segment object.</summary>
+            /// <param name="headerData">header date bytes</param>
+            public virtual void SetHeaderData(byte[] headerData) {
+                this.headerData = headerData;
+            }
+
+            /// <summary>Retrieves page association size of the JBig2Segment object.</summary>
+            /// <returns>page association size value</returns>
+            public virtual bool IsPageAssociationSize() {
+                return pageAssociationSize;
+            }
+
+            /// <summary>Sets page association size of the JBig2Segment object.</summary>
+            /// <param name="pageAssociationSize">page association size</param>
+            public virtual void SetPageAssociationSize(bool pageAssociationSize) {
+                this.pageAssociationSize = pageAssociationSize;
+            }
+
+            /// <summary>Retrieves the page association offset of the JBig2Segment object.</summary>
+            /// <returns>page association offset value</returns>
+            public virtual int GetPageAssociationOffset() {
+                return pageAssociationOffset;
+            }
+
+            /// <summary>Sets page association offset of the JBig2Segment object.</summary>
+            /// <param name="pageAssociationOffset">page association offset</param>
+            public virtual void SetPageAssociationOffset(int pageAssociationOffset) {
+                this.pageAssociationOffset = pageAssociationOffset;
+            }
+
+            /// <summary>Retrieves the segment number of the JBig2Segment object.</summary>
+            /// <returns>segment number</returns>
+            public virtual int GetSegmentNumber() {
+                return segmentNumber;
+            }
         }
 
         /// <summary>Inner class that holds information about a JBIG2 page.</summary>
         public class Jbig2Page {
-            public readonly int page;
+            private readonly int page;
 
             private readonly Jbig2SegmentReader sr;
 
             private readonly IDictionary<int, Jbig2SegmentReader.Jbig2Segment> segs = new SortedDictionary<int, Jbig2SegmentReader.Jbig2Segment
                 >();
 
-            public int pageBitmapWidth = -1;
+            private int pageBitmapWidth = -1;
 
-            public int pageBitmapHeight = -1;
+            private int pageBitmapHeight = -1;
 
             public Jbig2Page(int page, Jbig2SegmentReader sr) {
                 this.page = page;
                 this.sr = sr;
+            }
+
+            /// <summary>Retrieves the page number of the Jbig2Page object.</summary>
+            /// <returns>page number</returns>
+            public virtual int GetPage() {
+                return page;
+            }
+
+            /// <summary>Retrieves page bitmap width of the Jbig2Page object.</summary>
+            /// <returns>width of page bitmap</returns>
+            public virtual int GetPageBitmapWidth() {
+                return pageBitmapWidth;
+            }
+
+            /// <summary>Sets page bitmap width of the JBig2Page object.</summary>
+            /// <param name="pageBitmapWidth">page bitmap width</param>
+            public virtual void SetPageBitmapWidth(int pageBitmapWidth) {
+                this.pageBitmapWidth = pageBitmapWidth;
+            }
+
+            /// <summary>Retrieves page bitmap height of the JBig2Page object.</summary>
+            /// <returns>height of the page bitmap</returns>
+            public virtual int GetPageBitmapHeight() {
+                return pageBitmapHeight;
+            }
+
+            /// <summary>Sets the height of the page bitmap of a Jbig2Page object.</summary>
+            /// <param name="pageBitmapHeight">height of the page bitmap</param>
+            public virtual void SetPageBitmapHeight(int pageBitmapHeight) {
+                this.pageBitmapHeight = pageBitmapHeight;
             }
 
             /// <summary>
@@ -196,34 +368,34 @@ namespace iText.IO.Codec {
                     Jbig2SegmentReader.Jbig2Segment s = segs.Get(sn);
                     // pdf reference 1.4, section 3.3.6 Jbig2Decode Filter
                     // D.3 Embedded organisation
-                    if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE)) {
+                    if (for_embedding && (s.GetType() == END_OF_FILE || s.GetType() == END_OF_PAGE)) {
                         continue;
                     }
                     if (for_embedding) {
                         // change the page association to page 1
-                        byte[] headerData_emb = CopyByteArray(s.headerData);
-                        if (s.page_association_size) {
-                            headerData_emb[s.page_association_offset] = 0x0;
-                            headerData_emb[s.page_association_offset + 1] = 0x0;
-                            headerData_emb[s.page_association_offset + 2] = 0x0;
-                            headerData_emb[s.page_association_offset + 3] = 0x1;
+                        byte[] headerDataEmb = CopyByteArray(s.GetHeaderData());
+                        if (s.IsPageAssociationSize()) {
+                            headerDataEmb[s.GetPageAssociationOffset()] = 0x0;
+                            headerDataEmb[s.GetPageAssociationOffset() + 1] = 0x0;
+                            headerDataEmb[s.GetPageAssociationOffset() + 2] = 0x0;
+                            headerDataEmb[s.GetPageAssociationOffset() + 3] = 0x1;
                         }
                         else {
-                            headerData_emb[s.page_association_offset] = 0x1;
+                            headerDataEmb[s.GetPageAssociationOffset()] = 0x1;
                         }
-                        os.Write(headerData_emb);
+                        os.Write(headerDataEmb);
                     }
                     else {
-                        os.Write(s.headerData);
+                        os.Write(s.GetHeaderData());
                     }
-                    os.Write(s.data);
+                    os.Write(s.GetData());
                 }
                 os.Dispose();
                 return os.ToArray();
             }
 
             public virtual void AddSegment(Jbig2SegmentReader.Jbig2Segment s) {
-                segs.Put(s.segmentNumber, s);
+                segs.Put(s.GetSegmentNumber(), s);
             }
         }
 
@@ -249,7 +421,7 @@ namespace iText.IO.Codec {
                 do {
                     Jbig2SegmentReader.Jbig2Segment tmp = ReadHeader();
                     ReadSegment(tmp);
-                    segments.Put(tmp.segmentNumber, tmp);
+                    segments.Put(tmp.GetSegmentNumber(), tmp);
                 }
                 while (this.ra.GetPosition() < this.ra.Length());
             }
@@ -258,9 +430,9 @@ namespace iText.IO.Codec {
                 Jbig2SegmentReader.Jbig2Segment tmp;
                 do {
                     tmp = ReadHeader();
-                    segments.Put(tmp.segmentNumber, tmp);
+                    segments.Put(tmp.GetSegmentNumber(), tmp);
                 }
-                while (tmp.type != END_OF_FILE);
+                while (tmp.GetType() != END_OF_FILE);
                 foreach (int integer in segments.Keys) {
                     ReadSegment(segments.Get(integer));
                 }
@@ -271,25 +443,25 @@ namespace iText.IO.Codec {
         internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s) {
             int ptr = (int)ra.GetPosition();
             //TODO DEVSIX-6406 7.2.7 not supported
-            if (s.dataLength == unchecked((long)(0xffffffffl))) {
+            if (s.GetDataLength() == unchecked((long)(0xffffffffl))) {
                 return;
             }
-            byte[] data = new byte[(int)s.dataLength];
+            byte[] data = new byte[(int)s.GetDataLength()];
             ra.Read(data);
-            s.data = data;
-            if (s.type == PAGE_INFORMATION) {
+            s.SetData(data);
+            if (s.GetType() == PAGE_INFORMATION) {
                 int last = (int)ra.GetPosition();
                 ra.Seek(ptr);
                 int page_bitmap_width = ra.ReadInt();
                 int page_bitmap_height = ra.ReadInt();
                 ra.Seek(last);
-                Jbig2SegmentReader.Jbig2Page p = pages.Get(s.page);
+                Jbig2SegmentReader.Jbig2Page p = pages.Get(s.GetPage());
                 if (p == null) {
                     throw new iText.IO.Exceptions.IOException("Referring to widht or height of a page we haven't seen yet: {0}"
-                        ).SetMessageParams(s.page);
+                        ).SetMessageParams(s.GetPage());
                 }
-                p.pageBitmapWidth = page_bitmap_width;
-                p.pageBitmapHeight = page_bitmap_height;
+                p.SetPageBitmapWidth(page_bitmap_width);
+                p.SetPageBitmapHeight(page_bitmap_height);
             }
         }
 //\endcond
@@ -303,10 +475,10 @@ namespace iText.IO.Codec {
             // 7.2.3
             int segment_header_flags = ra.Read();
             bool deferred_non_retain = (segment_header_flags & 0x80) == 0x80;
-            s.deferredNonRetain = deferred_non_retain;
+            s.SetDeferredNonRetain(deferred_non_retain);
             bool page_association_size = (segment_header_flags & 0x40) == 0x40;
             int segment_type = segment_header_flags & 0x3f;
-            s.type = segment_type;
+            s.SetType(segment_type);
             //7.2.4
             int referred_to_byte0 = ra.Read();
             int count_of_referred_to_segments = (referred_to_byte0 & 0xE0) >> 5;
@@ -345,8 +517,8 @@ namespace iText.IO.Codec {
                     }
                 }
             }
-            s.segmentRetentionFlags = segment_retention_flags;
-            s.countOfReferredToSegments = count_of_referred_to_segments;
+            s.SetSegmentRetentionFlags(segment_retention_flags);
+            s.SetCountOfReferredToSegments(count_of_referred_to_segments);
             // 7.2.5
             referred_to_segment_numbers = new int[count_of_referred_to_segments + 1];
             for (int i = 1; i <= count_of_referred_to_segments; i++) {
@@ -362,7 +534,7 @@ namespace iText.IO.Codec {
                     }
                 }
             }
-            s.referredToSegmentNumbers = referred_to_segment_numbers;
+            s.SetReferredToSegmentNumbers(referred_to_segment_numbers);
             // 7.2.6
             int segment_page_association;
             int page_association_offset = (int)ra.GetPosition() - ptr;
@@ -376,10 +548,10 @@ namespace iText.IO.Codec {
                 throw new iText.IO.Exceptions.IOException("Page {0} is invalid for segment {1} starting at {2}").SetMessageParams
                     (segment_page_association, segment_number, ptr);
             }
-            s.page = segment_page_association;
+            s.SetPage(segment_page_association);
             // so we can change the page association at embedding time.
-            s.page_association_size = page_association_size;
-            s.page_association_offset = page_association_offset;
+            s.SetPageAssociationSize(page_association_size);
+            s.SetPageAssociationOffset(page_association_offset);
             if (segment_page_association > 0 && !pages.ContainsKey(segment_page_association)) {
                 pages.Put(segment_page_association, new Jbig2SegmentReader.Jbig2Page(segment_page_association, this));
             }
@@ -392,12 +564,12 @@ namespace iText.IO.Codec {
             // 7.2.7
             long segment_data_length = ra.ReadUnsignedInt();
             //TODO DEVSIX-6406 the 0xffffffff value that might be here, and how to understand those afflicted segments
-            s.dataLength = segment_data_length;
+            s.SetDataLength(segment_data_length);
             int end_ptr = (int)ra.GetPosition();
             ra.Seek(ptr);
             byte[] header_data = new byte[end_ptr - ptr];
             ra.Read(header_data);
-            s.headerData = header_data;
+            s.SetHeaderData(header_data);
             return s;
         }
 //\endcond
@@ -431,11 +603,11 @@ namespace iText.IO.Codec {
         }
 
         public virtual int GetPageHeight(int i) {
-            return pages.Get(i).pageBitmapHeight;
+            return pages.Get(i).GetPageBitmapHeight();
         }
 
         public virtual int GetPageWidth(int i) {
-            return pages.Get(i).pageBitmapWidth;
+            return pages.Get(i).GetPageBitmapWidth();
         }
 
         public virtual Jbig2SegmentReader.Jbig2Page GetPage(int page) {
@@ -448,11 +620,11 @@ namespace iText.IO.Codec {
             try {
                 foreach (Object element in globals) {
                     Jbig2SegmentReader.Jbig2Segment s = (Jbig2SegmentReader.Jbig2Segment)element;
-                    if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE)) {
+                    if (for_embedding && (s.GetType() == END_OF_FILE || s.GetType() == END_OF_PAGE)) {
                         continue;
                     }
-                    os.Write(s.headerData);
-                    os.Write(s.data);
+                    os.Write(s.GetHeaderData());
+                    os.Write(s.GetData());
                 }
                 if (os.Length > 0) {
                     streamBytes = os.ToArray();

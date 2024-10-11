@@ -22,29 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using iText.Test;
 
 namespace iText.Commons.Utils {
     [NUnit.Framework.Category("UnitTest")]
-    [NUnit.Framework.TestFixtureSource("DataSourceTestFixtureData")]
     public class MessageFormatUtilTest : ExtendedITextTest {
-        private String expectedResult;
-
-        private String pattern;
-
-        private Object[] arguments;
-
-        public MessageFormatUtilTest(Object expectedResult, Object pattern, Object arguments, Object name) {
-            this.expectedResult = (String)expectedResult;
-            this.pattern = (String)pattern;
-            this.arguments = (Object[])arguments;
-        }
-
-        public MessageFormatUtilTest(Object[] array)
-            : this(array[0], array[1], array[2], array[3]) {
-        }
-
         public static IEnumerable<Object[]> DataSource() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { "Plain message with params 1 test", "Plain message with params {0} {1}"
                 , new Object[] { 1, "test" }, "test with simple params" }, new Object[] { "Message with 'single quotes'"
@@ -61,12 +43,8 @@ namespace iText.Commons.Utils {
                  } });
         }
 
-        public static ICollection<NUnit.Framework.TestFixtureData> DataSourceTestFixtureData() {
-            return DataSource().Select(array => new NUnit.Framework.TestFixtureData(array)).ToList();
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestFormatting() {
+        [NUnit.Framework.TestCaseSource("DataSource")]
+        public virtual void TestFormatting(String expectedResult, String pattern, Object[] arguments, String name) {
             NUnit.Framework.Assert.AreEqual(expectedResult, MessageFormatUtil.Format(pattern, arguments));
         }
     }

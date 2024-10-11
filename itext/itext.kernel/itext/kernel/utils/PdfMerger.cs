@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
@@ -38,28 +37,7 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="pdfDocument">the document into which source documents will be merged</param>
         public PdfMerger(PdfDocument pdfDocument)
-            : this(pdfDocument, true, true) {
-        }
-
-        /// <summary>This class is used to merge a number of existing documents into one.</summary>
-        /// <param name="pdfDocument">the document into which source documents will be merged</param>
-        /// <param name="mergeTags">
-        /// if true, then tags from the source document are copied even if destination document is not set as
-        /// tagged. Note, that if false, tag structure is still could be copied if the destination document
-        /// is explicitly marked as tagged with
-        /// <see cref="iText.Kernel.Pdf.PdfDocument.SetTagged()"/>
-        /// </param>
-        /// <param name="mergeOutlines">
-        /// if true, then outlines from the source document are copied even if in destination document
-        /// outlines are not initialized. Note, that if false, outlines are still could be copied if the
-        /// destination document outlines were explicitly initialized with
-        /// <see cref="iText.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>
-        /// </param>
-        [System.ObsoleteAttribute(@"use <code>PdfMerger(PdfDocument, PdfMergerProperties)</code> constructor")]
-        public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines) {
-            this.pdfDocument = pdfDocument;
-            this.properties = new PdfMergerProperties();
-            this.properties.SetMergeTags(mergeTags).SetMergeOutlines(mergeOutlines);
+            : this(pdfDocument, new PdfMergerProperties().SetMergeTags(true).SetMergeOutlines(true)) {
         }
 
         /// <summary>This class is used to merge a number of existing documents into one.</summary>

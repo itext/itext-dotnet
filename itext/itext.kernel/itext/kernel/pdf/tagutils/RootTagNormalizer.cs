@@ -113,8 +113,10 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
                 // This boolean is used to "flatten" possible deep "stacking" of the tag structure in case of the multiple pages copying operations.
                 // This could happen due to the wrapping of all the kids in the createNewRootTag or ensureExistingRootTagIsDocument methods.
-                // And therefore, we don't need here to resolve mappings, because we exactly know which role we set.
-                bool kidIsDocument = PdfName.Document.Equals(kid.GetRole());
+                IRoleMappingResolver mapping = kid.GetRole() == null ? null : context.ResolveMappingToStandardOrDomainSpecificRole
+                    (kid.GetRole().GetValue(), rootTagElement.GetNamespace());
+                bool kidIsDocument = mapping != null && mapping.CurrentRoleIsStandard() && StandardRoles.DOCUMENT.Equals(mapping
+                    .GetRole());
                 if (kidIsDocument && kid.GetNamespace() != null && context.TargetTagStructureVersionIs2()) {
                     // we flatten only tags of document role in standard structure namespace
                     String kidNamespaceName = kid.GetNamespace().GetNamespaceName();

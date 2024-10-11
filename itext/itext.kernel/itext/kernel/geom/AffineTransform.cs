@@ -24,6 +24,13 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Geom {
+    /// <summary>
+    /// The
+    /// <see cref="AffineTransform"/>
+    /// class represents an affine transformation,
+    /// which is a combination of linear transformations such as translation,
+    /// scaling, rotation, and shearing which allows preservation of the straightness of lines.
+    /// </summary>
     public class AffineTransform {
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
@@ -136,12 +143,32 @@ namespace iText.Kernel.Geom {
         internal int type;
 //\endcond
 
+        /// <summary>
+        /// Create an empty
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Create an empty
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// The default type is for the transformation is
+        /// <c>TYPE_IDENTITY</c>
+        /// </remarks>
         public AffineTransform() {
             type = TYPE_IDENTITY;
             m00 = m11 = 1;
             m10 = m01 = m02 = m12 = 0;
         }
 
+        /// <summary>
+        /// Will create a new
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided from the original
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </summary>
+        /// <param name="t">The AffineTransform class to be used.</param>
         public AffineTransform(iText.Kernel.Geom.AffineTransform t) {
             this.type = t.type;
             this.m00 = t.m00;
@@ -152,6 +179,24 @@ namespace iText.Kernel.Geom {
             this.m12 = t.m12;
         }
 
+        /// <summary>
+        /// Create an
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided.
+        /// </summary>
+        /// <remarks>
+        /// Create an
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided.
+        /// The default type is for the transformation is
+        /// <c>TYPE_UNKNOWN</c>
+        /// </remarks>
+        /// <param name="m00">The value of the first row and first column of the matrix.</param>
+        /// <param name="m10">The value of the second row and first column of the matrix.</param>
+        /// <param name="m01">The value of the first row and second column of the matrix.</param>
+        /// <param name="m11">The value of the second row and second column of the matrix.</param>
+        /// <param name="m02">The value of the first row and third column of the matrix.</param>
+        /// <param name="m12">The value of the second row and third column of the matrix.</param>
         public AffineTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
             this.type = TYPE_UNKNOWN;
             this.m00 = m00;
@@ -162,6 +207,19 @@ namespace iText.Kernel.Geom {
             this.m12 = m12;
         }
 
+        /// <summary>
+        /// Create an
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided.
+        /// </summary>
+        /// <remarks>
+        /// Create an
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided.
+        /// The default type is for the transformation is
+        /// <c>TYPE_UNKNOWN</c>
+        /// </remarks>
+        /// <param name="matrix">The array of values to be used for the transformation matrix.</param>
         public AffineTransform(float[] matrix) {
             this.type = TYPE_UNKNOWN;
             m00 = matrix[0];
@@ -174,6 +232,19 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Create an
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided.
+        /// </summary>
+        /// <remarks>
+        /// Create an
+        /// <see cref="AffineTransform"/>
+        /// instance with the values provided.
+        /// The default type is for the transformation is
+        /// <c>TYPE_UNKNOWN</c>
+        /// </remarks>
+        /// <param name="matrix">The array of values to be used for the transformation matrix.</param>
         public AffineTransform(double[] matrix) {
             this.type = TYPE_UNKNOWN;
             m00 = matrix[0];
@@ -275,34 +346,70 @@ namespace iText.Kernel.Geom {
             return type;
         }
 
+        /// <summary>Gets the scale factor of the x-axis.</summary>
+        /// <returns>the scale factor of the x-axis.</returns>
         public virtual double GetScaleX() {
             return m00;
         }
 
+        /// <summary>Gets the scale factor of the y-axis.</summary>
+        /// <returns>the scale factor of the y-axis.</returns>
         public virtual double GetScaleY() {
             return m11;
         }
 
+        /// <summary>Gets the shear factor of the x-axis.</summary>
+        /// <returns>the shear factor of the x-axis.</returns>
         public virtual double GetShearX() {
             return m01;
         }
 
+        /// <summary>Gets the shear factor of the y-axis.</summary>
+        /// <returns>the shear factor of the y-axis.</returns>
         public virtual double GetShearY() {
             return m10;
         }
 
+        /// <summary>Gets translation factor of the x-axis.</summary>
+        /// <returns>the translation factor of the x-axis.</returns>
         public virtual double GetTranslateX() {
             return m02;
         }
 
+        /// <summary>Gets translation factor of the y-axis.</summary>
+        /// <returns>the translation factor of the y-axis.</returns>
         public virtual double GetTranslateY() {
             return m12;
         }
 
+        /// <summary>
+        /// Gets whether this
+        /// <see cref="AffineTransform"/>
+        /// is an identity transformation.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this
+        /// <see cref="AffineTransform"/>
+        /// is an identity transformation,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool IsIdentity() {
             return GetTransformType() == TYPE_IDENTITY;
         }
 
+        /// <summary>
+        /// Fills the matrix parameter with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </summary>
+        /// <param name="matrix">
+        /// the array to be filled with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </param>
         public virtual void GetMatrix(float[] matrix) {
             matrix[0] = (float)m00;
             matrix[1] = (float)m10;
@@ -314,6 +421,16 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Fills the matrix parameter with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </summary>
+        /// <param name="matrix">
+        /// the array to be filled with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </param>
         public virtual void GetMatrix(double[] matrix) {
             matrix[0] = m00;
             matrix[1] = m10;
@@ -325,10 +442,36 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Gets the determinant of the matrix representation of this
+        /// <see cref="AffineTransform"/>.
+        /// </summary>
+        /// <returns>
+        /// the determinant of the matrix representation of this
+        /// <see cref="AffineTransform"/>.
+        /// </returns>
         public virtual double GetDeterminant() {
             return m00 * m11 - m01 * m10;
         }
 
+        /// <summary>
+        /// Sets the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance to the values provided.
+        /// </summary>
+        /// <remarks>
+        /// Sets the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance to the values provided.
+        /// The type of the transformation is set to
+        /// <c>TYPE_UNKNOWN</c>.
+        /// </remarks>
+        /// <param name="m00">The value of the first row and first column of the matrix.</param>
+        /// <param name="m10">The value of the second row and first column of the matrix.</param>
+        /// <param name="m01">The value of the first row and second column of the matrix.</param>
+        /// <param name="m11">The value of the second row and second column of the matrix.</param>
+        /// <param name="m02">The value of the first row and third column of the matrix.</param>
+        /// <param name="m12">The value of the second row and third column of the matrix.</param>
         public virtual void SetTransform(float m00, float m10, float m01, float m11, float m02, float m12) {
             this.type = TYPE_UNKNOWN;
             this.m00 = m00;
@@ -339,6 +482,24 @@ namespace iText.Kernel.Geom {
             this.m12 = m12;
         }
 
+        /// <summary>
+        /// Sets the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance to the values provided.
+        /// </summary>
+        /// <remarks>
+        /// Sets the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance to the values provided.
+        /// The type of the transformation is set to
+        /// <c>TYPE_UNKNOWN</c>.
+        /// </remarks>
+        /// <param name="m00">The value of the first row and first column of the matrix.</param>
+        /// <param name="m10">The value of the second row and first column of the matrix.</param>
+        /// <param name="m01">The value of the first row and second column of the matrix.</param>
+        /// <param name="m11">The value of the second row and second column of the matrix.</param>
+        /// <param name="m02">The value of the first row and third column of the matrix.</param>
+        /// <param name="m12">The value of the second row and third column of the matrix.</param>
         public virtual void SetTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
             this.type = TYPE_UNKNOWN;
             this.m00 = m00;
@@ -349,17 +510,39 @@ namespace iText.Kernel.Geom {
             this.m12 = m12;
         }
 
+        /// <summary>
+        /// Sets the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance to the values provided.
+        /// </summary>
+        /// <param name="t">
+        /// The
+        /// <see cref="AffineTransform"/>
+        /// instance to be used.
+        /// </param>
         public virtual void SetTransform(iText.Kernel.Geom.AffineTransform t) {
             type = t.type;
             SetTransform(t.m00, t.m10, t.m01, t.m11, t.m02, t.m12);
         }
 
+        /// <summary>
+        /// Sets this
+        /// <see cref="AffineTransform"/>
+        /// to the identity transformation.
+        /// </summary>
         public virtual void SetToIdentity() {
             type = TYPE_IDENTITY;
             m00 = m11 = 1;
             m10 = m01 = m02 = m12 = 0;
         }
 
+        /// <summary>
+        /// Sets this
+        /// <see cref="AffineTransform"/>
+        /// to represent a translation transformation.
+        /// </summary>
+        /// <param name="mx">The value of the translation on the x-axis.</param>
+        /// <param name="my">The value of the translation on the y-axis.</param>
         public virtual void SetToTranslation(double mx, double my) {
             m00 = m11 = 1;
             m01 = m10 = 0;
@@ -373,6 +556,13 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Sets this
+        /// <see cref="AffineTransform"/>
+        /// to represent a scale transformation.
+        /// </summary>
+        /// <param name="scx">The value of the scale factor on the x-axis.</param>
+        /// <param name="scy">The value of the scale factor on the y-axis.</param>
         public virtual void SetToScale(double scx, double scy) {
             m00 = scx;
             m11 = scy;
@@ -385,6 +575,13 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Sets this
+        /// <see cref="AffineTransform"/>
+        /// to represent a shear transformation.
+        /// </summary>
+        /// <param name="shx">The value of the shear factor on the x-axis.</param>
+        /// <param name="shy">The value of the shear factor on the y-axis.</param>
         public virtual void SetToShear(double shx, double shy) {
             m00 = m11 = 1;
             m02 = m12 = 0;
@@ -434,18 +631,54 @@ namespace iText.Kernel.Geom {
             type = TYPE_UNKNOWN;
         }
 
+        /// <summary>
+        /// Get a new
+        /// <see cref="AffineTransform"/>
+        /// instance representing a translation over the passed values
+        /// </summary>
+        /// <param name="mx">x-coordinate of translation</param>
+        /// <param name="my">y-coordinate of translation</param>
+        /// <returns>
+        /// 
+        /// <see cref="AffineTransform"/>
+        /// representing the translation
+        /// </returns>
         public static iText.Kernel.Geom.AffineTransform GetTranslateInstance(double mx, double my) {
             iText.Kernel.Geom.AffineTransform t = new iText.Kernel.Geom.AffineTransform();
             t.SetToTranslation(mx, my);
             return t;
         }
 
+        /// <summary>
+        /// Get a new
+        /// <see cref="AffineTransform"/>
+        /// instance representing a scale over the passed values
+        /// </summary>
+        /// <param name="scx">scale factor on the x-axis</param>
+        /// <param name="scY">scale factor on the y-axis</param>
+        /// <returns>
+        /// 
+        /// <see cref="AffineTransform"/>
+        /// representing the scale
+        /// </returns>
         public static iText.Kernel.Geom.AffineTransform GetScaleInstance(double scx, double scY) {
             iText.Kernel.Geom.AffineTransform t = new iText.Kernel.Geom.AffineTransform();
             t.SetToScale(scx, scY);
             return t;
         }
 
+        /// <summary>
+        /// Get a new
+        /// <see cref="AffineTransform"/>
+        /// instance representing a shear over the passed values
+        /// </summary>
+        /// <param name="shx">shear factor on the x-axis</param>
+        /// <param name="shy">shear factor on the y-axis</param>
+        /// <returns>
+        /// 
+        /// <see cref="AffineTransform"/>
+        /// representing the shear
+        /// </returns>
         public static iText.Kernel.Geom.AffineTransform GetShearInstance(double shx, double shy) {
             iText.Kernel.Geom.AffineTransform m = new iText.Kernel.Geom.AffineTransform();
             m.SetToShear(shx, shy);
@@ -514,8 +747,8 @@ namespace iText.Kernel.Geom {
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Multiply matrix of two AffineTransform objects</summary>
-        /// <param name="t1">- the AffineTransform object is a multiplicand</param>
-        /// <param name="t2">- the AffineTransform object is a multiplier</param>
+        /// <param name="t1">- the AffineTransform object is a multiplicand.</param>
+        /// <param name="t2">- the AffineTransform object is a multiplier.</param>
         /// <returns>an AffineTransform object that is a result of t1 multiplied by matrix t2.</returns>
         internal virtual iText.Kernel.Geom.AffineTransform Multiply(iText.Kernel.Geom.AffineTransform t1, iText.Kernel.Geom.AffineTransform
              t2) {
@@ -525,14 +758,32 @@ namespace iText.Kernel.Geom {
         }
 //\endcond
 
+        /// <summary>Multiply matrix of two AffineTransform objects</summary>
+        /// <param name="t">- the AffineTransform object is a multiplier.</param>
         public virtual void Concatenate(iText.Kernel.Geom.AffineTransform t) {
             SetTransform(Multiply(t, this));
         }
 
+        /// <summary>Multiply matrix of two AffineTransform objects</summary>
+        /// <param name="t">- the AffineTransform object is a multiplicand.</param>
         public virtual void PreConcatenate(iText.Kernel.Geom.AffineTransform t) {
             SetTransform(Multiply(this, t));
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="AffineTransform"/>
+        /// object that is invert of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <returns>
+        /// a new
+        /// <see cref="AffineTransform"/>
+        /// object that is invert of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </returns>
         public virtual iText.Kernel.Geom.AffineTransform CreateInverse() {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -545,6 +796,14 @@ namespace iText.Kernel.Geom {
                  * m02) / det, (m10 * m02 - m00 * m12) / det);
         }
 
+        /// <summary>
+        /// Transform the point according to the values of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <param name="src">The point to be transformed.</param>
+        /// <param name="dst">The point that will hold the result of the transformation.</param>
+        /// <returns>The point that holds the result of the transformation.</returns>
         public virtual Point Transform(Point src, Point dst) {
             if (dst == null) {
                 dst = new Point();
@@ -555,6 +814,16 @@ namespace iText.Kernel.Geom {
             return dst;
         }
 
+        /// <summary>
+        /// Transform the array of points according to the values of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <param name="src">The array of points to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the array.</param>
+        /// <param name="dst">The array of points that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void Transform(Point[] src, int srcOff, Point[] dst, int dstOff, int length) {
             while (--length >= 0) {
                 Point srcPoint = src[srcOff++];
@@ -569,6 +838,16 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Transform the array of points according to the values of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <param name="src">The array of points to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the array.</param>
+        /// <param name="dst">The array of points that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void Transform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
             int step = 2;
             if (src == dst && srcOff < dstOff && dstOff < srcOff + length * 2) {
@@ -586,6 +865,16 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Transform the array of points according to the values of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <param name="src">The array of points to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the array.</param>
+        /// <param name="dst">The array of points that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void Transform(float[] src, int srcOff, float[] dst, int dstOff, int length) {
             int step = 2;
             if (src == dst && srcOff < dstOff && dstOff < srcOff + length * 2) {
@@ -603,6 +892,16 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Transform the array of points according to the values of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <param name="src">The array of points to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the array.</param>
+        /// <param name="dst">The array of points that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void Transform(float[] src, int srcOff, double[] dst, int dstOff, int length) {
             while (--length >= 0) {
                 float x = src[srcOff++];
@@ -612,6 +911,16 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Transform the array of points according to the values of this
+        /// <see cref="AffineTransform"/>
+        /// object.
+        /// </summary>
+        /// <param name="src">The array of points to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the array.</param>
+        /// <param name="dst">The array of points that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void Transform(double[] src, int srcOff, float[] dst, int dstOff, int length) {
             while (--length >= 0) {
                 double x = src[srcOff++];
@@ -621,6 +930,10 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>Performs  the transformation on the source point and stores the result in the destination point.</summary>
+        /// <param name="src">The source point to be transformed.</param>
+        /// <param name="dst">The destination point that will hold the result of the transformation.</param>
+        /// <returns>The modified destination point.</returns>
         public virtual Point DeltaTransform(Point src, Point dst) {
             if (dst == null) {
                 dst = new Point();
@@ -631,6 +944,15 @@ namespace iText.Kernel.Geom {
             return dst;
         }
 
+        /// <summary>
+        /// Performs the delta transformation on the source array of points and stores the result in
+        /// the destination array of points.
+        /// </summary>
+        /// <param name="src">The source array of data to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the source array.</param>
+        /// <param name="dst">The destination array of data that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void DeltaTransform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
             while (--length >= 0) {
                 double x = src[srcOff++];
@@ -640,6 +962,11 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>Performs the inverse transformation on the source point and stores the result in the destination point.
+        ///     </summary>
+        /// <param name="src">The source point to be transformed.</param>
+        /// <param name="dst">The destination point that will hold the result of the transformation.</param>
+        /// <returns>The modified destination point.</returns>
         public virtual Point InverseTransform(Point src, Point dst) {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -657,6 +984,15 @@ namespace iText.Kernel.Geom {
             return dst;
         }
 
+        /// <summary>
+        /// Performs the inverse transformation on the source array of points and stores the result
+        /// in the destination array of points.
+        /// </summary>
+        /// <param name="src">The source array of data to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the source array.</param>
+        /// <param name="dst">The destination array of data that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void InverseTransform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
             double det = GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -673,6 +1009,15 @@ namespace iText.Kernel.Geom {
             }
         }
 
+        /// <summary>
+        /// Performs the inverse transformation on the source array of points and stores the result
+        /// in the destination array of points.
+        /// </summary>
+        /// <param name="src">The source array of data to be transformed.</param>
+        /// <param name="srcOff">The offset of the first point in the source array.</param>
+        /// <param name="dst">The destination array of data that will hold the result of the transformation.</param>
+        /// <param name="dstOff">The offset of the first point in the destination array.</param>
+        /// <param name="length">The number of points to be transformed.</param>
         public virtual void InverseTransform(float[] src, int srcOff, float[] dst, int dstOff, int length) {
             float det = (float)GetDeterminant();
             if (Math.Abs(det) < ZERO) {
@@ -698,6 +1043,21 @@ namespace iText.Kernel.Geom {
             return (iText.Kernel.Geom.AffineTransform) MemberwiseClone();
         }
 
+        /// <summary>Compares this AffineTransform with the specified Object.</summary>
+        /// <remarks>
+        /// Compares this AffineTransform with the specified Object.
+        /// If the object is the same as this AffineTransform, this method returns true.
+        /// Otherwise, this method checks if the Object is an instance of AffineTransform and if the values of the two
+        /// AffineTransforms are equal.
+        /// </remarks>
+        /// <param name="o">The object to compare this AffineTransform with.</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the object is the same as this AffineTransform,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -711,6 +1071,8 @@ namespace iText.Kernel.Geom {
                 m02) == 0 && JavaUtil.DoubleCompare(that.m12, m12) == 0;
         }
 
+        /// <summary>Returns a hash code value for the object.</summary>
+        /// <returns>a hash code value for this object.</returns>
         public override int GetHashCode() {
             return JavaUtil.ArraysHashCode(m00, m10, m01, m11, m02, m12);
         }

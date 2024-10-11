@@ -85,8 +85,8 @@ namespace iText.Signatures {
             return extensionValue.IsNull() ? null : extensionValue.GetDerEncoded();
         }
 
-        internal static IDigest GetMessageDigest(String hashAlgorithm) {
-            return (IDigest)new BouncyCastleDigest().GetMessageDigest(hashAlgorithm);
+        internal static IMessageDigest GetMessageDigest(String hashAlgorithm) {
+            return new BouncyCastleDigest().GetMessageDigest(hashAlgorithm);
         }
         
         internal static IMessageDigest GetMessageDigest(String hashAlgorithm, IExternalDigest externalDigest) {
@@ -210,37 +210,6 @@ namespace iText.Signatures {
             response.tsaResponseStream = httpWebResponse.GetResponseStream();
             response.encoding = httpWebResponse.Headers[HttpResponseHeader.ContentEncoding];
             return response;
-        }
-        
-        /// <summary>
-        /// This behavior is different in Java and .NET, because in Java we use this two-step check:
-        /// first via #hasUnsupportedCriticalExtension method, and then additionally allowing standard critical extensions;
-        /// in .NET there's only second step. However, removing first step in Java can be a breaking change for some users
-        /// and moreover we don't have any means of providing customization for unsupported extensions check as of right now.
-        ///
-        /// During major release I'd suggest changing java unsupported extensions check logic to the same as in .NET,
-        /// but only if it is possible to customize this logic.
-        /// </summary>
-        /// <param name="cert"></param>
-        /// <returns></returns>
-        /// TODO DEVSIX-2634
-        [Obsolete]
-        internal static bool HasUnsupportedCriticalExtension(IX509Certificate cert) {
-            if ( cert == null ) {
-                throw new ArgumentException("X509Certificate can't be null.");
-            }
-
-            ISet<string> criticalExtensionsSet = cert.GetCriticalExtensionOids();
-            if (criticalExtensionsSet != null) {
-                foreach (String oid in criticalExtensionsSet) {
-                    if (OID.X509Extensions.SUPPORTED_CRITICAL_EXTENSIONS.Contains(oid)) {
-                        continue;
-                        
-                    }
-                    return true;
-                }
-            }
-            return false;
         }
 
         internal static DateTime GetTimeStampDate(ITstInfo timeStampTokenInfo) {

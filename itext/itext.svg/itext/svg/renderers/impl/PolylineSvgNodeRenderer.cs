@@ -143,8 +143,8 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
             if (point != null) {
-                String moveX = SvgCssUtils.ConvertDoubleToString(CssUtils.ConvertPtsToPx(point.x));
-                String moveY = SvgCssUtils.ConvertDoubleToString(CssUtils.ConvertPtsToPx(point.y));
+                String moveX = SvgCssUtils.ConvertDoubleToString(CssUtils.ConvertPtsToPx(point.GetX()));
+                String moveY = SvgCssUtils.ConvertDoubleToString(CssUtils.ConvertPtsToPx(point.GetY()));
                 MarkerSvgNodeRenderer.DrawMarker(context, moveX, moveY, markerVertexType, this);
             }
         }

@@ -25,7 +25,6 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
-using iText.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -499,11 +498,11 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static bool HasTopBorders(IRenderer renderer) {
-            return iText.Layout.Margincollapse.MarginsCollapseHandler.HasBorders(renderer, Property.BORDER_TOP);
+            return renderer.GetModelElement().HasProperty(Property.BORDER_TOP);
         }
 
         private static bool HasBottomBorders(IRenderer renderer) {
-            return iText.Layout.Margincollapse.MarginsCollapseHandler.HasBorders(renderer, Property.BORDER_BOTTOM);
+            return renderer.GetModelElement().HasProperty(Property.BORDER_BOTTOM);
         }
 
         private static bool RendererIsFloated(IRenderer renderer) {
@@ -570,11 +569,6 @@ namespace iText.Layout.Margincollapse {
                     , property));
             }
             return padding != null && padding.GetValue() > 0;
-        }
-
-        private static bool HasBorders(IRenderer renderer, int property) {
-            IPropertyContainer modelElement = renderer.GetModelElement();
-            return modelElement.HasProperty(property) || modelElement.HasProperty(Property.BORDER);
         }
     }
 }

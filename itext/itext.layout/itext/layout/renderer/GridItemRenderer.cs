@@ -101,7 +101,7 @@ namespace iText.Layout.Renderer {
                     break;
                 }
 
-                case Property.FILL_AVAILABLE_AREA: {
+                case Property.FILL_AVAILABLE_AREA_ON_SPLIT: {
                     renderer.SetProperty(property, value);
                     break;
                 }
@@ -160,7 +160,9 @@ namespace iText.Layout.Renderer {
                     rectangle.DecreaseHeight(paddingBottom.GetValue());
                 }
                 Border borderBottom = renderer.GetBorders()[AbstractRenderer.BOTTOM_SIDE];
-                rectangle.DecreaseHeight(borderBottom.GetWidth());
+                if (borderBottom != null) {
+                    rectangle.DecreaseHeight(borderBottom.GetWidth());
+                }
             }
             else {
                 renderer.ApplyMarginsBordersPaddings(rectangle, false);

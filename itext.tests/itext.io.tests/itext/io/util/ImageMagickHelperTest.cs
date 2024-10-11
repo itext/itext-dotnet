@@ -58,10 +58,6 @@ namespace iText.IO.Util {
         public virtual void ImageMagickEnvVarIsExplicitlySpecified() {
             String compareExec = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE
                 );
-            if (compareExec == null) {
-                compareExec = SystemUtil.GetEnvironmentVariable(ImageMagickHelper.MAGICK_COMPARE_ENVIRONMENT_VARIABLE_LEGACY
-                    );
-            }
             ImageMagickHelper imageMagickHelper = new ImageMagickHelper(compareExec);
             NUnit.Framework.Assert.IsNotNull(imageMagickHelper.GetCliExecutionCommand());
         }

@@ -32,6 +32,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <!--TODO DEVSIX-7184: Bump Microsoft.Extensions.Logging when targeting netcoreapp3.1-->
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 </Project>

@@ -28,15 +28,75 @@ using iText.Commons;
 namespace iText.IO.Image {
     public class Jpeg2000ImageData : ImageData {
         public class Parameters {
-            public int numOfComps;
+            private int numOfComps;
 
-            public IList<Jpeg2000ImageData.ColorSpecBox> colorSpecBoxes = null;
+            private IList<Jpeg2000ImageData.ColorSpecBox> colorSpecBoxes = null;
 
-            public bool isJp2 = false;
+            private bool isJp2 = false;
 
-            public bool isJpxBaseline = false;
+            private bool isJpxBaseline = false;
 
-            public byte[] bpcBoxData;
+            private byte[] bpcBoxData;
+
+            /// <summary>Retrieves number of components of the object.</summary>
+            /// <returns>number of components</returns>
+            public virtual int GetNumOfComps() {
+                return numOfComps;
+            }
+
+            /// <summary>Sets number of components of the object.</summary>
+            /// <param name="numOfComps">number of components</param>
+            public virtual void SetNumOfComps(int numOfComps) {
+                this.numOfComps = numOfComps;
+            }
+
+            /// <summary>Retrieves the color spec boxes of the object.</summary>
+            /// <returns>color spec boxes</returns>
+            public virtual IList<Jpeg2000ImageData.ColorSpecBox> GetColorSpecBoxes() {
+                return colorSpecBoxes;
+            }
+
+            /// <summary>Sets the color spec boxes of the object.</summary>
+            /// <param name="colorSpecBoxes">color spec boxes</param>
+            public virtual void SetColorSpecBoxes(IList<Jpeg2000ImageData.ColorSpecBox> colorSpecBoxes) {
+                this.colorSpecBoxes = colorSpecBoxes;
+            }
+
+            /// <summary>Retrieves whether the object is a Jp2.</summary>
+            /// <returns>true if it is a jp2, otherwise false</returns>
+            public virtual bool IsJp2() {
+                return isJp2;
+            }
+
+            /// <summary>Sets whether the object is a jp2.</summary>
+            /// <param name="jp2">true is it is a jp2, otherwise false</param>
+            public virtual void SetJp2(bool jp2) {
+                isJp2 = jp2;
+            }
+
+            /// <summary>Retrieves whether jpx is baseline.</summary>
+            /// <returns>true if jpx is baseline, false otherwise</returns>
+            public virtual bool IsJpxBaseline() {
+                return isJpxBaseline;
+            }
+
+            /// <summary>Sets whether jpx is baseline.</summary>
+            /// <param name="jpxBaseline">true if jpx is baseline, false otherwise</param>
+            public virtual void SetJpxBaseline(bool jpxBaseline) {
+                isJpxBaseline = jpxBaseline;
+            }
+
+            /// <summary>Retrieves the bits per component of the box data.</summary>
+            /// <returns>bits per component</returns>
+            public virtual byte[] GetBpcBoxData() {
+                return bpcBoxData;
+            }
+
+            /// <summary>Sets the bits per component of the box data.</summary>
+            /// <param name="bpcBoxData">bits per component</param>
+            public virtual void SetBpcBoxData(byte[] bpcBoxData) {
+                this.bpcBoxData = bpcBoxData;
+            }
         }
 
         public class ColorSpecBox : List<int> {

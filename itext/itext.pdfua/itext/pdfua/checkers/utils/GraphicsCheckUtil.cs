@@ -42,32 +42,6 @@ namespace iText.Pdfua.Checkers.Utils {
             this.context = context;
         }
 
-        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
-        /// <remarks>
-        /// WARNING! This method is an artifact and currently does nothing.
-        /// It is kept to ensure backward binary compatibility
-        /// </remarks>
-        /// <param name="image">image to check</param>
-        [System.ObsoleteAttribute(@"This method is an artifact and will be removed.")]
-        public static void CheckLayoutImage(Image image) {
-        }
-
-        //No impl
-        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
-        /// <remarks>
-        /// WARNING! This method is an artifact and currently does nothing.
-        /// It is kept to ensure backward binary compatibility
-        /// </remarks>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Tagutils.ITagTreeIteratorHandler"/>
-        /// always null
-        /// </returns>
-        [System.ObsoleteAttribute(@"This method is an artifact and will be removed.")]
-        public static ITagTreeIteratorHandler CreateFigureTagHandler() {
-            return null;
-        }
-
         /// <summary>Checks if image has alternative description or actual text.</summary>
         /// <param name="image">The image to check</param>
         public void CheckLayoutElement(Image image) {
@@ -117,8 +91,11 @@ namespace iText.Pdfua.Checkers.Utils {
                 : base(context) {
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override void NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 PdfStructElem structElem = context.GetElementIfRoleMatches(PdfName.Figure, elem);
                 if (structElem == null) {
                     return;

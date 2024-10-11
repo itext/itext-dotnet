@@ -36,6 +36,7 @@ using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
+using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
@@ -211,10 +212,12 @@ namespace iText.Signatures {
             }
             if (certInclude == LtvVerification.CertificateInclusion.YES) {
                 foreach (IX509Certificate processedCert in processedCerts) {
-                    validationData.certs.Add(processedCert.GetEncoded());
+                    IList<byte[]> certs = validationData.GetCerts();
+                    certs.Add(processedCert.GetEncoded());
+                    validationData.SetCerts(certs);
                 }
             }
-            if (validationData.crls.Count == 0 && validationData.ocsps.Count == 0) {
+            if (validationData.GetCrls().IsEmpty() && validationData.GetOcsps().IsEmpty()) {
                 return false;
             }
             validated.Put(GetSignatureHashKey(signatureName), validationData);
@@ -235,14 +238,20 @@ namespace iText.Signatures {
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             if (ocsps != null) {
                 foreach (byte[] ocsp in ocsps) {
-                    vd.ocsps.Add(LtvVerification.BuildOCSPResponse(ocsp));
+                    IList<byte[]> ocspsArr = vd.GetOcsps();
+                    ocspsArr.Add(LtvVerification.BuildOCSPResponse(ocsp));
+                    vd.SetOcsps(ocspsArr);
                 }
             }
             if (crls != null) {
-                vd.crls.AddAll(crls);
+                IList<byte[]> crlsArr = vd.GetCrls();
+                crlsArr.AddAll(crls);
+                vd.SetCrls(crlsArr);
             }
             if (certs != null) {
-                vd.certs.AddAll(certs);
+                IList<byte[]> certsArr = vd.GetCerts();
+                certsArr.AddAll(certs);
+                vd.SetCerts(certsArr);
             }
             validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
@@ -250,7 +259,7 @@ namespace iText.Signatures {
 
         /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
         public virtual void Merge() {
-            if (used || validated.Count == 0) {
+            if (used || validated.IsEmpty()) {
                 return;
             }
             used = true;
@@ -336,7 +345,9 @@ namespace iText.Signatures {
                 ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, certificateChain), null);
                 if (ocspEnc != null && BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(OcspClientBouncyCastle
                     .GetCertificateStatus(ocspEnc))) {
-                    validationData.ocsps.Add(LtvVerification.BuildOCSPResponse(ocspEnc));
+                    IList<byte[]> ocsps = validationData.GetOcsps();
+                    ocsps.Add(LtvVerification.BuildOCSPResponse(ocspEnc));
+                    validationData.SetOcsps(ocsps);
                     revocationDataAdded = true;
                     LOGGER.LogInformation("OCSP added");
                     if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
@@ -353,16 +364,18 @@ namespace iText.Signatures {
                 ICollection<byte[]> cims = crl.GetEncoded(cert, null);
                 if (cims != null) {
                     foreach (byte[] cim in cims) {
+                        revocationDataAdded = true;
                         bool dup = false;
-                        foreach (byte[] b in validationData.crls) {
+                        foreach (byte[] b in validationData.GetCrls()) {
                             if (JavaUtil.ArraysEquals(b, cim)) {
                                 dup = true;
                                 break;
                             }
                         }
                         if (!dup) {
-                            validationData.crls.Add(cim);
-                            revocationDataAdded = true;
+                            IList<byte[]> crls = validationData.GetCrls();
+                            crls.Add(cim);
+                            validationData.SetCrls(crls);
                             LOGGER.LogInformation("CRL added");
                             if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                                 IX509Certificate[] certsList = issuingCertificateRetriever.GetCrlIssuerCertificates(SignUtils.ParseCrlFromStream
@@ -513,7 +526,7 @@ namespace iText.Signatures {
                 PdfArray crl = new PdfArray();
                 PdfArray cert = new PdfArray();
                 PdfDictionary vri = new PdfDictionary();
-                foreach (byte[] b in validated.Get(vkey).crls) {
+                foreach (byte[] b in validated.Get(vkey).GetCrls()) {
                     PdfStream ps = new PdfStream(b);
                     ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
                     ps.MakeIndirect(document);
@@ -521,14 +534,14 @@ namespace iText.Signatures {
                     crls.Add(ps);
                     crls.SetModified();
                 }
-                foreach (byte[] b in validated.Get(vkey).ocsps) {
+                foreach (byte[] b in validated.Get(vkey).GetOcsps()) {
                     PdfStream ps = new PdfStream(b);
                     ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
                     ocsp.Add(ps);
                     ocsps.Add(ps);
                     ocsps.SetModified();
                 }
-                foreach (byte[] b in validated.Get(vkey).certs) {
+                foreach (byte[] b in validated.Get(vkey).GetCerts()) {
                     PdfStream ps = new PdfStream(b);
                     ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
                     ps.MakeIndirect(document);
@@ -536,15 +549,15 @@ namespace iText.Signatures {
                     certs.Add(ps);
                     certs.SetModified();
                 }
-                if (ocsp.Size() > 0) {
+                if (!ocsp.IsEmpty()) {
                     ocsp.MakeIndirect(document);
                     vri.Put(PdfName.OCSP, ocsp);
                 }
-                if (crl.Size() > 0) {
+                if (!crl.IsEmpty()) {
                     crl.MakeIndirect(document);
                     vri.Put(PdfName.CRL, crl);
                 }
-                if (cert.Size() > 0) {
+                if (!cert.IsEmpty()) {
                     cert.MakeIndirect(document);
                     vri.Put(PdfName.Cert, cert);
                 }
@@ -554,15 +567,15 @@ namespace iText.Signatures {
             vrim.MakeIndirect(document);
             vrim.SetModified();
             dss.Put(PdfName.VRI, vrim);
-            if (ocsps.Size() > 0) {
+            if (!ocsps.IsEmpty()) {
                 ocsps.MakeIndirect(document);
                 dss.Put(PdfName.OCSPs, ocsps);
             }
-            if (crls.Size() > 0) {
+            if (!crls.IsEmpty()) {
                 crls.MakeIndirect(document);
                 dss.Put(PdfName.CRLs, crls);
             }
-            if (certs.Size() > 0) {
+            if (!certs.IsEmpty()) {
                 certs.MakeIndirect(document);
                 dss.Put(PdfName.Certs, certs);
             }
@@ -572,11 +585,47 @@ namespace iText.Signatures {
         }
 
         private class ValidationData {
-            public IList<byte[]> crls = new List<byte[]>();
+            private IList<byte[]> crls = new List<byte[]>();
 
-            public IList<byte[]> ocsps = new List<byte[]>();
+            private IList<byte[]> ocsps = new List<byte[]>();
 
-            public IList<byte[]> certs = new List<byte[]>();
+            private IList<byte[]> certs = new List<byte[]>();
+
+            /// <summary>Sets the crls byte array.</summary>
+            /// <param name="crls">crls</param>
+            public virtual void SetCrls(IList<byte[]> crls) {
+                this.crls = crls;
+            }
+
+            /// <summary>Retrieves Crls byte array.</summary>
+            /// <returns>crls</returns>
+            public virtual IList<byte[]> GetCrls() {
+                return crls;
+            }
+
+            /// <summary>Sets the ocsps array.</summary>
+            /// <param name="ocsps">ocsps</param>
+            public virtual void SetOcsps(IList<byte[]> ocsps) {
+                this.ocsps = ocsps;
+            }
+
+            /// <summary>Retrieves ocsps byte array.</summary>
+            /// <returns>ocsps</returns>
+            public virtual IList<byte[]> GetOcsps() {
+                return ocsps;
+            }
+
+            /// <summary>Sets the certs byte array.</summary>
+            /// <param name="certs">certs</param>
+            public virtual void SetCerts(IList<byte[]> certs) {
+                this.certs = certs;
+            }
+
+            /// <summary>Retrieves cert byte array.</summary>
+            /// <returns>cert</returns>
+            public virtual IList<byte[]> GetCerts() {
+                return certs;
+            }
         }
 
         private IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] certChain) {

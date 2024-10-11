@@ -177,10 +177,10 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         public const int META_CREATEREGION = 0x06FF;
 
         /// <summary>PdfCanvas of the MetaDo object.</summary>
-        public PdfCanvas cb;
+        private readonly PdfCanvas cb;
 
         /// <summary>The InputMeta instance containing the data.</summary>
-        public InputMeta @in;
+        private readonly InputMeta @in;
 
 //\cond DO_NOT_DOCUMENT
         internal int left;

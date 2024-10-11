@@ -759,13 +759,13 @@ namespace iText.Kernel.Utils {
         internal class CustomPdfAnnotationFlattenFactory : PdfAnnotationFlattenFactory {
             public override IAnnotationFlattener GetAnnotationFlattenWorker(PdfName name) {
                 if (PdfName.Link.Equals(name)) {
-                    return new _IAnnotationFlattener_872();
+                    return new _IAnnotationFlattener_871();
                 }
                 return base.GetAnnotationFlattenWorker(name);
             }
 
-            private sealed class _IAnnotationFlattener_872 : IAnnotationFlattener {
-                public _IAnnotationFlattener_872() {
+            private sealed class _IAnnotationFlattener_871 : IAnnotationFlattener {
+                public _IAnnotationFlattener_871() {
                 }
 
                 public bool Flatten(PdfAnnotation annotation, PdfPage page) {

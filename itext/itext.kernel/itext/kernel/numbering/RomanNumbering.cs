@@ -85,9 +85,9 @@ namespace iText.Kernel.Numbering {
                 // loop over the array with values for m-d-c-l-x-v-i
                 RomanNumbering.RomanDigit dig = ROMAN_DIGITS[pos];
                 // adding as many digits as we can
-                while (index >= dig.value) {
-                    buf.Append(dig.digit);
-                    index -= dig.value;
+                while (index >= dig.GetValue()) {
+                    buf.Append(dig.GetDigit());
+                    index -= dig.GetValue();
                 }
                 // we have the complete number
                 if (index <= 0) {
@@ -95,12 +95,12 @@ namespace iText.Kernel.Numbering {
                 }
                 // look for the next digit that can be used in a special way
                 int j = pos;
-                while (!ROMAN_DIGITS[++j].pre) {
+                while (!ROMAN_DIGITS[++j].IsPre()) {
                 }
                 // does the special notation apply?
-                if (index + ROMAN_DIGITS[j].value >= dig.value) {
-                    buf.Append(ROMAN_DIGITS[j].digit).Append(dig.digit);
-                    index -= dig.value - ROMAN_DIGITS[j].value;
+                if (index + ROMAN_DIGITS[j].GetValue() >= dig.GetValue()) {
+                    buf.Append(ROMAN_DIGITS[j].GetDigit()).Append(dig.GetDigit());
+                    index -= dig.GetValue() - ROMAN_DIGITS[j].GetValue();
                 }
                 pos++;
             }
@@ -110,13 +110,13 @@ namespace iText.Kernel.Numbering {
         /// <summary>Helper class for Roman Digits</summary>
         private class RomanDigit {
             /// <summary>part of a roman number</summary>
-            public char digit;
+            private readonly char digit;
 
             /// <summary>value of the roman digit</summary>
-            public int value;
+            private readonly int value;
 
             /// <summary>can the digit be used as a prefix</summary>
-            public bool pre;
+            private readonly bool pre;
 
 //\cond DO_NOT_DOCUMENT
             /// <summary>Constructs a roman digit</summary>
@@ -129,6 +129,24 @@ namespace iText.Kernel.Numbering {
                 this.pre = pre;
             }
 //\endcond
+
+            /// <summary>Retrieves the roman digit.</summary>
+            /// <returns>roman digit</returns>
+            public virtual char GetDigit() {
+                return digit;
+            }
+
+            /// <summary>Retrieves the value of the roman digit.</summary>
+            /// <returns>value</returns>
+            public virtual int GetValue() {
+                return value;
+            }
+
+            /// <summary>Retrieves whether the roman digit can be used as prefix.</summary>
+            /// <returns>true if it can, false otherwise</returns>
+            public virtual bool IsPre() {
+                return pre;
+            }
         }
     }
 }

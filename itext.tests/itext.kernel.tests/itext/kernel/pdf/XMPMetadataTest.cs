@@ -31,26 +31,26 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class XMPMetadataTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/XmpWriterTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/XmpWriterTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocumentWithXmp() {
             String filename = "emptyDocumentWithXmp.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties().AddXmpMetadata
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename, new WriterProperties().AddXmpMetadata
                 ());
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText").SetTitle("Empty iText Document"
@@ -60,12 +60,12 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.Close();
-            PdfReader reader = CompareTool.CreateOutputReader(destinationFolder + filename);
+            PdfReader reader = CompareTool.CreateOutputReader(DESTINATION_FOLDER + filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            byte[] outBytes = pdfDocument.GetXmpMetadata();
+            byte[] outBytes = pdfDocument.GetXmpMetadataBytes();
             pdfDocument.Close();
-            byte[] cmpBytes = ReadFile(sourceFolder + "emptyDocumentWithXmp.xml");
+            byte[] cmpBytes = ReadFile(SOURCE_FOLDER + "emptyDocumentWithXmp.xml");
             cmpBytes = RemoveAlwaysDifferentEntries(cmpBytes);
             outBytes = RemoveAlwaysDifferentEntries(outBytes);
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
@@ -73,9 +73,9 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void EmptyDocumentWithXmpAppendMode01() {
-            String created = destinationFolder + "emptyDocumentWithXmpAppendMode01.pdf";
-            String updated = destinationFolder + "emptyDocumentWithXmpAppendMode01_updated.pdf";
-            String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode01_updatedAgain.pdf";
+            String created = DESTINATION_FOLDER + "emptyDocumentWithXmpAppendMode01.pdf";
+            String updated = DESTINATION_FOLDER + "emptyDocumentWithXmpAppendMode01_updated.pdf";
+            String updatedAgain = DESTINATION_FOLDER + "emptyDocumentWithXmpAppendMode01_updatedAgain.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             // create XMP metadata
@@ -95,9 +95,9 @@ namespace iText.Kernel.Pdf {
                 ();
             NUnit.Framework.Assert.AreEqual(6, metadataRef.GetObjNumber());
             NUnit.Framework.Assert.AreEqual(0, metadataRef.GetGenNumber());
-            byte[] outBytes = pdfDocument.GetXmpMetadata();
+            byte[] outBytes = pdfDocument.GetXmpMetadataBytes();
             pdfDocument.Close();
-            byte[] cmpBytes = ReadFile(sourceFolder + "emptyDocumentWithXmpAppendMode01.xml");
+            byte[] cmpBytes = ReadFile(SOURCE_FOLDER + "emptyDocumentWithXmpAppendMode01.xml");
             cmpBytes = RemoveAlwaysDifferentEntries(cmpBytes);
             outBytes = RemoveAlwaysDifferentEntries(outBytes);
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
@@ -105,9 +105,9 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void EmptyDocumentWithXmpAppendMode02() {
-            String created = destinationFolder + "emptyDocumentWithXmpAppendMode02.pdf";
-            String updated = destinationFolder + "emptyDocumentWithXmpAppendMode02_updated.pdf";
-            String updatedAgain = destinationFolder + "emptyDocumentWithXmpAppendMode02_updatedAgain.pdf";
+            String created = DESTINATION_FOLDER + "emptyDocumentWithXmpAppendMode02.pdf";
+            String updated = DESTINATION_FOLDER + "emptyDocumentWithXmpAppendMode02_updated.pdf";
+            String updatedAgain = DESTINATION_FOLDER + "emptyDocumentWithXmpAppendMode02_updatedAgain.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(created));
             pdfDocument.AddNewPage();
             pdfDocument.Close();
@@ -127,16 +127,16 @@ namespace iText.Kernel.Pdf {
                 ();
             NUnit.Framework.Assert.AreEqual(6, metadataRef.GetObjNumber());
             NUnit.Framework.Assert.AreEqual(0, metadataRef.GetGenNumber());
-            byte[] outBytes = pdfDocument.GetXmpMetadata();
+            byte[] outBytes = pdfDocument.GetXmpMetadataBytes();
             pdfDocument.Close();
-            byte[] cmpBytes = ReadFile(sourceFolder + "emptyDocumentWithXmpAppendMode02.xml");
+            byte[] cmpBytes = ReadFile(SOURCE_FOLDER + "emptyDocumentWithXmpAppendMode02.xml");
             cmpBytes = RemoveAlwaysDifferentEntries(cmpBytes);
             outBytes = RemoveAlwaysDifferentEntries(outBytes);
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareXmls(outBytes, cmpBytes));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, Count = 2)]
         public virtual void CreateEmptyDocumentWithAbcXmp() {
             MemoryStream fos = new MemoryStream();
             PdfWriter writer = new PdfWriter(fos);
@@ -151,8 +151,8 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             PdfReader reader = new PdfReader(new MemoryStream(fos.ToArray()));
             PdfDocument pdfDocument = new PdfDocument(reader);
-            NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual("abc".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), pdfDocument.GetXmpMetadata
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Rebuilt");
+            NUnit.Framework.Assert.AreEqual("abc".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1), pdfDocument.GetXmpMetadataBytes
                 ());
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
             reader.Close();
@@ -181,16 +181,16 @@ namespace iText.Kernel.Pdf {
         }
 
         private void RunCustomXmpTest(String name, String xmp) {
-            String outPath = destinationFolder + name + ".pdf";
-            String cmpPath = sourceFolder + "cmp_" + name + ".pdf";
+            String outPath = DESTINATION_FOLDER + name + ".pdf";
+            String cmpPath = SOURCE_FOLDER + "cmp_" + name + ".pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPath));
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
             pdfDoc.SetXmpMetadata(xmp.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
-            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, destinationFolder, "diff_" + 
-                name + "_"));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareByContent(outPath, cmpPath, DESTINATION_FOLDER, "diff_" +
+                 name + "_"));
             NUnit.Framework.Assert.IsNull(compareTool.CompareDocumentInfo(outPath, cmpPath));
         }
 

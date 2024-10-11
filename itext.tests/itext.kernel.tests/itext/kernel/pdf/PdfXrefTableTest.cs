@@ -48,17 +48,17 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
-            LogLevelConstants.ERROR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            LogLevel = LogLevelConstants.ERROR)]
         public virtual void OpenInvalidDocWithHugeRefTest() {
             String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
-            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_67();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_68();
             NUnit.Framework.Assert.DoesNotThrow(() => new PdfDocument(new PdfReader(inputFile, new ReaderProperties().
                 SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler))));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_67 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_67() {
+        private sealed class _MemoryLimitsAwareHandler_68 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_68() {
             }
 
             public override void CheckIfXrefStructureExceedsTheLimit(int requestedCapacity) {
@@ -66,8 +66,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
-            LogLevelConstants.ERROR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            LogLevel = LogLevelConstants.ERROR)]
         public virtual void OpenInvalidDocWithHugeRefTestDefaultMemoryLimitAwareHandler() {
             String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
             NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => new PdfDocument(new PdfReader(inputFile
@@ -75,8 +75,8 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT, LogLevel = 
-            LogLevelConstants.ERROR)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE, 
+            LogLevel = LogLevelConstants.ERROR)]
         public virtual void OpenWithWriterInvalidDocWithHugeRefTest() {
             String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
             MemoryStream outputStream = new ByteArrayOutputStream();

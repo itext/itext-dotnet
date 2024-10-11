@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext.commons</id>
-    <version>8.0.5</version>
+    <version>9.0.0</version>
     <title>iText commons module</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
@@ -19,10 +19,12 @@
     <dependencies>
       <group targetFramework="net461">
 		<dependency id="Newtonsoft.Json" version="13.0.1" />
+        <!--TODO DEVSIX-7184: Bump Microsoft.Extensions.Logging when targeting netcoreapp3.1-->
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
 		<dependency id="Newtonsoft.Json" version="13.0.1" />
+        <!--TODO DEVSIX-7184: Bump Microsoft.Extensions.Logging when targeting netcoreapp3.1-->
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
     </dependencies>

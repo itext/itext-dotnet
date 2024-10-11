@@ -1659,13 +1659,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             AtomicLong counter = new AtomicLong(0);
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Traverse(new 
-                _NodeVisitor_1765(counter));
+                _NodeVisitor_1763(counter));
             NUnit.Framework.Assert.AreEqual(7, counter.Get());
             NUnit.Framework.Assert.AreEqual(div2, div);
         }
 
-        private sealed class _NodeVisitor_1765 : NodeVisitor {
-            public _NodeVisitor_1765(AtomicLong counter) {
+        private sealed class _NodeVisitor_1763 : NodeVisitor {
+            public _NodeVisitor_1763(AtomicLong counter) {
                 this.counter = counter;
             }
 
@@ -1685,12 +1685,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>One<p>Two<p>Three");
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Filter(new 
-                _NodeFilter_1787());
+                _NodeFilter_1785());
             NUnit.Framework.Assert.AreSame(div, div2);
         }
 
-        private sealed class _NodeFilter_1787 : NodeFilter {
-            public _NodeFilter_1787() {
+        private sealed class _NodeFilter_1785 : NodeFilter {
+            public _NodeFilter_1785() {
             }
 
             public override NodeFilter.FilterResult Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {

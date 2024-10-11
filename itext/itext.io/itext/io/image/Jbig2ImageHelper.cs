@@ -64,8 +64,8 @@ namespace iText.IO.Image {
                 sr.Read();
                 Jbig2SegmentReader.Jbig2Page p = sr.GetPage(image.GetPage());
                 raf.Close();
-                image.SetHeight(p.pageBitmapHeight);
-                image.SetWidth(p.pageBitmapWidth);
+                image.SetHeight(p.GetPageBitmapHeight());
+                image.SetWidth(p.GetPageBitmapWidth());
                 image.SetBpc(1);
                 image.SetColorEncodingComponentsNumber(1);
                 byte[] globals = sr.GetGlobal(true);

@@ -21,6 +21,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.IO;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
@@ -63,14 +64,15 @@ namespace iText.Bouncycastlefips.Crypto {
         /// </param>
         public CipherCBCnoPadBCFips(bool forEncryption, byte[] key, byte[] initVector) {
             FipsAes.Key aesKey = new FipsAes.Key(key);
-            IBlockCipherService provider = CryptoServicesRegistrar.CreateService(aesKey);
+            IBlockCipherService provider = CryptoServicesRegistrar.CreateService<IBlockCipherService>(
+                (ICryptoServiceType<IBlockCipherService>) aesKey);
 
             IBlockCipherBuilder<IParameters<Algorithm>> cipherBuilder = null;
             if (forEncryption) {
-                cipherBuilder = provider.CreateBlockEncryptorBuilder(FipsAes.Cbc.WithIV(initVector));
+                cipherBuilder = provider.CreateBlockEncryptorBuilder<FipsAes.ParametersWithIV>(FipsAes.Cbc.WithIV(initVector));
             }
             else {
-                cipherBuilder = provider.CreateBlockDecryptorBuilder(FipsAes.Cbc.WithIV(initVector));
+                cipherBuilder = provider.CreateBlockDecryptorBuilder<FipsAes.ParametersWithIV>(FipsAes.Cbc.WithIV(initVector));
             }
 
             blockCipher = cipherBuilder.BuildBlockCipher(memoryStream);
@@ -81,14 +83,14 @@ namespace iText.Bouncycastlefips.Crypto {
             if (inpLen % blockCipher.BlockSize != 0) {
                 throw new ArgumentException("Not multiple of block: " + inpLen);
             }
-            try {
-                blockCipher.Stream.Write(inp, inpOff, inpLen);
-                blockCipher.Stream.Flush();
-                return memoryStream.ToArray();
+            if (memoryStream.Length != 0) {
+                throw new ArgumentException("Cipher memory stream is not empty!");
             }
-            finally {
-                memoryStream.SetLength(0);
+
+            using (Stream stream = blockCipher.Stream) {
+                stream.Write(inp, inpOff, inpLen);
             }
+            return memoryStream.ToArray();
         }
         
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

@@ -37,6 +37,8 @@ namespace iText.Pdfua.Checkers.Utils {
             this.context = context;
         }
 
-        public abstract void NextElement(IStructureNode arg1);
+        public abstract bool Accept(IStructureNode arg1);
+
+        public abstract void ProcessElement(IStructureNode arg1);
     }
 }

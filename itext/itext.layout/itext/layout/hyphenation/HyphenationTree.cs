@@ -117,7 +117,7 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Read hyphenation patterns from an XML file.</summary>
         /// <param name="filename">the filename</param>
         public virtual void LoadPatterns(String filename) {
-            LoadPatterns(new FileStream(filename, FileMode.Open, FileAccess.Read), filename);
+            LoadPatterns(FileUtil.GetInputStreamForFile(filename), filename);
         }
 
         /// <summary>Read hyphenation patterns from an XML file.</summary>

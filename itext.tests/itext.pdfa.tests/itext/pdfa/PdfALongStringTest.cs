@@ -55,7 +55,7 @@ namespace iText.Pdfa {
             String filename = destinationFolder + file;
             using (Stream icm = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
                 using (Stream fos = FileUtil.GetFileOutputStream(filename)) {
-                    Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformanceLevel.PDF_A_3U, new PdfOutputIntent
+                    Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformance.PDF_A_3U, new PdfOutputIntent
                         ("Custom", "", "http://www.color.org", "sRGB ICC preference", icm)));
                     StringBuilder stringBuilder = new StringBuilder(LOREM_IPSUM);
                     while (stringBuilder.Length < STRING_LENGTH_LIMIT) {

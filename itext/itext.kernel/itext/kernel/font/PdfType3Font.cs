@@ -334,9 +334,9 @@ namespace iText.Kernel.Font {
                 }
                 int flags = fontProgram.GetPdfFontFlags();
                 // reset both flags
-                flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
+                flags &= ~(FontDescriptorFlags.SYMBOLIC | FontDescriptorFlags.NONSYMBOLIC);
                 // set fontSpecific based on font encoding
-                flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
+                flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.SYMBOLIC : FontDescriptorFlags.NONSYMBOLIC;
                 fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
                 return fontDescriptor;
             }

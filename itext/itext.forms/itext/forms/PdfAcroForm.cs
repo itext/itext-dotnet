@@ -1382,10 +1382,10 @@ namespace iText.Forms {
                 float[] transformedRectArr = new float[] { float.MaxValue, float.MaxValue, -float.MaxValue, -float.MaxValue
                      };
                 foreach (Point p in transformedAppBoxPoints) {
-                    transformedRectArr[0] = (float)Math.Min(transformedRectArr[0], p.x);
-                    transformedRectArr[1] = (float)Math.Min(transformedRectArr[1], p.y);
-                    transformedRectArr[2] = (float)Math.Max(transformedRectArr[2], p.x);
-                    transformedRectArr[3] = (float)Math.Max(transformedRectArr[3], p.y);
+                    transformedRectArr[0] = (float)Math.Min(transformedRectArr[0], p.GetX());
+                    transformedRectArr[1] = (float)Math.Min(transformedRectArr[1], p.GetY());
+                    transformedRectArr[2] = (float)Math.Max(transformedRectArr[2], p.GetX());
+                    transformedRectArr[3] = (float)Math.Max(transformedRectArr[3], p.GetY());
                 }
                 transformedRect = new Rectangle(transformedRectArr[0], transformedRectArr[1], transformedRectArr[2] - transformedRectArr
                     [0], transformedRectArr[3] - transformedRectArr[1]);

@@ -22,19 +22,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Pdfa.Checker;
 
 namespace iText.Pdfa {
 //\cond DO_NOT_DOCUMENT
     internal class PdfAPage : PdfPage {
+        private readonly PdfAChecker checker;
+
 //\cond DO_NOT_DOCUMENT
-        internal PdfAPage(PdfDocument pdfDocument, PageSize pageSize)
+        internal PdfAPage(PdfDocument pdfDocument, PageSize pageSize, PdfAChecker checker)
             : base(pdfDocument, pageSize) {
+            this.checker = checker;
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal PdfAPage(PdfDictionary pdfObject)
+        internal PdfAPage(PdfDictionary pdfObject, PdfAChecker checker)
             : base(pdfObject) {
+            this.checker = checker;
         }
 //\endcond
 
@@ -42,12 +47,9 @@ namespace iText.Pdfa {
             // We check in advance whether this PdfAPage can be flushed and call the flush method only if it is.
             // This avoids processing actions that are invoked during flushing (for example, sending the END_PAGE event)
             // if the page is not actually flushed.
-            if (flushResourcesContentStreams || ((PdfADocument)GetDocument()).IsClosing() || ((PdfADocument)GetDocument
-                ()).checker.ObjectIsChecked(this.GetPdfObject())) {
+            if (flushResourcesContentStreams || GetDocument().IsClosing() || checker.IsPdfObjectReadyToFlush(this.GetPdfObject
+                ())) {
                 base.Flush(flushResourcesContentStreams);
-            }
-            else {
-                ((PdfADocument)GetDocument()).LogThatPdfAPageFlushingWasNotPerformed();
             }
         }
     }

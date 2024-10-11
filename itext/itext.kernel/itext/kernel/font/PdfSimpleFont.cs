@@ -292,7 +292,7 @@ namespace iText.Kernel.Font {
         public override float GetContentWidth(PdfString content) {
             float width = 0;
             GlyphLine glyphLine = DecodeIntoGlyphLine(content);
-            for (int i = glyphLine.start; i < glyphLine.end; i++) {
+            for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
                 width += glyphLine.Get(i).GetWidth();
             }
             return width;
@@ -464,9 +464,9 @@ namespace iText.Kernel.Font {
             AddFontStream(fontDescriptor);
             int flags = fontProgram.GetPdfFontFlags();
             // reset both flags
-            flags &= ~(FontDescriptorFlags.Symbolic | FontDescriptorFlags.Nonsymbolic);
+            flags &= ~(FontDescriptorFlags.SYMBOLIC | FontDescriptorFlags.NONSYMBOLIC);
             // set fontSpecific based on font encoding
-            flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.Symbolic : FontDescriptorFlags.Nonsymbolic;
+            flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.SYMBOLIC : FontDescriptorFlags.NONSYMBOLIC;
             fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
             return fontDescriptor;
         }

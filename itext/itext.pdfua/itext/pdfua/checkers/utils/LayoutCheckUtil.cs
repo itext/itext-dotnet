@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
@@ -41,23 +40,13 @@ namespace iText.Pdfua.Checkers.Utils {
             this.context = context;
         }
 
-        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
-        /// <remarks>
-        /// WARNING! This method is an artifact and currently does nothing.
-        /// It is kept to ensure backward binary compatibility
-        /// </remarks>
-        /// <param name="rendererObj">layout element to check</param>
-        [Obsolete]
-        public static void CheckLayoutElements(Object rendererObj) {
-        }
-
         /// <summary>Checks renderer for PDF UA compliance.</summary>
-        /// <param name="rendererObj">The renderer to check.</param>
-        public void CheckRenderer(Object rendererObj) {
-            if (rendererObj == null) {
+        /// <param name="renderer">The renderer to check.</param>
+        public void CheckRenderer(IRenderer renderer) {
+            if (renderer == null) {
                 return;
             }
-            IPropertyContainer layoutElement = ((IRenderer)rendererObj).GetModelElement();
+            IPropertyContainer layoutElement = renderer.GetModelElement();
             if (layoutElement is Image) {
                 new GraphicsCheckUtil(context).CheckLayoutElement((Image)layoutElement);
             }

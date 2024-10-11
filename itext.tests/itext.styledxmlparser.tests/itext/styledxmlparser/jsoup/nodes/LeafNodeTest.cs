@@ -62,12 +62,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         private bool HasAnyAttributes(iText.StyledXmlParser.Jsoup.Nodes.Node node) {
             bool[] found = new bool[1];
-            node.Filter(new _NodeFilter_78(found));
+            node.Filter(new _NodeFilter_77(found));
             return found[0];
         }
 
-        private sealed class _NodeFilter_78 : NodeFilter {
-            public _NodeFilter_78(bool[] found) {
+        private sealed class _NodeFilter_77 : NodeFilter {
+            public _NodeFilter_77(bool[] found) {
                 this.found = found;
             }
 

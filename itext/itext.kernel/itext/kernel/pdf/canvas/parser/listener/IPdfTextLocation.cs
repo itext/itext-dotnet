@@ -38,9 +38,5 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <returns>the text</returns>
         String GetText();
-
-        /// <summary>Get the page number of the page on which the text is located</summary>
-        /// <returns>the page number, or 0 if no page number was set</returns>
-        int GetPageNumber();
     }
 }

@@ -20,8 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-
 namespace iText.Forms.Form {
     /// <summary>Set of constants that will be used as keys to get and set properties.</summary>
     public sealed class FormProperty {
@@ -58,10 +56,6 @@ namespace iText.Forms.Form {
         /// <summary>The Constant FORM_FIELD_LABEL.</summary>
         public const int FORM_FIELD_LABEL = PROPERTY_START + 10;
 
-        /// <summary>The Constant FORM_ACCESSIBILITY_LANGUAGE.</summary>
-        [Obsolete]
-        public const int FORM_ACCESSIBILITY_LANGUAGE = PROPERTY_START + 11;
-
         /// <summary>The Constant FORM_FIELD_RADIO_GROUP_NAME.</summary>
         public const int FORM_FIELD_RADIO_GROUP_NAME = PROPERTY_START + 12;
 
@@ -73,6 +67,21 @@ namespace iText.Forms.Form {
 
         /// <summary>The Constant FORM_CONFORMANCE_LEVEL.</summary>
         public const int FORM_CONFORMANCE_LEVEL = PROPERTY_START + 15;
+
+        /// <summary>The Constant LIST_BOX_TOP_INDEX representing the index of the first visible option in a scrollable list.
+        ///     </summary>
+        public const int LIST_BOX_TOP_INDEX = PROPERTY_START + 16;
+
+        /// <summary>
+        /// The Constant TEXT_FIELD_COMB_FLAG representing
+        /// <c>Comb</c>
+        /// flag for the text field.
+        /// </summary>
+        public const int TEXT_FIELD_COMB_FLAG = PROPERTY_START + 17;
+
+        /// <summary>The Constant TEXT_FIELD_MAX_LEN representing the maximum length of the field's text, in characters.
+        ///     </summary>
+        public const int TEXT_FIELD_MAX_LEN = PROPERTY_START + 18;
 
         private FormProperty() {
         }

@@ -158,8 +158,9 @@ namespace iText.Layout.Renderer {
                 cellToRender.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(itemHeight));
                 // Adjust cell BBox to the remaining part of the layout bbox
                 // This way we can lay out elements partially
-                cellBBox.SetHeight(cellBBox.GetTop() - actualBBox.GetBottom()).SetY(actualBBox.GetY());
-                cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA, true);
+                cellBBox.SetHeight(cellBBox.GetTop() - layoutContext.GetArea().GetBBox().GetBottom()).SetY(layoutContext.GetArea
+                    ().GetBBox().GetY());
+                cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, true);
                 LayoutResult cellResult = cellToRender.Layout(cellContext);
                 notLayoutedRow = Math.Min(notLayoutedRow, ProcessLayoutResult(layoutResult, cell, cellResult));
             }
@@ -241,15 +242,14 @@ namespace iText.Layout.Renderer {
         private LayoutArea CalculateContainerOccupiedArea(LayoutContext layoutContext, bool isFull) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle areaBBox = area.GetBBox();
-            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(containerHeight, isFull, isFirstLayout, 
-                this);
+            float totalContainerHeight = GridMulticolUtil.UpdateOccupiedHeight(containerHeight, isFull, this);
             if (totalContainerHeight < areaBBox.GetHeight() || isFull) {
                 float? height = RetrieveHeight();
                 if (height == null) {
                     areaBBox.SetHeight(totalContainerHeight);
                 }
                 else {
-                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, isFirstLayout, this);
+                    height = GridMulticolUtil.UpdateOccupiedHeight((float)height, isFull, this);
                     areaBBox.SetHeight((float)height);
                 }
             }

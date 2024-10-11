@@ -67,7 +67,7 @@ namespace iText.Kernel.Font {
                 }
                 catch (Exception e) {
                     LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
-                    cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
+                    cMapToUnicode = CMapToUnicode.EMPTY_CMAP;
                 }
             }
             else {

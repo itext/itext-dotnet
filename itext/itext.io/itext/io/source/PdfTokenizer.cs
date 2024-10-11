@@ -45,25 +45,6 @@ namespace iText.IO.Source {
             EndOfFile
         }
 
-        public static readonly bool[] delims = new bool[] { true, true, false, false, false, false, false, false, 
-            false, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, true, false, false, false, false, true
-            , false, false, true, true, false, false, false, false, false, true, false, false, false, false, false
-            , false, false, false, false, false, false, false, true, false, true, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, true, false, true, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            , false, false, false, false, false, false, false, false };
-
         public static readonly byte[] Obj = ByteUtils.GetIsoBytes("obj");
 
         public static readonly byte[] R = ByteUtils.GetIsoBytes("R");
@@ -100,6 +81,25 @@ namespace iText.IO.Source {
 
         /// <summary>Streams are closed automatically.</summary>
         private bool closeStream = true;
+
+        private static readonly bool[] delims = new bool[] { true, true, false, false, false, false, false, false, 
+            false, false, true, true, false, true, true, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, true, false, false, false, false, true
+            , false, false, true, true, false, false, false, false, false, true, false, false, false, false, false
+            , false, false, false, false, false, false, false, true, false, true, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, true, false, true, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            , false, false, false, false, false, false, false, false };
 
         /// <summary>
         /// Creates a PdfTokenizer for the specified
@@ -141,6 +141,27 @@ namespace iText.IO.Source {
 
         public virtual int Read() {
             return file.Read();
+        }
+
+        /// <summary>Gets the next byte of pdf source without moving source position.</summary>
+        /// <returns>the byte, or -1 if EOF is reached</returns>
+        public virtual int Peek() {
+            return file.Peek();
+        }
+
+        /// <summary>
+        /// Gets the next
+        /// <c>buffer.length</c>
+        /// bytes of pdf source without moving source position.
+        /// </summary>
+        /// <param name="buffer">buffer to store read bytes</param>
+        /// <returns>
+        /// the number of read bytes. If it is less than
+        /// <c>buffer.length</c>
+        /// it means EOF has been reached.
+        /// </returns>
+        public virtual int Peek(byte[] buffer) {
+            return file.Peek(buffer);
         }
 
         public virtual String ReadString(int size) {
@@ -261,10 +282,23 @@ namespace iText.IO.Source {
             do {
                 long currentPosition = file.GetPosition();
                 str = ReadString(arrLength);
-                long eofPosition = str.IndexOf("%%EOF", StringComparison.Ordinal);
+                int eofPosition = str.IndexOf("%%EOF", StringComparison.Ordinal);
                 if (eofPosition >= 0) {
-                    // 6 stands for '%%EOF' length + 1
-                    return currentPosition + eofPosition + 6;
+                    // Now we want to also include following EOL bytes.
+                    file.Seek(currentPosition + eofPosition + 5);
+                    // We only allow 4 next bytes to be EOL markers.
+                    String remainingBytes = ReadString(4);
+                    int eolCount = 0;
+                    foreach (byte b in remainingBytes.GetBytes(System.Text.Encoding.UTF8)) {
+                        if (b == '\n' || b == '\r') {
+                            eolCount++;
+                        }
+                        else {
+                            return currentPosition + eofPosition + eolCount + 5;
+                        }
+                    }
+                    // 5 stands for '%%EOF' length
+                    return currentPosition + eofPosition + eolCount + 5;
                 }
                 // Change current position to ensure '%%EOF' is not cut in half.
                 file.Seek(file.GetPosition() - 4);

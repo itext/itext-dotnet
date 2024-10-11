@@ -54,68 +54,68 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         public const int WINDING = 2;
 
         /// <summary>Stack of saved states.</summary>
-        public Stack<iText.Kernel.Pdf.Canvas.Wmf.MetaState> savedStates;
+        private Stack<iText.Kernel.Pdf.Canvas.Wmf.MetaState> savedStates;
 
         /// <summary>List of MetaObjects.</summary>
-        public IList<MetaObject> MetaObjects;
+        private IList<MetaObject> metaObjects;
 
         /// <summary>Current Point.</summary>
-        public Point currentPoint;
+        private Point currentPoint;
 
         /// <summary>Current Pen.</summary>
-        public MetaPen currentPen;
+        private MetaPen currentPen;
 
         /// <summary>Current Brush.</summary>
-        public MetaBrush currentBrush;
+        private MetaBrush currentBrush;
 
         /// <summary>Current Font.</summary>
-        public MetaFont currentFont;
+        private MetaFont currentFont;
 
         /// <summary>The current background color.</summary>
         /// <remarks>The current background color. Default value is DeviceRgb#WHITE.</remarks>
-        public Color currentBackgroundColor = ColorConstants.WHITE;
+        private Color currentBackgroundColor = ColorConstants.WHITE;
 
         /// <summary>Current text color.</summary>
         /// <remarks>Current text color. Default value is DeviceRgb#BLACK.</remarks>
-        public Color currentTextColor = ColorConstants.BLACK;
+        private Color currentTextColor = ColorConstants.BLACK;
 
         /// <summary>The current background mode.</summary>
         /// <remarks>The current background mode. Default value is OPAQUE.</remarks>
-        public int backgroundMode = OPAQUE;
+        private int backgroundMode = OPAQUE;
 
         /// <summary>Current polygon fill mode.</summary>
         /// <remarks>Current polygon fill mode. Default value is ALTERNATE.</remarks>
-        public int polyFillMode = ALTERNATE;
+        private int polyFillMode = ALTERNATE;
 
         /// <summary>Curent line join.</summary>
         /// <remarks>Curent line join. Default value is 1.</remarks>
-        public int lineJoin = 1;
+        private int lineJoin = 1;
 
         /// <summary>Current text alignment.</summary>
-        public int textAlign;
+        private int textAlign;
 
         /// <summary>Current offset for Wx.</summary>
-        public int offsetWx;
+        private int offsetWx;
 
         /// <summary>Current offset for Wy.</summary>
-        public int offsetWy;
+        private int offsetWy;
 
         /// <summary>Current extent for Wx.</summary>
-        public int extentWx;
+        private int extentWx;
 
         /// <summary>Current extent for Wy.</summary>
-        public int extentWy;
+        private int extentWy;
 
         /// <summary>Current x value for scaling.</summary>
-        public float scalingX;
+        private float scalingX;
 
         /// <summary>Current y value for scaling.</summary>
-        public float scalingY;
+        private float scalingY;
 
         /// <summary>Creates new MetaState</summary>
         public MetaState() {
             savedStates = new Stack<iText.Kernel.Pdf.Canvas.Wmf.MetaState>();
-            MetaObjects = new List<MetaObject>();
+            metaObjects = new List<MetaObject>();
             currentPoint = new Point(0, 0);
             currentPen = new MetaPen();
             currentBrush = new MetaBrush();
@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <param name="state">state to copy</param>
         public virtual void SetMetaState(iText.Kernel.Pdf.Canvas.Wmf.MetaState state) {
             savedStates = state.savedStates;
-            MetaObjects = state.MetaObjects;
+            metaObjects = state.metaObjects;
             currentPoint = state.currentPoint;
             currentPen = state.currentPen;
             currentBrush = state.currentBrush;
@@ -154,20 +154,20 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Add a MetaObject to the State.</summary>
         /// <param name="object">MetaObject to be added</param>
         public virtual void AddMetaObject(MetaObject @object) {
-            for (int k = 0; k < MetaObjects.Count; ++k) {
-                if (MetaObjects[k] == null) {
-                    MetaObjects[k] = @object;
+            for (int k = 0; k < metaObjects.Count; ++k) {
+                if (metaObjects[k] == null) {
+                    metaObjects[k] = @object;
                     return;
                 }
             }
-            MetaObjects.Add(@object);
+            metaObjects.Add(@object);
         }
 
         /// <summary>Select the MetaObject at the specified index and prepare the PdfCanvas.</summary>
         /// <param name="index">position of the MetaObject</param>
         /// <param name="cb">PdfCanvas to prepare</param>
         public virtual void SelectMetaObject(int index, PdfCanvas cb) {
-            MetaObject obj = MetaObjects[index];
+            MetaObject obj = metaObjects[index];
             if (obj == null) {
                 return;
             }
@@ -236,7 +236,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <summary>Deletes the MetaObject at the specified index.</summary>
         /// <param name="index">index of the MetaObject to delete</param>
         public virtual void DeleteMetaObject(int index) {
-            MetaObjects[index] = null;
+            metaObjects[index] = null;
         }
 
         /// <summary>Saves the state of this MetaState object.</summary>

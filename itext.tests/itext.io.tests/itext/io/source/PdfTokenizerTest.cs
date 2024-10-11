@@ -58,6 +58,39 @@ namespace iText.IO.Source {
         }
 
         [NUnit.Framework.Test]
+        public virtual void PeekTest() {
+            String data = "/Name1 70";
+            PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                (data.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1))));
+            tokenizer.Seek(0);
+            int symbol = tokenizer.Peek();
+            NUnit.Framework.Assert.AreEqual((int)'/', symbol);
+            NUnit.Framework.Assert.AreEqual(0, tokenizer.GetPosition());
+            tokenizer.Seek(7);
+            symbol = tokenizer.Peek();
+            NUnit.Framework.Assert.AreEqual((int)'7', symbol);
+            NUnit.Framework.Assert.AreEqual(7, tokenizer.GetPosition());
+            tokenizer.Seek(9);
+            symbol = tokenizer.Peek();
+            NUnit.Framework.Assert.AreEqual(-1, symbol);
+            NUnit.Framework.Assert.AreEqual(9, tokenizer.GetPosition());
+            byte[] name = new byte[6];
+            tokenizer.Seek(0);
+            int read = tokenizer.Peek(name);
+            byte[] expected = "/Name1".GetBytes();
+            NUnit.Framework.Assert.AreEqual(expected, name);
+            NUnit.Framework.Assert.AreEqual(0, tokenizer.GetPosition());
+            NUnit.Framework.Assert.AreEqual(6, read);
+            byte[] bigBuffer = new byte[13];
+            read = tokenizer.Peek(bigBuffer);
+            expected = new byte[] { (byte)47, (byte)78, (byte)97, (byte)109, (byte)101, (byte)49, (byte)32, (byte)55, 
+                (byte)48, (byte)0, (byte)0, (byte)0, (byte)0 };
+            NUnit.Framework.Assert.AreEqual(expected, bigBuffer);
+            NUnit.Framework.Assert.AreEqual(0, tokenizer.GetPosition());
+            NUnit.Framework.Assert.AreEqual(9, read);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetLongValueTest() {
             String data = "21474836470";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
@@ -175,7 +208,7 @@ namespace iText.IO.Source {
             using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(
                 iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
                 long eofPosition = tok.GetNextEof();
-                NUnit.Framework.Assert.AreEqual(data.Length + 1, eofPosition);
+                NUnit.Framework.Assert.AreEqual(data.Length, eofPosition);
             }
         }
 
@@ -191,7 +224,7 @@ namespace iText.IO.Source {
             using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(stringBuilder.
                 ToString().GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
                 long eofPosition = tok.GetNextEof();
-                NUnit.Framework.Assert.AreEqual(data.Length * 20 + 6, eofPosition);
+                NUnit.Framework.Assert.AreEqual(data.Length * 20 + 5, eofPosition);
             }
         }
 
@@ -208,7 +241,7 @@ namespace iText.IO.Source {
             using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(stringBuilder.
                 ToString().GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
                 long eofPosition = tok.GetNextEof();
-                NUnit.Framework.Assert.AreEqual(124 + 6, eofPosition);
+                NUnit.Framework.Assert.AreEqual(124 + 5, eofPosition);
             }
         }
 
@@ -219,7 +252,18 @@ namespace iText.IO.Source {
             using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(
                 iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
                 long eofPosition = tok.GetNextEof();
-                NUnit.Framework.Assert.AreEqual(data.IndexOf("%%EOF", StringComparison.Ordinal) + 6, eofPosition);
+                NUnit.Framework.Assert.AreEqual(data.IndexOf("%%EOF", StringComparison.Ordinal) + 5, eofPosition);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetNextEofFollowedByEOLTest() {
+            String data = "some text to test \ngetting end of\n file logic%%EOF\n\r\r\n\r\r\n";
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            using (PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes(
+                iText.Commons.Utils.EncodingUtil.ISO_8859_1))))) {
+                long eofPosition = tok.GetNextEof();
+                NUnit.Framework.Assert.AreEqual(data.IndexOf("%%EOF", StringComparison.Ordinal) + 4 + 5, eofPosition);
             }
         }
 

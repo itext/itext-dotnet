@@ -37,31 +37,31 @@ namespace iText.IO.Font.Otf {
         }
 
         public override bool TransformOne(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return false;
             }
-            if (openReader.IsSkip(line.Get(line.idx).GetCode(), lookupFlag)) {
-                line.idx++;
+            if (openReader.IsSkip(line.Get(line.GetIdx()).GetCode(), lookupFlag)) {
+                line.SetIdx(line.GetIdx() + 1);
                 return false;
             }
             bool changed = false;
             OpenTableLookup.GlyphIndexer gi = null;
             foreach (GposLookupType6.MarkToBaseMark mb in marksbases) {
-                OtfMarkRecord omr = mb.marks.Get(line.Get(line.idx).GetCode());
+                OtfMarkRecord omr = mb.marks.Get(line.Get(line.GetIdx()).GetCode());
                 if (omr == null) {
                     continue;
                 }
                 if (gi == null) {
                     gi = new OpenTableLookup.GlyphIndexer();
-                    gi.idx = line.idx;
-                    gi.line = line;
+                    gi.SetIdx(line.GetIdx());
+                    gi.SetLine(line);
                     while (true) {
-                        int prev = gi.idx;
+                        int prev = gi.GetIdx();
                         // avoid attaching this mark glyph to another very distant mark glyph
                         bool foundBaseGlyph = false;
                         gi.PreviousGlyph(openReader, lookupFlag);
-                        if (gi.idx != -1) {
-                            for (int i = gi.idx; i < prev; i++) {
+                        if (gi.GetIdx() != -1) {
+                            for (int i = gi.GetIdx(); i < prev; i++) {
                                 if (openReader.GetGlyphClass(line.Get(i).GetCode()) == OtfClass.GLYPH_BASE) {
                                     foundBaseGlyph = true;
                                     break;
@@ -69,33 +69,33 @@ namespace iText.IO.Font.Otf {
                             }
                         }
                         if (foundBaseGlyph) {
-                            gi.glyph = null;
+                            gi.SetGlyph(null);
                             break;
                         }
-                        if (gi.glyph == null) {
+                        if (gi.GetGlyph() == null) {
                             break;
                         }
-                        if (mb.baseMarks.ContainsKey(gi.glyph.GetCode())) {
+                        if (mb.baseMarks.ContainsKey(gi.GetGlyph().GetCode())) {
                             break;
                         }
                     }
-                    if (gi.glyph == null) {
+                    if (gi.GetGlyph() == null) {
                         break;
                     }
                 }
-                GposAnchor[] gpas = mb.baseMarks.Get(gi.glyph.GetCode());
+                GposAnchor[] gpas = mb.baseMarks.Get(gi.GetGlyph().GetCode());
                 if (gpas == null) {
                     continue;
                 }
-                int markClass = omr.markClass;
+                int markClass = omr.GetMarkClass();
                 GposAnchor baseAnchor = gpas[markClass];
-                GposAnchor markAnchor = omr.anchor;
-                line.Set(line.idx, new Glyph(line.Get(line.idx), -markAnchor.XCoordinate + baseAnchor.XCoordinate, -markAnchor
-                    .YCoordinate + baseAnchor.YCoordinate, 0, 0, gi.idx - line.idx));
+                GposAnchor markAnchor = omr.GetAnchor();
+                line.Set(line.GetIdx(), new Glyph(line.Get(line.GetIdx()), -markAnchor.GetXCoordinate() + baseAnchor.GetXCoordinate
+                    (), -markAnchor.GetYCoordinate() + baseAnchor.GetYCoordinate(), 0, 0, gi.GetIdx() - line.GetIdx()));
                 changed = true;
                 break;
             }
-            line.idx++;
+            line.SetIdx(line.GetIdx() + 1);
             return changed;
         }
 

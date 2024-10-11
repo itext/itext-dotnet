@@ -46,16 +46,16 @@ namespace iText.IO.Font.Otf {
         /// <param name="line">a line, which is to be checked if it matches some context.</param>
         /// <returns>matching context rule or null, if none was found.</returns>
         public virtual T GetMatchingContextRule(GlyphLine line) {
-            if (line.idx >= line.end) {
+            if (line.GetIdx() >= line.GetEnd()) {
                 return null;
             }
-            Glyph g = line.Get(line.idx);
+            Glyph g = line.Get(line.GetIdx());
             IList<T> rules = GetSetOfRulesForStartGlyph(g.GetCode());
             foreach (T rule in rules) {
                 int lastGlyphIndex = CheckIfContextMatch(line, rule);
                 if (lastGlyphIndex != -1) {
-                    line.start = line.idx;
-                    line.end = lastGlyphIndex + 1;
+                    line.SetStart(line.GetIdx());
+                    line.SetEnd(lastGlyphIndex + 1);
                     return rule;
                 }
             }
@@ -82,18 +82,18 @@ namespace iText.IO.Font.Otf {
         protected internal virtual int CheckIfContextMatch(GlyphLine line, T rule) {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-            gidx.line = line;
-            gidx.idx = line.idx;
+            gidx.SetLine(line);
+            gidx.SetIdx(line.GetIdx());
             //Note, that starting index shall be 1
             for (j = 1; j < rule.GetContextLength(); ++j) {
                 gidx.NextGlyph(openReader, lookupFlag);
-                if (gidx.glyph == null || !rule.IsGlyphMatchesInput(gidx.glyph.GetCode(), j)) {
+                if (gidx.GetGlyph() == null || !rule.IsGlyphMatchesInput(gidx.GetGlyph().GetCode(), j)) {
                     break;
                 }
             }
             bool isMatch = j == rule.GetContextLength();
             if (isMatch) {
-                return gidx.idx;
+                return gidx.GetIdx();
             }
             else {
                 return -1;

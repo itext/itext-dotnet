@@ -41,7 +41,7 @@ namespace iText.Signatures {
     /// Class that allows you to verify a certificate against
     /// one or more OCSP responses.
     /// </summary>
-    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.V1.OCSPValidator should be used instead."
+    [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.OCSPValidator should be used instead."
         )]
     public class OCSPVerifier : RootStoreVerifier {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory

@@ -20,7 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
 using iText.Commons.Actions.Contexts;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -36,6 +39,10 @@ namespace iText.Kernel.Pdf {
     /// </remarks>
     public class DocumentProperties {
         protected internal IMetaInfo metaInfo = null;
+
+//\cond DO_NOT_DOCUMENT
+        internal Dictionary<Type, Object> dependencies = new Dictionary<Type, Object>();
+//\endcond
 
         /// <summary>Default constructor, use provided setters for configuration options.</summary>
         public DocumentProperties() {
@@ -63,6 +70,25 @@ namespace iText.Kernel.Pdf {
         /// <returns>true if the document event counting meta info is set, false otherwise.</returns>
         public virtual bool IsEventCountingMetaInfoSet() {
             return this.metaInfo != null;
+        }
+
+        /// <summary>Register custom dependency for the document.</summary>
+        /// <param name="clazz">Type of the dependency.</param>
+        /// <param name="instance">The instance of the dependency.</param>
+        /// <returns>
+        /// this
+        /// <see cref="DocumentProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.DocumentProperties RegisterDependency(Type clazz, Object instance) {
+            if (clazz == null) {
+                throw new ArgumentException(KernelExceptionMessageConstant.TYPE_SHOULD_NOT_BE_NULL);
+            }
+            if (instance == null) {
+                throw new ArgumentException(KernelExceptionMessageConstant.INSTANCE_SHOULD_NOT_BE_NULL);
+            }
+            dependencies.Put(clazz, instance);
+            return this;
         }
     }
 }

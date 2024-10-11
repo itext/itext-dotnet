@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf.Tagging {
 //\cond DO_NOT_DOCUMENT
@@ -368,7 +369,7 @@ namespace iText.Kernel.Pdf.Tagging {
             if (!parentsOfMcrs.IsEmpty()) {
                 parentsOfMcrs.MakeIndirect(structTreeRoot.GetDocument());
                 parentTree.AddEntry(pageStructParentIndex, parentsOfMcrs);
-                structTreeRoot.GetDocument().CheckIsoConformance(parentsOfMcrs, IsoKey.TAG_STRUCTURE_ELEMENT);
+                structTreeRoot.GetDocument().CheckIsoConformance(new TagStructElementValidationContext(parentsOfMcrs));
                 parentsOfMcrs.Flush();
                 return true;
             }

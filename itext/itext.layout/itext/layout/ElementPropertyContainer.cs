@@ -473,7 +473,10 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorder(Border border) {
-            SetProperty(Property.BORDER, border);
+            SetProperty(Property.BORDER_TOP, border);
+            SetProperty(Property.BORDER_RIGHT, border);
+            SetProperty(Property.BORDER_BOTTOM, border);
+            SetProperty(Property.BORDER_LEFT, border);
             return (T)(Object)this;
         }
 
@@ -528,7 +531,10 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorderRadius(BorderRadius borderRadius) {
-            SetProperty(Property.BORDER_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_BOTTOM_RIGHT_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_TOP_LEFT_RADIUS, borderRadius);
+            SetProperty(Property.BORDER_TOP_RIGHT_RADIUS, borderRadius);
             return (T)(Object)this;
         }
 
@@ -669,24 +675,24 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
-        /// <summary>Switch on the simulation of bold style for a font.</summary>
+        /// <summary>Simulates bold style for a font.</summary>
         /// <remarks>
-        /// Switch on the simulation of bold style for a font.
+        /// Simulates bold style for a font.
         /// Be aware that using correct bold font is highly preferred over this option.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetBold() {
+        public virtual T SimulateBold() {
             SetProperty(Property.BOLD_SIMULATION, true);
             return (T)(Object)this;
         }
 
-        /// <summary>Switch on the simulation of italic style for a font.</summary>
+        /// <summary>Simulates italic style for a font.</summary>
         /// <remarks>
-        /// Switch on the simulation of italic style for a font.
+        /// Simulates italic style for a font.
         /// Be aware that using correct italic (oblique) font is highly preferred over this option.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetItalic() {
+        public virtual T SimulateItalic() {
             SetProperty(Property.ITALIC_SIMULATION, true);
             return (T)(Object)this;
         }

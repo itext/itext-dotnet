@@ -33,6 +33,7 @@ using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Splitting;
 using iText.Layout.Tagging;
+using iText.Layout.Validation.Context;
 
 namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
@@ -367,7 +368,7 @@ namespace iText.Layout {
             if (renderer == null) {
                 return;
             }
-            pdfDocument.CheckIsoConformance(renderer, IsoKey.LAYOUT);
+            pdfDocument.CheckIsoConformance(new LayoutValidationContext(renderer));
             IList<IRenderer> renderers = renderer.GetChildRenderers();
             if (renderers == null) {
                 return;

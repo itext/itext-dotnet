@@ -1004,6 +1004,7 @@ namespace iText.IO.Font {
             int map31 = 0;
             int map30 = 0;
             int mapExt = 0;
+            int map03 = 0;
             cmaps = new OpenTypeParser.CmapTable();
             for (int k = 0; k < num_tables; ++k) {
                 int platId = raf.ReadUnsignedShort();
@@ -1025,6 +1026,11 @@ namespace iText.IO.Font {
                             if (platId == 1 && platSpecId == 0) {
                                 map10 = offset;
                             }
+                            else {
+                                if (platId == 0 && platSpecId == 3) {
+                                    map03 = offset;
+                                }
+                            }
                         }
                     }
                 }
@@ -1045,6 +1051,26 @@ namespace iText.IO.Font {
 
                     case 6: {
                         cmaps.cmap10 = ReadFormat6();
+                        break;
+                    }
+                }
+            }
+            if (map03 > 0) {
+                // Unicode platform, Unicode >2.0 semantics, expect format 4 or 6 subtable
+                raf.Seek(table_location[0] + map03);
+                int format = raf.ReadUnsignedShort();
+                // We treat this table as equivalent to (platformId = 3, encodingId = 1)
+                // for downstream processing, since both are intended to address the Unicode BMP.
+                // Note that only one of these encoding subtables is used at a time. If multiple encoding subtables
+                // are found, the ‘cmap’ parsing software determines which one to use.
+                switch (format) {
+                    case 4: {
+                        cmaps.cmap31 = ReadFormat4(false);
+                        break;
+                    }
+
+                    case 6: {
+                        cmaps.cmap31 = ReadFormat6();
                         break;
                     }
                 }

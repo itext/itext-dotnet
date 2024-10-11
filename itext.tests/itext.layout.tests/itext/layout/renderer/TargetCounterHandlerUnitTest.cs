@@ -32,10 +32,10 @@ namespace iText.Layout.Renderer {
     public class TargetCounterHandlerUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void AddAndGetPageByDestinationNotDocumentRendererTest() {
-            RootRenderer documentRenderer = new _RootRenderer_41();
+            RootRenderer documentRenderer = new _RootRenderer_40();
             String id = "id";
             int expectedPage = 5;
-            IRenderer renderer = new _TextRenderer_60(expectedPage, new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_59(expectedPage, new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -43,8 +43,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNull(page);
         }
 
-        private sealed class _RootRenderer_41 : RootRenderer {
-            public _RootRenderer_41() {
+        private sealed class _RootRenderer_40 : RootRenderer {
+            public _RootRenderer_40() {
             }
 
             public override IRenderer GetNextRenderer() {
@@ -59,8 +59,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_60 : TextRenderer {
-            public _TextRenderer_60(int expectedPage, Text baseArg1)
+        private sealed class _TextRenderer_59 : TextRenderer {
+            public _TextRenderer_59(int expectedPage, Text baseArg1)
                 : base(baseArg1) {
                 this.expectedPage = expectedPage;
             }
@@ -74,16 +74,16 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void IsValueDefinedForThisIdNotDocumentRendererTest() {
-            RootRenderer documentRenderer = new _RootRenderer_76();
+            RootRenderer documentRenderer = new _RootRenderer_75();
             String id = "id";
-            IRenderer renderer = new _TextRenderer_94(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_93(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             NUnit.Framework.Assert.IsFalse(TargetCounterHandler.IsValueDefinedForThisId(renderer, id));
         }
 
-        private sealed class _RootRenderer_76 : RootRenderer {
-            public _RootRenderer_76() {
+        private sealed class _RootRenderer_75 : RootRenderer {
+            public _RootRenderer_75() {
             }
 
             public override IRenderer GetNextRenderer() {
@@ -98,8 +98,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_94 : TextRenderer {
-            public _TextRenderer_94(Text baseArg1)
+        private sealed class _TextRenderer_93 : TextRenderer {
+            public _TextRenderer_93(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -112,7 +112,7 @@ namespace iText.Layout.Renderer {
         public virtual void AddAndGetPageByDestinationNullOccupiedAreaTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
-            IRenderer renderer = new _TextRenderer_111(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_110(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -120,8 +120,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNull(page);
         }
 
-        private sealed class _TextRenderer_111 : TextRenderer {
-            public _TextRenderer_111(Text baseArg1)
+        private sealed class _TextRenderer_110 : TextRenderer {
+            public _TextRenderer_110(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -134,7 +134,7 @@ namespace iText.Layout.Renderer {
         public virtual void AddAndGetPageByDestinationDoubleAddIncreasedTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
-            IRenderer renderer = new _TextRenderer_130(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_129(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -144,8 +144,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual((int?)8, page);
         }
 
-        private sealed class _TextRenderer_130 : TextRenderer {
-            public _TextRenderer_130(Text baseArg1)
+        private sealed class _TextRenderer_129 : TextRenderer {
+            public _TextRenderer_129(Text baseArg1)
                 : base(baseArg1) {
                 this.expectedPage = 5;
             }
@@ -163,7 +163,7 @@ namespace iText.Layout.Renderer {
         public virtual void AddAndGetPageByDestinationDoubleAddDecreasedTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
-            IRenderer renderer = new _TextRenderer_152(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_151(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -173,8 +173,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual((int?)2, page);
         }
 
-        private sealed class _TextRenderer_152 : TextRenderer {
-            public _TextRenderer_152(Text baseArg1)
+        private sealed class _TextRenderer_151 : TextRenderer {
+            public _TextRenderer_151(Text baseArg1)
                 : base(baseArg1) {
                 this.expectedPage = 5;
             }
@@ -193,7 +193,7 @@ namespace iText.Layout.Renderer {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
             int expectedPage = 5;
-            IRenderer renderer = new _TextRenderer_175(expectedPage, new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_174(expectedPage, new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -206,8 +206,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual((int?)expectedPage, page);
         }
 
-        private sealed class _TextRenderer_175 : TextRenderer {
-            public _TextRenderer_175(int expectedPage, Text baseArg1)
+        private sealed class _TextRenderer_174 : TextRenderer {
+            public _TextRenderer_174(int expectedPage, Text baseArg1)
                 : base(baseArg1) {
                 this.expectedPage = expectedPage;
             }
@@ -223,7 +223,7 @@ namespace iText.Layout.Renderer {
         public virtual void IsRelayoutRequiredTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
-            IRenderer renderer = new _TextRenderer_200(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_199(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             NUnit.Framework.Assert.IsFalse(documentRenderer.IsRelayoutRequired());
@@ -233,8 +233,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(documentRenderer.IsRelayoutRequired());
         }
 
-        private sealed class _TextRenderer_200 : TextRenderer {
-            public _TextRenderer_200(Text baseArg1)
+        private sealed class _TextRenderer_199 : TextRenderer {
+            public _TextRenderer_199(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -248,7 +248,7 @@ namespace iText.Layout.Renderer {
         public virtual void CopyConstructorTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
-            IRenderer renderer = new _TextRenderer_222(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_221(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -256,8 +256,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsTrue(copy.IsRelayoutRequired());
         }
 
-        private sealed class _TextRenderer_222 : TextRenderer {
-            public _TextRenderer_222(Text baseArg1)
+        private sealed class _TextRenderer_221 : TextRenderer {
+            public _TextRenderer_221(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -272,7 +272,7 @@ namespace iText.Layout.Renderer {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
             String id = "id";
             String notAddedId = "not added id";
-            IRenderer renderer = new _TextRenderer_243(new Text("renderer"));
+            IRenderer renderer = new _TextRenderer_242(new Text("renderer"));
             renderer.SetParent(documentRenderer);
             renderer.SetProperty(Property.ID, id);
             TargetCounterHandler.AddPageByID(renderer);
@@ -280,8 +280,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsFalse(TargetCounterHandler.IsValueDefinedForThisId(renderer, notAddedId));
         }
 
-        private sealed class _TextRenderer_243 : TextRenderer {
-            public _TextRenderer_243(Text baseArg1)
+        private sealed class _TextRenderer_242 : TextRenderer {
+            public _TextRenderer_242(Text baseArg1)
                 : base(baseArg1) {
             }
 

@@ -51,5 +51,10 @@ namespace iText.Bouncycastle.Asn1.X509 {
         public virtual X509Name GetX509Name() {
             return (X509Name)GetEncodable();
         }
+
+        public string GetName()
+        {
+            return GetX509Name().ToString();
+        }
     }
 }

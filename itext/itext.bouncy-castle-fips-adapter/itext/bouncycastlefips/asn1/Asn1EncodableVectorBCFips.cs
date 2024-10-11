@@ -107,6 +107,11 @@ namespace iText.Bouncycastlefips.Asn1 {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        public virtual int Size() {
+            return encodableVector.Count;
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
         /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {

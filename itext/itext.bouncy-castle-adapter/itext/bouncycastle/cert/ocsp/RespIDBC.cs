@@ -69,6 +69,11 @@ namespace iText.Bouncycastle.Cert.Ocsp {
             return respID;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public virtual IResponderID ToASN1Primitive() {
+            return new ResponderIDBC(respID.ToAsn1Object());
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
         /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>
         public override bool Equals(Object o) {

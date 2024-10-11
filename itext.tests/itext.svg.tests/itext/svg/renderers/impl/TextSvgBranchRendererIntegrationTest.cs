@@ -216,7 +216,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TspanWithOneAbsoluteCoordinateTest() {
-            // TODO change cmp after DEVSIX-4143 is fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanWithOneAbsoluteCoordinateTest");
         }
     }

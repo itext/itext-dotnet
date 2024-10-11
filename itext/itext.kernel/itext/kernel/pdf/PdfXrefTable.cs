@@ -25,11 +25,12 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Commons.Actions.Data;
+using iText.Commons.Actions;
 using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Actions.Data;
+using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
@@ -184,28 +185,6 @@ namespace iText.Kernel.Pdf {
             return xref[index];
         }
 
-        /// <summary>Convenience method to write the fingerprint preceding the trailer.</summary>
-        /// <remarks>
-        /// Convenience method to write the fingerprint preceding the trailer.
-        /// The fingerprint contains information on iText products used in the generation or manipulation
-        /// of an outputted PDF file.
-        /// </remarks>
-        /// <param name="document">pdfDocument to write the fingerprint to</param>
-        protected internal static void WriteKeyInfo(PdfDocument document) {
-            PdfWriter writer = document.GetWriter();
-            ICollection<ProductData> products = document.GetFingerPrint().GetProducts();
-            if (products.IsEmpty()) {
-                writer.WriteString(MessageFormatUtil.Format("%iText-{0}-no-registered-products\n", ITextCoreProductData.GetInstance
-                    ().GetVersion()));
-            }
-            else {
-                foreach (ProductData productData in products) {
-                    writer.WriteString(MessageFormatUtil.Format("%iText-{0}-{1}\n", productData.GetPublicProductName(), productData
-                        .GetVersion()));
-                }
-            }
-        }
-
         /// <summary>Creates next available indirect reference.</summary>
         /// <param name="document">
         /// is the current
@@ -290,7 +269,7 @@ namespace iText.Kernel.Pdf {
                 xref = null;
                 return;
             }
-            document.CheckIsoConformance(this, IsoKey.XREF_TABLE);
+            document.CheckIsoConformance(new XrefTableValidationContext(this));
             long startxref = writer.GetCurrentPos();
             long xRefStmPos = -1;
             if (xrefStream != null) {
@@ -303,7 +282,9 @@ namespace iText.Kernel.Pdf {
                 int offsetSize = GetOffsetSize(Math.Max(startxref, Size()));
                 xrefStream.Put(PdfName.W, new PdfArray(JavaUtil.ArraysAsList((PdfObject)new PdfNumber(1), new PdfNumber(offsetSize
                     ), new PdfNumber(2))));
-                xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
+                if (document.GetTrailer().Get(PdfName.Info) != null) {
+                    xrefStream.Put(PdfName.Info, document.GetTrailer().Get(PdfName.Info));
+                }
                 xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
                 PdfArray index = new PdfArray();
                 foreach (int? section in sections) {
@@ -400,7 +381,7 @@ namespace iText.Kernel.Pdf {
                 writer.Write(document.GetTrailer());
                 writer.Write('\n');
             }
-            WriteKeyInfo(document);
+            EventManager.GetInstance().OnEvent(new AddFingerPrintEvent(document));
             writer.WriteString("startxref\n").WriteLong(startxref).WriteString("\n%%EOF\n");
             xref = null;
             freeReferencesLinkedList.Clear();

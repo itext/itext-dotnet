@@ -68,6 +68,10 @@ namespace iText.Forms.Form.Element {
                     return (T1)(Object)4;
                 }
 
+                case FormProperty.LIST_BOX_TOP_INDEX: {
+                    return (T1)(Object)0;
+                }
+
                 default: {
                     return base.GetDefaultProperty<T1>(property);
                 }
@@ -125,6 +129,18 @@ namespace iText.Forms.Form.Element {
                 }
             }
             return selectedStrings;
+        }
+
+        /// <summary>Sets the index of the first visible option in a scrollable list.</summary>
+        /// <param name="topIndex">the index of the first option</param>
+        /// <returns>
+        /// this
+        /// <see cref="ListBoxField"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Forms.Form.Element.ListBoxField SetTopIndex(int topIndex) {
+            SetProperty(FormProperty.LIST_BOX_TOP_INDEX, topIndex);
+            return this;
         }
 
         /// <summary><inheritDoc/></summary>

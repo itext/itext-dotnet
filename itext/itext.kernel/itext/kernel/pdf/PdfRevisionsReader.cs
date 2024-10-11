@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf {
                 RandomAccessFileOrArray raf = reader.GetSafeFile();
                 WindowRandomAccessSource source = new WindowRandomAccessSource(raf.CreateSourceView(), 0, raf.Length());
                 using (Stream inputStream = new RASInputStream(source)) {
-                    using (PdfReader newReader = new PdfReader(inputStream)) {
+                    using (PdfReader newReader = new PdfReader(inputStream, reader.GetPropertiesCopy())) {
                         using (PdfDocument newDocument = new PdfDocument(newReader, new DocumentProperties().SetEventCountingMetaInfo
                             (metaInfo))) {
                             newDocument.GetXref().UnmarkReadingCompleted();

@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.Kernel.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Signatures.Testutils;
@@ -261,7 +262,7 @@ namespace iText.Signatures.Sign {
         private SignerProperties CreateSignerProperties() {
             SignerProperties signerProperties = new SignerProperties();
             signerProperties.SetFieldName("Signature1");
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(signerProperties.GetFieldName())
+            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID)
                 .SetContent("Approval test signature.\nCreated by iText.");
             signerProperties.SetPageRect(new Rectangle(50, 650, 200, 100))
                 .SetSignatureAppearance(appearance);

@@ -46,36 +46,36 @@ namespace iText.IO.Font.Otf {
 
         public override bool TransformOne(GlyphLine line) {
             bool changed = false;
-            int oldLineStart = line.start;
-            int oldLineEnd = line.end;
-            int initialLineIndex = line.idx;
+            int oldLineStart = line.GetStart();
+            int oldLineEnd = line.GetEnd();
+            int initialLineIndex = line.GetIdx();
             foreach (ContextualTable<ContextualPositionRule> subTable in subTables) {
                 ContextualPositionRule contextRule = subTable.GetMatchingContextRule(line);
                 if (contextRule == null) {
                     continue;
                 }
-                int lineEndBeforeTransformations = line.end;
+                int lineEndBeforeTransformations = line.GetEnd();
                 PosLookupRecord[] posLookupRecords = contextRule.GetPosLookupRecords();
                 OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
-                gidx.line = line;
+                gidx.SetLine(line);
                 foreach (PosLookupRecord posRecord in posLookupRecords) {
                     // There could be some skipped glyphs inside the context sequence, therefore currently GlyphIndexer and
                     // nextGlyph method are used to get to the glyph at "substRecord.sequenceIndex" index
-                    gidx.idx = initialLineIndex;
+                    gidx.SetIdx(initialLineIndex);
                     for (int i = 0; i < posRecord.sequenceIndex; ++i) {
                         gidx.NextGlyph(openReader, lookupFlag);
                     }
-                    line.idx = gidx.idx;
+                    line.SetIdx(gidx.GetIdx());
                     OpenTableLookup lookupTable = openReader.GetLookupTable(posRecord.lookupListIndex);
                     changed = lookupTable.TransformOne(line) || changed;
                 }
-                line.idx = line.end;
-                line.start = oldLineStart;
-                int lenDelta = lineEndBeforeTransformations - line.end;
-                line.end = oldLineEnd - lenDelta;
+                line.SetIdx(line.GetEnd());
+                line.SetStart(oldLineStart);
+                int lenDelta = lineEndBeforeTransformations - line.GetEnd();
+                line.SetEnd(oldLineEnd - lenDelta);
                 return changed;
             }
-            line.idx++;
+            line.SetIdx(line.GetIdx() + 1);
             return changed;
         }
 

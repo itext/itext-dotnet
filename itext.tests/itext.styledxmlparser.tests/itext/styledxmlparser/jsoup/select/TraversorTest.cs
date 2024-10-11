@@ -34,13 +34,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void FilterVisit() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            NodeTraversor.Filter(new _NodeFilter_44(accum), doc.Select("div"));
+            NodeTraversor.Filter(new _NodeFilter_43(accum), doc.Select("div"));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p></div><div><#text></#text></div>", accum.ToString
                 ());
         }
 
-        private sealed class _NodeFilter_44 : NodeFilter {
-            public _NodeFilter_44(StringBuilder accum) {
+        private sealed class _NodeFilter_43 : NodeFilter {
+            public _NodeFilter_43(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -61,14 +61,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void FilterSkipChildren() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            NodeTraversor.Filter(new _NodeFilter_64(accum), 
+            NodeTraversor.Filter(new _NodeFilter_63(accum), 
                         // OMIT contents of p:
                         doc.Select("div"));
             NUnit.Framework.Assert.AreEqual("<div><p></p></div><div><#text></#text></div>", accum.ToString());
         }
 
-        private sealed class _NodeFilter_64 : NodeFilter {
-            public _NodeFilter_64(StringBuilder accum) {
+        private sealed class _NodeFilter_63 : NodeFilter {
+            public _NodeFilter_63(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -89,14 +89,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void FilterSkipEntirely() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            NodeTraversor.Filter(new _NodeFilter_85(accum), 
+            NodeTraversor.Filter(new _NodeFilter_84(accum), 
                         // OMIT p:
                         doc.Select("div"));
             NUnit.Framework.Assert.AreEqual("<div></div><div><#text></#text></div>", accum.ToString());
         }
 
-        private sealed class _NodeFilter_85 : NodeFilter {
-            public _NodeFilter_85(StringBuilder accum) {
+        private sealed class _NodeFilter_84 : NodeFilter {
+            public _NodeFilter_84(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -120,7 +120,7 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void FilterRemove() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There be <b>bold</b></div>"
                 );
-            NodeTraversor.Filter(new _NodeFilter_107(), 
+            NodeTraversor.Filter(new _NodeFilter_106(), 
                         // Delete "p" in head:
                         
                         // Delete "b" in tail:
@@ -128,8 +128,8 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual("<div></div>\n<div>\n There be \n</div>", doc.Select("body").Html());
         }
 
-        private sealed class _NodeFilter_107 : NodeFilter {
-            public _NodeFilter_107() {
+        private sealed class _NodeFilter_106 : NodeFilter {
+            public _NodeFilter_106() {
             }
 
             public override NodeFilter.FilterResult Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
@@ -145,14 +145,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         public virtual void FilterStop() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p></div><div>There</div>");
             StringBuilder accum = new StringBuilder();
-            NodeTraversor.Filter(new _NodeFilter_127(accum), 
+            NodeTraversor.Filter(new _NodeFilter_126(accum), 
                         // Stop after p.
                         doc.Select("div"));
             NUnit.Framework.Assert.AreEqual("<div><p><#text></#text></p>", accum.ToString());
         }
 
-        private sealed class _NodeFilter_127 : NodeFilter {
-            public _NodeFilter_127(StringBuilder accum) {
+        private sealed class _NodeFilter_126 : NodeFilter {
+            public _NodeFilter_126(StringBuilder accum) {
                 this.accum = accum;
             }
 
@@ -175,14 +175,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             // test we can replace an element during traversal
             String html = "<div><p>One <i>two</i> <i>three</i> four.</p></div>";
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
-            NodeTraversor.Traverse(new _NodeVisitor_150(), doc);
+            NodeTraversor.Traverse(new _NodeVisitor_149(), doc);
             iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.SelectFirst("p");
             NUnit.Framework.Assert.IsNotNull(p);
             NUnit.Framework.Assert.AreEqual("<p>One <u>two</u> <u>three</u> four.</p>", p.OuterHtml());
         }
 
-        private sealed class _NodeVisitor_150 : NodeVisitor {
-            public _NodeVisitor_150() {
+        private sealed class _NodeVisitor_149 : NodeVisitor {
+            public _NodeVisitor_149() {
             }
 
             public void Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
@@ -203,13 +203,13 @@ namespace iText.StyledXmlParser.Jsoup.Select {
         [NUnit.Framework.Test]
         public virtual void CanAddChildren() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p></p><p></p></div>");
-            NodeTraversor.Traverse(new _NodeVisitor_174(), doc);
+            NodeTraversor.Traverse(new _NodeVisitor_173(), doc);
             NUnit.Framework.Assert.AreEqual("<div>\n" + " <p><span>0</span><span>1</span></p>\n" + " <p><span>2</span><span>3</span></p>\n"
                  + "</div>", doc.Body().Html());
         }
 
-        private sealed class _NodeVisitor_174 : NodeVisitor {
-            public _NodeVisitor_174() {
+        private sealed class _NodeVisitor_173 : NodeVisitor {
+            public _NodeVisitor_173() {
                 this.i = 0;
             }
 

@@ -119,14 +119,14 @@ namespace iText.Signatures.Sign {
         [LogMessage("Checking CRL: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
         [LogMessage("Added CRL found at: ", LogLevel = LogLevelConstants.INFO, Count = 3)]
         public virtual void UnreachableSeveralCrlDistributionPointsFromTheCertChainTest() {
-            CrlClientOnline crlClientOnline = new _CrlClientOnline_152();
+            CrlClientOnline crlClientOnline = new _CrlClientOnline_151();
             IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(chainWithSeveralUrls)[1];
             ICollection<byte[]> bytes = crlClientOnline.GetEncoded(checkCert, null);
             NUnit.Framework.Assert.AreEqual(3, bytes.Count);
         }
 
-        private sealed class _CrlClientOnline_152 : CrlClientOnline {
-            public _CrlClientOnline_152() {
+        private sealed class _CrlClientOnline_151 : CrlClientOnline {
+            public _CrlClientOnline_151() {
             }
 
             protected internal override Stream GetCrlResponse(IX509Certificate cert, Uri url) {

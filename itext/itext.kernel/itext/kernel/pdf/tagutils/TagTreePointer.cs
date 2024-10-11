@@ -762,10 +762,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_MOVE_TO_MARKED_CONTENT_REFERENCE);
             }
             TagTreePointer.RoleFinderHandler handler = new TagTreePointer.RoleFinderHandler(n, role);
-            TagTreePointer.TagTreeIteratorApproverWithStop approver = new TagTreePointer.TagTreeIteratorApproverWithStop
-                (handler);
-            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), approver, TagTreeIterator.TreeTraversalOrder
-                .PRE_ORDER);
+            TagTreeIterator iterator = new TagTreeIterator(GetCurrentStructElem(), TagTreeIterator.TreeTraversalOrder.
+                PRE_ORDER);
             iterator.AddHandler(handler);
             iterator.Traverse();
             PdfStructElem elem = handler.GetFoundElement();
@@ -1129,7 +1127,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private class RoleFinderHandler : ITagTreeIteratorHandler {
+        private class RoleFinderHandler : AbstractAvoidDuplicatesTagTreeIteratorHandler {
             private readonly int n;
 
             private readonly String role;
@@ -1145,7 +1143,15 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
 //\endcond
 
-            public virtual void NextElement(IStructureNode elem) {
+            public virtual PdfStructElem GetFoundElement() {
+                return foundElem;
+            }
+
+            public override bool Accept(IStructureNode node) {
+                return GetFoundElement() == null && base.Accept(node);
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 if (foundElem != null) {
                     return;
                 }
@@ -1153,25 +1159,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (descendantRole.Equals(role) && foundIdx++ == n) {
                     foundElem = (PdfStructElem)elem;
                 }
-            }
-
-            public virtual PdfStructElem GetFoundElement() {
-                return foundElem;
-            }
-        }
-
-        [System.ObsoleteAttribute(@"change ITagTreeIteratorHandler#nextElement to return boolean showing whether the iteration should be continued. It will allow to get rid of this ugly workaround."
-            )]
-        private class TagTreeIteratorApproverWithStop : TagTreeIteratorAvoidDuplicatesApprover {
-            private readonly TagTreePointer.RoleFinderHandler handler;
-
-            public TagTreeIteratorApproverWithStop(TagTreePointer.RoleFinderHandler handler)
-                : base() {
-                this.handler = handler;
-            }
-
-            public override bool Approve(IStructureNode elem) {
-                return base.Approve(elem) && handler.GetFoundElement() == null;
             }
         }
     }

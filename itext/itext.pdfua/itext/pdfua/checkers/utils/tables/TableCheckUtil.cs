@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
@@ -41,17 +40,6 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             this.context = context;
         }
 
-        /// <summary>WARNING! This method is an artifact and currently does nothing.</summary>
-        /// <remarks>
-        /// WARNING! This method is an artifact and currently does nothing.
-        /// It is kept to ensure backward binary compatibility
-        /// </remarks>
-        /// <param name="table">the table to check.</param>
-        [System.ObsoleteAttribute(@"This method is an artifact and will be removed.")]
-        public static void CheckLayoutTable(Table table) {
-        }
-
-        //No impl
         /// <summary>Checks if the table is pdf/ua compliant.</summary>
         /// <param name="table">the table to check.</param>
         public void CheckTable(Table table) {
@@ -69,8 +57,11 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
                 : base(context) {
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override void NextElement(IStructureNode elem) {
+            public override bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public override void ProcessElement(IStructureNode elem) {
                 PdfStructElem table = context.GetElementIfRoleMatches(PdfName.Table, elem);
                 if (table == null) {
                     return;

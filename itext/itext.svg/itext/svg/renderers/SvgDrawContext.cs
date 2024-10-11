@@ -57,7 +57,9 @@ namespace iText.Svg.Renderers {
 
         private SvgCssContext cssContext;
 
-        private AffineTransform lastTextTransform = new AffineTransform();
+        private AffineTransform lastTextTransform;
+
+        private AffineTransform rootTransform;
 
         private float[] textMove = new float[] { 0.0f, 0.0f };
 
@@ -239,6 +241,25 @@ namespace iText.Svg.Renderers {
         /// <param name="newTransform">last text transformation</param>
         public virtual void SetLastTextTransform(AffineTransform newTransform) {
             this.lastTextTransform = newTransform;
+        }
+
+        /// <summary>Get the current root transformation that was last applied.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// representing the root transformation.
+        /// </returns>
+        public virtual AffineTransform GetRootTransform() {
+            if (rootTransform == null) {
+                rootTransform = new AffineTransform();
+            }
+            return this.rootTransform;
+        }
+
+        /// <summary>Set the current root transformation.</summary>
+        /// <param name="newTransform">root transformation.</param>
+        public virtual void SetRootTransform(AffineTransform newTransform) {
+            this.rootTransform = newTransform;
         }
 
         /// <summary>Get the stored current text move</summary>
