@@ -1876,9 +1876,15 @@ namespace iText.Kernel.Pdf {
         }
 
         private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument) {
+            RebuildFormFieldParent(field, newField, toDocument, new HashSet<PdfDictionary>());
+        }
+
+        private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument, ICollection
+            <PdfDictionary> visitedForms) {
             if (newField.ContainsKey(PdfName.Parent)) {
                 return;
             }
+            visitedForms.Add(field);
             PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
             if (oldParent != null) {
                 PdfDictionary newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
@@ -1887,10 +1893,10 @@ namespace iText.Kernel.Pdf {
                     newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName.Parent), true
                         , NullCopyFilter.GetInstance());
                 }
-                if (oldParent == oldParent.GetAsDictionary(PdfName.Parent)) {
+                if (visitedForms.Contains(oldParent)) {
                     return;
                 }
-                RebuildFormFieldParent(oldParent, newParent, toDocument);
+                RebuildFormFieldParent(oldParent, newParent, toDocument, visitedForms);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
                     // no kids are added here, since we do not know at this point which pages are to be copied,

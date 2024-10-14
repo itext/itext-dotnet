@@ -22,6 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -52,6 +55,9 @@ namespace iText.Forms.Fields {
 
         private static readonly PdfName[] TERMINAL_FIELDS = new PdfName[] { PdfName.Btn, PdfName.Tx, PdfName.Ch, PdfName
             .Sig };
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.AbstractPdfFormField
+            ));
 
         /// <summary>Index of font value in default appearance element.</summary>
         private const int DA_FONT = 0;
@@ -136,26 +142,7 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>.
         /// </returns>
         public virtual PdfString GetFieldName() {
-            String parentName = "";
-            PdfDictionary parentDict = GetParent();
-            if (parentDict != null) {
-                PdfFormField parentField = GetParentField();
-                if (parentField == null) {
-                    parentField = PdfFormField.MakeFormField(GetParent(), GetDocument());
-                }
-                PdfString pName = parentField.GetFieldName();
-                if (pName != null) {
-                    parentName = pName.ToUnicodeString() + ".";
-                }
-            }
-            PdfString name = GetPdfObject().GetAsString(PdfName.T);
-            if (name != null) {
-                return new PdfString(parentName + name.ToUnicodeString(), PdfEncodings.UNICODE_BIG);
-            }
-            if (IsTerminalFormField()) {
-                return new PdfString(parentName, PdfEncodings.UNICODE_BIG);
-            }
-            return null;
+            return GetFieldName(new HashSet<PdfFormField>());
         }
 
         /// <summary>
@@ -462,6 +449,45 @@ namespace iText.Forms.Fields {
             }
             return false;
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Gets the current field name.</summary>
+        /// <param name="visited">list of visited parents which is used to determine cycle references</param>
+        /// <returns>
+        /// the current field name, as a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>.
+        /// </returns>
+        internal virtual PdfString GetFieldName(ICollection<PdfFormField> visited) {
+            String parentName = "";
+            PdfDictionary parentDict = GetParent();
+            if (parentDict != null) {
+                PdfFormField parentField = GetParentField();
+                if (!visited.Contains(parentField)) {
+                    if (parentField == null) {
+                        parentField = PdfFormField.MakeFormField(GetParent(), GetDocument());
+                    }
+                    visited.Add(parentField);
+                    PdfString pName = parentField.GetFieldName(visited);
+                    if (pName != null) {
+                        parentName = pName.ToUnicodeString() + ".";
+                    }
+                }
+                else {
+                    LOGGER.LogWarning(FormsLogMessageConstants.FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE);
+                    Remove(PdfName.Parent);
+                    this.parent = null;
+                }
+            }
+            PdfString name = GetPdfObject().GetAsString(PdfName.T);
+            if (name != null) {
+                return new PdfString(parentName + name.ToUnicodeString(), PdfEncodings.UNICODE_BIG);
+            }
+            if (IsTerminalFormField()) {
+                return new PdfString(parentName, PdfEncodings.UNICODE_BIG);
+            }
+            return null;
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void UpdateFontAndFontSize(PdfFont font, float fontSize) {

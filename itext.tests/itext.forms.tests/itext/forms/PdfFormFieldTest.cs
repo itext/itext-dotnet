@@ -1587,6 +1587,29 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE, Ignore = true)]
+        public virtual void FormFieldCycleRefTest() {
+            String fileName = destinationFolder + "formFieldCycleRefTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
+            pdfDoc.SetTagged();
+            pdfDoc.InitializeOutlines();
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfFormField formField = new CheckBoxFormFieldBuilder(pdfDoc, "TestCheck").SetWidgetRectangle(new Rectangle
+                (36, 560, 20, 20)).CreateCheckBox().SetValue("1", true);
+            PdfFormField child1 = new TextFormFieldBuilder(pdfDoc, "child").SetWidgetRectangle(new Rectangle(100, 300, 
+                200, 20)).CreateText();
+            PdfFormField child2 = new TextFormFieldBuilder(pdfDoc, "another_name").SetWidgetRectangle(new Rectangle(100
+                , 250, 200, 20)).CreateText();
+            formField.AddKid(child1);
+            child1.AddKid(child2);
+            formField.SetParent(child2);
+            acroForm.AddField(formField);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(fileName, sourceFolder + "cmp_formFieldCycleRefTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal class CustomButtonFormField : PdfButtonFormField {
             private int counter = 0;
