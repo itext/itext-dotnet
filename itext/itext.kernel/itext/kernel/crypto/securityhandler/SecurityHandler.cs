@@ -67,7 +67,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         protected internal byte[] extra = new byte[5];
 
         protected internal SecurityHandler() {
-            SafeInitMessageDigest();
+            InitMd5MessageDigest();
         }
 
         /// <summary>
@@ -125,7 +125,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return JavaUtil.ArraysCopyOf(mkey, mkey.Length);
         }
 
-        private void SafeInitMessageDigest() {
+        /// <summary>Init md5 message digest.</summary>
+        protected internal virtual void InitMd5MessageDigest() {
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
                 if (FACTORY.IsInApprovedOnlyMode()) {

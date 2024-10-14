@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Kernel.Utils.Objectpathitems;
@@ -52,7 +51,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SimpleEncryptDecryptTest() {
             String srcFile = SRC + "simpleDocument.pdf";
             String encryptedCmpFile = SRC + "cmp_encryptedSimpleDocument.pdf";
@@ -74,7 +72,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         [NUnit.Framework.Test]
         [LogMessage(VersionConforming.NOT_SUPPORTED_AES_GCM)]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void SimpleEncryptDecryptPdf15Test() {
             String srcFile = SRC + "simpleDocument.pdf";
             String outFile = DEST + "notSupportedVersionDocument.pdf";
@@ -87,7 +84,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void KnownOutputTest() {
             String srcFile = SRC + "encryptedDocument.pdf";
             String outFile = DEST + "encryptedDocument.pdf";
@@ -100,21 +96,18 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         // In all these tampered files, the stream content of object 14 has been modified.
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void MacTamperedTest() {
             String srcFile = SRC + "encryptedDocumentTamperedMac.pdf";
             AssertTampered(srcFile);
         }
 
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void InitVectorTamperedTest() {
             String srcFile = SRC + "encryptedDocumentTamperedIv.pdf";
             AssertTampered(srcFile);
         }
 
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void CiphertextTamperedTest() {
             String srcFile = SRC + "encryptedDocumentTamperedCiphertext.pdf";
@@ -122,7 +115,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
             )]
         public virtual void PdfEncryptionWithEmbeddedFilesTest() {
@@ -158,7 +150,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void PdfEncryptionWithMetadataTest() {
             byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
                 (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };
@@ -191,7 +182,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptPdfWithMissingCFTest() {
             byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
                 (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };
@@ -206,7 +196,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptPdfWithMissingStdCFTest() {
             byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
                 (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };
@@ -226,7 +215,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptPdfWithMissingCFMTest() {
             byte[] documentId = new byte[] { (byte)88, (byte)189, (byte)192, (byte)48, (byte)240, (byte)200, (byte)87, 
                 (byte)183, (byte)244, (byte)119, (byte)224, (byte)109, (byte)226, (byte)173, (byte)32, (byte)90 };

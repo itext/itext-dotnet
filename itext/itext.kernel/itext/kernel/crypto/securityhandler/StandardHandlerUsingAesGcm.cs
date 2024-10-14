@@ -100,5 +100,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return true;
         }
 //\endcond
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void InitMd5MessageDigest() {
+        }
+        //Do nothing to not initialize md5 message digest, since it's not used by AES-GCM handler
     }
 }

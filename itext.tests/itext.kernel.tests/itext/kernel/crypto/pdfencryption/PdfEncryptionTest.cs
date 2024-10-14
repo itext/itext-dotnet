@@ -135,7 +135,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256() {
             String filename = "encryptWithPasswordAes256.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -151,7 +150,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256NoCompression() {
             String filename = "encryptWithPasswordAes256NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -311,7 +309,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256EmbeddedFilesOnly() {
             String filename = "encryptWithPasswordAes256EmbeddedFilesOnly.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.EMBEDDED_FILES_ONLY;
@@ -342,7 +339,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2NotEncryptMetadata() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
@@ -350,7 +346,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2NotEncryptMetadata02() {
             String filename = "encryptAes256Pdf2NotEncryptMetadata02.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
@@ -377,7 +372,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256FullCompression() {
             String filename = "encryptAes256FullCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -385,7 +379,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptWithPasswordAes256Pdf2() {
             String filename = "encryptWithPasswordAes256Pdf2.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
@@ -402,7 +395,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StampAndUpdateVersionNewAes256() {
             String filename = "stampAndUpdateVersionNewAes256.pdf";
             PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256.pdf", new ReaderProperties
@@ -414,7 +406,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2Permissions() {
             String filename = "encryptAes256Pdf2Permissions.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
@@ -461,7 +452,6 @@ namespace iText.Kernel.Crypto.Pdfencryption {
 
         // this test checks log message absence
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true, Count = 2)]
         public virtual void DecryptAdobeWithPasswordAes256() {
             String filename = System.IO.Path.Combine(sourceFolder + "AdobeAes256.pdf").ToString();
             DecryptWithPassword(filename, "user".GetBytes());

@@ -137,6 +137,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 //\endcond
 
+        /// <summary><inheritDoc/></summary>
+        protected internal override void InitMd5MessageDigest() {
+        }
+
+        //Do nothing to not initialize md5 message digest, since it's not used by AES256 handler
         private void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             ownerPassword = GenerateOwnerPasswordIfNullOrEmpty(ownerPassword);

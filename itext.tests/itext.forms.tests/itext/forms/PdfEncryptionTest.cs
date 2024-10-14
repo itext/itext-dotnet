@@ -70,7 +70,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2PermissionsTest01() {
             String filename = "encryptAes256Pdf2PermissionsTest01.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
@@ -107,7 +106,6 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void EncryptAes256Pdf2PermissionsTest02() {
             String filename = "encryptAes256Pdf2PermissionsTest02.pdf";
             // This test differs from the previous one (encryptAes256Pdf2PermissionsTest01) only in permissions.

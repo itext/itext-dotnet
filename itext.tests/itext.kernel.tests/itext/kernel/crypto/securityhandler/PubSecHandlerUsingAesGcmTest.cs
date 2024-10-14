@@ -30,7 +30,6 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -54,7 +53,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void TestSimpleEncryptDecryptTest() {
             try {
@@ -72,7 +70,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         [LogMessage(VersionConforming.NOT_SUPPORTED_AES_GCM, Ignore = true)]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void TestSimpleEncryptDecryptPdf17Test() {
             try {
@@ -89,7 +86,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             DecryptWithCertificate(fileName, DESTINATION_FOLDER, "test.cer", "test.pem");
         }
 
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void DecryptExternalFileTest() {
             try {
@@ -101,7 +97,6 @@ namespace iText.Kernel.Crypto.Securityhandler {
             DecryptWithCertificate("externalFile.pdf", SOURCE_FOLDER, "decrypter.cert.pem", "signerkey.pem");
         }
 
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [NUnit.Framework.Test]
         public virtual void InvalidCryptFilterTest() {
             String fileName = "invalidCryptFilter.pdf";

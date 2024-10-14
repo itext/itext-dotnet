@@ -20,8 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using iText.Commons.Digest;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
@@ -62,7 +65,14 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         protected internal virtual byte[] GenerateOwnerPasswordIfNullOrEmpty(byte[] ownerPassword) {
             if (ownerPassword == null || ownerPassword.Length == 0) {
-                ownerPassword = md5.Digest(PdfEncryption.GenerateNewDocumentId());
+                try {
+                    IMessageDigest sha256 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest(
+                        "SHA-256");
+                    ownerPassword = sha256.Digest(PdfEncryption.GenerateNewDocumentId());
+                }
+                catch (Exception e) {
+                    throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
+                }
             }
             return ownerPassword;
         }

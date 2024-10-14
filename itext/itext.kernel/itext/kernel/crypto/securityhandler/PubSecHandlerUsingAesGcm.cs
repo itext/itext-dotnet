@@ -107,5 +107,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             PdfName filter = PdfName.AESV4;
             SetEncryptionDictEntries(encryptionDictionary, encryptMetadata, embeddedFilesOnly, version, filter);
         }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void InitMd5MessageDigest() {
+        }
+        //Do nothing to not initialize md5 message digest, since it's not used by AES-GCM handler
     }
 }

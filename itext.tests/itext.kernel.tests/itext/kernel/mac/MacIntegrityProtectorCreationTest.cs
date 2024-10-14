@@ -65,7 +65,6 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacStandardEncryptionTest() {
             String fileName = "standaloneMacStandardEncryptionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -82,7 +81,6 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void NoMacProtectionTest() {
             String fileName = "noMacProtectionTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -115,21 +113,20 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PDF_WRITER_CLOSING_FAILED)]
         public virtual void StandaloneMacUnwritableStreamTest() {
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, new MacProperties(MacProperties.MacDigestAlgorithm
                 .SHA_256));
-            MemoryStream unwritableStream = new _MemoryStream_152();
+            MemoryStream unwritableStream = new _MemoryStream_147();
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(unwritableStream, writerProperties))) {
                 pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
             }
             unwritableStream.Dispose();
         }
 
-        private sealed class _MemoryStream_152 : MemoryStream {
-            public _MemoryStream_152() {
+        private sealed class _MemoryStream_147 : MemoryStream {
+            public _MemoryStream_147() {
             }
 
             public override void Write(byte[] b, int off, int len) {
@@ -138,7 +135,6 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacWithAllHashAlgorithmsTest() {
             for (int i = 0; i < EnumUtil.GetAllValuesOfEnum<MacProperties.MacDigestAlgorithm>().Count; i++) {
                 String fileName = "standaloneMacWithAllHashAlgorithmsTest" + (i + 1) + ".pdf";
@@ -159,7 +155,6 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacPdfVersionNotSetTest() {
             String fileName = "standaloneMacPdfVersionNotSetTest.pdf";
             String outputFileName = DESTINATION_FOLDER + fileName;
@@ -209,7 +204,6 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void AddMacWithDisableMacPropertyTest() {
             // MAC should not be added in disable MAC mode even if it was provided with writer properties
             String fileName = "addMacWithDisableMacPropertyTest.pdf";
@@ -280,7 +274,6 @@ namespace iText.Kernel.Mac {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
         public virtual void StandaloneMacPublicKeyEncryptionTest() {
             try {
                 BouncyCastleFactoryCreator.GetFactory().IsEncryptionFeatureSupported(0, true);

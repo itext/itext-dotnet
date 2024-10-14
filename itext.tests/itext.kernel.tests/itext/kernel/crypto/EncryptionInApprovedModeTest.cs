@@ -24,11 +24,9 @@ using System;
 using NUnit.Framework;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
-using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Kernel.Crypto {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -59,7 +57,6 @@ namespace iText.Kernel.Crypto {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT)]
         public virtual void CheckMD5LogMessageWhileReadingPdfTest() {
             String fileName = "checkMD5LogMessageWhileReadingPdf.pdf";
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName))) {
@@ -68,7 +65,6 @@ namespace iText.Kernel.Crypto {
 
         // this test checks log message
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT)]
         public virtual void CheckMD5LogMessageWhileCreatingPdfTest() {
             String fileName = "checkMD5LogMessageWhileCreatingPdf.pdf";
             using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName
@@ -79,7 +75,6 @@ namespace iText.Kernel.Crypto {
 
         // this test checks log message
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Count = 3)]
         public virtual void CheckMD5LogMessageForEachPdfTest() {
             String fileName = "checkMD5LogMessageForEachPdf.pdf";
             for (int i = 0; i < 3; ++i) {
@@ -89,6 +84,6 @@ namespace iText.Kernel.Crypto {
                 }
             }
         }
-        // this test checks log message
+        // this test checks absence of log messages
     }
 }
