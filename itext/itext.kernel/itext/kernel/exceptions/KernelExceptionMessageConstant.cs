@@ -655,10 +655,10 @@ namespace iText.Kernel.Exceptions {
 
         public const String INVALID_OBJECT_STREAM_NUMBER = "Unable to read object {0} with object stream " + "number {1} and index {2} from object stream.";
 
-        //TODO DEVSIX-8490 remove this exception message when implemented
+        [Obsolete]
         public const String UNABLE_TO_ADD_SECOND_PARENT_LAYER = "Unable to add second parent layer to " + "{0} ocg layer";
 
-        //TODO DEVSIX-8490 remove this exception message when implemented
+        [Obsolete]
         public const String UNABLE_TO_REMOVE_DUPLICATE_LAYER = "Unable to remove duplicated layer {0} " + "because it has child layers.";
 
         public const String TYPE_SHOULD_NOT_BE_NULL = "ClassArgument type should not be null";

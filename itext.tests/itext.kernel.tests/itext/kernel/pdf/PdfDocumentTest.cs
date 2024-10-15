@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Image;
@@ -32,6 +33,7 @@ using iText.Kernel.Logs;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Xobject;
@@ -530,60 +532,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsFalse(document.GetConformance().IsPdfAOrUa());
         }
 
-        //TODO DEVSIX-8490 remove this test when implemented
         [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED)]
-        public virtual void RemoveDuplicatesInOrderArrayTest() {
-            String inputPdf = "removeDuplicatesInOrderArray.pdf";
-            String outputPdf = "removedDuplicateInOrderArray.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(SOURCE_FOLDER + inputPdf), CompareTool.CreateTestPdfWriter
-                (DESTINATION_FOLDER + outputPdf));
-            //Need to update OCProperties
-            doc.GetCatalog().GetOCProperties(false);
+        public virtual void OcgWithTwoParentsTest() {
+            String inputPdf = "ocgWithTwoParents.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(SOURCE_FOLDER + inputPdf));
+            IList<PdfLayer> layerList = doc.GetCatalog().GetOCProperties(false).GetLayers();
+            NUnit.Framework.Assert.AreEqual(2, layerList[4].GetParents().Count);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outputPdf, SOURCE_FOLDER
-                 + "cmp_" + outputPdf, DESTINATION_FOLDER));
-        }
-
-        //TODO DEVSIX-8490 remove this test when implemented
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED)]
-        public virtual void RemoveNestedDuplicatesInOrderArrayTest() {
-            String inputPdf = "removeNestedDuplicatesInOrderArray.pdf";
-            String outputPdf = "removedNestedDuplicatesInOrderArray.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(SOURCE_FOLDER + inputPdf), new PdfWriter(DESTINATION_FOLDER
-                 + outputPdf));
-            //Need to update OCProperties
-            doc.GetCatalog().GetOCProperties(false);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outputPdf, SOURCE_FOLDER
-                 + "cmp_" + outputPdf, DESTINATION_FOLDER));
-        }
-
-        //TODO DEVSIX-8490 remove this test when implemented
-        [NUnit.Framework.Test]
-        public virtual void RemoveDuplicatesHasChildInOrderArrayTest() {
-            String inputPdf = "removeDuplicatesHasChildInOrderArray.pdf";
-            String outputPdf = "removedDuplicatesHasChildInOrderArray.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(SOURCE_FOLDER + inputPdf), CompareTool.CreateTestPdfWriter
-                (DESTINATION_FOLDER + outputPdf));
-            PdfCatalog catalog = doc.GetCatalog();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => catalog.GetOCProperties(false));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_REMOVE_DUPLICATE_LAYER
-                , "4 0 R"), e.Message);
-        }
-
-        //TODO DEVSIX-8490 remove this test when implemented
-        [NUnit.Framework.Test]
-        public virtual void RemoveNestedDuplicatesHasChildInOrderArrayTest() {
-            String inputPdf = "removeNestedDuplicatesHasChildInOrderArray.pdf";
-            String outputPdf = "removedNestedDuplicatesHasChildInOrderArray.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(SOURCE_FOLDER + inputPdf), CompareTool.CreateTestPdfWriter
-                (DESTINATION_FOLDER + outputPdf));
-            PdfCatalog catalog = doc.GetCatalog();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => catalog.GetOCProperties(false));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_REMOVE_DUPLICATE_LAYER
-                , "27 0 R"), e.Message);
         }
 
         [NUnit.Framework.Test]

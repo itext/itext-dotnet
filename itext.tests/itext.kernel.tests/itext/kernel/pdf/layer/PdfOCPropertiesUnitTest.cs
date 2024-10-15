@@ -20,90 +20,226 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
+using System.Collections.Generic;
 using System.IO;
-using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Layer {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfOCPropertiesUnitTest {
-        //TODO DEVSIX-8490 remove this test when implemented
         [NUnit.Framework.Test]
-        public virtual void RemoveOrderDuplicatesTest() {
+        public virtual void OrderArrayOcgWithTwoParentsTest() {
             byte[] docBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
-                    PdfDictionary ocgDic = new PdfDictionary();
-                    ocgDic.MakeIndirect(document);
+                    PdfDictionary parentOcg1 = new PdfDictionary();
+                    parentOcg1.Put(PdfName.Name, new PdfString("Parent1"));
+                    parentOcg1.Put(PdfName.Type, PdfName.OCG);
+                    parentOcg1.MakeIndirect(document);
                     PdfArray orderArray = new PdfArray();
-                    for (int i = 0; i < 3; i++) {
-                        orderArray.Add(ocgDic);
-                    }
-                    PdfDictionary ocgDic2 = new PdfDictionary();
-                    ocgDic.MakeIndirect(document);
-                    for (int i = 0; i < 3; i++) {
-                        PdfArray layerArray = new PdfArray();
-                        layerArray.Add(new PdfString("layerName" + i));
-                        layerArray.Add(ocgDic2);
-                        orderArray.Add(layerArray);
-                    }
+                    orderArray.Add(parentOcg1);
+                    PdfDictionary childOcg = new PdfDictionary();
+                    childOcg.Put(PdfName.Name, new PdfString("child"));
+                    childOcg.Put(PdfName.Type, PdfName.OCG);
+                    childOcg.MakeIndirect(document);
+                    PdfArray childArray = new PdfArray();
+                    childArray.Add(childOcg);
+                    orderArray.Add(childArray);
+                    PdfDictionary parentOcg2 = new PdfDictionary();
+                    parentOcg2.Put(PdfName.Name, new PdfString("Parent2"));
+                    parentOcg2.Put(PdfName.Type, PdfName.OCG);
+                    parentOcg2.MakeIndirect(document);
+                    orderArray.Add(parentOcg2);
+                    orderArray.Add(new PdfArray(childArray));
                     PdfDictionary DDictionary = new PdfDictionary();
                     DDictionary.Put(PdfName.Order, orderArray);
-                    PdfArray OCGsArray = new PdfArray();
-                    OCGsArray.Add(ocgDic);
-                    OCGsArray.Add(ocgDic2);
+                    PdfArray ocgArray = new PdfArray();
+                    ocgArray.Add(parentOcg1);
+                    ocgArray.Add(parentOcg2);
+                    ocgArray.Add(childOcg);
                     PdfDictionary OCPropertiesDic = new PdfDictionary();
                     OCPropertiesDic.Put(PdfName.D, DDictionary);
-                    OCPropertiesDic.Put(PdfName.OCGs, OCGsArray);
+                    OCPropertiesDic.Put(PdfName.OCGs, ocgArray);
+                    OCPropertiesDic.MakeIndirect(document);
                     document.GetCatalog().GetPdfObject().Put(PdfName.OCProperties, OCPropertiesDic);
-                    document.GetCatalog().GetOCProperties(false);
                 }
                 docBytes = outputStream.ToArray();
             }
             using (PdfDocument docReopen = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
-                PdfArray resultArray = docReopen.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties).GetAsDictionary
-                    (PdfName.D).GetAsArray(PdfName.Order);
-                NUnit.Framework.Assert.AreEqual(2, resultArray.Size());
+                IList<PdfLayer> layers = docReopen.GetCatalog().GetOCProperties(false).GetLayers();
+                NUnit.Framework.Assert.AreEqual(3, layers.Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[0].GetChildren().Count);
+                NUnit.Framework.Assert.AreEqual(2, layers[1].GetParents().Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[2].GetChildren().Count);
             }
         }
 
-        //TODO DEVSIX-8490 remove this test when implemented
         [NUnit.Framework.Test]
-        public virtual void RemoveOrderDuplicateHasChildTest() {
+        public virtual void OrderArrayOcgWithTwoTitleParentsTest() {
+            byte[] docBytes;
             using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
-                    PdfDictionary ocgDic = new PdfDictionary();
-                    PdfDictionary ocgDicChild1 = new PdfDictionary();
-                    PdfDictionary ocgDicChild2 = new PdfDictionary();
-                    ocgDic.MakeIndirect(document);
+                    PdfDictionary childOcg = new PdfDictionary();
+                    childOcg.Put(PdfName.Name, new PdfString("child"));
+                    childOcg.Put(PdfName.Type, PdfName.OCG);
+                    childOcg.MakeIndirect(document);
+                    PdfArray childArray = new PdfArray();
+                    childArray.Add(childOcg);
+                    PdfArray titleOcg1 = new PdfArray();
+                    titleOcg1.Add(new PdfString("parent title layer 1"));
+                    titleOcg1.Add(childArray);
                     PdfArray orderArray = new PdfArray();
-                    PdfArray childArray1 = new PdfArray();
-                    childArray1.Add(ocgDicChild1);
-                    PdfArray childArray2 = new PdfArray();
-                    childArray2.Add(ocgDicChild2);
-                    orderArray.Add(ocgDic);
-                    orderArray.Add(childArray1);
-                    orderArray.Add(ocgDic);
-                    orderArray.Add(childArray2);
+                    orderArray.Add(titleOcg1);
+                    PdfArray titleOcg2 = new PdfArray();
+                    titleOcg2.Add(new PdfString("parent title 2"));
+                    titleOcg2.Add(childArray);
+                    orderArray.Add(titleOcg2);
                     PdfDictionary DDictionary = new PdfDictionary();
                     DDictionary.Put(PdfName.Order, orderArray);
-                    PdfArray OCGsArray = new PdfArray();
-                    OCGsArray.Add(ocgDic);
-                    OCGsArray.Add(ocgDicChild1);
-                    OCGsArray.Add(ocgDicChild2);
-                    PdfDictionary OCPropertiesDic = new PdfDictionary();
-                    OCPropertiesDic.Put(PdfName.D, DDictionary);
-                    OCPropertiesDic.Put(PdfName.OCGs, OCGsArray);
-                    document.GetCatalog().GetPdfObject().Put(PdfName.OCProperties, OCPropertiesDic);
-                    PdfIndirectReference @ref = ocgDic.GetIndirectReference();
-                    PdfCatalog catalog = document.GetCatalog();
-                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => catalog.GetOCProperties(false));
-                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_REMOVE_DUPLICATE_LAYER
-                        , @ref.ToString()), e.Message);
+                    PdfArray ocgArray = new PdfArray();
+                    ocgArray.Add(childOcg);
+                    PdfDictionary ocPropertiesDic = new PdfDictionary();
+                    ocPropertiesDic.Put(PdfName.D, DDictionary);
+                    ocPropertiesDic.Put(PdfName.OCGs, ocgArray);
+                    ocPropertiesDic.MakeIndirect(document);
+                    document.GetCatalog().GetPdfObject().Put(PdfName.OCProperties, ocPropertiesDic);
                 }
+                docBytes = outputStream.ToArray();
+            }
+            using (PdfDocument docReopen = new PdfDocument(new PdfReader(new MemoryStream(docBytes)), new PdfWriter(new 
+                ByteArrayOutputStream()))) {
+                IList<PdfLayer> layers = docReopen.GetCatalog().GetOCProperties(false).GetLayers();
+                NUnit.Framework.Assert.AreEqual(3, layers.Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[0].GetChildren().Count);
+                NUnit.Framework.Assert.AreEqual(2, layers[1].GetParents().Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[2].GetChildren().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OrderArrayTitleOcgWithTwoParentsTest() {
+            byte[] docBytes;
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfDictionary parentOcg1 = new PdfDictionary();
+                    parentOcg1.Put(PdfName.Name, new PdfString("Parent1"));
+                    parentOcg1.Put(PdfName.Type, PdfName.OCG);
+                    parentOcg1.MakeIndirect(document);
+                    PdfArray orderArray = new PdfArray();
+                    orderArray.Add(parentOcg1);
+                    PdfArray titleChildOcg = new PdfArray();
+                    titleChildOcg.Add(new PdfString("child title layer"));
+                    PdfArray childArray = new PdfArray();
+                    childArray.Add(titleChildOcg);
+                    orderArray.Add(childArray);
+                    PdfDictionary parentOcg2 = new PdfDictionary();
+                    parentOcg2.Put(PdfName.Name, new PdfString("Parent2"));
+                    parentOcg2.Put(PdfName.Type, PdfName.OCG);
+                    parentOcg2.MakeIndirect(document);
+                    orderArray.Add(parentOcg2);
+                    orderArray.Add(new PdfArray(childArray));
+                    PdfDictionary DDictionary = new PdfDictionary();
+                    DDictionary.Put(PdfName.Order, orderArray);
+                    PdfArray ocgArray = new PdfArray();
+                    ocgArray.Add(parentOcg1);
+                    ocgArray.Add(parentOcg2);
+                    PdfDictionary ocPropertiesDic = new PdfDictionary();
+                    ocPropertiesDic.Put(PdfName.D, DDictionary);
+                    ocPropertiesDic.Put(PdfName.OCGs, ocgArray);
+                    ocPropertiesDic.MakeIndirect(document);
+                    document.GetCatalog().GetPdfObject().Put(PdfName.OCProperties, ocPropertiesDic);
+                }
+                docBytes = outputStream.ToArray();
+            }
+            using (PdfDocument docReopen = new PdfDocument(new PdfReader(new MemoryStream(docBytes)), new PdfWriter(new 
+                ByteArrayOutputStream()))) {
+                IList<PdfLayer> layers = docReopen.GetCatalog().GetOCProperties(false).GetLayers();
+                NUnit.Framework.Assert.AreEqual(3, layers.Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[0].GetChildren().Count);
+                NUnit.Framework.Assert.AreEqual(2, layers[1].GetParents().Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[2].GetChildren().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OrderArrayDuplicatedOcgTest() {
+            byte[] docBytes;
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfDictionary ocg = new PdfDictionary();
+                    ocg.Put(PdfName.Name, new PdfString("ocg"));
+                    ocg.Put(PdfName.Type, PdfName.OCG);
+                    ocg.MakeIndirect(document);
+                    PdfArray orderArray = new PdfArray();
+                    orderArray.Add(ocg);
+                    orderArray.Add(ocg);
+                    orderArray.Add(ocg);
+                    PdfDictionary parentOcg = new PdfDictionary();
+                    parentOcg.Put(PdfName.Name, new PdfString("Parent"));
+                    parentOcg.Put(PdfName.Type, PdfName.OCG);
+                    parentOcg.MakeIndirect(document);
+                    orderArray.Add(parentOcg);
+                    orderArray.Add(new PdfArray(ocg));
+                    PdfDictionary DDictionary = new PdfDictionary();
+                    DDictionary.Put(PdfName.Order, orderArray);
+                    PdfArray ocgArray = new PdfArray();
+                    ocgArray.Add(ocg);
+                    ocgArray.Add(parentOcg);
+                    PdfDictionary ocPropertiesDic = new PdfDictionary();
+                    ocPropertiesDic.Put(PdfName.D, DDictionary);
+                    ocPropertiesDic.Put(PdfName.OCGs, ocgArray);
+                    ocPropertiesDic.MakeIndirect(document);
+                    document.GetCatalog().GetPdfObject().Put(PdfName.OCProperties, ocPropertiesDic);
+                }
+                docBytes = outputStream.ToArray();
+            }
+            using (PdfDocument docReopen = new PdfDocument(new PdfReader(new MemoryStream(docBytes)), new PdfWriter(new 
+                ByteArrayOutputStream()))) {
+                IList<PdfLayer> layers = docReopen.GetCatalog().GetOCProperties(false).GetLayers();
+                NUnit.Framework.Assert.AreEqual(2, layers.Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[0].GetParents().Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[1].GetChildren().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OrderArrayDuplicatedTitleOcgTest() {
+            byte[] docBytes;
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument document = new PdfDocument(new PdfWriter(outputStream))) {
+                    PdfArray orderArray = new PdfArray();
+                    PdfArray titleOcg = new PdfArray();
+                    titleOcg.Add(new PdfString("title layer"));
+                    orderArray.Add(titleOcg);
+                    PdfDictionary parentOcg = new PdfDictionary();
+                    parentOcg.Put(PdfName.Name, new PdfString("Parent"));
+                    parentOcg.Put(PdfName.Type, PdfName.OCG);
+                    parentOcg.MakeIndirect(document);
+                    orderArray.Add(parentOcg);
+                    PdfArray nestedOcg = new PdfArray();
+                    nestedOcg.Add(titleOcg);
+                    orderArray.Add(nestedOcg);
+                    orderArray.Add(titleOcg);
+                    PdfDictionary DDictionary = new PdfDictionary();
+                    DDictionary.Put(PdfName.Order, orderArray);
+                    PdfArray ocgArray = new PdfArray();
+                    ocgArray.Add(parentOcg);
+                    PdfDictionary ocPropertiesDic = new PdfDictionary();
+                    ocPropertiesDic.Put(PdfName.D, DDictionary);
+                    ocPropertiesDic.Put(PdfName.OCGs, ocgArray);
+                    ocPropertiesDic.MakeIndirect(document);
+                    document.GetCatalog().GetPdfObject().Put(PdfName.OCProperties, ocPropertiesDic);
+                }
+                docBytes = outputStream.ToArray();
+            }
+            using (PdfDocument docReopen = new PdfDocument(new PdfReader(new MemoryStream(docBytes)), new PdfWriter(new 
+                ByteArrayOutputStream()))) {
+                IList<PdfLayer> layers = docReopen.GetCatalog().GetOCProperties(false).GetLayers();
+                NUnit.Framework.Assert.AreEqual(2, layers.Count);
+                NUnit.Framework.Assert.AreEqual("title layer", layers[0].GetTitle());
+                NUnit.Framework.Assert.AreEqual(1, layers[0].GetParents().Count);
+                NUnit.Framework.Assert.AreEqual(1, layers[1].GetChildren().Count);
             }
         }
     }

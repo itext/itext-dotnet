@@ -1636,16 +1636,10 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             else {
                 if (layer is PdfLayer) {
-                    int num = 0;
                     PdfLayer la = (PdfLayer)layer;
-                    while (la != null) {
-                        if (la.GetTitle() == null) {
-                            AddToPropertiesAndBeginLayer(la);
-                            num++;
-                        }
-                        la = la.GetParent();
-                    }
-                    layerDepth.Add(num);
+                    ICollection<PdfLayer> layers = new HashSet<PdfLayer>();
+                    int depth = BeginLayerTree(la, layers);
+                    layerDepth.Add(depth);
                 }
                 else {
                     throw new NotSupportedException("Unsupported type for operand: layer");
@@ -2486,6 +2480,30 @@ namespace iText.Kernel.Pdf.Canvas {
         private static bool IsIdentityMatrix(float a, float b, float c, float d, float e, float f) {
             return Math.Abs(1 - a) < IDENTITY_MATRIX_EPS && Math.Abs(b) < IDENTITY_MATRIX_EPS && Math.Abs(c) < IDENTITY_MATRIX_EPS
                  && Math.Abs(1 - d) < IDENTITY_MATRIX_EPS && Math.Abs(e) < IDENTITY_MATRIX_EPS && Math.Abs(f) < IDENTITY_MATRIX_EPS;
+        }
+
+        /// <summary>This method is used to traverse parent tree and begin all layers in it.</summary>
+        /// <remarks>
+        /// This method is used to traverse parent tree and begin all layers in it.
+        /// If layer was already begun during method call, it will not be processed again.
+        /// </remarks>
+        private int BeginLayerTree(PdfLayer layer, ICollection<PdfLayer> layers) {
+            if (layer == null || layers.Contains(layer)) {
+                return 0;
+            }
+            layers.Add(layer);
+            int depth = 0;
+            if (layer.GetTitle() == null) {
+                AddToPropertiesAndBeginLayer(layer);
+                depth++;
+            }
+            IList<PdfLayer> parentLayers = layer.GetParents();
+            if (parentLayers != null) {
+                foreach (PdfLayer parentLayer in parentLayers) {
+                    depth += BeginLayerTree(parentLayer, layers);
+                }
+            }
+            return depth;
         }
 
         private enum CheckColorMode {

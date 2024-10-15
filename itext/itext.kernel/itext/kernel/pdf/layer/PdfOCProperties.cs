@@ -26,7 +26,6 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Font;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -51,12 +50,6 @@ namespace iText.Kernel.Pdf.Layer {
 //\endcond
 
         private IList<PdfLayer> layers = new List<PdfLayer>();
-
-        //TODO DEVSIX-8490 remove this field when implemented
-        private ICollection<PdfIndirectReference> references;
-
-        //TODO DEVSIX-8490 remove this field when implemented
-        private bool isDuplicateRemoved;
 
         /// <summary>Creates a new PdfOCProperties instance.</summary>
         /// <param name="document">the document the optional content belongs to</param>
@@ -165,7 +158,7 @@ namespace iText.Kernel.Pdf.Layer {
             IList<PdfLayer> docOrder = new List<PdfLayer>(layers);
             for (int i = 0; i < docOrder.Count; i++) {
                 PdfLayer layer = docOrder[i];
-                if (layer.GetParent() != null) {
+                if (layer.GetParents() != null) {
                     docOrder.Remove(layer);
                     i--;
                 }
@@ -413,14 +406,9 @@ namespace iText.Kernel.Pdf.Layer {
                 }
                 PdfArray orderArray = d.GetAsArray(PdfName.Order);
                 if (orderArray != null && !orderArray.IsEmpty()) {
-                    references = new HashSet<PdfIndirectReference>();
-                    isDuplicateRemoved = false;
-                    ReadOrderFromDictionary(null, orderArray, layerMap);
-                    //TODO DEVSIX-8490 remove this check when implemented
-                    if (isDuplicateRemoved) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Layer.PdfOCProperties));
-                        logger.LogWarning(KernelLogMessageConstant.DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED);
-                    }
+                    ICollection<PdfIndirectReference> layerReferences = new HashSet<PdfIndirectReference>();
+                    IDictionary<PdfString, PdfLayer> titleLayers = new Dictionary<PdfString, PdfLayer>();
+                    ReadOrderFromDictionary(null, orderArray, layerMap, layerReferences, titleLayers);
                 }
             }
             // Add the layers which should not be displayed on the panel to the order list
@@ -433,7 +421,8 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Reads the /Order in the /D entry and initialized the parent-child hierarchy.</summary>
         private void ReadOrderFromDictionary(PdfLayer parent, PdfArray orderArray, IDictionary<PdfIndirectReference
-            , PdfLayer> layerMap) {
+            , PdfLayer> layerMap, ICollection<PdfIndirectReference> layerReferences, IDictionary<PdfString, PdfLayer
+            > titleLayers) {
             for (int i = 0; i < orderArray.Size(); i++) {
                 PdfObject item = orderArray.Get(i);
                 if (item.GetObjectType() == PdfObject.DICTIONARY) {
@@ -441,33 +430,19 @@ namespace iText.Kernel.Pdf.Layer {
                     if (layer == null) {
                         continue;
                     }
-                    //TODO DEVSIX-8490 remove this check and it statement when implemented
-                    if (references.Contains(layer.GetIndirectReference())) {
-                        //We want to check if this duplicate layer has childLayers, if it has - throw an exception,
-                        // else just don't add this layer.
-                        if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject.ARRAY) {
-                            PdfArray nextArray = orderArray.GetAsArray(i + 1);
-                            if (nextArray.Size() > 0 && nextArray.Get(0).GetObjectType() != PdfObject.STRING) {
-                                PdfIndirectReference @ref = layer.GetIndirectReference();
-                                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_REMOVE_DUPLICATE_LAYER
-                                    , @ref.ToString()));
-                            }
-                        }
-                        isDuplicateRemoved = true;
-                    }
-                    else {
-                        references.Add(layer.GetIndirectReference());
+                    if (!layerReferences.Contains(layer.GetIndirectReference())) {
+                        layerReferences.Add(layer.GetIndirectReference());
                         layers.Add(layer);
                         layer.onPanel = true;
-                        if (parent != null) {
-                            parent.AddChild(layer);
-                        }
-                        if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject.ARRAY) {
-                            PdfArray nextArray = orderArray.GetAsArray(i + 1);
-                            if (nextArray.Size() > 0 && nextArray.Get(0).GetObjectType() != PdfObject.STRING) {
-                                ReadOrderFromDictionary(layer, orderArray.GetAsArray(i + 1), layerMap);
-                                i++;
-                            }
+                    }
+                    if (parent != null) {
+                        parent.AddChild(layer);
+                    }
+                    if (i + 1 < orderArray.Size() && orderArray.Get(i + 1).GetObjectType() == PdfObject.ARRAY) {
+                        PdfArray nextArray = orderArray.GetAsArray(i + 1);
+                        if (nextArray.Size() > 0 && nextArray.Get(0).GetObjectType() != PdfObject.STRING) {
+                            ReadOrderFromDictionary(layer, orderArray.GetAsArray(i + 1), layerMap, layerReferences, titleLayers);
+                            i++;
                         }
                     }
                 }
@@ -479,16 +454,22 @@ namespace iText.Kernel.Pdf.Layer {
                         }
                         PdfObject firstObj = subArray.Get(0);
                         if (firstObj.GetObjectType() == PdfObject.STRING) {
-                            PdfLayer titleLayer = PdfLayer.CreateTitleSilent(((PdfString)firstObj).ToUnicodeString(), GetDocument());
-                            titleLayer.onPanel = true;
-                            layers.Add(titleLayer);
+                            PdfString title = (PdfString)firstObj;
+                            PdfLayer titleLayer = titleLayers.Get(title);
+                            if (titleLayer == null) {
+                                titleLayer = PdfLayer.CreateTitleSilent(title.ToUnicodeString(), GetDocument());
+                                titleLayer.onPanel = true;
+                                layers.Add(titleLayer);
+                                titleLayers.Put(title, titleLayer);
+                            }
                             if (parent != null) {
                                 parent.AddChild(titleLayer);
                             }
-                            ReadOrderFromDictionary(titleLayer, new PdfArray(subArray.SubList(1, subArray.Size())), layerMap);
+                            ReadOrderFromDictionary(titleLayer, new PdfArray(subArray.SubList(1, subArray.Size())), layerMap, layerReferences
+                                , titleLayers);
                         }
                         else {
-                            ReadOrderFromDictionary(parent, subArray, layerMap);
+                            ReadOrderFromDictionary(parent, subArray, layerMap, layerReferences, titleLayers);
                         }
                     }
                 }

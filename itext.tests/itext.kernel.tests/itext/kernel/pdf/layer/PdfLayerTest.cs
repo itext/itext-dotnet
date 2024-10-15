@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -466,21 +465,69 @@ namespace iText.Kernel.Pdf.Layer {
             }
         }
 
-        //TODO DEVSIX-8490 remove this test when implemented
         [NUnit.Framework.Test]
-        public virtual void AddSecondParentlayerTest() {
-            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                using (PdfDocument doc = new PdfDocument(new PdfWriter(outputStream))) {
-                    PdfLayer childLayer = new PdfLayer("childLayer", doc);
-                    PdfLayer parentLayer1 = new PdfLayer("firstParentLayer", doc);
-                    PdfLayer parentLayer2 = new PdfLayer("secondParentLayer", doc);
-                    parentLayer1.AddChild(childLayer);
-                    PdfIndirectReference @ref = childLayer.GetIndirectReference();
-                    Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => parentLayer2.AddChild(childLayer));
-                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_ADD_SECOND_PARENT_LAYER
-                        , @ref.ToString()), e.Message);
-                }
-            }
+        public virtual void NestedLayerTwoParentsTest() {
+            String outPdf = destinationFolder + "nestedLayerTwoParents.pdf";
+            String cmpPdf = sourceFolder + "cmp_nestedLayerTwoParents.pdf";
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
+            PdfFont font = PdfFontFactory.CreateFont();
+            PdfLayer parentLayer1 = new PdfLayer("Parent layer 1", pdfDoc);
+            PdfLayer parentLayer2 = new PdfLayer("Parent layer 2", pdfDoc);
+            PdfLayer nestedLayer = new PdfLayer("Nested layer 1", pdfDoc);
+            parentLayer1.AddChild(nestedLayer);
+            parentLayer2.AddChild(nestedLayer);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.SetFontAndSize(font, 12);
+            PdfLayerTestUtils.AddTextInsideLayer(parentLayer1, canvas, "Parent layer 1 text", 50, 750);
+            PdfLayerTestUtils.AddTextInsideLayer(parentLayer2, canvas, "Parent layer 2 text", 50, 700);
+            PdfLayerTestUtils.AddTextInsideLayer(nestedLayer, canvas, "Nested layer 1 text", 100, 650);
+            canvas.Release();
+            pdfDoc.Close();
+            PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedLayerTwoParentsWithOneParentTest() {
+            String outPdf = destinationFolder + "nestedLayerTwoParentsWithOneParent.pdf";
+            String cmpPdf = sourceFolder + "cmp_nestedLayerTwoParentsWithOneParent.pdf";
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
+            PdfFont font = PdfFontFactory.CreateFont();
+            PdfLayer parentLayer = new PdfLayer("Parent layer", pdfDoc);
+            PdfLayer layer1 = new PdfLayer("Layer 1", pdfDoc);
+            PdfLayer layer2 = new PdfLayer("Layer 2", pdfDoc);
+            PdfLayer nestedLayer = new PdfLayer("Nested layer 1", pdfDoc);
+            layer1.AddChild(nestedLayer);
+            layer2.AddChild(nestedLayer);
+            parentLayer.AddChild(layer1);
+            parentLayer.AddChild(layer2);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.SetFontAndSize(font, 12);
+            PdfLayerTestUtils.AddTextInsideLayer(parentLayer, canvas, "Parent layer text", 50, 750);
+            PdfLayerTestUtils.AddTextInsideLayer(layer1, canvas, "layer 1 text", 100, 700);
+            PdfLayerTestUtils.AddTextInsideLayer(layer2, canvas, "layer 2 text", 100, 650);
+            PdfLayerTestUtils.AddTextInsideLayer(nestedLayer, canvas, "Nested layer text", 150, 600);
+            canvas.Release();
+            pdfDoc.Close();
+            PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DuplicatedNestedLayersTest() {
+            String outPdf = destinationFolder + "duplicatedNestedLayers.pdf";
+            String cmpPdf = sourceFolder + "cmp_duplicatedNestedLayers.pdf";
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
+            PdfFont font = PdfFontFactory.CreateFont();
+            PdfLayer parentLayer = new PdfLayer("Parent layer", pdfDoc);
+            PdfLayer nestedLayer1 = new PdfLayer("Nested layer", pdfDoc);
+            parentLayer.AddChild(nestedLayer1);
+            parentLayer.AddChild(nestedLayer1);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+            canvas.SetFontAndSize(font, 12);
+            PdfLayerTestUtils.AddTextInsideLayer(parentLayer, canvas, "Parent layer text", 50, 750);
+            PdfLayerTestUtils.AddTextInsideLayer(nestedLayer1, canvas, "Nested layer text", 100, 700);
+            canvas.Release();
+            pdfDoc.Close();
+            PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
         }
     }
 }
