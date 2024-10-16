@@ -45,6 +45,9 @@ namespace iText.Layout {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/AlignmentTest/";
 
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -514,6 +517,23 @@ namespace iText.Layout {
                 innerDiv.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
                 div.Add(innerDiv).Add(innerDiv);
                 doc.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void JustifiedAlignmentWithZeroFreeSpaceTest() {
+            String outFileName = DESTINATION_FOLDER + "justifiedAlignmentWithZeroFreeSpaceTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_justifiedAlignmentWithZeroFreeSpaceTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDoc);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansCJKjp-Regular.otf");
+                Text t1 = new Text("期期期").SetFont(font);
+                Text t2 = new Text("期期期").SetFont(font);
+                Paragraph p = new Paragraph(t1).Add(t2).SetSpacingRatio(1).SetWidth(60).SetTextAlignment(TextAlignment.JUSTIFIED
+                    );
+                document.Add(p);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
