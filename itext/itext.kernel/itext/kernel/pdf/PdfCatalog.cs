@@ -780,14 +780,14 @@ namespace iText.Kernel.Pdf {
             PdfDestination d = null;
             if (dest.IsArray()) {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
-                foreach (PdfPage oldPage in page2page.Keys) {
-                    if (oldPage.GetPdfObject() == pageObject) {
-                        // in the copiedArray old page ref will be correctly replaced by the new page ref
-                        // as this page is already copied
-                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false, NullCopyFilter.GetInstance());
-                        d = new PdfExplicitDestination(copiedArray);
-                        break;
-                    }
+                //12.3.2.2 Explicit destinations
+                if (pageObject.IsNumber()) {
+                    //Handle remote and embedded destinations
+                    d = CreateDestinationFromPageNum(dest, toDocument);
+                }
+                else {
+                    //Handle all other destinations
+                    d = CreateDestinationFromPageRef(dest, page2page, toDocument, pageObject);
                 }
             }
             else {
@@ -839,6 +839,23 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsDictionary(PdfName.OCProperties);
         }
 //\endcond
+
+        private PdfDestination CreateDestinationFromPageNum(PdfObject dest, PdfDocument toDocument) {
+            return new PdfExplicitDestination((PdfArray)dest.CopyTo(toDocument, false, NullCopyFilter.GetInstance()));
+        }
+
+        private static PdfDestination CreateDestinationFromPageRef(PdfObject dest, IDictionary<PdfPage, PdfPage> page2page
+            , PdfDocument toDocument, PdfObject pageObject) {
+            foreach (PdfPage oldPage in page2page.Keys) {
+                if (oldPage.GetPdfObject() == pageObject) {
+                    // in the copiedArray old page ref will be correctly replaced by the new page ref
+                    // as this page is already copied
+                    PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false, NullCopyFilter.GetInstance());
+                    return new PdfExplicitDestination(copiedArray);
+                }
+            }
+            return null;
+        }
 
         private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, PdfString
              srcDestName, PdfArray srcDestArray, PdfPage oldPage) {

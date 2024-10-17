@@ -85,6 +85,24 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void MergeDocumentOutlinesWithExplicitRemoteDestinationTest() {
+            String resultFile = destinationFolder + "mergeDocumentWithRemoteGoToTest.pdf";
+            String filename1 = sourceFolder + "docWithRemoteGoTo.pdf";
+            String filename2 = sourceFolder + "doc1.pdf";
+            PdfDocument sourceDocument1 = new PdfDocument(new PdfReader(filename1));
+            PdfDocument sourceDocument2 = new PdfDocument(new PdfReader(filename2));
+            PdfMerger resultDocument = new PdfMerger(new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile)));
+            resultDocument.Merge(sourceDocument1, 1, 1);
+            resultDocument.Merge(sourceDocument2, 1, 1);
+            resultDocument.Close();
+            sourceDocument1.Close();
+            sourceDocument2.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergeDocumentWithRemoteGoToTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MergeDocumentWithCycleRefInAcroFormTest() {
             String filename1 = sourceFolder + "doc1.pdf";
             String filename2 = sourceFolder + "pdfWithCycleRefInAnnotationParent.pdf";
