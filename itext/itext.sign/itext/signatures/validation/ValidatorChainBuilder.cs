@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Validation.Report.Xml;
 
 namespace iText.Signatures.Validation {
     /// <summary>A builder class to construct all necessary parts of a validation chain.</summary>
@@ -50,6 +51,8 @@ namespace iText.Signatures.Validation {
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
+
+        private AdESReportAggregator adESReportAggregator = new NullAdESReportAggregator();
 
         /// <summary>
         /// Create a new
@@ -260,6 +263,23 @@ namespace iText.Signatures.Validation {
             return this;
         }
 
+        /// <summary>Use this AdES report aggregator to enable AdES compliant report generation.</summary>
+        /// <remarks>
+        /// Use this AdES report aggregator to enable AdES compliant report generation.
+        /// <para />
+        /// Generated
+        /// <see cref="iText.Signatures.Validation.Report.Xml.PadesValidationReport"/>
+        /// report could be provided to
+        /// <see cref="iText.Signatures.Validation.Report.Xml.XmlReportGenerator.Generate(iText.Signatures.Validation.Report.Xml.PadesValidationReport, System.IO.TextWriter)
+        ///     "/>.
+        /// </remarks>
+        /// <param name="adESReportAggregator">the report aggregator to use</param>
+        /// <returns>the current ValidatorChainBuilder</returns>
+        public virtual ValidatorChainBuilder WithAdESReportAggregator(AdESReportAggregator adESReportAggregator) {
+            this.adESReportAggregator = adESReportAggregator;
+            return this;
+        }
+
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>
@@ -292,6 +312,27 @@ namespace iText.Signatures.Validation {
                 properties = new SignatureValidationProperties();
             }
             return properties;
+        }
+
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
+        /// instance.
+        /// Default is the
+        /// <see cref="iText.Signatures.Validation.Report.Xml.NullAdESReportAggregator"/>.
+        /// </remarks>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
+        /// instance.
+        /// </returns>
+        public virtual AdESReportAggregator GetAdESReportAggregator() {
+            return adESReportAggregator;
         }
 
 //\cond DO_NOT_DOCUMENT

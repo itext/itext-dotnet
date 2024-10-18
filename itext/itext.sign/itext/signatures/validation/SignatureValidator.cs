@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using iText.Bouncycastleconnector;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle;
@@ -110,6 +111,8 @@ namespace iText.Signatures.Validation {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
+        private readonly ValidatorChainBuilder builder;
+
         private ValidationContext validationContext = new ValidationContext(ValidatorContext.SIGNATURE_VALIDATOR, 
             CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
 
@@ -148,6 +151,7 @@ namespace iText.Signatures.Validation {
         /// </param>
         protected internal SignatureValidator(PdfDocument originalDocument, ValidatorChainBuilder builder) {
             this.originalDocument = originalDocument;
+            this.builder = builder;
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.certificateChainValidator = builder.GetCertificateChainValidator();
@@ -234,6 +238,7 @@ namespace iText.Signatures.Validation {
             // We only retrieve not signed revocation data at the very beginning of signature processing.
             RetrieveNotSignedRevocationInfoFromSignatureContainer(pkcs7, validationContext);
             if (StopValidation(validationReport, validationContext)) {
+                ReportResult(validationReport);
                 return validationReport;
             }
             IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, document);
@@ -245,6 +250,7 @@ namespace iText.Signatures.Validation {
                 if (UpdateLastKnownPoE(validationReport, pkcs7.GetTimeStampTokenInfo())) {
                     UpdateValidationClients(pkcs7, validationReport, validationContext, document);
                 }
+                ReportResult(validationReport);
                 return validationReport;
             }
             bool isPoEUpdated = false;
@@ -260,6 +266,7 @@ namespace iText.Signatures.Validation {
                 }
                 validationReport.Merge(tsValidationReport);
                 if (StopValidation(tsValidationReport, validationContext)) {
+                    ReportResult(validationReport);
                     return validationReport;
                 }
             }
@@ -281,9 +288,24 @@ namespace iText.Signatures.Validation {
                 RetrieveSignedRevocationInfoFromSignatureContainer(timestampSignatureContainer, validationContext);
                 UpdateValidationClients(pkcs7, validationReport, validationContext, document);
             }
+            ReportResult(validationReport);
             return validationReport.Merge(signatureReport);
         }
 //\endcond
+
+        private void ReportResult(ValidationReport validationReport) {
+            if (validationReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
+                builder.GetAdESReportAggregator().ReportSignatureValidationSuccess();
+                return;
+            }
+            StringBuilder reason = new StringBuilder("[");
+            foreach (ReportItem reportItem in validationReport.GetFailures()) {
+                reason.Append(reportItem).Append("\n");
+            }
+            reason.Append("]");
+            builder.GetAdESReportAggregator().ReportSignatureValidationFailure(validationReport.GetValidationResult() 
+                == ValidationReport.ValidationResult.INDETERMINATE, reason.ToString());
+        }
 
         private ValidationReport Validate(String signatureName) {
             ValidationReport validationReport = new ValidationReport();
@@ -349,6 +371,14 @@ namespace iText.Signatures.Validation {
             PdfPKCS7 pkcs7 = signatureUtil.ReadSignatureData(latestSignatureName);
             validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(VALIDATING_SIGNATURE_NAME
                 , latestSignatureName), ReportItem.ReportItemStatus.INFO));
+            if (pkcs7.IsTsp()) {
+                builder.GetAdESReportAggregator().ProofOfExistenceFound(signatureUtil.GetSignature(latestSignatureName).GetContents
+                    ().GetValueBytes(), true);
+            }
+            else {
+                builder.GetAdESReportAggregator().StartSignatureValidation(signatureUtil.GetSignature(latestSignatureName)
+                    .GetContents().GetValueBytes(), latestSignatureName, lastKnownPoE);
+            }
             if (!signatureUtil.SignatureCoversWholeDocument(latestSignatureName)) {
                 validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(DOCUMENT_IS_NOT_COVERED
                     , latestSignatureName), ReportItem.ReportItemStatus.INVALID));

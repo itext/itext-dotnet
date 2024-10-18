@@ -1234,6 +1234,9 @@ namespace iText.Signatures {
         /// array
         /// </returns>
         public virtual IX509Certificate[] GetTimestampCertificates() {
+            if (timestampCerts == null) {
+                return new IX509Certificate[0];
+            }
             return timestampCerts.ToArray(new IX509Certificate[0]);
         }
 

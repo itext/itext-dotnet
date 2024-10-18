@@ -38,7 +38,7 @@ namespace iText.Signatures.Validation.Report {
         public ValidationReport() {
         }
 
-        // Empty constructor.
+        // Declaring default constructor explicitly to avoid removing it unintentionally.
         /// <summary>Get the result of a validation process.</summary>
         /// <returns>
         /// 
