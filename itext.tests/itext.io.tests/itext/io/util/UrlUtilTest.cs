@@ -23,7 +23,9 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using iText.Commons.Utils;
 using iText.Test;
 using NUnit.Framework;
@@ -85,7 +87,25 @@ namespace iText.IO.Util {
             byte[] bytes = StreamUtil.InputStreamToArray(openStream);
             String actual = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
             NUnit.Framework.Assert.AreEqual("Hello world from text file!", actual);
-            
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void openStreamConnectTimeoutTest()
+        {
+            bool exceptionThrown = false;
+            Uri url = new Uri("http://10.255.255.1/");
+            try {
+                // We check 2 possible exceptions
+                UrlUtil.GetInputStreamOfFinalConnection(url, 500, 300000);
+            } catch(WebException e) {
+                exceptionThrown = true;
+                // Do not check exception message because it is localized
+            } catch(OperationCanceledException e) {
+                exceptionThrown = true;
+                NUnit.Framework.Assert.AreEqual("the operation was canceled.", e.Message.ToLower());
+            }
+
+            NUnit.Framework.Assert.True(exceptionThrown);
         }
     }
 }

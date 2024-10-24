@@ -23,6 +23,8 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -30,6 +32,8 @@ namespace iText.IO.Util {
     /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public static class UrlUtil {
+        private const int DEFAULT_CONNECT_TIMEOUT = 300000;
+        private const int DEFAULT_READ_TIMEOUT = 300000;
         /// <summary>This method makes a valid URL from a given filename.</summary>
         /// <param name="filename">a given filename</param>
         /// <returns>a valid URL</returns>
@@ -41,19 +45,47 @@ namespace iText.IO.Util {
             }
         }
 
+        [Obsolete]
+        /// <summary>
+        /// Gets the input stream of connection related to last redirected url. You should manually close input stream after
+        /// calling this method to not hold any open resources.
+        /// </summary>
+        /// <param name="url">an initial URL.</param>
+        /// 
+        /// <returns>an input stream of connection related to the last redirected url.</returns>
         public static Stream OpenStream(Uri url) {
+            return OpenStream(url, DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT);
+        }
+
+        /// <summary>
+        /// Gets the input stream of connection related to last redirected url. You should manually close input stream after
+        /// calling this method to not hold any open resources.
+        /// </summary>
+        /// <param name="url">an initial URL.</param>
+        /// <param name="connectTimeout">a connect timeout in milliseconds</param>
+        /// <param name="readTimeout">a read timeout in milliseconds</param>
+        /// 
+        /// <returns>an input stream of connection related to the last redirected url.</returns>
+        static Stream OpenStream(Uri url, int connectTimeout, int readTimeout)
+        {
             Stream isp;
-            if (url.IsFile) {
+            if (url.IsFile)
+            {
                 // Use url.LocalPath because it's needed for handling UNC pathes (like used in local
                 // networks, e.g. \\computer\file.ext). It's safe to use #LocalPath because we 
                 // check #IsFile beforehand. On the other hand, the url.AbsolutePath provides escaped string and also breaks
                 // UNC path.
-                isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);     
-            } else {
-                WebRequest req = WebRequest.Create(url);
+                isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);
+            }
+            else
+            {
+                HttpWebRequest req = (HttpWebRequest) WebRequest.Create(url);
+                req.Timeout = connectTimeout;
+                req.ReadWriteTimeout = readTimeout;
                 req.Credentials = CredentialCache.DefaultCredentials;
                 using (WebResponse res = req.GetResponse())
-                using (Stream rs = res.GetResponseStream()) {
+                using (Stream rs = res.GetResponseStream())
+                {
                     // We don't want to leave the response stream in an open state as it
                     // may lead to running out of server connections what will block processing
                     // of new requests. Therefore copying the state of the stream to a MemoryStream 
@@ -61,7 +93,8 @@ namespace iText.IO.Util {
                     isp = new MemoryStream();
                     byte[] buffer = new byte[4096];
                     int read;
-                    while ((read = rs.Read(buffer, 0, buffer.Length)) > 0) {
+                    while ((read = rs.Read(buffer, 0, buffer.Length)) > 0)
+                    {
                         isp.Write(buffer, 0, read);
                     }
                     isp.Position = 0;
@@ -124,7 +157,21 @@ namespace iText.IO.Util {
         /// 
         /// <returns>an input stream of connection related to the last redirected url.</returns>
         public static Stream GetInputStreamOfFinalConnection(Uri url) {
-            return UrlUtil.OpenStream(url);
+            return OpenStream(url, 3000000, 3000000);
+        }
+
+        /// <summary>
+        /// Gets the input stream of connection related to last redirected url. You should manually close input stream after
+        /// calling this method to not hold any open resources.
+        /// </summary>
+        /// <param name="url">an initial URL.</param>
+        /// <param name="connectTimeout">a connect timeout in milliseconds</param>
+        /// <param name="readTimeout">a read timeout in milliseconds</param>
+        /// 
+        /// <returns>an input stream of connection related to the last redirected url.</returns>
+        public static Stream GetInputStreamOfFinalConnection(Uri url, int connectTimeout, int readTimeout)
+        {
+            return OpenStream(url, connectTimeout, readTimeout);
         }
     }
 }
