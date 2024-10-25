@@ -36,8 +36,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0301\u0302 abc");
             NUnit.Framework.Assert.AreEqual(3, result.Count);
             NUnit.Framework.Assert.AreEqual("L with accent: ", result[0].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("\u004f\u0301\u0302", result[1].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual(" abc", result[2].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("\u004f\u0301\u0302 ", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("abc", result[2].GetFirst().ToString());
             // Diacritics and symbol were separated, but the font is the same
             NUnit.Framework.Assert.AreEqual(result[0].GetSecond(), result[2].GetSecond());
         }
@@ -49,8 +49,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(3, result.Count);
             NUnit.Framework.Assert.AreEqual("L with accent: ", result[0].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("\u004f\u0302", result[1].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual(" abc", result[2].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("\u004f\u0302 ", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("abc", result[2].GetFirst().ToString());
             NUnit.Framework.Assert.AreNotEqual(result[0].GetSecond(), result[1].GetSecond());
         }
 
@@ -75,8 +75,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             NUnit.Framework.Assert.AreEqual(6, result.Count);
             NUnit.Framework.Assert.AreEqual("Ми", result[0].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("\u0301", result[1].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("ръ", result[2].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual(" (mír", result[3].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("ръ (", result[2].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("mír", result[3].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("ə", result[4].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual(")", result[5].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual(result[0].GetSecond(), result[2].GetSecond());
@@ -100,8 +100,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("text \uD800\uDF10\uD800\uDF00\uD800\uDF11 text"
                 );
             NUnit.Framework.Assert.AreEqual(3, result.Count);
-            NUnit.Framework.Assert.AreEqual("text", result[0].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual(" \uD800\uDF10\uD800\uDF00\uD800\uDF11 ", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("text ", result[0].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("\uD800\uDF10\uD800\uDF00\uD800\uDF11 ", result[1].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("text", result[2].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual(result[0].GetSecond(), result[2].GetSecond());
         }
@@ -122,13 +122,21 @@ namespace iText.Layout.Font.Selectorstrategy {
             IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithLimitedThreeFonts(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(" axadefa ");
-            NUnit.Framework.Assert.AreEqual(6, result.Count);
+            NUnit.Framework.Assert.AreEqual(5, result.Count);
             NUnit.Framework.Assert.AreEqual(" a", result[0].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("x", result[1].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("a", result[2].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("def", result[3].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("a", result[4].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual(" ", result[5].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("a ", result[4].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WindowsLineEndingsTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("Hello\r\n   World!\r\n ");
+            NUnit.Framework.Assert.AreEqual(1, result.Count);
+            NUnit.Framework.Assert.AreEqual("Hello\r\n   World!\r\n ", result[0].GetFirst().ToString());
         }
     }
 }

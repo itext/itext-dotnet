@@ -109,7 +109,8 @@ namespace iText.Layout.Font.Selectorstrategy {
                         if (codePoint > 0xFFFF) {
                             i++;
                         }
-                        if (IsCurrentFontCheckRequired() && (i != indexDiacritic - 1)) {
+                        if (IsCurrentFontCheckRequired() && (i != indexDiacritic - 1) && !iText.IO.Util.TextUtil.IsWhitespaceOrNonPrintable
+                            (codePoint)) {
                             if (currentFont != MatchFont(codePoint, fontSelector, fontProvider, additionalFonts)) {
                                 breakRequested = true;
                             }
@@ -191,8 +192,7 @@ namespace iText.Layout.Font.Selectorstrategy {
             foreach (FontInfo fontInfo in fontSelector.GetFonts()) {
                 if (fontInfo.GetFontUnicodeRange().Contains(codePoint)) {
                     PdfFont temptFont = GetPdfFont(fontInfo, fontProvider, additionalFonts);
-                    Glyph glyph = temptFont.GetGlyph(codePoint);
-                    if (null != glyph && 0 != glyph.GetCode()) {
+                    if (temptFont.ContainsGlyph(codePoint)) {
                         matchedFont = temptFont;
                         break;
                     }

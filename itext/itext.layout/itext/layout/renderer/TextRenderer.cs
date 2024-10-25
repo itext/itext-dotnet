@@ -466,9 +466,13 @@ namespace iText.Layout.Renderer {
                                         for (int i = hyph.Length() - 1; i >= 0; i--) {
                                             String pre = hyph.GetPreHyphenText(i);
                                             String pos = hyph.GetPostHyphenText(i);
-                                            float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
-                                                , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing
-                                                , wordSpacing);
+                                            char hyphen = hyphenationConfig.GetHyphenSymbol();
+                                            String glyphLine = text.ToUnicodeString(currentTextPos, wordBounds[0]) + pre;
+                                            if (font.ContainsGlyph(hyphen)) {
+                                                glyphLine += hyphen;
+                                            }
+                                            float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(glyphLine), fontSize.GetValue
+                                                (), hScale, characterSpacing, wordSpacing);
                                             if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
                                                 <= layoutBox.GetWidth()) {
                                                 hyphenationApplied = true;
@@ -476,10 +480,12 @@ namespace iText.Layout.Renderer {
                                                     line.SetStart(currentTextPos);
                                                 }
                                                 line.SetEnd(Math.Max(line.GetEnd(), wordBounds[0] + pre.Length));
-                                                GlyphLine lineCopy = line.Copy(line.GetStart(), line.GetEnd());
-                                                lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
-                                                lineCopy.SetEnd(lineCopy.GetEnd() + 1);
-                                                line = lineCopy;
+                                                if (font.ContainsGlyph(hyphen)) {
+                                                    GlyphLine lineCopy = line.Copy(line.GetStart(), line.GetEnd());
+                                                    lineCopy.Add(font.GetGlyph(hyphen));
+                                                    lineCopy.SetEnd(lineCopy.GetEnd() + 1);
+                                                    line = lineCopy;
+                                                }
                                                 // TODO DEVSIX-7010 recalculate line properties in case of word hyphenation.
                                                 // These values are based on whole word. Recalculate properly based on hyphenated part.
                                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);

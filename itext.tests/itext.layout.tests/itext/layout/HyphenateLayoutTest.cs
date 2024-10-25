@@ -244,5 +244,20 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void WordsBreakingWordSoftHyphenTest() {
+            String outFileName = destinationFolder + "wordsBreakingWordSoftHyphenTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_wordsBreakingWordSoftHyphenTest.pdf";
+            String SOFT_HYPHEN = "\u00AD";
+            String text = "Soft hyphen at the mid" + SOFT_HYPHEN + "dle,\nhyphen at the end: abcdef" + SOFT_HYPHEN + "ghijklmnopqrst\n"
+                 + SOFT_HYPHEN + "hyphen at the beginning.";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                document.Add(new Paragraph(text).SetWidth(150).SetBorder(new SolidBorder(1)).SetHyphenation(new HyphenationConfig
+                    (1, 1)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
     }
 }
