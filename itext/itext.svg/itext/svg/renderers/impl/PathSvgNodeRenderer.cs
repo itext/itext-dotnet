@@ -343,6 +343,7 @@ namespace iText.Svg.Renderers.Impl {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.INVALID_PATH_D_ATTRIBUTE_OPERATORS).SetMessageParams
                     (pathString);
             }
+            pathString = iText.Commons.Utils.StringUtil.ReplaceAll(pathString, "\\s+", " ").Trim();
             String[] operators = SplitPathStringIntoOperators(pathString);
             foreach (String inst in operators) {
                 String instTrim = inst.Trim();

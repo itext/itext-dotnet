@@ -526,5 +526,10 @@ namespace iText.Svg.Converter {
             // So this test checks if there are any differences
             ConvertAndCompare(sourceFolder, destinationFolder, "svgStackOver");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParsePathWithNewLinesTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "pathWithNewLines");
+        }
     }
 }
