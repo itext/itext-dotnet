@@ -41,6 +41,14 @@ namespace iText.StyledXmlParser.Resolver.Resource {
 
         private long resourceSizeByteLimit;
 
+        private int connectTimeout;
+
+        private int readTimeout;
+
+        private const int DEFAULT_CONNECT_TIMEOUT = 300000;
+
+        private const int DEFAULT_READ_TIMEOUT = 300000;
+
         /// <summary>
         /// Creates a new
         /// <see cref="DefaultResourceRetriever"/>
@@ -56,6 +64,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </remarks>
         public DefaultResourceRetriever() {
             resourceSizeByteLimit = long.MaxValue;
+            connectTimeout = DEFAULT_CONNECT_TIMEOUT;
+            readTimeout = DEFAULT_READ_TIMEOUT;
         }
 
         /// <summary>Gets the resource size byte limit.</summary>
@@ -84,6 +94,58 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             return this;
         }
 
+        /// <summary>Gets the connect timeout.</summary>
+        /// <remarks>
+        /// Gets the connect timeout.
+        /// The connect timeout is used to create input stream with a limited time to establish connection to resource.
+        /// </remarks>
+        /// <returns>the connect timeout in milliseconds</returns>
+        public virtual int GetConnectTimeout() {
+            return connectTimeout;
+        }
+
+        /// <summary>Sets the connect timeout.</summary>
+        /// <remarks>
+        /// Sets the connect timeout.
+        /// The connect timeout is used to create input stream with a limited time to establish connection to resource.
+        /// </remarks>
+        /// <param name="connectTimeout">the connect timeout in milliseconds</param>
+        /// <returns>
+        /// the
+        /// <see cref="IResourceRetriever"/>
+        /// instance
+        /// </returns>
+        public virtual IResourceRetriever SetConnectTimeout(int connectTimeout) {
+            this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        /// <summary>Gets the read timeout.</summary>
+        /// <remarks>
+        /// Gets the read timeout.
+        /// The read timeout is used to create input stream with a limited time to receive data from resource.
+        /// </remarks>
+        /// <returns>the read timeout in milliseconds</returns>
+        public virtual int GetReadTimeout() {
+            return readTimeout;
+        }
+
+        /// <summary>Sets the read timeout.</summary>
+        /// <remarks>
+        /// Sets the read timeout.
+        /// The read timeout is used to create input stream with a limited time to receive data from resource.
+        /// </remarks>
+        /// <param name="readTimeout">the read timeout in milliseconds</param>
+        /// <returns>
+        /// the
+        /// <see cref="IResourceRetriever"/>
+        /// instance
+        /// </returns>
+        public virtual IResourceRetriever SetReadTimeout(int readTimeout) {
+            this.readTimeout = readTimeout;
+            return this;
+        }
+
         /// <summary>
         /// Gets the input stream with current limit on the number of bytes read,
         /// that connect with source URL for retrieving data from that connection.
@@ -96,7 +158,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                     , url));
                 return null;
             }
-            return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url), resourceSizeByteLimit);
+            return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout), resourceSizeByteLimit
+                );
         }
 
         /// <summary>Gets the byte array that are retrieved from the source URL.</summary>
