@@ -22,8 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
 using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Svg;
+using iText.Svg.Converter;
 using iText.Svg.Css.Impl;
 using iText.Svg.Processors.Impl;
 using iText.Test;
@@ -67,6 +70,23 @@ namespace iText.Svg.Css {
             sr = new SvgStyleResolver(new SvgProcessorContext(new SvgConverterProperties()));
             attr = sr.ResolveStyles(node, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual(value3, attr.Get("xlink:href"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+            )]
+        public virtual void SvgCssResolveMalformedXlink2Test() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.AddNewPage();
+            String svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n"
+                 + "        \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n" + "<svg width=\"500\" height=\"400\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n"
+                 + "    <image x=\"0\" y=\"300\" width=\"350\" height=\"80.98\" preserveAspectRatio=\"xMidYMid\" xlink:href=\"//usb.svg\" />\n"
+                 + "</svg>";
+            int pagenr = 1;
+            // Does not throw
+            SvgConverter.DrawOnDocument(svg, pdfDoc, pagenr);
+            pdfDoc.Close();
         }
     }
 }

@@ -260,7 +260,6 @@ namespace iText.Svg.Renderers.Impl {
                 , "invalidOperatorTest01"));
         }
 
-        //TODO DEVSIX-2242. This test should fail when the ticket is resolved
         [NUnit.Framework.Test]
         public virtual void PathLOperatorMultipleCoordinates() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathLOperatorMultipleCoordinates");

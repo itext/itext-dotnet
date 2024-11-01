@@ -199,5 +199,15 @@ namespace iText.Svg.Css {
         public virtual void TextTagNoFontSizeTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textTagNoFontSize");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ChartWithText1Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "chartWithText1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChartWithText2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "chartWithText2");
+        }
     }
 }

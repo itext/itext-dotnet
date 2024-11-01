@@ -101,6 +101,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ClipPathCssProperty() {
+            //TODO: update after DEVSIX-2828
             properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathCssProperty", properties);
         }

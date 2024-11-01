@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -58,7 +60,6 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
         }
 
-        /* This test should fail when DEVSIX-2251 is resolved*/
         [NUnit.Framework.Test]
         public virtual void EoFillTest01() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill01");
@@ -84,7 +85,6 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
         }
 
-        /* This test should fail when DEVSIX-2251 is resolved*/
         [NUnit.Framework.Test]
         public virtual void NonZeroFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nonzerofill");
@@ -115,6 +115,13 @@ namespace iText.Svg.Renderers {
         public virtual void InvalidUrlFillTest() {
             //TODO update cmp file after DEVSIX-3365 will be fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidUrlFillTest");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 4)]
+        public virtual void TextFillFallbackTest() {
+            //TODO update cmp file after DEVSIX-2915 will be fixed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFillFallbackTest");
         }
     }
 }

@@ -59,6 +59,12 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void OverrideStrokeWidthTest() {
+            //TODO: update cmp-file after DEVSIX-2247 - SVG: Attributes override style declarations in style tags
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "overrideStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AdvancedStrokeTest() {
             //TODO: update cmp-file after DEVSIX-2258
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeAdvanced");

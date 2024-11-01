@@ -58,7 +58,6 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
             Count = 19)]
         public virtual void DifferentAspectRatiosTest() {
-            //TODO: update cmp_ when DEVSIX-2250 fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "differentAspectRatios");
         }
 

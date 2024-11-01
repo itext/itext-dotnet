@@ -85,21 +85,16 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MoreThanOneHParam() {
-            // TODO DEVSIX-2331 Update the cmp after the issue is resolved
-            // UPD: Seems to be fixed now, but leaving the remark and issue open because the scope of the issue might be bigger than
-            // this test
             ConvertAndCompare(sourceFolder, destinationFolder, "moreThanOneHParam");
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest01() {
-            //TODO update after DEVSIX-2331 - several (negative) line operators
             ConvertAndCompare(sourceFolder, destinationFolder, "negativeAfterPositiveHandling");
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest02() {
-            //TODO update after DEVSIX-2333 (negative viewbox) fix
             ConvertAndCompare(sourceFolder, destinationFolder, "negativeAfterPositiveHandlingExtendedViewbox");
         }
 

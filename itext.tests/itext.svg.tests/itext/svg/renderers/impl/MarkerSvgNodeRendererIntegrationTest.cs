@@ -259,6 +259,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SquareInNotSquareViewBoxTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "squareInNotSquareViewBox");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleNestedSvgViewBoxes2Test() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleNestedSvgViewBoxes2");
         }
