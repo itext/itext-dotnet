@@ -2623,6 +2623,19 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        //TODO DEVSIX-8695: Update after bug is fixed.
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
+        [NUnit.Framework.Test]
+        public virtual void TrailerMissingBytesTest() {
+            FileInfo file = new FileInfo(SOURCE_FOLDER + "encryptedDocWithFlateDecodeError.pdf");
+            PdfReader pdfReader = new PdfReader(file);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            PdfWriter pdfWriter = new PdfWriter(byteArrayOutputStream);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(pdfReader, pdfWriter
+                ));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.TRAILER_NOT_FOUND, e.Message);
+        }
+
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("b"), new PdfName("c"));
