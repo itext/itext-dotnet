@@ -204,7 +204,10 @@ namespace iText.Layout.Margincollapse {
             MarginsCollapse ownCollapseAfter;
             bool lastChildMarginJoinedToParent = prevChildMarginInfo != null && prevChildMarginInfo.IsIgnoreOwnMarginBottom
                 () && !lastKidCollapsedAfterHasClearanceApplied;
-            if (lastChildMarginJoinedToParent) {
+            //Checking prevChildMarginInfo#ownCollapseAfter for null, because there can be a case where margin collapse
+            //is enabled for the parent, but disabled for the child, in such a case prevChildMarginInfo#ownCollapseAfter
+            //value will be null and the above condition can still be met
+            if (lastChildMarginJoinedToParent && prevChildMarginInfo.GetOwnCollapseAfter() != null) {
                 ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
             }
             else {

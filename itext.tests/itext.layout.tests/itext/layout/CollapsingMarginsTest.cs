@@ -199,6 +199,31 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CollapsingMarginsTest06() {
+            String outFileName = destinationFolder + "collapsingMarginsTest06.pdf";
+            String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest06.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            DrawPageBorders(pdfDocument, 1);
+            Document doc = new Document(pdfDocument);
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Div container = new Div();
+            container.SetBackgroundColor(new DeviceRgb(209, 247, 29));
+            container.SetMarginBottom(30.0f);
+            container.SetMarginTop(30.0f);
+            List list = new List();
+            ListItem listItem = new ListItem("test");
+            listItem.SetProperty(Property.COLLAPSING_MARGINS, null);
+            listItem.SetMargins(20.0f, 5.0f, 20.0f, 5.0f);
+            listItem.SetBackgroundColor(new DeviceRgb(65, 151, 29));
+            list.Add(listItem);
+            container.Add(list);
+            doc.Add(container);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ElementCollapsingMarginsTest01() {
             String outFileName = destinationFolder + "elementCollapsingMarginsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_elementCollapsingMarginsTest01.pdf";
