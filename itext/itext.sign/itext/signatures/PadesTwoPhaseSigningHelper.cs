@@ -368,9 +368,8 @@ namespace iText.Signatures {
             , Stream outputStream, String signatureFieldName, CMSContainer cmsContainer) {
             SetSignatureAlgorithmAndSignature(externalSignature, cmsContainer);
             try {
-                using (PdfDocument document = new PdfDocument(inputDocument, stampingProperties)) {
-                    PdfTwoPhaseSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
-                }
+                PdfTwoPhaseSigner.AddSignatureToPreparedDocument(inputDocument, signatureFieldName, outputStream, cmsContainer
+                    );
             }
             finally {
                 outputStream.Dispose();
@@ -401,9 +400,8 @@ namespace iText.Signatures {
                 cmsContainer.GetSignerInfo().AddUnSignedAttribute(timestampAttribute);
             }
             try {
-                using (PdfDocument document = new PdfDocument(inputDocument, stampingProperties)) {
-                    PdfTwoPhaseSigner.AddSignatureToPreparedDocument(document, signatureFieldName, outputStream, cmsContainer);
-                }
+                PdfTwoPhaseSigner.AddSignatureToPreparedDocument(inputDocument, signatureFieldName, outputStream, cmsContainer
+                    );
             }
             finally {
                 outputStream.Dispose();

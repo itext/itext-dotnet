@@ -46,6 +46,7 @@ using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
 using iText.Layout.Properties;
@@ -613,7 +614,9 @@ namespace iText.Signatures {
             PreClose(exc);
             Stream data = GetRangeStream();
             byte[] encodedSig = externalSignatureContainer.Sign(data);
-            encodedSig = EmbedMacTokenIntoSignatureContainer(encodedSig);
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                encodedSig = EmbedMacTokenIntoSignatureContainer(encodedSig);
+            }
             if (estimatedSize < encodedSig.Length) {
                 throw new System.IO.IOException(SignExceptionMessageConstant.NOT_ENOUGH_SPACE);
             }
@@ -675,7 +678,9 @@ namespace iText.Signatures {
                 throw iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateGeneralSecurityException(e
                     .Message, e);
             }
-            tsToken = EmbedMacTokenIntoSignatureContainer(tsToken);
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                tsToken = EmbedMacTokenIntoSignatureContainer(tsToken);
+            }
             if (contentEstimated + 2 < tsToken.Length) {
                 throw new System.IO.IOException(MessageFormatUtil.Format(SignExceptionMessageConstant.TOKEN_ESTIMATION_SIZE_IS_NOT_LARGE_ENOUGH
                     , contentEstimated, tsToken.Length));
@@ -696,9 +701,29 @@ namespace iText.Signatures {
         /// the signature container doing the actual signing. Only the
         /// method ExternalSignatureContainer.sign is used
         /// </param>
+        [System.ObsoleteAttribute(@"SignDeferred(iText.Kernel.Pdf.PdfReader, System.String, System.IO.Stream, IExternalSignatureContainer) should be used instead."
+            )]
         public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
              externalSignatureContainer) {
             PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => externalSignatureContainer.Sign(a.GetDataToSign()));
+        }
+
+        /// <summary>Signs a PDF where space was already reserved.</summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// that reads the PDF file
+        /// </param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="externalSignatureContainer">
+        /// the signature container doing the actual signing. Only the
+        /// method ExternalSignatureContainer.sign is used
+        /// </param>
+        public static void SignDeferred(PdfReader reader, String fieldName, Stream outs, IExternalSignatureContainer
+             externalSignatureContainer) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(reader, fieldName, outs);
             applier.Apply((a) => externalSignatureContainer.Sign(a.GetDataToSign()));
         }
 
@@ -1243,6 +1268,54 @@ namespace iText.Signatures {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual byte[] EmbedMacTokenIntoSignatureContainer(byte[] signatureContainer) {
+            using (Stream rangeStream = GetRangeStream()) {
+                return EmbedMacTokenIntoSignatureContainer(signatureContainer, rangeStream, document);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static byte[] EmbedMacTokenIntoSignatureContainer(byte[] signatureContainer, Stream rangeStream, 
+            PdfDocument document) {
+            try {
+                CMSContainer cmsContainer;
+                if (JavaUtil.ArraysEquals(new byte[signatureContainer.Length], signatureContainer)) {
+                    // Signature container is empty most likely due two two-step signing process.
+                    // We will create blank signature container in order to add MAC in there.
+                    cmsContainer = new CMSContainer();
+                    SignerInfo signerInfo = new SignerInfo();
+                    String digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(DigestAlgorithms.SHA256);
+                    signerInfo.SetDigestAlgorithm(new AlgorithmIdentifier(digestAlgorithmOid));
+                    signerInfo.SetSignatureAlgorithm(new AlgorithmIdentifier(OID.RSA));
+                    signerInfo.SetSignature("This is a placeholder signature. It's value shall be replaced with a real signature."
+                        .GetBytes(System.Text.Encoding.UTF8));
+                    cmsContainer.SetSignerInfo(signerInfo);
+                }
+                else {
+                    cmsContainer = new CMSContainer(signatureContainer);
+                }
+                // If MAC is in the signature already, we regenerate it anyway.
+                cmsContainer.GetSignerInfo().RemoveUnSignedAttribute(ID_ATTR_PDF_MAC_DATA);
+                IAsn1EncodableVector unsignedVector = FACTORY.CreateASN1EncodableVector();
+                document.DispatchEvent(new SignatureContainerGenerationEvent(unsignedVector, cmsContainer.GetSignerInfo().
+                    GetSignatureData(), rangeStream));
+                if (FACTORY.CreateDERSequence(unsignedVector).Size() != 0) {
+                    IAsn1Sequence sequence = FACTORY.CreateASN1Sequence(FACTORY.CreateDERSequence(unsignedVector).GetObjectAt(
+                        0));
+                    cmsContainer.GetSignerInfo().AddUnSignedAttribute(new CmsAttribute(FACTORY.CreateASN1ObjectIdentifier(sequence
+                        .GetObjectAt(0)).GetId(), sequence.GetObjectAt(1).ToASN1Primitive()));
+                    return cmsContainer.Serialize();
+                }
+            }
+            catch (Exception exception) {
+                throw new PdfException(SignExceptionMessageConstant.NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE, exception);
+            }
+            return signatureContainer;
+        }
+//\endcond
+
         private static String GetSignerName(IX509Certificate certificate) {
             String name = null;
             CertificateInfo.X500Name x500name = CertificateInfo.GetSubjectFields(certificate);
@@ -1299,30 +1372,6 @@ namespace iText.Signatures {
             if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
                 formField.SetAlternativeName(alternativeDescription);
             }
-        }
-
-        private byte[] EmbedMacTokenIntoSignatureContainer(byte[] signatureContainer) {
-            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
-                try {
-                    CMSContainer cmsContainer = new CMSContainer(signatureContainer);
-                    // If MAC is in the signature already, we regenerate it anyway.
-                    cmsContainer.GetSignerInfo().RemoveUnSignedAttribute(ID_ATTR_PDF_MAC_DATA);
-                    IAsn1EncodableVector unsignedVector = FACTORY.CreateASN1EncodableVector();
-                    document.DispatchEvent(new SignatureContainerGenerationEvent(unsignedVector, cmsContainer.GetSignerInfo().
-                        GetSignatureData(), GetRangeStream()));
-                    if (FACTORY.CreateDERSequence(unsignedVector).Size() != 0) {
-                        IAsn1Sequence sequence = FACTORY.CreateASN1Sequence(FACTORY.CreateDERSequence(unsignedVector).GetObjectAt(
-                            0));
-                        cmsContainer.GetSignerInfo().AddUnSignedAttribute(new CmsAttribute(FACTORY.CreateASN1ObjectIdentifier(sequence
-                            .GetObjectAt(0)).GetId(), sequence.GetObjectAt(1).ToASN1Primitive()));
-                        return cmsContainer.Serialize();
-                    }
-                }
-                catch (Exception exception) {
-                    throw new PdfException(SignExceptionMessageConstant.NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE, exception);
-                }
-            }
-            return signatureContainer;
         }
 
         private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {
@@ -1411,6 +1460,8 @@ namespace iText.Signatures {
         internal class SignatureApplier {
             private readonly PdfDocument document;
 
+            private readonly PdfReader reader;
+
             private readonly String fieldName;
 
             private readonly Stream outs;
@@ -1419,13 +1470,46 @@ namespace iText.Signatures {
 
             private long[] gaps;
 
+            public SignatureApplier(PdfReader reader, String fieldName, Stream outs) {
+                this.reader = reader;
+                this.fieldName = fieldName;
+                this.outs = outs;
+                this.document = null;
+            }
+
             public SignatureApplier(PdfDocument document, String fieldName, Stream outs) {
                 this.document = document;
                 this.fieldName = fieldName;
                 this.outs = outs;
+                this.reader = null;
             }
 
             public virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
+                StampingProperties properties = new StampingProperties().PreserveEncryption();
+                properties.RegisterDependency(typeof(IMacContainerLocator), new SignatureMacContainerLocator());
+                // This IdleOutputStream writer does nothing and only required to be able to apply MAC if needed.
+                using (PdfWriter dummyWriter = new PdfWriter(new IdleOutputStream())) {
+                    if (document == null) {
+                        using (PdfDocument newDocument = new PdfDocument(reader, dummyWriter, properties)) {
+                            Apply(newDocument, signatureDataProvider);
+                        }
+                    }
+                    else {
+                        RandomAccessFileOrArray raf = document.GetReader().GetSafeFile();
+                        WindowRandomAccessSource source = new WindowRandomAccessSource(raf.CreateSourceView(), 0, raf.Length());
+                        using (Stream inputStream = new RASInputStream(source)) {
+                            using (PdfReader newReader = new PdfReader(inputStream, document.GetReader().GetPropertiesCopy())) {
+                                using (PdfDocument newDocument = new PdfDocument(newReader, dummyWriter, properties)) {
+                                    Apply(newDocument, signatureDataProvider);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+//\cond DO_NOT_DOCUMENT
+            internal virtual void Apply(PdfDocument document, PdfSigner.ISignatureDataProvider signatureDataProvider) {
                 SignatureUtil signatureUtil = new SignatureUtil(document);
                 PdfSignature signature = signatureUtil.GetSignature(fieldName);
                 if (signature == null) {
@@ -1444,6 +1528,12 @@ namespace iText.Signatures {
                     throw new ArgumentException("Gap is not a multiple of 2");
                 }
                 byte[] signedContent = signatureDataProvider(this);
+                if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                    RandomAccessSourceFactory fac = new RandomAccessSourceFactory();
+                    IRandomAccessSource randomAccessSource = fac.CreateRanged(readerSource, gaps);
+                    RASInputStream signedDocumentStream = new RASInputStream(randomAccessSource);
+                    signedContent = EmbedMacTokenIntoSignatureContainer(signedContent, signedDocumentStream, document);
+                }
                 spaceAvailable /= 2;
                 if (spaceAvailable < signedContent.Length) {
                     throw new PdfException(SignExceptionMessageConstant.AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE);
@@ -1462,6 +1552,7 @@ namespace iText.Signatures {
                 StreamUtil.CopyBytes(readerSource, gaps[2] - 1, gaps[3] + 1, outs);
                 document.Close();
             }
+//\endcond
 
             public virtual Stream GetDataToSign() {
                 return new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));

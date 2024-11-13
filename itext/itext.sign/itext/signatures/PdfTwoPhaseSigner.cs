@@ -111,9 +111,26 @@ namespace iText.Signatures {
         /// <param name="fieldName">the field to sign. It must be the last field</param>
         /// <param name="outs">the output PDF</param>
         /// <param name="cmsContainer">the finalized CMS container</param>
+        [System.ObsoleteAttribute(@"AddSignatureToPreparedDocument(iText.Kernel.Pdf.PdfReader, System.String, System.IO.Stream, iText.Signatures.Cms.CMSContainer) should be used instead."
+            )]
         public static void AddSignatureToPreparedDocument(PdfDocument document, String fieldName, Stream outs, CMSContainer
              cmsContainer) {
             PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => cmsContainer.Serialize());
+        }
+
+        /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// that reads the PDF file
+        /// </param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="cmsContainer">the finalized CMS container</param>
+        public static void AddSignatureToPreparedDocument(PdfReader reader, String fieldName, Stream outs, CMSContainer
+             cmsContainer) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(reader, fieldName, outs);
             applier.Apply((a) => cmsContainer.Serialize());
         }
 
@@ -122,9 +139,26 @@ namespace iText.Signatures {
         /// <param name="fieldName">the field to sign. It must be the last field</param>
         /// <param name="outs">the output PDF</param>
         /// <param name="signedContent">the bytes for the signed data</param>
+        [System.ObsoleteAttribute(@"AddSignatureToPreparedDocument(iText.Kernel.Pdf.PdfReader, System.String, System.IO.Stream, byte[]) should be used instead."
+            )]
         public static void AddSignatureToPreparedDocument(PdfDocument document, String fieldName, Stream outs, byte
             [] signedContent) {
             PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(document, fieldName, outs);
+            applier.Apply((a) => signedContent);
+        }
+
+        /// <summary>Adds an existing signature to a PDF where space was already reserved.</summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// that reads the PDF file
+        /// </param>
+        /// <param name="fieldName">the field to sign. It must be the last field</param>
+        /// <param name="outs">the output PDF</param>
+        /// <param name="signedContent">the bytes for the signed data</param>
+        public static void AddSignatureToPreparedDocument(PdfReader reader, String fieldName, Stream outs, byte[] 
+            signedContent) {
+            PdfSigner.SignatureApplier applier = new PdfSigner.SignatureApplier(reader, fieldName, outs);
             applier.Apply((a) => signedContent);
         }
 
@@ -173,9 +207,6 @@ namespace iText.Signatures {
             }
             PdfSigner pdfSigner = CreatePdfSigner(signerProperties);
             PdfDocument document = pdfSigner.GetDocument();
-            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
-                throw new PdfException(SignExceptionMessageConstant.NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE);
-            }
             if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
                 document.GetCatalog().AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
@@ -191,6 +222,13 @@ namespace iText.Signatures {
             Stream data = pdfSigner.GetRangeStream();
             byte[] digest = DigestAlgorithms.Digest(data, messageDigest);
             byte[] paddedSig = new byte[estimatedSize];
+            if (document.GetDiContainer().GetInstance<IMacContainerLocator>().IsMacContainerLocated()) {
+                byte[] encodedSig = pdfSigner.EmbedMacTokenIntoSignatureContainer(paddedSig);
+                if (estimatedSize < encodedSig.Length) {
+                    throw new System.IO.IOException(SignExceptionMessageConstant.NOT_ENOUGH_SPACE);
+                }
+                Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
+            }
             PdfDictionary dic2 = new PdfDictionary();
             dic2.Put(PdfName.Contents, new PdfString(paddedSig).SetHexWriting(true));
             pdfSigner.Close(dic2);

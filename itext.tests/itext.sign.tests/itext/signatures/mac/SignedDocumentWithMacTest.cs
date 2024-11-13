@@ -30,7 +30,6 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Signatures;
@@ -82,20 +81,12 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    if (signingOperation.Equals("signExternalContainerBlank")) {
-                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
-                            , signRsaPrivateKey, signRsaChain));
-                    }
-                    else {
-                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
-                    }
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            if (!signingOperation.Equals("signExternalContainerBlank")) {
-                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                    , properties));
-            }
+            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                , properties));
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
@@ -112,20 +103,12 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    if (signingOperation.Equals("signExternalContainerBlank")) {
-                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
-                            , signRsaPrivateKey, signRsaChain));
-                    }
-                    else {
-                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
-                    }
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            if (!signingOperation.Equals("signExternalContainerBlank")) {
-                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                    , properties));
-            }
+            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                , properties));
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
@@ -145,7 +128,6 @@ namespace iText.Signatures.Mac {
                     PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            // TODO DEVSIX-8637 Add else statement for empty signature container
             if (!signingOperation.Equals("signExternalContainerBlank")) {
                 ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
                 NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
@@ -171,7 +153,6 @@ namespace iText.Signatures.Mac {
                     PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            // TODO DEVSIX-8637 Add else statement for empty signature container
             if (!signingOperation.Equals("signExternalContainerBlank")) {
                 ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
                 NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
@@ -193,20 +174,12 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties().UseAppendMode());
-                    if (signingOperation.Equals("signExternalContainerBlank")) {
-                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
-                            , signRsaPrivateKey, signRsaChain));
-                    }
-                    else {
-                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
-                    }
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            if (!signingOperation.Equals("signExternalContainerBlank")) {
-                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                    , properties));
-            }
+            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                , properties));
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
@@ -223,20 +196,12 @@ namespace iText.Signatures.Mac {
                 ))) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    if (signingOperation.Equals("signExternalContainerBlank")) {
-                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
-                            , signRsaPrivateKey, signRsaChain));
-                    }
-                    else {
-                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
-                    }
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            if (!signingOperation.Equals("signExternalContainerBlank")) {
-                ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                    , properties));
-            }
+            ReaderProperties properties = new ReaderProperties().SetPassword(ENCRYPTION_PASSWORD);
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                , properties));
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
@@ -262,19 +227,11 @@ namespace iText.Signatures.Mac {
             using (PdfReader reader = new PdfReader(srcFileName, properties)) {
                 using (Stream outputStream = FileUtil.GetFileOutputStream(outputFileName)) {
                     PdfSigner pdfSigner = new PdfSigner(reader, outputStream, new StampingProperties());
-                    if (signingOperation.Equals("signExternalContainerBlank")) {
-                        NUnit.Framework.Assert.Catch(typeof(PdfException), () => PerformSigningOperation(signingOperation, pdfSigner
-                            , signRsaPrivateKey, signRsaChain));
-                    }
-                    else {
-                        PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
-                    }
+                    PerformSigningOperation(signingOperation, pdfSigner, signRsaPrivateKey, signRsaChain);
                 }
             }
-            if (!signingOperation.Equals("signExternalContainerBlank")) {
-                NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
-                    , properties));
-            }
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outputFileName, cmpFileName, properties
+                , properties));
         }
 
         private static void PerformSigningOperation(String signingOperation, PdfSigner pdfSigner, IPrivateKey privateKey

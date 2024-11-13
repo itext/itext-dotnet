@@ -90,7 +90,7 @@ namespace iText.Signatures.Exceptions {
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed " +
              "data.";
 
-        public const String NOT_ENOUGH_SPACE = "Not enough space.";
+        public const String NOT_ENOUGH_SPACE = "Not enough space allocated for the signature.";
 
         public const String NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE = "It was not possible to embed MAC token into signature. Most likely signature container is empty.";
 
