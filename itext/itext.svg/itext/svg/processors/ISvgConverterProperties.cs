@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Layout.Font;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Renderers.Factories;
@@ -82,5 +83,13 @@ namespace iText.Svg.Processors {
         /// </remarks>
         /// <returns>the resource retriever</returns>
         IResourceRetriever GetResourceRetriever();
+
+        /// <summary>Gets the CSS style sheet.</summary>
+        /// <remarks>
+        /// Gets the CSS style sheet.
+        /// Style sheet is used to apply CSS statements to elements.
+        /// </remarks>
+        /// <returns>the CSS style sheet</returns>
+        CssStyleSheet GetCssStyleSheet();
     }
 }

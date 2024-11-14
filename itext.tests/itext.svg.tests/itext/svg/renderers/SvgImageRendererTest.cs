@@ -77,7 +77,8 @@ namespace iText.Svg.Renderers {
             using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
                 SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
-                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
                 float[] wh = SvgConverter.ExtractWidthAndHeight(topSvgRenderer);
                 SvgImageXObject svgImageXObject = new SvgImageXObject(new Rectangle(0, 0, wh[0], wh[1]), result, new ResourceResolver

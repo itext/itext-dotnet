@@ -102,12 +102,17 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                 resultNode = new JsoupDocumentTypeNode((DocumentType)jsoupNode);
                             }
                             else {
-                                if (jsoupNode is Comment || jsoupNode is XmlDeclaration) {
+                                if (jsoupNode is XmlDeclaration) {
+                                    resultNode = new JsoupXmlDeclarationNode((XmlDeclaration)jsoupNode);
                                 }
                                 else {
-                                    // Ignore. We should do this to avoid redundant log message
-                                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
-                                        , jsoupNode.GetType()));
+                                    if (jsoupNode is Comment) {
+                                    }
+                                    else {
+                                        // Ignore. We should do this to avoid redundant log message
+                                        logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
+                                            , jsoupNode.GetType()));
+                                    }
                                 }
                             }
                         }

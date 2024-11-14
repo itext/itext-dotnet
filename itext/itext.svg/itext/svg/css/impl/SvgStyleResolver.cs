@@ -85,6 +85,7 @@ namespace iText.Svg.Css.Impl {
         public SvgStyleResolver(Stream defaultCssStream, SvgProcessorContext context) {
             this.css = CssStyleSheetParser.Parse(defaultCssStream);
             this.resourceResolver = context.GetResourceResolver();
+            this.css.AppendCssStyleSheet(context.GetCssStyleSheet());
         }
 
         /// <summary>
@@ -103,6 +104,7 @@ namespace iText.Svg.Css.Impl {
                 this.css = new CssStyleSheet();
             }
             this.resourceResolver = context.GetResourceResolver();
+            this.css.AppendCssStyleSheet(context.GetCssStyleSheet());
         }
 
         /// <summary>
@@ -121,6 +123,8 @@ namespace iText.Svg.Css.Impl {
             // TODO DEVSIX-2060. Fetch default styles first.
             this.deviceDescription = context.GetDeviceDescription();
             this.resourceResolver = context.GetResourceResolver();
+            this.css = new CssStyleSheet();
+            this.css.AppendCssStyleSheet(context.GetCssStyleSheet());
             CollectCssDeclarations(rootNode, this.resourceResolver);
             CollectFonts();
         }
@@ -190,18 +194,28 @@ namespace iText.Svg.Css.Impl {
         /// <returns>the map containing the resolved styles that are defined in the body of the element</returns>
         public virtual IDictionary<String, String> ResolveNativeStyles(INode node, AbstractCssContext cssContext) {
             IDictionary<String, String> styles = new Dictionary<String, String>();
+            IAttribute styleAttr = null;
+            // Load in attributes declarations except style
+            if (node is IElementNode) {
+                IElementNode eNode = (IElementNode)node;
+                foreach (IAttribute attr in eNode.GetAttributes()) {
+                    if (SvgConstants.Attributes.STYLE.Equals(attr.GetKey())) {
+                        styleAttr = attr;
+                    }
+                    else {
+                        ProcessAttribute(attr, styles);
+                    }
+                }
+            }
             // Load in from collected style sheets
             IList<CssDeclaration> styleSheetDeclarations = css.GetCssDeclarations(node, MediaDeviceDescription.CreateDefault
                 ());
             foreach (CssDeclaration ssd in styleSheetDeclarations) {
                 styles.Put(ssd.GetProperty(), ssd.GetExpression());
             }
-            // Load in attributes declarations
-            if (node is IElementNode) {
-                IElementNode eNode = (IElementNode)node;
-                foreach (IAttribute attr in eNode.GetAttributes()) {
-                    ProcessAttribute(attr, styles);
-                }
+            // Inline CSS from style attribute overrides presentation attributes and collected style sheets
+            if (styleAttr != null) {
+                ProcessAttribute(styleAttr, styles);
             }
             return styles;
         }
@@ -282,7 +296,6 @@ namespace iText.Svg.Css.Impl {
         }
 
         private void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
-            this.css = new CssStyleSheet();
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
                 q.Add(rootNode);
@@ -293,45 +306,52 @@ namespace iText.Svg.Css.Impl {
                     IElementNode headChildElement = (IElementNode)currentNode;
                     if (SvgConstants.Tags.STYLE.Equals(headChildElement.Name())) {
                         // XML parser will parse style tag contents as text nodes
-                        if (!currentNode.ChildNodes().IsEmpty() && (currentNode.ChildNodes()[0] is IDataNode || currentNode.ChildNodes
-                            ()[0] is ITextNode)) {
-                            String styleData;
-                            if (currentNode.ChildNodes()[0] is IDataNode) {
-                                styleData = ((IDataNode)currentNode.ChildNodes()[0]).GetWholeData();
+                        foreach (INode node in currentNode.ChildNodes()) {
+                            if (node is IDataNode || node is ITextNode) {
+                                String styleData = node is IDataNode ? ((IDataNode)node).GetWholeData() : ((ITextNode)node).WholeText();
+                                CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
+                                // TODO (DEVSIX-2263): media query wrap
+                                // styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
+                                this.css.AppendCssStyleSheet(styleSheet);
                             }
-                            else {
-                                styleData = ((ITextNode)currentNode.ChildNodes()[0]).WholeText();
-                            }
-                            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
-                            // TODO (DEVSIX-2263): media query wrap
-                            // styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
-                            this.css.AppendCssStyleSheet(styleSheet);
                         }
                     }
                     else {
                         if (CssUtils.IsStyleSheetLink(headChildElement)) {
-                            String styleSheetUri = headChildElement.GetAttribute(SvgConstants.Attributes.HREF);
-                            try {
-                                using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(styleSheetUri)) {
-                                    if (stream != null) {
-                                        CssStyleSheet styleSheet = CssStyleSheetParser.Parse(stream, resourceResolver.ResolveAgainstBaseUri(styleSheetUri
-                                            ).ToExternalForm());
-                                        this.css.AppendCssStyleSheet(styleSheet);
-                                    }
-                                }
-                            }
-                            catch (Exception exc) {
-                                LOGGER.LogError(exc, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
-                                    );
-                            }
+                            ParseStylesheet(headChildElement);
+                        }
+                    }
+                }
+                else {
+                    if (currentNode is IXmlDeclarationNode) {
+                        IXmlDeclarationNode declarationNode = (IXmlDeclarationNode)currentNode;
+                        if (SvgConstants.Tags.XML_STYLESHEET.Equals(declarationNode.Name())) {
+                            ParseStylesheet(declarationNode);
                         }
                     }
                 }
                 foreach (INode child in currentNode.ChildNodes()) {
-                    if (child is IElementNode) {
+                    if (child is IElementNode || child is IXmlDeclarationNode) {
                         q.Add(child);
                     }
                 }
+            }
+        }
+
+        private void ParseStylesheet(IAttributesContainer attributesNode) {
+            String styleSheetUri = attributesNode.GetAttribute(SvgConstants.Attributes.HREF);
+            try {
+                using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(styleSheetUri)) {
+                    if (stream != null) {
+                        CssStyleSheet styleSheet = CssStyleSheetParser.Parse(stream, resourceResolver.ResolveAgainstBaseUri(styleSheetUri
+                            ).ToExternalForm());
+                        this.css.AppendCssStyleSheet(styleSheet);
+                    }
+                }
+            }
+            catch (Exception exc) {
+                LOGGER.LogError(exc, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
+                    );
             }
         }
 

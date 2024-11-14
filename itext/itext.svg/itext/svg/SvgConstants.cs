@@ -327,6 +327,9 @@ namespace iText.Svg {
 
             /// <summary>Tag defining the vertical kerning values in between two glyphs.</summary>
             public const String VKERN = "vkern";
+
+            /// <summary>Tag defining the xml stylesheet declaration.</summary>
+            public const String XML_STYLESHEET = "xml-stylesheet";
         }
 
         /// <summary>Class containing the constant property names for the attributes of tags in the SVG spec</summary>

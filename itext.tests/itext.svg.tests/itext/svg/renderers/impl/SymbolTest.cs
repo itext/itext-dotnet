@@ -110,7 +110,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ClassAttributeTestWithCssTest() {
-            // TODO DEVSIX-4563 Processing of attributes from an external CSS is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "classAttrTest");
         }
 

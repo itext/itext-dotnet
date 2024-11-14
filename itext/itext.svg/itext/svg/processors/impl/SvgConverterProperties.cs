@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Layout.Font;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Processors;
@@ -50,6 +51,8 @@ namespace iText.Svg.Processors.Impl {
         private ISvgNodeRendererFactory rendererFactory;
 
         private String charset = System.Text.Encoding.UTF8.Name();
+
+        private CssStyleSheet cssStyleSheet = null;
 
         /// <summary>
         /// Creates a new
@@ -145,6 +148,27 @@ namespace iText.Svg.Processors.Impl {
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetResourceRetriever(IResourceRetriever resourceRetriever
             ) {
             this.resourceRetriever = resourceRetriever;
+            return this;
+        }
+
+        public virtual CssStyleSheet GetCssStyleSheet() {
+            return cssStyleSheet;
+        }
+
+        /// <summary>Sets the CSS style sheet.</summary>
+        /// <remarks>
+        /// Sets the CSS style sheet.
+        /// Style sheet is used to apply CSS statements to elements.
+        /// </remarks>
+        /// <param name="cssStyleSheet">the CSS style sheet</param>
+        /// <returns>
+        /// the
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetCssStyleSheet(CssStyleSheet cssStyleSheet
+            ) {
+            this.cssStyleSheet = cssStyleSheet;
             return this;
         }
     }

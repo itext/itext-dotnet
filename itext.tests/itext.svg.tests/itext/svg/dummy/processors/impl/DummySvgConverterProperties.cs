@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Layout.Font;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Dummy.Factories;
@@ -79,6 +80,10 @@ namespace iText.Svg.Dummy.Processors.Impl {
 
         public virtual IResourceRetriever GetResourceRetriever() {
             return resourceRetriever;
+        }
+
+        public virtual CssStyleSheet GetCssStyleSheet() {
+            return null;
         }
 
         public virtual iText.Svg.Dummy.Processors.Impl.DummySvgConverterProperties SetMediaDeviceDescription(MediaDeviceDescription

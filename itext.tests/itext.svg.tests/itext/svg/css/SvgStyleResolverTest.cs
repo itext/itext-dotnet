@@ -181,7 +181,7 @@ namespace iText.Svg.Css {
             ICssResolver styleResolver = new SvgStyleResolver(new SvgProcessorContext(new SvgConverterProperties()));
             iText.StyledXmlParser.Jsoup.Nodes.Element svg = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf("svg"), "");
-            svg.Attributes().Put(SvgConstants.Attributes.STROKE, "white");
+            svg.Attributes().Put(SvgConstants.Attributes.STYLE, "stroke:white");
             INode svgNode = new JsoupElementNode(svg);
             IDictionary<String, String> resolvedStyles = styleResolver.ResolveStyles(svgNode, new SvgCssContext());
             NUnit.Framework.Assert.AreEqual("white", resolvedStyles.Get(SvgConstants.Attributes.STROKE));

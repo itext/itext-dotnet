@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.IO.Font;
 using iText.Layout.Font;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
@@ -46,6 +47,8 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>The SVG CSS context.</summary>
         private readonly SvgCssContext cssContext;
 
+        private CssStyleSheet cssStyleSheet;
+
         /// <summary>
         /// Instantiates a new
         /// <see cref="SvgProcessorContext"/>
@@ -67,6 +70,10 @@ namespace iText.Svg.Processors.Impl {
             }
             resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), converterProperties.GetResourceRetriever
                 ());
+            cssStyleSheet = converterProperties.GetCssStyleSheet();
+            if (cssStyleSheet == null) {
+                cssStyleSheet = new CssStyleSheet();
+            }
             cssContext = new SvgCssContext();
         }
 
@@ -132,6 +139,12 @@ namespace iText.Svg.Processors.Impl {
                 tempFonts = new FontSet();
             }
             tempFonts.AddFont(fontInfo, alias);
+        }
+
+        /// <summary>Gets the CSS style sheet.</summary>
+        /// <returns>the CSS style sheet</returns>
+        public virtual CssStyleSheet GetCssStyleSheet() {
+            return cssStyleSheet;
         }
     }
 }

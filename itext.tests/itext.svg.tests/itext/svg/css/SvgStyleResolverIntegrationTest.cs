@@ -122,7 +122,6 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void FontResolverIntegrationTest() {
-            //TODO DEVSIX-2058
             ConvertAndCompare(sourceFolder, destinationFolder, "fontssvg");
         }
 
@@ -140,7 +139,6 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void ExternalStyleSheetWithFillStyleTest() {
-            // TODO DEVSIX-4275 investigate why fill style not processed
             ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithFillStyleTest");
         }
 
@@ -208,6 +206,96 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void ChartWithText2Test() {
             ConvertAndCompare(sourceFolder, destinationFolder, "chartWithText2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImportStyleSheetWithStrokeStyleTest() {
+            // TODO DEVSIX-2264 Support CSS @import url() rule to reference external resources
+            ConvertAndCompare(sourceFolder, destinationFolder, "importStyleSheetWithStrokeStyleTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StyleInCdataTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "styleInCDATA");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StyleInCdataWithNewLineBeforeTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "styleInCdataWithNewLineBefore");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder1Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder3Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder4Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder4");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder5Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder5");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder6Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder6");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder7Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder7");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder8Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder8");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
+        public virtual void CssStylesResolverOrder9Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder9");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
+        public virtual void CssStylesResolverOrder10Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder10");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
+        public virtual void CssStylesResolverOrder11Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder11");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
+        public virtual void CssStylesResolverOrder12Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder12");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder13Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder13");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder14Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder14");
         }
     }
 }

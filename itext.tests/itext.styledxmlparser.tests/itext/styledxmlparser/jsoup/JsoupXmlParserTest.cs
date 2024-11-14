@@ -36,8 +36,9 @@ namespace iText.StyledXmlParser.Jsoup {
             String xml = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!-- just declaration and comment -->";
             Stream stream = new MemoryStream(xml.GetBytes());
             IDocumentNode node = new JsoupXmlParser().Parse(stream, "UTF-8");
-            // only text (whitespace) child node shall be fetched.
-            NUnit.Framework.Assert.AreEqual(1, node.ChildNodes().Count);
+            NUnit.Framework.Assert.AreEqual(2, node.ChildNodes().Count);
+            NUnit.Framework.Assert.IsTrue(node.ChildNodes()[0] is IXmlDeclarationNode);
+            NUnit.Framework.Assert.IsTrue(node.ChildNodes()[1] is ITextNode);
         }
 
         [NUnit.Framework.Test]
