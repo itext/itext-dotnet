@@ -513,8 +513,8 @@ namespace iText.Layout.Renderer {
                         overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
                     }
                     // Count the height allowed for the items after the one which was partially layouted
-                    maxHeightInLine = Math.Max(maxHeightInLine, itemInfo.GetRectangle().GetY() + itemInfo.GetRenderer().GetOccupiedAreaBBox
-                        ().GetHeight());
+                    maxHeightInLine = Math.Max(maxHeightInLine, itemInfo.GetRectangle().GetY() + childResult.GetOccupiedArea()
+                        .GetBBox().GetHeight());
                 }
                 else {
                     if (metChildRendererInLine) {

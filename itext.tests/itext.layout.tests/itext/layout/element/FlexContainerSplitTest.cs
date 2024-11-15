@@ -332,6 +332,30 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TableInFlexOnSplit2Test() {
+            String outFileName = DESTINATION_FOLDER + "tableInFlexOnSplit2Test.pdf";
+            String cmpFileName = SOURCE_FOLDER + "tableInFlexOnSplitTest2.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDocument);
+                pdfDocument.SetDefaultPageSize(PageSize.A5);
+                Div flexContainer = new FlexContainer();
+                flexContainer.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10 }));
+                for (int i = 1; i <= 3; i++) {
+                    table.AddHeaderCell("Header" + i);
+                }
+                for (int i = 1; i <= 81; i++) {
+                    table.AddCell("Cell" + i);
+                }
+                flexContainer.Add(table);
+                Paragraph p = new Paragraph("Some text").SetBorder(new SolidBorder(1)).SetMargin(0);
+                document.Add(new FlexContainer().Add(flexContainer).Add(table));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         private Div CreateDefaultFlexContainer() {
             Div flexContainer = new FlexContainer();
             flexContainer.SetBorder(new SolidBorder(2));
