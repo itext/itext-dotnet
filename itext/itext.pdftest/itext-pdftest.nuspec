@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext.pdftest</id>
-    <version>9.0.1-SNAPSHOT</version>
+    <version>9.1.0-SNAPSHOT</version>
     <title>iText pdftest module</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
