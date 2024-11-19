@@ -67,6 +67,11 @@ internal static class KernelExtensions {
         return result == 0 ? -1 : result;
     }
 
+    public static int JRead(this BinaryReader stream, byte[] buffer, int offset, int count) {
+        int result = stream.Read(buffer, offset, count);
+        return result == 0 ? -1 : result;
+    }
+
     public static void Write(this Stream stream, byte[] buffer) {
         stream.Write(buffer, 0, buffer.Length);
     }

@@ -224,55 +224,61 @@ namespace iText.Commons.Utils {
         }
 
         public static void Fill(byte[] a, byte val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
+                a[i] = val;
+            }
+        }
+
+        public static void Fill(byte[] a, int from, int to, byte val) {
+            for (int i = from; i < to; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(char[] a, char val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(bool[] a, bool val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(short[] a, short val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(int[] a, int val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(long[] a, long val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(float[] a, float val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(double[] a, double val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
 
         public static void Fill(object[] a, object val) {
-            for (int i = 0, len = a.Length; i < len; i++) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = val;
             }
         }
