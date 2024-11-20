@@ -63,7 +63,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(DESTINATION_FOLDER);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
@@ -2623,17 +2623,17 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        //TODO DEVSIX-8695: Update after bug is fixed.
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE)]
         [NUnit.Framework.Test]
-        public virtual void TrailerMissingBytesTest() {
-            FileInfo file = new FileInfo(SOURCE_FOLDER + "encryptedDocWithFlateDecodeError.pdf");
-            PdfReader pdfReader = new PdfReader(file);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            PdfWriter pdfWriter = new PdfWriter(byteArrayOutputStream);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(pdfReader, pdfWriter
-                ));
-            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.TRAILER_NOT_FOUND, e.Message);
+        public virtual void XrefStreamMissingBytesTest() {
+            String inputFile = SOURCE_FOLDER + "xrefStreamMissingBytes.pdf";
+            String outputFile = DESTINATION_FOLDER + "xrefStreamMissingBytes.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_xrefStreamMissingBytes.pdf";
+            PdfReader pdfReader = new PdfReader(inputFile).SetUnethicalReading(true);
+            using (PdfDocument pdfDoc = new PdfDocument(pdfReader, CompareTool.CreateTestPdfWriter(outputFile))) {
+                pdfDoc.RemovePage(2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, DESTINATION_FOLDER, 
+                "diff_"));
         }
 
         private static PdfDictionary GetTestPdfDictionary() {

@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.util.zlib;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
@@ -89,7 +90,10 @@ namespace iText.Kernel.Pdf.Filters {
                     if (filter < 0) {
                         return fout.ToArray();
                     }
-                    dataStream.ReadFully(curr, 0, bytesPerRow);
+                    int bytesRead = dataStream.JRead(curr, 0, bytesPerRow);
+                    if (bytesRead < bytesPerRow) {
+                        JavaUtil.Fill(curr, bytesRead, bytesPerRow, (byte)0);
+                    }
                 }
                 catch (Exception) {
                     return fout.ToArray();
