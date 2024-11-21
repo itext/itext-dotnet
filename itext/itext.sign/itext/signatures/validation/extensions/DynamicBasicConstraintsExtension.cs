@@ -24,7 +24,6 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Crypto;
-using iText.Signatures;
 
 namespace iText.Signatures.Validation.Extensions {
     /// <summary>
@@ -63,15 +62,7 @@ namespace iText.Signatures.Validation.Extensions {
         /// otherwise
         /// </returns>
         public override bool ExistsInCertificate(IX509Certificate certificate) {
-            try {
-                if (CertificateUtil.GetExtensionValue(certificate, OID.X509Extensions.BASIC_CONSTRAINTS) == null) {
-                    return false;
-                }
-            }
-            catch (System.IO.IOException) {
-                return false;
-            }
-            return certificate.GetBasicConstraints() >= GetCertificateChainSize();
+            return certificate.GetBasicConstraints() >= GetCertificateChainSize() - 1;
         }
     }
 }

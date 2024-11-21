@@ -258,13 +258,11 @@ namespace iText.Signatures.Validation {
             certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .CERT_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(2).HasNumberOfLogs(3).HasLogItem((la
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(2).HasLogItem((la
                 ) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((la) => la
                 .WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING
-                , (l) => OID.X509Extensions.KEY_USAGE).WithCertificate(signingCert)).HasLogItem((la) => la.WithCheckName
-                (CertificateChainValidator.EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, 
-                (l) => OID.X509Extensions.BASIC_CONSTRAINTS).WithCertificate(signingCert)));
+                , (l) => OID.X509Extensions.KEY_USAGE).WithCertificate(signingCert)));
         }
 
         [NUnit.Framework.Test]
