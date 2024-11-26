@@ -811,7 +811,7 @@ namespace iText.Signatures {
                 .GetSignatureMechanismParameters());
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
-                throw new System.IO.IOException("Not enough space");
+                throw new System.IO.IOException($"Size of encoded signature was smaller than the estimated size. Expected {estimatedSize} but got {encodedSig.Length}");
             }
             byte[] paddedSig = new byte[estimatedSize];
             Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
