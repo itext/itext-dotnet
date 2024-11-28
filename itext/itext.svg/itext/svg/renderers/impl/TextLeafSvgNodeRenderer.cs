@@ -24,7 +24,7 @@ using System;
 using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Svg;
@@ -37,6 +37,8 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for drawing text to a canvas.
     /// </summary>
     public class TextLeafSvgNodeRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer {
+        private readonly Text text = new Text("");
+
         public override ISvgNodeRenderer CreateDeepCopy() {
             TextLeafSvgNodeRenderer copy = new TextLeafSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);
@@ -100,20 +102,53 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
                 )) {
-                PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                //TODO(DEVSIX-2507): Support for glyph by glyph handling of x, y and rotate
-                if (context.GetPreviousElementTextMove() == null) {
-                    currentCanvas.MoveText(context.GetTextMove()[0], context.GetTextMove()[1]);
-                }
-                else {
-                    currentCanvas.MoveText(context.GetPreviousElementTextMove()[0], context.GetPreviousElementTextMove()[1]);
-                }
-                currentCanvas.ShowText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
+                text.SetText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
+                float parentFontSize = ((AbstractSvgNodeRenderer)GetParent()).GetCurrentFontSize();
+                PdfFont parentFont = ((TextSvgBranchRenderer)GetParent()).GetFont();
+                float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(parentFont, RenderingMode
+                    .HTML_MODE);
+                float yLineOffset = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[0]) * parentFontSize;
+                ApplyTransform(context);
+                ApplyGraphicsState(context);
+                ((TextSvgBranchRenderer)GetParent()).AddTextChild(text, context, yLineOffset, GetTextContentLength(parentFontSize
+                    , parentFont));
             }
         }
 
         protected internal override bool CanElementFill() {
             return false;
+        }
+
+        /// <summary>
+        /// Retrieves
+        /// <see cref="iText.Layout.Element.Text"/>
+        /// element which will be drawn using layout.
+        /// </summary>
+        /// <returns>
+        /// corresponding
+        /// <see cref="iText.Layout.Element.Text"/>
+        /// element
+        /// </returns>
+        protected internal virtual Text GetText() {
+            return text;
+        }
+
+        private void ApplyTransform(SvgDrawContext context) {
+            AffineTransform transform = context.GetLastTextTransform();
+            text.SetHorizontalScaling((float)transform.GetScaleX());
+            text.SetProperty(Property.VERTICAL_SCALING, transform.GetScaleY());
+            text.SetProperty(Property.SKEW, new float[] { (float)transform.GetShearX(), (float)transform.GetShearY() }
+                );
+        }
+
+        private void ApplyGraphicsState(SvgDrawContext context) {
+            SvgTextProperties textProperties = context.GetSvgTextProperties();
+            // TODO DEVSIX-8774 support stroke-opacity for text at layout level
+            // TODO DEVSIX-8776 support dash-pattern in layout
+            text.SetFontColor(textProperties.GetFillColor());
+            text.SetStrokeWidth(textProperties.GetLineWidth());
+            text.SetStrokeColor(textProperties.GetStrokeColor());
+            text.SetOpacity(textProperties.GetFillOpacity());
         }
     }
 }

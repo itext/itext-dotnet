@@ -225,5 +225,17 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void YWithoutXTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "yWithoutX");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeAbsoluteAndRelativePositionTest() {
+            // TODO DEVSIX-2507 support x, y, dx, dy attributes
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeAbsoluteAndRelativePosition");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoPositionAfterRelativeTest() {
+            // TODO DEVSIX-2507 support x, y, dx, dy attributes
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "noPositionAfterRelative");
+        }
     }
 }

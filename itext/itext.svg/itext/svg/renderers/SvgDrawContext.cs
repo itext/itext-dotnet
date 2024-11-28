@@ -29,6 +29,7 @@ using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css;
 using iText.Svg.Exceptions;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers {
     /// <summary>
@@ -52,6 +53,8 @@ namespace iText.Svg.Renderers {
         private readonly ResourceResolver resourceResolver;
 
         private readonly FontProvider fontProvider;
+
+        private SvgTextProperties textProperties = new SvgTextProperties();
 
         private FontSet tempFonts;
 
@@ -339,12 +342,42 @@ namespace iText.Svg.Renderers {
             this.patternIds.Pop();
         }
 
+        [Obsolete]
         public virtual void SetPreviousElementTextMove(float[] previousElementTextMove) {
             this.previousElementTextMove = previousElementTextMove;
         }
 
+        [Obsolete]
         public virtual float[] GetPreviousElementTextMove() {
             return previousElementTextMove;
+        }
+
+        /// <summary>
+        /// Retrieves
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// for text SVG elements.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// text properties
+        /// </returns>
+        public virtual SvgTextProperties GetSvgTextProperties() {
+            return textProperties;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// for textSVG elements.
+        /// </summary>
+        /// <param name="textProperties">
+        /// 
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// to set
+        /// </param>
+        public virtual void SetSvgTextProperties(SvgTextProperties textProperties) {
+            this.textProperties = textProperties;
         }
     }
 }

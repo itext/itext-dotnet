@@ -282,41 +282,42 @@ namespace iText.Svg.Renderers.Impl {
         /// </remarks>
         /// <param name="context">the svg draw context</param>
         internal virtual void PreDraw(SvgDrawContext context) {
-            if (this.attributesAndStyles != null) {
-                PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                PdfExtGState opacityGraphicsState = new PdfExtGState();
-                if (!partOfClipPath) {
- {
-                        // fill
-                        float generalOpacity = GetOpacity();
-                        String fillRawValue = GetAttributeOrDefault(SvgConstants.Attributes.FILL, "black");
-                        this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
-                        if (doFill && CanElementFill()) {
-                            float fillOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.FILL_OPACITY, generalOpacity);
-                            Color fillColor = null;
-                            TransparentColor transparentColor = GetColorFromAttributeValue(context, fillRawValue, 0, fillOpacity);
-                            if (transparentColor != null) {
-                                fillColor = transparentColor.GetColor();
-                                fillOpacity = transparentColor.GetOpacity();
-                            }
-                            if (!CssUtils.CompareFloats(fillOpacity, 1f)) {
-                                opacityGraphicsState.SetFillOpacity(fillOpacity);
-                            }
-                            // set default if no color has been parsed
-                            if (fillColor == null) {
-                                fillColor = ColorConstants.BLACK;
-                            }
-                            currentCanvas.SetFillColor(fillColor);
-                        }
-                    }
-                    ApplyStrokeProperties(context, currentCanvas, opacityGraphicsState);
- {
-                        // opacity
-                        if (!opacityGraphicsState.GetPdfObject().IsEmpty()) {
-                            currentCanvas.SetExtGState(opacityGraphicsState);
-                        }
-                    }
+            if (this.attributesAndStyles != null && !partOfClipPath) {
+                AbstractSvgNodeRenderer.FillProperties fillProperties = CalculateFillProperties(context);
+                AbstractSvgNodeRenderer.StrokeProperties strokeProperties = CalculateStrokeProperties(context);
+                ApplyFillAndStrokeProperties(fillProperties, strokeProperties, context);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void ApplyFillAndStrokeProperties(AbstractSvgNodeRenderer.FillProperties fillProperties, 
+            AbstractSvgNodeRenderer.StrokeProperties strokeProperties, SvgDrawContext context) {
+            PdfExtGState opacityGraphicsState = new PdfExtGState();
+            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            if (fillProperties != null) {
+                currentCanvas.SetFillColor(fillProperties.GetColor());
+                if (!CssUtils.CompareFloats(fillProperties.GetOpacity(), 1f)) {
+                    opacityGraphicsState.SetFillOpacity(fillProperties.GetOpacity());
                 }
+            }
+            if (strokeProperties != null) {
+                if (strokeProperties.GetLineDashParameters() != null) {
+                    SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = strokeProperties.GetLineDashParameters
+                        ();
+                    currentCanvas.SetLineDash(lineDashParameters.GetDashArray(), lineDashParameters.GetDashPhase());
+                }
+                // As default value for stroke is 'none' we should not set it in case value obtaining fails
+                if (strokeProperties.GetColor() != null) {
+                    currentCanvas.SetStrokeColor(strokeProperties.GetColor());
+                }
+                currentCanvas.SetLineWidth(strokeProperties.GetWidth());
+                if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {
+                    opacityGraphicsState.SetStrokeOpacity(strokeProperties.GetOpacity());
+                }
+            }
+            if (!opacityGraphicsState.GetPdfObject().IsEmpty()) {
+                currentCanvas.SetExtGState(opacityGraphicsState);
             }
         }
 //\endcond
@@ -422,8 +423,28 @@ namespace iText.Svg.Renderers.Impl {
             return result;
         }
 
-        private void ApplyStrokeProperties(SvgDrawContext context, PdfCanvas currentCanvas, PdfExtGState opacityGraphicsState
-            ) {
+        private AbstractSvgNodeRenderer.FillProperties CalculateFillProperties(SvgDrawContext context) {
+            float generalOpacity = GetOpacity();
+            String fillRawValue = GetAttributeOrDefault(SvgConstants.Attributes.FILL, "black");
+            this.doFill = !SvgConstants.Values.NONE.EqualsIgnoreCase(fillRawValue);
+            if (doFill && CanElementFill()) {
+                float fillOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.FILL_OPACITY, generalOpacity);
+                Color fillColor = null;
+                TransparentColor transparentColor = GetColorFromAttributeValue(context, fillRawValue, 0, fillOpacity);
+                if (transparentColor != null) {
+                    fillColor = transparentColor.GetColor();
+                    fillOpacity = transparentColor.GetOpacity();
+                }
+                // set default if no color has been parsed
+                if (fillColor == null) {
+                    fillColor = ColorConstants.BLACK;
+                }
+                return new AbstractSvgNodeRenderer.FillProperties(fillOpacity, fillColor);
+            }
+            return null;
+        }
+
+        private AbstractSvgNodeRenderer.StrokeProperties CalculateStrokeProperties(SvgDrawContext context) {
             String strokeRawValue = GetAttributeOrDefault(SvgConstants.Attributes.STROKE, SvgConstants.Values.NONE);
             if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
                 String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
@@ -441,25 +462,85 @@ namespace iText.Svg.Renderers.Impl {
                     strokeColor = transparentColor.GetColor();
                     strokeOpacity = transparentColor.GetOpacity();
                 }
-                if (!CssUtils.CompareFloats(strokeOpacity, 1f)) {
-                    opacityGraphicsState.SetStrokeOpacity(strokeOpacity);
-                }
                 String strokeDashArrayRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHARRAY);
                 String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
                 SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
                     (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(), context);
-                if (lineDashParameters != null) {
-                    currentCanvas.SetLineDash(lineDashParameters.GetDashArray(), lineDashParameters.GetDashPhase());
-                }
-                // as default value for stroke is 'none' we should not set
-                // it in case when value obtaining fails
-                if (strokeColor != null) {
-                    currentCanvas.SetStrokeColor(strokeColor);
-                }
-                currentCanvas.SetLineWidth(strokeWidth);
                 doStroke = true;
+                return new AbstractSvgNodeRenderer.StrokeProperties(strokeColor, strokeWidth, strokeOpacity, lineDashParameters
+                    );
+            }
+            return null;
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal sealed class FillProperties {
+//\cond DO_NOT_DOCUMENT
+            internal readonly float opacity;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly Color color;
+//\endcond
+
+            public FillProperties(float opacity, Color color) {
+                this.opacity = opacity;
+                this.color = color;
+            }
+
+            public float GetOpacity() {
+                return opacity;
+            }
+
+            public Color GetColor() {
+                return color;
             }
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal sealed class StrokeProperties {
+//\cond DO_NOT_DOCUMENT
+            internal readonly Color color;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly float width;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly float opacity;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters;
+//\endcond
+
+            public StrokeProperties(Color color, float width, float opacity, SvgStrokeParameterConverter.PdfLineDashParameters
+                 lineDashParameters) {
+                this.color = color;
+                this.width = width;
+                this.opacity = opacity;
+                this.lineDashParameters = lineDashParameters;
+            }
+
+            public Color GetColor() {
+                return color;
+            }
+
+            public float GetWidth() {
+                return width;
+            }
+
+            public float GetOpacity() {
+                return opacity;
+            }
+
+            public SvgStrokeParameterConverter.PdfLineDashParameters GetLineDashParameters() {
+                return lineDashParameters;
+            }
+        }
+//\endcond
 
         public abstract ISvgNodeRenderer CreateDeepCopy();
 

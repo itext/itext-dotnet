@@ -828,15 +828,21 @@ namespace iText.Layout.Renderer {
                 }
                 BeginElementOpacityApplying(drawContext);
                 canvas.SaveState().BeginText().SetFontAndSize(font, fontSize.GetValue());
+                float verticalScale = (float)this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
                 if (skew != null && skew.Length == 2) {
-                    canvas.SetTextMatrix(1, skew[0], skew[1], 1, leftBBoxX, GetYLine());
+                    canvas.SetTextMatrix(1, skew[0], skew[1], verticalScale, leftBBoxX, GetYLine());
                 }
                 else {
                     if (italicSimulation) {
-                        canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, 1, leftBBoxX, GetYLine());
+                        canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, verticalScale, leftBBoxX, GetYLine());
                     }
                     else {
-                        canvas.MoveText(leftBBoxX, GetYLine());
+                        if (Math.Abs(verticalScale - 1) < EPS) {
+                            canvas.MoveText(leftBBoxX, GetYLine());
+                        }
+                        else {
+                            canvas.SetTextMatrix(1, 0, 0, verticalScale, leftBBoxX, GetYLine());
+                        }
                     }
                 }
                 if (textRenderingMode != PdfCanvasConstants.TextRenderingMode.FILL) {

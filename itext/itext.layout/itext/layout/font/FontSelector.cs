@@ -70,7 +70,7 @@ namespace iText.Layout.Font {
         /// </remarks>
         /// <returns>the best matched font</returns>
         public FontInfo BestMatch() {
-            // fonts is sorted best to worst, get(0) returns the best matched FontInfo
+            // Fonts are sorted best to worst, get(0) returns the best matched FontInfo
             return fonts[0];
         }
 

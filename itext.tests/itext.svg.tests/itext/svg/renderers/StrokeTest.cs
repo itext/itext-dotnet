@@ -55,6 +55,8 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void StrokeWithDashesTest() {
+            // TODO DEVSIX-8774 support stroke-opacity for text at layout level
+            // TODO DEVSIX-8776 support dash-pattern in layout
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashes");
         }
 

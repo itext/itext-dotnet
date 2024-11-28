@@ -116,8 +116,10 @@ namespace iText.Svg.Renderers.Impl {
             if (GetAttribute(SvgConstants.Attributes.Y) != null) {
                 y = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.Y));
             }
-            width = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.WIDTH));
-            height = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.HEIGHT));
+            width = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttributeOrDefault(SvgConstants.Attributes.WIDTH, 
+                "0"));
+            height = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttributeOrDefault(SvgConstants.Attributes.HEIGHT
+                , "0"));
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RX)) {
                 rx = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX)), width
                     );

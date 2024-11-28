@@ -34,6 +34,7 @@ using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Factories;
 using iText.Svg.Renderers.Impl;
+using iText.Svg.Utils;
 using iText.Test;
 
 namespace iText.Svg.Customization {
@@ -88,12 +89,13 @@ namespace iText.Svg.Customization {
             protected internal override void DoDraw(SvgDrawContext context) {
                 if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
                     )) {
-                    PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                    currentCanvas.SetFillColor(ColorConstants.RED);
-                    currentCanvas.MoveText(context.GetTextMove()[0], context.GetTextMove()[1]);
                     String initialText = this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT);
                     String amendedText = "_" + initialText + "_";
-                    currentCanvas.ShowText(amendedText);
+                    SvgTextProperties properties = new SvgTextProperties(context.GetSvgTextProperties());
+                    context.GetSvgTextProperties().SetFillColor(ColorConstants.RED);
+                    base.DoDraw(context);
+                    GetText().SetText(amendedText);
+                    context.SetSvgTextProperties(properties);
                 }
             }
         }

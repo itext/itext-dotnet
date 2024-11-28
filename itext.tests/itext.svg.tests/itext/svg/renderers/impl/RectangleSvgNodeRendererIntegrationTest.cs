@@ -112,5 +112,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void NoFillRectangleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "noFillRectangle");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RectangleNoWidthNoHeightTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "rectangleNoWidthNoHeight");
+        }
     }
 }
