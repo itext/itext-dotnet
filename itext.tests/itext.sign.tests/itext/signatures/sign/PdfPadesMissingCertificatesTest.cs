@@ -41,49 +41,88 @@ namespace iText.Signatures.Sign {
     public class PdfPadesMissingCertificatesTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfPadesMissingCertificatesTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/signatures/sign/PdfPadesMissingCertificatesTest/";
 
-        private static readonly char[] password = "testpassphrase".ToCharArray();
+        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateFromAiaIsIncorrectTest() {
+            String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
+            String rootCertFileName = CERTS_SRC + "root.pem";
+            String intermediateCertFileName = CERTS_SRC + "intermediate.pem";
+            String signCertFileName = CERTS_SRC + "sign.pem";
+            IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signCertFileName)[0];
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PASSWORD);
+            SignerProperties signerProperties = CreateSignerProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(intermediateCertFileName
+                )[0];
+            MemoryStream outputStream = new MemoryStream();
+            PdfPadesSigner padesSigner = new PdfPadesSigner(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName))
+                , outputStream);
+            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_98(rootCertFileName
+                );
+            issuingCertificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
+            padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
+            IX509Certificate[] signChain = new IX509Certificate[] { signCert, rootCert };
+            padesSigner.SignWithBaselineBProfile(signerProperties, signChain, signPrivateKey);
+            outputStream.Dispose();
+            TestSignUtils.BasicCheckSignedDoc(new MemoryStream(outputStream.ToArray()), "Signature1");
+            IList<IX509Certificate> certs = JavaUtil.ArraysAsList(rootCert, intermediateCert, signCert);
+            TestSignUtils.SignedDocumentContainsCerts(new MemoryStream(outputStream.ToArray()), certs, "Signature1");
+        }
+
+        private sealed class _IssuingCertificateRetriever_98 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_98(String rootCertFileName) {
+                this.rootCertFileName = rootCertFileName;
+            }
+
+            protected internal override Stream GetIssuerCertByURI(String uri) {
+                return FileUtil.GetInputStreamForFile(rootCertFileName);
+            }
+
+            private readonly String rootCertFileName;
         }
 
         [NUnit.Framework.Test]
         public virtual void RetrieveMissingCertificatesTest() {
-            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
-            String rootCertFileName = certsSrc + "root.pem";
-            String intermediateCertFileName = certsSrc + "intermediate.pem";
-            String signCertFileName = certsSrc + "sign.pem";
-            String rootCrlFileName = certsSrc + "crlRoot.pem";
-            String intermediateCrlFileName = certsSrc + "crlIntermediate.pem";
-            String crlCertFileName = certsSrc + "crlCert.pem";
-            String rootOcspFileName = certsSrc + "ocspRoot.pem";
-            String intermediateOscpFileName = certsSrc + "ocspIntermediate.pem";
-            String ocspCertFileName = certsSrc + "ocspCert.pem";
-            String rootTsaFileName = certsSrc + "tsaRoot.pem";
-            String intermediateTsaFileName = certsSrc + "tsaIntermediate.pem";
-            String tsaCertFileName = certsSrc + "tsaCert.pem";
-            String crlSignedByCA = certsSrc + "crlSignedByCA.crl";
-            String crlSignedByCrlCert = certsSrc + "crlSignedByCrlCert.crl";
+            String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
+            String rootCertFileName = CERTS_SRC + "root.pem";
+            String intermediateCertFileName = CERTS_SRC + "intermediate.pem";
+            String signCertFileName = CERTS_SRC + "sign.pem";
+            String rootCrlFileName = CERTS_SRC + "crlRoot.pem";
+            String intermediateCrlFileName = CERTS_SRC + "crlIntermediate.pem";
+            String crlCertFileName = CERTS_SRC + "crlCert.pem";
+            String rootOcspFileName = CERTS_SRC + "ocspRoot.pem";
+            String intermediateOscpFileName = CERTS_SRC + "ocspIntermediate.pem";
+            String ocspCertFileName = CERTS_SRC + "ocspCert.pem";
+            String rootTsaFileName = CERTS_SRC + "tsaRoot.pem";
+            String intermediateTsaFileName = CERTS_SRC + "tsaIntermediate.pem";
+            String tsaCertFileName = CERTS_SRC + "tsaCert.pem";
+            String crlSignedByCA = CERTS_SRC + "crlSignedByCA.crl";
+            String crlSignedByCrlCert = CERTS_SRC + "crlSignedByCrlCert.crl";
             IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signCertFileName)[0];
-            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PASSWORD);
             IX509Certificate crlCert = (IX509Certificate)PemFileHelper.ReadFirstChain(crlCertFileName)[0];
             IX509Certificate ocspCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspCertFileName)[0];
-            IPrivateKey ocspPrivateKey = PemFileHelper.ReadFirstKey(ocspCertFileName, password);
+            IPrivateKey ocspPrivateKey = PemFileHelper.ReadFirstKey(ocspCertFileName, PASSWORD);
             IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(tsaCertFileName)[0];
-            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaCollectionsUtil.SingletonList(tsaCert), tsaPrivateKey);
-            CrlClientOnline testCrlClient = new _CrlClientOnline_110(crlSignedByCrlCert, crlSignedByCA);
+            CrlClientOnline testCrlClient = new _CrlClientOnline_149(crlSignedByCrlCert, crlSignedByCA);
             IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IX509Certificate crlRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCrlFileName)[0];
             IX509Certificate ocspRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootOcspFileName)[0];
@@ -110,7 +149,7 @@ namespace iText.Signatures.Sign {
                 , outputStream);
             padesSigner.SetCrlClient(testCrlClient);
             padesSigner.SetOcspClient(ocspClient);
-            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_145(crlCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_184(crlCertFileName
                 , intermediateCrlFileName, rootCrlFileName, intermediateTsaFileName, rootTsaFileName, intermediateOscpFileName
                 , rootOcspFileName, intermediateCertFileName, rootCertFileName);
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
@@ -133,8 +172,8 @@ namespace iText.Signatures.Sign {
                 , certs);
         }
 
-        private sealed class _CrlClientOnline_110 : CrlClientOnline {
-            public _CrlClientOnline_110(String crlSignedByCrlCert, String crlSignedByCA) {
+        private sealed class _CrlClientOnline_149 : CrlClientOnline {
+            public _CrlClientOnline_149(String crlSignedByCrlCert, String crlSignedByCA) {
                 this.crlSignedByCrlCert = crlSignedByCrlCert;
                 this.crlSignedByCA = crlSignedByCA;
             }
@@ -151,8 +190,8 @@ namespace iText.Signatures.Sign {
             private readonly String crlSignedByCA;
         }
 
-        private sealed class _IssuingCertificateRetriever_145 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_145(String crlCertFileName, String intermediateCrlFileName, String rootCrlFileName
+        private sealed class _IssuingCertificateRetriever_184 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_184(String crlCertFileName, String intermediateCrlFileName, String rootCrlFileName
                 , String intermediateTsaFileName, String rootTsaFileName, String intermediateOscpFileName, String rootOcspFileName
                 , String intermediateCertFileName, String rootCertFileName) {
                 this.crlCertFileName = crlCertFileName;
@@ -215,22 +254,22 @@ namespace iText.Signatures.Sign {
 
         [NUnit.Framework.Test]
         public virtual void RetrieveMissingCertificatesUsingTrustedStoreTest() {
-            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
-            String rootCertFileName = sourceFolder + "root.pem";
-            String signCertFileName = sourceFolder + "sign.pem";
-            String rootCrlFileName = sourceFolder + "crlRoot.pem";
-            String crlCertFileName = sourceFolder + "crlCert.pem";
-            String tsaCertFileName = sourceFolder + "tsCert.pem";
-            String crlSignedByCA = sourceFolder + "crlWithRootIssuer.crl";
-            String crlSignedByCrlCert = sourceFolder + "crlWithCrlIssuer.crl";
+            String srcFileName = SOURCE_FOLDER + "helloWorldDoc.pdf";
+            String rootCertFileName = SOURCE_FOLDER + "root.pem";
+            String signCertFileName = SOURCE_FOLDER + "sign.pem";
+            String rootCrlFileName = SOURCE_FOLDER + "crlRoot.pem";
+            String crlCertFileName = SOURCE_FOLDER + "crlCert.pem";
+            String tsaCertFileName = SOURCE_FOLDER + "tsCert.pem";
+            String crlSignedByCA = SOURCE_FOLDER + "crlWithRootIssuer.crl";
+            String crlSignedByCrlCert = SOURCE_FOLDER + "crlWithCrlIssuer.crl";
             IX509Certificate signCert = (IX509Certificate)PemFileHelper.ReadFirstChain(signCertFileName)[0];
-            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, PASSWORD);
             IX509Certificate crlCert = (IX509Certificate)PemFileHelper.ReadFirstChain(crlCertFileName)[0];
             IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(tsaCertFileName)[0];
-            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, PASSWORD);
             SignerProperties signerProperties = CreateSignerProperties();
             TestTsaClient testTsa = new TestTsaClient(JavaCollectionsUtil.SingletonList(tsaCert), tsaPrivateKey);
-            CrlClientOnline testCrlClient = new _CrlClientOnline_221(crlSignedByCrlCert, crlSignedByCA);
+            CrlClientOnline testCrlClient = new _CrlClientOnline_260(crlSignedByCrlCert, crlSignedByCA);
             IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCertFileName)[0];
             IX509Certificate crlRootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(rootCrlFileName)[0];
             MemoryStream outputStream = new MemoryStream();
@@ -257,8 +296,8 @@ namespace iText.Signatures.Sign {
                 , certs);
         }
 
-        private sealed class _CrlClientOnline_221 : CrlClientOnline {
-            public _CrlClientOnline_221(String crlSignedByCrlCert, String crlSignedByCA) {
+        private sealed class _CrlClientOnline_260 : CrlClientOnline {
+            public _CrlClientOnline_260(String crlSignedByCrlCert, String crlSignedByCA) {
                 this.crlSignedByCrlCert = crlSignedByCrlCert;
                 this.crlSignedByCA = crlSignedByCA;
             }

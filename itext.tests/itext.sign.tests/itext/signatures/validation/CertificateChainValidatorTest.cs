@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
@@ -118,6 +119,62 @@ namespace iText.Signatures.Validation {
                 .EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, (l) => "2.5.29.19").WithCertificate
                 (rootCert)).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessage
                 (CertificateChainValidator.EXTENSION_MISSING, (l) => "2.5.29.19").WithCertificate(intermediateCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChainWithAiaTest() {
+            String chainName = CERTS_SRC + "chainWithAia.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_182();
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            properties.SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), JavaCollectionsUtil
+                .EmptyList<CertificateExtension>());
+            customRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
+                .AddYears(21));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
+        private sealed class _IssuingCertificateRetriever_182 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_182() {
+            }
+
+            protected internal override Stream GetIssuerCertByURI(String uri) {
+                return FileUtil.GetInputStreamForFile(CertificateChainValidatorTest.CERTS_SRC + "intermediateCertFromAia.pem"
+                    );
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChainWithAiaWhichPointsToRandomCertTest() {
+            String chainName = CERTS_SRC + "chainWithAia.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
+            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_206();
+            validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            properties.SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), JavaCollectionsUtil
+                .EmptyList<CertificateExtension>());
+            customRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert)
+                );
+            customRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
+                .AddYears(21));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
+        private sealed class _IssuingCertificateRetriever_206 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_206() {
+            }
+
+            protected internal override Stream GetIssuerCertByURI(String uri) {
+                return FileUtil.GetInputStreamForFile(CertificateChainValidatorTest.CERTS_SRC + "randomCert.pem");
+            }
         }
 
         [NUnit.Framework.Test]
