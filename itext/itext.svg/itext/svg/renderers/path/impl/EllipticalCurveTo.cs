@@ -76,11 +76,11 @@ namespace iText.Svg.Renderers.Path.Impl {
             }
         }
 
-        public override void Draw(PdfCanvas canvas) {
+        public override void Draw() {
             Point start = new Point(startPoint.GetX() * .75, startPoint.GetY() * .75);
             // pixels to points
-            double rx = Math.Abs(CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]));
-            double ry = Math.Abs(CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]));
+            double rx = Math.Abs(ParseHorizontalLength(coordinates[0]));
+            double ry = Math.Abs(ParseVerticalLength(coordinates[1]));
             // φ is taken mod 360 degrees.
             double rotation = Double.Parse(coordinates[2], System.Globalization.CultureInfo.InvariantCulture) % 360.0;
             // rotation argument is given in degrees, but we need radians for easier trigonometric calculations
@@ -88,8 +88,7 @@ namespace iText.Svg.Renderers.Path.Impl {
             // binary flags (Value correction: any nonzero value for either of the flags fA or fS is taken to mean the value 1.)
             bool largeArc = !CssUtils.CompareFloats((float)CssDimensionParsingUtils.ParseFloat(coordinates[3]), 0);
             bool sweep = !CssUtils.CompareFloats((float)CssDimensionParsingUtils.ParseFloat(coordinates[4]), 0);
-            Point end = new Point(CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[5]), CssDimensionParsingUtils
-                .ParseAbsoluteLength(coordinates[6]));
+            Point end = new Point(ParseHorizontalLength(coordinates[5]), ParseVerticalLength(coordinates[6]));
             if (CssUtils.CompareFloats(start.GetX(), end.GetX()) && CssUtils.CompareFloats(start.GetY(), end.GetY())) {
                 /* edge case: If the endpoints (x1, y1) and (x2, y2) are identical,
                 * then this is equivalent to omitting the elliptical arc segment entirely.
@@ -100,7 +99,7 @@ namespace iText.Svg.Renderers.Path.Impl {
                 /* edge case: If rx = 0 or ry = 0 then this arc is treated as a straight line segment (a "lineto")
                 * joining the endpoints.
                 */
-                canvas.LineTo(end.GetX(), end.GetY());
+                context.GetCurrentCanvas().LineTo(end.GetX(), end.GetY());
             }
             else {
                 /* This is the first step of calculating a rotated elliptical path.
@@ -124,13 +123,13 @@ namespace iText.Svg.Renderers.Path.Impl {
                 if (sweep) {
                     points = Rotate(points, rotation, points[0][0]);
                     for (int i = 0; i < points.Length; i++) {
-                        DrawCurve(canvas, points[i][1], points[i][2], points[i][3]);
+                        DrawCurve(context.GetCurrentCanvas(), points[i][1], points[i][2], points[i][3]);
                     }
                 }
                 else {
                     points = Rotate(points, rotation, points[points.Length - 1][3]);
                     for (int i = points.Length - 1; i >= 0; i--) {
-                        DrawCurve(canvas, points[i][2], points[i][1], points[i][0]);
+                        DrawCurve(context.GetCurrentCanvas(), points[i][2], points[i][1], points[i][0]);
                     }
                 }
             }

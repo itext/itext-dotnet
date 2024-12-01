@@ -110,15 +110,23 @@ namespace iText.Svg.Renderers.Impl {
 
         // Branch renderers do not contain any text themselves and do not contribute to the text length
         public virtual float[] GetRelativeTranslation() {
+            return GetRelativeTranslation(new SvgDrawContext(null, null));
+        }
+
+        public virtual float[] GetRelativeTranslation(SvgDrawContext context) {
             if (!moveResolved) {
-                ResolveTextMove();
+                ResolveTextMove(context);
             }
             return new float[] { xMove, yMove };
         }
 
         public virtual bool ContainsRelativeMove() {
+            return ContainsRelativeMove(new SvgDrawContext(null, null));
+        }
+
+        public virtual bool ContainsRelativeMove(SvgDrawContext context) {
             if (!moveResolved) {
-                ResolveTextMove();
+                ResolveTextMove(context);
             }
             bool isNullMove = CssUtils.CompareFloats(0f, xMove) && CssUtils.CompareFloats(0f, yMove);
             // comparision to 0
@@ -165,7 +173,7 @@ namespace iText.Svg.Renderers.Impl {
                     }
                 }
                 basePoint = new Point(x, y);
-                basePoint.Move(GetRelativeTranslation()[0], GetRelativeTranslation()[1]);
+                basePoint.Move(GetRelativeTranslation(context)[0], GetRelativeTranslation(context)[1]);
                 Rectangle commonRect = null;
                 foreach (ISvgTextNodeRenderer child in GetChildren()) {
                     if (child != null) {
@@ -215,8 +223,8 @@ namespace iText.Svg.Renderers.Impl {
             ApplyFontProperties(paragraph, context);
             foreach (ISvgTextNodeRenderer child in children) {
                 // Apply relative move
-                if (this.ContainsRelativeMove()) {
-                    float[] rootMove = this.GetRelativeTranslation();
+                if (this.ContainsRelativeMove(context)) {
+                    float[] rootMove = this.GetRelativeTranslation(context);
                     //-y to account for the text-matrix transform we do in the text root to account for the coordinates
                     context.AddTextMove(rootMove[0], -rootMove[1]);
                 }
@@ -254,9 +262,13 @@ namespace iText.Svg.Renderers.Impl {
                 context.AddTextMove(textAnchorCorrection, 0);
             }
             // Move needs to happen before the saving of the state in order for it to cascade beyond
-            if (c.ContainsRelativeMove()) {
-                // -y to account for the text-matrix transform we do in the text root to account for the coordinates
-                float[] childMove = c.GetRelativeTranslation();
+            bool containsRelativeMove = c is iText.Svg.Renderers.Impl.TextSvgBranchRenderer ? ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer
+                )c).ContainsRelativeMove(context) : c.ContainsRelativeMove();
+            if (containsRelativeMove) {
+                float[] childMove = c is iText.Svg.Renderers.Impl.TextSvgBranchRenderer ? ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer
+                    )c).GetRelativeTranslation(context) : c.GetRelativeTranslation();
+                //-y to account for the text-matrix transform we do
+                // in the text root to account for the coordinates
                 context.AddTextMove(childMove[0], -childMove[1]);
             }
             SvgTextProperties textProperties = new SvgTextProperties(context.GetSvgTextProperties());
@@ -418,7 +430,7 @@ namespace iText.Svg.Renderers.Impl {
             context.SetRootTransform(rootTf);
         }
 
-        private void ResolveTextMove() {
+        private void ResolveTextMove(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 String xRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.DX);
                 String yRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.DY);
@@ -427,10 +439,10 @@ namespace iText.Svg.Renderers.Impl {
                 xMove = 0f;
                 yMove = 0f;
                 if (!xValuesList.IsEmpty()) {
-                    xMove = CssDimensionParsingUtils.ParseAbsoluteLength(xValuesList[0]);
+                    xMove = ParseHorizontalLength(xValuesList[0], context);
                 }
                 if (!yValuesList.IsEmpty()) {
-                    yMove = CssDimensionParsingUtils.ParseAbsoluteLength(yValuesList[0]);
+                    yMove = ParseVerticalLength(yValuesList[0], context);
                 }
                 moveResolved = true;
             }
@@ -489,7 +501,7 @@ namespace iText.Svg.Renderers.Impl {
         private void DeepCopyChildren(iText.Svg.Renderers.Impl.TextSvgBranchRenderer deepCopy) {
             foreach (ISvgTextNodeRenderer child in children) {
                 ISvgTextNodeRenderer newChild = (ISvgTextNodeRenderer)child.CreateDeepCopy();
-                child.SetParent(deepCopy);
+                newChild.SetParent(deepCopy);
                 deepCopy.AddChild(newChild);
             }
         }

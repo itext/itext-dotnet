@@ -46,7 +46,7 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(canvas);
             SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(renderer);
-            Rectangle actual = root.CalculateViewPort(context);
+            Rectangle actual = PdfRootSvgNodeRenderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
@@ -62,7 +62,7 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(canvas);
             SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(renderer);
-            Rectangle actual = root.CalculateViewPort(context);
+            Rectangle actual = PdfRootSvgNodeRenderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
@@ -85,7 +85,7 @@ namespace iText.Svg.Renderers.Impl {
             styles.Put("height", "500");
             renderer.SetAttributesAndStyles(styles);
             renderer.SetParent(parent);
-            Rectangle actual = root.CalculateViewPort(context);
+            Rectangle actual = PdfRootSvgNodeRenderer.CalculateViewPort(context);
             NUnit.Framework.Assert.IsTrue(expected.EqualsWithEpsilon(actual));
         }
 
@@ -116,7 +116,7 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(canvas);
             SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             PdfRootSvgNodeRenderer root = new PdfRootSvgNodeRenderer(renderer);
-            context.AddViewPort(root.CalculateViewPort(context));
+            context.AddViewPort(PdfRootSvgNodeRenderer.CalculateViewPort(context));
             AffineTransform actual = root.CalculateTransformation(context);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }

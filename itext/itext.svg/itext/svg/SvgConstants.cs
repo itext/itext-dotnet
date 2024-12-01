@@ -686,6 +686,15 @@ namespace iText.Svg {
             public const String XMAX_YMAX = "xmaxymax";
 
             public const String VERSION1_1 = "1.1";
+
+            /// <summary>Default svg view box width value.</summary>
+            public const String DEFAULT_VIEWBOX_WIDTH = "300px";
+
+            /// <summary>Default svg view box height value.</summary>
+            public const String DEFAULT_VIEWBOX_HEIGHT = "150px";
+
+            /// <summary>The number of viewBox values.</summary>
+            public const int VIEWBOX_VALUES_NUMBER = 4;
         }
     }
 }

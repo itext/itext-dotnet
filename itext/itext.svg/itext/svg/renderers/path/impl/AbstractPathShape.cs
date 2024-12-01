@@ -25,11 +25,16 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
+using iText.Svg.Renderers;
+using iText.Svg.Renderers.Impl;
 using iText.Svg.Renderers.Path;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>This class handles common behaviour in IPathShape implementations</summary>
     public abstract class AbstractPathShape : IPathShape {
+        private PathSvgNodeRenderer parent;
+
         /// <summary>The properties of this shape.</summary>
         protected internal IDictionary<String, String> properties;
 
@@ -40,6 +45,8 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         // Original coordinates from path instruction, according to the (x1 y1 x2 y2 x y)+ spec
         protected internal String[] coordinates;
+
+        protected internal SvgDrawContext context;
 
         public AbstractPathShape()
             : this(false) {
@@ -75,7 +82,56 @@ namespace iText.Svg.Renderers.Path.Impl {
                 (GetEndingPoint().GetY()), 0, 0);
         }
 
-        public abstract void Draw(PdfCanvas arg1);
+        public virtual void Draw(PdfCanvas canvas) {
+            Draw();
+        }
+
+        /// <summary>Draws this instruction to a canvas object.</summary>
+        public abstract void Draw();
+
+        /// <summary>Set parent path for this shape.</summary>
+        /// <param name="parent">
+        /// 
+        /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer"/>
+        /// instance
+        /// </param>
+        public virtual void SetParent(PathSvgNodeRenderer parent) {
+            this.parent = parent;
+        }
+
+        /// <summary>Set svg draw context for this shape.</summary>
+        /// <param name="context">
+        /// 
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// instance.
+        /// </param>
+        public virtual void SetContext(SvgDrawContext context) {
+            this.context = context;
+        }
+
+        /// <summary>Parse x axis length value.</summary>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// length for parsing
+        /// </param>
+        /// <returns>absolute length in points</returns>
+        protected internal virtual float ParseHorizontalLength(String length) {
+            return SvgCssUtils.ParseAbsoluteLength(parent, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded
+                (context, length, true), 0.0F, context);
+        }
+
+        /// <summary>Parse y axis length value.</summary>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// length for parsing
+        /// </param>
+        /// <returns>absolute length in points</returns>
+        protected internal virtual float ParseVerticalLength(String length) {
+            return SvgCssUtils.ParseAbsoluteLength(parent, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded
+                (context, length, false), 0.0F, context);
+        }
 
         public abstract void SetCoordinates(String[] arg1, Point arg2);
     }

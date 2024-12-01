@@ -138,11 +138,11 @@ namespace iText.Svg.Renderers.Impl {
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.CY, "339.5");
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.RX, "6");
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.RY, "6");
-            // Parse parameters with better precision (in double type) in the method CssUtils#parseAbsoluteLength
-            ellipseRenderer.SetParameters();
             SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
+            // Parse parameters with better precision (in double type) in the method CssUtils#parseAbsoluteLength
+            ellipseRenderer.SetParameters(context);
             // Calculate coordinates with better precision (in double type) in the method EllipseSvgNodeRenderer#doDraw
             ellipseRenderer.Draw(context);
             String pageContentBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPage(1).GetContentBytes(), 

@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
 
@@ -58,7 +57,7 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas cv = context.GetCurrentCanvas();
             cv.WriteLiteral("% rect\n");
-            SetParameters();
+            SetParameters(context);
             bool singleValuePresent = (rxPresent && !ryPresent) || (!rxPresent && ryPresent);
             if (!rxPresent && !ryPresent) {
                 cv.Rectangle(x, y, width, height);
@@ -105,29 +104,25 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            SetParameters();
+            SetParameters(context);
             return new Rectangle(this.x, this.y, this.width, this.height);
         }
 
-        private void SetParameters() {
+        private void SetParameters(SvgDrawContext context) {
             if (GetAttribute(SvgConstants.Attributes.X) != null) {
-                x = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.X));
+                x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
             }
             if (GetAttribute(SvgConstants.Attributes.Y) != null) {
-                y = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.Y));
+                y = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.Y), context);
             }
-            width = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttributeOrDefault(SvgConstants.Attributes.WIDTH, 
-                "0"));
-            height = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttributeOrDefault(SvgConstants.Attributes.HEIGHT
-                , "0"));
+            width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
+            height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RX)) {
-                rx = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX)), width
-                    );
+                rx = CheckRadius(ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.RX), context), width);
                 rxPresent = true;
             }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RY)) {
-                ry = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY)), height
-                    );
+                ry = CheckRadius(ParseVerticalLength(GetAttribute(SvgConstants.Attributes.RY), context), height);
                 ryPresent = true;
             }
         }

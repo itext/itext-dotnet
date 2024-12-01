@@ -26,8 +26,10 @@ using iText.Layout.Properties;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
 
 namespace iText.Svg.Utils {
+    /// <summary>Utility class that facilitates various methods for calculating/transforming coordinates.</summary>
     public class SvgCoordinateUtils {
         /// <summary>Converts relative coordinates to absolute ones.</summary>
         /// <remarks>
@@ -123,6 +125,37 @@ namespace iText.Svg.Utils {
                 }
             }
             return defaultValue;
+        }
+
+        /// <summary>Calculate normalized diagonal length.</summary>
+        /// <param name="context">svg draw context.</param>
+        /// <returns>diagonal length in px.</returns>
+        public static float CalculateNormalizedDiagonalLength(SvgDrawContext context) {
+            float viewPortHeight = context.GetCurrentViewPort().GetHeight();
+            float viewPortWidth = context.GetCurrentViewPort().GetWidth();
+            return (float)(Math.Sqrt(viewPortHeight * viewPortHeight + viewPortWidth * viewPortWidth) / Math.Sqrt(2));
+        }
+
+        /// <summary>Calculate percent base value if provided length is percent value.</summary>
+        /// <param name="context">svg draw context.</param>
+        /// <param name="length">length to check</param>
+        /// <param name="isXAxis">
+        /// if
+        /// <see langword="true"/>
+        /// viewport's width will be used (x-axis), otherwise viewport's height will be
+        /// used (y-axis)
+        /// </param>
+        /// <returns>percent base value if provided length is percent value, 0.0F otherwise</returns>
+        public static float CalculatePercentBaseValueIfNeeded(SvgDrawContext context, String length, bool isXAxis) {
+            float percentBaseValue = 0.0F;
+            if (CssTypesValidationUtils.IsPercentageValue(length)) {
+                if (context.GetCurrentViewPort() == null) {
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.ILLEGAL_RELATIVE_VALUE_NO_VIEWPORT_IS_SET);
+                }
+                percentBaseValue = isXAxis ? context.GetCurrentViewPort().GetWidth() : context.GetCurrentViewPort().GetHeight
+                    ();
+            }
+            return percentBaseValue;
         }
 
         /// <summary>Returns the viewBox received after scaling and displacement given preserveAspectRatio.</summary>

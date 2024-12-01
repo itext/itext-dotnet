@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
 
@@ -36,6 +37,20 @@ namespace iText.Svg.Renderers.Impl {
             SvgDrawContext context = new SvgDrawContext(new ResourceResolver(""), new FontProvider());
             renderer.SetAttributesAndStyles(new Dictionary<String, String>());
             NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(context));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoViewPortTest() {
+            EllipseSvgNodeRenderer renderer = new EllipseSvgNodeRenderer();
+            SvgDrawContext context = new SvgDrawContext(new ResourceResolver(""), new FontProvider());
+            IDictionary<String, String> styles = new Dictionary<String, String>();
+            styles.Put("rx", "50%");
+            styles.Put("ry", "50%");
+            renderer.SetAttributesAndStyles(styles);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => renderer.SetParameters(context
+                ));
+            NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.ILLEGAL_RELATIVE_VALUE_NO_VIEWPORT_IS_SET, e.Message
+                );
         }
     }
 }

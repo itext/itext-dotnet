@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
@@ -42,10 +40,10 @@ namespace iText.Svg.Renderers.Path.Impl {
             : base(relative) {
         }
 
-        public override void Draw(PdfCanvas canvas) {
-            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
-            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
-            canvas.MoveTo(x, y);
+        public override void Draw() {
+            float x = ParseHorizontalLength(coordinates[0]);
+            float y = ParseVerticalLength(coordinates[1]);
+            context.GetCurrentCanvas().MoveTo(x, y);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

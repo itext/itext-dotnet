@@ -44,6 +44,12 @@ namespace iText.Svg.Renderers.Impl {
     /// </summary>
     public abstract class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
         /// <summary>The number of viewBox values.</summary>
+        /// <remarks>
+        /// The number of viewBox values.
+        /// Deprecate in favour of
+        /// <c>SvgConstants.Values.VIEWBOX_VALUES_NUMBER</c>
+        /// </remarks>
+        [Obsolete]
         protected internal const int VIEWBOX_VALUES_NUMBER = 4;
 
         private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
@@ -119,8 +125,8 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
         internal virtual void ApplyViewBox(SvgDrawContext context) {
-            float[] viewBoxValues = GetViewBoxValues();
-            if (viewBoxValues.Length < VIEWBOX_VALUES_NUMBER) {
+            float[] viewBoxValues = SvgCssUtils.ParseViewBox(this);
+            if (viewBoxValues == null || viewBoxValues.Length < SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
                 float[] values = new float[] { 0, 0, context.GetCurrentViewPort().GetWidth(), context.GetCurrentViewPort()
                     .GetHeight() };
                 Rectangle currentViewPort = context.GetCurrentViewPort();
@@ -371,45 +377,6 @@ namespace iText.Svg.Renderers.Impl {
                 context.GetCurrentViewPort().SetX(currentViewPort.GetX() + -1 * (float)transform.GetTranslateX()).SetY(currentViewPort
                     .GetY() + -1 * (float)transform.GetTranslateY());
             }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual float[] GetViewBoxValues() {
-            if (this.attributesAndStyles == null) {
-                return new float[] {  };
-            }
-            String viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX);
-            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-            if (viewBoxValues == null) {
-                viewBoxValues = attributesAndStyles.Get(SvgConstants.Attributes.VIEWBOX.ToLowerInvariant());
-            }
-            if (viewBoxValues == null) {
-                return new float[] {  };
-            }
-            IList<String> valueStrings = SvgCssUtils.SplitValueList(viewBoxValues);
-            float[] values = new float[valueStrings.Count];
-            for (int i = 0; i < values.Length; i++) {
-                values[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valueStrings[i]);
-            }
-            // the value for viewBox should be 4 numbers according to the viewBox documentation
-            if (values.Length != VIEWBOX_VALUES_NUMBER) {
-                if (LOGGER.IsEnabled(LogLevel.Warning)) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, viewBoxValues
-                        ));
-                }
-                return new float[] {  };
-            }
-            // case when viewBox width or height is negative value is an error and
-            // invalidates the ‘viewBox’ attribute (according to the viewBox documentation)
-            if (values[2] < 0 || values[3] < 0) {
-                if (LOGGER.IsEnabled(LogLevel.Warning)) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE
-                        , viewBoxValues));
-                }
-                return new float[] {  };
-            }
-            return values;
         }
 //\endcond
 

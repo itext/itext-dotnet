@@ -20,9 +20,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
@@ -30,25 +33,19 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;circle&gt; tag.
     /// </summary>
     public class CircleSvgNodeRenderer : EllipseSvgNodeRenderer {
-        protected internal override bool SetParameters() {
-            cx = 0;
-            cy = 0;
-            if (GetAttribute(SvgConstants.Attributes.CX) != null) {
-                cx = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
+        protected internal override bool SetParameters(SvgDrawContext context) {
+            InitCenter(context);
+            String r = GetAttribute(SvgConstants.Attributes.R);
+            float percentBaseValue = 0.0F;
+            if (CssTypesValidationUtils.IsPercentageValue(r)) {
+                if (context.GetCurrentViewPort() == null) {
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.ILLEGAL_RELATIVE_VALUE_NO_VIEWPORT_IS_SET);
+                }
+                percentBaseValue = SvgCoordinateUtils.CalculateNormalizedDiagonalLength(context);
             }
-            if (GetAttribute(SvgConstants.Attributes.CY) != null) {
-                cy = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
-            }
-            if (GetAttribute(SvgConstants.Attributes.R) != null && CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute
-                (SvgConstants.Attributes.R)) > 0) {
-                rx = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.R));
-                ry = rx;
-            }
-            else {
-                return false;
-            }
-            //No drawing if rx is absent
-            return true;
+            rx = SvgCssUtils.ParseAbsoluteLength(this, r, percentBaseValue, 0.0F, context);
+            ry = rx;
+            return rx > 0.0F;
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {

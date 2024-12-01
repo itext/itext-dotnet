@@ -202,17 +202,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 8)]
         public virtual void PatternContentUnitsObjBoundBoxAbsoluteCoordTest() {
-            // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsObjBoundBoxAbsoluteCoord");
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-4834 support relative units in attributes of svg elements
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 8)]
         public virtual void ViewBoxAndAbsoluteCoordinatesTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxAndAbsoluteCoordinates");
         }
@@ -313,10 +307,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 2)]
         public virtual void SeveralComplexElementsInsidePatternTest() {
-            // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "severalComplexElementsInsidePattern");
         }
 

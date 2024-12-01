@@ -27,7 +27,6 @@ using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     public class DeviceCmykSvgTest : SvgIntegrationTest {
@@ -71,8 +70,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void SvgSimpleShapesColorTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svgSimpleShapesColor");
         }

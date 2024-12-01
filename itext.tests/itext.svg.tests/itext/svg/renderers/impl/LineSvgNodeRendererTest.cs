@@ -22,15 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
-using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -88,7 +84,8 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidAttributeTest01() {
-            PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            String filename = "invalidAttributeTest01.pdf";
+            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             doc.AddNewPage();
             ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
@@ -100,14 +97,13 @@ namespace iText.Svg.Renderers.Impl {
             SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => root.Draw(context));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "notAnum"), e.Message
-                );
+            root.Draw(context);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 2)]
         public virtual void InvalidAttributeTest02() {
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");

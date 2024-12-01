@@ -84,6 +84,8 @@ namespace iText.Svg.Exceptions {
 
         public const String UNKNOWN_TRANSFORMATION_TYPE = "Unsupported type of transformation.";
 
+        public const String ILLEGAL_RELATIVE_VALUE_NO_VIEWPORT_IS_SET = "Relative value can't be resolved, no viewport is set.";
+
         private SvgExceptionMessageConstant() {
         }
     }

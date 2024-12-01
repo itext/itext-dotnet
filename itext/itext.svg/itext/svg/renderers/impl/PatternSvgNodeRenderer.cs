@@ -90,9 +90,9 @@ namespace iText.Svg.Renderers.Impl {
                 patternMatrixTransform.Concatenate(GetTransformToUserSpaceOnUse(objectBoundingBox));
             }
             patternMatrixTransform.Translate(originalPatternRectangle.GetX(), originalPatternRectangle.GetY());
-            float[] viewBoxValues = GetViewBoxValues();
+            float[] viewBoxValues = SvgCssUtils.ParseViewBox(this);
             Rectangle bbox;
-            if (viewBoxValues.Length < VIEWBOX_VALUES_NUMBER) {
+            if (viewBoxValues == null || viewBoxValues.Length < SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
                 if (isObjectBoundingBoxInPatternUnits != isObjectBoundingBoxInPatternContentUnits) {
                     // If pattern units are not the same as pattern content units, then we need to scale
                     // the resulted space into a space to draw pattern content. The pattern rectangle origin
@@ -187,7 +187,7 @@ namespace iText.Svg.Renderers.Impl {
                 double viewPortY = currentViewPort.GetY();
                 double viewPortWidth = currentViewPort.GetWidth();
                 double viewPortHeight = currentViewPort.GetHeight();
-                float em = GetCurrentFontSize();
+                float em = GetCurrentFontSize(context);
                 float rem = context.GetCssContext().GetRootFontSize();
                 // get pattern coordinates in userSpaceOnUse coordinate system
                 xOffset = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X), viewPortX

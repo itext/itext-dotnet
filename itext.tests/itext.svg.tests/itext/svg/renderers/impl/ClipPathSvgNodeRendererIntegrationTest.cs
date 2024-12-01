@@ -108,7 +108,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ClipPathRulesCombined() {
-            //TODO: update after DEVSIX-2377
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRulesCombined");
         }
 

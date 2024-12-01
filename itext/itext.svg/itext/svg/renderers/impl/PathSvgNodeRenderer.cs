@@ -105,11 +105,18 @@ namespace iText.Svg.Renderers.Impl {
         /// </remarks>
         private ClosePath zOperator = null;
 
+        /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
+        /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% path\n");
             foreach (IPathShape item in GetShapes()) {
-                item.Draw(canvas);
+                if (item is AbstractPathShape) {
+                    AbstractPathShape shape = (AbstractPathShape)item;
+                    shape.SetParent(this);
+                    shape.SetContext(context);
+                }
+                item.Draw(context.GetCurrentCanvas());
             }
         }
 

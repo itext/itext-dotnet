@@ -24,7 +24,6 @@ using System;
 using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -58,8 +57,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanRelativeMoveInvalidXTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "textspan-relativeMove-invalidX"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-relativeMove-invalidX");
         }
 
         [NUnit.Framework.Test]
@@ -79,8 +77,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanRelativeMoveInvalidYTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "textspan-relativeMove-invalidY"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-relativeMove-invalidY");
         }
 
         [NUnit.Framework.Test]
@@ -160,18 +157,14 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void TspanBasicExample() {
+            //TODO: update after DEVSIX-2507 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBasicExample");
         }
 
         [NUnit.Framework.Test]
-        //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void TspanNestedExample() {
+            //TODO: update after DEVSIX-2507 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanNestedExample");
         }
 

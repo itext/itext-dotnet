@@ -45,6 +45,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void RelativeHelloWorldTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_relative");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TooLongTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "too_long");
         }
@@ -173,8 +178,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveInvalidXTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "text-relativeMove-invalidX"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-invalidX");
         }
 
         //Y
@@ -195,8 +199,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveInvalidYTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "text-relativeMove-invalidY"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-invalidY");
         }
 
         [NUnit.Framework.Test]

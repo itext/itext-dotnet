@@ -162,10 +162,37 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        /// <summary>Return font-size of the current element</summary>
+        /// <summary>Return font-size of the current element in px.</summary>
+        /// <remarks>
+        /// Return font-size of the current element in px.
+        /// <para />
+        /// This method is deprecated in favour of
+        /// <see cref="GetCurrentFontSize(iText.Svg.Renderers.SvgDrawContext)"/>
+        /// because
+        /// current one can't support relative values (em, rem) and those can't be resolved without
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>.
+        /// </remarks>
         /// <returns>absolute value of font-size</returns>
+        [Obsolete]
         public virtual float GetCurrentFontSize() {
-            return CssDimensionParsingUtils.ParseAbsoluteFontSize(GetAttribute(SvgConstants.Attributes.FONT_SIZE));
+            return GetCurrentFontSize(new SvgDrawContext(null, null));
+        }
+
+        /// <summary>Return font-size of the current element in px.</summary>
+        /// <param name="context">draw context from which root font size can be extracted</param>
+        /// <returns>absolute value of font-size</returns>
+        public virtual float GetCurrentFontSize(SvgDrawContext context) {
+            String fontSizeAttribute = GetAttribute(SvgConstants.Attributes.FONT_SIZE);
+            if (CssTypesValidationUtils.IsRemValue(fontSizeAttribute)) {
+                return CssDimensionParsingUtils.ParseRelativeValue(fontSizeAttribute, context.GetCssContext().GetRootFontSize
+                    ());
+            }
+            if (CssTypesValidationUtils.IsEmValue(fontSizeAttribute) && GetParent() != null && parent is AbstractSvgNodeRenderer
+                ) {
+                return CssDimensionParsingUtils.ParseRelativeValue(fontSizeAttribute, ((AbstractSvgNodeRenderer)parent).GetCurrentFontSize
+                    (context));
+            }
+            return CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeAttribute);
         }
 
         /// <summary>
@@ -322,7 +349,80 @@ namespace iText.Svg.Renderers.Impl {
         }
 //\endcond
 
+        /// <summary>Parse x-axis length value.</summary>
+        /// <remarks>
+        /// Parse x-axis length value.
+        /// If this method is called and there is no view port in
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// , a default current viewport
+        /// will be created. This can happen if svg is created manually
+        /// (not through
+        /// <see cref="iText.Svg.Element.SvgImage"/>
+        /// or
+        /// <see cref="iText.Svg.Xobject.SvgImageXObject"/>
+        /// )
+        /// and don't have
+        /// <see cref="PdfRootSvgNodeRenderer"/>
+        /// as its parent.
+        /// </remarks>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// length for parsing
+        /// </param>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// instance
+        /// </param>
+        /// <returns>absolute length in points</returns>
+        protected internal virtual float ParseHorizontalLength(String length, SvgDrawContext context) {
+            return SvgCssUtils.ParseAbsoluteLength(this, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded(
+                context, length, true), 0.0F, context);
+        }
+
+        /// <summary>Parse y-axis length value.</summary>
+        /// <remarks>
+        /// Parse y-axis length value.
+        /// If this method is called and there is no view port in
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// , a default current viewport
+        /// will be created. This can happen if svg is created manually
+        /// (not through
+        /// <see cref="iText.Svg.Element.SvgImage"/>
+        /// or
+        /// <see cref="iText.Svg.Xobject.SvgImageXObject"/>
+        /// )
+        /// and don't have
+        /// <see cref="PdfRootSvgNodeRenderer"/>
+        /// as its parent.
+        /// </remarks>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// length for parsing
+        /// </param>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// instance
+        /// </param>
+        /// <returns>absolute length in points</returns>
+        protected internal virtual float ParseVerticalLength(String length, SvgDrawContext context) {
+            return SvgCssUtils.ParseAbsoluteLength(this, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded(
+                context, length, false), 0.0F, context);
+        }
+
         /// <summary>Parse length attributes.</summary>
+        /// <remarks>
+        /// Parse length attributes.
+        /// <para />
+        /// This method is deprecated and
+        /// <see cref="iText.Svg.Utils.SvgCssUtils.ParseAbsoluteLength(AbstractSvgNodeRenderer, System.String, float, float, iText.Svg.Renderers.SvgDrawContext)
+        ///     "/>
+        /// should
+        /// be used instead.
+        /// </remarks>
         /// <param name="length">
         /// 
         /// <see cref="System.String"/>
@@ -335,11 +435,10 @@ namespace iText.Svg.Renderers.Impl {
         /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
         /// </param>
         /// <returns>absolute value in points</returns>
+        [Obsolete]
         protected internal virtual float ParseAbsoluteLength(String length, float percentBaseValue, float defaultValue
             , SvgDrawContext context) {
-            float em = GetCurrentFontSize();
-            float rem = context.GetCssContext().GetRootFontSize();
-            return CssDimensionParsingUtils.ParseLength(length, percentBaseValue, defaultValue, em, rem);
+            return SvgCssUtils.ParseAbsoluteLength(this, length, percentBaseValue, defaultValue, context);
         }
 
         private TransparentColor GetColorFromAttributeValue(SvgDrawContext context, String rawColorValue, float objectBoundingBoxMargin
@@ -451,7 +550,7 @@ namespace iText.Svg.Renderers.Impl {
                 // 1 px = 0,75 pt
                 float strokeWidth = 0.75f;
                 if (strokeWidthRawValue != null) {
-                    strokeWidth = CssDimensionParsingUtils.ParseAbsoluteLength(strokeWidthRawValue);
+                    strokeWidth = ParseHorizontalLength(strokeWidthRawValue, context);
                 }
                 float generalOpacity = GetOpacity();
                 float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
@@ -465,7 +564,7 @@ namespace iText.Svg.Renderers.Impl {
                 String strokeDashArrayRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHARRAY);
                 String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
                 SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
-                    (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(), context);
+                    (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(context), context);
                 doStroke = true;
                 return new AbstractSvgNodeRenderer.StrokeProperties(strokeColor, strokeWidth, strokeOpacity, lineDashParameters
                     );

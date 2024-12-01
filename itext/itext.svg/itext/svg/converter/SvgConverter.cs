@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
@@ -32,6 +31,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
 using iText.StyledXmlParser;
+using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
@@ -693,13 +693,11 @@ namespace iText.Svg.Converter {
                     // Extract topmost dimensions
                     CheckNull(topSvgRenderer);
                     CheckNull(pdfDocument);
-                    float width;
-                    float height;
-                    float[] wh = ExtractWidthAndHeight(topSvgRenderer);
-                    width = wh[0];
-                    height = wh[1];
+                    //Since svg is a single object in the document, rem = em
+                    Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, drawContext.GetCssContext().GetRootFontSize
+                        (), drawContext.GetCssContext().GetRootFontSize());
                     // Adjust pagesize and create new page
-                    pdfDocument.SetDefaultPageSize(new PageSize(width, height));
+                    pdfDocument.SetDefaultPageSize(new PageSize(wh.GetWidth(), wh.GetHeight()));
                     PdfPage page = pdfDocument.AddNewPage();
                     PdfCanvas pageCanvas = new PdfCanvas(page);
                     // Add to the first page
@@ -1145,12 +1143,12 @@ namespace iText.Svg.Converter {
             CheckNull(topSvgRenderer);
             CheckNull(document);
             CheckNull(context);
-            float width;
-            float height;
-            float[] wh = ExtractWidthAndHeight(topSvgRenderer);
-            width = wh[0];
-            height = wh[1];
-            PdfFormXObject pdfForm = new PdfFormXObject(new Rectangle(0, 0, width, height));
+            //Can't determine em value here, so passing default value
+            float defaultFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
+                .FONT_SIZE));
+            Rectangle bbox = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, defaultFontSize, context.GetCssContext(
+                ).GetRootFontSize());
+            PdfFormXObject pdfForm = new PdfFormXObject(bbox);
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
             ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(topSvgRenderer);
@@ -1313,6 +1311,15 @@ namespace iText.Svg.Converter {
         /// defaulting to respective viewbox values if either one is not present or
         /// to browser default if viewbox is missing as well
         /// </summary>
+        /// <remarks>
+        /// Extract width and height of the passed SVGNodeRenderer,
+        /// defaulting to respective viewbox values if either one is not present or
+        /// to browser default if viewbox is missing as well
+        /// <para />
+        /// Deprecated in favour of
+        /// <see cref="iText.Svg.Utils.SvgCssUtils.ExtractWidthAndHeight(iText.Svg.Renderers.ISvgNodeRenderer, float, float)
+        ///     "/>
+        /// </remarks>
         /// <param name="topSvgRenderer">
         /// the
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
@@ -1320,38 +1327,24 @@ namespace iText.Svg.Converter {
         /// the renderer tree
         /// </param>
         /// <returns>float[2], width is in position 0, height in position 1</returns>
+        [Obsolete]
         public static float[] ExtractWidthAndHeight(ISvgNodeRenderer topSvgRenderer) {
             float[] res = new float[2];
-            bool viewBoxPresent = false;
-            //Parse viewbox
-            String vbString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX);
-            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-            if (vbString == null) {
-                vbString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX.ToLowerInvariant());
-            }
-            float[] values = new float[] { 0, 0, 0, 0 };
-            if (vbString != null) {
-                IList<String> valueStrings = SvgCssUtils.SplitValueList(vbString);
-                values = new float[valueStrings.Count];
-                for (int i = 0; i < values.Length; i++) {
-                    values[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valueStrings[i]);
-                }
-                viewBoxPresent = true;
-            }
+            float[] values = SvgCssUtils.ParseViewBox(topSvgRenderer);
             float width;
             float height;
             String wString;
             String hString;
             wString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH);
             if (wString == null) {
-                if (viewBoxPresent) {
+                if (values != null) {
                     width = values[2];
                 }
                 else {
                     //Log Warning
                     LOGGER.LogWarning(SvgLogMessageConstant.MISSING_WIDTH);
                     //Set to browser default
-                    width = CssDimensionParsingUtils.ParseAbsoluteLength("300px");
+                    width = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWBOX_WIDTH);
                 }
             }
             else {
@@ -1359,14 +1352,14 @@ namespace iText.Svg.Converter {
             }
             hString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
             if (hString == null) {
-                if (viewBoxPresent) {
+                if (values != null) {
                     height = values[3];
                 }
                 else {
                     //Log Warning
                     LOGGER.LogWarning(SvgLogMessageConstant.MISSING_HEIGHT);
                     //Set to browser default
-                    height = CssDimensionParsingUtils.ParseAbsoluteLength("150px");
+                    height = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWBOX_HEIGHT);
                 }
             }
             else {

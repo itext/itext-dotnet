@@ -169,9 +169,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 3)]
         public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValuesTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsFontRelativeValues");
         }
@@ -182,9 +179,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 3)]
         public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValuesTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsPercentageValues");
         }

@@ -48,10 +48,7 @@ namespace iText.Svg.Css {
             , String strokeDashOffset, float fontSize, SvgDrawContext context) {
             if (strokeDashArray != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(strokeDashArray)) {
                 float rem = context.GetCssContext().GetRootFontSize();
-                float viewPortHeight = context.GetCurrentViewPort().GetHeight();
-                float viewPortWidth = context.GetCurrentViewPort().GetWidth();
-                float percentBaseValue = (float)(Math.Sqrt(viewPortHeight * viewPortHeight + viewPortWidth * viewPortWidth
-                    ) / Math.Sqrt(2));
+                float percentBaseValue = SvgCoordinateUtils.CalculateNormalizedDiagonalLength(context);
                 IList<String> dashArray = SvgCssUtils.SplitValueList(strokeDashArray);
                 if (dashArray.Count > 0) {
                     if (dashArray.Count % 2 == 1) {

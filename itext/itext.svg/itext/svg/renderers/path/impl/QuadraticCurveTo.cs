@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
@@ -49,12 +48,12 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
-        public override void Draw(PdfCanvas canvas) {
-            float x1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
-            float y1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
-            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[2]);
-            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[3]);
-            canvas.CurveTo(x1, y1, x, y);
+        public override void Draw() {
+            float x1 = ParseHorizontalLength(coordinates[0]);
+            float y1 = ParseVerticalLength(coordinates[1]);
+            float x = ParseHorizontalLength(coordinates[2]);
+            float y = ParseVerticalLength(coordinates[3]);
+            context.GetCurrentCanvas().CurveTo(x1, y1, x, y);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

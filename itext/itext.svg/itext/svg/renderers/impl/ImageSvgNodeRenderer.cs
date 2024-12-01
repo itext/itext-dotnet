@@ -24,7 +24,6 @@ using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
-using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -59,21 +58,19 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             float x = 0;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                x = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+                x = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.X), context);
             }
             float y = 0;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                y = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                y = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.Y), context);
             }
             float width = 0;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
-                width = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH
-                    ));
+                width = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH), context);
             }
             float height = 0;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
-                height = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT
-                    ));
+                height = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT), context);
             }
             String preserveAspectRatio = "";
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {

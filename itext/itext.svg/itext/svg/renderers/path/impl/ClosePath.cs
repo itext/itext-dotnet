@@ -20,8 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Kernel.Pdf.Canvas;
-
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements closePath(Z) attribute of SVG's path element</summary>
     public class ClosePath : LineTo {
@@ -37,8 +35,8 @@ namespace iText.Svg.Renderers.Path.Impl {
             : base(relative) {
         }
 
-        public override void Draw(PdfCanvas canvas) {
-            canvas.ClosePath();
+        public override void Draw() {
+            context.GetCurrentCanvas().ClosePath();
         }
     }
 }

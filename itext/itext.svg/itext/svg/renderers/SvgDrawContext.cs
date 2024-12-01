@@ -135,6 +135,9 @@ namespace iText.Svg.Renderers {
         /// <summary>Get the current viewbox.</summary>
         /// <returns>the viewbox as it is currently set</returns>
         public virtual Rectangle GetCurrentViewPort() {
+            if (viewports.IsEmpty()) {
+                return null;
+            }
             return viewports.JGetFirst();
         }
 

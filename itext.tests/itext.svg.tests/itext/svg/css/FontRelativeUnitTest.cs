@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Css {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -71,10 +70,7 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 6)]
         public virtual void TextFontSizeInheritanceFromUseTest() {
-            // TODO DEVSIX-2607 relative font-size value is not supported for tspan element
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFontSizeInheritanceFromUseTest");
         }
 

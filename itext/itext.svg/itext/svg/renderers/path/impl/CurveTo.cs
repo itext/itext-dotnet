@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
@@ -35,7 +34,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         internal const int ARGUMENT_SIZE = 6;
 //\endcond
 
-        private static double ZERO_EPSILON = 1e-12;
+        private const double ZERO_EPSILON = 1e-12;
 
         public CurveTo()
             : this(false) {
@@ -49,14 +48,14 @@ namespace iText.Svg.Renderers.Path.Impl {
             : base(relative, copier) {
         }
 
-        public override void Draw(PdfCanvas canvas) {
-            float x1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
-            float y1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
-            float x2 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[2]);
-            float y2 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[3]);
-            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[4]);
-            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[5]);
-            canvas.CurveTo(x1, y1, x2, y2, x, y);
+        public override void Draw() {
+            float x1 = ParseHorizontalLength(coordinates[0]);
+            float y1 = ParseVerticalLength(coordinates[1]);
+            float x2 = ParseHorizontalLength(coordinates[2]);
+            float y2 = ParseVerticalLength(coordinates[3]);
+            float x = ParseHorizontalLength(coordinates[4]);
+            float y = ParseVerticalLength(coordinates[5]);
+            context.GetCurrentCanvas().CurveTo(x1, y1, x2, y2, x, y);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

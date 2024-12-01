@@ -44,6 +44,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void RelativeCircleTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "relativeCircle");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CircleCxCyAbsentTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circleCxCyAbsent");
         }

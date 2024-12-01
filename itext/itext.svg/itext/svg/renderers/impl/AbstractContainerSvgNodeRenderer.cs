@@ -45,6 +45,10 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the SVG draw context</param>
         /// <returns>the viewport that applies to this renderer</returns>
         internal virtual Rectangle CalculateViewPort(SvgDrawContext context) {
+            //TODO: DEVSIX-8775 the logic below should be refactored, first of all it shouldn't be applied to root svg tag
+            // (though depending on implementation maybe it won't be a problem), also it need to be adjusted to support em/rem
+            // which seems possible for all cases, and as for percents, I'm not sure it's possible for nested svg tags, but
+            // it should be possible for symbols
             Rectangle currentViewPort = context.GetCurrentViewPort();
             // Set default values to parent viewport in the case of a nested svg tag
             float portX = currentViewPort.GetX();

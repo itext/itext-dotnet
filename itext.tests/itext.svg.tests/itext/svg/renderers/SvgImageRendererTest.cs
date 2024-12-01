@@ -32,6 +32,7 @@ using iText.Svg.Converter;
 using iText.Svg.Element;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
+using iText.Svg.Utils;
 using iText.Svg.Xobject;
 
 namespace iText.Svg.Renderers {
@@ -58,9 +59,8 @@ namespace iText.Svg.Renderers {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
-                float[] wh = SvgConverter.ExtractWidthAndHeight(topSvgRenderer);
-                SvgImageXObject svgImageXObject = new SvgImageXObject(new Rectangle(0, 0, wh[0], wh[1]), result, new ResourceResolver
-                    (SOURCE_FOLDER));
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, 0.0F);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
                 SvgImage svgImage = new SvgImage(svgImageXObject);
                 document.Add(svgImage);
                 document.Add(svgImage);
@@ -80,9 +80,8 @@ namespace iText.Svg.Renderers {
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
-                float[] wh = SvgConverter.ExtractWidthAndHeight(topSvgRenderer);
-                SvgImageXObject svgImageXObject = new SvgImageXObject(new Rectangle(0, 0, wh[0], wh[1]), result, new ResourceResolver
-                    (SOURCE_FOLDER));
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, 0.0F);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
                 SvgImage svgImage = new SvgImage(svgImageXObject);
                 document.Add(svgImage);
                 document.Add(svgImage);
