@@ -503,15 +503,11 @@ namespace iText.Svg.Renderers.Impl {
                 String textAnchorValue = this.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
                 // Middle
                 if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
-                    if (xPos != null && xPos.Length > 0) {
-                        textAnchorXCorrection -= childContentLength / 2;
-                    }
+                    textAnchorXCorrection -= childContentLength / 2;
                 }
                 // End
                 if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue)) {
-                    if (xPos != null && xPos.Length > 0) {
-                        textAnchorXCorrection -= childContentLength;
-                    }
+                    textAnchorXCorrection -= childContentLength;
                 }
             }
             return textAnchorXCorrection;
