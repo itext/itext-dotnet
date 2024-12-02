@@ -33,17 +33,17 @@ namespace iText.Kernel.Utils {
     ///     </summary>
     /// <remarks>
     /// PdfWriter implementation which allows to create documents in memory and dump them on disk on purpose.
-    /// Currently it's private and used in automated tests only.
+    /// Currently, it's private and used in automated tests only.
     /// </remarks>
     internal class MemoryFirstPdfWriter : PdfWriter {
         private const int MAX_ALLOWED_STREAMS = 100;
 
-        private static IDictionary<String, iText.Kernel.Utils.MemoryFirstPdfWriter> waitingStreams = new ConcurrentDictionary
-            <String, iText.Kernel.Utils.MemoryFirstPdfWriter>();
+        private static readonly IDictionary<String, iText.Kernel.Utils.MemoryFirstPdfWriter> waitingStreams = new 
+            ConcurrentDictionary<String, iText.Kernel.Utils.MemoryFirstPdfWriter>();
 
-        private String filePath;
+        private readonly String filePath;
 
-        private MemoryStream outStream;
+        private readonly MemoryStream outStream;
 
 //\cond DO_NOT_DOCUMENT
         internal MemoryFirstPdfWriter(String filename, WriterProperties properties)
@@ -84,9 +84,9 @@ namespace iText.Kernel.Utils {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void Dump() {
-            Stream fos = FileUtil.GetFileOutputStream(filePath);
-            outStream.WriteTo(fos);
-            fos.Dispose();
+            using (Stream fos = FileUtil.GetFileOutputStream(filePath)) {
+                outStream.WriteTo(fos);
+            }
         }
 //\endcond
 

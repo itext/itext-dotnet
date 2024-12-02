@@ -309,6 +309,21 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MemoryFirstWriterCmpMissingTest() {
+            String firstPdf = destinationFolder + "memoryFirstWriterCmpMissingTest.pdf";
+            String secondPdf = destinationFolder + "cmp_memoryFirstWriterCmpMissingTest.pdf";
+            PdfDocument firstDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(firstPdf));
+            PdfPage page1FirstDocument = firstDocument.AddNewPage();
+            page1FirstDocument.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 560, 400, 50)).SetDestination(PdfExplicitDestination
+                .CreateFit(page1FirstDocument)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })));
+            page1FirstDocument.Flush();
+            firstDocument.Close();
+            NUnit.Framework.Assert.Catch(typeof(System.IO.IOException), () => new CompareTool().CompareByContent(firstPdf
+                , secondPdf, destinationFolder));
+            NUnit.Framework.Assert.IsTrue(new FileInfo(firstPdf).Exists);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DumpMemoryFirstWriterOnDiskTest() {
             String firstPdf = destinationFolder + "dumpMemoryFirstWriterOnDiskTest.pdf";
             String secondPdf = destinationFolder + "dumpMemoryFirstWriterOnDiskTest2.pdf";
