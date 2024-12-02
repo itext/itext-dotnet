@@ -74,5 +74,22 @@ namespace iText.Svg.Renderers {
         public virtual void StrokeWidthMeasureUnitsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWidthMeasureUnitsTest");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void PathLengthTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "path-length");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeAttributesTest() {
+            //TODO DEVSIX-2258: update cmp after supporting
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-attributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightWidthZeroTest() {
+            //TODO DEVSIX-8760 : change cmp after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "height-width-zero");
+        }
     }
 }

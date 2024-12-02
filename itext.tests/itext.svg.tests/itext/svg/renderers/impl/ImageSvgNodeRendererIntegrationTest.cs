@@ -184,5 +184,10 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMaxYMax", properties
                 );
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageRenderingTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "image-rendering", properties);
+        }
     }
 }

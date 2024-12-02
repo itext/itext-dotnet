@@ -21,47 +21,26 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Svg.Processors;
-using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class MaskTest : SvgIntegrationTest {
+    public class SystemLanguageTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/MaskTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/SystemLanguageTest/";
 
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/renderers/impl/MaskTest/";
-
-        private ISvgConverterProperties properties;
+             + "/test/itext/svg/renderers/impl/SystemLanguageTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
-        }
-
         [NUnit.Framework.Test]
-        public virtual void MaskBasic() {
-            //TODO: update after DEVSIX-2378 implementation
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskBasic", properties);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MaskWithGradient() {
-            //TODO: update after DEVSIX-2378 implementation
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskWithGradient", properties);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void MaskContentUnitsTest() {
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "mask-content-units", properties);
+        public virtual void DifferentSystemLanguageTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "system-language");
         }
     }
 }

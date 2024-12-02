@@ -123,5 +123,10 @@ namespace iText.Svg.Renderers.Impl {
             // TODO: DEVSIX-3932 update cmp_ after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "circleWithBigStrokeWidth");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CircleShapeRenderingTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "shape-rendering");
+        }
     }
 }
