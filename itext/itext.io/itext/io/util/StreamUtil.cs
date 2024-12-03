@@ -276,6 +276,7 @@ namespace iText.IO.Util {
         /// <paramref name="len"/>
         /// bytes from an input stream.
         /// </summary>
+        /// <param name="input">the stream to read</param>
         /// <param name="b">the buffer into which the data is read.</param>
         /// <param name="off">an int specifying the offset into the data.</param>
         /// <param name="len">an int specifying the number of bytes to read.</param>
