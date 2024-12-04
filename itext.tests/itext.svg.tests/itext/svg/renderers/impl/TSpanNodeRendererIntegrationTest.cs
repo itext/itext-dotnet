@@ -169,6 +169,53 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TspanDxDyAttributesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanDxDyAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanBaselineShiftTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBaselineShift");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanRotateTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanRotate");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanLengthAdjustTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanLengthAdjust");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanStretchedTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanStretchedTextLengthTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanShrunkTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanShrunkTextLengthTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanCombinedAttributesTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanCombinedAttributes");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Text_decoration_Test() {
             //TODO: update cmp-file after DEVSIX-2270 fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "text_decoration");

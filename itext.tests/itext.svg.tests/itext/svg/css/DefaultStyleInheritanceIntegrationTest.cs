@@ -60,5 +60,72 @@ namespace iText.Svg.Css {
         public virtual void UseInheritanceNotOverridingTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "useInheritanceNotOverriding");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void UsePropertiesInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "usePropertiesInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillOpacityInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "fillOpacityInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillRuleInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "fillRuleInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeWidthInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeWidthInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeOpacityInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeOpacityInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeLinecapInheritanceTest() {
+            //TODO DEVSIX-4857 support stroke-linecap attribute
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeLinecapInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeLinejoinInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeLinejoinInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeDasharrayInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeDasharrayInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeDashoffsetInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "strokeDashoffsetInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OpacityInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "opacityInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextPropertiesInheritanceTest() {
+            //TODO DEVSIX-4114 support vertical text attribute
+            ConvertAndCompare(sourceFolder, destinationFolder, "textPropertiesInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedInheritanceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "nestedInheritance");
+        }
     }
 }

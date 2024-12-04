@@ -110,7 +110,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
-        public virtual void Text_path_Test() {
+        public virtual void TextPathTest() {
             //TODO: update cmp-file after DEVSIX-2255
             ConvertAndCompare(sourceFolder, destinationFolder, "textpath");
         }
@@ -120,6 +120,13 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void TextPathExample() {
             //TODO: update when DEVSIX-2255 implemented
             ConvertAndCompare(sourceFolder, destinationFolder, "textPathExample");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
+        public virtual void TspanInTextPathTest() {
+            //TODO: update when DEVSIX-2255 implemented
+            ConvertAndCompare(sourceFolder, destinationFolder, "tspanInTextPath");
         }
 
         [NUnit.Framework.Test]

@@ -221,5 +221,112 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void TspanWithOneAbsoluteCoordinateTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanWithOneAbsoluteCoordinateTest");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDxDyAttributesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDxDyAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextBaselineShiftTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textBaselineShift");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextRotateTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textRotate");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextLengthAdjustTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textLengthAdjust");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextStretchedTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textStretchedTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextShrunkTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textShrunkTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextCombinedAttributesTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textCombinedAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextStrokeDasharrayTest() {
+            //TODO: DEVSIX-8776 Support stroke dash pattern in layout
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textStrokeDasharray");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextComplexStrokeDasharrayTest() {
+            //TODO: DEVSIX-8776 Support stroke dash pattern in layout
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textComplexStrokeDasharray");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextDecorationUnderlineTest() {
+            //TODO: DEVSIX-2270, DEVSIX-4586 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationUnderline");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextDecorationLineThroughTest() {
+            //TODO: DEVSIX-2270, DEVSIX-4586 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationLineThrough");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextDecorationOverlineTest() {
+            //TODO: DEVSIX-2270, DEVSIX-4586 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationOverline");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpaceNormalTest() {
+            //TODO: DEVSIX-2284 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpaceNormal");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpacePreTest() {
+            //TODO: DEVSIX-2284 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePre");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpaceNoWrapTest() {
+            //TODO: DEVSIX-2284 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpaceNoWrap");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpacePreWrapTest() {
+            //TODO: DEVSIX-2284 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreWrap");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpacePreLineTest() {
+            //TODO: DEVSIX-2284 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreLine");
+        }
     }
 }

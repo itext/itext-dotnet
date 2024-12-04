@@ -91,5 +91,11 @@ namespace iText.Svg.Renderers {
             //TODO DEVSIX-8760 : change cmp after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "height-width-zero");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeDashArrayLinesTest() {
+            //TODO: update cmp-file after DEVSIX-2258
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeDashArrayLines");
+        }
     }
 }
