@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -53,6 +54,15 @@ namespace iText.Signatures.Testutils.Client {
         }
 
         public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
+            if (url != null && !String.IsNullOrEmpty(url)) {
+                // Treat as file path
+                try {
+                    return File.ReadAllBytes(System.IO.Path.Combine(url));
+                }
+                catch (Exception) {
+                }
+            }
+            // Sometimes we pass http url here in tests (though it's not used) so skipping any errors
             byte[] bytes = null;
             try {
                 ICertID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY

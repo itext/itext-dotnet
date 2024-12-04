@@ -162,6 +162,21 @@ namespace iText.Signatures.Validation {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void OcspResponseWithoutHashAlgoParametersTest() {
+            TestOcspClient ocspClient = new TestOcspClient();
+            IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
+                .GetEncoded(checkCert, caCert, SOURCE_FOLDER + "ocspResponseWithoutHashAlgoParameters.dat")));
+            ValidationReport report = new ValidationReport();
+            // Configure OCSP signing authority for the certificate in question
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
+            OCSPValidator validator = validatorChainBuilder.BuildOCSPValidator();
+            validator.Validate(report, baseContext, checkCert, caBasicOCSPResp.GetResponses()[0], caBasicOCSPResp, TimeTestUtil
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasStatus(ValidationReport.ValidationResult
+                .VALID));
+        }
+
         private ValidationReport ValidateTest(DateTime checkDate) {
             DateTime thisUpdate = checkDate.AddDays(1);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
