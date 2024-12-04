@@ -1026,7 +1026,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            return new CertIDBC(hashAlgorithm, issuerCert, serialNumber);
+            return new CertIDBC(new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance), issuerCert, serialNumber);
         }
         
         /// <summary><inheritDoc/></summary>

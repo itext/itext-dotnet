@@ -1052,7 +1052,7 @@ namespace iText.Bouncycastlefips {
 
         /// <summary><inheritDoc/></summary>
         public ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            return new CertIDBCFips(hashAlgorithm, issuerCert, serialNumber);
+            return new CertIDBCFips(new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance), issuerCert, serialNumber);
         }
 
         /// <summary><inheritDoc/></summary>

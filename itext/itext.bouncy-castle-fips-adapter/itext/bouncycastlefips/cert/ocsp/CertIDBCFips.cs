@@ -67,21 +67,39 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>.
         /// </summary>
         /// <param name="hashAlgorithm">
-        /// hash algorithm to create
+        /// hash algorithm
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
         /// <param name="issuerCert">
-        /// X509Certificate wrapper to create
+        /// X509Certificate wrapper
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
         /// <param name="serialNumber">
-        /// serial number to create
+        /// serial number
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
-        public CertIDBCFips(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            AlgorithmIdentifier hashAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance);
+        public CertIDBCFips(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) 
+            : this(new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance), issuerCert, serialNumber) {
+        }
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>.
+        /// </summary>
+        /// <param name="hashAlgId">
+        /// hash algorithm identifier
+        /// <see cref="Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier"/>
+        /// </param>
+        /// <param name="issuerCert">
+        /// X509Certificate wrapper
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// </param>
+        /// <param name="serialNumber">
+        /// serial number
+        /// </param>
+        public CertIDBCFips(AlgorithmIdentifier hashAlgId, IX509Certificate issuerCert, IBigInteger serialNumber) {
             X500Name issuerName = ((X509CertificateBCFips)issuerCert).GetCertificate().SubjectDN;
+            string hashAlgorithm = hashAlgId.Algorithm.Id;
             byte[] issuerNameHash = new DigestBCFips(hashAlgorithm).Digest(issuerName.GetEncoded());
 
             IAsymmetricPublicKey issuerKey = ((X509CertificateBCFips)issuerCert).GetCertificate().GetPublicKey();
@@ -123,7 +141,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual bool MatchesIssuer(IX509Certificate issuerCert) {
-            return new CertIDBCFips(certificateID.HashAlgorithm.Algorithm.Id, issuerCert, new BigIntegerBCFips(
+            return new CertIDBCFips(certificateID.HashAlgorithm, issuerCert, new BigIntegerBCFips(
                 certificateID.SerialNumber.Value)).GetCertificateID().Equals(certificateID);
         }
 

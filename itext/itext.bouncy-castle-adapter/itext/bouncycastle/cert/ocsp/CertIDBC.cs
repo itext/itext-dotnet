@@ -68,21 +68,39 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>.
         /// </summary>
         /// <param name="hashAlgorithm">
-        /// hash algorithm to create
+        /// hash algorithm
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
         /// <param name="issuerCert">
-        /// X509Certificate wrapper to create
+        /// X509Certificate wrapper
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
         /// <param name="serialNumber">
-        /// serial number to create
+        /// serial number
         /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>
         /// </param>
-        public CertIDBC(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            AlgorithmIdentifier hashAlgId = new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance);
+        public CertIDBC(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) 
+            : this(new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance), issuerCert, serialNumber) {
+        }
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Asn1.Ocsp.CertID"/>.
+        /// </summary>
+        /// <param name="hashAlgId">
+        /// hash algorithm indentifier
+        /// <see cref="Org.BouncyCastle.Asn1.X509.AlgorithmIdentifier"/>
+        /// </param>
+        /// <param name="issuerCert">
+        /// X509Certificate wrapper
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// </param>
+        /// <param name="serialNumber">
+        /// serial number
+        /// </param>
+        public CertIDBC(AlgorithmIdentifier hashAlgId, IX509Certificate issuerCert, IBigInteger serialNumber) {
             X509Name issuerName = PrincipalUtilities.GetSubjectX509Principal(((X509CertificateBC)issuerCert).GetCertificate());
+            string hashAlgorithm = hashAlgId.Algorithm.Id;
             byte[] issuerNameHash = DigestUtilities.CalculateDigest(hashAlgorithm, issuerName.GetEncoded());
 
             AsymmetricKeyParameter issuerKey = ((X509CertificateBC)issuerCert).GetCertificate().GetPublicKey();
@@ -124,7 +142,7 @@ namespace iText.Bouncycastle.Cert.Ocsp {
 
         /// <summary><inheritDoc/></summary>
         public virtual bool MatchesIssuer(IX509Certificate issuerCert) {
-            return new CertIDBC(certificateID.HashAlgorithm.Algorithm.Id, issuerCert, new BigIntegerBC(
+            return new CertIDBC(certificateID.HashAlgorithm, issuerCert, new BigIntegerBC(
                 certificateID.SerialNumber.Value)).GetCertID().Equals(certificateID);
         }
 
