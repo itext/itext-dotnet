@@ -20,6 +20,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,16 +34,16 @@ using NUnit.Framework;
 namespace iText.Test.Pdfa {
     public class VeraPdfValidator {
         private const String CLI_COMMAND = "java -classpath \"<libPath>\\*\" -Dfile.encoding=UTF8 " +
-                                    "-XX:+IgnoreUnrecognizedVMOptions -Dapp.name=\"VeraPDF validation GUI\" " +
-                                    "-Dapp.repo=\"<libPath>\" -Dapp.home=\"../\" " +
-                                    "-Dbasedir=\"\" org.verapdf.apps.GreenfieldCliWrapper --addlogs ";
+                                           "-XX:+IgnoreUnrecognizedVMOptions -Dapp.name=\"VeraPDF validation GUI\" " +
+                                           "-Dapp.repo=\"<libPath>\" -Dapp.home=\"../\" " +
+                                           "-Dbasedir=\"\" org.verapdf.apps.GreenfieldCliWrapper --addlogs ";
 
         public String Validate(String dest) {
             Process p = new Process();
             String currentCommand = CLI_COMMAND.Replace("<libPath>",
                 TestContext.CurrentContext.TestDirectory + "\\lib\\VeraPdf");
 
-            p.StartInfo = new ProcessStartInfo("cmd", "/c" + currentCommand + dest );
+            p.StartInfo = new ProcessStartInfo("cmd", "/c" + currentCommand + dest);
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
@@ -67,30 +68,32 @@ namespace iText.Test.Pdfa {
             }
 
             String stdErrOutput = standardError.ToString();
-            
+
             /* If JAVA_TOOL_OPTIONS env var is defined JVM will always print its value to stderr. We filter this line
                in order to catch other valuable error output. */
             string javaToolOptionsWarn = "Picked up JAVA_TOOL_OPTIONS: ";
-            stdErrOutput = String.Join("\n", 
+            stdErrOutput = String.Join("\n",
                 stdErrOutput
                     .Split('\n').Where(s => !s.StartsWith(javaToolOptionsWarn))
             );
-            
+
             if (String.IsNullOrEmpty(standardOutput.ToString())) {
                 return "VeraPDF execution failed: Standard output is empty";
             }
-            
+
             VeraPdfReportResult reportResult = GenerateReport(standardOutput.ToString(), dest, true);
 
             if (reportResult.NonCompliantPdfaCount != 0) {
                 return reportResult.MessageResult;
-            } else if (!String.IsNullOrEmpty(stdErrOutput) && reportResult.VeraPdfLogs == null) {
+            }
+            else if (!String.IsNullOrEmpty(stdErrOutput) && reportResult.VeraPdfLogs == null) {
                 return "The following warnings and errors were logged during validation:" + stdErrOutput;
-            } else if (!String.IsNullOrEmpty(reportResult.VeraPdfLogs)) {
+            }
+            else if (!String.IsNullOrEmpty(reportResult.VeraPdfLogs)) {
                 Console.WriteLine("The following warnings and errors were logged during validation:\n" + stdErrOutput);
                 return "The following warnings and errors were logged during validation:" + reportResult.VeraPdfLogs;
             }
-            
+
             return reportResult.MessageResult;
         }
 
@@ -117,7 +120,7 @@ namespace iText.Test.Pdfa {
                                                     + UrlUtil.GetNormalizedFileUriString(reportDest);
                 return veraPdfReportResult;
             }
-            
+
             detailsAttributes = document.GetElementsByTagName("validationReports")[0].Attributes;
             veraPdfReportResult.NonCompliantPdfaCount = int.Parse(detailsAttributes["nonCompliant"].InnerText);
             if (veraPdfReportResult.NonCompliantPdfaCount != 0) {
@@ -130,12 +133,13 @@ namespace iText.Test.Pdfa {
                 WriteToFile(output, reportDest);
                 Console.WriteLine("VeraPDF verification finished. See verification report: "
                                   + UrlUtil.GetNormalizedFileUriString(reportDest));
-                
+
                 var logs = new List<string>();
                 XmlNodeList elements = document.GetElementsByTagName("logMessage");
                 foreach (XmlElement element in elements) {
                     logs.Add(element.Attributes["level"].Value + ": " + element.InnerText);
                 }
+
                 logs.Sort();
 
                 foreach (String log in logs) {
@@ -145,7 +149,25 @@ namespace iText.Test.Pdfa {
 
             return veraPdfReportResult;
         }
+
+
+        /// <summary>
+        ///  Validates PDF file with VeraPdf expecting success.
+        /// </summary>
+        /// <param name="filePath"> Path to location  </param>
+        public void ValidateFailure(String filePath) {
+            Assert.NotNull(Validate(filePath));
+        }
         
+        /// <summary>
+        ///  Validates PDF file with VeraPdf expecting success.
+        /// </summary>
+        /// <param name="filePath">Path to location  </param>
+        /// <param name="expectedWarning">True when you expect a warning</param>
+        public void ValidateWarning(String filePath, String expectedWarning) {
+            Assert.AreEqual(expectedWarning, Validate(filePath));
+        }
+
         private void WriteToFile(String output, String reportDest) {
             using (FileStream stream = File.Create(reportDest)) {
                 stream.Write(new UTF8Encoding(true).GetBytes(output),
