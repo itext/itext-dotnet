@@ -64,13 +64,19 @@ namespace iText.Svg.Renderers.Impl {
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
                 y = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.Y), context);
             }
-            float width = 0;
+            float width;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
                 width = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH), context);
             }
-            float height = 0;
+            else {
+                width = xObject.GetWidth();
+            }
+            float height;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
                 height = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT), context);
+            }
+            else {
+                height = xObject.GetHeight();
             }
             String preserveAspectRatio = "";
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {

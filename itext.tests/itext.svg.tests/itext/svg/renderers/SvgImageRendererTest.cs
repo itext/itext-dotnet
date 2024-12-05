@@ -89,5 +89,23 @@ namespace iText.Svg.Renderers {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void NoSpecifiedWidthHeightImageTest() {
+            String svgFileName = SOURCE_FOLDER + "noWidthHeightSvgImage.svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_noWidthHeightSvg.pdf";
+            String outFileName = DESTINATION_FOLDER + "noWidthHeightSvg.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, 0.0F);
+                document.Add(new SvgImage(new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER))));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
     }
 }
