@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
@@ -34,29 +35,8 @@ using iText.StyledXmlParser.Resolver.Resource;
 namespace iText.StyledXmlParser.Css.Parse.Syntax {
     /// <summary>State machine that will parse content into a style sheet.</summary>
     public sealed class CssParserStateController {
-        /// <summary>The current state.</summary>
-        private IParserState currentState;
-
-        /// <summary>Indicates if the current rule is supported.</summary>
-        private bool isCurrentRuleSupported = true;
-
-        /// <summary>The previous active state (excluding comments).</summary>
-        private IParserState previousActiveState;
-
-        /// <summary>A buffer to store temporary results.</summary>
-        private StringBuilder buffer = new StringBuilder();
-
-        /// <summary>The current selector.</summary>
-        private String currentSelector;
-
-        /// <summary>The style sheet.</summary>
-        private CssStyleSheet styleSheet;
-
-        /// <summary>The nested At-rules.</summary>
-        private Stack<CssNestedAtRule> nestedAtRules;
-
-        /// <summary>The stored properties without selector.</summary>
-        private Stack<IList<CssDeclaration>> storedPropertiesWithoutSelector;
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController
+            ));
 
         /// <summary>Set of the supported rules.</summary>
         private static readonly ICollection<String> SUPPORTED_RULES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
@@ -69,6 +49,39 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// <summary>Set of conditional group rules.</summary>
         private static readonly ICollection<String> CONDITIONAL_GROUP_RULES = JavaCollectionsUtil.UnmodifiableSet(
             new HashSet<String>(JavaUtil.ArraysAsList(CssRuleName.MEDIA)));
+
+        /// <summary>The current state.</summary>
+        private IParserState currentState;
+
+        /// <summary>Indicates if the current rule is supported.</summary>
+        private bool isCurrentRuleSupported = true;
+
+        /// <summary>The previous active state (excluding comments).</summary>
+        private IParserState previousActiveState;
+
+        /// <summary>A buffer to store temporary results.</summary>
+        private readonly StringBuilder buffer = new StringBuilder();
+
+        /// <summary>The current selector.</summary>
+        private String currentSelector;
+
+        /// <summary>The style sheet.</summary>
+        private readonly CssStyleSheet styleSheet;
+
+        /// <summary>The style sheet from import CSS rules.</summary>
+        /// <remarks>
+        /// The style sheet from import CSS rules. It is used to store styles from import
+        /// separately to avoid
+        /// <see cref="iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_MUST_COME_BEFORE"/>
+        /// on check whether were styles before import or not.
+        /// </remarks>
+        private readonly CssStyleSheet styleSheetFromImport;
+
+        /// <summary>The nested At-rules.</summary>
+        private readonly Stack<CssNestedAtRule> nestedAtRules;
+
+        /// <summary>The stored properties without selector.</summary>
+        private readonly Stack<IList<CssDeclaration>> storedPropertiesWithoutSelector;
 
         /// <summary>The comment start state.</summary>
         private readonly IParserState commentStartState;
@@ -94,14 +107,15 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// <summary>The At-rule block state.</summary>
         private readonly IParserState atRuleBlockState;
 
-        /// <summary>The URI resolver.</summary>
-        private UriResolver uriResolver;
+        /// <summary>The resource resolver.</summary>
+        private readonly ResourceResolver resourceResolver;
 
         /// <summary>
         /// Creates a new
         /// <see cref="CssParserStateController"/>
         /// instance.
         /// </summary>
+        [System.ObsoleteAttribute(@"use CssParserStateController(System.String) constructor")]
         public CssParserStateController()
             : this("") {
         }
@@ -112,11 +126,15 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// instance.
         /// </summary>
         /// <param name="baseUrl">the base URL</param>
-        public CssParserStateController(String baseUrl) {
-            if (baseUrl != null && baseUrl.Length > 0) {
-                this.uriResolver = new UriResolver(baseUrl);
-            }
+        public CssParserStateController(String baseUrl)
+            : this((baseUrl == null || String.IsNullOrEmpty(baseUrl)) ? null : new ResourceResolver(baseUrl, new NoDuplicatesResourceRetriever
+                ())) {
+        }
+
+        private CssParserStateController(ResourceResolver resourceResolver) {
+            this.resourceResolver = resourceResolver;
             styleSheet = new CssStyleSheet();
+            styleSheetFromImport = new CssStyleSheet();
             nestedAtRules = new Stack<CssNestedAtRule>();
             storedPropertiesWithoutSelector = new Stack<IList<CssDeclaration>>();
             commentStartState = new CommentStartState(this);
@@ -139,7 +157,10 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// <summary>Gets the resulting style sheet.</summary>
         /// <returns>the resulting style sheet</returns>
         public CssStyleSheet GetParsingResult() {
-            return styleSheet;
+            CssStyleSheet parsingResult = new CssStyleSheet();
+            parsingResult.AppendCssStyleSheet(styleSheet);
+            parsingResult.AppendCssStyleSheet(styleSheetFromImport);
+            return parsingResult;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -311,7 +332,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
 //\cond DO_NOT_DOCUMENT
         /// <summary>Push the block preceding At-rule.</summary>
         internal void PushBlockPrecedingAtRule() {
-            nestedAtRules.Push(CssNestedAtRuleFactory.CreateNestedRule(buffer.ToString()));
+            nestedAtRules.Push(CssAtRuleFactory.CreateNestedRule(buffer.ToString()));
             storedPropertiesWithoutSelector.Push(new List<CssDeclaration>());
             isCurrentRuleSupported = IsCurrentRuleSupported();
             buffer.Length = 0;
@@ -339,7 +360,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
                 NormalizeDeclarationURIs(ruleSet.GetImportantDeclarations());
             }
             foreach (CssRuleSet ruleSet in ruleSets) {
-                if (nestedAtRules.Count == 0) {
+                if (nestedAtRules.IsEmpty()) {
                     styleSheet.AddStatement(ruleSet);
                 }
                 else {
@@ -351,7 +372,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// <summary>Processes the properties.</summary>
         /// <param name="properties">the properties</param>
         private void ProcessProperties(String properties) {
-            if (storedPropertiesWithoutSelector.Count > 0) {
+            if (!storedPropertiesWithoutSelector.IsEmpty()) {
                 IList<CssDeclaration> cssDeclarations = CssRuleSetParser.ParsePropertyDeclarations(properties);
                 NormalizeDeclarationURIs(cssDeclarations);
                 storedPropertiesWithoutSelector.Peek().AddAll(cssDeclarations);
@@ -362,65 +383,118 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         /// <param name="declarations">the declarations</param>
         private void NormalizeDeclarationURIs(IList<CssDeclaration> declarations) {
             // This is the case when css has no location and thus urls should not be resolved against base css location
-            if (this.uriResolver == null) {
+            if (this.resourceResolver == null) {
                 return;
             }
             foreach (CssDeclaration declaration in declarations) {
                 if (declaration.GetExpression().Contains("url(")) {
-                    CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(declaration.GetExpression());
-                    CssDeclarationValueTokenizer.Token token;
-                    StringBuilder normalizedDeclaration = new StringBuilder();
-                    while ((token = tokenizer.GetNextValidToken()) != null) {
-                        String strToAppend;
-                        if (token.GetType() == CssDeclarationValueTokenizer.TokenType.FUNCTION && token.GetValue().StartsWith("url("
-                            )) {
-                            String url = token.GetValue().Trim();
-                            url = url.JSubstring(4, url.Length - 1).Trim();
-                            if (CssTypesValidationUtils.IsBase64Data(url)) {
-                                strToAppend = token.GetValue().Trim();
-                            }
-                            else {
-                                if (url.StartsWith("'") && url.EndsWith("'") || url.StartsWith("\"") && url.EndsWith("\"")) {
-                                    url = url.JSubstring(1, url.Length - 1);
-                                }
-                                url = url.Trim();
-                                String finalUrl = url;
-                                try {
-                                    finalUrl = uriResolver.ResolveAgainstBaseUri(url).ToExternalForm();
-                                }
-                                catch (UriFormatException) {
-                                }
-                                strToAppend = MessageFormatUtil.Format("url({0})", finalUrl);
-                            }
-                        }
-                        else {
-                            strToAppend = token.GetValue();
-                        }
-                        if (normalizedDeclaration.Length > 0) {
-                            normalizedDeclaration.Append(' ');
-                        }
-                        normalizedDeclaration.Append(strToAppend);
-                    }
-                    declaration.SetExpression(normalizedDeclaration.ToString());
+                    NormalizeSingleDeclarationURI(declaration);
                 }
             }
+        }
+
+        private void NormalizeSingleDeclarationURI(CssDeclaration declaration) {
+            CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(declaration.GetExpression());
+            CssDeclarationValueTokenizer.Token token;
+            StringBuilder normalizedDeclaration = new StringBuilder();
+            while ((token = tokenizer.GetNextValidToken()) != null) {
+                String strToAppend;
+                if (token.GetType() == CssDeclarationValueTokenizer.TokenType.FUNCTION && token.GetValue().StartsWith("url("
+                    )) {
+                    String url = token.GetValue().Trim();
+                    url = url.JSubstring(4, url.Length - 1).Trim();
+                    url = CssUtils.ExtractUnquotedString(url);
+                    if (CssTypesValidationUtils.IsInlineData(url) || url.StartsWith("#")) {
+                        strToAppend = token.GetValue().Trim();
+                    }
+                    else {
+                        String finalUrl = url;
+                        try {
+                            finalUrl = resourceResolver.ResolveAgainstBaseUri(url).ToExternalForm();
+                        }
+                        catch (UriFormatException) {
+                        }
+                        strToAppend = MessageFormatUtil.Format("url({0})", finalUrl);
+                    }
+                }
+                else {
+                    if (token.GetType() == CssDeclarationValueTokenizer.TokenType.STRING && token.GetStringQuote() != 0) {
+                        // If we parse string with quotes, save them
+                        strToAppend = token.GetStringQuote() + token.GetValue() + token.GetStringQuote();
+                    }
+                    else {
+                        strToAppend = token.GetValue();
+                    }
+                }
+                if (normalizedDeclaration.Length > 0 && token.GetType() != CssDeclarationValueTokenizer.TokenType.COMMA) {
+                    // Don't add space at the start and before comma
+                    normalizedDeclaration.Append(' ');
+                }
+                normalizedDeclaration.Append(strToAppend);
+            }
+            declaration.SetExpression(normalizedDeclaration.ToString());
         }
 
         /// <summary>Processes the semicolon At-rule.</summary>
         /// <param name="ruleStr">the rule str</param>
         private void ProcessSemicolonAtRule(String ruleStr) {
-            CssSemicolonAtRule atRule = new CssSemicolonAtRule(ruleStr);
-            styleSheet.AddStatement(atRule);
+            CssSemicolonAtRule atRule = CssAtRuleFactory.CreateSemicolonAtRule(ruleStr);
+            if (atRule is CssImportAtRule) {
+                bool isPositionCorrect = true;
+                foreach (CssStatement statement in styleSheet.GetStatements()) {
+                    if (statement is CssAtRule) {
+                        String ruleName = ((CssAtRule)statement).GetRuleName();
+                        if (!CssImportAtRule.ALLOWED_RULES_BEFORE.Contains(ruleName)) {
+                            isPositionCorrect = false;
+                            break;
+                        }
+                    }
+                    else {
+                        isPositionCorrect = false;
+                        break;
+                    }
+                }
+                if (isPositionCorrect) {
+                    if (resourceResolver == null) {
+                        LOGGER.LogError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_RULE_URL_CAN_NOT_BE_RESOLVED
+                            );
+                        return;
+                    }
+                    String externalCss = CssUtils.ExtractUrl(atRule.GetRuleParams());
+                    try {
+                        using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(externalCss)) {
+                            if (stream != null) {
+                                ResourceResolver newResourceResolver = new ResourceResolver(resourceResolver.ResolveAgainstBaseUri(externalCss
+                                    ).ToExternalForm(), resourceResolver.GetRetriever());
+                                iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController controller = new iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController
+                                    (newResourceResolver);
+                                CssStyleSheet externalStyleSheet = CssStyleSheetParser.Parse(stream, controller);
+                                styleSheetFromImport.AppendCssStyleSheet(externalStyleSheet);
+                            }
+                        }
+                    }
+                    catch (System.IO.IOException e) {
+                        LOGGER.LogError(e, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
+                            );
+                    }
+                }
+                else {
+                    LOGGER.LogWarning(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_MUST_COME_BEFORE);
+                }
+            }
+            else {
+                styleSheet.AddStatement(atRule);
+            }
         }
 
         /// <summary>Processes the finished At-rule block.</summary>
         /// <param name="atRule">the at rule</param>
         private void ProcessFinishedAtRuleBlock(CssNestedAtRule atRule) {
-            if (nestedAtRules.Count != 0) {
-                nestedAtRules.Peek().AddStatementToBody(atRule);
+            if (nestedAtRules.IsEmpty()) {
+                styleSheet.AddStatement(atRule);
             }
             else {
-                styleSheet.AddStatement(atRule);
+                nestedAtRules.Peek().AddStatementToBody(atRule);
             }
         }
 
@@ -429,8 +503,8 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         private bool IsCurrentRuleSupported() {
             bool isSupported = nestedAtRules.IsEmpty() || SUPPORTED_RULES.Contains(nestedAtRules.Peek().GetRuleName());
             if (!isSupported) {
-                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                    .RULE_IS_NOT_SUPPORTED, nestedAtRules.Peek().GetRuleName()));
+                LOGGER.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED
+                    , nestedAtRules.Peek().GetRuleName()));
             }
             return isSupported;
         }

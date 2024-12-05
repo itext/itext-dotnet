@@ -21,37 +21,44 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using System.IO;
+using iText.StyledXmlParser.Resolver.Resource;
 
-namespace iText.StyledXmlParser.Css {
+namespace iText.StyledXmlParser.Css.Parse.Syntax {
+//\cond DO_NOT_DOCUMENT
     /// <summary>
-    /// A factory for creating
-    /// <see cref="CssNestedAtRule"/>
-    /// objects.
+    /// Implementation of
+    /// <see cref="iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever"/>
+    /// which returns
+    /// <see langword="null"/>
+    /// if the
+    /// <c>URL</c>
+    /// from
+    /// <see cref="GetInputStreamByUrl(System.Uri)"/>
+    /// has been already processed by the current instance.
     /// </summary>
-    [System.ObsoleteAttribute(@"use CssAtRuleFactory instead")]
-    public sealed class CssNestedAtRuleFactory {
+    internal class NoDuplicatesResourceRetriever : DefaultResourceRetriever {
+        private readonly ICollection<String> processedUrls = new HashSet<String>();
+
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
-        /// <see cref="CssNestedAtRuleFactory"/>
+        /// <see cref="NoDuplicatesResourceRetriever"/>
         /// instance.
         /// </summary>
-        private CssNestedAtRuleFactory() {
+        internal NoDuplicatesResourceRetriever()
+            : base() {
         }
+//\endcond
 
-        /// <summary>
-        /// Creates a new
-        /// <see cref="CssNestedAtRule"/>
-        /// object.
-        /// </summary>
-        /// <param name="ruleDeclaration">the rule declaration</param>
-        /// <returns>
-        /// a
-        /// <see cref="CssNestedAtRule"/>
-        /// instance
-        /// </returns>
-        [System.ObsoleteAttribute(@"use CssAtRuleFactory.CreateNestedRule(System.String)")]
-        public static CssNestedAtRule CreateNestedRule(String ruleDeclaration) {
-            return CssAtRuleFactory.CreateNestedRule(ruleDeclaration);
+        public override Stream GetInputStreamByUrl(Uri url) {
+            if (processedUrls.Contains(url.ToExternalForm())) {
+                return null;
+            }
+            processedUrls.Add(url.ToExternalForm());
+            return base.GetInputStreamByUrl(url);
         }
     }
+//\endcond
 }

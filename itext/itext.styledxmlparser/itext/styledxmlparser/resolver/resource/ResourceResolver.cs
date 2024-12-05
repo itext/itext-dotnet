@@ -230,6 +230,12 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             return uriResolver.ResolveAgainstBaseUri(uri);
         }
 
+        /// <summary>Gets the base URI.</summary>
+        /// <returns>the base uri</returns>
+        public virtual String GetBaseUri() {
+            return uriResolver.GetBaseUri();
+        }
+
         /// <summary>Resets the simple image cache.</summary>
         public virtual void ResetCache() {
             imageCache.Reset();

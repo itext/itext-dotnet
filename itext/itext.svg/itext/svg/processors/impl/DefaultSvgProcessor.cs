@@ -101,7 +101,6 @@ namespace iText.Svg.Processors.Impl {
             context = new SvgProcessorContext(converterProps);
             cssResolver = new SvgStyleResolver(root, context);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
-            //TODO DEVSIX-2264
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
         }
 //\endcond

@@ -98,13 +98,13 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
                 if (currentChar == splitChar && !isEscaped) {
-                    resultList.Add(value.JSubstring(lastSplitChar, i));
+                    resultList.Add(value.JSubstring(lastSplitChar, i).Trim());
                     lastSplitChar = i + 1;
                 }
             }
             String lastToken = value.Substring(lastSplitChar);
             if (!String.IsNullOrEmpty(lastToken)) {
-                resultList.Add(lastToken);
+                resultList.Add(lastToken.Trim());
             }
             return resultList;
         }
@@ -254,27 +254,39 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="url">the url attribute to parse</param>
         /// <returns>the parsed url. Or original url if not wrappend in url()</returns>
         public static String ExtractUrl(String url) {
-            String str = null;
-            if (url.StartsWith("url")) {
-                String urlString = url.Substring(3).Trim().Replace("(", "").Replace(")", "").Trim();
-                if (urlString.StartsWith("'") && urlString.EndsWith("'")) {
-                    str = urlString.JSubstring(urlString.IndexOf("'", StringComparison.Ordinal) + 1, urlString.LastIndexOf("'"
-                        ));
+            if (url.StartsWith(CommonCssConstants.URL)) {
+                String urlString = url.Substring(CommonCssConstants.URL.Length).Trim();
+                if (!urlString.StartsWith("(") || !urlString.EndsWith(")")) {
+                    return url;
                 }
-                else {
-                    if (urlString.StartsWith("\"") && urlString.EndsWith("\"")) {
-                        str = urlString.JSubstring(urlString.IndexOf('"') + 1, urlString.LastIndexOf('"'));
-                    }
-                    else {
-                        str = urlString;
-                    }
-                }
+                urlString = urlString.JSubstring(1, urlString.Length - 1).Trim();
+                return ExtractUnquotedString(urlString);
             }
             else {
                 // assume it's an url without wrapping in "url()"
-                str = url;
+                return ExtractUnquotedString(url);
             }
-            return str;
+        }
+
+        /// <summary>
+        /// Unquotes the passed string, e.g. parse
+        /// <c>"text"</c>
+        /// to
+        /// <c>text</c>.
+        /// </summary>
+        /// <param name="str">the quotes string</param>
+        /// <returns>
+        /// the unquoted string, or original
+        /// <paramref name="str"/>
+        /// if not wrapped in quotes
+        /// </returns>
+        public static String ExtractUnquotedString(String str) {
+            if ((str.StartsWith("'") && str.EndsWith("'")) || (str.StartsWith("\"") && str.EndsWith("\""))) {
+                return str.JSubstring(1, str.Length - 1).Trim();
+            }
+            else {
+                return str;
+            }
         }
 
         /// <summary>Parses string and return attribute value.</summary>

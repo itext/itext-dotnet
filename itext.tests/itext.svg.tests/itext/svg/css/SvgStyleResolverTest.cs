@@ -224,5 +224,64 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);
             NUnit.Framework.Assert.AreEqual(2, fontFaceRuleList[0].GetProperties().Count);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void FontFamilyResolvingTest1() {
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("font-family", "courier");
+            expected.Put("font-size", "12pt");
+            FontFamilyResolving("font-family:Courier;", expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontFamilyResolvingTest2() {
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("font-family", "Courier");
+            expected.Put("font-size", "12pt");
+            FontFamilyResolving("font-family:'Courier';", expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontFamilyResolvingTest3() {
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("font-family", "Courier");
+            expected.Put("font-size", "12pt");
+            FontFamilyResolving("font-family:\"Courier\";", expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontFamilyResolvingTest4() {
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("font-family", " Courier");
+            expected.Put("font-size", "12pt");
+            FontFamilyResolving("font-family:\" Courier\" ;", expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontFamilyResolvingTest5() {
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("font-family", "Courier");
+            expected.Put("font-size", "12pt");
+            FontFamilyResolving("font-family:\"Courier\", serif, Times;", expected);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontFamilyResolvingTest6() {
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("font-family", "serif");
+            expected.Put("font-size", "12pt");
+            FontFamilyResolving("font-family:serif, \"Courier\", Times;", expected);
+        }
+
+        private static void FontFamilyResolving(String styleAttr, IDictionary<String, String> expected) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupText = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("text"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Attributes textAttributes = jsoupText.Attributes();
+            textAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("style", styleAttr));
+            INode text = new JsoupElementNode(jsoupText);
+            ICssResolver resolver = new SvgStyleResolver(text, new SvgProcessorContext(new SvgConverterProperties()));
+            IDictionary<String, String> actual = resolver.ResolveStyles(text, new SvgCssContext());
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

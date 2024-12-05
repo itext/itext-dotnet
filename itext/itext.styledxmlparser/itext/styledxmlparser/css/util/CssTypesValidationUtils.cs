@@ -41,6 +41,9 @@ namespace iText.StyledXmlParser.Css.Util {
         private static readonly Regex BASE64_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("^data:[^\\s]+;base64,"
             );
 
+        private static readonly Regex DATA_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("^data:[^\\s]+;[^\\s]+,"
+            );
+
         /// <summary>
         /// Creates a new
         /// <see cref="CssTypesValidationUtils"/>
@@ -72,8 +75,16 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <summary>Checks if a data is base 64 encoded.</summary>
         /// <param name="data">the data</param>
         /// <returns>true, if the data is base 64 encoded</returns>
+        [System.ObsoleteAttribute(@"use IsInlineData(System.String) instead.")]
         public static bool IsBase64Data(String data) {
             return iText.Commons.Utils.Matcher.Match(BASE64_PATTERN, data).Find();
+        }
+
+        /// <summary>Checks if the string represent inline data in format `data:{FORMAT};{ENCODING},{DATA}`.</summary>
+        /// <param name="data">the string to check</param>
+        /// <returns>true, if the string is inline data</returns>
+        public static bool IsInlineData(String data) {
+            return iText.Commons.Utils.Matcher.Match(DATA_PATTERN, data).Find();
         }
 
         /// <summary>Checks if a value is a color property.</summary>

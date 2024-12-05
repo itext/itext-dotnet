@@ -28,7 +28,7 @@ namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Tokenizer for CSS declaration values.</summary>
     public class CssDeclarationValueTokenizer {
         /// <summary>The source string.</summary>
-        private String src;
+        private readonly String src;
 
         /// <summary>The current index.</summary>
         private int index = -1;
@@ -107,7 +107,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                                 if (curChar == stringQuote) {
                                     inString = false;
                                     return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.STRING
-                                        );
+                                        , stringQuote);
                                 }
                                 else {
                                     if (!iText.IO.Util.TextUtil.IsWhiteSpace(curChar)) {
@@ -126,7 +126,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                         if (curChar == stringQuote) {
                             inString = false;
                             return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.STRING
-                                );
+                                , stringQuote);
                         }
                         else {
                             if (curChar == '\\') {
@@ -173,7 +173,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                                         inString = false;
                                         buff.Append(curChar);
                                         return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.STRING
-                                            );
+                                            , stringQuote);
                                     }
                                     else {
                                         if (curChar == ',' && !inString && functionDepth == 0) {
@@ -239,10 +239,12 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <summary>The Token class.</summary>
         public class Token {
             /// <summary>The value.</summary>
-            private String value;
+            private readonly String value;
 
             /// <summary>The type.</summary>
-            private CssDeclarationValueTokenizer.TokenType type;
+            private readonly CssDeclarationValueTokenizer.TokenType type;
+
+            private readonly char stringQuote;
 
             /// <summary>
             /// Creates a new
@@ -251,10 +253,17 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// </summary>
             /// <param name="value">the value</param>
             /// <param name="type">the type</param>
-            public Token(String value, CssDeclarationValueTokenizer.TokenType type) {
+            public Token(String value, CssDeclarationValueTokenizer.TokenType type)
+                : this(value, type, (char)0) {
+            }
+
+//\cond DO_NOT_DOCUMENT
+            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote) {
                 this.value = value;
                 this.type = type;
+                this.stringQuote = stringQuote;
             }
+//\endcond
 
             /// <summary>Gets the value.</summary>
             /// <returns>the value</returns>
@@ -266,6 +275,18 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// <returns>the type</returns>
             public virtual CssDeclarationValueTokenizer.TokenType GetType() {
                 return type;
+            }
+
+            /// <summary>Gets the quotes of the string.</summary>
+            /// <returns>
+            /// 
+            /// <c>0</c>
+            /// if the token isn't a string or there are no quotes,
+            /// <c>quote char</c>
+            /// otherwise
+            /// </returns>
+            public virtual char GetStringQuote() {
+                return stringQuote;
             }
 
             /// <summary>Checks if the token is a string.</summary>

@@ -31,7 +31,7 @@ namespace iText.StyledXmlParser.Css {
     /// </summary>
     public class CssSemicolonAtRule : CssAtRule {
         /// <summary>The rule parameters.</summary>
-        private String ruleParams;
+        private readonly String ruleParams;
 
         /// <summary>
         /// Creates a new
@@ -39,9 +39,30 @@ namespace iText.StyledXmlParser.Css {
         /// instance.
         /// </summary>
         /// <param name="ruleDeclaration">the rule declaration</param>
+        [System.ObsoleteAttribute(@"use CssSemicolonAtRule(System.String, System.String) constructor instead")]
         public CssSemicolonAtRule(String ruleDeclaration)
-            : base(CssNestedAtRuleFactory.ExtractRuleNameFromDeclaration(ruleDeclaration.Trim())) {
+            : base(CssAtRuleFactory
+                        // After removing the constructor, make CssAtRuleFactory.extractRuleNameFromDeclaration private
+                        .ExtractRuleNameFromDeclaration(ruleDeclaration.Trim())) {
             this.ruleParams = ruleDeclaration.Trim().Substring(ruleName.Length).Trim();
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssSemicolonAtRule"/>
+        /// instance.
+        /// </summary>
+        /// <param name="ruleName">the rule name</param>
+        /// <param name="ruleParams">the rule params</param>
+        public CssSemicolonAtRule(String ruleName, String ruleParams)
+            : base(ruleName) {
+            this.ruleParams = ruleParams;
+        }
+
+        /// <summary>Gets the rule params.</summary>
+        /// <returns>the rule params</returns>
+        public virtual String GetRuleParams() {
+            return ruleParams;
         }
 
         /* (non-Javadoc)

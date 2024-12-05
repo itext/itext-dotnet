@@ -82,6 +82,7 @@ namespace iText.Svg.Xobject {
                 if (result is SvgProcessorResult) {
                     context.SetCssContext(((SvgProcessorResult)result).GetContext().GetCssContext());
                 }
+                context.SetTempFonts(result.GetTempFonts());
                 context.AddNamedObjects(result.GetNamedObjects());
                 context.PushCanvas(canvas);
                 ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(result.GetRootRenderer());

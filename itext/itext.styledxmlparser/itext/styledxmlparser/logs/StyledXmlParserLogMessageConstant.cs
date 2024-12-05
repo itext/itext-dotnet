@@ -101,6 +101,11 @@ namespace iText.StyledXmlParser.Logs {
         /// <summary>The Constant ERROR_RESOLVING_PARENT_STYLES.</summary>
         public const String ERROR_RESOLVING_PARENT_STYLES = "Element parent styles are not resolved. Styles for current element might be incorrect.";
 
+        public const String IMPORT_MUST_COME_BEFORE = "Imported rules must come before all other types of rules, except @charset rules and layer creating @layer statements. "
+             + "Rule will be ignored. ";
+
+        public const String IMPORT_RULE_URL_CAN_NOT_BE_RESOLVED = "Import rule URL can't be resolved because of base URI absence.";
+
         /// <summary>Instantiates a new log message constant.</summary>
         private StyledXmlParserLogMessageConstant() {
         }

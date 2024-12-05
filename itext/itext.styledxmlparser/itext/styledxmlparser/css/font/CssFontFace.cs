@@ -56,7 +56,7 @@ namespace iText.StyledXmlParser.Css.Font {
             String fontFamily = null;
             String srcs = null;
             foreach (CssDeclaration descriptor in properties) {
-                if ("font-family".Equals(descriptor.GetProperty())) {
+                if (CommonCssConstants.FONT_FAMILY.Equals(descriptor.GetProperty())) {
                     // TODO DEVSIX-2534
                     fontFamily = FontFamilySplitterUtil.RemoveQuotes(descriptor.GetExpression());
                 }

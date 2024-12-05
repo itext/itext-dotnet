@@ -150,7 +150,7 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void GoogleFontsTest() {
-            //TODO DEVSIX-2264: that test shall fail after the fix.
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6459 Android: fix the SecurityException(Permission denied) from UrlUtil method)
             ConvertAndCompare(sourceFolder, destinationFolder, "googleFontsTest");
         }
 
@@ -207,7 +207,6 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void ImportStyleSheetWithStrokeStyleTest() {
-            // TODO DEVSIX-2264 Support CSS @import url() rule to reference external resources
             ConvertAndCompare(sourceFolder, destinationFolder, "importStyleSheetWithStrokeStyleTest");
         }
 
@@ -293,6 +292,21 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder14Test() {
             ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder14");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder15Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder15");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder16Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder16");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssStylesResolverOrder17Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder17");
         }
     }
 }

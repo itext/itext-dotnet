@@ -21,37 +21,34 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Css {
     /// <summary>
-    /// A factory for creating
-    /// <see cref="CssNestedAtRule"/>
-    /// objects.
+    /// Implementation of
+    /// <see cref="CssSemicolonAtRule"/>
+    /// for
+    /// <c>import</c>
+    /// rule.
     /// </summary>
-    [System.ObsoleteAttribute(@"use CssAtRuleFactory instead")]
-    public sealed class CssNestedAtRuleFactory {
+    public class CssImportAtRule : CssSemicolonAtRule {
         /// <summary>
-        /// Creates a new
-        /// <see cref="CssNestedAtRuleFactory"/>
-        /// instance.
+        /// The list of rules which are allowed to be before
+        /// <c>import</c>
+        /// rule declaration in CSS stylesheet.
         /// </summary>
-        private CssNestedAtRuleFactory() {
-        }
+        public static readonly ICollection<String> ALLOWED_RULES_BEFORE = JavaCollectionsUtil.UnmodifiableSet(new 
+            HashSet<String>(JavaUtil.ArraysAsList(CssRuleName.CHARSET, CssRuleName.IMPORT, CssRuleName.LAYER)));
 
         /// <summary>
         /// Creates a new
-        /// <see cref="CssNestedAtRule"/>
-        /// object.
+        /// <see cref="CssImportAtRule"/>
+        /// instance.
         /// </summary>
-        /// <param name="ruleDeclaration">the rule declaration</param>
-        /// <returns>
-        /// a
-        /// <see cref="CssNestedAtRule"/>
-        /// instance
-        /// </returns>
-        [System.ObsoleteAttribute(@"use CssAtRuleFactory.CreateNestedRule(System.String)")]
-        public static CssNestedAtRule CreateNestedRule(String ruleDeclaration) {
-            return CssAtRuleFactory.CreateNestedRule(ruleDeclaration);
+        /// <param name="ruleParameters">the rule parameters</param>
+        public CssImportAtRule(String ruleParameters)
+            : base(CssRuleName.IMPORT, ruleParameters) {
         }
     }
 }

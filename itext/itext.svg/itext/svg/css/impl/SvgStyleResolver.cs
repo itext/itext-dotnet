@@ -255,6 +255,13 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             iText.Svg.Css.Impl.SvgStyleResolver.ResolveFontSizeStyle(styles, context, parentFontSizeStr);
+            // TODO DEVSIX-2534 Process CSS "font-family" property value according to CSS specification rules
+            IList<String> fontFamilies = FontFamilySplitterUtil.SplitFontFamily(styles.Get(CommonCssConstants.FONT_FAMILY
+                ));
+            if (fontFamilies != null && !fontFamilies.IsEmpty()) {
+                // TODO DEVSIX-8792 SVG: implement styles appliers like in html2pdf
+                styles.Put(CommonCssConstants.FONT_FAMILY, fontFamilies[0]);
+            }
             // Set root font size
             bool isSvgElement = element is IElementNode && SvgConstants.Tags.SVG.Equals(((IElementNode)element).Name()
                 );
@@ -309,7 +316,7 @@ namespace iText.Svg.Css.Impl {
                         foreach (INode node in currentNode.ChildNodes()) {
                             if (node is IDataNode || node is ITextNode) {
                                 String styleData = node is IDataNode ? ((IDataNode)node).GetWholeData() : ((ITextNode)node).WholeText();
-                                CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData);
+                                CssStyleSheet styleSheet = CssStyleSheetParser.Parse(styleData, resourceResolver.GetBaseUri());
                                 // TODO (DEVSIX-2263): media query wrap
                                 // styleSheet = wrapStyleSheetInMediaQueryIfNecessary(headChildElement, styleSheet);
                                 this.css.AppendCssStyleSheet(styleSheet);

@@ -38,7 +38,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>
         /// Parses a stream into a
-        /// <see cref="CssRuleSetParser"/>.
+        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>.
         /// </summary>
         /// <param name="stream">the stream</param>
         /// <param name="baseUrl">the base url</param>
@@ -47,7 +47,20 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
         /// </returns>
         public static CssStyleSheet Parse(Stream stream, String baseUrl) {
-            CssParserStateController controller = new CssParserStateController(baseUrl);
+            return Parse(stream, new CssParserStateController(baseUrl));
+        }
+
+        /// <summary>
+        /// Parses a stream into a
+        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>.
+        /// </summary>
+        /// <param name="stream">the stream</param>
+        /// <param name="controller">the parse state controller</param>
+        /// <returns>
+        /// the resulting
+        /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
+        /// </returns>
+        public static CssStyleSheet Parse(Stream stream, CssParserStateController controller) {
             // TODO determine charset correctly DEVSIX-1458
             TextReader br = PortUtil.WrapInBufferedReader(new StreamReader(stream, System.Text.Encoding.UTF8));
             char[] buffer = new char[8192];
@@ -70,7 +83,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <see cref="iText.StyledXmlParser.Css.CssStyleSheet"/>
         /// </returns>
         public static CssStyleSheet Parse(Stream stream) {
-            return Parse(stream, null);
+            return Parse(stream, (String)null);
         }
 
         /// <summary>
