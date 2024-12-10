@@ -961,6 +961,11 @@ namespace iText.Bouncycastlefips {
             content.Write(bOut);
             return new TstInfoBCFips(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual ITstInfo CreateTSTInfo(IAsn1Object contentInfo) {
+            return new TstInfoBCFips(TstInfo.GetInstance(((Asn1ObjectBCFips) contentInfo).GetPrimitive()));
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp) {

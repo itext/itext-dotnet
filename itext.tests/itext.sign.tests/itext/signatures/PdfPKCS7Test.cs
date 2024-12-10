@@ -85,6 +85,16 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
+        public virtual void VerifySignatureIntegrityAndAuthenticityBerEncodedTimestampTest() {
+            using (PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timeStampSignatureBerEncoded.pdf"
+                ))) {
+                SignatureUtil sigUtil = new SignatureUtil(outDocument);
+                PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("timestampSig1");
+                NUnit.Framework.Assert.IsTrue(pkcs7.VerifySignatureIntegrityAndAuthenticity());
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReasonSetGetTest() {
             PdfPKCS7 pkcs7 = CreateSimplePdfPKCS7();
             NUnit.Framework.Assert.IsNull(pkcs7.GetReason());

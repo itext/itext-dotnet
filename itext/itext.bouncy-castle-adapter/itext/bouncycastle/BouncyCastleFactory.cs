@@ -965,6 +965,11 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual ITstInfo CreateTSTInfo(IAsn1Object contentInfo) {
+            return new TstInfoBC(TstInfo.GetInstance(((Asn1ObjectBC) contentInfo).GetPrimitive()));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp) {
             return new SingleResponseBC(basicResp);
         }

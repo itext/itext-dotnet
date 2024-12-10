@@ -1224,6 +1224,13 @@ namespace iText.Commons.Bouncycastle {
         /// <returns>created TST Info wrapper</returns>
         ITstInfo CreateTSTInfo(IContentInfo contentInfo);
 
+        /// <summary>
+        /// Create TST Info wrapper from content info wrapper.
+        /// </summary>
+        /// <param name="contentInfo">primitive wrapper to create TST Info wrapper from</param>
+        /// <returns>created TST Info wrapper</returns>
+        ITstInfo CreateTSTInfo(IAsn1Object contentInfo);
+
         /// <summary>Create single resp wrapper from basic OCSP Response wrapper.</summary>
         /// <param name="basicResp">basic OCSP Response wrapper to create single resp wrapper from</param>
         /// <returns>created single resp wrapper</returns>
