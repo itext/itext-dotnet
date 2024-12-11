@@ -79,10 +79,7 @@ namespace iText.Pdfua {
         public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing) {
             CheckError(CheckErrorLayout("layout_" + filename + ".pdf"), expectedMsg);
             String createdFileName = "vera_" + filename + ".pdf";
-            String veraPdf = VerAPdfResult(createdFileName);
-            System.Console.Out.WriteLine(veraPdf);
-            NUnit.Framework.Assert.IsNotNull(veraPdf);
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+            VerAPdfResult(createdFileName, true);
             if (checkDocClosing) {
                 System.Console.Out.WriteLine("Checking closing");
                 CheckError(CheckErrorOnClosing(createdFileName), expectedMsg);
@@ -91,7 +88,7 @@ namespace iText.Pdfua {
 
         public virtual void AssertBothValid(String fileName) {
             Exception e = CheckErrorLayout("layout_" + fileName + ".pdf");
-            String veraPdf = VerAPdfResult("vera_" + fileName + ".pdf");
+            String veraPdf = VerAPdfResult("vera_" + fileName + ".pdf", false);
             Exception eClosing = CheckErrorOnClosing("vera_" + fileName + ".pdf");
             if (e == null && veraPdf == null && eClosing == null) {
                 return;
@@ -117,7 +114,11 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.Fail(sb.ToString());
         }
 
-        public virtual String VerAPdfResult(String filename) {
+        public virtual void AddBeforeGenerationHook(Action<PdfDocument> action) {
+            this.beforeGeneratorHook.Add(action);
+        }
+
+        private String VerAPdfResult(String filename, bool failureExpected) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
             PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename));
@@ -134,13 +135,15 @@ namespace iText.Pdfua {
             VeraPdfValidator validator = new VeraPdfValidator();
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             String validate = null;
-            validate = validator.Validate(destinationFolder + filename);
+            if (failureExpected) {
+                validator.ValidateFailure(destinationFolder + filename);
+            }
+            else {
+                // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+                validate = validator.Validate(destinationFolder + filename);
+            }
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             return validate;
-        }
-
-        public virtual void AddBeforeGenerationHook(Action<PdfDocument> action) {
-            this.beforeGeneratorHook.Add(action);
         }
 
         private void CheckError(Exception e, String expectedMsg) {

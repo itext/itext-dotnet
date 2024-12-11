@@ -225,7 +225,7 @@ namespace iText.Pdfua {
             );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_ua1StampAnnotWithAltTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -243,7 +243,7 @@ namespace iText.Pdfua {
             );
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_ua1ScreenAnnotWithAltTest.pdf"
                 , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
@@ -757,7 +757,7 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
             // VeraPdf complains about the fact that PrinterMark annotation isn't wrapped by Annot tag.
             // But in that test we don't put PrinterMark annot in tag structure at all.
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

@@ -199,7 +199,7 @@ namespace iText.Signatures {
                     (appearance);
             }
             );
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -239,7 +239,7 @@ namespace iText.Signatures {
                     (appearance);
             }
             );
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)

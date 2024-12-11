@@ -160,7 +160,7 @@ namespace iText.Pdfua {
                 canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

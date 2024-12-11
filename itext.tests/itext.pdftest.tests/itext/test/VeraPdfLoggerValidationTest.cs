@@ -59,8 +59,11 @@ namespace iText.Test {
             String expectedWarningsForFileWithWarnings = "The following warnings and errors were logged during validation:\n"
                  + "WARNING: Invalid embedded cff font. Charset range exceeds number of glyphs\n" + "WARNING: Missing OutputConditionIdentifier in an output intent dictionary\n"
                  + "WARNING: The Top DICT does not begin with ROS operator";
-            NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
-                 + target));
+            IgnoreRunningWhenNative((isNative) => {
+                NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
+                     + target));
+            }
+            );
         }
 
         [NUnit.Framework.Test]
@@ -72,11 +75,14 @@ namespace iText.Test {
             String expectedWarningsForFileWithWarnings = "The following warnings and errors were logged during validation:\n"
                  + "WARNING: Invalid embedded cff font. Charset range exceeds number of glyphs\n" + "WARNING: Missing OutputConditionIdentifier in an output intent dictionary\n"
                  + "WARNING: The Top DICT does not begin with ROS operator";
-            NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
-                 + fileNameWithWarnings));
-            //We check that the logs are empty after the first check
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + fileNameWithoutWarnings
-                ));
+            IgnoreRunningWhenNative((isNative) => {
+                NUnit.Framework.Assert.AreEqual(expectedWarningsForFileWithWarnings, new VeraPdfValidator().Validate(DESTINATION_FOLDER
+                     + fileNameWithWarnings));
+                //We check that the logs are empty after the first check
+                NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + fileNameWithoutWarnings
+                    ));
+            }
+            );
         }
 
         [NUnit.Framework.Test]
@@ -85,8 +91,22 @@ namespace iText.Test {
             String target = "checkValidatorLogsForFileContainingErrorsTest.pdf";
             FileUtil.Copy(SOURCE_FOLDER + source, DESTINATION_FOLDER + target);
             String expectedResponseForErrors = "VeraPDF verification failed. See verification results: file:";
-            String result = new VeraPdfValidator().Validate(DESTINATION_FOLDER + target);
-            NUnit.Framework.Assert.IsTrue(result.StartsWith(expectedResponseForErrors));
+            IgnoreRunningWhenNative((isNative) => {
+                String result = new VeraPdfValidator().Validate(DESTINATION_FOLDER + target);
+                NUnit.Framework.Assert.IsTrue(result.StartsWith(expectedResponseForErrors));
+            }
+            );
+        }
+
+        private static readonly bool isNative = Environment.GetEnvironmentVariable("org.graalvm.nativeimage.imagecode"
+            ) != null;
+
+        public static void IgnoreRunningWhenNative(Action<Object> test) {
+            // VeraPdf doesn't work in native mode so skip VeraPdf validation
+            if (isNative) {
+                return;
+            }
+            test(isNative);
         }
     }
 }

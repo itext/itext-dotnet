@@ -83,8 +83,17 @@ namespace iText.Signatures.Validation.Report.Xml {
                     }
                 }
                 // For each reported signature the certificate is added to the validation objects
-                NUnit.Framework.Assert.IsTrue(testTool.CountElements("//r:ValidationObject[r:ObjectType=\"urn:etsi:019102:validationObject:certificate\"]"
-                    ) >= 2);
+                // We don't use something like
+                // testTool.countElements("//r:ValidationObject[r:ObjectType=\"urn:etsi:019102:validationObject:certificate\"]");
+                // here because it fails in native by not clear reason
+                XmlNodeList objectTypesNodes = testTool.ExecuteXpathAsNodeList("//r:ValidationObject//r:ObjectType");
+                int requiredObjectTypesCount = 0;
+                for (int i = 0; i < objectTypesNodes.Count; i++) {
+                    if ("urn:etsi:019102:validationObject:certificate".Equals(objectTypesNodes.Item(i).InnerText)) {
+                        ++requiredObjectTypesCount;
+                    }
+                }
+                NUnit.Framework.Assert.AreEqual(2, requiredObjectTypesCount);
                 NUnit.Framework.Assert.IsNull(testTool.ValidateXMLSchema());
             }
         }

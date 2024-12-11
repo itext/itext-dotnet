@@ -624,7 +624,7 @@ namespace iText.Pdfa {
         }
 
         private void CompareResult(String outPdf, String cmpPdf, String expectedVeraPdfWarning) {
-            NUnit.Framework.Assert.AreEqual(expectedVeraPdfWarning, new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateWarning(outPdf, expectedVeraPdfWarning);
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {

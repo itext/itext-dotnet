@@ -87,7 +87,7 @@ namespace iText.Layout {
                 paragraph.Add(link);
                 new Document(pdfDocument).Add(paragraph);
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -128,7 +128,7 @@ namespace iText.Layout {
                 annot.SetContents("Hello world");
                 pdfPage.AddAnnotation(annot);
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -163,7 +163,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(stamp);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -194,7 +194,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(screen);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -225,7 +225,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(ink);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -256,7 +256,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(redact);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -287,7 +287,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(annot);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -318,7 +318,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(annot);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -353,7 +353,7 @@ namespace iText.Layout {
                 PdfTrapNetworkAnnotation annot = new PdfTrapNetworkAnnotation(PageSize.A4, form);
                 pdfPage.AddAnnotation(annot);
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -367,7 +367,7 @@ namespace iText.Layout {
                 PdfAnnotation annot = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), new PdfStream());
                 pdfPage.AddAnnotation(annot);
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -386,7 +386,7 @@ namespace iText.Layout {
                 paragraph.Add(link);
                 new Document(pdfDocument).Add(paragraph);
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -424,7 +424,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(annot);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -440,7 +440,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(annot);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)

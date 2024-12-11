@@ -33,6 +33,8 @@ using iText.Layout.Element;
 using iText.Test;
 
 namespace iText.Pdfa {
+    [iText.Commons.Utils.NoopAnnotation]
+    // java.awt is not compatible with graalvm
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfABarcodeTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

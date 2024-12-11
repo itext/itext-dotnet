@@ -584,7 +584,7 @@ namespace iText.Layout {
                 pdfDocument.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
                 pdfDocument.GetCatalog().SetLang(new PdfString("en-US"));
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -602,7 +602,7 @@ namespace iText.Layout {
                 PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
                 info.SetTitle("PdfUA2 Title");
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -619,7 +619,7 @@ namespace iText.Layout {
                 PdfDocumentInfo info = pdfDocument.GetDocumentInfo();
                 info.SetTitle("PdfUA2 Title");
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -652,7 +652,7 @@ namespace iText.Layout {
                 ((PdfDictionary)spec.GetPdfObject()).Remove(PdfName.Desc);
                 pdfDocument.AddFileAttachment("specificname", spec);
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
