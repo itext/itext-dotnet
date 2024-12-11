@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Actions.Processors;
+using iText.Commons.Datastructures;
 using iText.Commons.Exceptions;
-using iText.Commons.Utils;
 
 namespace iText.Commons.Actions {
     /// <summary>Entry point for event handling mechanism.</summary>
@@ -37,7 +37,7 @@ namespace iText.Commons.Actions {
         private static readonly iText.Commons.Actions.EventManager INSTANCE = new iText.Commons.Actions.EventManager
             ();
 
-        private readonly ICollection<IEventHandler> handlers = new LinkedHashSet<IEventHandler>();
+        private readonly ConcurrentHashSet<IEventHandler> handlers = new ConcurrentHashSet<IEventHandler>();
 
         private EventManager() {
             handlers.Add(ProductEventHandler.INSTANCE);
@@ -63,7 +63,7 @@ namespace iText.Commons.Actions {
         /// <param name="event">to handle</param>
         public void OnEvent(IEvent @event) {
             IList<Exception> caughtExceptions = new List<Exception>();
-            foreach (IEventHandler handler in handlers) {
+            handlers.ForEach((handler) => {
                 try {
                     handler.OnEvent(@event);
                 }
@@ -71,6 +71,7 @@ namespace iText.Commons.Actions {
                     caughtExceptions.Add(ex);
                 }
             }
+            );
             if (@event is AbstractITextConfigurationEvent) {
                 try {
                     AbstractITextConfigurationEvent itce = (AbstractITextConfigurationEvent)@event;

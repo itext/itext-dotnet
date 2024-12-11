@@ -69,6 +69,8 @@ namespace iText.Commons.Exceptions {
 
         public const String ZIP_ENTRY_NOT_FOUND = "Zip entry not found for name: {0}";
 
+        public const String UNSUPPORTED_OPERATION = "This operation is not supported.";
+
         private CommonsExceptionMessageConstant() {
         }
         // Empty constructor.

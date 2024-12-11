@@ -56,12 +56,12 @@ namespace iText.Commons.Actions {
                 eventManager.OnEvent(new ITextTestEvent(sequenceId, null, "test-event", ProductNameConstant.ITEXT_CORE));
             }
             catch (AggregatedException e) {
-                NUnit.Framework.Assert.AreEqual("Error during event processing:\n" + "0) ThrowArithmeticExpHandler\n" + "1) ThrowIllegalArgumentExpHandler\n"
-                    , e.Message);
                 IList<Exception> aggregatedExceptions = e.GetAggregatedExceptions();
                 NUnit.Framework.Assert.AreEqual(2, aggregatedExceptions.Count);
-                NUnit.Framework.Assert.AreEqual("ThrowArithmeticExpHandler", aggregatedExceptions[0].Message);
-                NUnit.Framework.Assert.AreEqual("ThrowIllegalArgumentExpHandler", aggregatedExceptions[1].Message);
+                NUnit.Framework.Assert.AreEqual("ThrowArithmeticExpHandler", FindHandler(aggregatedExceptions, typeof(ArithmeticException
+                    )).Message);
+                NUnit.Framework.Assert.AreEqual("ThrowIllegalArgumentExpHandler", FindHandler(aggregatedExceptions, typeof(
+                    ArgumentException)).Message);
             }
             eventManager.Unregister(handler1);
             eventManager.Unregister(handler2);
@@ -104,6 +104,15 @@ namespace iText.Commons.Actions {
             IProductProcessorFactory underAgplProductProcessorFactory1 = ProductProcessorFactoryKeeper.GetProductProcessorFactory
                 ();
             NUnit.Framework.Assert.IsTrue(underAgplProductProcessorFactory1 is UnderAgplProductProcessorFactory);
+        }
+
+        private Exception FindHandler(IList<Exception> events, Type eventClass) {
+            foreach (Exception @event in events) {
+                if (eventClass.IsInstanceOfType(@event)) {
+                    return @event;
+                }
+            }
+            return null;
         }
 
         private class ThrowArithmeticExpHandler : IEventHandler {
