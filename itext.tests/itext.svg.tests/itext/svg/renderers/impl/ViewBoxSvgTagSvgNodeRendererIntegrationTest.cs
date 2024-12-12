@@ -94,21 +94,18 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ViewBoxXYValuesPreserveAspectRatioXMaxYMaxMeetValues() {
-            //TODO (DEVSIX-3493) change cmp files after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxMeetValues"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ViewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues() {
-            //TODO (DEVSIX-3493) change cmp files after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioXMaxYMaxSliceValues"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRationAllOptionsTest() {
-            //TODO DEVSIX-4861 change cmp after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRationAllOptions");
         }
     }

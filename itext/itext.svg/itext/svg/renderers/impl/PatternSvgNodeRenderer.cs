@@ -128,15 +128,16 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 Rectangle viewBox = new Rectangle(viewBoxValues[0], viewBoxValues[1], viewBoxValues[2], viewBoxValues[3]);
                 Rectangle appliedViewBox = CalculateAppliedViewBox(viewBox, xStep, yStep);
-                patternMatrixTransform.Translate(appliedViewBox.GetX(), appliedViewBox.GetY());
                 double scaleX_1 = (double)appliedViewBox.GetWidth() / (double)viewBox.GetWidth();
                 double scaleY_1 = (double)appliedViewBox.GetHeight() / (double)viewBox.GetHeight();
+                double xOffset = (double)appliedViewBox.GetX() / scaleX_1 - (double)viewBox.GetX();
+                double yOffset = (double)appliedViewBox.GetY() / scaleY_1 - (double)viewBox.GetY();
+                patternMatrixTransform.Translate(xOffset, yOffset);
                 patternMatrixTransform.Scale(scaleX_1, scaleY_1);
                 xStep /= scaleX_1;
                 yStep /= scaleY_1;
-                patternMatrixTransform.Translate(-viewBox.GetX(), -viewBox.GetY());
-                double bboxXOriginal = viewBox.GetX() - appliedViewBox.GetX() / scaleX_1;
-                double bboxYOriginal = viewBox.GetY() - appliedViewBox.GetY() / scaleY_1;
+                double bboxXOriginal = -xOffset / scaleX_1;
+                double bboxYOriginal = -yOffset / scaleY_1;
                 bbox = new Rectangle((float)bboxXOriginal, (float)bboxYOriginal, (float)xStep, (float)yStep);
             }
             return CreateColoredTilingPatternInstance(patternMatrixTransform, bbox, xStep, yStep);
@@ -284,7 +285,7 @@ namespace iText.Svg.Renderers.Impl {
             // of the element (according to the viewBox documentation)
             if (viewBoxValues[2] == 0 || viewBoxValues[3] == 0) {
                 if (LOGGER.IsEnabled(LogLevel.Information)) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO));
+                    LOGGER.LogInformation(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
                 }
                 return true;
             }

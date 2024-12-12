@@ -51,8 +51,8 @@ namespace iText.Svg.Renderers.Impl {
             // it should be possible for symbols
             Rectangle currentViewPort = context.GetCurrentViewPort();
             // Set default values to parent viewport in the case of a nested svg tag
-            float portX = currentViewPort.GetX();
-            float portY = currentViewPort.GetY();
+            float portX = 0;
+            float portY = 0;
             // Default should be parent portWidth if not outermost
             float portWidth = currentViewPort.GetWidth();
             // Default should be parent height if not outermost

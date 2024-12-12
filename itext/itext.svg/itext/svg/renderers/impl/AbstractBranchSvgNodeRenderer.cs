@@ -31,7 +31,6 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Logs;
 using iText.Svg.Renderers;
@@ -43,6 +42,8 @@ namespace iText.Svg.Renderers.Impl {
     /// as a parent.
     /// </summary>
     public abstract class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+
         /// <summary>The number of viewBox values.</summary>
         /// <remarks>
         /// The number of viewBox values.
@@ -52,9 +53,9 @@ namespace iText.Svg.Renderers.Impl {
         [Obsolete]
         protected internal const int VIEWBOX_VALUES_NUMBER = 4;
 
-        private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
+        private const float EPS = 1e-6f;
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+        private readonly IList<ISvgNodeRenderer> children = new List<ISvgNodeRenderer>();
 
         /// <summary>
         /// Method that will set properties to be inherited by this branch renderer's
@@ -66,7 +67,7 @@ namespace iText.Svg.Renderers.Impl {
         /// </param>
         protected internal override void DoDraw(SvgDrawContext context) {
             // If branch has no children, don't do anything
-            if (GetChildren().Count > 0) {
+            if (!GetChildren().IsEmpty()) {
                 PdfStream stream = new PdfStream();
                 stream.Put(PdfName.Type, PdfName.XObject);
                 stream.Put(PdfName.Subtype, PdfName.Form);
@@ -125,17 +126,12 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
         /// <param name="context">current svg draw context</param>
         internal virtual void ApplyViewBox(SvgDrawContext context) {
+            Rectangle currentViewPort = context.GetCurrentViewPort();
             float[] viewBoxValues = SvgCssUtils.ParseViewBox(this);
             if (viewBoxValues == null || viewBoxValues.Length < SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
-                float[] values = new float[] { 0, 0, context.GetCurrentViewPort().GetWidth(), context.GetCurrentViewPort()
-                    .GetHeight() };
-                Rectangle currentViewPort = context.GetCurrentViewPort();
-                CalculateAndApplyViewBox(context, values, currentViewPort);
+                viewBoxValues = new float[] { 0, 0, currentViewPort.GetWidth(), currentViewPort.GetHeight() };
             }
-            else {
-                Rectangle currentViewPort = context.GetCurrentViewPort();
-                CalculateAndApplyViewBox(context, viewBoxValues, currentViewPort);
-            }
+            CalculateAndApplyViewBox(context, viewBoxValues, currentViewPort);
         }
 //\endcond
 
@@ -188,105 +184,6 @@ namespace iText.Svg.Renderers.Impl {
                 currentCanvas.ConcatMatrix(tf);
             }
         }
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>If present, process the preserveAspectRatio position.</summary>
-        /// <param name="context">the svg draw context</param>
-        /// <param name="viewBoxValues">the four values depicting the viewbox [min-x min-y width height]</param>
-        /// <param name="align">alignment method to use</param>
-        /// <param name="scaleWidth">the multiplier for scaling width</param>
-        /// <param name="scaleHeight">the multiplier for scaling height</param>
-        /// <returns>the transformation based on the preserveAspectRatio value</returns>
-        internal virtual AffineTransform ProcessAspectRatioPosition(SvgDrawContext context, float[] viewBoxValues, 
-            String align, float scaleWidth, float scaleHeight) {
-            AffineTransform transform = new AffineTransform();
-            Rectangle currentViewPort = context.GetCurrentViewPort();
-            float midXBox = viewBoxValues[0] + (viewBoxValues[2] / 2);
-            float midYBox = viewBoxValues[1] + (viewBoxValues[3] / 2);
-            float midXPort = currentViewPort.GetX() + (currentViewPort.GetWidth() / 2);
-            float midYPort = currentViewPort.GetY() + (currentViewPort.GetHeight() / 2);
-            float x = 0f;
-            float y = 0f;
-            // if x attribute of svg is present, then x value of current viewport should be set according to it
-            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                x = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
-            }
-            // if y attribute of svg is present, then y value of current viewport should be set according to it
-            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                y = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
-            }
-            if (!(this is MarkerSvgNodeRenderer)) {
-                x -= currentViewPort.GetX();
-                y -= currentViewPort.GetY();
-            }
-            // need to consider previous (parent) translation before applying the current one
-            switch (align.ToLowerInvariant()) {
-                case SvgConstants.Values.NONE: {
-                    break;
-                }
-
-                case SvgConstants.Values.XMIN_YMIN: {
-                    x -= viewBoxValues[0];
-                    y -= viewBoxValues[1];
-                    break;
-                }
-
-                case SvgConstants.Values.XMIN_YMID: {
-                    x -= viewBoxValues[0];
-                    y += (midYPort - midYBox);
-                    break;
-                }
-
-                case SvgConstants.Values.XMIN_YMAX: {
-                    x -= viewBoxValues[0];
-                    y += (currentViewPort.GetHeight() - viewBoxValues[3]);
-                    break;
-                }
-
-                case SvgConstants.Values.XMID_YMIN: {
-                    x += (midXPort - midXBox);
-                    y -= viewBoxValues[1];
-                    break;
-                }
-
-                case SvgConstants.Values.XMID_YMAX: {
-                    x += (midXPort - midXBox);
-                    y += (currentViewPort.GetHeight() - viewBoxValues[3]);
-                    break;
-                }
-
-                case SvgConstants.Values.XMAX_YMIN: {
-                    x += (currentViewPort.GetWidth() - viewBoxValues[2]);
-                    y -= viewBoxValues[1];
-                    break;
-                }
-
-                case SvgConstants.Values.XMAX_YMID: {
-                    x += (currentViewPort.GetWidth() - viewBoxValues[2]);
-                    y += (midYPort - midYBox);
-                    break;
-                }
-
-                case SvgConstants.Values.XMAX_YMAX: {
-                    x += (currentViewPort.GetWidth() - viewBoxValues[2]);
-                    y += (currentViewPort.GetHeight() - viewBoxValues[3]);
-                    break;
-                }
-
-                case SvgConstants.Values.DEFAULT_ASPECT_RATIO:
-                default: {
-                    x += (midXPort - midXBox);
-                    y += (midYPort - midYBox);
-                    break;
-                }
-            }
-            //Rescale x and y
-            x /= scaleWidth;
-            y /= scaleHeight;
-            transform.Translate(x, y);
-            return transform;
-        }
-//\endcond
 
         /// <summary>Cleans up the SvgDrawContext by removing the current viewport and by popping the current canvas.</summary>
         /// <param name="context">context to clean</param>
@@ -343,51 +240,41 @@ namespace iText.Svg.Renderers.Impl {
 //\cond DO_NOT_DOCUMENT
         internal virtual void CalculateAndApplyViewBox(SvgDrawContext context, float[] values, Rectangle currentViewPort
             ) {
-            // TODO DEVSIX-4861 change this method with using of SvgCoordinateUtils#applyViewBox
+            // If viewBox width or height is zero we should disable rendering of the element.
+            if (Math.Abs(values[2]) < EPS || Math.Abs(values[3]) < EPS) {
+                if (LOGGER.IsEnabled(LogLevel.Information)) {
+                    LOGGER.LogInformation(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
+                }
+                context.GetCurrentCanvas().ConcatMatrix(AffineTransform.GetScaleInstance(0, 0));
+                return;
+            }
             String[] alignAndMeet = RetrieveAlignAndMeet();
             String align = alignAndMeet[0];
             String meetOrSlice = alignAndMeet[1];
-            float scaleWidth = currentViewPort.GetWidth() / values[2];
-            float scaleHeight = currentViewPort.GetHeight() / values[3];
-            bool forceUniformScaling = !(SvgConstants.Values.NONE.Equals(align));
-            if (forceUniformScaling) {
-                //Scaling should preserve aspect ratio
-                if (SvgConstants.Values.MEET.Equals(meetOrSlice)) {
-                    scaleWidth = Math.Min(scaleWidth, scaleHeight);
-                }
-                else {
-                    scaleWidth = Math.Max(scaleWidth, scaleHeight);
-                }
-                scaleHeight = scaleWidth;
-            }
+            Rectangle viewBox = new Rectangle(values[0], values[1], values[2], values[3]);
+            Rectangle appliedViewBox = SvgCoordinateUtils.ApplyViewBox(viewBox, currentViewPort, align, meetOrSlice);
+            float scaleWidth = appliedViewBox.GetWidth() / viewBox.GetWidth();
+            float scaleHeight = appliedViewBox.GetHeight() / viewBox.GetHeight();
             AffineTransform scale = AffineTransform.GetScaleInstance(scaleWidth, scaleHeight);
-            float[] scaledViewBoxValues = ScaleViewBoxValues(values, scaleWidth, scaleHeight);
-            AffineTransform transform = ProcessAspectRatioPosition(context, scaledViewBoxValues, align, scaleWidth, scaleHeight
-                );
+            float xOffset = appliedViewBox.GetX() / scaleWidth - viewBox.GetX();
+            float yOffset = appliedViewBox.GetY() / scaleHeight - viewBox.GetY();
+            AffineTransform transform = new AffineTransform();
+            transform.Translate(xOffset, yOffset);
+            if (!transform.IsIdentity()) {
+                context.GetCurrentCanvas().ConcatMatrix(transform);
+                // Apply inverse translation to viewport to make it line up nicely
+                context.GetCurrentViewPort().SetX(currentViewPort.GetX() - (float)transform.GetTranslateX()).SetY(currentViewPort
+                    .GetY() - (float)transform.GetTranslateY());
+            }
             if (!scale.IsIdentity()) {
                 context.GetCurrentCanvas().ConcatMatrix(scale);
-                //Inverse scaling needs to be applied to viewport dimensions
+                // Inverse scaling needs to be applied to viewport dimensions
                 context.GetCurrentViewPort().SetWidth(currentViewPort.GetWidth() / scaleWidth).SetX(currentViewPort.GetX()
                      / scaleWidth).SetHeight(currentViewPort.GetHeight() / scaleHeight).SetY(currentViewPort.GetY() / scaleHeight
                     );
             }
-            if (!transform.IsIdentity()) {
-                context.GetCurrentCanvas().ConcatMatrix(transform);
-                //Apply inverse translation to viewport to make it line up nicely
-                context.GetCurrentViewPort().SetX(currentViewPort.GetX() + -1 * (float)transform.GetTranslateX()).SetY(currentViewPort
-                    .GetY() + -1 * (float)transform.GetTranslateY());
-            }
         }
 //\endcond
-
-        private static float[] ScaleViewBoxValues(float[] values, float scaleWidth, float scaleHeight) {
-            float[] scaledViewBoxValues = new float[values.Length];
-            scaledViewBoxValues[0] = values[0] * scaleWidth;
-            scaledViewBoxValues[1] = values[1] * scaleHeight;
-            scaledViewBoxValues[2] = values[2] * scaleWidth;
-            scaledViewBoxValues[3] = values[3] * scaleHeight;
-            return scaledViewBoxValues;
-        }
 
         private static bool IsOverflowVisible(AbstractSvgNodeRenderer currentElement) {
             return (CommonCssConstants.VISIBLE.Equals(currentElement.attributesAndStyles.Get(CommonCssConstants.OVERFLOW

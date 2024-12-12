@@ -99,7 +99,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRatioViewBoxTest() {
-            // TODO DEVSIX-3537 Processing of preserveAspectRatio attribute with offsets x and y is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioViewBoxTest");
         }
 
@@ -181,7 +180,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 3)]
+            , Count = 2)]
         public virtual void UseSymbolXYContrudictionAllUnitsTest() {
             // TODO DEVSIX-4388 The handling of x and y attributes with percentages is not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolXYContrudictionAllUnitsTest", properties
@@ -190,7 +189,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 6)]
+            , Count = 4)]
         public virtual void UseSymbolCoordinatesContrudictionTest() {
             // TODO DEVSIX-2654 Percent values are not correctly processed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolCoordinatesContrudiction", properties

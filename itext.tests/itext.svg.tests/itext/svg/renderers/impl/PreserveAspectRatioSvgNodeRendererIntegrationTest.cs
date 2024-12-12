@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -138,38 +139,44 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationYMinMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed 
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMinMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationYMidMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMidMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationYMaxMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMaxMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationXMinMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMinMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationXMidMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMidMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationXMaxMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMaxMeet");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO, LogLevel = LogLevelConstants.INFO)]
+        public virtual void SvgZeroWidthRatioTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgZeroWidthRatio");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO, LogLevel = LogLevelConstants.INFO)]
+        public virtual void SvgZeroHeightRatioTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgZeroHeightRatio");
         }
     }
 }
