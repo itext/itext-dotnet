@@ -119,7 +119,7 @@ namespace iText.Signatures.Sign {
                 ).SetFieldName("Signature1");
             signer.SetSignerProperties(signerProperties);
             // Creating the appearance
-            CreateAppearance(signer, "Signature1", "Test 1", "TestCity", false, rect, 12f);
+            CreateAppearance(signer, "Test 1", "TestCity", false, rect, 12f);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
@@ -143,7 +143,7 @@ namespace iText.Signatures.Sign {
                 (name);
             signer.SetSignerProperties(signerProperties);
             // Creating the appearance
-            CreateAppearance(signer, name, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
+            CreateAppearance(signer, reason, location, setReuseAppearance, rectangleForNewField, fontSize);
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, subfilter);
@@ -155,8 +155,8 @@ namespace iText.Signatures.Sign {
             return result;
         }
 
-        private static void CreateAppearance(PdfSigner signer, String signatureName, String reason, String location
-            , bool setReuseAppearance, Rectangle rectangleForNewField, float? fontSize) {
+        private static void CreateAppearance(PdfSigner signer, String reason, String location, bool setReuseAppearance
+            , Rectangle rectangleForNewField, float? fontSize) {
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
                 (new SignedAppearanceText());
             signer.GetSignerProperties().SetReason(reason).SetLocation(location).SetSignatureAppearance(appearance);

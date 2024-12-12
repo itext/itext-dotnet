@@ -345,6 +345,7 @@ namespace iText.Signatures {
                 PdfSignatureFormField sigField = new SignatureFormFieldBuilder(document, this.signerProperties.GetFieldName
                     ()).SetWidgetRectangle(this.signerProperties.GetPageRect()).SetPage(this.signerProperties.GetPageNumber
                     ()).CreateSignature();
+                sigField.GetWidgets()[0].SetFlags(PdfAnnotation.PRINT);
                 acroForm.AddField(sigField);
                 if (acroForm.GetPdfObject().IsIndirect()) {
                     acroForm.SetModified();
