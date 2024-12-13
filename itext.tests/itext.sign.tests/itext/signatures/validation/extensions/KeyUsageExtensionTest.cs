@@ -49,6 +49,14 @@ namespace iText.Signatures.Validation.Extensions {
         }
 
         [NUnit.Framework.Test]
+        public virtual void KeyUsageNotSetButConfiguredToReturnFalseTest() {
+            String certName = certsSrc + "keyUsageNotSetCert.pem";
+            IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            KeyUsageExtension extension = new KeyUsageExtension(8, true);
+            NUnit.Framework.Assert.IsTrue(extension.ExistsInCertificate(certificate));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void KeyUsageKeyCertSignExpectedTest() {
             String certName = certsSrc + "keyUsageKeyCertSignCert.pem";
             IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];

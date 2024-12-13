@@ -34,6 +34,8 @@ namespace iText.Signatures.Validation.Extensions {
 
         private readonly int keyUsage;
 
+        private readonly bool resultOnMissingExtension;
+
         /// <summary>
         /// Create new
         /// <see cref="KeyUsageExtension"/>
@@ -47,8 +49,30 @@ namespace iText.Signatures.Validation.Extensions {
         /// flag which represents bit values for key usage value
         /// </param>
         public KeyUsageExtension(int keyUsage)
+            : this(keyUsage, false) {
+        }
+
+        /// <summary>
+        /// Create new
+        /// <see cref="KeyUsageExtension"/>
+        /// instance using provided
+        /// <c>int</c>
+        /// flag.
+        /// </summary>
+        /// <param name="keyUsage">
+        /// 
+        /// <c>int</c>
+        /// flag which represents bit values for key usage value
+        /// </param>
+        /// <param name="resultOnMissingExtension">
+        /// parameter which represents return value for
+        /// <see cref="ExistsInCertificate(iText.Commons.Bouncycastle.Cert.IX509Certificate)"/>
+        /// method in case of the extension not being present in a certificate
+        /// </param>
+        public KeyUsageExtension(int keyUsage, bool resultOnMissingExtension)
             : base(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage(keyUsage).ToASN1Primitive()) {
             this.keyUsage = keyUsage;
+            this.resultOnMissingExtension = resultOnMissingExtension;
         }
 
         /// <summary>
@@ -62,7 +86,26 @@ namespace iText.Signatures.Validation.Extensions {
         /// which represents key usage values
         /// </param>
         public KeyUsageExtension(IList<KeyUsage> keyUsages)
-            : this(ConvertKeyUsageSetToInt(keyUsages)) {
+            : this(keyUsages, false) {
+        }
+
+        /// <summary>
+        /// Create new
+        /// <see cref="KeyUsageExtension"/>
+        /// instance using provided key usage enum list.
+        /// </summary>
+        /// <param name="keyUsages">
+        /// key usages
+        /// <see cref="System.Collections.IList{E}"/>
+        /// which represents key usage values
+        /// </param>
+        /// <param name="resultOnMissingExtension">
+        /// parameter which represents return value for
+        /// <see cref="ExistsInCertificate(iText.Commons.Bouncycastle.Cert.IX509Certificate)"/>
+        /// method in case of the extension not being present in a certificate
+        /// </param>
+        public KeyUsageExtension(IList<KeyUsage> keyUsages, bool resultOnMissingExtension)
+            : this(ConvertKeyUsageSetToInt(keyUsages), resultOnMissingExtension) {
         }
 
         /// <summary>
@@ -76,7 +119,26 @@ namespace iText.Signatures.Validation.Extensions {
         /// which represents single key usage enum value
         /// </param>
         public KeyUsageExtension(KeyUsage keyUsageValue)
-            : this(JavaCollectionsUtil.SingletonList(keyUsageValue)) {
+            : this(JavaCollectionsUtil.SingletonList(keyUsageValue), false) {
+        }
+
+        /// <summary>
+        /// Create new
+        /// <see cref="KeyUsageExtension"/>
+        /// instance using provided single key usage enum value.
+        /// </summary>
+        /// <param name="keyUsageValue">
+        /// 
+        /// <see cref="KeyUsage"/>
+        /// which represents single key usage enum value
+        /// </param>
+        /// <param name="resultOnMissingExtension">
+        /// parameter which represents return value for
+        /// <see cref="ExistsInCertificate(iText.Commons.Bouncycastle.Cert.IX509Certificate)"/>
+        /// method in case of the extension not being present in a certificate
+        /// </param>
+        public KeyUsageExtension(KeyUsage keyUsageValue, bool resultOnMissingExtension)
+            : this(JavaCollectionsUtil.SingletonList(keyUsageValue), resultOnMissingExtension) {
         }
 
         /// <summary>Check if this extension is present in the provided certificate.</summary>
@@ -101,7 +163,8 @@ namespace iText.Signatures.Validation.Extensions {
         public override bool ExistsInCertificate(IX509Certificate certificate) {
             bool[] providedKeyUsageFlags = certificate.GetKeyUsage();
             if (providedKeyUsageFlags == null) {
-                return false;
+                // By default, we want to return true if extension is not specified. Configurable.
+                return resultOnMissingExtension;
             }
             for (int i = 0; i < providedKeyUsageFlags.Length; ++i) {
                 int power = providedKeyUsageFlags.Length - i - 2;

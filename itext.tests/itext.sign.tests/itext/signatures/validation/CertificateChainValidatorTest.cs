@@ -221,26 +221,20 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(3, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(4, report.GetLogs().Count);
+            NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
+            NUnit.Framework.Assert.AreEqual(3, report.GetLogs().Count);
             NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
             NUnit.Framework.Assert.AreEqual(report.GetFailures()[1], report.GetLogs()[1]);
-            NUnit.Framework.Assert.AreEqual(report.GetFailures()[2], report.GetLogs()[2]);
             CertificateReportItem failure1 = report.GetCertificateFailures()[0];
-            NUnit.Framework.Assert.AreEqual(signingCert, failure1.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(intermediateCert, failure1.GetCertificate());
             NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure1.GetCheckName());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
                 , OID.X509Extensions.KEY_USAGE), failure1.GetMessage());
             CertificateReportItem failure2 = report.GetCertificateFailures()[1];
-            NUnit.Framework.Assert.AreEqual(intermediateCert, failure2.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(rootCert, failure2.GetCertificate());
             NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure2.GetCheckName());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
                 , OID.X509Extensions.KEY_USAGE), failure2.GetMessage());
-            CertificateReportItem failure3 = report.GetCertificateFailures()[2];
-            NUnit.Framework.Assert.AreEqual(rootCert, failure3.GetCertificate());
-            NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure3.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
-                , OID.X509Extensions.KEY_USAGE), failure3.GetMessage());
         }
 
         [NUnit.Framework.Test]
@@ -264,10 +258,29 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
             NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
             CertificateReportItem failure1 = report.GetCertificateFailures()[0];
-            NUnit.Framework.Assert.AreEqual(signingCert, failure1.GetCertificate());
+            NUnit.Framework.Assert.AreEqual(intermediateCert, failure1.GetCertificate());
             NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure1.GetCheckName());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
                 , OID.X509Extensions.KEY_USAGE), failure1.GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnusualKeyUsageExtensionsTest() {
+            // Both root and intermediate certificates in this chain doesn't have KeyUsage extension.
+            // Sign certificate contains digital signing.
+            String chainName = CERTS_SRC + "chainWithUnusualKeyUsages.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
+            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
+            properties.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
+            ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
+                ());
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
+            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
         }
 
         [NUnit.Framework.Test]

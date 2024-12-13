@@ -62,14 +62,12 @@ namespace iText.Signatures.Validation {
             SetFreshness(ValidatorContexts.Of(ValidatorContext.CRL_VALIDATOR), CertificateSources.All(), TimeBasedContexts
                 .Of(TimeBasedContext.PRESENT), DEFAULT_FRESHNESS_PRESENT_CRL);
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.CRL_ISSUER), JavaCollectionsUtil.SingletonList
-                <CertificateExtension>(new KeyUsageExtension(KeyUsage.CRL_SIGN)));
+                <CertificateExtension>(new KeyUsageExtension(KeyUsage.CRL_SIGN, true)));
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.OCSP_ISSUER), JavaCollectionsUtil.SingletonList
                 <CertificateExtension>(new ExtendedKeyUsageExtension(JavaCollectionsUtil.SingletonList<String>(ExtendedKeyUsageExtension
                 .OCSP_SIGNING))));
-            SetRequiredExtensions(CertificateSources.Of(CertificateSource.SIGNER_CERT), JavaCollectionsUtil.SingletonList
-                <CertificateExtension>(new KeyUsageExtension(KeyUsage.NON_REPUDIATION)));
             IList<CertificateExtension> certIssuerRequiredExtensions = new List<CertificateExtension>();
-            certIssuerRequiredExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN));
+            certIssuerRequiredExtensions.Add(new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN, true));
             certIssuerRequiredExtensions.Add(new DynamicBasicConstraintsExtension());
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), certIssuerRequiredExtensions);
             SetRequiredExtensions(CertificateSources.Of(CertificateSource.TIMESTAMP), JavaCollectionsUtil.SingletonList
@@ -179,7 +177,7 @@ namespace iText.Signatures.Validation {
         }
 
         /// <summary>
-        /// Set list of extensions which are required to be set to a certificate depending on certificate source.
+        /// Sets list of extensions which are required to be set to a certificate depending on certificate source.
         /// <para />
         /// By default, required extensions are set to be compliant with common validation norms.
         /// Changing those can result in falsely positive validation result.
@@ -187,7 +185,7 @@ namespace iText.Signatures.Validation {
         /// <param name="certificateSources"><see cref="CertificateSource"/> for extensions to be present</param>
         /// <param name="requiredExtensions">list of required <see cref="CertificateExtension"/></param>
         /// <returns>this same <see cref="SignatureValidationProperties"/> instance</returns>
-        public iText.Signatures.Validation.SignatureValidationProperties SetRequiredExtensions(CertificateSources
+        public SignatureValidationProperties SetRequiredExtensions(CertificateSources
             certificateSources, IList<CertificateExtension> requiredExtensions) {
             // make a defensive copy of  requiredExtensions and already wrap it with unmodifiableList so that we don't have
             // to do this every time it is retrieved. Now we are protected against changes in th passed list and from
@@ -196,6 +194,22 @@ namespace iText.Signatures.Validation {
                 >(requiredExtensions));
             SetParameterValueFor(ValidatorContexts.All().GetSet(), certificateSources.GetSet(), TimeBasedContexts.All(
                 ).GetSet(), (p) => p.SetRequiredExtensions(copy));
+            return this;
+        }
+        
+        public SignatureValidationProperties AddRequiredExtensions(CertificateSources certificateSources,
+            IList<CertificateExtension> requiredExtensions) {
+            foreach (CertificateSource certificateSource in certificateSources.GetSet()) {
+                // The list of required extensions is exactly the same for all TimeBasedContexts and ValidatorContexts.
+                // That's why we can just use any ValidatorContext and TimeBasedContext values to retrieve the list.
+                IList<CertificateExtension> currentExtensionsList = this.GetParametersValueFor(
+                    ValidatorContext.OCSP_VALIDATOR, certificateSource, TimeBasedContext.HISTORICAL,
+                    (p) => p.GetRequiredExtensions());
+                List<CertificateExtension> certificateSourceSpecificList = currentExtensionsList == null ?
+                    new List<CertificateExtension>() : new List<CertificateExtension>(currentExtensionsList);
+                certificateSourceSpecificList.AddAll(requiredExtensions);
+                SetRequiredExtensions(CertificateSources.Of(certificateSource), certificateSourceSpecificList);
+            }
             return this;
         }
 

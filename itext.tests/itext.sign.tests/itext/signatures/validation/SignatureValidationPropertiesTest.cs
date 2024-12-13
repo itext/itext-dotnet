@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Extensions;
@@ -137,6 +138,27 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.AreEqual(JavaCollectionsUtil.SingletonList(new KeyUsageExtension(3)), sut.GetRequiredExtensions
                 (new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR, CertificateSource.OCSP_ISSUER, TimeBasedContext
                 .HISTORICAL)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddRequiredExtensionsTest() {
+            SignatureValidationProperties sut = new SignatureValidationProperties();
+            sut.AddRequiredExtensions(CertificateSources.All(), JavaCollectionsUtil.SingletonList<CertificateExtension
+                >(new KeyUsageExtension(1)));
+            sut.AddRequiredExtensions(CertificateSources.Of(CertificateSource.CRL_ISSUER), JavaCollectionsUtil.SingletonList
+                <CertificateExtension>(new KeyUsageExtension(2)));
+            IList<CertificateExtension> expectedExtensionsSigner = JavaCollectionsUtil.SingletonList<CertificateExtension
+                >(new KeyUsageExtension(1));
+            IList<CertificateExtension> expectedExtensionsCrlIssuer = new List<CertificateExtension>();
+            expectedExtensionsCrlIssuer.Add(new KeyUsageExtension(KeyUsage.CRL_SIGN));
+            expectedExtensionsCrlIssuer.Add(new KeyUsageExtension(1));
+            expectedExtensionsCrlIssuer.Add(new KeyUsageExtension(2));
+            NUnit.Framework.Assert.AreEqual(expectedExtensionsSigner, sut.GetRequiredExtensions(new ValidationContext(
+                ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR, CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT)
+                ));
+            NUnit.Framework.Assert.AreEqual(expectedExtensionsCrlIssuer, sut.GetRequiredExtensions(new ValidationContext
+                (ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR, CertificateSource.CRL_ISSUER, TimeBasedContext.HISTORICAL
+                )));
         }
 
         private class IncrementalFreshnessValueSetter {
