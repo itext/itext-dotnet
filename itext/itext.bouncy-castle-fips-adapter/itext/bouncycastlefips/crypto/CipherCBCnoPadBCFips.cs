@@ -22,6 +22,7 @@
  */
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
@@ -64,17 +65,7 @@ namespace iText.Bouncycastlefips.Crypto {
         /// </param>
         public CipherCBCnoPadBCFips(bool forEncryption, byte[] key, byte[] initVector) {
             FipsAes.Key aesKey = new FipsAes.Key(key);
-            IBlockCipherService provider = CryptoServicesRegistrar.CreateService<IBlockCipherService>(
-                (ICryptoServiceType<IBlockCipherService>) aesKey);
-
-            IBlockCipherBuilder<IParameters<Algorithm>> cipherBuilder = null;
-            if (forEncryption) {
-                cipherBuilder = provider.CreateBlockEncryptorBuilder<FipsAes.ParametersWithIV>(FipsAes.Cbc.WithIV(initVector));
-            }
-            else {
-                cipherBuilder = provider.CreateBlockDecryptorBuilder<FipsAes.ParametersWithIV>(FipsAes.Cbc.WithIV(initVector));
-            }
-
+            IBlockCipherBuilder<IParameters<Algorithm>> cipherBuilder = createBuilder(forEncryption, aesKey, initVector);
             blockCipher = cipherBuilder.BuildBlockCipher(memoryStream);
         }
 
@@ -117,6 +108,22 @@ namespace iText.Bouncycastlefips.Crypto {
         /// </summary>
         public override String ToString() {
             return blockCipher.ToString();
+        }
+
+        // Disabling optimization here allows to avoid random failures on encryption/decryption
+        // Though the code seems straighforward here and in the bc-fips counterpart
+        [MethodImplAttribute(MethodImplOptions.NoOptimization)]
+        private static IBlockCipherBuilder<IParameters<Algorithm>> createBuilder(bool forEncryption, FipsAes.Key aesKey, byte[] initVector) {
+            IBlockCipherService provider = CryptoServicesRegistrar.CreateService<IBlockCipherService>(
+                (ICryptoServiceType<IBlockCipherService>) aesKey);
+            IBlockCipherBuilder<IParameters<Algorithm>> cipherBuilder = null;
+            if (forEncryption) {
+                cipherBuilder = provider.CreateBlockEncryptorBuilder<FipsAes.ParametersWithIV>(FipsAes.Cbc.WithIV(initVector));
+            } else {
+                cipherBuilder = provider.CreateBlockDecryptorBuilder<FipsAes.ParametersWithIV>(FipsAes.Cbc.WithIV(initVector));
+            }
+
+            return cipherBuilder;
         }
     }
 }
