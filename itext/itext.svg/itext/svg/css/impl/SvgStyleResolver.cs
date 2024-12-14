@@ -262,6 +262,10 @@ namespace iText.Svg.Css.Impl {
                 // TODO DEVSIX-8792 SVG: implement styles appliers like in html2pdf
                 styles.Put(CommonCssConstants.FONT_FAMILY, fontFamilies[0]);
             }
+
+            // Resolve CSS variables
+            ResolveCssVariables(styles);
+
             // Set root font size
             bool isSvgElement = element is IElementNode && SvgConstants.Tags.SVG.Equals(((IElementNode)element).Name()
                 );
@@ -273,6 +277,41 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             return styles;
+        }
+
+        private static void ResolveCssVariables(IDictionary<string, string> styles) {
+            var varOverrides = new Dictionary<string, string>();
+
+            foreach (KeyValuePair<String, String> entry in styles) {
+                if (entry.Value?.StartsWith("var(--") ?? false) {
+                    var value = ResolveVariable(entry.Value.Substring(4, entry.Value.Length - 5));
+                    varOverrides.Add(entry.Key, value);
+                }
+                continue;
+
+                string ResolveVariable(string substring) {
+                    var hasDefault = substring.IndexOf(',');
+                    var varName = hasDefault == -1 ? substring : substring.Substring(0, hasDefault);
+                    var dfltVal = hasDefault == -1 ? null : substring.Substring(hasDefault + 1).Trim();
+                    if (styles.TryGetValue(varName, out var variable)) {
+                        return variable;
+                    }
+
+                    if (dfltVal is null) {
+                        return null;
+                    }
+
+                    if (dfltVal.StartsWith("var(--")) {
+                        return ResolveVariable(dfltVal.Substring(4, dfltVal.Length - 5));
+                    }
+
+                    return dfltVal;
+                }
+            }
+
+            foreach (var varOverride in varOverrides) {
+                styles.Put(varOverride.Key, varOverride.Value);
+            }
         }
 
         /// <summary>
