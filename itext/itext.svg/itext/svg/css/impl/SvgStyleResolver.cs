@@ -40,6 +40,7 @@ using iText.Svg.Css;
 using iText.Svg.Exceptions;
 using iText.Svg.Logs;
 using iText.Svg.Processors.Impl;
+using System.Text.RegularExpressions;
 
 namespace iText.Svg.Css.Impl {
     /// <summary>Default implementation of SVG`s styles and attribute resolver .</summary>
@@ -59,6 +60,8 @@ namespace iText.Svg.Css.Impl {
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver
             ));
+
+        private static readonly Regex CssVarDecl = new Regex(@"^\s*var\(\s*(?<decl>--.*)\)\s*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private CssStyleSheet css;
 
@@ -279,12 +282,28 @@ namespace iText.Svg.Css.Impl {
             return styles;
         }
 
+        private static bool IsCssVarDecl(string decl, out string innerDecl) {
+            if (decl == null) {
+                innerDecl = null;
+                return false;
+            }
+
+            var cssVarDecl = CssVarDecl.Match(decl);
+            if (cssVarDecl.Success) {
+                innerDecl = cssVarDecl.Groups["decl"].Value;
+                return true;
+            }
+
+            innerDecl = null;
+            return false;
+        }
+
         private static void ResolveCssVariables(IDictionary<string, string> styles) {
             var varOverrides = new Dictionary<string, string>();
 
             foreach (KeyValuePair<String, String> entry in styles) {
-                if (entry.Value?.StartsWith("var(--") ?? false) {
-                    var value = ResolveVariable(entry.Value.Substring(4, entry.Value.Length - 5));
+                if (IsCssVarDecl(entry.Value, out var decl)) {
+                    var value = ResolveVariable(decl);
                     varOverrides.Add(entry.Key, value);
                 }
                 continue;
@@ -301,8 +320,8 @@ namespace iText.Svg.Css.Impl {
                         return null;
                     }
 
-                    if (dfltVal.StartsWith("var(--")) {
-                        return ResolveVariable(dfltVal.Substring(4, dfltVal.Length - 5));
+                    if (IsCssVarDecl(dfltVal, out var innerDecl)) {
+                        return ResolveVariable(innerDecl);
                     }
 
                     return dfltVal;
