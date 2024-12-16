@@ -101,6 +101,9 @@ namespace iText.StyledXmlParser.Logs {
         /// <summary>The Constant ERROR_RESOLVING_PARENT_STYLES.</summary>
         public const String ERROR_RESOLVING_PARENT_STYLES = "Element parent styles are not resolved. Styles for current element might be incorrect.";
 
+        /// <summary>The Constant ERROR_LOADING_FONT.</summary>
+        public const String ERROR_LOADING_FONT = "Error while loading font";
+
         public const String IMPORT_MUST_COME_BEFORE = "Imported rules must come before all other types of rules, except @charset rules and layer creating @layer statements. "
              + "Rule will be ignored. ";
 
