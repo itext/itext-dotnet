@@ -531,5 +531,15 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(sourceFolder, destinationFolder, "severalTransformsInGradientWithObjectBoundingBoxUnits"
                 );
         }
+
+        [NUnit.Framework.Test]
+        public virtual void HrefBasicReferenceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "hrefBasicReference");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TransitiveHrefBasicReferenceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "transitiveHrefBasicReference");
+        }
     }
 }

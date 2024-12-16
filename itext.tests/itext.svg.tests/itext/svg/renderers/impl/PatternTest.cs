@@ -92,6 +92,21 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void HrefBasicReferenceTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefBasicReference");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HrefAndXlinkHrefPriorityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefAndXlinkHrefPriority");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TransitiveHrefBasicReferenceTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "transitiveHrefBasicReference");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PatternUnitsObjectBoundingBoxTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternUnitsObjectBoundingBox");
         }

@@ -38,9 +38,9 @@ namespace iText.Svg.Renderers.Impl {
     public class UseSvgNodeRenderer : AbstractSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
-                String elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
+                String elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
                 if (elementToReUse == null) {
-                    elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
+                    elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
                 }
                 if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse) && IsValidHref(elementToReUse)) {
                     String normalizedName = SvgTextUtil.FilterReferenceValue(elementToReUse);

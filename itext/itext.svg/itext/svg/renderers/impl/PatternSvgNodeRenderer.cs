@@ -58,6 +58,8 @@ namespace iText.Svg.Renderers.Impl {
                 return null;
             }
             try {
+                //create color is an entry point method for pattern when drawing svg, so resolving href values here
+                TemplateResolveUtils.Resolve(this, context);
                 PdfPattern.Tiling tilingPattern = CreateTilingPattern(context, objectBoundingBox);
                 DrawPatternContent(context, tilingPattern);
                 return (tilingPattern == null) ? null : new PatternColor(tilingPattern);

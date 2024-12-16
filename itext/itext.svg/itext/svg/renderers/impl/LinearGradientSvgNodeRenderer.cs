@@ -41,6 +41,8 @@ namespace iText.Svg.Renderers.Impl {
             if (objectBoundingBox == null) {
                 return null;
             }
+            //create color is an entry point method for linear gradient when drawing svg, so resolving href values here
+            TemplateResolveUtils.Resolve(this, context);
             LinearGradientBuilder builder = new LinearGradientBuilder();
             foreach (GradientColorStop stopColor in ParseStops(parentOpacity)) {
                 builder.AddColorStop(stopColor);
