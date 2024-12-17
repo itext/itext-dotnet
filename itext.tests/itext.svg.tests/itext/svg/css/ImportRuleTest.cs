@@ -94,6 +94,16 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
             , LogLevel = LogLevelConstants.ERROR)]
+        public virtual void MediaQueryPrintTest() {
+            // TODO DEVSIX-2263 SVG: CSS: Media query processing
+            ISvgConverterProperties properties = new SvgConverterProperties().SetMediaDeviceDescription(new MediaDeviceDescription
+                (MediaType.SCREEN));
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "mediaQueryPrint", properties);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+            , LogLevel = LogLevelConstants.ERROR)]
         public virtual void SrcInImportTest() {
             // Spec says that import can contain src, but no one browser doesn't support it as well as iText
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "srcInImport");

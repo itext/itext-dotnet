@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Css.Util {
@@ -126,6 +127,15 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsRemValue("10rem "));
             NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsMetricValue("10px "));
             NUnit.Framework.Assert.IsTrue(CssTypesValidationUtils.IsPercentageValue("10% "));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsBase64Test() {
+            String base64String = "data:image/jpeg;base64,/9j/aGVsbG8gd29ybGQ=";
+            bool isBase64Data = CssTypesValidationUtils.IsBase64Data(base64String);
+            bool isInlineData = CssTypesValidationUtils.IsInlineData(base64String);
+            NUnit.Framework.Assert.IsTrue(isBase64Data);
+            NUnit.Framework.Assert.IsTrue(isInlineData);
         }
     }
 }

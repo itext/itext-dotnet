@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -49,6 +50,113 @@ namespace iText.Svg.Renderers.Impl {
             )]
         public virtual void IncorrectImageWithDataTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "incorrectImageWithData");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHref");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlink3StopsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHref3Stops");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkGradientTransformTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefGradientTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkNegativeOffsetTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefNegativeOffset");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkNegativeOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefNegativeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkOpacity2Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefOpacity2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkSpreadMethodTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefSpreadMethod1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkSpreadMethod2Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefSpreadMethod2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkSpreadMethod3Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefSpreadMethod3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHrefXYvalsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefXYvals1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHrefXYvals2Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefXYvals2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHrefXYvals3Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHrefXYvals3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHreOffsetSwapTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradXlinkHreOffsetSwap");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternXlinkHref");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPatternContentUnits1Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternXlinkHrefPatternContentUnits1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPatternContentUnits2Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternXlinkHrefPatternContentUnits2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPatternUnitsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternXlinkHrefPatternUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPreserveAR1Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternXlinkHrefPreserveAR1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPreserveAR2Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternXlinkHrefPreserveAR2");
+        }
+
+        //TODO DEVSIX-2255: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
+        public virtual void TextPathXlinkTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textPathXrefHref");
         }
     }
 }

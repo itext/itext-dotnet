@@ -531,5 +531,33 @@ namespace iText.Svg.Converter {
         public virtual void ParsePathWithNewLinesTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "pathWithNewLines");
         }
+
+        [NUnit.Framework.Test]
+        //TODO DEVSIX-8769: adapt after supporting
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
+        public virtual void DescriptionTagsTest() {
+            IDictionary<String, ISvgNodeRenderer> map = new Dictionary<String, ISvgNodeRenderer>();
+            RectangleSvgNodeRenderer rect = new RectangleSvgNodeRenderer();
+            rect.SetAttribute("title", "Blue rectangle title");
+            rect.SetAttribute("desc", "This is a description of a blue rectangle in a desc tag.");
+            rect.SetAttribute("aria-describedby", "This description inside the aria-describedby will take precedent over desc tag description."
+                );
+            rect.SetAttribute("fill", "blue");
+            rect.SetAttribute("width", "300");
+            rect.SetAttribute("height", "200");
+            ISvgNodeRenderer root = new SvgTagSvgNodeRenderer();
+            root.SetAttribute("xmlns", "http://www.w3.org/2000/svg");
+            root.SetAttribute("font-size", "12pt");
+            root.SetAttribute("width", "800");
+            root.SetAttribute("height", "500");
+            ISvgProcessorResult expected = new SvgProcessorResult(map, root, new SvgProcessorContext(new SvgConverterProperties
+                ()));
+            String name = "descriptions";
+            using (Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg")) {
+                ISvgProcessorResult actual = SvgConverter.ParseAndProcess(fis);
+                NUnit.Framework.Assert.AreEqual(expected.GetRootRenderer().GetAttributeMapCopy(), actual.GetRootRenderer()
+                    .GetAttributeMapCopy());
+            }
+        }
     }
 }

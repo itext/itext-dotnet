@@ -57,9 +57,21 @@ namespace iText.Svg.Css {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "font-size-adjust");
         }
 
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void FontSizeAdjustTspanTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "font-size-adjust-tspan");
+        }
+
         [NUnit.Framework.Test]
         public virtual void FontStretchTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "font-stretch");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void FontStretchTspanTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "font-stretch-tspan");
         }
 
         [NUnit.Framework.Test]

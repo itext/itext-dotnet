@@ -229,6 +229,13 @@ namespace iText.StyledXmlParser.Css.Parse {
                 declaration.Length - 1)));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void Base64Test() {
+            String cssString = "data:image/jpeg;base64,/9j/aGVsbG8gd29ybGQ=";
+            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(new MemoryStream(cssString.GetBytes()), sourceFolder);
+            NUnit.Framework.Assert.IsTrue(styleSheet.GetStatements().IsEmpty());
+        }
+
         private String GetCssFileContents(String filePath) {
             byte[] bytes = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(filePath));
             String content = iText.Commons.Utils.JavaUtil.GetStringForBytes(bytes);

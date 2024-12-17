@@ -123,5 +123,11 @@ namespace iText.Svg.Renderers {
             //TODO update cmp file after DEVSIX-2915 will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFillFallbackTest");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void FillLinkToNonExistingGradientTest() {
+            //TODO DEVSIX-8821: update after supported
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fillLinkToNonExistingGradient");
+        }
     }
 }

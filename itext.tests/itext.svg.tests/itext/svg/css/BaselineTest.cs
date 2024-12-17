@@ -54,5 +54,12 @@ namespace iText.Svg.Css {
             //TODO DEVSIX-5890: update cmp file after supporting
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "dominant-baseline");
         }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void DominantBaselineTspanTest() {
+            //TODO DEVSIX-5890: update cmp file after supporting
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "dominant-baseline-tspan");
+        }
     }
 }

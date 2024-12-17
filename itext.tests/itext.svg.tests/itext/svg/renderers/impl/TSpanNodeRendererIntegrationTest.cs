@@ -288,5 +288,23 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void NestedPositioningTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPositioningTest");
         }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationTspanTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspan");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationTspanSubTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspanSub");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void TspanFillTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanFill");
+        }
     }
 }

@@ -122,5 +122,15 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ClipPathUnitsTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathUnits");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathUrlTopLevelTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathUrlTopLevel");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathUrl2ndLevelTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathUrl2ndLevel");
+        }
     }
 }

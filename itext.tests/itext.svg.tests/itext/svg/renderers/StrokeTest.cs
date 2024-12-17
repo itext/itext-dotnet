@@ -97,5 +97,17 @@ namespace iText.Svg.Renderers {
             //TODO: update cmp-file after DEVSIX-2258
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeDashArrayLines");
         }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void StrokeTextTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeText");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void StrokeTspanTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeTspan");
+        }
     }
 }

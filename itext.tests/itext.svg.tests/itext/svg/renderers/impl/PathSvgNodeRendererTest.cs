@@ -30,6 +30,7 @@ using iText.Kernel.Utils;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Exceptions;
+using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -43,9 +44,16 @@ namespace iText.Svg.Renderers.Impl {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/svg/renderers/impl/PathSvgNodeRendererTest/";
 
+        private ISvgConverterProperties properties;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.SetUp]
+        public virtual void Before() {
+            properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
         }
 
         [NUnit.Framework.Test]
@@ -360,6 +368,66 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathHOperatorRelativeAfterMultiplePairsTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorRelativeAfterMultiplePairs");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHref");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPatternContentUnits1Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefPatternContentUnits1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPatternContentUnits2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefPatternContentUnits2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPatternUnitsTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefPatternUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPreserveAR1Test() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefPreserveAR1", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternXlinkHrefPreserveAR2Test() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefPreserveAR2", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternHrefTransitivePatternUnitsTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePatternUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternHrefTransitivePCUTopLayerTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePCUTopLayer");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternHrefTransitivePCUBottomLayerTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePCUBottomLayer");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternHrefTransitivePCU2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePCU2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternHrefTransitivePresAR1Test() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefTransitivePresAR1", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PatternHrefTransitivePresAR2Test() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefTransitivePresAR2", properties);
         }
     }
 }

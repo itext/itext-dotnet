@@ -167,6 +167,12 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SvgWithInternalCSSWithoutOverlapTest() {
+            // TODO: update cmp files when DEVSIX-2286 resolved
+            ConvertAndCompare(sourceFolder, destinationFolder, "internalCssNoOverlap");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-2286 resolved
             // Take a note this method differs from the one used in Default Page test
@@ -307,6 +313,12 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder17Test() {
             ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder17");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightWidthSvgStyleTest() {
+            //TODO DEVSIX-8823: update after issue is fixed
+            ConvertAndCompare(sourceFolder, destinationFolder, "height-width-style");
         }
     }
 }
