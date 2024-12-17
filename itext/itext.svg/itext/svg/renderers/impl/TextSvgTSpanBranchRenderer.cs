@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
-using iText.Layout.Element;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -44,15 +43,7 @@ namespace iText.Svg.Renderers.Impl {
             if (GetChildren().IsEmpty() || this.attributesAndStyles == null) {
                 return;
             }
-            foreach (ISvgTextNodeRenderer child in GetChildren()) {
-                ResolveFont(context);
-                if (child is TextLeafSvgNodeRenderer) {
-                    Text text = ((TextLeafSvgNodeRenderer)child).GetText();
-                    ApplyFontProperties(text, context);
-                    ApplyTextRenderingMode(text);
-                }
-                ProcessChild(context, child);
-            }
+            PerformDrawing(context);
         }
     }
 }

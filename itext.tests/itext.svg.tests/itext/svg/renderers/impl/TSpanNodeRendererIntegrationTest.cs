@@ -267,8 +267,14 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NegativeAbsoluteAndRelativePositionTest() {
+        public virtual void AbsoluteAndRelativePositionTest() {
             // TODO DEVSIX-2507 support x, y, dx, dy attributes
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "absoluteAndRelativePosition");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeAbsoluteAndRelativePositionTest() {
+            // TODO DEVSIX-2507 support x, y, dx, dy attributes, handle whitespaces
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeAbsoluteAndRelativePosition");
         }
 
@@ -276,6 +282,11 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void NoPositionAfterRelativeTest() {
             // TODO DEVSIX-2507 support x, y, dx, dy attributes
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "noPositionAfterRelative");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedPositioningTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPositioningTest");
         }
     }
 }

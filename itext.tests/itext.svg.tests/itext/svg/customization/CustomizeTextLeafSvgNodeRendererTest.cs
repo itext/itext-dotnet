@@ -91,10 +91,10 @@ namespace iText.Svg.Customization {
                     )) {
                     String initialText = this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT);
                     String amendedText = "_" + initialText + "_";
+                    this.attributesAndStyles.Put(SvgConstants.Attributes.TEXT_CONTENT, amendedText);
                     SvgTextProperties properties = new SvgTextProperties(context.GetSvgTextProperties());
                     context.GetSvgTextProperties().SetFillColor(ColorConstants.RED);
                     base.DoDraw(context);
-                    GetText().SetText(amendedText);
                     context.SetSvgTextProperties(properties);
                 }
             }

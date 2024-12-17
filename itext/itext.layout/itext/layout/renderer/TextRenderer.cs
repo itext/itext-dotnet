@@ -598,7 +598,8 @@ namespace iText.Layout.Renderer {
                     isPlacingForcedWhileNothing = true;
                 }
             }
-            yLineOffset = FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender * fontSize.GetValue());
+            yLineOffset = RenderingMode.SVG_MODE == mode ? 0 : FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender
+                 * fontSize.GetValue());
             occupiedArea.GetBBox().MoveDown(currentLineHeight);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight);
             occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth));

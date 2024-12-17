@@ -57,10 +57,12 @@ namespace iText.Svg.Renderers.Impl {
             return contentLength;
         }
 
+        [Obsolete]
         public virtual float[] GetRelativeTranslation() {
             return new float[] { 0.0f, 0.0f };
         }
 
+        [Obsolete]
         public virtual bool ContainsRelativeMove() {
             return false;
         }
@@ -103,15 +105,11 @@ namespace iText.Svg.Renderers.Impl {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
                 )) {
                 text.SetText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
-                float parentFontSize = ((AbstractSvgNodeRenderer)GetParent()).GetCurrentFontSize();
-                PdfFont parentFont = ((TextSvgBranchRenderer)GetParent()).GetFont();
-                float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(parentFont, RenderingMode
-                    .HTML_MODE);
-                float yLineOffset = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[0]) * parentFontSize;
+                ((TextSvgBranchRenderer)GetParent()).ApplyFontProperties(text, context);
+                ((TextSvgBranchRenderer)GetParent()).ApplyTextRenderingMode(text);
                 ApplyTransform(context);
                 ApplyGraphicsState(context);
-                ((TextSvgBranchRenderer)GetParent()).AddTextChild(text, context, yLineOffset, GetTextContentLength(parentFontSize
-                    , parentFont));
+                ((TextSvgBranchRenderer)GetParent()).AddTextChild(text, context);
             }
         }
 
@@ -119,22 +117,8 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        /// <summary>
-        /// Retrieves
-        /// <see cref="iText.Layout.Element.Text"/>
-        /// element which will be drawn using layout.
-        /// </summary>
-        /// <returns>
-        /// corresponding
-        /// <see cref="iText.Layout.Element.Text"/>
-        /// element
-        /// </returns>
-        protected internal virtual Text GetText() {
-            return text;
-        }
-
         private void ApplyTransform(SvgDrawContext context) {
-            AffineTransform transform = context.GetLastTextTransform();
+            AffineTransform transform = context.GetRootTransform();
             text.SetHorizontalScaling((float)transform.GetScaleX());
             text.SetProperty(Property.VERTICAL_SCALING, transform.GetScaleY());
             text.SetProperty(Property.SKEW, new float[] { (float)transform.GetShearX(), (float)transform.GetShearY() }

@@ -663,6 +663,7 @@ namespace iText.Layout.Renderer {
             }
             if (anythingPlaced || floatsPlacedInLine) {
                 toProcess.AdjustChildrenYLine().TrimLast();
+                toProcess.AdjustChildrenXLine();
                 result.SetMinMaxWidth(minMaxWidth);
             }
             if (wasXOverflowChanged) {
@@ -1625,6 +1626,42 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        private void AdjustChildrenXLine() {
+            RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            if (RenderingMode.SVG_MODE != mode) {
+                return;
+            }
+            // LineRenderer first child contains initial x of the occupied area, in order to identify originX we need to
+            // also add relative x position of the first text chunk in the svg which is ParagraphRenderer first child.
+            float originX = (float)GetChildRenderers()[0].GetOccupiedArea().GetBBox().GetLeft() + (float)((TextRenderer
+                )GetParent().GetChildRenderers()[0]).GetPropertyAsFloat(Property.LEFT, 0f);
+            float leftmostX = GetLeftmostX();
+            float xShift = originX - leftmostX;
+            foreach (IRenderer renderer in GetChildRenderers()) {
+                if (renderer is TextRenderer) {
+                    renderer.Move(xShift, 0);
+                }
+            }
+        }
+
+        private float GetLeftmostX() {
+            float leftmostX = float.MaxValue;
+            for (int i = 0; i < GetChildRenderers().Count; i++) {
+                IRenderer renderer = GetChildRenderers()[i];
+                if (renderer is TextRenderer) {
+                    TextRenderer textRenderer = (TextRenderer)renderer;
+                    float x = textRenderer.GetOccupiedArea().GetBBox().GetX();
+                    if (textRenderer.IsRelativePosition()) {
+                        x += (float)textRenderer.GetPropertyAsFloat(Property.LEFT, 0f);
+                    }
+                    if (x < leftmostX) {
+                        leftmostX = x;
+                    }
+                }
+            }
+            return leftmostX;
         }
 
         public class RendererGlyph {

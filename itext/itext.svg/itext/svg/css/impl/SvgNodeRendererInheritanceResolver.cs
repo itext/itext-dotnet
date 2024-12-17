@@ -56,6 +56,12 @@ namespace iText.Svg.Css.Impl {
                     ApplyInheritanceToSubTree(subTreeAsBranch, child, cssContext);
                 }
             }
+            if (subTree is TextSvgBranchRenderer) {
+                TextSvgBranchRenderer subTreeAsBranch = (TextSvgBranchRenderer)subTree;
+                foreach (ISvgNodeRenderer child in subTreeAsBranch.GetChildren()) {
+                    ApplyInheritanceToSubTree(subTreeAsBranch, child, cssContext);
+                }
+            }
         }
 
         private static void ApplyStyles(ISvgNodeRenderer parent, ISvgNodeRenderer child, SvgCssContext cssContext) {

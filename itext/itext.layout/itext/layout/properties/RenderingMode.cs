@@ -26,6 +26,8 @@ namespace iText.Layout.Properties {
         /// <summary>Default object layout mode</summary>
         DEFAULT_LAYOUT_MODE,
         /// <summary>Mode in which objects are processed in accordance with the HTML documentation</summary>
-        HTML_MODE
+        HTML_MODE,
+        /// <summary>Mode in which objects are processed in accordance with the SVG documentation</summary>
+        SVG_MODE
     }
 }

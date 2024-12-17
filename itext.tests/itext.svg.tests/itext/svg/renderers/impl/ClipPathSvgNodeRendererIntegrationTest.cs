@@ -108,6 +108,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ClipPathRulesCombined() {
+            // TODO DEVSIX-2589 Support overflow attribute for symbol
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathRulesCombined");
         }
 

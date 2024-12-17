@@ -60,13 +60,11 @@ namespace iText.Svg.Renderers {
 
         private SvgCssContext cssContext;
 
-        private AffineTransform lastTextTransform;
-
         private AffineTransform rootTransform;
 
         private float[] textMove = new float[] { 0.0f, 0.0f };
 
-        private float[] previousElementTextMove;
+        private float[] relativePosition;
 
         /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
         /// <param name="resourceResolver">
@@ -149,7 +147,7 @@ namespace iText.Svg.Renderers {
 
         /// <summary>Remove the currently set view box.</summary>
         public virtual void RemoveCurrentViewPort() {
-            if (this.viewports.Count > 0) {
+            if (!this.viewports.IsEmpty()) {
                 viewports.RemoveFirst();
             }
         }
@@ -230,25 +228,24 @@ namespace iText.Svg.Renderers {
             this.useIds.Pop();
         }
 
-        /// <summary>Get the text transformation that was last applied</summary>
+        /// <summary>Get the text transformation that was last applied.</summary>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>
         /// representing the last text transformation
         /// </returns>
+        [System.ObsoleteAttribute(@"in favour of GetRootTransform()")]
         public virtual AffineTransform GetLastTextTransform() {
-            if (lastTextTransform == null) {
-                lastTextTransform = new AffineTransform();
-            }
-            return this.lastTextTransform;
+            return new AffineTransform();
         }
 
-        /// <summary>Set the last text transformation</summary>
+        /// <summary>Set the last text transformation.</summary>
         /// <param name="newTransform">last text transformation</param>
+        [System.ObsoleteAttribute(@"in favour of SetRootTransform(iText.Kernel.Geom.AffineTransform)")]
         public virtual void SetLastTextTransform(AffineTransform newTransform) {
-            this.lastTextTransform = newTransform;
         }
 
+        // Do nothing.
         /// <summary>Get the current root transformation that was last applied.</summary>
         /// <returns>
         /// 
@@ -268,7 +265,7 @@ namespace iText.Svg.Renderers {
             this.rootTransform = newTransform;
         }
 
-        /// <summary>Get the stored current text move</summary>
+        /// <summary>Get the stored current text move.</summary>
         /// <returns>[horizontal text move, vertical text move]</returns>
         public virtual float[] GetTextMove() {
             return textMove;
@@ -279,7 +276,7 @@ namespace iText.Svg.Renderers {
             textMove = new float[] { 0.0f, 0.0f };
         }
 
-        /// <summary>Increment the stored text move</summary>
+        /// <summary>Increment the stored text move.</summary>
         /// <param name="additionalMoveX">horizontal value to add</param>
         /// <param name="additionalMoveY">vertical value to add</param>
         public virtual void AddTextMove(float additionalMoveX, float additionalMoveY) {
@@ -287,7 +284,7 @@ namespace iText.Svg.Renderers {
             textMove[1] += additionalMoveY;
         }
 
-        /// <summary>Get the current canvas transformation</summary>
+        /// <summary>Get the current canvas transformation.</summary>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>
@@ -347,12 +344,12 @@ namespace iText.Svg.Renderers {
 
         [Obsolete]
         public virtual void SetPreviousElementTextMove(float[] previousElementTextMove) {
-            this.previousElementTextMove = previousElementTextMove;
         }
 
+        // Do nothing.
         [Obsolete]
         public virtual float[] GetPreviousElementTextMove() {
-            return previousElementTextMove;
+            return new float[] { 0.0f, 0.0f };
         }
 
         /// <summary>
@@ -381,6 +378,28 @@ namespace iText.Svg.Renderers {
         /// </param>
         public virtual void SetSvgTextProperties(SvgTextProperties textProperties) {
             this.textProperties = textProperties;
+        }
+
+        /// <summary>
+        /// Retrieves relative position for the current text SVG element relative to the last origin
+        /// identified by absolute position.
+        /// </summary>
+        /// <returns>relative position for the current text SVG element</returns>
+        public virtual float[] GetRelativePosition() {
+            return relativePosition;
+        }
+
+        /// <summary>Adds move to the current relative position for the text SVG element.</summary>
+        /// <param name="dx">x-axis movement</param>
+        /// <param name="dy">y-axis movement</param>
+        public virtual void MoveRelativePosition(float dx, float dy) {
+            relativePosition[0] += dx;
+            relativePosition[1] += dy;
+        }
+
+        /// <summary>Resets current relative position for the text SVG element.</summary>
+        public virtual void ResetRelativePosition() {
+            relativePosition = new float[] { 0.0f, 0.0f };
         }
     }
 }

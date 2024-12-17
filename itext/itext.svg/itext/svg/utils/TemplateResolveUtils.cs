@@ -27,7 +27,7 @@ using iText.Svg.Renderers;
 
 namespace iText.Svg.Utils {
     /// <summary>Utility class which contains methods related to href resolving</summary>
-    public class TemplateResolveUtils {
+    public sealed class TemplateResolveUtils {
         private TemplateResolveUtils() {
         }
 
