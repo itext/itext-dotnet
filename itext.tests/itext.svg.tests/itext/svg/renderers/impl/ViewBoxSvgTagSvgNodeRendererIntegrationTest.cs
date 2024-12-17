@@ -87,7 +87,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ViewBoxXYValuesPreserveAspectRatioNoneValues() {
-            //TODO (DEVSIX-3493) change cmp files after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxXYValuesPreserveAspectRatioNoneValues"
                 );
         }

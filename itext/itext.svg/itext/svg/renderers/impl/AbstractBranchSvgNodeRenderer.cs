@@ -91,7 +91,6 @@ namespace iText.Svg.Renderers.Impl {
                 if (!(this is MarkerSvgNodeRenderer) || !overflowVisible) {
                     ApplyViewportClip(context);
                 }
-                ApplyViewportTranslationCorrection(context);
                 foreach (ISvgNodeRenderer child in GetChildren()) {
                     if (!(child is MarkerSvgNodeRenderer)) {
                         newCanvas.SaveState();
@@ -171,18 +170,6 @@ namespace iText.Svg.Renderers.Impl {
             currentCanvas.Rectangle(context.GetCurrentViewPort());
             currentCanvas.Clip();
             currentCanvas.EndPath();
-        }
-
-        private void ApplyViewportTranslationCorrection(SvgDrawContext context) {
-            PdfCanvas currentCanvas = context.GetCurrentCanvas();
-            AffineTransform tf = this.CalculateViewPortTranslation(context);
-            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-            bool preserveAspectRationNone = SvgConstants.Values.NONE.Equals(GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
-                )) || SvgConstants.Values.NONE.Equals(GetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
-                ()));
-            if (!tf.IsIdentity() && preserveAspectRationNone) {
-                currentCanvas.ConcatMatrix(tf);
-            }
         }
 
         /// <summary>Cleans up the SvgDrawContext by removing the current viewport and by popping the current canvas.</summary>
