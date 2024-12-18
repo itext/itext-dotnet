@@ -116,6 +116,8 @@ namespace iText.Signatures.Validation {
 
         private readonly CRLValidator crlValidator;
 
+        private readonly ValidatorChainBuilder builder;
+
         /// <summary>
         /// Creates new
         /// <see cref="RevocationDataValidator"/>
@@ -132,6 +134,7 @@ namespace iText.Signatures.Validation {
             this.crlValidator = builder.GetCRLValidator();
             this.crlClients.AddAll(this.properties.GetCrlClients());
             this.ocspClients.AddAll(this.properties.GetOcspClients());
+            this.builder = builder;
         }
 
         /// <summary>
@@ -139,6 +142,14 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.ICrlClient"/>
         /// to be used for CRL responses receiving.
         /// </summary>
+        /// <remarks>
+        /// Add
+        /// <see cref="iText.Signatures.ICrlClient"/>
+        /// to be used for CRL responses receiving.
+        /// These clients will be used regardless of the
+        /// <see cref="OnlineFetching"/>
+        /// settings
+        /// </remarks>
         /// <param name="crlClient">
         /// 
         /// <see cref="iText.Signatures.ICrlClient"/>
@@ -158,6 +169,14 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.IOcspClient"/>
         /// to be used for OCSP responses receiving.
         /// </summary>
+        /// <remarks>
+        /// Add
+        /// <see cref="iText.Signatures.IOcspClient"/>
+        /// to be used for OCSP responses receiving.
+        /// These clients will be used regardless of the
+        /// <see cref="OnlineFetching"/>
+        /// settings
+        /// </remarks>
         /// <param name="ocspClient">
         /// 
         /// <see cref="iText.Signatures.IOcspClient"/>
@@ -388,8 +407,7 @@ namespace iText.Signatures.Validation {
             if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching) {
                 foreach (IX509Certificate issuerCert in issuerCerts) {
                     SafeCalling.OnRuntimeExceptionLog(() => {
-                        IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
-                            null);
+                        IBasicOcspResponse basicOCSPResp = builder.GetOcspClient().GetBasicOCSPResp(certificate, issuerCert, null);
                         FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
                             );
                     }
@@ -410,7 +428,7 @@ namespace iText.Signatures.Validation {
             SignatureValidationProperties.OnlineFetching onlineFetching = properties.GetRevocationOnlineFetching(context
                 .SetValidatorContext(ValidatorContext.CRL_VALIDATOR));
             if (SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH == onlineFetching) {
-                crlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, new CrlClientOnline()));
+                crlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, builder.GetCrlClient()));
             }
             // Sort all the CRL responses available based on the most recent revocation data.
             return crlResponses.Sorted((o1, o2) => o2.crl.GetThisUpdate().CompareTo(o1.crl.GetThisUpdate())).ToList();
@@ -423,16 +441,15 @@ namespace iText.Signatures.Validation {
                 .SetValidatorContext(ValidatorContext.CRL_VALIDATOR));
             if (SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE == crlOnlineFetching) {
                 // Sort all the CRL responses available based on the most recent revocation data.
-                onlineCrlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, new CrlClientOnline()).Sorted
-                    ((o1, o2) => o2.crl.GetThisUpdate().CompareTo(o1.crl.GetThisUpdate())).ToList());
+                onlineCrlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, builder.GetCrlClient()).
+                    Sorted((o1, o2) => o2.crl.GetThisUpdate().CompareTo(o1.crl.GetThisUpdate())).ToList());
             }
             SignatureValidationProperties.OnlineFetching ocspOnlineFetching = properties.GetRevocationOnlineFetching(context
                 .SetValidatorContext(ValidatorContext.OCSP_VALIDATOR));
             if (SignatureValidationProperties.OnlineFetching.FETCH_IF_NO_OTHER_DATA_AVAILABLE == ocspOnlineFetching) {
                 foreach (IX509Certificate issuerCert in certificateRetriever.RetrieveIssuerCertificate(certificate)) {
                     SafeCalling.OnRuntimeExceptionLog(() => {
-                        IBasicOcspResponse basicOCSPResp = new OcspClientBouncyCastle().GetBasicOCSPResp(certificate, issuerCert, 
-                            null);
+                        IBasicOcspResponse basicOCSPResp = builder.GetOcspClient().GetBasicOCSPResp(certificate, issuerCert, null);
                         IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
                             >();
                         FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT

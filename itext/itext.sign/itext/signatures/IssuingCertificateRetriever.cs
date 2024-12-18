@@ -33,6 +33,7 @@ using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation;
+using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Signatures {
     /// <summary>
@@ -50,15 +51,30 @@ namespace iText.Signatures {
         private readonly IDictionary<String, IList<IX509Certificate>> knownCertificates = new Dictionary<String, IList
             <IX509Certificate>>();
 
+        private readonly IResourceRetriever resourceRetriever;
+
         /// <summary>
         /// Creates
         /// <see cref="IssuingCertificateRetriever"/>
         /// instance.
         /// </summary>
         public IssuingCertificateRetriever() {
+            this.resourceRetriever = new DefaultResourceRetriever();
         }
 
-        // Empty constructor.
+        /// <summary>
+        /// Creates
+        /// <see cref="IssuingCertificateRetriever"/>
+        /// instance.
+        /// </summary>
+        /// <param name="resourceRetriever">
+        /// an @{link IResourceRetriever} instance to use for performing http
+        /// requests.
+        /// </param>
+        public IssuingCertificateRetriever(IResourceRetriever resourceRetriever) {
+            this.resourceRetriever = resourceRetriever;
+        }
+
         /// <summary><inheritDoc/></summary>
         /// <param name="chain">
         /// 
@@ -389,7 +405,7 @@ namespace iText.Signatures {
         /// <see cref="System.IO.Stream"/>.
         /// </returns>
         protected internal virtual Stream GetIssuerCertByURI(String uri) {
-            return SignUtils.GetHttpResponse(new Uri(uri));
+            return resourceRetriever.GetInputStreamByUrl(new Uri(uri));
         }
 
         /// <summary>Parses certificates represented as byte array.</summary>

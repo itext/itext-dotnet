@@ -26,7 +26,8 @@
     <ProjectReference Include="..\itext.layout\itext.layout.csproj" />
     <ProjectReference Include="..\itext.pdfa\itext.pdfa.csproj" />
     <ProjectReference Include="..\itext.pdfua\itext.pdfua.csproj" />
-	<ProjectReference Include="..\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj" />
+    <ProjectReference Include="..\itext.bouncy-castle-connector\itext.bouncy-castle-connector.csproj" />
+    <ProjectReference Include="..\itext.styledxmlparser\itext.styledxmlparser.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>

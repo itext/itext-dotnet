@@ -29,16 +29,21 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures;
 
 namespace iText.Signatures.Testutils.Client {
-    public class TestOcspClientWrapper : IOcspClient {
+    public class TestOcspClientWrapper : IOcspClient, IOcspClientBouncyCastle {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
         private readonly IList<TestOcspClientWrapper.OcspClientCall> calls = new List<TestOcspClientWrapper.OcspClientCall
             >();
 
+        private readonly IList<TestOcspClientWrapper.BasicOCSPCall> basicCalls = new List<TestOcspClientWrapper.BasicOCSPCall
+            >();
+
         private readonly IOcspClient wrappedClient;
 
         private Func<TestOcspClientWrapper.OcspClientCall, byte[]> onGetEncoded;
+
+        private Func<TestOcspClientWrapper.BasicOCSPCall, IBasicOcspResponse> onGetBasicPOcspResponse;
 
         public TestOcspClientWrapper(IOcspClient wrappedClient) {
             this.wrappedClient = wrappedClient;
@@ -70,9 +75,33 @@ namespace iText.Signatures.Testutils.Client {
             return calls;
         }
 
+        public virtual IList<TestOcspClientWrapper.BasicOCSPCall> GetBasicResponceCalls() {
+            return basicCalls;
+        }
+
         public virtual iText.Signatures.Testutils.Client.TestOcspClientWrapper OnGetEncodedDo(Func<TestOcspClientWrapper.OcspClientCall
             , byte[]> callBack) {
             onGetEncoded = callBack;
+            return this;
+        }
+
+        public virtual IBasicOcspResponse GetBasicOCSPResp(IX509Certificate checkCert, IX509Certificate issuerCert
+            , String url) {
+            TestOcspClientWrapper.BasicOCSPCall call = new TestOcspClientWrapper.BasicOCSPCall(checkCert, issuerCert, 
+                url);
+            basicCalls.Add(call);
+            if (onGetBasicPOcspResponse != null) {
+                return onGetBasicPOcspResponse.Invoke(call);
+            }
+            if (wrappedClient is IOcspClientBouncyCastle) {
+                return ((IOcspClientBouncyCastle)wrappedClient).GetBasicOCSPResp(checkCert, issuerCert, url);
+            }
+            throw new Exception("TestOcspClientWrapper for IOcspClientBouncyCastle was expected here.");
+        }
+
+        public virtual iText.Signatures.Testutils.Client.TestOcspClientWrapper OnGetBasicOCSPRespDo(Func<TestOcspClientWrapper.BasicOCSPCall
+            , IBasicOcspResponse> callback) {
+            onGetBasicPOcspResponse = callback;
             return this;
         }
 
@@ -93,6 +122,20 @@ namespace iText.Signatures.Testutils.Client {
 
             public virtual void SetResponce(IBasicOcspResponse basicOCSPResp) {
                 response = basicOCSPResp;
+            }
+        }
+
+        public class BasicOCSPCall {
+            public readonly IX509Certificate checkCert;
+
+            public readonly IX509Certificate issuerCert;
+
+            public readonly String url;
+
+            public BasicOCSPCall(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
+                this.checkCert = checkCert;
+                this.issuerCert = issuerCert;
+                this.url = url;
             }
         }
     }
