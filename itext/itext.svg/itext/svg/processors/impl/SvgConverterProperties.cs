@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Geom;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
@@ -54,6 +55,8 @@ namespace iText.Svg.Processors.Impl {
 
         private CssStyleSheet cssStyleSheet = null;
 
+        private Rectangle customViewport = null;
+
         /// <summary>
         /// Creates a new
         /// <see cref="SvgConverterProperties"/>
@@ -68,6 +71,29 @@ namespace iText.Svg.Processors.Impl {
         public SvgConverterProperties() {
             this.resourceRetriever = new DefaultResourceRetriever();
             this.rendererFactory = new DefaultSvgNodeRendererFactory();
+        }
+
+        /// <summary>Gets the custom viewport of SVG.</summary>
+        /// <remarks>
+        /// Gets the custom viewport of SVG.
+        /// <para />
+        /// The custom viewport is used to resolve percent values of the top level svg.
+        /// </remarks>
+        /// <returns>the custom viewport</returns>
+        public virtual Rectangle GetCustomViewport() {
+            // TODO DEVSIX-8808 add this getter to the interface ISvgConverterProperties and remove class casting where getCustomViewport is called
+            return customViewport;
+        }
+
+        /// <summary>Sets the custom viewport of SVG.</summary>
+        /// <remarks>
+        /// Sets the custom viewport of SVG.
+        /// <para />
+        /// The custom viewport is used to resolve percent values of the top level svg.
+        /// </remarks>
+        /// <param name="customViewport">the custom viewport</param>
+        public virtual void SetCustomViewport(Rectangle customViewport) {
+            this.customViewport = customViewport;
         }
 
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetRendererFactory(ISvgNodeRendererFactory

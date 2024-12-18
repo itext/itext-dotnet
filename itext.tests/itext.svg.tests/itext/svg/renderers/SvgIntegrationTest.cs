@@ -43,14 +43,14 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void Convert(String svg, String output) {
-            Convert(svg, output, PageSize.DEFAULT);
+            Convert(svg, output, PageSize.DEFAULT, new SvgConverterProperties());
         }
 
-        public virtual void Convert(String svg, String output, PageSize size) {
+        public virtual void Convert(String svg, String output, PageSize size, SvgConverterProperties properties) {
             using (PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(
                 0)))) {
                 doc.AddNewPage(size);
-                ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
+                properties.SetBaseUri(svg);
                 SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(svg), doc, 1, properties);
             }
         }
@@ -99,8 +99,19 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(src, dest, fileName, PageSize.DEFAULT);
         }
 
+        public virtual void ConvertAndCompare(String src, String dest, String fileName, SvgConverterProperties properties
+            ) {
+            ConvertAndCompare(src, dest, fileName, PageSize.DEFAULT, properties);
+        }
+
         public virtual void ConvertAndCompare(String src, String dest, String fileName, PageSize size) {
-            Convert(src + fileName + ".svg", dest + fileName + ".pdf", size);
+            Convert(src + fileName + ".svg", dest + fileName + ".pdf", size, new SvgConverterProperties());
+            Compare(fileName, src, dest);
+        }
+
+        public virtual void ConvertAndCompare(String src, String dest, String fileName, PageSize size, SvgConverterProperties
+             properties) {
+            Convert(src + fileName + ".svg", dest + fileName + ".pdf", size, properties);
             Compare(fileName, src, dest);
         }
 

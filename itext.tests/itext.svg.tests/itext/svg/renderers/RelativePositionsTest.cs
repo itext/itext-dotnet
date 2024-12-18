@@ -43,7 +43,6 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsBasic");
         }
 
-        //TODO DEVSIX-5740: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void RelativePositionsBasic2Test() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsBasic2");

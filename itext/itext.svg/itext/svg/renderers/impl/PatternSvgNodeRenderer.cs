@@ -185,7 +185,7 @@ namespace iText.Svg.Renderers.Impl {
                     0) * CONVERT_COEFF;
             }
             else {
-                Rectangle currentViewPort = context.GetCurrentViewPort();
+                Rectangle currentViewPort = this.GetCurrentViewBox(context);
                 double viewPortX = currentViewPort.GetX();
                 double viewPortY = currentViewPort.GetY();
                 double viewPortWidth = currentViewPort.GetWidth();

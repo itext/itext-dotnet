@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
+using iText.Svg.Exceptions;
 using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
@@ -97,6 +98,44 @@ namespace iText.Svg.Utils {
             return CssDimensionParsingUtils.ParseLength(length, percentBaseValue, defaultValue, em, rem);
         }
 
+        /// <summary>Parses vertical length attribute and converts it to an absolute value.</summary>
+        /// <param name="svgNodeRenderer">renderer for which length should be parsed</param>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// for parsing
+        /// </param>
+        /// <param name="defaultValue">default value if length is not recognized</param>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>absolute value in points</returns>
+        public static float ParseAbsoluteVerticalLength(AbstractSvgNodeRenderer svgNodeRenderer, String length, float
+             defaultValue, SvgDrawContext context) {
+            float percentBaseValue = CalculatePercentBaseValueIfNeeded(svgNodeRenderer, context, length, false);
+            return ParseAbsoluteLength(svgNodeRenderer, length, percentBaseValue, defaultValue, context);
+        }
+
+        /// <summary>Parses horizontal length attribute and converts it to an absolute value.</summary>
+        /// <param name="svgNodeRenderer">renderer for which length should be parsed</param>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// for parsing
+        /// </param>
+        /// <param name="defaultValue">default value if length is not recognized</param>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>absolute value in points</returns>
+        public static float ParseAbsoluteHorizontalLength(AbstractSvgNodeRenderer svgNodeRenderer, String length, 
+            float defaultValue, SvgDrawContext context) {
+            float percentBaseValue = CalculatePercentBaseValueIfNeeded(svgNodeRenderer, context, length, true);
+            return ParseAbsoluteLength(svgNodeRenderer, length, percentBaseValue, defaultValue, context);
+        }
+
         /// <summary>Extract svg viewbox values.</summary>
         /// <param name="svgRenderer">
         /// the
@@ -142,65 +181,94 @@ namespace iText.Svg.Utils {
         }
 
         /// <summary>
-        /// Extract width and height of the passed SVGNodeRenderer,
-        /// defaulting to respective viewbox values if either one is not present or
-        /// to browser default if viewbox is missing as well.
+        /// Extract width and height of the passed SVGNodeRenderer, defaulting to
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext.GetCustomViewport()"/>
+        /// if either one is not present.
         /// </summary>
+        /// <remarks>
+        /// Extract width and height of the passed SVGNodeRenderer, defaulting to
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext.GetCustomViewport()"/>
+        /// if either one is not present. If
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext.GetCustomViewport()"/>
+        /// isn't specified, than respective
+        /// viewbox values or browser default (if viewbox is missing) will be used.
+        /// </remarks>
         /// <param name="svgRenderer">
         /// the
         /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
-        /// instance that contains
-        /// the renderer tree
+        /// instance that contains the renderer tree
         /// </param>
         /// <param name="em">em value in pt</param>
-        /// <param name="rem">rem value in pt</param>
-        /// <returns>Rectangle, where x,y = 0 and width and height are extracted ones by this method.</returns>
-        public static Rectangle ExtractWidthAndHeight(ISvgNodeRenderer svgRenderer, float em, float rem) {
-            float[] values = iText.Svg.Utils.SvgCssUtils.ParseViewBox(svgRenderer);
-            float defaultWidth = values == null ? CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWBOX_WIDTH
-                ) : values[2];
-            float defaultHeight = values == null ? CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWBOX_HEIGHT
-                ) : values[3];
-            Rectangle result = new Rectangle(defaultWidth, defaultHeight);
+        /// <param name="context">the svg draw context</param>
+        /// <returns>rectangle, where x,y = 0 and width and height are extracted ones by this method.</returns>
+        public static Rectangle ExtractWidthAndHeight(ISvgNodeRenderer svgRenderer, float em, SvgDrawContext context
+            ) {
+            float finalWidth = 0;
+            float finalHeight = 0;
+            float percentHorizontalBase;
+            float percentVerticalBase;
+            // Here we follow https://svgwg.org/specs/integration/#svg-css-sizing with one exception:
+            // we use author specified width and height (SvgDrawContext#customViewport)
+            // in any case regardless viewbox existing (it is how browsers work).
+            if (context.GetCustomViewport() == null) {
+                float[] viewBox = iText.Svg.Utils.SvgCssUtils.ParseViewBox(svgRenderer);
+                if (viewBox == null) {
+                    percentHorizontalBase = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWPORT_WIDTH
+                        );
+                    percentVerticalBase = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWPORT_HEIGHT
+                        );
+                }
+                else {
+                    percentHorizontalBase = viewBox[2];
+                    percentVerticalBase = viewBox[3];
+                }
+            }
+            else {
+                percentHorizontalBase = context.GetCustomViewport().GetWidth();
+                percentVerticalBase = context.GetCustomViewport().GetHeight();
+            }
+            float rem = context.GetCssContext().GetRootFontSize();
             String width = svgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH);
-            if (CssTypesValidationUtils.IsRemValue(width)) {
-                result.SetWidth(CssDimensionParsingUtils.ParseRelativeValue(width, rem));
-            }
-            else {
-                if (CssTypesValidationUtils.IsEmValue(width)) {
-                    result.SetWidth(CssDimensionParsingUtils.ParseRelativeValue(width, em));
-                }
-                else {
-                    if (width != null) {
-                        result.SetWidth(CssDimensionParsingUtils.ParseAbsoluteLength(width));
-                    }
-                    else {
-                        if (values == null) {
-                            LOGGER.LogWarning(SvgLogMessageConstant.MISSING_WIDTH);
-                        }
-                    }
-                }
-            }
+            finalWidth = CalculateFinalSvgRendererLength(width, em, rem, percentHorizontalBase);
             String height = svgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
-            if (CssTypesValidationUtils.IsRemValue(height)) {
-                result.SetHeight(CssDimensionParsingUtils.ParseRelativeValue(height, rem));
+            finalHeight = CalculateFinalSvgRendererLength(height, em, rem, percentVerticalBase);
+            return new Rectangle(finalWidth, finalHeight);
+        }
+
+        private static float CalculateFinalSvgRendererLength(String length, float em, float rem, float percentBase
+            ) {
+            if (length == null) {
+                length = SvgConstants.Values.DEFAULT_WIDTH_AND_HEIGHT_VALUE;
+            }
+            if (CssTypesValidationUtils.IsRemValue(length)) {
+                return CssDimensionParsingUtils.ParseRelativeValue(length, rem);
             }
             else {
-                if (CssTypesValidationUtils.IsEmValue(height)) {
-                    result.SetHeight(CssDimensionParsingUtils.ParseRelativeValue(height, em));
+                if (CssTypesValidationUtils.IsEmValue(length)) {
+                    return CssDimensionParsingUtils.ParseRelativeValue(length, em);
                 }
                 else {
-                    if (height != null) {
-                        result.SetHeight(CssDimensionParsingUtils.ParseAbsoluteLength(height));
+                    if (CssTypesValidationUtils.IsPercentageValue(length)) {
+                        return CssDimensionParsingUtils.ParseRelativeValue(length, percentBase);
                     }
                     else {
-                        if (values == null) {
-                            LOGGER.LogWarning(SvgLogMessageConstant.MISSING_HEIGHT);
-                        }
+                        return CssDimensionParsingUtils.ParseAbsoluteLength(length);
                     }
                 }
             }
-            return result;
+        }
+
+        private static float CalculatePercentBaseValueIfNeeded(AbstractSvgNodeRenderer svgNodeRenderer, SvgDrawContext
+             context, String length, bool isXAxis) {
+            float percentBaseValue = 0.0F;
+            if (CssTypesValidationUtils.IsPercentageValue(length)) {
+                Rectangle viewBox = svgNodeRenderer.GetCurrentViewBox(context);
+                if (viewBox == null) {
+                    throw new SvgProcessingException(SvgExceptionMessageConstant.ILLEGAL_RELATIVE_VALUE_NO_VIEWPORT_IS_SET);
+                }
+                percentBaseValue = isXAxis ? viewBox.GetWidth() : viewBox.GetHeight();
+            }
+            return percentBaseValue;
         }
     }
 }

@@ -59,7 +59,7 @@ namespace iText.Svg.Renderers {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
-                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, 0.0F);
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
                 SvgImageXObject svgImageXObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
                 SvgImage svgImage = new SvgImage(svgImageXObject);
                 document.Add(svgImage);
@@ -80,7 +80,7 @@ namespace iText.Svg.Renderers {
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
-                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, 0.0F);
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
                 SvgImageXObject svgImageXObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
                 SvgImage svgImage = new SvgImage(svgImageXObject);
                 document.Add(svgImage);
@@ -101,7 +101,7 @@ namespace iText.Svg.Renderers {
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
-                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, 0.0F);
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
                 document.Add(new SvgImage(new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER))));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

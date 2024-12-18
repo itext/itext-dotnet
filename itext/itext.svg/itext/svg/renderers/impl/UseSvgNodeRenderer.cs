@@ -57,12 +57,9 @@ namespace iText.Svg.Renderers.Impl {
                             PdfCanvas currentCanvas = context.GetCurrentCanvas();
                             float x = 0f;
                             float y = 0f;
-                            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                                x = CssDimensionParsingUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X));
-                            }
-                            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                                y = CssDimensionParsingUtils.ParseAbsoluteLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y));
-                            }
+                            // If X or Y attribute is null, then default 0 value will be returned
+                            x = ParseHorizontalLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X), context);
+                            y = ParseVerticalLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y), context);
                             AffineTransform inverseMatrix = null;
                             if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);

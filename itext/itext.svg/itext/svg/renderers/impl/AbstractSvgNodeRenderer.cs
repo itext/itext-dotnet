@@ -187,12 +187,48 @@ namespace iText.Svg.Renderers.Impl {
                 return CssDimensionParsingUtils.ParseRelativeValue(fontSizeAttribute, context.GetCssContext().GetRootFontSize
                     ());
             }
-            if (CssTypesValidationUtils.IsEmValue(fontSizeAttribute) && GetParent() != null && parent is AbstractSvgNodeRenderer
+            if (CssTypesValidationUtils.IsEmValue(fontSizeAttribute) && GetParent() != null && GetParent() is AbstractSvgNodeRenderer
                 ) {
-                return CssDimensionParsingUtils.ParseRelativeValue(fontSizeAttribute, ((AbstractSvgNodeRenderer)parent).GetCurrentFontSize
-                    (context));
+                return CssDimensionParsingUtils.ParseRelativeValue(fontSizeAttribute, ((AbstractSvgNodeRenderer)GetParent(
+                    )).GetCurrentFontSize(context));
             }
             return CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeAttribute);
+        }
+
+        /// <summary>Gets the viewbox from the first parent element which can define it.</summary>
+        /// <remarks>
+        /// Gets the viewbox from the first parent element which can define it.
+        /// <para />
+        /// See <a href="https://svgwg.org/svg2-draft/coords.html#establishinganewsvgviewport">SVG specification</a>
+        /// to find which elements can define a viewbox.
+        /// </remarks>
+        /// <param name="context">draw context from which fallback viewbox can be extracted</param>
+        /// <returns>
+        /// the viewbox or
+        /// <see langword="null"/>
+        /// if the element doesn't have parent which can define the viewbox
+        /// </returns>
+        public virtual Rectangle GetCurrentViewBox(SvgDrawContext context) {
+            // According to https://svgwg.org/svg2-draft/coords.html#EstablishingANewSVGViewport: "For historical reasons,
+            // the ‘pattern’ and ‘marker’ elements do not create a new viewport, despite accepting a ‘viewBox’ attribute".
+            // So get viewbox only from symbol and svg elements
+            if (this is AbstractContainerSvgNodeRenderer) {
+                float[] viewBoxValues = SvgCssUtils.ParseViewBox(this);
+                if (viewBoxValues == null || viewBoxValues.Length < SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
+                    Rectangle currentViewPort = context.GetCurrentViewPort();
+                    viewBoxValues = new float[] { 0, 0, currentViewPort.GetWidth(), currentViewPort.GetHeight() };
+                }
+                return new Rectangle(viewBoxValues[0], viewBoxValues[1], viewBoxValues[2], viewBoxValues[3]);
+            }
+            else {
+                if (GetParent() is AbstractSvgNodeRenderer) {
+                    return ((AbstractSvgNodeRenderer)GetParent()).GetCurrentViewBox(context);
+                }
+                else {
+                    // From iText this line isn't reachable, in custom renderer tree fallback to context's view port
+                    return context.GetCurrentViewPort();
+                }
+            }
         }
 
         /// <summary>
@@ -377,8 +413,7 @@ namespace iText.Svg.Renderers.Impl {
         /// </param>
         /// <returns>absolute length in points</returns>
         protected internal virtual float ParseHorizontalLength(String length, SvgDrawContext context) {
-            return SvgCssUtils.ParseAbsoluteLength(this, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded(
-                context, length, true), 0.0F, context);
+            return SvgCssUtils.ParseAbsoluteHorizontalLength(this, length, 0.0F, context);
         }
 
         /// <summary>Parse y-axis length value.</summary>
@@ -409,8 +444,7 @@ namespace iText.Svg.Renderers.Impl {
         /// </param>
         /// <returns>absolute length in points</returns>
         protected internal virtual float ParseVerticalLength(String length, SvgDrawContext context) {
-            return SvgCssUtils.ParseAbsoluteLength(this, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded(
-                context, length, false), 0.0F, context);
+            return SvgCssUtils.ParseAbsoluteVerticalLength(this, length, 0.0F, context);
         }
 
         /// <summary>Parse length attributes.</summary>
@@ -458,6 +492,9 @@ namespace iText.Svg.Renderers.Impl {
                 String normalizedName = tokenValue.JSubstring(5, tokenValue.Length - 1).Trim();
                 ISvgNodeRenderer colorRenderer = context.GetNamedObject(normalizedName);
                 if (colorRenderer is ISvgPaintServer) {
+                    if (colorRenderer.GetParent() == null) {
+                        colorRenderer.SetParent(this);
+                    }
                     resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, GetObjectBoundingBox(context), objectBoundingBoxMargin
                         , parentOpacity);
                 }

@@ -117,8 +117,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// </param>
         /// <returns>absolute length in points</returns>
         protected internal virtual float ParseHorizontalLength(String length) {
-            return SvgCssUtils.ParseAbsoluteLength(parent, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded
-                (context, length, true), 0.0F, context);
+            return SvgCssUtils.ParseAbsoluteHorizontalLength(parent, length, 0.0F, context);
         }
 
         /// <summary>Parse y axis length value.</summary>
@@ -129,8 +128,7 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// </param>
         /// <returns>absolute length in points</returns>
         protected internal virtual float ParseVerticalLength(String length) {
-            return SvgCssUtils.ParseAbsoluteLength(parent, length, SvgCoordinateUtils.CalculatePercentBaseValueIfNeeded
-                (context, length, false), 0.0F, context);
+            return SvgCssUtils.ParseAbsoluteVerticalLength(parent, length, 0.0F, context);
         }
 
         public abstract void SetCoordinates(String[] arg1, Point arg2);

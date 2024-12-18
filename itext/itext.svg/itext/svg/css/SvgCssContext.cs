@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
-using iText.Svg;
+using iText.Svg.Css.Impl;
 
 namespace iText.Svg.Css {
     /// <summary>
@@ -32,8 +32,7 @@ namespace iText.Svg.Css {
     /// </summary>
     public class SvgCssContext : AbstractCssContext {
         /// <summary>The root font size value in pt.</summary>
-        private float rootFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
-            .FONT_SIZE));
+        private float rootFontSize = SvgStyleResolver.DEFAULT_FONT_SIZE;
 
         /// <summary>Gets the root font size.</summary>
         /// <returns>the root font size in pt</returns>

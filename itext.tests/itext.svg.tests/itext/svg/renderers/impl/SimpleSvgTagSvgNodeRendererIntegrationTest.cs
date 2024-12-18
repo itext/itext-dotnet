@@ -23,10 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Exceptions;
-using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -48,23 +46,16 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        //TODO: change cmp file after DEVSIX-3123 fixed
-        [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
         public virtual void AbsentHeight() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentHeight");
         }
 
         [NUnit.Framework.Test]
-        //TODO: change cmp file after DEVSIX-3123 fixed
-        [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
         public virtual void AbsentWidth() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidth");
         }
 
         [NUnit.Framework.Test]
-        //TODO: change cmp file after DEVSIX-3123 fixed
-        [LogMessage(SvgLogMessageConstant.MISSING_WIDTH)]
-        [LogMessage(SvgLogMessageConstant.MISSING_HEIGHT)]
         public virtual void AbsentWidthAndHeight() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absentWidthAndHeight");
         }
@@ -100,14 +91,12 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void InvalidX() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "invalidX"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidX");
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidY() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "invalidY"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidY");
         }
 
         [NUnit.Framework.Test]

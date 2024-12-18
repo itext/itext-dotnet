@@ -31,14 +31,10 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
 using iText.StyledXmlParser;
-using iText.StyledXmlParser.Css.Resolve;
-using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.StyledXmlParser.Resolver.Resource;
-using iText.Svg;
 using iText.Svg.Exceptions;
-using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -340,6 +336,9 @@ namespace iText.Svg.Converter {
         public static void DrawOnPage(Stream stream, PdfPage page, float x, float y, ISvgConverterProperties props
             ) {
             CheckNull(page);
+            if (props is SvgConverterProperties && ((SvgConverterProperties)props).GetCustomViewport() == null) {
+                ((SvgConverterProperties)props).SetCustomViewport(page.GetMediaBox());
+            }
             DrawOnCanvas(stream, new PdfCanvas(page), x, y, props);
         }
 
@@ -693,9 +692,9 @@ namespace iText.Svg.Converter {
                     // Extract topmost dimensions
                     CheckNull(topSvgRenderer);
                     CheckNull(pdfDocument);
-                    //Since svg is a single object in the document, rem = em
-                    Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, drawContext.GetCssContext().GetRootFontSize
-                        (), drawContext.GetCssContext().GetRootFontSize());
+                    // Since svg is a single object in the document, em = rem
+                    float em = drawContext.GetCssContext().GetRootFontSize();
+                    Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, em, drawContext);
                     // Adjust pagesize and create new page
                     pdfDocument.SetDefaultPageSize(new PageSize(wh.GetWidth(), wh.GetHeight()));
                     PdfPage page = pdfDocument.AddNewPage();
@@ -877,6 +876,9 @@ namespace iText.Svg.Converter {
             SvgDrawContext drawContext = new SvgDrawContext(resourceResolver, processorResult.GetFontProvider());
             if (processorResult is SvgProcessorResult) {
                 drawContext.SetCssContext(((SvgProcessorResult)processorResult).GetContext().GetCssContext());
+            }
+            if (props is SvgConverterProperties) {
+                drawContext.SetCustomViewport(((SvgConverterProperties)props).GetCustomViewport());
             }
             drawContext.SetTempFonts(processorResult.GetTempFonts());
             drawContext.AddNamedObjects(processorResult.GetNamedObjects());
@@ -1143,11 +1145,9 @@ namespace iText.Svg.Converter {
             CheckNull(topSvgRenderer);
             CheckNull(document);
             CheckNull(context);
-            //Can't determine em value here, so passing default value
-            float defaultFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
-                .FONT_SIZE));
-            Rectangle bbox = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, defaultFontSize, context.GetCssContext(
-                ).GetRootFontSize());
+            // Can't determine em value here, so em=rem
+            float em = context.GetCssContext().GetRootFontSize();
+            Rectangle bbox = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, em, context);
             PdfFormXObject pdfForm = new PdfFormXObject(bbox);
             PdfCanvas canvas = new PdfCanvas(pdfForm, document);
             context.PushCanvas(canvas);
@@ -1317,7 +1317,7 @@ namespace iText.Svg.Converter {
         /// to browser default if viewbox is missing as well
         /// <para />
         /// Deprecated in favour of
-        /// <see cref="iText.Svg.Utils.SvgCssUtils.ExtractWidthAndHeight(iText.Svg.Renderers.ISvgNodeRenderer, float, float)
+        /// <see cref="iText.Svg.Utils.SvgCssUtils.ExtractWidthAndHeight(iText.Svg.Renderers.ISvgNodeRenderer, float, iText.Svg.Renderers.SvgDrawContext)
         ///     "/>
         /// </remarks>
         /// <param name="topSvgRenderer">
@@ -1329,45 +1329,10 @@ namespace iText.Svg.Converter {
         /// <returns>float[2], width is in position 0, height in position 1</returns>
         [Obsolete]
         public static float[] ExtractWidthAndHeight(ISvgNodeRenderer topSvgRenderer) {
-            float[] res = new float[2];
-            float[] values = SvgCssUtils.ParseViewBox(topSvgRenderer);
-            float width;
-            float height;
-            String wString;
-            String hString;
-            wString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.WIDTH);
-            if (wString == null) {
-                if (values != null) {
-                    width = values[2];
-                }
-                else {
-                    //Log Warning
-                    LOGGER.LogWarning(SvgLogMessageConstant.MISSING_WIDTH);
-                    //Set to browser default
-                    width = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWBOX_WIDTH);
-                }
-            }
-            else {
-                width = CssDimensionParsingUtils.ParseAbsoluteLength(wString);
-            }
-            hString = topSvgRenderer.GetAttribute(SvgConstants.Attributes.HEIGHT);
-            if (hString == null) {
-                if (values != null) {
-                    height = values[3];
-                }
-                else {
-                    //Log Warning
-                    LOGGER.LogWarning(SvgLogMessageConstant.MISSING_HEIGHT);
-                    //Set to browser default
-                    height = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWBOX_HEIGHT);
-                }
-            }
-            else {
-                height = CssDimensionParsingUtils.ParseAbsoluteLength(hString);
-            }
-            res[0] = width;
-            res[1] = height;
-            return res;
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            float em = context.GetCssContext().GetRootFontSize();
+            Rectangle rectangle = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, em, context);
+            return new float[] { rectangle.GetX(), rectangle.GetY(), rectangle.GetWidth(), rectangle.GetHeight() };
         }
 
 //\cond DO_NOT_DOCUMENT

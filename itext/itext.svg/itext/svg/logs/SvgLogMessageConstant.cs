@@ -49,9 +49,13 @@ namespace iText.Svg.Logs {
 
         public const String PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE = "Pattern width or height is negative value. This pattern will not be rendered.";
 
+        /// <summary>The constant not used anymore and will be removed in the next major release.</summary>
+        [Obsolete]
         public const String MISSING_WIDTH = "Top Svg tag has no defined width attribute and viewbox width is not present, so browser default of 300px "
              + "is used";
 
+        /// <summary>The constant not used anymore and will be removed in the next major release.</summary>
+        [Obsolete]
         public const String MISSING_HEIGHT = "Top Svg tag has no defined height attribute and viewbox height is not present, so browser default of "
              + "150px is used";
 

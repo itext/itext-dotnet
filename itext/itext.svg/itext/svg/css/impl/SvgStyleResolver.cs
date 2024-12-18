@@ -49,13 +49,13 @@ namespace iText.Svg.Css.Impl {
             (new HashSet<IStyleInheritance>(JavaUtil.ArraysAsList((IStyleInheritance)new CssInheritance(), (IStyleInheritance
             )new SvgAttributeInheritance())));
 
+        public static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
+            .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
+
         // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
         private static readonly String[] ELEMENTS_INHERITING_PARENT_STYLES = new String[] { SvgConstants.Tags.MARKER
             , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant(), SvgConstants.Tags
             .PATTERN };
-
-        private static readonly float DEFAULT_FONT_SIZE = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults
-            .GetDefaultValue(SvgConstants.Attributes.FONT_SIZE));
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver
             ));
@@ -144,8 +144,7 @@ namespace iText.Svg.Css.Impl {
                 }
                 else {
                     if (parentFontSizeStr == null) {
-                        baseFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
-                            .FONT_SIZE));
+                        baseFontSize = DEFAULT_FONT_SIZE;
                     }
                     else {
                         baseFontSize = CssDimensionParsingUtils.ParseAbsoluteLength(parentFontSizeStr);

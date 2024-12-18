@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -43,6 +45,7 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(canvas);
             context.AddViewPort(expected);
             SvgTagSvgNodeRenderer parent = new SvgTagSvgNodeRenderer();
+            parent.SetAttributesAndStyles(new Dictionary<String, String>());
             SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             renderer.SetParent(parent);
             Rectangle actual = renderer.CalculateViewPort(context);

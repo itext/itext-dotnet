@@ -132,7 +132,6 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void FontWeightTest() {
-            //TODO DEVSIX-2079: change compare file after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "fontWeightTest");
         }
 

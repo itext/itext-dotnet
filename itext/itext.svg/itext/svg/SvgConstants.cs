@@ -612,6 +612,27 @@ namespace iText.Svg {
             /// <summary>Value representing the default aspect ratio: xmidymid.</summary>
             public const String DEFAULT_ASPECT_RATIO = SvgConstants.Values.XMID_YMID;
 
+            /// <summary>Default svg view port width value.</summary>
+            /// <remarks>
+            /// Default svg view port width value.
+            /// See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            /// </remarks>
+            public const String DEFAULT_VIEWPORT_WIDTH = "300px";
+
+            /// <summary>Default svg view port height value.</summary>
+            /// <remarks>
+            /// Default svg view port height value.
+            /// See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            /// </remarks>
+            public const String DEFAULT_VIEWPORT_HEIGHT = "150px";
+
+            /// <summary>Default width and height value.</summary>
+            /// <remarks>
+            /// Default width and height value.
+            /// See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            /// </remarks>
+            public const String DEFAULT_WIDTH_AND_HEIGHT_VALUE = "100%";
+
             /// <summary>Value representing how to preserve the aspect ratio when dealing with images.</summary>
             public const String DEFER = "defer";
 
@@ -658,6 +679,9 @@ namespace iText.Svg {
             /// <summary>Value representing the units relation "userSpaceOnUse".</summary>
             public const String USER_SPACE_ON_USE = "userSpaceOnUse";
 
+            /// <summary>The number of viewBox values.</summary>
+            public const int VIEWBOX_VALUES_NUMBER = 4;
+
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMIN = "xminymin";
 
@@ -685,16 +709,8 @@ namespace iText.Svg {
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMAX_YMAX = "xmaxymax";
 
+            [Obsolete]
             public const String VERSION1_1 = "1.1";
-
-            /// <summary>Default svg view box width value.</summary>
-            public const String DEFAULT_VIEWBOX_WIDTH = "300px";
-
-            /// <summary>Default svg view box height value.</summary>
-            public const String DEFAULT_VIEWBOX_HEIGHT = "150px";
-
-            /// <summary>The number of viewBox values.</summary>
-            public const int VIEWBOX_VALUES_NUMBER = 4;
         }
     }
 }

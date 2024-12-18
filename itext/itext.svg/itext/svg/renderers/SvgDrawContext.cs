@@ -66,6 +66,8 @@ namespace iText.Svg.Renderers {
 
         private float[] relativePosition;
 
+        private Rectangle customViewport;
+
         /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
         /// <param name="resourceResolver">
         /// instance of
@@ -85,6 +87,28 @@ namespace iText.Svg.Renderers {
             }
             this.fontProvider = fontProvider;
             cssContext = new SvgCssContext();
+        }
+
+        /// <summary>Gets the custom viewport of SVG.</summary>
+        /// <remarks>
+        /// Gets the custom viewport of SVG.
+        /// <para />
+        /// The custom viewport is used to resolve percent values of the top level svg.
+        /// </remarks>
+        /// <returns>the custom viewport</returns>
+        public virtual Rectangle GetCustomViewport() {
+            return customViewport;
+        }
+
+        /// <summary>Sets the custom viewport of SVG.</summary>
+        /// <remarks>
+        /// Sets the custom viewport of SVG.
+        /// <para />
+        /// The custom viewport is used to resolve percent values of the top level svg.
+        /// </remarks>
+        /// <param name="customViewport">the custom viewport</param>
+        public virtual void SetCustomViewport(Rectangle customViewport) {
+            this.customViewport = customViewport;
         }
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>

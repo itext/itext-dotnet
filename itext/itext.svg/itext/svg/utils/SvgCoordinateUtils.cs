@@ -136,28 +136,6 @@ namespace iText.Svg.Utils {
             return (float)(Math.Sqrt(viewPortHeight * viewPortHeight + viewPortWidth * viewPortWidth) / Math.Sqrt(2));
         }
 
-        /// <summary>Calculate percent base value if provided length is percent value.</summary>
-        /// <param name="context">svg draw context.</param>
-        /// <param name="length">length to check</param>
-        /// <param name="isXAxis">
-        /// if
-        /// <see langword="true"/>
-        /// viewport's width will be used (x-axis), otherwise viewport's height will be
-        /// used (y-axis)
-        /// </param>
-        /// <returns>percent base value if provided length is percent value, 0.0F otherwise</returns>
-        public static float CalculatePercentBaseValueIfNeeded(SvgDrawContext context, String length, bool isXAxis) {
-            float percentBaseValue = 0.0F;
-            if (CssTypesValidationUtils.IsPercentageValue(length)) {
-                if (context.GetCurrentViewPort() == null) {
-                    throw new SvgProcessingException(SvgExceptionMessageConstant.ILLEGAL_RELATIVE_VALUE_NO_VIEWPORT_IS_SET);
-                }
-                percentBaseValue = isXAxis ? context.GetCurrentViewPort().GetWidth() : context.GetCurrentViewPort().GetHeight
-                    ();
-            }
-            return percentBaseValue;
-        }
-
         /// <summary>Returns the viewBox received after scaling and displacement given preserveAspectRatio.</summary>
         /// <param name="viewBox">
         /// parsed viewBox rectangle. It should be a valid
