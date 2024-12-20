@@ -739,28 +739,30 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1PrinterMAnnotNotInTagStructureTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNotInTagStructureTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage pdfPage = pdfDoc.AddNewPage();
-            PdfFormXObject form = new PdfFormXObject(PageSize.A4);
-            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
-            canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
-            canvas.Release();
-            PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
-            annot.SetContents("link annot");
-            // Put false as 3rd parameter to not tag annotation
-            pdfPage.AddAnnotation(-1, annot, false);
-            PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
-                , 400, 100));
-            annot2.SetContents("Content of unique annot");
-            pdfPage.AddAnnotation(annot2);
-            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
-            // VeraPdf complains about the fact that PrinterMark annotation isn't wrapped by Annot tag.
-            // But in that test we don't put PrinterMark annot in tag structure at all.
-            new VeraPdfValidator().ValidateFailure(outPdf);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfFormXObject form = new PdfFormXObject(PageSize.A4);
+                PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
+                canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
+                canvas.Release();
+                PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
+                annot.SetContents("link annot");
+                // Put false as 3rd parameter to not tag annotation
+                pdfPage.AddAnnotation(-1, annot, false);
+                PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
+                    , 400, 100));
+                annot2.SetContents("Content of unique annot");
+                pdfPage.AddAnnotation(annot2);
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetContents("stamp contents");
+                stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
+                pdfPage.AddAnnotation(stamp);
+            }
+            );
+            framework.AssertBothValid("ua1PrinterMAnnotNotInTagStructureTest");
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         private PdfTextAnnotation CreateRichTextAnnotation() {
             PdfTextAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 100, 100, 100));
             annot.SetContents("Rich media annot");

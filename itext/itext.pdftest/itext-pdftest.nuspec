@@ -23,7 +23,7 @@
     <file src="bin\Release\netstandard2.0\itext.pdftest.dll" target="lib\netstandard2.0" />
     <file src="bin\Release\netstandard2.0\itext.pdftest.xml" target="lib\netstandard2.0" />
     <file src="lib\verapdf\VeraPDF_license.txt" target="Build\lib\verapdf" />
-    <file src="lib\verapdf\greenfield-apps-1.25.116.jar" target="Build\lib\verapdf" />
+    <file src="lib\verapdf\greenfield-apps-1.26.2.jar" target="Build\lib\verapdf" />
     <file src="itext.pdftest.props" target="Build" />
     <file src="..\..\gnu-agpl-v3.0.md" target="" />
     <file src="..\..\LICENSE.md" target="" />

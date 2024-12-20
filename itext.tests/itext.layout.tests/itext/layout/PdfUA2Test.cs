@@ -231,6 +231,46 @@ namespace iText.Layout {
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
+                Paragraph paragraph = new Paragraph("Table of Contents");
+                document.Add(paragraph);
+                Paragraph tociRef = new Paragraph("The referenced paragraph");
+                document.Add(tociRef);
+                TagTreePointer pointer = new TagTreePointer(pdfDocument);
+                pointer.MoveToKid(1, StandardRoles.P);
+                Div tocDiv = new Div();
+                tocDiv.GetAccessibilityProperties().SetRole(StandardRoles.TOC).SetNamespace(new PdfNamespace(StandardNamespaces
+                    .PDF_1_7));
+                Div firstTociDiv = new Div();
+                firstTociDiv.GetAccessibilityProperties().SetRole(StandardRoles.TOCI).SetNamespace(new PdfNamespace(StandardNamespaces
+                    .PDF_1_7));
+                firstTociDiv.Add(new Paragraph("first toci"));
+                firstTociDiv.GetAccessibilityProperties().AddRef(pointer);
+                Div secondTociDiv = new Div();
+                secondTociDiv.GetAccessibilityProperties().SetRole(StandardRoles.TOCI).SetNamespace(new PdfNamespace(StandardNamespaces
+                    .PDF_1_7));
+                secondTociDiv.Add(new Paragraph("second toci"));
+                secondTociDiv.GetAccessibilityProperties().AddRef(pointer);
+                tocDiv.Add(firstTociDiv);
+                tocDiv.Add(secondTociDiv);
+                document.Add(tocDiv);
+                pointer.MoveToParent().MoveToKid(StandardRoles.TOCI);
+                // We check that TOCI contains the previously added Paragraph ref
+                NUnit.Framework.Assert.AreEqual(1, pointer.GetProperties().GetRefsList().Count);
+                NUnit.Framework.Assert.AreEqual(StandardRoles.P, pointer.GetProperties().GetRefsList()[0].GetRole());
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckInvalidStructureTableOfContentsTest() {
+            String outFile = DESTINATION_FOLDER + "invalidStructureTableOfContentsTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
                 Paragraph tocTitle = new Paragraph("Table of Contents\n");
                 tocTitle.GetAccessibilityProperties().SetRole(StandardRoles.TOC).SetNamespace(new PdfNamespace(StandardNamespaces
                     .PDF_1_7));
@@ -249,9 +289,11 @@ namespace iText.Layout {
                 NUnit.Framework.Assert.AreEqual(1, pointer.GetProperties().GetRefsList().Count);
                 NUnit.Framework.Assert.AreEqual(StandardRoles.P, pointer.GetProperties().GetRefsList()[0].GetRole());
             }
-            CompareAndValidate(outFile, cmpFile);
+            // We expect failing validation because TOC and TOCI shall not contain Span tags
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CreateValidAsideTest() {
             String outFile = DESTINATION_FOLDER + "validAsideTest.pdf";
@@ -264,7 +306,34 @@ namespace iText.Layout {
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
                 document.Add(new Paragraph("Section 1:"));
-                Paragraph section1Content = new Paragraph("Paragraph 1.1");
+                document.Add(new Paragraph("Paragraph 1.1"));
+                Div aside = new Div();
+                aside.GetAccessibilityProperties().SetRole(StandardRoles.ASIDE);
+                aside.Add(new Paragraph("Additional content related to Section 1."));
+                document.Add(aside);
+                document.Add(new Paragraph("Section 2:"));
+                document.Add(new Paragraph("Paragraph 2.1"));
+                document.Add(new Paragraph("Paragraph 2.2"));
+                Div aside2 = new Div();
+                aside2.GetAccessibilityProperties().SetRole(StandardRoles.ASIDE);
+                aside2.Add(new Paragraph("Additional content related to Section 2."));
+                document.Add(aside2);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateInvalidAsideStructureTest() {
+            String outFile = DESTINATION_FOLDER + "invalidAsideStructureTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                document.Add(new Paragraph("Section 1:"));
+                Paragraph section1Content = new Paragraph("Paragraph 1.1\n");
                 Paragraph aside = new Paragraph("Additional content related to Section 1.");
                 aside.GetAccessibilityProperties().SetRole(StandardRoles.ASIDE);
                 section1Content.Add(aside);
@@ -275,11 +344,12 @@ namespace iText.Layout {
                 Paragraph aside2 = new Paragraph("Additional content related to Section 2.");
                 aside2.GetAccessibilityProperties().SetRole(StandardRoles.ASIDE);
                 document.Add(aside2);
-                document.Add(new Paragraph("Section 3:"));
             }
-            CompareAndValidate(outFile, cmpFile);
+            // We expect failing validation because Aside shall not contain Span and P shall not contain Aside
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckParagraphTest() {
             String outFile = DESTINATION_FOLDER + "paragraphTest.pdf";
@@ -332,9 +402,32 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckLabelTest() {
+        public virtual void CheckLabelInListTest() {
+            String outFile = DESTINATION_FOLDER + "labelInListTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_labelInListTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                List list = new List();
+                list.Add("First list element");
+                list.Add("Second list element");
+                list.Add("Third list element");
+                document.Add(list);
+                TagTreePointer pointer = new TagTreePointer(pdfDocument);
+                pointer.MoveToKid(StandardRoles.LI);
+                // We check that a list element contains a bullet with Lbl tag
+                NUnit.Framework.Assert.AreEqual(StandardRoles.LBL, pointer.GetKidsRoles()[0]);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckInvalidLabelStructureTest() {
             String outFile = DESTINATION_FOLDER + "labelTest.pdf";
-            String cmpFile = SOURCE_FOLDER + "cmp_labelTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
@@ -344,12 +437,34 @@ namespace iText.Layout {
                 CreateSimplePdfUA2Document(pdfDocument);
                 Div lblStructure = new Div();
                 lblStructure.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
-                Paragraph labelContent = new Paragraph("Label: ");
+                Paragraph labelContent = new Paragraph("Label content");
                 lblStructure.Add(labelContent);
-                Paragraph targetContent = new Paragraph("Marked content");
-                targetContent.GetAccessibilityProperties().SetActualText("Marked content");
                 document.Add(lblStructure);
-                document.Add(targetContent);
+            }
+            // We expect failing validation because Lbl shall not contain P and Document shall not contain Lbl
+            new VeraPdfValidator().ValidateFailure(outFile);
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void CheckLabelWithLinkContentTest() {
+            String outFile = DESTINATION_FOLDER + "labelWithLinkContentTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_labelWithLinkContentTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                Paragraph container = new Paragraph();
+                Div lblStructure = new Div();
+                lblStructure.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
+                Paragraph labelContent = new Paragraph("Label with Link content");
+                labelContent.GetAccessibilityProperties().SetRole(StandardRoles.LINK);
+                lblStructure.Add(labelContent);
+                container.Add(lblStructure);
+                document.Add(container);
             }
             CompareAndValidate(outFile, cmpFile);
         }
@@ -561,6 +676,26 @@ namespace iText.Layout {
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
+                Paragraph paragraph = new Paragraph("Bibliography paragraph:\n");
+                Paragraph bibliography = new Paragraph("1. Author A. Title of Book. Publisher, Year.");
+                bibliography.GetAccessibilityProperties().SetRole(StandardRoles.BIBENTRY).SetNamespace(new PdfNamespace(StandardNamespaces
+                    .PDF_1_7));
+                paragraph.Add(bibliography);
+                document.Add(paragraph);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckInvalidBibliographicStructureEntryTest() {
+            String outFile = DESTINATION_FOLDER + "invalidBibliographicStructureEntryTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
                 Paragraph section = new Paragraph("Bibliography section:\n");
                 section.GetAccessibilityProperties().SetRole(StandardRoles.SECT);
                 Paragraph bibliography = new Paragraph("1. Author A. Title of Book. Publisher, Year.");
@@ -569,9 +704,11 @@ namespace iText.Layout {
                 section.Add(bibliography);
                 document.Add(section);
             }
-            CompareAndValidate(outFile, cmpFile);
+            // We expect failing validation because Sect shall not contain BibEntry and Span
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CheckMetadataNoTitleTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaMetadataNoTitleTest.pdf";
