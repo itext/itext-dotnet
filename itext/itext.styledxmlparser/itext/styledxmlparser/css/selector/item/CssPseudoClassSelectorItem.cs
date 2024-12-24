@@ -95,8 +95,16 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                     return new CssPseudoClassNthChildSelectorItem(arguments);
                 }
 
+                case CommonCssConstants.NTH_LAST_CHILD: {
+                    return new CssPseudoClassNthLastChildSelectorItem(arguments);
+                }
+
                 case CommonCssConstants.NTH_OF_TYPE: {
                     return new CssPseudoClassNthOfTypeSelectorItem(arguments);
+                }
+
+                case CommonCssConstants.NTH_LAST_OF_TYPE: {
+                    return new CssPseudoClassNthLastOfTypeSelectorItem(arguments);
                 }
 
                 case CommonCssConstants.NOT: {
@@ -136,8 +144,6 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                     //case CommonCssConstants.IN_RANGE:
                     //case CommonCssConstants.INVALID:
                     //case CommonCssConstants.LANG:
-                    //case CommonCssConstants.NTH_LAST_CHILD:
-                    //case CommonCssConstants.NTH_LAST_OF_TYPE:
                     //case CommonCssConstants.ONLY_OF_TYPE:
                     //case CommonCssConstants.ONLY_CHILD:
                     //case CommonCssConstants.OPTIONAL:

@@ -22,21 +22,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
 //\cond DO_NOT_DOCUMENT
-    internal class CssPseudoClassNthOfTypeSelectorItem : CssPseudoClassNthSelectorItem {
+    internal class CssPseudoClassNthLastOfTypeSelectorItem : CssPseudoClassNthSelectorItem {
 //\cond DO_NOT_DOCUMENT
-        internal CssPseudoClassNthOfTypeSelectorItem(String arguments)
-            : base(CommonCssConstants.NTH_OF_TYPE, arguments) {
+        internal CssPseudoClassNthLastOfTypeSelectorItem(String arguments)
+            : base(CommonCssConstants.NTH_LAST_OF_TYPE, arguments) {
         }
 //\endcond
 
         public override bool Matches(INode node) {
             IList<INode> children = GetAllSiblingsOfNodeType(node);
             return !children.IsEmpty() && ResolveNth(node, children);
+        }
+
+        protected internal override bool ResolveNth(INode node, IList<INode> children) {
+            IList<INode> reversedChildren = new List<INode>(children);
+            JavaCollectionsUtil.Reverse(reversedChildren);
+            return base.ResolveNth(node, reversedChildren);
         }
     }
 //\endcond

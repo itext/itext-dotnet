@@ -41,9 +41,6 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
 //\endcond
 
         public override bool Matches(INode node) {
-            if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {
-                return false;
-            }
             IList<INode> children = GetAllSiblings(node);
             return !children.IsEmpty() && ResolveNth(node, children);
         }

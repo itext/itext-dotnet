@@ -59,6 +59,119 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MatchesNthChildFixSelectorItemTest() {
+            CssPseudoClassNthChildSelectorItem item = new CssPseudoClassNthChildSelectorItem("2");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><p>Second</p><p>Third</p><p>Fourth</p>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[1];
+            INode third = bodyNode.ChildNodes()[2];
+            INode fourth = bodyNode.ChildNodes()[3];
+            NUnit.Framework.Assert.IsFalse(item.Matches(first), "First paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(second), "Second paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(third), "Third paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsFalse(item.Matches(fourth), "Fourth paragraph should NOT be matched, but matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthChildEvenSelectorItemTest() {
+            CssPseudoClassNthChildSelectorItem item = new CssPseudoClassNthChildSelectorItem("2n");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><p>Second</p><p>Third</p><p>Fourth</p>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[1];
+            INode third = bodyNode.ChildNodes()[2];
+            INode fourth = bodyNode.ChildNodes()[3];
+            NUnit.Framework.Assert.IsFalse(item.Matches(first), "First paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(second), "Second paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(third), "Third paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(fourth), "Fourth paragraph should be be matched, but WAS NOT matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthChildOddSelectorItemTest() {
+            CssPseudoClassNthChildSelectorItem item = new CssPseudoClassNthChildSelectorItem("2n-1");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><p>Second</p><p>Third</p><p>Fourth</p>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[1];
+            INode third = bodyNode.ChildNodes()[2];
+            INode fourth = bodyNode.ChildNodes()[3];
+            NUnit.Framework.Assert.IsTrue(item.Matches(first), "First paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(second), "Second paragraph should NOT be matched, but matched!"
+                );
+            NUnit.Framework.Assert.IsTrue(item.Matches(third), "Third paragraph should be be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(fourth), "Fourth paragraph should NOT be matched, but matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthLastChildFixSelectorItemTest() {
+            CssPseudoClassNthLastChildSelectorItem item = new CssPseudoClassNthLastChildSelectorItem("2");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><p>Second</p><p>Third</p><p>Fourth</p>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[1];
+            INode third = bodyNode.ChildNodes()[2];
+            INode fourth = bodyNode.ChildNodes()[3];
+            NUnit.Framework.Assert.IsFalse(item.Matches(first), "First paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsFalse(item.Matches(second), "Second paragraph should NOT be matched, but matched!"
+                );
+            NUnit.Framework.Assert.IsTrue(item.Matches(third), "Third paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(fourth), "Fourth paragraph should NOT be matched, but matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthLastChildEvenSelectorItemTest() {
+            CssPseudoClassNthLastChildSelectorItem item = new CssPseudoClassNthLastChildSelectorItem("2n");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><p>Second</p><p>Third</p><p>Fourth</p>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[1];
+            INode third = bodyNode.ChildNodes()[2];
+            INode fourth = bodyNode.ChildNodes()[3];
+            NUnit.Framework.Assert.IsTrue(item.Matches(first), "First paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(second), "Second paragraph should NOT be matched, but matched!"
+                );
+            NUnit.Framework.Assert.IsTrue(item.Matches(third), "Third paragraph should be be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(fourth), "Fourth paragraph should NOT be matched, but matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthLastChildOddSelectorItemTest() {
+            CssPseudoClassNthLastChildSelectorItem item = new CssPseudoClassNthLastChildSelectorItem("2n-1");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><p>Second</p><p>Third</p><p>Fourth</p>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[1];
+            INode third = bodyNode.ChildNodes()[2];
+            INode fourth = bodyNode.ChildNodes()[3];
+            NUnit.Framework.Assert.IsFalse(item.Matches(first), "First paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(second), "Second paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(third), "Third paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(fourth), "Fourth paragraph should be be matched, but WAS NOT matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MatchesFirstOfTypeSelectorItemTest() {
             CssPseudoClassFirstOfTypeSelectorItem item = CssPseudoClassFirstOfTypeSelectorItem.GetInstance();
             IXmlParser htmlParser = new JsoupHtmlParser();
@@ -86,6 +199,66 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
             INode divNode = bodyNode.ChildNodes()[0].ChildNodes()[1];
             NUnit.Framework.Assert.IsTrue(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthLastOfTypeFixSelectorItemTest() {
+            CssPseudoClassNthLastOfTypeSelectorItem item = new CssPseudoClassNthLastOfTypeSelectorItem("2");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><h1>Headline</h1><p>Second</p><h1>Headline</h1><p>Third</p><h1>Headline</h1><p>Fourth</p>"
+                );
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[2];
+            INode third = bodyNode.ChildNodes()[4];
+            INode fourth = bodyNode.ChildNodes()[6];
+            NUnit.Framework.Assert.IsFalse(item.Matches(first), "First paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsFalse(item.Matches(second), "Second paragraph should NOT be matched, but matched!"
+                );
+            NUnit.Framework.Assert.IsTrue(item.Matches(third), "Third paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(fourth), "Fourth paragraph should NOT be be matched, but matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthLastOfTypeEvenSelectorItemTest() {
+            CssPseudoClassNthLastOfTypeSelectorItem item = new CssPseudoClassNthLastOfTypeSelectorItem("2n");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><h1>Headline</h1><p>Second</p><h1>Headline</h1><p>Third</p><h1>Headline</h1><p>Fourth</p>"
+                );
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[2];
+            INode third = bodyNode.ChildNodes()[4];
+            INode fourth = bodyNode.ChildNodes()[6];
+            NUnit.Framework.Assert.IsTrue(item.Matches(first), "First paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(second), "Second paragraph should NOT be matched, but matched!"
+                );
+            NUnit.Framework.Assert.IsTrue(item.Matches(third), "Third paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(fourth), "Fourth paragraph should NOT be be matched, but matched!"
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesNthLastOfTypeOddSelectorItemTest() {
+            CssPseudoClassNthLastOfTypeSelectorItem item = new CssPseudoClassNthLastOfTypeSelectorItem("2n-1");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<p>First</p><h1>Headline</h1><p>Second</p><h1>Headline</h1><p>Third</p><h1>Headline</h1><p>Fourth</p>"
+                );
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode first = bodyNode.ChildNodes()[0];
+            INode second = bodyNode.ChildNodes()[2];
+            INode third = bodyNode.ChildNodes()[4];
+            INode fourth = bodyNode.ChildNodes()[6];
+            NUnit.Framework.Assert.IsFalse(item.Matches(first), "First paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(second), "Second paragraph should be matched, but WAS NOT matched!"
+                );
+            NUnit.Framework.Assert.IsFalse(item.Matches(third), "Third paragraph should NOT be matched, but matched!");
+            NUnit.Framework.Assert.IsTrue(item.Matches(fourth), "Fourth paragraph should be be matched, but WAS NOT matched!"
+                );
         }
 
         [NUnit.Framework.Test]

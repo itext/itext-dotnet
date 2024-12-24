@@ -152,6 +152,24 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Test23() {
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-last-child(2n - 3)"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Test24() {
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-of-type(2n - 3)"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Test25() {
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-last-of-type(2n - 3)"
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PageTest01() {
             NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.ID_SPECIFICITY, GetPageSelectorSpecificity("customPageName"
                 ));
