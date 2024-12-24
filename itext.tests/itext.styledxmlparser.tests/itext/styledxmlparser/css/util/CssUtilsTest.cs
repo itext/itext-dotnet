@@ -99,7 +99,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NormalizeProperty() {
+        public virtual void NormalizePropertyTest() {
             NUnit.Framework.Assert.AreEqual("part1 part2", CssUtils.NormalizeCssProperty("   part1   part2  "));
             NUnit.Framework.Assert.AreEqual("\" the next quote is ESCAPED \\\\\\\" still  IN string \"", CssUtils.NormalizeCssProperty
                 ("\" the next quote is ESCAPED \\\\\\\" still  IN string \""));
@@ -117,6 +117,9 @@ namespace iText.StyledXmlParser.Css.Util {
                 ));
         }
 
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+            )]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_EMPTY_IN_CSS_EXPRESSION)]
         [NUnit.Framework.Test]
         public virtual void NormalizeUrlTest() {
             NUnit.Framework.Assert.AreEqual("url(data:application/font-woff;base64,2CBPCRXmgywtV1t4oWwjBju0kqkvfhPs0cYdMgFtDSY5uL7MIGT5wiGs078HrvBHekp0Yf=)"
@@ -128,6 +131,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 ));
             NUnit.Framework.Assert.AreEqual("url(haveEscapedEndBracket\\))", CssUtils.NormalizeCssProperty("url(  haveEscapedEndBracket\\) )"
                 ));
+            NUnit.Framework.Assert.AreEqual("url(", CssUtils.NormalizeCssProperty("url(https://example.com/"));
+            NUnit.Framework.Assert.AreEqual("url(", CssUtils.NormalizeCssProperty("url("));
         }
 
         [NUnit.Framework.Test]

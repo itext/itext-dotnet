@@ -111,7 +111,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <param name="start">where to start in the source. Should point at first symbol after "url(".</param>
         /// <returns>the new position in the source</returns>
         private static int AppendUrlContent(StringBuilder buffer, String source, int start) {
-            while (iText.IO.Util.TextUtil.IsWhiteSpace(source[start]) && start < source.Length) {
+            while (start < source.Length && iText.IO.Util.TextUtil.IsWhiteSpace(source[start])) {
                 ++start;
             }
             if (start < source.Length) {
