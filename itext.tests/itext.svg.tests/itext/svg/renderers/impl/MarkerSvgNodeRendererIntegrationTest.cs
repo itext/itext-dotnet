@@ -109,32 +109,59 @@ namespace iText.Svg.Renderers.Impl {
         // Markers in different elements
         [NUnit.Framework.Test]
         public virtual void MarkerTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "marker");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInLineElementTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInLineElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolylineElementTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolylineElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolygonElementTest() {
-            // TODO: update when DEVSIX-3397, DEVSIX-2719 will be closed
+            // TODO: update when DEVSIX-2719 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElement");
         }
 
         [NUnit.Framework.Test]
+        public virtual void MarkerInPolygonElementWithComplexAngleTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElementWithComplexAngle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandWithFillAndStrokeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandWithFillAndStroke");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MarkerInPathTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPath");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerInPathWithAngledMarkerTest() {
+            // TODO: update when DEVSIX-8749 will be closed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPathWithAngledMarker");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandInPolylineTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandInPolyline");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandInheritanceTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandTagInheritanceTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandTagInheritance");
         }
 
         [NUnit.Framework.Test]

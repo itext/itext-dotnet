@@ -420,12 +420,9 @@ namespace iText.Svg.Css.Impl {
         }
 
         private IDictionary<String, String> ParseStylesFromStyleAttribute(String style) {
-            IDictionary<String, String> parsed = new Dictionary<String, String>();
-            IList<CssDeclaration> declarations = CssRuleSetParser.ParsePropertyDeclarations(style);
-            foreach (CssDeclaration declaration in declarations) {
-                parsed.Put(declaration.GetProperty(), declaration.GetExpression());
-            }
-            return parsed;
+            IList<CssRuleSet> ruleSets = JavaCollectionsUtil.SingletonList(new CssRuleSet(null, CssRuleSetParser.ParsePropertyDeclarations
+                (style)));
+            return CssStyleSheet.ExtractStylesFromRuleSets(ruleSets);
         }
     }
 }

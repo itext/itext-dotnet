@@ -427,6 +427,18 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant MARGIN_TOP.</summary>
         public const String MARGIN_TOP = "margin-top";
 
+        /// <summary>The Constant MARKER</summary>
+        public const String MARKER = "marker";
+
+        /// <summary>The Constant MARKER_MID</summary>
+        public const String MARKER_MID = "marker-mid";
+
+        /// <summary>The Constant MARKER_START</summary>
+        public const String MARKER_START = "marker-start";
+
+        /// <summary>The Constant MARKER_END</summary>
+        public const String MARKER_END = "marker-end";
+
         /// <summary>The Constant MIN_HEIGHT.</summary>
         public const String MIN_HEIGHT = "min-height";
 

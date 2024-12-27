@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
@@ -36,6 +38,13 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;marker&gt; tag.
     /// </summary>
     public class MarkerSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
+        /// <summary>Attribute defining the marker index on polygon, line or polyline.</summary>
+        /// <remarks>
+        /// Attribute defining the marker index on polygon, line or polyline.
+        /// It is not a property from css standard, used for internal marker processing.
+        /// </remarks>
+        public const String MARKER_INDEX = "marker-index";
+
         // Default marker width in point units (3 px)
         private const float DEFAULT_MARKER_WIDTH = 2.25f;
 
@@ -98,9 +107,37 @@ namespace iText.Svg.Renderers.Impl {
                 namedObject.SetAttribute(SvgConstants.Tags.MARKER, markerToUse.ToString());
                 namedObject.SetAttribute(SvgConstants.Attributes.X, moveX);
                 namedObject.SetAttribute(SvgConstants.Attributes.Y, moveY);
+                context.GetCurrentCanvas().SaveState();
                 namedObject.Draw(context);
+                context.GetCurrentCanvas().RestoreState();
                 // unsetting the parent of the referenced element
                 namedObject.SetParent(null);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static void DrawMarkers(SvgDrawContext context, int startIndex, IList<Point> markerPoints, MarkerVertexType
+             markerToUse, AbstractSvgNodeRenderer parent) {
+            String elementToReUse = SvgTextUtil.FilterReferenceValue(parent.attributesAndStyles.Get(markerToUse.ToString
+                ()));
+            ISvgNodeRenderer template = context.GetNamedObject(elementToReUse);
+            if (!(template is MarkerSvgNodeRenderer && 
+                        // Having markerWidth or markerHeight with negative or zero value disables rendering of the element .
+                        MarkerWidthHeightAreCorrect((MarkerSvgNodeRenderer)template))) {
+                return;
+            }
+            for (int i = 0; i < markerPoints.Count; ++i) {
+                ISvgNodeRenderer marker = template.CreateDeepCopy();
+                // setting the parent of the referenced element to this instance
+                marker.SetParent(parent);
+                marker.SetAttribute(SvgConstants.Tags.MARKER, markerToUse.ToString());
+                marker.SetAttribute(SvgConstants.Attributes.X, SvgCssUtils.ConvertDoubleToString(markerPoints[i].GetX()));
+                marker.SetAttribute(SvgConstants.Attributes.Y, SvgCssUtils.ConvertDoubleToString(markerPoints[i].GetY()));
+                marker.SetAttribute(MarkerSvgNodeRenderer.MARKER_INDEX, JavaUtil.IntegerToString(startIndex + i));
+                context.GetCurrentCanvas().SaveState();
+                marker.Draw(context);
+                context.GetCurrentCanvas().RestoreState();
             }
         }
 //\endcond

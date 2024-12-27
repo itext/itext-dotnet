@@ -404,6 +404,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the height of the viewport in which the marker is to be fitted</summary>
             public const String MARKER_HEIGHT = "markerHeight";
 
+            /// <summary>Attribute defining shorthand for marker-start/marker-mid/marker-end</summary>
+            public const String MARKER = "marker";
+
             /// <summary>Attribute defining the marker drawn at every other vertex but the start and end of a path, line, polygon or polyline
             ///     </summary>
             public const String MARKER_MID = "marker-mid";

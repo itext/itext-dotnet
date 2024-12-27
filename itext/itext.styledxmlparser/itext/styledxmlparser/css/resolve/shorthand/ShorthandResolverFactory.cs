@@ -61,6 +61,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand {
             shorthandResolvers.Put(CommonCssConstants.GRID_COLUMN, new GridColumnShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.GRID_TEMPLATE, new GridTemplateShorthandResolver());
             shorthandResolvers.Put(CommonCssConstants.GRID, new GridShorthandResolver());
+            shorthandResolvers.Put(CommonCssConstants.MARKER, new MarkerShorthandResolver());
         }
 
         /// <summary>Gets a shorthand resolver.</summary>
