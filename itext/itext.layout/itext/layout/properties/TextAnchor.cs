@@ -20,25 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Svg.Renderers;
-
-namespace iText.Svg.Renderers.Impl {
-    public class TextSvgTSpanBranchRenderer : TextSvgBranchRenderer {
-        public TextSvgTSpanBranchRenderer() {
-            this.performRootTransformations = false;
-        }
-
-        public override ISvgNodeRenderer CreateDeepCopy() {
-            TextSvgBranchRenderer copy = new iText.Svg.Renderers.Impl.TextSvgTSpanBranchRenderer();
-            FillCopy(copy);
-            return copy;
-        }
-
-        protected internal override void DoDraw(SvgDrawContext context) {
-            if (GetChildren().IsEmpty() || this.attributesAndStyles == null) {
-                return;
-            }
-            PerformDrawing(context);
-        }
+namespace iText.Layout.Properties {
+    /// <summary>
+    /// A specialized enum containing potential property values for
+    /// <see cref="Property.TEXT_ANCHOR"/>.
+    /// </summary>
+    public enum TextAnchor {
+        START,
+        MIDDLE,
+        END
     }
 }

@@ -21,9 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -45,6 +47,7 @@ namespace iText.Svg.Renderers.Impl {
             return copy;
         }
 
+        [Obsolete]
         public virtual float GetTextContentLength(float parentFontSize, PdfFont font) {
             float contentLength = 0.0f;
             if (font != null && this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes
@@ -78,19 +81,17 @@ namespace iText.Svg.Renderers.Impl {
             return new float[][] { part, part };
         }
 
-        public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint) {
-            if (GetParent() is TextSvgBranchRenderer && basePoint != null) {
-                float parentFontSize = ((AbstractSvgNodeRenderer)GetParent()).GetCurrentFontSize(context);
-                PdfFont parentFont = ((TextSvgBranchRenderer)GetParent()).GetFont();
-                float textLength = GetTextContentLength(parentFontSize, parentFont);
-                float[] fontAscenderDescenderFromMetrics = TextRenderer.CalculateAscenderDescender(parentFont, RenderingMode
-                    .HTML_MODE);
-                float fontAscender = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[0]) * parentFontSize;
-                float fontDescender = FontProgram.ConvertTextSpaceToGlyphSpace(fontAscenderDescenderFromMetrics[1]) * parentFontSize;
-                // TextRenderer#calculateAscenderDescender returns fontDescender as a negative value so we should subtract this value
-                float textHeight = fontAscender - fontDescender;
-                return new TextRectangle((float)basePoint.GetX(), (float)basePoint.GetY() - fontAscender, textLength, textHeight
-                    , (float)basePoint.GetY());
+        public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point startPoint) {
+            if (GetParent() is TextSvgBranchRenderer && startPoint != null) {
+                LineRenderer lineRenderer = LayoutText(context);
+                if (lineRenderer == null) {
+                    return null;
+                }
+                Rectangle textBBox = lineRenderer.GetOccupiedAreaBBox();
+                float textLength = textBBox.GetWidth();
+                float textHeight = textBBox.GetHeight();
+                return new TextRectangle((float)startPoint.GetX(), (float)startPoint.GetY() - lineRenderer.GetMaxAscent(), 
+                    textLength, textHeight, (float)startPoint.GetY());
             }
             else {
                 return null;
@@ -133,6 +134,29 @@ namespace iText.Svg.Renderers.Impl {
             text.SetStrokeWidth(textProperties.GetLineWidth());
             text.SetStrokeColor(textProperties.GetStrokeColor());
             text.SetOpacity(textProperties.GetFillOpacity());
+        }
+
+        private LineRenderer LayoutText(SvgDrawContext context) {
+            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
+                )) {
+                // We need to keep all spaces after whitespace processing, so spaces are replaced with SpaceChar to avoid
+                // trimming trailing spaces at layout level (they trimmed in the beginning of the paragraph by default,
+                // but current text could be somewhere in the middle or end in the final result).
+                text.SetText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT).Replace(" ", "\u00a0"));
+                ((TextSvgBranchRenderer)GetParent()).ApplyFontProperties(text, context);
+                Paragraph paragraph = new Paragraph();
+                paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
+                ParagraphRenderer paragraphRenderer = new ParagraphRenderer(paragraph);
+                paragraph.SetNextRenderer(paragraphRenderer);
+                paragraph.Add(text);
+                PdfFormXObject xObject = new PdfFormXObject(new Rectangle(1e6f, 0));
+                using (iText.Layout.Canvas canvas = new Canvas(new PdfCanvas(xObject, context.GetCurrentCanvas().GetDocument
+                    ()), xObject.GetBBox().ToRectangle())) {
+                    canvas.Add(paragraph);
+                }
+                return paragraphRenderer.GetLines()[0];
+            }
+            return null;
         }
     }
 }

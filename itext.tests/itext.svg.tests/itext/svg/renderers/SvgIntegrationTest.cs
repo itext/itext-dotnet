@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -129,6 +130,8 @@ namespace iText.Svg.Renderers {
         }
 
         protected internal virtual void Compare(String filename, String sourceFolder, String destinationFolder) {
+            System.Console.Out.WriteLine("SVG: " + UrlUtil.GetNormalizedFileUriString(sourceFolder + filename + ".svg"
+                ) + "\n");
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename + ".pdf", sourceFolder
                  + "cmp_" + filename + ".pdf", destinationFolder, "diff_"));
         }

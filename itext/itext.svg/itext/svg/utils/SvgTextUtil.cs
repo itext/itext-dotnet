@@ -148,6 +148,8 @@ namespace iText.Svg.Utils {
         ///     </param>
         /// <returns>float containing the font-size, or the parent font size if the renderer's declaration cannot be resolved
         ///     </returns>
+        [System.ObsoleteAttribute(@"will be removed together with iText.Svg.Renderers.Impl.TextLeafSvgNodeRenderer.GetTextContentLength(float, iText.Kernel.Font.PdfFont)"
+            )]
         public static float ResolveFontSize(ISvgTextNodeRenderer renderer, float parentFontSize) {
             //Use own font-size declaration if it is present, parent's otherwise
             float fontSize = float.NaN;

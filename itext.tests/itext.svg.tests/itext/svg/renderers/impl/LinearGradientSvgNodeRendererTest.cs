@@ -322,6 +322,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TspanTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "tspan");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TextNestedTSpansTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textNestedTSpansTest");
         }
@@ -334,6 +339,21 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void TextDxTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textDxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChineseTextDxTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "chineseTextDxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChineseTextDxVerticalTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "chineseTextDxVerticalTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAnchorTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textAnchorTest");
         }
 
         [NUnit.Framework.Test]

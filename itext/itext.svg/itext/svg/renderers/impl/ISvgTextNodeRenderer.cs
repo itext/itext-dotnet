@@ -28,6 +28,7 @@ using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     public interface ISvgTextNodeRenderer : ISvgNodeRenderer {
+        [Obsolete]
         float GetTextContentLength(float parentFontSize, PdfFont font);
 
         /// <summary>

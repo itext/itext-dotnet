@@ -52,7 +52,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String textDecorationColorValue = null;
             foreach (String value in props) {
                 //For text-decoration-line attributes several attributes may be present at once.
-                //However when "none" attribute is present, all the other attributes become invalid
+                //However, when "none" attribute is present, all the other attributes become invalid
                 if (TEXT_DECORATION_LINE_VALUES.Contains(value) || CommonCssConstants.NONE.Equals(value)) {
                     textDecorationLineValues.Add(value);
                 }

@@ -317,6 +317,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void LinearGradientInsidePatternTextTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradientInsidePatternText");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NestedPatternsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPatterns");
         }
@@ -439,6 +444,16 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CoordSystemTransform() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "coordSystemTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextCoordSystemTransformTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textCoordSystemTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAnchorTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textAnchorTest");
         }
 
         [NUnit.Framework.Test]

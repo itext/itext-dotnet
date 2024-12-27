@@ -350,6 +350,8 @@ namespace iText.Layout.Properties {
 
         public const int TEXT_ALIGNMENT = 70;
 
+        public const int TEXT_ANCHOR = 155;
+
         /// <summary>
         /// Use values from
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>.
@@ -402,7 +404,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 154;
+        private const int MAX_INHERITED_PROPERTY_ID = 155;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -434,6 +436,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_WIDTH] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ALIGNMENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ANCHOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RENDERING_MODE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RISE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;

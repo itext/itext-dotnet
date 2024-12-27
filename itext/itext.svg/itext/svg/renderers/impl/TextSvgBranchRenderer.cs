@@ -30,10 +30,10 @@ using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Css;
-using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -52,9 +52,9 @@ namespace iText.Svg.Renderers.Impl {
         [Obsolete]
         protected internal bool performRootTransformations;
 
-        private PdfFont font;
-
         private Paragraph paragraph;
+
+        private Rectangle objectBoundingBox;
 
         private bool moveResolved;
 
@@ -101,6 +101,7 @@ namespace iText.Svg.Renderers.Impl {
             return JavaCollectionsUtil.UnmodifiableList(children);
         }
 
+        [Obsolete]
         public virtual float GetTextContentLength(float parentFontSize, PdfFont font) {
             return 0.0f;
         }
@@ -128,7 +129,7 @@ namespace iText.Svg.Renderers.Impl {
                 ResolveTextMove(context);
             }
             bool isNullMove = CssUtils.CompareFloats(0f, xMove) && CssUtils.CompareFloats(0f, yMove);
-            // comparision to 0
+            // comparison to 0
             return !isNullMove;
         }
 
@@ -150,48 +151,56 @@ namespace iText.Svg.Renderers.Impl {
             whiteSpaceProcessed = true;
         }
 
-        public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point basePoint) {
-            if (this.attributesAndStyles != null) {
-                ResolveFont(context);
-                double x = 0;
-                double y = 0;
-                if (GetAbsolutePositionChanges()[0] != null) {
-                    x = GetAbsolutePositionChanges()[0][0];
+        public virtual TextRectangle GetTextRectangle(SvgDrawContext context, Point startPoint) {
+            if (this.attributesAndStyles == null) {
+                return null;
+            }
+            startPoint = GetStartPoint(context, startPoint);
+            Rectangle commonRect = null;
+            Rectangle textChunkRect = null;
+            IList<ISvgTextNodeRenderer> children = new List<ISvgTextNodeRenderer>();
+            CollectChildren(children);
+            float rootX = (float)startPoint.GetX();
+            String textAnchorValue = this.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
+            // We resolve absolutely positioned text chunks similar to doDraw method, but here we are interested only in
+            // building of properly positioned rectangles without any drawing or visual properties applying.
+            foreach (ISvgTextNodeRenderer child in children) {
+                if (child is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
+                    startPoint = ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)child).GetStartPoint(context, startPoint);
+                    if (child.ContainsAbsolutePositionChange() && textChunkRect != null) {
+                        commonRect = GetCommonRectangleWithAnchor(commonRect, textChunkRect, rootX, textAnchorValue);
+                        // Start new text chunk.
+                        textChunkRect = null;
+                        textAnchorValue = child.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
+                        rootX = (float)startPoint.GetX();
+                    }
                 }
                 else {
-                    if (basePoint != null) {
-                        x = basePoint.GetX();
-                    }
+                    TextRectangle rectangle = child.GetTextRectangle(context, startPoint);
+                    startPoint = rectangle.GetTextBaseLineRightPoint();
+                    textChunkRect = Rectangle.GetCommonRectangle(textChunkRect, rectangle);
                 }
-                if (GetAbsolutePositionChanges()[1] != null) {
-                    y = GetAbsolutePositionChanges()[1][0];
-                }
-                else {
-                    if (basePoint != null) {
-                        y = basePoint.GetY();
-                    }
-                }
-                bool isRoot = basePoint == null;
-                basePoint = new Point(x, y);
-                basePoint.Move(GetRelativeTranslation(context)[0], GetRelativeTranslation(context)[1]);
-                Rectangle commonRect = null;
-                foreach (ISvgTextNodeRenderer child in GetChildren()) {
-                    if (child != null) {
-                        TextRectangle rectangle = child.GetTextRectangle(context, basePoint);
-                        basePoint = rectangle.GetTextBaseLineRightPoint();
-                        commonRect = Rectangle.GetCommonRectangle(commonRect, rectangle);
-                    }
-                }
-                if (commonRect != null) {
-                    return new TextRectangle(isRoot ? (float)x : commonRect.GetX(), commonRect.GetY(), commonRect.GetWidth(), 
-                        commonRect.GetHeight(), (float)basePoint.GetY());
-                }
+            }
+            if (textChunkRect != null) {
+                commonRect = GetCommonRectangleWithAnchor(commonRect, textChunkRect, rootX, textAnchorValue);
+                return new TextRectangle(commonRect.GetX(), commonRect.GetY(), commonRect.GetWidth(), commonRect.GetHeight
+                    (), (float)startPoint.GetY());
             }
             return null;
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            return GetTextRectangle(context, null);
+            if (GetParent() is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
+                return GetParent().GetObjectBoundingBox(context);
+            }
+            if (objectBoundingBox == null) {
+                // Handle white-spaces
+                if (!whiteSpaceProcessed) {
+                    SvgTextUtil.ProcessWhiteSpace(this, true);
+                }
+                objectBoundingBox = GetTextRectangle(context, null);
+            }
+            return objectBoundingBox;
         }
 
         /// <summary>
@@ -216,6 +225,8 @@ namespace iText.Svg.Renderers.Impl {
             this.paragraph.SetMargin(0);
             ApplyTextRenderingMode(paragraph);
             ApplyFontProperties(paragraph, context);
+            // We resolve and draw absolutely positioned text chunks similar to getTextRectangle method. We are interested
+            // not only in building of properly positioned rectangles, but also in drawing and text properties applying.
             StartNewTextChunk(context, TEXTFLIP);
             PerformDrawing(context);
             DrawLastTextChunk(context);
@@ -270,7 +281,6 @@ namespace iText.Svg.Renderers.Impl {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void PerformDrawing(SvgDrawContext context) {
-            ResolveFont(context);
             if (this.ContainsAbsolutePositionChange()) {
                 DrawLastTextChunk(context);
                 // TODO: DEVSIX-2507 support rotate and other attributes
@@ -284,12 +294,16 @@ namespace iText.Svg.Renderers.Impl {
                 context.MoveRelativePosition(rootMove[0], rootMove[1]);
             }
             foreach (ISvgTextNodeRenderer child in children) {
-                ProcessChild(context, child);
+                SvgTextProperties textProperties = new SvgTextProperties(context.GetSvgTextProperties());
+                child.SetParent(this);
+                child.Draw(context);
+                context.SetSvgTextProperties(textProperties);
             }
         }
 //\endcond
 
-        private static void StartNewTextChunk(SvgDrawContext context, AffineTransform newTransform) {
+        private void StartNewTextChunk(SvgDrawContext context, AffineTransform newTransform) {
+            ApplyTextAnchor();
             context.SetRootTransform(newTransform);
             context.ResetTextMove();
             context.ResetRelativePosition();
@@ -303,27 +317,16 @@ namespace iText.Svg.Renderers.Impl {
             if (paragraph.GetChildren().IsEmpty()) {
                 return;
             }
-            PdfCanvas currentCanvas = context.GetCurrentCanvas();
-            using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(currentCanvas, new Rectangle((float)context.GetRootTransform
-                ().GetTranslateX(), (float)context.GetRootTransform().GetTranslateY(), 1e6f, 0))) {
+            ParagraphRenderer paragraphRenderer = new ParagraphRenderer(paragraph);
+            paragraph.SetNextRenderer(paragraphRenderer);
+            using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(context.GetCurrentCanvas(), new Rectangle((float
+                )context.GetRootTransform().GetTranslateX(), (float)context.GetRootTransform().GetTranslateY(), 1e6f, 
+                0))) {
                 canvas.Add(paragraph);
             }
+            float textLength = paragraphRenderer.GetLines()[0].GetOccupiedAreaBBox().GetWidth();
+            context.AddTextMove(textLength, 0);
             paragraph.GetChildren().Clear();
-        }
-
-        private void ProcessChild(SvgDrawContext context, ISvgTextNodeRenderer c) {
-            float childLength = c.GetTextContentLength(GetCurrentFontSize(context), GetFont());
-            // Handle Text-Anchor declarations
-            float textAnchorCorrection = GetTextAnchorAlignmentCorrection(childLength);
-            if (!CssUtils.CompareFloats(0f, textAnchorCorrection)) {
-                context.AddTextMove(textAnchorCorrection, 0);
-                context.MoveRelativePosition(textAnchorCorrection, 0);
-            }
-            SvgTextProperties textProperties = new SvgTextProperties(context.GetSvgTextProperties());
-            c.SetParent(this);
-            c.Draw(context);
-            context.SetSvgTextProperties(textProperties);
-            context.AddTextMove(childLength, 0);
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -353,43 +356,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 //\endcond
 
-        private void ResolveFont(SvgDrawContext context) {
-            FontProvider provider = context.GetFontProvider();
-            FontSet tempFonts = context.GetTempFonts();
-            font = null;
-            if (!provider.GetFontSet().IsEmpty() || (tempFonts != null && !tempFonts.IsEmpty())) {
-                String fontFamily = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_FAMILY);
-                String fontWeight = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_WEIGHT);
-                String fontStyle = this.attributesAndStyles.Get(SvgConstants.Attributes.FONT_STYLE);
-                fontFamily = fontFamily != null ? fontFamily.Trim() : "";
-                FontInfo fontInfo = ResolveFontName(fontFamily, fontWeight, fontStyle, provider, tempFonts);
-                font = provider.GetPdfFont(fontInfo, tempFonts);
-            }
-            if (font == null) {
-                try {
-                    // TODO: DEVSIX-2057 each call of createFont() create a new instance of PdfFont.
-                    // FontProvider shall be used instead.
-                    font = PdfFontFactory.CreateFont();
-                }
-                catch (System.IO.IOException e) {
-                    throw new SvgProcessingException(SvgExceptionMessageConstant.FONT_NOT_FOUND, e);
-                }
-            }
-        }
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Return the font used in this text element.</summary>
-        /// <remarks>
-        /// Return the font used in this text element.
-        /// Note that font should already be resolved with
-        /// <see cref="ResolveFont(iText.Svg.Renderers.SvgDrawContext)"/>.
-        /// </remarks>
-        /// <returns>font of the current text element</returns>
-        internal virtual PdfFont GetFont() {
-            return font;
-        }
-//\endcond
-
         private void ResolveTextMove(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 String xRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.DX);
@@ -406,18 +372,6 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 moveResolved = true;
             }
-        }
-
-        private FontInfo ResolveFontName(String fontFamily, String fontWeight, String fontStyle, FontProvider provider
-            , FontSet tempFonts) {
-            bool isBold = SvgConstants.Attributes.BOLD.EqualsIgnoreCase(fontWeight);
-            bool isItalic = SvgConstants.Attributes.ITALIC.EqualsIgnoreCase(fontStyle);
-            FontCharacteristics fontCharacteristics = new FontCharacteristics();
-            IList<String> stringArrayList = new List<String>();
-            stringArrayList.Add(fontFamily);
-            fontCharacteristics.SetBoldFlag(isBold);
-            fontCharacteristics.SetItalicFlag(isItalic);
-            return provider.GetFontSelector(stringArrayList, fontCharacteristics, tempFonts).BestMatch();
         }
 
         private void ResolveTextPosition() {
@@ -459,6 +413,27 @@ namespace iText.Svg.Renderers.Impl {
             return result;
         }
 
+        /// <summary>
+        /// Adjust absolutely positioned text chunk (shift it to the start of view port, apply text anchor) and
+        /// merge it with the common text rectangle.
+        /// </summary>
+        /// <param name="commonRect">rectangle for the whole text tag</param>
+        /// <param name="textChunkRect">rectangle for the last absolutely positioned text chunk</param>
+        /// <param name="absoluteX">last absolute x position</param>
+        /// <param name="textAnchorValue">text anchor for the last text chunk</param>
+        /// <returns>merged common text rectangle</returns>
+        private static Rectangle GetCommonRectangleWithAnchor(Rectangle commonRect, Rectangle textChunkRect, float
+             absoluteX, String textAnchorValue) {
+            textChunkRect.MoveRight(absoluteX - textChunkRect.GetX());
+            if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
+                textChunkRect.MoveRight(-textChunkRect.GetWidth() / 2);
+            }
+            if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue)) {
+                textChunkRect.MoveRight(-textChunkRect.GetWidth());
+            }
+            return Rectangle.GetCommonRectangle(commonRect, textChunkRect);
+        }
+
         private void DeepCopyChildren(iText.Svg.Renderers.Impl.TextSvgBranchRenderer deepCopy) {
             foreach (ISvgTextNodeRenderer child in children) {
                 ISvgTextNodeRenderer newChild = (ISvgTextNodeRenderer)child.CreateDeepCopy();
@@ -467,27 +442,61 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private float GetTextAnchorAlignmentCorrection(float childContentLength) {
-            // Resolve text anchor
-            // TODO DEVSIX-2631 properly resolve text-anchor by taking entire line into account, not only children of the current TextSvgBranchRenderer
-            float textAnchorXCorrection = 0.0f;
+        private void ApplyTextAnchor() {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_ANCHOR
                 )) {
                 String textAnchorValue = this.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
-                // Middle
-                if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
-                    if (xPos != null && xPos.Length > 0) {
-                        textAnchorXCorrection -= childContentLength / 2;
-                    }
-                }
-                // End
-                if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue)) {
-                    if (xPos != null && xPos.Length > 0) {
-                        textAnchorXCorrection -= childContentLength;
-                    }
+                ApplyTextAnchor(textAnchorValue);
+            }
+        }
+
+        private void ApplyTextAnchor(String textAnchorValue) {
+            if (GetParent() is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
+                ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)GetParent()).ApplyTextAnchor(textAnchorValue);
+                return;
+            }
+            if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
+                paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.MIDDLE);
+                return;
+            }
+            if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue)) {
+                paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.END);
+                return;
+            }
+            paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.START);
+        }
+
+        private Point GetStartPoint(SvgDrawContext context, Point basePoint) {
+            double x = 0;
+            double y = 0;
+            if (GetAbsolutePositionChanges()[0] != null) {
+                x = GetAbsolutePositionChanges()[0][0];
+            }
+            else {
+                if (basePoint != null) {
+                    x = basePoint.GetX();
                 }
             }
-            return textAnchorXCorrection;
+            if (GetAbsolutePositionChanges()[1] != null) {
+                y = GetAbsolutePositionChanges()[1][0];
+            }
+            else {
+                if (basePoint != null) {
+                    y = basePoint.GetY();
+                }
+            }
+            basePoint = new Point(x, y);
+            basePoint.Move(GetRelativeTranslation(context)[0], GetRelativeTranslation(context)[1]);
+            return basePoint;
+        }
+
+        private void CollectChildren(IList<ISvgTextNodeRenderer> children) {
+            foreach (ISvgTextNodeRenderer child in GetChildren()) {
+                children.Add(child);
+                if (child is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
+                    ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)child).CollectChildren(children);
+                }
+            }
         }
     }
 }

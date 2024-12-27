@@ -157,6 +157,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TspanTextAnchorTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-textAnchor2");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TspanBasicExample() {
             //TODO: update after DEVSIX-2507 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBasicExample");

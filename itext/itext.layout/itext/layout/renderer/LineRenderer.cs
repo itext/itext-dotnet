@@ -1637,8 +1637,11 @@ namespace iText.Layout.Renderer {
             // also add relative x position of the first text chunk in the svg which is ParagraphRenderer first child.
             float originX = (float)GetChildRenderers()[0].GetOccupiedArea().GetBBox().GetLeft() + (float)((TextRenderer
                 )GetParent().GetChildRenderers()[0]).GetPropertyAsFloat(Property.LEFT, 0f);
-            float leftmostX = GetLeftmostX();
+            float[] minMaxX = GetMinMaxX();
+            float leftmostX = minMaxX[0];
             float xShift = originX - leftmostX;
+            float textAnchorCorrection = ApplyTextAnchor(minMaxX[1] - minMaxX[0]);
+            xShift += textAnchorCorrection;
             foreach (IRenderer renderer in GetChildRenderers()) {
                 if (renderer is TextRenderer) {
                     renderer.Move(xShift, 0);
@@ -1646,8 +1649,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private float GetLeftmostX() {
+        private float[] GetMinMaxX() {
             float leftmostX = float.MaxValue;
+            float rightmostX = float.Epsilon;
             for (int i = 0; i < GetChildRenderers().Count; i++) {
                 IRenderer renderer = GetChildRenderers()[i];
                 if (renderer is TextRenderer) {
@@ -1659,9 +1663,30 @@ namespace iText.Layout.Renderer {
                     if (x < leftmostX) {
                         leftmostX = x;
                     }
+                    float width = textRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                    if (x + width > rightmostX) {
+                        rightmostX = x + width;
+                    }
                 }
             }
-            return leftmostX;
+            return new float[] { leftmostX, rightmostX };
+        }
+
+        private float ApplyTextAnchor(float textWidth) {
+            TextAnchor textAnchor = (TextAnchor)this.GetProperty<TextAnchor?>(Property.TEXT_ANCHOR, TextAnchor.START);
+            switch (textAnchor) {
+                case TextAnchor.END: {
+                    return -textWidth;
+                }
+
+                case TextAnchor.MIDDLE: {
+                    return -textWidth / 2;
+                }
+
+                default: {
+                    return 0;
+                }
+            }
         }
 
         public class RendererGlyph {
