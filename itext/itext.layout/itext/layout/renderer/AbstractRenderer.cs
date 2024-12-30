@@ -592,8 +592,8 @@ namespace iText.Layout.Renderer {
             ) {
             Rectangle originBackgroundArea = ApplyBackgroundBoxProperty(backgroundArea.Clone(), backgroundImage.GetBackgroundOrigin
                 ());
-            float[] imageWidthAndHeight = BackgroundSizeCalculationUtil.CalculateBackgroundImageSize(backgroundImage, 
-                originBackgroundArea.GetWidth(), originBackgroundArea.GetHeight());
+            float[] imageWidthAndHeight = backgroundImage.CalculateBackgroundImageSize(originBackgroundArea.GetWidth()
+                , originBackgroundArea.GetHeight());
             PdfXObject backgroundXObject = backgroundImage.GetImage();
             if (backgroundXObject == null) {
                 backgroundXObject = backgroundImage.GetForm();

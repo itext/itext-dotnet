@@ -41,10 +41,12 @@ using iText.Test.Attributes;
 namespace iText.Layout.Properties {
     [NUnit.Framework.Category("IntegrationTest")]
     public class BackgroundImageTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private const float DELTA = 0.0001f;
+
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BackgroundImageTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/BackgroundImageTest/";
 
         [NUnit.Framework.OneTimeSetUp]
@@ -621,6 +623,58 @@ namespace iText.Layout.Properties {
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLinearGradientAndLuminosityBlendModeTest() {
             BlendModeTest(BlendMode.LUMINOSITY);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateImageSizeTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            float[] widthAndHeight = backgroundImage.CalculateBackgroundImageSize(200f, 300f);
+            iText.Test.TestUtil.AreEqual(new float[] { 45f, 45f }, widthAndHeight, DELTA);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateImageSizeWithCoverPropertyTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            backgroundImage.GetBackgroundSize().SetBackgroundSizeToCover();
+            float[] widthAndHeight = backgroundImage.CalculateBackgroundImageSize(200f, 300f);
+            iText.Test.TestUtil.AreEqual(new float[] { 300f, 300f }, widthAndHeight, DELTA);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateSizeWithContainPropertyTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "pattern-grg-rrg-rgg.png"
+                ));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            backgroundImage.GetBackgroundSize().SetBackgroundSizeToContain();
+            float[] widthAndHeight = backgroundImage.CalculateBackgroundImageSize(200f, 300f);
+            iText.Test.TestUtil.AreEqual(new float[] { 200f, 200.000015f }, widthAndHeight, DELTA);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateSizeWithContainAndImageWeightMoreThatHeightTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            backgroundImage.GetBackgroundSize().SetBackgroundSizeToContain();
+            float[] widthAndHeight = backgroundImage.CalculateBackgroundImageSize(200f, 300f);
+            iText.Test.TestUtil.AreEqual(new float[] { 200f, 112.5f }, widthAndHeight, DELTA);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalculateSizeWithCoverAndImageWeightMoreThatHeightTest() {
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(xObject).
+                Build();
+            backgroundImage.GetBackgroundSize().SetBackgroundSizeToCover();
+            float[] widthAndHeight = backgroundImage.CalculateBackgroundImageSize(200f, 300f);
+            iText.Test.TestUtil.AreEqual(new float[] { 533.3333f, 300f }, widthAndHeight, DELTA);
         }
 
         private void BlendModeTest(BlendMode blendMode) {

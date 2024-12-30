@@ -26,6 +26,10 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.Layout.Properties {
     /// <summary>Class to hold background-image property.</summary>
     public class BackgroundImage {
+        private static readonly UnitValue PERCENT_VALUE_100 = UnitValue.CreatePercentValue(100F);
+
+        private const float EPS = 1e-4F;
+
         private static readonly BlendMode DEFAULT_BLEND_MODE = BlendMode.NORMAL;
 
         protected internal PdfXObject image;
@@ -147,6 +151,31 @@ namespace iText.Layout.Properties {
             this.backgroundOrigin = origin;
         }
 
+        /// <summary>Calculates width and height values for background image with a given area params.</summary>
+        /// <param name="areaWidth">width of the area of this images</param>
+        /// <param name="areaHeight">height of the area of this images</param>
+        /// <returns>array of two float values. NOTE that first value defines width, second defines height</returns>
+        public virtual float[] CalculateBackgroundImageSize(float areaWidth, float areaHeight) {
+            BackgroundSize size;
+            if (GetLinearGradientBuilder() == null && GetBackgroundSize().IsSpecificSize()) {
+                size = CalculateBackgroundSizeForArea(this, areaWidth, areaHeight);
+            }
+            else {
+                size = GetBackgroundSize();
+            }
+            UnitValue widthUV = size.GetBackgroundWidthSize();
+            UnitValue heightUV = size.GetBackgroundHeightSize();
+            if (widthUV != null && widthUV.IsPercentValue()) {
+                widthUV = UnitValue.CreatePointValue(areaWidth * widthUV.GetValue() / PERCENT_VALUE_100.GetValue());
+            }
+            if (heightUV != null && heightUV.IsPercentValue()) {
+                heightUV = UnitValue.CreatePointValue(areaHeight * heightUV.GetValue() / PERCENT_VALUE_100.GetValue());
+            }
+            float? width = widthUV != null && widthUV.GetValue() >= 0 ? (float?)widthUV.GetValue() : null;
+            float? height = heightUV != null && heightUV.GetValue() >= 0 ? (float?)heightUV.GetValue() : null;
+            return ResolveWidthAndHeight(width, height, areaWidth, areaHeight);
+        }
+
         /// <summary>Gets background-position.</summary>
         /// <returns>
         /// 
@@ -233,6 +262,67 @@ namespace iText.Layout.Properties {
         /// </returns>
         public virtual BackgroundBox GetBackgroundOrigin() {
             return backgroundOrigin;
+        }
+
+        /// <summary>Resolves the final size of the background image in specified area.</summary>
+        /// <param name="width">the intrinsic background image width</param>
+        /// <param name="height">the intrinsic background image height</param>
+        /// <param name="areaWidth">the area width in which background will be placed</param>
+        /// <param name="areaHeight">the area height in which background will be placed</param>
+        /// <returns>the final size of the background image</returns>
+        protected internal virtual float[] ResolveWidthAndHeight(float? width, float? height, float areaWidth, float
+             areaHeight) {
+            bool isGradient = GetLinearGradientBuilder() != null;
+            float?[] widthAndHeight = new float?[2];
+            if (width != null) {
+                widthAndHeight[0] = width;
+                if (!isGradient && height == null) {
+                    float difference = GetImageWidth() < EPS ? 1F : (float)width / GetImageWidth();
+                    widthAndHeight[1] = GetImageHeight() * difference;
+                }
+            }
+            if (height != null) {
+                widthAndHeight[1] = height;
+                if (!isGradient && width == null) {
+                    float difference = GetImageHeight() < EPS ? 1F : (float)height / GetImageHeight();
+                    widthAndHeight[0] = GetImageWidth() * difference;
+                }
+            }
+            if (widthAndHeight[0] == null) {
+                widthAndHeight[0] = isGradient ? areaWidth : GetImageWidth();
+            }
+            if (widthAndHeight[1] == null) {
+                widthAndHeight[1] = isGradient ? areaHeight : GetImageHeight();
+            }
+            return new float[] { (float)widthAndHeight[0], (float)widthAndHeight[1] };
+        }
+
+        private static BackgroundSize CalculateBackgroundSizeForArea(iText.Layout.Properties.BackgroundImage image
+            , float areaWidth, float areaHeight) {
+            double widthDifference = areaWidth / image.GetImageWidth();
+            double heightDifference = areaHeight / image.GetImageHeight();
+            if (image.GetBackgroundSize().IsCover()) {
+                return CreateBackgroundSizeWithMaxValueSide(widthDifference > heightDifference);
+            }
+            else {
+                if (image.GetBackgroundSize().IsContain()) {
+                    return CreateBackgroundSizeWithMaxValueSide(widthDifference < heightDifference);
+                }
+                else {
+                    return new BackgroundSize();
+                }
+            }
+        }
+
+        private static BackgroundSize CreateBackgroundSizeWithMaxValueSide(bool maxWidth) {
+            BackgroundSize size = new BackgroundSize();
+            if (maxWidth) {
+                size.SetBackgroundSizeToValues(PERCENT_VALUE_100, null);
+            }
+            else {
+                size.SetBackgroundSizeToValues(null, PERCENT_VALUE_100);
+            }
+            return size;
         }
 
         /// <summary>

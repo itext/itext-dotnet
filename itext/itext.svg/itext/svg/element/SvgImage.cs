@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
@@ -46,10 +47,24 @@ namespace iText.Svg.Element {
         }
 
         /// <summary>
+        /// Gets the
+        /// <see cref="iText.Svg.Xobject.SvgImageXObject"/>
+        /// contained in this image object.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Svg.Xobject.SvgImageXObject"/>
+        /// </returns>
+        public virtual SvgImageXObject GetSvgImageXObject() {
+            return (SvgImageXObject)GetXObject();
+        }
+
+        /// <summary>
         /// Draws SVG image to a canvas-like object maintained in the
         /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>.
         /// </summary>
         /// <param name="document">pdf that shall contain the SVG image.</param>
+        [System.ObsoleteAttribute(@"was replaced by getSvgImageXObject().generate(PdfDocument)")]
         public virtual void Generate(PdfDocument document) {
             ((SvgImageXObject)xObject).Generate(document);
         }

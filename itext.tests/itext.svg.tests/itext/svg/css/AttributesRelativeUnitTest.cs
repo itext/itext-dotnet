@@ -121,6 +121,11 @@ namespace iText.Svg.Css {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svgWidthAndHeightEmAndRemTest");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SvgRelativeSizeWithViewBox1() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svgRelativeSizeWithViewBox1");
+        }
+
         //-------------- use
         [NUnit.Framework.Test]
         public virtual void UseXPercentTest() {
@@ -169,6 +174,32 @@ namespace iText.Svg.Css {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "symbolWidthAndHeightEmAndRemTest");
         }
 
+        //-------------- SVGs with absolute or missing size, but with viewBox and or preserveAspectRatio="none"
+        [NUnit.Framework.Test]
+        public virtual void AbsoluteWidthHeightViewBoxTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absoluteWidthHeightViewBoxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AbsoluteHeightViewBoxMissWidthTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absoluteHeightViewBoxMissWidthTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AbsoluteWidthNoHeightNoViewBoxTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absoluteWidthNoHeightNoViewBoxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AbsoluteWidthViewBoxNoHeightTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absoluteWidthViewBoxNoHeightTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AbsWidthViewBoxNoneRatioTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "absWidthViewBoxNoneRatioTest");
+        }
+
         //-------------- misc
         [NUnit.Framework.Test]
         public virtual void LinePercentTest() {
@@ -202,6 +233,16 @@ namespace iText.Svg.Css {
             // It is expected that the result is different with browser. In
             // browsers the result should be bigger but with the same proportions
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewportFromConverterPropertiesTest", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ViewBoxMissWidthHeightTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxMissWidthHeightTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PercentHeightMissWidthViewBoxTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "percentHeightMissWidthViewBoxTest");
         }
     }
 }

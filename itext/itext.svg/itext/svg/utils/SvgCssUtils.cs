@@ -213,10 +213,8 @@ namespace iText.Svg.Utils {
             if (context.GetCustomViewport() == null) {
                 float[] viewBox = iText.Svg.Utils.SvgCssUtils.ParseViewBox(svgRenderer);
                 if (viewBox == null) {
-                    percentHorizontalBase = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWPORT_WIDTH
-                        );
-                    percentVerticalBase = CssDimensionParsingUtils.ParseAbsoluteLength(SvgConstants.Values.DEFAULT_VIEWPORT_HEIGHT
-                        );
+                    percentHorizontalBase = SvgConstants.Values.DEFAULT_VIEWPORT_WIDTH;
+                    percentVerticalBase = SvgConstants.Values.DEFAULT_VIEWPORT_HEIGHT;
                 }
                 else {
                     percentHorizontalBase = viewBox[2];

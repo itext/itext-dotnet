@@ -48,8 +48,10 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual Rectangle CalculateViewPort(SvgDrawContext context) {
             Rectangle percentBaseBox;
             if (GetParent() is PdfRootSvgNodeRenderer || !(GetParent() is AbstractSvgNodeRenderer)) {
-                // If the current container is a top level SVG, take a current view port as a percent base
-                percentBaseBox = context.GetCurrentViewPort();
+                // If the current container is a top level SVG, make a copy of the current viewport.
+                // It is needed to avoid double percent resolving. For absolute sized viewport we
+                // will get the same viewport, so save resources and just make a copy.
+                return context.GetCurrentViewPort().Clone();
             }
             else {
                 // If the current container is nested container, take a view box as a percent base

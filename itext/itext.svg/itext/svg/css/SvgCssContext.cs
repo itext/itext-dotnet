@@ -45,5 +45,11 @@ namespace iText.Svg.Css {
         public virtual void SetRootFontSize(String fontSizeStr) {
             this.rootFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeStr);
         }
+
+        /// <summary>Sets the root font size.</summary>
+        /// <param name="rootFontSize">the new root font size</param>
+        public virtual void SetRootFontSize(float rootFontSize) {
+            this.rootFontSize = rootFontSize;
+        }
     }
 }
