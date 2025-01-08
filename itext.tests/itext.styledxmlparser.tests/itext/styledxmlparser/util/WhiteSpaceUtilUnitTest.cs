@@ -73,5 +73,45 @@ namespace iText.StyledXmlParser.Util {
             String expected = " A B ";
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepLineBreaksCollapseSpacesTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = true;
+            bool collapseSpaces = true;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = " A B \n A B ";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepLineBreaksKeepSpacesTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = true;
+            bool collapseSpaces = false;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = "\u200d\t  A B  \n\u200d  A   B   \t";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLineBreaksKeepSpacesTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = false;
+            bool collapseSpaces = true;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = " A B A B ";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLineBreaksCollapseSpacesInvalidTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = false;
+            bool collapseSpaces = false;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = "\u200d\t  A B  \n\u200d  A   B   \t";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

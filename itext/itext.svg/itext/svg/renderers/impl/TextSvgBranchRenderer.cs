@@ -222,6 +222,7 @@ namespace iText.Svg.Renderers.Impl {
             this.paragraph = new Paragraph();
             this.paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
             this.paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.SVG_MODE);
+            this.paragraph.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
             this.paragraph.SetMargin(0);
             ApplyTextRenderingMode(paragraph);
             ApplyFontProperties(paragraph, context);

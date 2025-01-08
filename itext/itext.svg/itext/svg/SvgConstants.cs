@@ -588,6 +588,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining XML namespace</summary>
             public const String XMLNS = "xmlns";
 
+            /// <summary>Attribute defining the property that sets how white space inside an element is handled.</summary>
+            public const String XML_SPACE = "xml:space";
+
             /// <summary>Attribute defining the y value of an element.</summary>
             public const String Y = "y";
 

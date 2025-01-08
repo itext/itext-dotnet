@@ -37,7 +37,6 @@ namespace iText.Svg.Renderers {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
-        //TODO DEVSIX-5740: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void RelativePositionsBasic1Test() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsBasic");
@@ -48,19 +47,19 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsBasic2");
         }
 
-        //TODO DEVSIX-5740: Update cmp file after supporting
+        //TODO DEVSIX-4068: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void RelativePositionsListValuesTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsListValues");
         }
 
-        //TODO DEVSIX-5740: Update cmp file after supporting
+        //TODO DEVSIX-4068: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void RelativePositionsListValuesNoXTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsListValuesNoX");
         }
 
-        //TODO DEVSIX-5740: Update cmp file after supporting
+        //TODO DEVSIX-4068: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void RelativePositionsListValuesNoYTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativePositionsListValuesNoY");

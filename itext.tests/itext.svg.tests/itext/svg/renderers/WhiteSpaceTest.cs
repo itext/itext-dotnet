@@ -26,7 +26,6 @@ using iText.Test;
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class WhiteSpaceTest : SvgIntegrationTest {
-        //TODO DEVSIX-2284: Update cmp file after supporting
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/WhiteSpaceTest/";
 
@@ -61,6 +60,19 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         public virtual void WhiteSpaceRelativePositionsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "white-space-basic-relative-positions");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhiteSpaceEmptyTest() {
+            // This test result is different from browser since we don't add empty (or whitespace only) children to the
+            // text branch renderer. But even if we will, spaces will be preserved for pre, pre-wrap and pre-line, however
+            // they shouldn't for pre-wrap and pre-line values.
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "white-space-empty");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhiteSpaceLeadingTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "white-space-leading");
         }
     }
 }

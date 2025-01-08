@@ -55,7 +55,6 @@ namespace iText.Svg.Googlecharts {
 
         [NUnit.Framework.Test]
         public virtual void SankeyFontsChart() {
-            // TODO DEVSIX-2905
             ConvertAndCompare(sourceFolder, destinationFolder, "sankeyFontsChart");
         }
 

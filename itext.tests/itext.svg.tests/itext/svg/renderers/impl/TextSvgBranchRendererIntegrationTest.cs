@@ -301,31 +301,26 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextWhiteSpaceNormalTest() {
-            //TODO: DEVSIX-2284 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpaceNormal");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextWhiteSpacePreTest() {
-            //TODO: DEVSIX-2284 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePre");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextWhiteSpaceNoWrapTest() {
-            //TODO: DEVSIX-2284 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpaceNoWrap");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextWhiteSpacePreWrapTest() {
-            //TODO: DEVSIX-2284 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreWrap");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextWhiteSpacePreLineTest() {
-            //TODO: DEVSIX-2284 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreLine");
         }
     }

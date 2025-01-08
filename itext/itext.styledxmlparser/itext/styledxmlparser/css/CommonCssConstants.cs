@@ -181,6 +181,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant BREAK_ALL.</summary>
         public const String BREAK_ALL = "break-all";
 
+        /// <summary>The Constant BREAK_SPACES.</summary>
+        public const String BREAK_SPACES = "break-spaces";
+
         /// <summary>The Constant CAPTION_SIDE.</summary>
         public const String CAPTION_SIDE = "caption-side";
 
@@ -844,6 +847,15 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant PADDING_BOX.</summary>
         public const String PADDING_BOX = "padding-box";
+
+        /// <summary>The Constant PRE.</summary>
+        public const String PRE = "pre";
+
+        /// <summary>The Constant PRE_LINE.</summary>
+        public const String PRE_LINE = "pre-line";
+
+        /// <summary>The Constant PRE_WRAP.</summary>
+        public const String PRE_WRAP = "pre-wrap";
 
         /// <summary>The Constant RAD.</summary>
         public const String RAD = "rad";

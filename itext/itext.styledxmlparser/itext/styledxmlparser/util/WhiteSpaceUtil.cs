@@ -65,5 +65,72 @@ namespace iText.StyledXmlParser.Util {
         public static bool IsNonEmSpace(char ch) {
             return iText.IO.Util.TextUtil.IsWhiteSpace(ch) && !EM_SPACES.Contains(ch);
         }
+
+        /// <summary>Checks if a character is white space value that doesn't cause a newline.</summary>
+        /// <param name="ch">the character</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// , if the character is a white space character, but no newline
+        /// </returns>
+        public static bool IsNonLineBreakSpace(char ch) {
+            return WhiteSpaceUtil.IsNonEmSpace(ch) && ch != '\n';
+        }
+
+        /// <summary>
+        /// Processes whitespaces according to provided
+        /// <paramref name="keepLineBreaks"/>
+        /// and
+        /// <paramref name="collapseSpaces"/>
+        /// values.
+        /// </summary>
+        /// <param name="text">string to process</param>
+        /// <param name="keepLineBreaks">whether to keep line breaks</param>
+        /// <param name="collapseSpaces">whether to collapse spaces</param>
+        /// <returns>processed string</returns>
+        public static String ProcessWhitespaces(String text, bool keepLineBreaks, bool collapseSpaces) {
+            if (!keepLineBreaks && collapseSpaces) {
+                // Don't keep line breaks and collapse spaces. Normal or nowrap.
+                text = WhiteSpaceUtil.CollapseConsecutiveSpaces(text);
+            }
+            else {
+                if (keepLineBreaks && collapseSpaces) {
+                    // Keep line breaks and collapse spaces. Pre-line.
+                    StringBuilder sb = new StringBuilder(text.Length);
+                    for (int i = 0; i < text.Length; i++) {
+                        if (WhiteSpaceUtil.IsNonLineBreakSpace(text[i])) {
+                            if (sb.Length == 0 || sb[sb.Length - 1] != ' ') {
+                                sb.Append(" ");
+                            }
+                        }
+                        else {
+                            sb.Append(text[i]);
+                        }
+                    }
+                    text = sb.ToString();
+                }
+                else {
+                    // Preserve line breaks and spaces. Pre, pre-wrap and break-spaces.
+                    text = KeepLineBreaksAndSpaces(text);
+                }
+            }
+            return text;
+        }
+
+        private static String KeepLineBreaksAndSpaces(String text) {
+            StringBuilder sb = new StringBuilder(text.Length);
+            // Prohibit trimming first and last spaces.
+            sb.Append('\u200d');
+            for (int i = 0; i < text.Length; i++) {
+                sb.Append(text[i]);
+                if ('\n' == text[i] || ('\r' == text[i] && i + 1 < text.Length && '\n' != text[i + 1])) {
+                    sb.Append('\u200d');
+                }
+            }
+            if ('\u200d' == sb[sb.Length - 1]) {
+                sb.Delete(sb.Length - 1, sb.Length);
+            }
+            return sb.ToString();
+        }
     }
 }

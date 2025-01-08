@@ -45,7 +45,7 @@ namespace iText.Svg.Utils {
             while (current < end) {
                 char currentChar = toTrim[current];
                 if (iText.IO.Util.TextUtil.IsWhiteSpace(currentChar) && !(currentChar == '\n' || currentChar == '\r')) {
-                    //if the character is whitespace and not a newline, increase current
+                    // If the character is whitespace and not a newline, increase current.
                     current++;
                 }
                 else {
@@ -68,7 +68,7 @@ namespace iText.Svg.Utils {
                 while (current >= 0) {
                     char currentChar = toTrim[current];
                     if (iText.IO.Util.TextUtil.IsWhiteSpace(currentChar) && !(currentChar == '\n' || currentChar == '\r')) {
-                        //if the character is whitespace and not a newline, increase current
+                        // If the character is whitespace and not a newline, increase current.
                         current--;
                     }
                     else {
@@ -97,33 +97,54 @@ namespace iText.Svg.Utils {
         /// <param name="isLeadingElement">true if this element is a leading element(either the first child or the first element after an absolute position change)
         ///     </param>
         public static void ProcessWhiteSpace(TextSvgBranchRenderer root, bool isLeadingElement) {
-            // when svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
+            // When svg is parsed by jsoup it leaves all whitespace in text element as is. Meaning that
             // tab/space indented xml files will retain their tabs and spaces.
             // The following regex replaces all whitespace with a single space.
-            bool performLeadingTrim = isLeadingElement;
+            String whiteSpace = root.GetAttributeMapCopy().IsEmpty() ? CommonCssConstants.NORMAL : root.GetAttribute(CommonCssConstants
+                .WHITE_SPACE);
+            if (whiteSpace == null) {
+                // XML_SPACE is 'default' or 'preserve'.
+                whiteSpace = root.GetAttribute(SvgConstants.Attributes.XML_SPACE);
+                if ("preserve".Equals(whiteSpace)) {
+                    whiteSpace = CommonCssConstants.PRE;
+                }
+                else {
+                    whiteSpace = CommonCssConstants.NORMAL;
+                }
+            }
+            bool keepLineBreaks = CommonCssConstants.PRE.Equals(whiteSpace) || CommonCssConstants.PRE_WRAP.Equals(whiteSpace
+                ) || CommonCssConstants.PRE_LINE.Equals(whiteSpace) || CommonCssConstants.BREAK_SPACES.Equals(whiteSpace
+                );
+            bool collapseSpaces = !(CommonCssConstants.PRE.Equals(whiteSpace) || CommonCssConstants.PRE_WRAP.Equals(whiteSpace
+                ) || CommonCssConstants.BREAK_SPACES.Equals(whiteSpace));
             foreach (ISvgTextNodeRenderer child in root.GetChildren()) {
-                //If leaf, process contents, if branch, call function again
+                // If child is leaf, process contents, if it is branch, call function again.
                 if (child is TextSvgBranchRenderer) {
-                    //Branch processing
-                    ProcessWhiteSpace((TextSvgBranchRenderer)child, child.ContainsAbsolutePositionChange());
+                    // Branch processing.
+                    ProcessWhiteSpace((TextSvgBranchRenderer)child, child.ContainsAbsolutePositionChange() || isLeadingElement
+                        );
                     ((TextSvgBranchRenderer)child).MarkWhiteSpaceProcessed();
+                    isLeadingElement = false;
                 }
                 if (child is TextLeafSvgNodeRenderer) {
-                    //Leaf processing
+                    // Leaf processing.
                     TextLeafSvgNodeRenderer leafRend = (TextLeafSvgNodeRenderer)child;
-                    //Process text
+                    // Process text.
                     String toProcess = leafRend.GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
-                    toProcess = iText.Commons.Utils.StringUtil.ReplaceAll(toProcess, "\\s+", " ");
-                    toProcess = WhiteSpaceUtil.CollapseConsecutiveSpaces(toProcess);
-                    if (performLeadingTrim) {
-                        //Trim leading white spaces
-                        toProcess = TrimLeadingWhitespace(toProcess);
-                        toProcess = TrimTrailingWhitespace(toProcess);
-                        performLeadingTrim = false;
-                    }
-                    else {
-                        //only collapse whitespace
-                        toProcess = TrimTrailingWhitespace(toProcess);
+                    // For now, text element contains single line and no-wrapping by default.
+                    toProcess = toProcess.Replace("\n", "");
+                    toProcess = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+                    if (!keepLineBreaks) {
+                        if (isLeadingElement) {
+                            // Trim leading and trailing whitespaces.
+                            toProcess = TrimLeadingWhitespace(toProcess);
+                            toProcess = TrimTrailingWhitespace(toProcess);
+                            isLeadingElement = false;
+                        }
+                        else {
+                            // Only trim trailing whitespaces.
+                            toProcess = TrimTrailingWhitespace(toProcess);
+                        }
                     }
                     leafRend.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, toProcess);
                 }
@@ -135,9 +156,9 @@ namespace iText.Svg.Utils {
         /// <returns>true if the string only contains whitespace characters, false otherwise</returns>
         public static bool IsOnlyWhiteSpace(String s) {
             String trimmedText = iText.Commons.Utils.StringUtil.ReplaceAll(s, "\\s+", " ");
-            //Trim leading whitespace
+            // Trim leading whitespace.
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimLeadingWhitespace(trimmedText);
-            //Trim trailing whitespace
+            // Trim trailing whitespace.
             trimmedText = iText.Svg.Utils.SvgTextUtil.TrimTrailingWhitespace(trimmedText);
             return "".Equals(trimmedText);
         }
