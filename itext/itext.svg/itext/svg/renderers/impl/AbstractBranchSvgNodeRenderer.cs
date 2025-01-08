@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
-using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -75,14 +74,15 @@ namespace iText.Svg.Renderers.Impl {
                 PdfCanvas newCanvas = new PdfCanvas(xObject, context.GetCurrentCanvas().GetDocument());
                 ApplyViewBox(context);
                 bool overflowVisible = IsOverflowVisible(this);
+                Rectangle bbBox;
                 // TODO (DEVSIX-3482) Currently overflow logic works only for markers.  Update this code after the ticket will be finished.
                 if (this is MarkerSvgNodeRenderer && overflowVisible) {
-                    WriteBBoxAccordingToVisibleOverflow(context, stream);
+                    bbBox = GetBBoxAccordingToVisibleOverflow(context);
                 }
                 else {
-                    Rectangle bbBox = context.GetCurrentViewPort().Clone();
-                    stream.Put(PdfName.BBox, new PdfArray(bbBox));
+                    bbBox = context.GetCurrentViewPort().Clone();
                 }
+                stream.Put(PdfName.BBox, new PdfArray(bbBox));
                 context.PushCanvas(newCanvas);
                 // TODO (DEVSIX-3482) Currently overflow logic works only for markers. Update this code after the ticket will be finished.
                 if (!(this is MarkerSvgNodeRenderer) || !overflowVisible) {
@@ -97,26 +97,9 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 CleanUp(context);
                 // Transformation already happened in AbstractSvgNodeRenderer, so no need to do a transformation here
-                AddXObject(context.GetCurrentCanvas(), xObject, 0, 0);
+                context.GetCurrentCanvas().AddXObjectAt(xObject, bbBox.GetX(), bbBox.GetY());
             }
         }
-
-//\cond DO_NOT_DOCUMENT
-        //TODO: DEVSIX-5731 Replace this workaround method with PdfCanvas::addXObjectAt
-        internal static void AddXObject(PdfCanvas canvas, PdfXObject xObject, float x, float y) {
-            if (xObject is PdfFormXObject) {
-                canvas.SaveState();
-                canvas.ConcatMatrix(1, 0, 0, 1, x, y);
-                PdfName name = canvas.GetResources().AddForm((PdfFormXObject)xObject);
-                canvas.GetContentStream().GetOutputStream().Write(name).WriteSpace().WriteBytes(ByteUtils.GetIsoBytes("Do\n"
-                    ));
-                canvas.RestoreState();
-            }
-            else {
-                canvas.AddXObjectAt(xObject, x, y);
-            }
-        }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Applies a transformation based on a viewBox for a given branch node.</summary>
@@ -274,24 +257,29 @@ namespace iText.Svg.Renderers.Impl {
         /// <c>overflow</c>
         /// is
         /// <c>visible</c>
-        /// the corresponding formXObject
-        /// should have a BBox (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries)
-        /// that should cover the entire svg space (page in pdf) in order to be able to show parts of the element which are outside the current element viewPort.
+        /// the corresponding formXObject should have a BBox
+        /// (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries) that should cover the entire svg
+        /// space (page in pdf) in order to be able to show parts of the element which are outside the current element
+        /// viewPort.
         /// </summary>
         /// <remarks>
         /// When in the svg element
         /// <c>overflow</c>
         /// is
         /// <c>visible</c>
-        /// the corresponding formXObject
-        /// should have a BBox (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries)
-        /// that should cover the entire svg space (page in pdf) in order to be able to show parts of the element which are outside the current element viewPort.
-        /// To do this, we get the inverse matrix of all the current transformation matrix changes and apply it to the root viewPort.
-        /// This allows you to get the root rectangle in the final coordinate system.
+        /// the corresponding formXObject should have a BBox
+        /// (form XObject’s bounding box; see PDF 32000-1:2008 - 8.10.2 Form Dictionaries) that should cover the entire svg
+        /// space (page in pdf) in order to be able to show parts of the element which are outside the current element
+        /// viewPort. To do this, we get the inverse matrix of all the current transformation matrix changes and apply it
+        /// to the root viewPort. This allows you to get the root rectangle in the final coordinate system.
         /// </remarks>
         /// <param name="context">current context to get canvases and view ports</param>
-        /// <param name="stream">stream to write a BBox</param>
-        private static void WriteBBoxAccordingToVisibleOverflow(SvgDrawContext context, PdfStream stream) {
+        /// <returns>
+        /// the set to
+        /// <c>PdfStream</c>
+        /// bbox
+        /// </returns>
+        private static Rectangle GetBBoxAccordingToVisibleOverflow(SvgDrawContext context) {
             IList<PdfCanvas> canvases = new List<PdfCanvas>();
             int canvasesSize = context.Size();
             for (int i = 0; i < canvasesSize; i++) {
@@ -309,17 +297,15 @@ namespace iText.Svg.Renderers.Impl {
                 transform = transform.CreateInverse();
             }
             catch (NoninvertibleTransformException) {
-                // Case with zero determiner (see PDF 32000-1:2008 - 8.3.4 Transformation Matrices - NOTE 3)
-                // for example with a, b, c, d in cm equal to 0
-                stream.Put(PdfName.BBox, new PdfArray(new Rectangle(0, 0, 0, 0)));
                 ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
                 logger.LogWarning(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
-                return;
+                // Case with zero determiner (see PDF 32000-1:2008 - 8.3.4 Transformation Matrices - NOTE 3)
+                // for example with a, b, c, d in cm equal to 0
+                return new Rectangle(0, 0, 0, 0);
             }
             Point[] points = context.GetRootViewPort().ToPointsArray();
             transform.Transform(points, 0, points, 0, points.Length);
-            Rectangle bbox = Rectangle.CalculateBBox(JavaUtil.ArraysAsList(points));
-            stream.Put(PdfName.BBox, new PdfArray(bbox));
+            return Rectangle.CalculateBBox(JavaUtil.ArraysAsList(points));
         }
     }
 }
