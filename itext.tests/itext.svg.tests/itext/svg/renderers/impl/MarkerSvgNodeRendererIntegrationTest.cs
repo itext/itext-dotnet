@@ -75,7 +75,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxRightOrientNoAspectRatioPreservationTest() {
-            // TODO (DEVSIX-3621) fix cmp after fixing
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrientNoAspectRatioPreservation"
                 );
         }
@@ -102,7 +101,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathPreserveAspectRatioTest() {
-            // TODO (DEVSIX-3621) fix cmp after fixing
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathPreserveAspectRatio");
         }
 
@@ -305,7 +303,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void DeformationWhenRotationAndPreserveAspectRationNoneTest() {
-            // TODO (DEVSIX-3621) change cmp after fixing
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "deformationWhenRotationAndPreserveAspectRationNone"
                 );
         }

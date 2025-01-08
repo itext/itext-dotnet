@@ -83,9 +83,6 @@ namespace iText.Svg.Renderers.Impl {
                     Rectangle bbBox = context.GetCurrentViewPort().Clone();
                     stream.Put(PdfName.BBox, new PdfArray(bbBox));
                 }
-                if (this is MarkerSvgNodeRenderer) {
-                    ((MarkerSvgNodeRenderer)this).ApplyMarkerAttributes(context);
-                }
                 context.PushCanvas(newCanvas);
                 // TODO (DEVSIX-3482) Currently overflow logic works only for markers. Update this code after the ticket will be finished.
                 if (!(this is MarkerSvgNodeRenderer) || !overflowVisible) {
@@ -252,6 +249,9 @@ namespace iText.Svg.Renderers.Impl {
                 // Apply inverse translation to viewport to make it line up nicely
                 context.GetCurrentViewPort().SetX(currentViewPort.GetX() - (float)transform.GetTranslateX()).SetY(currentViewPort
                     .GetY() - (float)transform.GetTranslateY());
+            }
+            if (this is MarkerSvgNodeRenderer) {
+                ((MarkerSvgNodeRenderer)this).ApplyMarkerAttributes(context);
             }
             if (!scale.IsIdentity()) {
                 context.GetCurrentCanvas().ConcatMatrix(scale);
