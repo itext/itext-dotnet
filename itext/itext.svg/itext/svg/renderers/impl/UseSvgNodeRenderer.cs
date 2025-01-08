@@ -25,6 +25,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Css.Impl;
@@ -38,28 +39,26 @@ namespace iText.Svg.Renderers.Impl {
     public class UseSvgNodeRenderer : AbstractSvgNodeRenderer {
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
-                String elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
+                String elementToReUse = GetAttribute(SvgConstants.Attributes.HREF);
                 if (elementToReUse == null) {
-                    elementToReUse = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
+                    elementToReUse = GetAttribute(SvgConstants.Attributes.XLINK_HREF);
                 }
                 if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse) && IsValidHref(elementToReUse)) {
                     String normalizedName = SvgTextUtil.FilterReferenceValue(elementToReUse);
                     if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
                         ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
                         // Clone template
-                        ISvgNodeRenderer namedObject = template == null ? null : template.CreateDeepCopy();
+                        ISvgNodeRenderer clonedObject = template == null ? null : template.CreateDeepCopy();
                         // Resolve parent inheritance
-                        SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, namedObject, context.GetCssContext());
-                        if (namedObject != null) {
-                            if (namedObject is AbstractSvgNodeRenderer) {
-                                ((AbstractSvgNodeRenderer)namedObject).SetPartOfClipPath(partOfClipPath);
+                        SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clonedObject, context.GetCssContext());
+                        if (clonedObject != null) {
+                            if (clonedObject is AbstractSvgNodeRenderer) {
+                                ((AbstractSvgNodeRenderer)clonedObject).SetPartOfClipPath(partOfClipPath);
                             }
                             PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                            float x = 0f;
-                            float y = 0f;
                             // If X or Y attribute is null, then default 0 value will be returned
-                            x = ParseHorizontalLength(this.attributesAndStyles.Get(SvgConstants.Attributes.X), context);
-                            y = ParseVerticalLength(this.attributesAndStyles.Get(SvgConstants.Attributes.Y), context);
+                            float x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
+                            float y = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.Y), context);
                             AffineTransform inverseMatrix = null;
                             if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
@@ -74,11 +73,25 @@ namespace iText.Svg.Renderers.Impl {
                                     }
                                 }
                             }
-                            // setting the parent of the referenced element to this instance
-                            namedObject.SetParent(this);
-                            namedObject.Draw(context);
-                            // unsetting the parent of the referenced element
-                            namedObject.SetParent(null);
+                            // Setting the parent of the referenced element to this instance
+                            clonedObject.SetParent(this);
+                            // Width, and height have no effect on use elements, unless the element referenced has a viewBox
+                            // i.e. they only have an effect when use refers to a svg or symbol element.
+                            if (clonedObject is SvgTagSvgNodeRenderer || clonedObject is SymbolSvgNodeRenderer) {
+                                if (GetAttribute(SvgConstants.Attributes.WIDTH) != null) {
+                                    float width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
+                                    clonedObject.SetAttribute(SvgConstants.Attributes.WIDTH, Convert.ToString(width, System.Globalization.CultureInfo.InvariantCulture
+                                        ) + CommonCssConstants.PT);
+                                }
+                                if (GetAttribute(SvgConstants.Attributes.HEIGHT) != null) {
+                                    float height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
+                                    clonedObject.SetAttribute(SvgConstants.Attributes.HEIGHT, Convert.ToString(height, System.Globalization.CultureInfo.InvariantCulture
+                                        ) + CommonCssConstants.PT);
+                                }
+                            }
+                            clonedObject.Draw(context);
+                            // Unsetting the parent of the referenced element
+                            clonedObject.SetParent(null);
                             if (inverseMatrix != null) {
                                 currentCanvas.ConcatMatrix(inverseMatrix);
                             }

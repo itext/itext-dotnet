@@ -144,7 +144,6 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void UseWidthPercentTest() {
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "useWidthPercentTest");
         }
 

@@ -160,13 +160,11 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void UseHeightWidthAllUnitsTest() {
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useHeightWidthAllUnitsTest", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void UseSymbolHeightWidthAllUnitsTest() {
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolHeightWidthAllUnitsTest", properties
                 );
         }
@@ -185,7 +183,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightAttrInteractionTest() {
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrInteraction", properties);
         }
     }

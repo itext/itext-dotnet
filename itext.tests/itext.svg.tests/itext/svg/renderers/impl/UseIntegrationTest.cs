@@ -21,10 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -153,6 +155,32 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void UseInDifferentFilesExampleTest() {
             //TODO: update when DEVSIX-2252 fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "useInDifferentFilesExampleTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthAndHeightResolvingTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthAndHeightResolving", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthAndHeightOverridingTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthAndHeightOverriding", properties);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO, LogLevel = LogLevelConstants.INFO, Count
+             = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN, LogLevel = LogLevelConstants.ERROR, Count
+             = 4)]
+        public virtual void InvalidWidthAndHeightResolvingTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidWidthAndHeightResolving", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WidthAndHeightNestedResolvingTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthAndHeightNestedResolving", properties
+                );
         }
     }
 }
