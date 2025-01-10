@@ -37,6 +37,7 @@ namespace iText.Svg.Utils {
         /// <param name="toTrim">string to trim</param>
         /// <returns>string with all leading whitespace characters removed</returns>
         public static String TrimLeadingWhitespace(String toTrim) {
+            // TODO DEVSIX-8808 make this method private static, because it is used only in the scope of that class
             if (toTrim == null) {
                 return "";
             }
@@ -59,6 +60,7 @@ namespace iText.Svg.Utils {
         /// <param name="toTrim">string to trim</param>
         /// <returns>string with al trailing whitespace characters removed</returns>
         public static String TrimTrailingWhitespace(String toTrim) {
+            // TODO DEVSIX-8808 make this method private static, because it is used only in the scope of that class
             if (toTrim == null) {
                 return "";
             }

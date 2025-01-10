@@ -132,8 +132,10 @@ namespace iText.Svg.Renderers.Impl {
                 // setting the parent of the referenced element to this instance
                 marker.SetParent(parent);
                 marker.SetAttribute(SvgConstants.Tags.MARKER, markerToUse.ToString());
-                marker.SetAttribute(SvgConstants.Attributes.X, SvgCssUtils.ConvertDoubleToString(markerPoints[i].GetX()));
-                marker.SetAttribute(SvgConstants.Attributes.Y, SvgCssUtils.ConvertDoubleToString(markerPoints[i].GetY()));
+                marker.SetAttribute(SvgConstants.Attributes.X, Convert.ToString(markerPoints[i].GetX(), System.Globalization.CultureInfo.InvariantCulture
+                    ));
+                marker.SetAttribute(SvgConstants.Attributes.Y, Convert.ToString(markerPoints[i].GetY(), System.Globalization.CultureInfo.InvariantCulture
+                    ));
                 marker.SetAttribute(MarkerSvgNodeRenderer.MARKER_INDEX, JavaUtil.IntegerToString(startIndex + i));
                 context.GetCurrentCanvas().SaveState();
                 marker.Draw(context);

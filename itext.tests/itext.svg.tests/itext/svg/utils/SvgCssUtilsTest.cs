@@ -138,5 +138,12 @@ namespace iText.Svg.Utils {
             String actual = SvgCssUtils.ConvertFloatToString(0.1234567f);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertLongerDoubleToStringTest() {
+            String expected = "0.1234567";
+            String actual = SvgCssUtils.ConvertDoubleToString(0.1234567d);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
     }
 }

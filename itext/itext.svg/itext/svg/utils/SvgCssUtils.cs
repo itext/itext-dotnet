@@ -36,7 +36,6 @@ using iText.Svg.Renderers.Impl;
 namespace iText.Svg.Utils {
     /// <summary>Utility class that facilitates parsing values from CSS.</summary>
     public sealed class SvgCssUtils {
-        // TODO DEVSIX-2266
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Utils.SvgCssUtils));
 
         private SvgCssUtils() {
@@ -66,6 +65,7 @@ namespace iText.Svg.Utils {
         /// <summary>Converts a float to a String.</summary>
         /// <param name="value">to be converted float value</param>
         /// <returns>the value in a String representation</returns>
+        [System.ObsoleteAttribute(@"can be replaced by Float.toString(float)")]
         public static String ConvertFloatToString(float value) {
             return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
@@ -73,6 +73,7 @@ namespace iText.Svg.Utils {
         /// <summary>Converts a double to a String.</summary>
         /// <param name="value">to be converted double value</param>
         /// <returns>the value in a String representation</returns>
+        [System.ObsoleteAttribute(@"can be replaced by Double.toString(float)")]
         public static String ConvertDoubleToString(double value) {
             return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
