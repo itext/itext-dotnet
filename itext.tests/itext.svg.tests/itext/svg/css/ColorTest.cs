@@ -41,13 +41,11 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundColorTest() {
-            //TODO DEVSIX-7156: update cmp file after supporting
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "background-color");
         }
 
         [NUnit.Framework.Test]
         public virtual void CurrentColorTest() {
-            //TODO DEVSIX-8758: update cmp file after supporting
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "current-color");
         }
 

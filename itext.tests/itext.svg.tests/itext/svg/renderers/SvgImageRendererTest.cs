@@ -95,6 +95,26 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SvgImageWithBackgroundTest() {
+            String svgFileName = SOURCE_FOLDER + "svgImageWithBackground.svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_svgImageWithBackground.pdf";
+            String outFileName = DESTINATION_FOLDER + "svgImageWithBackground.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
+                SvgImageXObject svgImageXObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                document.Add(svgImage);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NoSpecifiedWidthHeightImageTest() {
             String svgFileName = SOURCE_FOLDER + "noWidthHeightSvgImage.svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_noWidthHeightSvg.pdf";
