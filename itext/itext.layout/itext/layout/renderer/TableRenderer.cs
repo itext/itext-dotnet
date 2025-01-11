@@ -811,7 +811,7 @@ namespace iText.Layout.Renderer {
                                 rowspans[col] = ((Cell)cellSplit.GetModelElement()).GetRowspan();
                             }
                             if (splits[col].GetStatus() != LayoutResult.NOTHING && (hasContent || cellWithBigRowspanAdded)) {
-                                childRenderers.Add(cellSplit);
+                                splitResult[0].AddChildRenderer(cellSplit);
                             }
                             LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
                             if (hasContent || cellWithBigRowspanAdded || splits[col].GetStatus() == LayoutResult.NOTHING) {
@@ -1285,7 +1285,12 @@ namespace iText.Layout.Renderer {
             splitRenderer.rowRange = rowRange;
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
+            // Do not use splitRenderer.addAllChildRenderers(childRenderers); here
+            // because we want to share childRenderers with parent renderer. They are still used.
+            // It's ok to set all parent's child renderers because they are collected while layouting.
+            // The ones which have not been layouted are not there.
             splitRenderer.childRenderers = childRenderers;
+            splitRenderer.SetThisAsParent(childRenderers);
             splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.headerRenderer = headerRenderer;
             splitRenderer.footerRenderer = footerRenderer;
