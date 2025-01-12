@@ -326,6 +326,9 @@ namespace iText.Kernel.Pdf {
         /// <param name="bytes">byte array to manipulate with.</param>
         /// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>
         protected internal virtual byte[] EncodeBytes(byte[] bytes) {
+            if (bytes.Length == 0) {
+                return bytes;
+            }
             if (hexWriting) {
                 ByteBuffer buf = new ByteBuffer(bytes.Length * 2);
                 foreach (byte b in bytes) {

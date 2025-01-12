@@ -262,5 +262,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "writeUtf8ActualText.pdf"
                 , sourceFolder + "cmp_writeUtf8ActualText.pdf", destinationFolder, "diffActualText_"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyHexWriting() {
+            PdfString @string = new PdfString("");
+            NUnit.Framework.Assert.AreEqual("", @string.ToUnicodeString());
+            @string.SetHexWriting(true);
+            NUnit.Framework.Assert.AreEqual("", @string.ToUnicodeString());
+        }
     }
 }
