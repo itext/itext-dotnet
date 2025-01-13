@@ -50,7 +50,7 @@ namespace iText.Forms.Form.Renderer {
 
         private const float EPS = 1e-5f;
 
-        private readonly SignatureAppearanceRenderer.RenderingMode renderingMode;
+        private readonly SignatureAppearanceRenderer.DisplayOption displayOption;
 
         private bool isFontSizeApproximated = false;
 
@@ -62,7 +62,7 @@ namespace iText.Forms.Form.Renderer {
         /// <param name="modelElement">the model element</param>
         public SignatureAppearanceRenderer(SignatureFieldAppearance modelElement)
             : base(modelElement) {
-            renderingMode = RetrieveRenderingMode();
+            displayOption = RetrieveRenderingMode();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -114,9 +114,9 @@ namespace iText.Forms.Form.Renderer {
             }
             Rectangle descriptionRect = null;
             Rectangle signatureRect = null;
-            switch (renderingMode) {
-                case SignatureAppearanceRenderer.RenderingMode.NAME_AND_DESCRIPTION:
-                case SignatureAppearanceRenderer.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
+            switch (displayOption) {
+                case SignatureAppearanceRenderer.DisplayOption.NAME_AND_DESCRIPTION:
+                case SignatureAppearanceRenderer.DisplayOption.GRAPHIC_AND_DESCRIPTION: {
                     // Split the signature field into two and add the name of the signer or an image to the one side,
                     // the description to the other side.
                     UnitValue[] paddings = GetPaddings();
@@ -140,13 +140,13 @@ namespace iText.Forms.Form.Renderer {
                     break;
                 }
 
-                case SignatureAppearanceRenderer.RenderingMode.GRAPHIC: {
+                case SignatureAppearanceRenderer.DisplayOption.GRAPHIC: {
                     // The signature field will consist of an image only; no description will be shown.
                     signatureRect = bBox;
                     break;
                 }
 
-                case SignatureAppearanceRenderer.RenderingMode.DESCRIPTION: {
+                case SignatureAppearanceRenderer.DisplayOption.DESCRIPTION: {
                     // Default one, it just shows whatever description was defined for the signature.
                     float additionalHeight = CalculateAdditionalHeight();
                     if (RetrieveHeight() == null) {
@@ -167,7 +167,7 @@ namespace iText.Forms.Form.Renderer {
                     return;
                 }
             }
-            AdjustChildrenLayout(renderingMode, signatureRect, descriptionRect, layoutContext.GetArea().GetPageNumber(
+            AdjustChildrenLayout(displayOption, signatureRect, descriptionRect, layoutContext.GetArea().GetPageNumber(
                 ));
         }
 
@@ -232,10 +232,10 @@ namespace iText.Forms.Form.Renderer {
             FormFieldRendererUtil.ReapplyProperties(modelElement, properties);
         }
 
-        private void AdjustChildrenLayout(SignatureAppearanceRenderer.RenderingMode renderingMode, Rectangle signatureRect
+        private void AdjustChildrenLayout(SignatureAppearanceRenderer.DisplayOption displayOption, Rectangle signatureRect
             , Rectangle descriptionRect, int pageNum) {
-            switch (renderingMode) {
-                case SignatureAppearanceRenderer.RenderingMode.NAME_AND_DESCRIPTION: {
+            switch (displayOption) {
+                case SignatureAppearanceRenderer.DisplayOption.NAME_AND_DESCRIPTION: {
                     ParagraphRenderer name = (ParagraphRenderer)flatRenderer.GetChildRenderers()[0];
                     RelayoutParagraph(name, signatureRect, pageNum);
                     ParagraphRenderer description = (ParagraphRenderer)flatRenderer.GetChildRenderers()[1];
@@ -243,14 +243,14 @@ namespace iText.Forms.Form.Renderer {
                     break;
                 }
 
-                case SignatureAppearanceRenderer.RenderingMode.GRAPHIC_AND_DESCRIPTION: {
+                case SignatureAppearanceRenderer.DisplayOption.GRAPHIC_AND_DESCRIPTION: {
                     RelayoutImage(signatureRect, pageNum);
                     ParagraphRenderer description = (ParagraphRenderer)flatRenderer.GetChildRenderers()[1];
                     RelayoutParagraph(description, descriptionRect, pageNum);
                     break;
                 }
 
-                case SignatureAppearanceRenderer.RenderingMode.GRAPHIC: {
+                case SignatureAppearanceRenderer.DisplayOption.GRAPHIC: {
                     RelayoutImage(signatureRect, pageNum);
                     break;
                 }
@@ -338,8 +338,8 @@ namespace iText.Forms.Form.Renderer {
             if (this.HasOwnProperty(Property.FONT_SIZE) || modelElement.HasOwnProperty(Property.FONT_SIZE)) {
                 return;
             }
-            if (SignatureAppearanceRenderer.RenderingMode.GRAPHIC == renderingMode || SignatureAppearanceRenderer.RenderingMode
-                .GRAPHIC_AND_DESCRIPTION == renderingMode || SignatureAppearanceRenderer.RenderingMode.CUSTOM == renderingMode
+            if (SignatureAppearanceRenderer.DisplayOption.GRAPHIC == displayOption || SignatureAppearanceRenderer.DisplayOption
+                .GRAPHIC_AND_DESCRIPTION == displayOption || SignatureAppearanceRenderer.DisplayOption.CUSTOM == displayOption
                 ) {
                 // We can expect CLIP_ELEMENT log messages since the initial image size may be larger than the field height.
                 // But image size will be adjusted during its relayout in #adjustFieldLayout.
@@ -352,38 +352,38 @@ namespace iText.Forms.Form.Renderer {
             }
         }
 
-        private SignatureAppearanceRenderer.RenderingMode RetrieveRenderingMode() {
+        private SignatureAppearanceRenderer.DisplayOption RetrieveRenderingMode() {
             IList<IElement> contentElements = ((SignatureFieldAppearance)modelElement).GetContentElements();
             if (contentElements.Count == 2 && contentElements[1] is Paragraph) {
                 if (contentElements[0] is Paragraph) {
-                    return SignatureAppearanceRenderer.RenderingMode.NAME_AND_DESCRIPTION;
+                    return SignatureAppearanceRenderer.DisplayOption.NAME_AND_DESCRIPTION;
                 }
                 if (contentElements[0] is Image) {
-                    return SignatureAppearanceRenderer.RenderingMode.GRAPHIC_AND_DESCRIPTION;
+                    return SignatureAppearanceRenderer.DisplayOption.GRAPHIC_AND_DESCRIPTION;
                 }
             }
             if (contentElements.Count == 1) {
                 if (contentElements[0] is Paragraph) {
-                    return SignatureAppearanceRenderer.RenderingMode.DESCRIPTION;
+                    return SignatureAppearanceRenderer.DisplayOption.DESCRIPTION;
                 }
                 if (contentElements[0] is Image) {
-                    return SignatureAppearanceRenderer.RenderingMode.GRAPHIC;
+                    return SignatureAppearanceRenderer.DisplayOption.GRAPHIC;
                 }
             }
-            return SignatureAppearanceRenderer.RenderingMode.CUSTOM;
+            return SignatureAppearanceRenderer.DisplayOption.CUSTOM;
         }
 
-        /// <summary>Signature rendering modes.</summary>
-        private enum RenderingMode {
-            /// <summary>The rendering mode is just the description.</summary>
+        /// <summary>Signature display options.</summary>
+        private enum DisplayOption {
+            /// <summary>The display option is just the description.</summary>
             DESCRIPTION,
-            /// <summary>The rendering mode is the name of the signer and the description.</summary>
+            /// <summary>The display option is the name of the signer and the description.</summary>
             NAME_AND_DESCRIPTION,
-            /// <summary>The rendering mode is an image and the description.</summary>
+            /// <summary>The display option is an image and the description.</summary>
             GRAPHIC_AND_DESCRIPTION,
-            /// <summary>The rendering mode is just an image.</summary>
+            /// <summary>The display option is just an image.</summary>
             GRAPHIC,
-            /// <summary>The rendering mode is div.</summary>
+            /// <summary>The display option is div.</summary>
             CUSTOM
         }
     }
