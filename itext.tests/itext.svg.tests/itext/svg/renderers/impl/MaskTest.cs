@@ -61,7 +61,128 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MaskContentUnitsTest() {
+            //TODO: update after DEVSIX-2378 implementation
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "mask-content-units", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskPatternCombiTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskPatternCombi", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskPatternAppliedTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskPatternApplied", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskMultiShapesTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskMultiShapes", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskPatternGradientAppliedTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskPatternGradientApplied", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskGradientAppliedMaskContentUnitsTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskGradientAppliedMaskContentUnits", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskPatternMaskContentUnitsUserSpaceOnUseTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskPatternMaskContentUnitsUserSpaceOnUse"
+                , properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskUnitsObjectBoundingBoxTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskUnitsObjectBoundingBox", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskUnitsUserSpaceOnUseTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskUnitsUserSpaceOnUse", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskTransformTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskTransform", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskTransform2Test() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskTransform2", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskTransform3Test() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskTransform3", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskInheritedBasicTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskInheritedBasic", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskInherited3LevelTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskInherited3Level", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskPatternAppliedInheritedTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskPatternAppliedInherited", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskUnitsObjectBoundingBoxInheritedTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskUnitsObjectBoundingBoxInherited", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskUnitsUserSpaceOnUseInherited2Test() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskUnitsUserSpaceOnUseInherited2", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskUnitsUserSpaceOnUseInheritedTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskUnitsUserSpaceOnUseInherited", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskUnitsObjectBoundingBoxInherited2Test() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskUnitsObjectBoundingBoxInherited2", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskTransformInheritedTest() {
+            //TODO: update after DEVSIX-2378 implementation
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskTransformInherited", properties);
         }
     }
 }

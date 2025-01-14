@@ -89,6 +89,11 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FontSelectorMissingFontWithSize() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorMissingWithFontSize");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FontFaceGrammarTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "fontFaceGrammarTest");
         }

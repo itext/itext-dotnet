@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -131,6 +132,55 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ClipPathUrl2ndLevelTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathUrl2ndLevel");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextSimpleTest() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathText");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextBoldTest() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextBold");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextMultiObjectsTest() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextMultiObjects");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextMultiObjects2Test() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextMultiObjects2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextMultiObjects3Test() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextMultiObjects3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextLinearGradientTest() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextLinearGrad");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextPatternTest() {
+            //TODO DEVSIX-2588: Update cmp files
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextPattern");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathTextImageTest() {
+            //TODO DEVSIX-2588: Update cmp files
+            ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "clipPathTextImage", properties);
         }
     }
 }

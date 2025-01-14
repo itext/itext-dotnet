@@ -155,38 +155,56 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoSingleDefaultPage() {
-            // TODO: update cmp files when DEVSIX-2286 resolved
+            // TODO: update cmp files when DEVSIX-4396 resolved
+            // TODO: update cmp files when DEVSIX-6405 resolved
+            // TODO: update cmp files when DEVSIX-8821 resolved
+            // TODO: update cmp files when DEVSIX-8822 resolved
+            // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "externalCss");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoSingleDefaultPage() {
-            // TODO: update cmp files when DEVSIX-2286 resolved
+            // TODO: update cmp files when DEVSIX-4396 resolved
+            // TODO: update cmp files when DEVSIX-6405 resolved
+            // TODO: update cmp files when DEVSIX-8821 resolved
+            // TODO: update cmp files when DEVSIX-8822 resolved
+            // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSSWithoutOverlapTest() {
-            // TODO: update cmp files when DEVSIX-2286 resolved
+            // TODO: update cmp files when DEVSIX-8822 resolved
+            // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "internalCssNoOverlap");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoCustomPage() {
-            // TODO: update cmp files when DEVSIX-2286 resolved
+            // TODO: update cmp files when DEVSIX-4396 resolved
+            // TODO: update cmp files when DEVSIX-6405 resolved
+            // TODO: update cmp files when DEVSIX-8821 resolved
+            // TODO: update cmp files when DEVSIX-8822 resolved
+            // TODO: update cmp files when DEVSIX-8832 resolved
             // Take a note this method differs from the one used in Default Page test
             ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoCustomPage() {
-            // TODO: update cmp files when DEVSIX-2286 resolved
+            // TODO: update cmp files when DEVSIX-4396 resolved
+            // TODO: update cmp files when DEVSIX-6405 resolved
+            // TODO: update cmp files when DEVSIX-8821 resolved
+            // TODO: update cmp files when DEVSIX-8822 resolved
+            // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
-            // TODO: update cmp files when DEVSIX-2286 resolved
+            // TODO: update cmp files when DEVSIX-8823 resolved
+            // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette", PageSize.A3.Rotate());
         }
 

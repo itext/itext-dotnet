@@ -109,5 +109,34 @@ namespace iText.Svg.Renderers {
         public virtual void StrokeTspanTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeTspan");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap1Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroup");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap2Test() {
+            //TODO DEVSIX-7338: Update cmp file
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroup2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap3Test() {
+            //TODO DEVSIX-7338: Update cmp file
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap4Test() {
+            //TODO DEVSIX-7338: Update cmp file
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap5Test() {
+            //TODO DEVSIX-7338: Update cmp file
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke3");
+        }
     }
 }
