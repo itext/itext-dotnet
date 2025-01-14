@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -50,6 +51,47 @@ namespace iText.Kernel.Pdf.Tagging {
                 , annotation));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE, exception
                 .Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AttributesAreNullTest() {
+            IDictionary<PdfName, PdfObject> attributesMap = new Dictionary<PdfName, PdfObject>();
+            PdfDictionary dictionary = new PdfDictionary(attributesMap);
+            PdfStructElem pdfStructElem = new PdfStructElem(dictionary);
+            IList<PdfStructureAttributes> actualAttributesList = pdfStructElem.GetAttributesList();
+            IList<PdfStructureAttributes> expectedAttributesList = new List<PdfStructureAttributes>();
+            NUnit.Framework.Assert.AreEqual(actualAttributesList, expectedAttributesList);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AttributesAreDictionaryTest() {
+            IDictionary<PdfName, PdfObject> attributesMap = new Dictionary<PdfName, PdfObject>();
+            IDictionary<PdfName, PdfObject> dictionaryMap = new Dictionary<PdfName, PdfObject>();
+            dictionaryMap.Put(PdfName.A, new PdfName("value"));
+            attributesMap.Put(PdfName.A, new PdfDictionary(dictionaryMap));
+            PdfDictionary dictionary = new PdfDictionary(attributesMap);
+            PdfStructElem pdfStructElem = new PdfStructElem(dictionary);
+            IList<PdfStructureAttributes> actualAttributesList = pdfStructElem.GetAttributesList();
+            IList<PdfStructureAttributes> expectedAttributesList = new List<PdfStructureAttributes>();
+            expectedAttributesList.Add(new PdfStructureAttributes(new PdfDictionary(dictionaryMap)));
+            NUnit.Framework.Assert.AreEqual(actualAttributesList[0].GetPdfObject().Get(PdfName.A), expectedAttributesList
+                [0].GetPdfObject().Get(PdfName.A));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AttributesAreArrayTest() {
+            IDictionary<PdfName, PdfObject> attributesMap = new Dictionary<PdfName, PdfObject>();
+            IDictionary<PdfName, PdfObject> dictionaryMap = new Dictionary<PdfName, PdfObject>();
+            dictionaryMap.Put(PdfName.A, new PdfName("value"));
+            PdfDictionary pdfDictionary = new PdfDictionary(dictionaryMap);
+            attributesMap.Put(PdfName.A, new PdfArray(pdfDictionary));
+            PdfDictionary dictionary = new PdfDictionary(attributesMap);
+            PdfStructElem pdfStructElem = new PdfStructElem(dictionary);
+            IList<PdfStructureAttributes> actualAttributesList = pdfStructElem.GetAttributesList();
+            IList<PdfStructureAttributes> expectedAttributesList = new List<PdfStructureAttributes>();
+            expectedAttributesList.Add(new PdfStructureAttributes(new PdfDictionary(dictionaryMap)));
+            NUnit.Framework.Assert.AreEqual(actualAttributesList[0].GetPdfObject().Get(PdfName.A), expectedAttributesList
+                [0].GetPdfObject().Get(PdfName.A));
         }
     }
 }

@@ -109,6 +109,29 @@ namespace iText.Kernel.Pdf.Tagging {
             return attributes;
         }
 
+        /// <summary>Gets a list of PDF attribute objects.</summary>
+        /// <returns>list of PDF attribute objects.</returns>
+        public virtual IList<PdfStructureAttributes> GetAttributesList() {
+            IList<PdfStructureAttributes> attributesList = new List<PdfStructureAttributes>();
+            PdfObject elemAttributesObj = GetAttributes(false);
+            if (elemAttributesObj != null) {
+                if (elemAttributesObj.IsDictionary()) {
+                    attributesList.Add(new PdfStructureAttributes((PdfDictionary)elemAttributesObj));
+                }
+                else {
+                    if (elemAttributesObj.IsArray()) {
+                        PdfArray attributesArray = (PdfArray)elemAttributesObj;
+                        foreach (PdfObject attributeObj in attributesArray) {
+                            if (attributeObj.IsDictionary()) {
+                                attributesList.Add(new PdfStructureAttributes((PdfDictionary)attributeObj));
+                            }
+                        }
+                    }
+                }
+            }
+            return attributesList;
+        }
+
         public virtual void SetAttributes(PdfObject attributes) {
             Put(PdfName.A, attributes);
         }

@@ -35,6 +35,13 @@ namespace iText.Kernel.Pdf.Tagging {
             GetPdfObject().Put(PdfName.O, PdfStructTreeRoot.ConvertRoleToPdfName(owner));
         }
 
+        /// <summary>Method to get owner of current pdf object.</summary>
+        /// <returns>Pdf owner</returns>
+        public virtual String GetPdfOwner() {
+            PdfName pdfName = (PdfName)GetPdfObject().Get(PdfName.O);
+            return pdfName == null ? null : pdfName.GetValue();
+        }
+
         public PdfStructureAttributes(PdfNamespace @namespace)
             : base(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.O, PdfName.NSO);
