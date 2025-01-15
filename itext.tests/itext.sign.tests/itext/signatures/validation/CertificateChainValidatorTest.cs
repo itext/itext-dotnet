@@ -22,10 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using System.Text;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
-using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Validation.Context;
@@ -116,9 +116,11 @@ namespace iText.Signatures.Validation {
                 (2).HasNumberOfLogs(3).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage("Certificate {0} is trusted, revocation data checks are not required.", (l) => rootCert.
                 GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((la) => la.WithCheckName(CertificateChainValidator
-                .EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, (l) => "2.5.29.19").WithCertificate
-                (rootCert)).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessage
-                (CertificateChainValidator.EXTENSION_MISSING, (l) => "2.5.29.19").WithCertificate(intermediateCert)));
+                .EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, (l) => MessageFormatUtil.Format
+                (DynamicBasicConstraintsExtension.ERROR_MESSAGE, 1, 0)).WithCertificate(rootCert)).HasLogItem((la) => 
+                la.WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING
+                , (l) => MessageFormatUtil.Format(DynamicBasicConstraintsExtension.ERROR_MESSAGE, 0, -1)).WithCertificate
+                (intermediateCert)));
         }
 
         [NUnit.Framework.Test]
@@ -127,7 +129,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_182();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_183();
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
             CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
             properties.SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), JavaCollectionsUtil
@@ -138,8 +140,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_182 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_182() {
+        private sealed class _IssuingCertificateRetriever_183 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_183() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -155,7 +157,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_206();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_207();
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
             CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
             properties.SetRequiredExtensions(CertificateSources.Of(CertificateSource.CERT_ISSUER), JavaCollectionsUtil
@@ -168,8 +170,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_206 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_206() {
+        private sealed class _IssuingCertificateRetriever_207 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_207() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -228,13 +230,13 @@ namespace iText.Signatures.Validation {
             CertificateReportItem failure1 = report.GetCertificateFailures()[0];
             NUnit.Framework.Assert.AreEqual(intermediateCert, failure1.GetCertificate());
             NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure1.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
-                , OID.X509Extensions.KEY_USAGE), failure1.GetMessage());
+            NUnit.Framework.Assert.AreEqual(BuildKeyUsageWrongMessagePart(KeyUsage.DECIPHER_ONLY, KeyUsage.KEY_CERT_SIGN
+                ), failure1.GetMessage());
             CertificateReportItem failure2 = report.GetCertificateFailures()[1];
             NUnit.Framework.Assert.AreEqual(rootCert, failure2.GetCertificate());
             NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure2.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
-                , OID.X509Extensions.KEY_USAGE), failure2.GetMessage());
+            NUnit.Framework.Assert.AreEqual(BuildKeyUsageWrongMessagePart(KeyUsage.DECIPHER_ONLY, KeyUsage.KEY_CERT_SIGN
+                ), failure2.GetMessage());
         }
 
         [NUnit.Framework.Test]
@@ -260,8 +262,8 @@ namespace iText.Signatures.Validation {
             CertificateReportItem failure1 = report.GetCertificateFailures()[0];
             NUnit.Framework.Assert.AreEqual(intermediateCert, failure1.GetCertificate());
             NUnit.Framework.Assert.AreEqual("Required certificate extensions check.", failure1.GetCheckName());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format("Required extension {0} is missing or incorrect."
-                , OID.X509Extensions.KEY_USAGE), failure1.GetMessage());
+            NUnit.Framework.Assert.AreEqual(BuildKeyUsageWrongMessagePart(KeyUsage.DECIPHER_ONLY, KeyUsage.KEY_CERT_SIGN
+                ), failure1.GetMessage());
         }
 
         [NUnit.Framework.Test]
@@ -331,8 +333,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(2).HasLogItem((la
                 ) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((la) => la
-                .WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING
-                , (l) => OID.X509Extensions.KEY_USAGE).WithCertificate(signingCert)));
+                .WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessageContains(BuildKeyUsageWrongMessagePart
+                (KeyUsage.KEY_CERT_SIGN)).WithCertificate(signingCert)));
         }
 
         [NUnit.Framework.Test]
@@ -671,6 +673,18 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.AreEqual(0, mockCertificateRetriever.getCrlIssuerCertificatesCalls.Count);
             NUnit.Framework.Assert.AreEqual(0, mockCertificateRetriever.getCrlIssuerCertificatesByNameCalls.Count);
             NUnit.Framework.Assert.AreEqual(1, mockRevocationDataValidator.calls.Count);
+        }
+
+        private String BuildKeyUsageWrongMessagePart(KeyUsage expectedKeyUsage, params KeyUsage[] actualKeyUsage) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String sep = "";
+            foreach (KeyUsage usage in actualKeyUsage) {
+                stringBuilder.Append(sep).Append(usage);
+                sep = ", ";
+            }
+            return MessageFormatUtil.Format(CertificateChainValidator.EXTENSION_MISSING, MessageFormatUtil.Format(KeyUsageExtension
+                .EXPECTED_VALUE, expectedKeyUsage) + MessageFormatUtil.Format(KeyUsageExtension.ACTUAL_VALUE, stringBuilder
+                .ToString()));
         }
     }
 }

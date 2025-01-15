@@ -20,11 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.IO.Util;
 using iText.Kernel.Crypto;
 
 namespace iText.Signatures.Validation.Extensions {
@@ -32,9 +35,19 @@ namespace iText.Signatures.Validation.Extensions {
     public class KeyUsageExtension : CertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
+        public const String EXPECTED_VALUE = "Key usage expected: ({0})";
+
+        public const String ACTUAL_VALUE = "\nbut found {0}";
+
+        public const String MISSING_VALUE = "\nbut nothing found.";
+
         private readonly int keyUsage;
 
         private readonly bool resultOnMissingExtension;
+
+        private String messagePreAmble;
+
+        private String message;
 
         /// <summary>
         /// Create new
@@ -47,6 +60,10 @@ namespace iText.Signatures.Validation.Extensions {
         /// 
         /// <c>int</c>
         /// flag which represents bit values for key usage value
+        /// bit strings are stored with the big-endian byte order and padding on the end,
+        /// the big endian notation causes a shift in actual integer values for
+        /// bits 1-8 becoming 0-7 and bit 1
+        /// the 7 bits padding makes for bit 0 to become bit 7 of the first byte
         /// </param>
         public KeyUsageExtension(int keyUsage)
             : this(keyUsage, false) {
@@ -63,6 +80,10 @@ namespace iText.Signatures.Validation.Extensions {
         /// 
         /// <c>int</c>
         /// flag which represents bit values for key usage value
+        /// bit strings are stored with the big-endian byte order and padding on the end,
+        /// the big endian notation causes a shift in actual integer values for bits 1-8
+        /// becoming 0-7 and bit 1
+        /// the 7 bits padding makes for bit 0 to become bit 7 of the first byte
         /// </param>
         /// <param name="resultOnMissingExtension">
         /// parameter which represents return value for
@@ -73,6 +94,8 @@ namespace iText.Signatures.Validation.Extensions {
             : base(OID.X509Extensions.KEY_USAGE, FACTORY.CreateKeyUsage(keyUsage).ToASN1Primitive()) {
             this.keyUsage = keyUsage;
             this.resultOnMissingExtension = resultOnMissingExtension;
+            messagePreAmble = MessageFormatUtil.Format(EXPECTED_VALUE, ConvertKeyUsageMaskToString(keyUsage));
+            message = messagePreAmble;
         }
 
         /// <summary>
@@ -164,37 +187,62 @@ namespace iText.Signatures.Validation.Extensions {
             bool[] providedKeyUsageFlags = certificate.GetKeyUsage();
             if (providedKeyUsageFlags == null) {
                 // By default, we want to return true if extension is not specified. Configurable.
+                message = messagePreAmble + MISSING_VALUE;
                 return resultOnMissingExtension;
             }
-            for (int i = 0; i < providedKeyUsageFlags.Length; ++i) {
-                int power = providedKeyUsageFlags.Length - i - 2;
-                if (power < 0) {
-                    // Bits are encoded backwards, for the last bit power is -1 and in this case we need to go over byte
-                    power = 16 + power;
+            int bitmap = 0;
+            // bit strings are stored with the big-endian byte order and padding on the end,
+            // the big endian notation causes a shift in actual integer values for bits 1-8 becoming 0-7 and bit 1
+            // the 7 bits padding makes for bit 0 to become bit 7 of the first byte
+            for (int i = 0; i < providedKeyUsageFlags.Length - 1; ++i) {
+                if (providedKeyUsageFlags[i]) {
+                    bitmap += 1 << (8 - i - 1);
                 }
-                if ((keyUsage & (1 << power)) != 0 && !providedKeyUsageFlags[i]) {
-                    return false;
-                }
+            }
+            if (providedKeyUsageFlags[8]) {
+                bitmap += 0x8000;
+            }
+            if ((bitmap & keyUsage) != keyUsage) {
+                message = new StringBuilder(messagePreAmble).Append(MessageFormatUtil.Format(ACTUAL_VALUE, ConvertKeyUsageMaskToString
+                    (bitmap))).ToString();
+                return false;
             }
             return true;
         }
 
-        private static int ConvertKeyUsageSetToInt(IList<KeyUsage> keyUsages) {
-            KeyUsage[] possibleKeyUsage = new KeyUsage[] { KeyUsage.DIGITAL_SIGNATURE, KeyUsage.NON_REPUDIATION, KeyUsage
-                .KEY_ENCIPHERMENT, KeyUsage.DATA_ENCIPHERMENT, KeyUsage.KEY_AGREEMENT, KeyUsage.KEY_CERT_SIGN, KeyUsage
-                .CRL_SIGN, KeyUsage.ENCIPHER_ONLY, KeyUsage.DECIPHER_ONLY };
-            int result = 0;
-            for (int i = 0; i < possibleKeyUsage.Length; ++i) {
-                if (keyUsages.Contains(possibleKeyUsage[i])) {
-                    int power = possibleKeyUsage.Length - i - 2;
-                    if (power < 0) {
-                        // Bits are encoded backwards, for the last bit power is -1 and in this case we need to go over byte
-                        power = 16 + power;
-                    }
-                    result |= (1 << power);
+        public override String GetMessage() {
+            return message;
+        }
+
+        private static String ConvertKeyUsageMaskToString(int keyUsageMask) {
+            StringBuilder result = new StringBuilder();
+            String separator = "";
+            // bit strings are stored with the big-endian byte order and padding on the end,
+            // the big endian notation causes a shift in actual integer values for bits 1-8 becoming 0-7 and bit 1
+            // the 7 bits padding makes for bit 0 to become bit 7 of the first byte
+            foreach (KeyUsage usage in EnumUtil.GetAllValuesOfEnum<KeyUsage>()) {
+                if (((1 << (8 - (int)(usage) - 1)) & keyUsageMask) > 0 || (usage == KeyUsage.DECIPHER_ONLY && (keyUsageMask
+                     & 0x8000) == 0x8000)) {
+                    result.Append(separator).Append(usage);
+                    separator = ", ";
                 }
             }
-            return result;
+            return result.ToString();
+        }
+
+        private static int ConvertKeyUsageSetToInt(IEnumerable<KeyUsage> keyUsages) {
+            int keyUsageMask = 0;
+            // bit strings are stored with the big-endian byte order and padding on the end,
+            // the big endian notation causes a shift in actual integer values for bits 1-8 becoming 0-7 and bit 1
+            // the 7 bits padding makes for bit 0 to become bit 7 of the first byte
+            foreach (KeyUsage usage in keyUsages) {
+                if (usage == KeyUsage.DECIPHER_ONLY) {
+                    keyUsageMask += 0x8000;
+                    continue;
+                }
+                keyUsageMask += 1 << (8 - (int)(usage) - 1);
+            }
+            return keyUsageMask;
         }
     }
 }

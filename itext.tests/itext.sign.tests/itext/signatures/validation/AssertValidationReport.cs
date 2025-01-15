@@ -127,6 +127,12 @@ namespace iText.Signatures.Validation {
                 return this;
             }
 
+            public virtual AssertValidationReport.AssertValidationReportLogItem WithMessageContains(String expectedContent
+                ) {
+                check.WithMessageContains(expectedContent);
+                return this;
+            }
+
             public virtual AssertValidationReport.AssertValidationReportLogItem WithStatus(ReportItem.ReportItemStatus
                  status) {
                 check.WithStatus(status);
@@ -219,6 +225,8 @@ namespace iText.Signatures.Validation {
 
             private String message;
 
+            private String expectedMessageContent;
+
             private ReportItem.ReportItemStatus status;
 
             private bool checkStatus = false;
@@ -243,6 +251,11 @@ namespace iText.Signatures.Validation {
                 this.message = message;
                 messageParams.AddAll(@params);
                 errorMessage.Append(" message '").Append(message).Append("'");
+            }
+
+            public virtual void WithMessageContains(String expectedContent) {
+                this.expectedMessageContent = expectedContent;
+                errorMessage.Append(" message containing '").Append(expectedContent).Append("'");
             }
 
             public virtual void WithStatus(ReportItem.ReportItemStatus status) {
@@ -276,7 +289,13 @@ namespace iText.Signatures.Validation {
                     errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after message filter\n");
                 }
                 else {
-                    prefiltered = report.GetLogs();
+                    if (expectedMessageContent != null) {
+                        prefiltered = report.GetLogs().Where((i) => i.GetMessage().Contains(expectedMessageContent)).ToList();
+                        errorMessage.Append("found ").Append(prefiltered.Count).Append(" matches after message filter\n");
+                    }
+                    else {
+                        prefiltered = report.GetLogs();
+                    }
                 }
                 if (checkName != null) {
                     prefiltered = prefiltered.Where((i) => (checkName.Equals(i.GetCheckName()))).ToList();

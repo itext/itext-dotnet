@@ -55,7 +55,7 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String EXTENSION_MISSING = "Required extension {0} is missing or incorrect.";
+        internal const String EXTENSION_MISSING = "Required extension validation failed: {0}";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -290,7 +290,7 @@ namespace iText.Signatures.Validation {
                     }
                     if (!requiredExtension.ExistsInCertificate(certificate)) {
                         result.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(EXTENSION_MISSING
-                            , requiredExtension.GetExtensionOid()), ReportItem.ReportItemStatus.INVALID));
+                            , requiredExtension.GetMessage()), ReportItem.ReportItemStatus.INVALID));
                     }
                 }
             }

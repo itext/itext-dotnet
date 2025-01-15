@@ -22,12 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Kernel.Crypto;
+using Microsoft.Extensions.Primitives;
 
 namespace iText.Signatures.Validation.Extensions {
     /// <summary>Class representing "Extended Key Usage" extension.</summary>
@@ -44,7 +46,15 @@ namespace iText.Signatures.Validation.Extensions {
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
+        public const String EXPECTED_KEY_USAGES = "Expected extended key usages:";
+        public const String ACTUAL = "But found :";
+        public const String NO_EXTENDED_KEY_USAGES_WERE_FOUND = " But no extended key usages were found.";
+        public const String ERROR_OCCURRED_DURING_RETRIEVAL = " But error occurred during retrieval ";
+
+
         private readonly IList<String> extendedKeyUsageOids;
+
+        private String errorMessage = "";
 
         /// <summary>
         /// Create new
@@ -87,6 +97,7 @@ namespace iText.Signatures.Validation.Extensions {
             {
                 if (certificate.GetExtendedKeyUsage() == null)
                 {
+                    errorMessage = NO_EXTENDED_KEY_USAGES_WERE_FOUND;
                     return false;
                 }
 
@@ -95,14 +106,24 @@ namespace iText.Signatures.Validation.Extensions {
                     providedExtendedKeyUsage.Add(singleExtendedKeyUsage);
                 }
             }
-            catch (AbstractCertificateParsingException) {
+            catch (Exception e) {
+                errorMessage = ERROR_OCCURRED_DURING_RETRIEVAL + e.GetType().Name + " " + e.Message;
                 return false;
             }
-            catch (Exception) {
-                return false;
+            if (providedExtendedKeyUsage.Contains(ANY_EXTENDED_KEY_USAGE_OID) || new HashSet<String>(providedExtendedKeyUsage
+                ).ContainsAll(extendedKeyUsageOids)) {
+                return true;
             }
-            return providedExtendedKeyUsage.Contains(ANY_EXTENDED_KEY_USAGE_OID) || new HashSet<String>(providedExtendedKeyUsage
-                ).ContainsAll(extendedKeyUsageOids);
+            StringBuilder sb = new StringBuilder(ACTUAL);
+            char sep = '(';
+            foreach (String usage in providedExtendedKeyUsage)
+            {
+                sb.Append(sep).Append(usage);
+                sep = ',';
+            }
+            sb.Append(')');
+            errorMessage = sb.ToString();
+            return false;
         }
 
         private static IDerObjectIdentifier[] CreateKeyPurposeIds(IList<String> extendedKeyUsageOids) {
@@ -111,6 +132,21 @@ namespace iText.Signatures.Validation.Extensions {
                 keyPurposeIds[i] = FACTORY.CreateASN1ObjectIdentifier(extendedKeyUsageOids[i]);
             }
             return keyPurposeIds;
+        }
+
+        
+        public override String GetMessage()
+        {
+            StringBuilder sb = new StringBuilder(EXPECTED_KEY_USAGES);
+            char sep = '(';
+            foreach (String usage in extendedKeyUsageOids)
+            {
+                sb.Append(sep).Append(usage);
+                sep = ',';
+            }
+            sb.Append(')');
+            sb.Append(errorMessage);
+            return sb.ToString();
         }
     }
 }

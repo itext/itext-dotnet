@@ -27,12 +27,12 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
-using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Extensions;
 using iText.Signatures.Validation.Report;
 using iText.Test;
 
@@ -157,9 +157,8 @@ namespace iText.Signatures.Validation {
             validator.Validate(report, baseContext, checkCert, basicOCSPResp.GetResponses()[0], basicOCSPResp, TimeTestUtil
                 .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasLogItem((al) => al.WithCheckName
-                (CertificateChainValidator.EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, 
-                (l) => OID.X509Extensions.EXTENDED_KEY_USAGE)).HasStatus(ValidationReport.ValidationResult.INDETERMINATE
-                ));
+                (CertificateChainValidator.EXTENSIONS_CHECK).WithMessageContains(ExtendedKeyUsageExtension.OCSP_SIGNING
+                )).HasStatus(ValidationReport.ValidationResult.INDETERMINATE));
         }
 
         [NUnit.Framework.Test]

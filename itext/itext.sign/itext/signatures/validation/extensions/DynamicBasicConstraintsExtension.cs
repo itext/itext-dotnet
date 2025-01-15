@@ -20,9 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 
 namespace iText.Signatures.Validation.Extensions {
@@ -32,6 +34,10 @@ namespace iText.Signatures.Validation.Extensions {
     /// </summary>
     public class DynamicBasicConstraintsExtension : DynamicCertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        public const String ERROR_MESSAGE = "Expected extension 2.5.29.19 to have a value of at least {0} but found {1}";
+
+        private String errorMessage;
 
         /// <summary>
         /// Create new instance of
@@ -62,7 +68,16 @@ namespace iText.Signatures.Validation.Extensions {
         /// otherwise
         /// </returns>
         public override bool ExistsInCertificate(IX509Certificate certificate) {
-            return certificate.GetBasicConstraints() >= GetCertificateChainSize() - 1;
+            if (certificate.GetBasicConstraints() >= GetCertificateChainSize() - 1) {
+                return true;
+            }
+            errorMessage = MessageFormatUtil.Format(ERROR_MESSAGE, GetCertificateChainSize() - 1, certificate.GetBasicConstraints
+                ());
+            return false;
+        }
+
+        public override String GetMessage() {
+            return errorMessage;
         }
     }
 }
