@@ -27,9 +27,10 @@ namespace iText.Layout.Properties {
     /// <summary>A POJO that describes the underline of a layout element.</summary>
     /// <remarks>
     /// A POJO that describes the underline of a layout element.
+    /// <para />
     /// This class is to be used as a property for an element or renderer,
     /// as the value for
-    /// <see cref="Property.UNDERLINE"/>
+    /// <see cref="Property.UNDERLINE"/>.
     /// </remarks>
     public class Underline {
         protected internal TransparentColor transparentColor;
@@ -43,6 +44,10 @@ namespace iText.Layout.Properties {
         protected internal float yPositionMul;
 
         protected internal int lineCapStyle = PdfCanvasConstants.LineCapStyle.BUTT;
+
+        private TransparentColor strokeColor;
+
+        private float strokeWidth = 0f;
 
         /// <summary>Creates an Underline.</summary>
         /// <remarks>
@@ -160,6 +165,50 @@ namespace iText.Layout.Properties {
         /// </returns>
         public virtual int GetLineCapStyle() {
             return lineCapStyle;
+        }
+
+        /// <summary>Gets the color of the underline stroke.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="TransparentColor"/>
+        /// stroke color
+        /// </returns>
+        public virtual TransparentColor GetStrokeColor() {
+            return strokeColor;
+        }
+
+        /// <summary>Sets the stroke color of the underline.</summary>
+        /// <param name="strokeColor">
+        /// 
+        /// <see cref="TransparentColor"/>
+        /// stroke color
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="Underline"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Properties.Underline SetStrokeColor(TransparentColor strokeColor) {
+            this.strokeColor = strokeColor;
+            return this;
+        }
+
+        /// <summary>Gets the thickness of the underline stroke.</summary>
+        /// <returns>float value of the stroke width</returns>
+        public virtual float GetStrokeWidth() {
+            return strokeWidth;
+        }
+
+        /// <summary>Sets the thickness of the underline stroke.</summary>
+        /// <param name="strokeWidth">float value of the stroke width</param>
+        /// <returns>
+        /// this
+        /// <see cref="Underline"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Properties.Underline SetStrokeWidth(float strokeWidth) {
+            this.strokeWidth = strokeWidth;
+            return this;
         }
     }
 }

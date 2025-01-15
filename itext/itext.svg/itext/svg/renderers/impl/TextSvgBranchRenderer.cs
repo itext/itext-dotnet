@@ -203,6 +203,13 @@ namespace iText.Svg.Renderers.Impl {
             return objectBoundingBox;
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal override void PreDraw(SvgDrawContext context) {
+            base.PreDraw(context);
+            SvgTextUtil.ApplyTextDecoration(this, doFill, doStroke, context);
+        }
+//\endcond
+
         /// <summary>
         /// Method that will set properties to be inherited by this branch renderer's
         /// children and will iterate over all children in order to draw them.
@@ -231,6 +238,7 @@ namespace iText.Svg.Renderers.Impl {
             StartNewTextChunk(context, TEXTFLIP);
             PerformDrawing(context);
             DrawLastTextChunk(context);
+            context.SetSvgTextProperties(new SvgTextProperties());
         }
 
 //\cond DO_NOT_DOCUMENT

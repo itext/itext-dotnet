@@ -276,6 +276,41 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void StrokedUnderlineTest() {
+            String outFileName = destinationFolder + "strokedUnderline.pdf";
+            String cmpFileName = sourceFolder + "cmp_strokedUnderline.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    Paragraph p = new Paragraph("Yellow text with pink stroked underline.").SetFontSize(50).SetFontColor(ColorConstants
+                        .YELLOW);
+                    Underline underline = new Underline(null, 0, 0.1f, 0, -0.1f, PdfCanvasConstants.LineCapStyle.BUTT).SetStrokeWidth
+                        (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f));
+                    p.SetUnderline(underline);
+                    Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
+                        (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(ColorConstants.GREEN);
+                    Underline underline2 = new Underline(ColorConstants.DARK_GRAY, 0, 0.1f, 0, 0.3f, PdfCanvasConstants.LineCapStyle
+                        .BUTT).SetStrokeWidth(1).SetStrokeColor(new TransparentColor(ColorConstants.GREEN));
+                    p2.SetUnderline(underline2);
+                    p2.SetUnderline();
+                    Paragraph p3 = new Paragraph("Text with transparent font color and default overline.").SetFontSize(50).SetFontColor
+                        (new TransparentColor(ColorConstants.BLUE, 0));
+                    Underline underline3 = new Underline(null, 0, 0.1f, 0, 0.9f, PdfCanvasConstants.LineCapStyle.BUTT);
+                    p3.SetUnderline(underline3);
+                    p3.SetBackgroundColor(ColorConstants.PINK);
+                    Paragraph p4 = new Paragraph("Text with null font color and default overline.").SetFontSize(50).SetFontColor
+                        ((TransparentColor)null);
+                    p4.SetUnderline(underline3);
+                    document.Add(p);
+                    document.Add(p2);
+                    document.Add(p3);
+                    document.Add(p4);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LineThroughTest() {
             //TODO: update after DEVSIX-2623 fix
             String outFileName = destinationFolder + "lineThrough.pdf";

@@ -20,9 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
+using iText.Layout.Properties;
 
 namespace iText.Svg.Utils {
     /// <summary>
@@ -54,6 +56,8 @@ namespace iText.Svg.Utils {
 
         private float lineWidth = 1f;
 
+        private IList<Underline> textDecoration = new List<Underline>();
+
         /// <summary>
         /// Creates new
         /// <see cref="SvgTextProperties"/>
@@ -80,6 +84,7 @@ namespace iText.Svg.Utils {
             this.strokeOpacity = textProperties.GetStrokeOpacity();
             this.dashPattern = textProperties.GetDashPattern();
             this.lineWidth = textProperties.GetLineWidth();
+            this.textDecoration = textProperties.GetTextDecoration();
         }
 
         /// <summary>Gets text stroke color.</summary>
@@ -170,6 +175,42 @@ namespace iText.Svg.Utils {
         /// </returns>
         public virtual iText.Svg.Utils.SvgTextProperties SetFillOpacity(float fillOpacity) {
             this.fillOpacity = fillOpacity;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the list of
+        /// <see cref="iText.Layout.Properties.Underline"/>
+        /// values representing text-decoration horizontal lines that can be an
+        /// underline, strikethrough or overline.
+        /// </summary>
+        /// <returns>
+        /// the list of
+        /// <see cref="iText.Layout.Properties.Underline"/>
+        /// values
+        /// </returns>
+        public virtual IList<Underline> GetTextDecoration() {
+            return textDecoration;
+        }
+
+        /// <summary>
+        /// Sets the list of
+        /// <see cref="iText.Layout.Properties.Underline"/>
+        /// values representing text-decoration horizontal lines that can be an
+        /// underline, strikethrough or overline.
+        /// </summary>
+        /// <param name="underlineList">
+        /// the list of
+        /// <see cref="iText.Layout.Properties.Underline"/>
+        /// values to set
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="SvgTextProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Utils.SvgTextProperties SetTextDecoration(IList<Underline> underlineList) {
+            this.textDecoration = underlineList;
             return this;
         }
 

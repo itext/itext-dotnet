@@ -221,9 +221,19 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Text_decoration_Test() {
-            //TODO: update cmp-file after DEVSIX-2270 fixed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "text_decoration");
+        public virtual void TextDecorationSvgTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationSvg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationCssTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationCss");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationStyleTest() {
+            // TODO update after DEVSIX-4063 is closed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationStyle");
         }
 
         [NUnit.Framework.Test]
@@ -294,13 +304,11 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPositioningTest");
         }
 
-        //TODO DEVSIX-2507: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void TextDecorationTspanTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspan");
         }
 
-        //TODO DEVSIX-2507: Update cmp file after supporting
         [NUnit.Framework.Test]
         public virtual void TextDecorationTspanSubTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspanSub");

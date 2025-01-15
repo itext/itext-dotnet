@@ -134,6 +134,7 @@ namespace iText.Svg.Renderers.Impl {
             text.SetStrokeWidth(textProperties.GetLineWidth());
             text.SetStrokeColor(textProperties.GetStrokeColor());
             text.SetOpacity(textProperties.GetFillOpacity());
+            text.SetProperty(Property.UNDERLINE, textProperties.GetTextDecoration());
         }
 
         private LineRenderer LayoutText(SvgDrawContext context) {

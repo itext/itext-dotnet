@@ -283,19 +283,16 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextTextDecorationUnderlineTest() {
-            //TODO: DEVSIX-2270, DEVSIX-4586 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationUnderline");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextTextDecorationLineThroughTest() {
-            //TODO: DEVSIX-2270, DEVSIX-4586 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationLineThrough");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextTextDecorationOverlineTest() {
-            //TODO: DEVSIX-2270, DEVSIX-4586 update cmp file after fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationOverline");
         }
 

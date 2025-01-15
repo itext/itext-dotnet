@@ -1461,25 +1461,58 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.TextRenderer[] { splitRenderer, overflowRenderer };
         }
 
-        protected internal virtual void DrawSingleUnderline(Underline underline, TransparentColor fontStrokeColor, 
-            PdfCanvas canvas, float fontSize, float italicAngleTan) {
-            TransparentColor underlineColor = underline.GetColor() != null ? new TransparentColor(underline.GetColor()
-                , underline.GetOpacity()) : fontStrokeColor;
+        protected internal virtual void DrawSingleUnderline(Underline underline, TransparentColor fontColor, PdfCanvas
+             canvas, float fontSize, float italicAngleTan) {
+            TransparentColor underlineFillColor = underline.GetColor() != null ? new TransparentColor(underline.GetColor
+                (), underline.GetOpacity()) : null;
+            TransparentColor underlineStrokeColor = underline.GetStrokeColor();
+            bool doStroke = underlineStrokeColor != null;
+            RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            // In SVG mode we should always use underline color, it is not related to the font color of the current text,
+            // but to the font color of the text element where text-decoration has been declared. In case of none value
+            // for fill and stroke in SVG mode, underline shouldn't be drawn at all.
+            if (underlineFillColor == null && !doStroke) {
+                if (RenderingMode.SVG_MODE == mode) {
+                    return;
+                }
+                underlineFillColor = fontColor;
+            }
+            bool doFill = underlineFillColor != null;
             canvas.SaveState();
-            if (underlineColor != null) {
-                canvas.SetStrokeColor(underlineColor.GetColor());
-                underlineColor.ApplyStrokeTransparency(canvas);
+            if (doFill) {
+                canvas.SetFillColor(underlineFillColor.GetColor());
+                underlineFillColor.ApplyFillTransparency(canvas);
+            }
+            if (doStroke) {
+                canvas.SetStrokeColor(underlineStrokeColor.GetColor());
+                underlineStrokeColor.ApplyStrokeTransparency(canvas);
             }
             canvas.SetLineCapStyle(underline.GetLineCapStyle());
             float underlineThickness = underline.GetThickness(fontSize);
             if (underlineThickness != 0) {
-                canvas.SetLineWidth(underlineThickness);
+                if (doStroke) {
+                    canvas.SetLineWidth(underline.GetStrokeWidth());
+                }
                 float yLine = GetYLine();
                 float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
                 float italicWidthSubstraction = .5f * fontSize * italicAngleTan;
                 Rectangle innerAreaBbox = GetInnerAreaBBox();
-                canvas.MoveTo(innerAreaBbox.GetX(), underlineYPosition).LineTo(innerAreaBbox.GetX() + innerAreaBbox.GetWidth
-                    () - italicWidthSubstraction, underlineYPosition).Stroke();
+                Rectangle underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, 
+                    innerAreaBbox.GetWidth() - italicWidthSubstraction, underlineThickness);
+                canvas.Rectangle(underlineBBox);
+                if (doFill && doStroke) {
+                    canvas.FillStroke();
+                }
+                else {
+                    if (doStroke) {
+                        canvas.Stroke();
+                    }
+                    else {
+                        // In layout/html we should use default color in case underline and fontColor are null
+                        // and still draw underline.
+                        canvas.Fill();
+                    }
+                }
             }
             canvas.RestoreState();
         }
