@@ -659,6 +659,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
         /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterDirectoryRecursively(System.String)"/>
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
@@ -705,6 +706,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
         /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterDirectoryRecursively(System.String)"/>
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
@@ -749,6 +751,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
         /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterDirectoryRecursively(System.String)"/>
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
@@ -797,6 +800,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
         /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterDirectoryRecursively(System.String)"/>
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
@@ -835,6 +839,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
         /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterDirectoryRecursively(System.String)"/>
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
@@ -868,6 +873,7 @@ namespace iText.Kernel.Font {
         /// <seealso cref="Register(System.String, System.String)"/>
         /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
         /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterDirectoryRecursively(System.String)"/>
         /// <seealso cref="RegisterSystemDirectories()"/>
         /// <seealso cref="GetRegisteredFamilies()"/>
         /// <seealso cref="GetRegisteredFonts()"/>
@@ -906,6 +912,13 @@ namespace iText.Kernel.Font {
         /// <returns>the number of fonts registered</returns>
         public static int RegisterDirectory(String dirPath) {
             return FontProgramFactory.RegisterFontDirectory(dirPath);
+        }
+
+        /// <summary>Registers all the fonts in a directory recursively.</summary>
+        /// <param name="dirPath">the directory path to be registered as a font directory path</param>
+        /// <returns>the number of fonts registered</returns>
+        public static int RegisterDirectoryRecursively(String dirPath) {
+            return FontProgramFactory.RegisterFontDirectoryRecursively(dirPath);
         }
 
         /// <summary>Register fonts in some probable directories.</summary>

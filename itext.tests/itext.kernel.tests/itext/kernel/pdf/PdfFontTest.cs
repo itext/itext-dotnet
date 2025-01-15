@@ -1374,6 +1374,17 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FontDirectoryRegisterRecursivelyTest() {
+            PdfFontFactory.RegisterDirectoryRecursively(sourceFolder);
+            foreach (String name in PdfFontFactory.GetRegisteredFonts()) {
+                PdfFont pdfFont = PdfFontFactory.CreateRegisteredFont(name);
+                if (pdfFont == null) {
+                    NUnit.Framework.Assert.IsTrue(false, "Font {" + name + "} can't be empty");
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FontRegisterTest() {
             FontProgramFactory.RegisterFont(fontsFolder + "NotoSerif-Regular_v1.7.ttf", "notoSerifRegular");
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());

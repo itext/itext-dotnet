@@ -495,6 +495,13 @@ namespace iText.IO.Font {
             return fontRegisterProvider.RegisterFontDirectory(dir);
         }
 
+        /// <summary>Register all the fonts in a directory recursively.</summary>
+        /// <param name="dir">the directory</param>
+        /// <returns>the number of fonts registered</returns>
+        public static int RegisterFontDirectoryRecursively(String dir) {
+            return fontRegisterProvider.RegisterFontDirectory(dir, true);
+        }
+
         /// <summary>Register fonts in some probable directories.</summary>
         /// <remarks>
         /// Register fonts in some probable directories. It usually works in Windows,
