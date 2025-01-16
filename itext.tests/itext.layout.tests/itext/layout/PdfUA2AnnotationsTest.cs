@@ -180,7 +180,7 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(screen);
                 pdfPage.Flush();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outFile));
+            new VeraPdfValidator().ValidateFailure(outFile);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
