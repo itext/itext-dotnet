@@ -548,9 +548,7 @@ namespace iText.Layout.Tagging {
                 if (parentHint != null) {
                     // if parent tag hasn't been created yet - it's ok, kid tags will be moved on it's creation
                     if (waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, parentHint)) {
-                        IList<TaggingHintKey> siblingsHint = GetAccessibleKidsHint(parentHint);
-                        int i = siblingsHint.IndexOf(hintKey);
-                        ind = GetNearestNextSiblingTagIndex(waitingTagsManager, tagPointer, siblingsHint, i);
+                        ind = GetNearestNextSiblingIndex(waitingTagsManager, tagPointer, parentHint, hintKey);
                     }
                 }
                 tagPointer.AddTag(ind, modelElement.GetAccessibilityProperties());
@@ -622,26 +620,9 @@ namespace iText.Layout.Tagging {
             if (!waitingTagsManager.TryMovePointerToWaitingTag(parentPointer, parentKey)) {
                 return;
             }
-            IList<TaggingHintKey> parentKidsHint = GetAccessibleKidsHint(parentKey);
-            int kidIndInParentKidsHint = parentKidsHint.IndexOf(kidKey);
-            int ind = GetNearestNextSiblingTagIndex(waitingTagsManager, parentPointer, parentKidsHint, kidIndInParentKidsHint
-                );
+            int ind = GetNearestNextSiblingIndex(waitingTagsManager, parentPointer, parentKey, kidKey);
             parentPointer.SetNextNewKidIndex(ind);
             kidPointer.Relocate(parentPointer);
-        }
-
-        private int GetNearestNextSiblingTagIndex(WaitingTagsManager waitingTagsManager, TagTreePointer parentPointer
-            , IList<TaggingHintKey> siblingsHint, int start) {
-            int ind = -1;
-            TagTreePointer nextSiblingPointer = new TagTreePointer(document);
-            while (++start < siblingsHint.Count) {
-                if (waitingTagsManager.TryMovePointerToWaitingTag(nextSiblingPointer, siblingsHint[start]) && parentPointer
-                    .IsPointingToSameTag(new TagTreePointer(nextSiblingPointer).MoveToParent())) {
-                    ind = nextSiblingPointer.GetIndexInParentKidsList();
-                    break;
-                }
-            }
-            return ind;
         }
 
         private static bool IsNonAccessibleHint(TaggingHintKey hintKey) {
@@ -741,6 +722,74 @@ namespace iText.Layout.Tagging {
                 taggingRules.Put(role, rules);
             }
             rules.Add(rule);
+        }
+
+        private int GetNearestNextSiblingIndex(WaitingTagsManager waitingTagsManager, TagTreePointer parentPointer
+            , TaggingHintKey parentKey, TaggingHintKey kidKey) {
+            LayoutTaggingHelper.ScanContext scanContext = new LayoutTaggingHelper.ScanContext();
+            scanContext.waitingTagsManager = waitingTagsManager;
+            scanContext.startHintKey = kidKey;
+            scanContext.parentPointer = parentPointer;
+            scanContext.nextSiblingPointer = new TagTreePointer(document);
+            return ScanForNearestNextSiblingIndex(scanContext, null, parentKey);
+        }
+
+        private int ScanForNearestNextSiblingIndex(LayoutTaggingHelper.ScanContext scanContext, TaggingHintKey toCheck
+            , TaggingHintKey parent) {
+            if (scanContext.startVerifying) {
+                if (scanContext.waitingTagsManager.TryMovePointerToWaitingTag(scanContext.nextSiblingPointer, toCheck) && 
+                    scanContext.parentPointer.IsPointingToSameTag(new TagTreePointer(scanContext.nextSiblingPointer).MoveToParent
+                    ())) {
+                    return scanContext.nextSiblingPointer.GetIndexInParentKidsList();
+                }
+            }
+            if (toCheck != null && !IsNonAccessibleHint(toCheck)) {
+                return -1;
+            }
+            IList<TaggingHintKey> kidsHintList = kidsHints.Get(parent);
+            if (kidsHintList == null) {
+                return -1;
+            }
+            int startIndex = -1;
+            if (!scanContext.startVerifying) {
+                for (int i = kidsHintList.Count - 1; i >= 0; i--) {
+                    if (scanContext.startHintKey == kidsHintList[i]) {
+                        scanContext.startVerifying = true;
+                        startIndex = i;
+                        break;
+                    }
+                }
+            }
+            for (int j = startIndex + 1; j < kidsHintList.Count; j++) {
+                TaggingHintKey kid = kidsHintList[j];
+                int interMediateResult = ScanForNearestNextSiblingIndex(scanContext, kid, kid);
+                if (interMediateResult != -1) {
+                    return interMediateResult;
+                }
+            }
+            return -1;
+        }
+
+        private class ScanContext {
+//\cond DO_NOT_DOCUMENT
+            internal WaitingTagsManager waitingTagsManager;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal TaggingHintKey startHintKey;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal bool startVerifying;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal TagTreePointer parentPointer;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal TagTreePointer nextSiblingPointer;
+//\endcond
         }
     }
 }
