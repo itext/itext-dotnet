@@ -1290,7 +1290,11 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="phase">the value of the phase</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(phase));
+            PdfArray dashPattern = GetDashPatternArray(phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteByte(']').WriteSpace().WriteFloat(phase).WriteSpace().
                 WriteBytes(d);
             return this;
@@ -1310,7 +1314,11 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float unitsOn, float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(new float[] { unitsOn }, phase));
+            PdfArray dashPattern = GetDashPatternArray(new float[] { unitsOn }, phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteFloat(unitsOn).WriteByte(']').WriteSpace().WriteFloat(
                 phase).WriteSpace().WriteBytes(d);
             return this;
@@ -1330,7 +1338,11 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="unitsOff">the number of units that must be 'off'</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float unitsOn, float unitsOff, float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(new float[] { unitsOn, unitsOff }, phase));
+            PdfArray dashPattern = GetDashPatternArray(new float[] { unitsOn, unitsOff }, phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteFloat(unitsOn).WriteSpace().WriteFloat(unitsOff).WriteByte
                 (']').WriteSpace().WriteFloat(phase).WriteSpace().WriteBytes(d);
             return this;
@@ -1349,7 +1361,11 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="phase">the value of the phase</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float[] array, float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(array, phase));
+            PdfArray dashPattern = GetDashPatternArray(array, phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             PdfOutputStream @out = contentStream.GetOutputStream();
             @out.WriteByte('[');
             for (int iter = 0; iter < array.Length; iter++) {
@@ -2355,8 +2371,18 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfArray dashPatternArray = new PdfArray();
             PdfArray dArray = new PdfArray();
             if (dashArray != null) {
+                float sum = 0;
                 foreach (float fl in dashArray) {
+                    if (fl < 0) {
+                        // Negative values are not allowed.
+                        return null;
+                    }
+                    sum += fl;
                     dArray.Add(new PdfNumber(fl));
+                }
+                if (sum < 1e-6) {
+                    // All 0 values are not allowed.
+                    return null;
                 }
             }
             dashPatternArray.Add(dArray);

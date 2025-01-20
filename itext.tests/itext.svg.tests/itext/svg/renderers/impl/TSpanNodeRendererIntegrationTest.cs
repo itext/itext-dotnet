@@ -237,6 +237,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TextDecorationDashedStrokeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationDashedStroke");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TspanDefaultFontSizeTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanDefaultFontSize");
         }

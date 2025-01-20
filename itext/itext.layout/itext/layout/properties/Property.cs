@@ -330,6 +330,19 @@ namespace iText.Layout.Properties {
 
         public const int STROKE_COLOR = 63;
 
+        /// <summary>
+        /// STROKE_DASH_PATTERN property specifies dash pattern for the text stroke and stores the
+        /// <see cref="System.Collections.IList{E}"/>
+        /// as float array of the form [ dashArray dashPhase ], where
+        /// <c>dashArray</c>
+        /// is a float array that specifies
+        /// the length of the alternating dashes and gaps,
+        /// <c>dashPhase</c>
+        /// is a float that specifies the distance into
+        /// the dash pattern to start the dash.
+        /// </summary>
+        public const int STROKE_DASH_PATTERN = 156;
+
         public const int STROKE_WIDTH = 64;
 
         public const int SKEW = 65;
@@ -404,7 +417,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 155;
+        private const int MAX_INHERITED_PROPERTY_ID = 156;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -434,6 +447,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_DASH_PATTERN] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_WIDTH] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ALIGNMENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ANCHOR] = true;

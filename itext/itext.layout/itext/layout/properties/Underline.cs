@@ -49,6 +49,10 @@ namespace iText.Layout.Properties {
 
         private float strokeWidth = 0f;
 
+        private float[] dashArray = null;
+
+        private float dashPhase = 0f;
+
         /// <summary>Creates an Underline.</summary>
         /// <remarks>
         /// Creates an Underline. Both the thickness and vertical positioning under
@@ -208,6 +212,59 @@ namespace iText.Layout.Properties {
         /// </returns>
         public virtual iText.Layout.Properties.Underline SetStrokeWidth(float strokeWidth) {
             this.strokeWidth = strokeWidth;
+            return this;
+        }
+
+        /// <summary>Gets dash array part of the dash pattern to be used when paths are stroked.</summary>
+        /// <remarks>
+        /// Gets dash array part of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// <para />
+        /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+        /// where dashArray is itself an array and dashPhase is an integer.
+        /// <para />
+        /// An empty dash array (first element in the array) and zero phase (second element in the array)
+        /// can be used to restore the dash pattern to a solid line.
+        /// </remarks>
+        /// <returns>float dash array</returns>
+        public virtual float[] GetDashArray() {
+            return dashArray;
+        }
+
+        /// <summary>Gets dash phase part of the dash pattern to be used when paths are stroked.</summary>
+        /// <remarks>
+        /// Gets dash phase part of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// <para />
+        /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+        /// where dashArray is itself an array and dashPhase is an integer.
+        /// <para />
+        /// An empty dash array (first element in the array) and zero phase (second element in the array)
+        /// can be used to restore the dash pattern to a solid line.
+        /// </remarks>
+        /// <returns>float dash array</returns>
+        public virtual float GetDashPhase() {
+            return dashPhase;
+        }
+
+        /// <summary>Sets a description of the dash pattern to be used when paths are stroked.</summary>
+        /// <remarks>
+        /// Sets a description of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// <para />
+        /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+        /// where dashArray is itself an array and dashPhase is a number.
+        /// <para />
+        /// An empty dash array (first element in the array) and zero phase (second element in the array)
+        /// can be used to restore the dash pattern to a solid line.
+        /// </remarks>
+        /// <param name="dashArray">dash array</param>
+        /// <param name="dashPhase">dash phase value</param>
+        /// <returns>
+        /// this same
+        /// <see cref="Underline"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Properties.Underline SetDashPattern(float[] dashArray, float dashPhase) {
+            this.dashArray = dashArray;
+            this.dashPhase = dashPhase;
             return this;
         }
     }

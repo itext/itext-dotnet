@@ -87,6 +87,11 @@ namespace iText.Layout {
                 .FILL_STROKE).SetStrokeColor(ColorConstants.BLUE).SetStrokeWidth(0.3f).SetFontColor(ColorConstants.GREEN
                 ).SetFontSize(20);
             document.Add(new Paragraph(text3));
+            Text text4 = new Text("This is a stroke with dashes text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                .FILL_STROKE).SetStrokeColor(ColorConstants.BLUE).SetStrokeWidth(0.5f).SetFontColor(ColorConstants.PINK
+                ).SetFontSize(20);
+            text4.SetDashPattern(new float[] { 0.5f, 1f }, 0f);
+            document.Add(new Paragraph(text4));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -281,10 +286,11 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_strokedUnderline.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Paragraph p = new Paragraph("Yellow text with pink stroked underline.").SetFontSize(50).SetFontColor(ColorConstants
-                        .YELLOW);
+                    Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
+                        (ColorConstants.YELLOW);
                     Underline underline = new Underline(null, 0, 0.1f, 0, -0.1f, PdfCanvasConstants.LineCapStyle.BUTT).SetStrokeWidth
-                        (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f));
+                        (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f)).SetDashPattern(new float[] { 5, 5, 
+                        10, 5 }, 5);
                     p.SetUnderline(underline);
                     Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
                         (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(ColorConstants.GREEN);
@@ -292,7 +298,7 @@ namespace iText.Layout {
                         .BUTT).SetStrokeWidth(1).SetStrokeColor(new TransparentColor(ColorConstants.GREEN));
                     p2.SetUnderline(underline2);
                     p2.SetUnderline();
-                    Paragraph p3 = new Paragraph("Text with transparent font color and default overline.").SetFontSize(50).SetFontColor
+                    Paragraph p3 = new Paragraph("Text with transparent color and default overline.").SetFontSize(50).SetFontColor
                         (new TransparentColor(ColorConstants.BLUE, 0));
                     Underline underline3 = new Underline(null, 0, 0.1f, 0, 0.9f, PdfCanvasConstants.LineCapStyle.BUTT);
                     p3.SetUnderline(underline3);

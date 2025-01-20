@@ -653,6 +653,38 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>Sets the stroke dash pattern for the current text.</summary>
+        /// <remarks>
+        /// Sets the stroke dash pattern for the current text. Dash pattern is an array of the form [ dashArray dashPhase ],
+        /// where
+        /// <paramref name="dashArray"/>
+        /// is a float array that specifies the length of the alternating dashes and gaps,
+        /// <paramref name="dashPhase"/>
+        /// is a float that specifies the distance into the dash pattern to start the dash.
+        /// </remarks>
+        /// <param name="dashArray">
+        /// float array that specifies the length of the alternating dashes and gaps,
+        /// use
+        /// <see langword="null"/>
+        /// for solid line
+        /// </param>
+        /// <param name="dashPhase">
+        /// float that specifies the distance into the dash pattern to start the dash,
+        /// use 0 in case offset isn't needed
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetDashPattern(float[] dashArray, float dashPhase) {
+            IList<float> dashPattern = new List<float>();
+            if (dashArray != null) {
+                foreach (float fl in dashArray) {
+                    dashPattern.Add(fl);
+                }
+            }
+            dashPattern.Add(dashPhase);
+            SetProperty(Property.STROKE_DASH_PATTERN, dashPattern);
+            return (T)(Object)this;
+        }
+
         /// <summary>Gets the stroke width for the current element.</summary>
         /// <remarks>
         /// Gets the stroke width for the current element.

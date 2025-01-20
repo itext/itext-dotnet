@@ -294,13 +294,15 @@ namespace iText.Svg.Utils {
             if (doStroke && doFill) {
                 underline = new Underline(fillColor, fillOpacity, context.GetSvgTextProperties().GetLineWidth(), 0.07f, 0, 
                     textDecorationLine, PdfCanvasConstants.LineCapStyle.BUTT).SetStrokeColor(new TransparentColor(strokeColor
-                    , strokeOpacity)).SetStrokeWidth(context.GetSvgTextProperties().GetLineWidth());
+                    , strokeOpacity)).SetStrokeWidth(context.GetSvgTextProperties().GetLineWidth()).SetDashPattern(context
+                    .GetSvgTextProperties().GetDashArray(), context.GetSvgTextProperties().GetDashPhase());
             }
             else {
                 if (doStroke) {
                     underline = new Underline(null, 0, context.GetSvgTextProperties().GetLineWidth(), 0.07f, 0, textDecorationLine
                         , PdfCanvasConstants.LineCapStyle.BUTT).SetStrokeColor(new TransparentColor(strokeColor, strokeOpacity
-                        )).SetStrokeWidth(context.GetSvgTextProperties().GetLineWidth());
+                        )).SetStrokeWidth(context.GetSvgTextProperties().GetLineWidth()).SetDashPattern(context.GetSvgTextProperties
+                        ().GetDashArray(), context.GetSvgTextProperties().GetDashPhase());
                 }
                 else {
                     underline = new Underline(fillColor, fillOpacity, 0, 0.07f, 0, textDecorationLine, PdfCanvasConstants.LineCapStyle

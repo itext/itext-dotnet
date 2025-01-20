@@ -21,9 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.Kernel.Colors;
-using iText.Kernel.Pdf;
 using iText.Layout.Properties;
 
 namespace iText.Svg.Utils {
@@ -51,8 +49,9 @@ namespace iText.Svg.Utils {
 
         private float strokeOpacity = 1f;
 
-        private PdfArray dashPattern = new PdfArray(JavaUtil.ArraysAsList(new PdfObject[] { new PdfArray(), new PdfNumber
-            (0) }));
+        private float[] dashArray = null;
+
+        private float dashPhase = 0f;
 
         private float lineWidth = 1f;
 
@@ -82,7 +81,8 @@ namespace iText.Svg.Utils {
             this.strokeColor = textProperties.GetStrokeColor();
             this.fillOpacity = textProperties.GetFillOpacity();
             this.strokeOpacity = textProperties.GetStrokeOpacity();
-            this.dashPattern = textProperties.GetDashPattern();
+            this.dashArray = textProperties.GetDashArray();
+            this.dashPhase = textProperties.GetDashPhase();
             this.lineWidth = textProperties.GetLineWidth();
             this.textDecoration = textProperties.GetTextDecoration();
         }
@@ -214,9 +214,9 @@ namespace iText.Svg.Utils {
             return this;
         }
 
-        /// <summary>Gets a description of the dash pattern to be used when paths are stroked.</summary>
+        /// <summary>Gets dash array part of the dash pattern to be used when paths are stroked.</summary>
         /// <remarks>
-        /// Gets a description of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// Gets dash array part of the dash pattern to be used when paths are stroked. Default value is solid line.
         /// <para />
         /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
         /// where dashArray is itself an array and dashPhase is an integer.
@@ -224,10 +224,24 @@ namespace iText.Svg.Utils {
         /// An empty dash array (first element in the array) and zero phase (second element in the array)
         /// can be used to restore the dash pattern to a solid line.
         /// </remarks>
-        /// <returns>dash pattern array</returns>
-        public virtual PdfArray GetDashPattern() {
-            // TODO DEVSIX-8776 support dash-pattern in layout
-            return dashPattern;
+        /// <returns>float dash array</returns>
+        public virtual float[] GetDashArray() {
+            return dashArray;
+        }
+
+        /// <summary>Gets dash phase part of the dash pattern to be used when paths are stroked.</summary>
+        /// <remarks>
+        /// Gets dash phase part of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// <para />
+        /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
+        /// where dashArray is itself an array and dashPhase is an integer.
+        /// <para />
+        /// An empty dash array (first element in the array) and zero phase (second element in the array)
+        /// can be used to restore the dash pattern to a solid line.
+        /// </remarks>
+        /// <returns>float dash array</returns>
+        public virtual float GetDashPhase() {
+            return dashPhase;
         }
 
         /// <summary>Sets a description of the dash pattern to be used when paths are stroked.</summary>
@@ -248,21 +262,9 @@ namespace iText.Svg.Utils {
         /// instance
         /// </returns>
         public virtual iText.Svg.Utils.SvgTextProperties SetDashPattern(float[] dashArray, float dashPhase) {
-            this.dashPattern = GetDashPatternArray(dashArray, dashPhase);
+            this.dashArray = dashArray;
+            this.dashPhase = dashPhase;
             return this;
-        }
-
-        private static PdfArray GetDashPatternArray(float[] dashArray, float phase) {
-            PdfArray dashPatternArray = new PdfArray();
-            PdfArray dArray = new PdfArray();
-            if (dashArray != null) {
-                foreach (float fl in dashArray) {
-                    dArray.Add(new PdfNumber(fl));
-                }
-            }
-            dashPatternArray.Add(dArray);
-            dashPatternArray.Add(new PdfNumber(phase));
-            return dashPatternArray;
         }
     }
 }

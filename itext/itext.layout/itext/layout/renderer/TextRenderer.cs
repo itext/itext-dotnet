@@ -851,6 +851,15 @@ namespace iText.Layout.Renderer {
                 }
                 if (textRenderingMode == PdfCanvasConstants.TextRenderingMode.STROKE || textRenderingMode == PdfCanvasConstants.TextRenderingMode
                     .FILL_STROKE) {
+                    IList<float> strokeDashPattern = this.GetProperty<IList<float>>(Property.STROKE_DASH_PATTERN);
+                    if (strokeDashPattern != null && !strokeDashPattern.IsEmpty()) {
+                        float[] dashArray = new float[strokeDashPattern.Count - 1];
+                        for (int i = 0; i < strokeDashPattern.Count - 1; ++i) {
+                            dashArray[i] = strokeDashPattern[i];
+                        }
+                        float dashPhase = strokeDashPattern[strokeDashPattern.Count - 1];
+                        canvas.SetLineDash(dashArray, dashPhase);
+                    }
                     if (strokeWidth == null) {
                         strokeWidth = this.GetPropertyAsFloat(Property.STROKE_WIDTH);
                     }
@@ -1486,6 +1495,10 @@ namespace iText.Layout.Renderer {
             if (doStroke) {
                 canvas.SetStrokeColor(underlineStrokeColor.GetColor());
                 underlineStrokeColor.ApplyStrokeTransparency(canvas);
+                float[] strokeDashArray = underline.GetDashArray();
+                if (strokeDashArray != null) {
+                    canvas.SetLineDash(strokeDashArray, underline.GetDashPhase());
+                }
             }
             canvas.SetLineCapStyle(underline.GetLineCapStyle());
             float underlineThickness = underline.GetThickness(fontSize);

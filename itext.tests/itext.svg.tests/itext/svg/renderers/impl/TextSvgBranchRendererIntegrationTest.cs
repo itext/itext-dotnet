@@ -271,13 +271,11 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextStrokeDasharrayTest() {
-            //TODO: DEVSIX-8776 Support stroke dash pattern in layout
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textStrokeDasharray");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextComplexStrokeDasharrayTest() {
-            //TODO: DEVSIX-8776 Support stroke dash pattern in layout
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textComplexStrokeDasharray");
         }
 

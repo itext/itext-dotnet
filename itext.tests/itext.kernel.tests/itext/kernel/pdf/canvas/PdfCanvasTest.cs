@@ -1295,6 +1295,27 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void LineDashTest() {
+            String outPdf = DESTINATION_FOLDER + "lineDash.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_lineDash.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
+                PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
+                canvas.SaveState().SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.FILL_STROKE).SetStrokeColor(ColorConstants
+                    .BLUE).SetLineWidth(2).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 30);
+                canvas.SetLineDash(3);
+                canvas.BeginText().MoveText(180, 250).ShowText("phase 3").EndText();
+                canvas.SetLineDash(new float[] { 0, 0, 0 }, 2);
+                canvas.BeginText().MoveText(180, 350).ShowText("dashArray [0, 0, 0]").EndText();
+                canvas.SetLineDash(new float[] { 5, -5 }, 1);
+                canvas.BeginText().MoveText(180, 450).ShowText("dashArray [5, -5]").EndText();
+                canvas.SetLineDash(5, -10);
+                canvas.BeginText().MoveText(180, 550).ShowText("phase -10").EndText().RestoreState();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
         private void CreateStandardDocument(PdfWriter writer, int pageCount, PdfCanvasTest.ContentProvider contentProvider
             ) {
             PdfDocument pdfDoc = new PdfDocument(writer);
