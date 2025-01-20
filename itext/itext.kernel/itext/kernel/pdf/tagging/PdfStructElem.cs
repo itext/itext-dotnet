@@ -333,6 +333,30 @@ namespace iText.Kernel.Pdf.Tagging {
             return kids;
         }
 
+        /// <summary>Checks if the kid with the given index is flushed.</summary>
+        /// <param name="index">index of the kid to check.</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the kid with the given index is flushed,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
+        public virtual bool IsKidFlushed(int index) {
+            PdfObject k = GetK();
+            if (k == null) {
+                return false;
+            }
+            if (k.IsArray()) {
+                PdfArray array = (PdfArray)k;
+                if (index >= array.Size()) {
+                    return false;
+                }
+                return array.Get(index).IsFlushed();
+            }
+            return index == 0 && k.IsFlushed();
+        }
+
         public virtual PdfObject GetK() {
             return GetPdfObject().Get(PdfName.K);
         }

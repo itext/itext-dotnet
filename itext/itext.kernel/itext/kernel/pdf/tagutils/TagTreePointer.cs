@@ -556,7 +556,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                     }
                 }
             }
-            if (GetCurrentStructElem().GetKids()[kidIndex] == null) {
+            if (GetCurrentStructElem().IsKidFlushed(kidIndex)) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_RELOCATE_TAG_WHICH_IS_ALREADY_FLUSHED);
             }
             IStructureNode removedKid = GetCurrentStructElem().RemoveKid(kidIndex, true);
