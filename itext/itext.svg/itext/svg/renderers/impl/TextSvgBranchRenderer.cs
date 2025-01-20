@@ -230,6 +230,10 @@ namespace iText.Svg.Renderers.Impl {
             this.paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
             this.paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.SVG_MODE);
             this.paragraph.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
+            if (GetParentClipPath() != null) {
+                this.paragraph.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new TextSvgBranchRenderer.ClippedElementDrawer
+                    (GetParentClipPath(), context));
+            }
             this.paragraph.SetMargin(0);
             ApplyTextRenderingMode(paragraph);
             ApplyFontProperties(paragraph, context);
@@ -259,17 +263,22 @@ namespace iText.Svg.Renderers.Impl {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void ApplyTextRenderingMode(IElement element) {
-            // Fill only is the default for text operation in PDF
-            if (doStroke && doFill) {
-                // Default for SVG
-                element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.FILL_STROKE);
+            if (GetParentClipPath() != null) {
+                element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.CLIP);
             }
             else {
-                if (doStroke) {
-                    element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.STROKE);
+                // Fill only is the default for text operation in PDF
+                if (doStroke && doFill) {
+                    // Default for SVG
+                    element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.FILL_STROKE);
                 }
                 else {
-                    element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.FILL);
+                    if (doStroke) {
+                        element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.STROKE);
+                    }
+                    else {
+                        element.SetProperty(Property.TEXT_RENDERING_MODE, PdfCanvasConstants.TextRenderingMode.FILL);
+                    }
                 }
             }
         }
@@ -505,6 +514,21 @@ namespace iText.Svg.Renderers.Impl {
                 if (child is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
                     ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)child).CollectChildren(children);
                 }
+            }
+        }
+
+        private sealed class ClippedElementDrawer : IBeforeTextRestoreExecutor {
+            private readonly ClipPathSvgNodeRenderer clipPathSvgNodeRenderer;
+
+            private readonly SvgDrawContext context;
+
+            public ClippedElementDrawer(ClipPathSvgNodeRenderer clipPathSvgNodeRenderer, SvgDrawContext context) {
+                this.clipPathSvgNodeRenderer = clipPathSvgNodeRenderer;
+                this.context = context;
+            }
+
+            public void Execute() {
+                clipPathSvgNodeRenderer.DrawClippedRenderer(context);
             }
         }
     }

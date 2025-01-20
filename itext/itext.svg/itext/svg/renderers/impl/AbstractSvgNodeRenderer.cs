@@ -50,10 +50,6 @@ namespace iText.Svg.Renderers.Impl {
         protected internal IDictionary<String, String> attributesAndStyles;
 
 //\cond DO_NOT_DOCUMENT
-        internal bool partOfClipPath;
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal bool doFill = false;
 //\endcond
 
@@ -130,6 +126,9 @@ namespace iText.Svg.Renderers.Impl {
                     AffineTransform transformation = TransformUtils.ParseTransform(transformString);
                     if (!transformation.IsIdentity()) {
                         currentCanvas.ConcatMatrix(transformation);
+                        if (GetParentClipPath() != null) {
+                            context.GetClippingElementTransform().Concatenate(transformation);
+                        }
                     }
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.ID)) {
@@ -248,6 +247,35 @@ namespace iText.Svg.Renderers.Impl {
         protected internal abstract void DoDraw(SvgDrawContext context);
 
 //\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Gets parent
+        /// <see cref="ClipPathSvgNodeRenderer"/>
+        /// if it exists or
+        /// <see langword="null"/>
+        /// otherwise.
+        /// </summary>
+        /// <returns>
+        /// the parent
+        /// <see cref="ClipPathSvgNodeRenderer"/>
+        /// or
+        /// <see langword="null"/>
+        /// otherwise
+        /// </returns>
+        internal virtual ClipPathSvgNodeRenderer GetParentClipPath() {
+            if (this is ClipPathSvgNodeRenderer) {
+                return (ClipPathSvgNodeRenderer)this;
+            }
+            if (GetParent() == null) {
+                return null;
+            }
+            if (GetParent() is AbstractSvgNodeRenderer) {
+                return ((AbstractSvgNodeRenderer)GetParent()).GetParentClipPath();
+            }
+            return null;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculate the transformation for the viewport based on the context.</summary>
         /// <remarks>
         /// Calculate the transformation for the viewport based on the context. Only used by elements that can create
@@ -273,8 +301,41 @@ namespace iText.Svg.Renderers.Impl {
         internal virtual void PostDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 PdfCanvas currentCanvas = context.GetCurrentCanvas();
+                if (this is ISvgTextNodeRenderer) {
+                    // Text rendering is performed via layout, which takes the responsibility for clipping, filling, stroking
+                    return;
+                }
                 // fill-rule
-                if (partOfClipPath) {
+                if (GetParentClipPath() == null) {
+                    if (doFill && CanElementFill()) {
+                        String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
+                        if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                            if (doStroke) {
+                                currentCanvas.EoFillStroke();
+                            }
+                            else {
+                                currentCanvas.EoFill();
+                            }
+                        }
+                        else {
+                            if (doStroke) {
+                                currentCanvas.FillStroke();
+                            }
+                            else {
+                                currentCanvas.Fill();
+                            }
+                        }
+                    }
+                    else {
+                        if (doStroke) {
+                            currentCanvas.Stroke();
+                        }
+                        else {
+                            currentCanvas.EndPath();
+                        }
+                    }
+                }
+                else {
                     if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(this.GetAttribute(SvgConstants.Attributes.CLIP_RULE
                         ))) {
                         currentCanvas.EoClip();
@@ -283,37 +344,6 @@ namespace iText.Svg.Renderers.Impl {
                         currentCanvas.Clip();
                     }
                     currentCanvas.EndPath();
-                }
-                else {
-                    if (!(this is ISvgTextNodeRenderer)) {
-                        if (doFill && CanElementFill()) {
-                            String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
-                            if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
-                                if (doStroke) {
-                                    currentCanvas.EoFillStroke();
-                                }
-                                else {
-                                    currentCanvas.EoFill();
-                                }
-                            }
-                            else {
-                                if (doStroke) {
-                                    currentCanvas.FillStroke();
-                                }
-                                else {
-                                    currentCanvas.Fill();
-                                }
-                            }
-                        }
-                        else {
-                            if (doStroke) {
-                                currentCanvas.Stroke();
-                            }
-                            else {
-                                currentCanvas.EndPath();
-                            }
-                        }
-                    }
                 }
                 // Marker drawing
                 if (this is IMarkerCapable) {
@@ -328,12 +358,6 @@ namespace iText.Svg.Renderers.Impl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void SetPartOfClipPath(bool value) {
-            partOfClipPath = value;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         /// <summary>Operations to perform before drawing an element.</summary>
         /// <remarks>
         /// Operations to perform before drawing an element.
@@ -341,7 +365,7 @@ namespace iText.Svg.Renderers.Impl {
         /// </remarks>
         /// <param name="context">the svg draw context</param>
         internal virtual void PreDraw(SvgDrawContext context) {
-            if (this.attributesAndStyles != null && !partOfClipPath) {
+            if (this.attributesAndStyles != null && GetParentClipPath() == null) {
                 AbstractSvgNodeRenderer.FillProperties fillProperties = CalculateFillProperties(context);
                 AbstractSvgNodeRenderer.StrokeProperties strokeProperties = CalculateStrokeProperties(context);
                 ApplyFillAndStrokeProperties(fillProperties, strokeProperties, context);
@@ -529,8 +553,8 @@ namespace iText.Svg.Renderers.Impl {
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
                 String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
                 ISvgNodeRenderer template = context.GetNamedObject(NormalizeLocalUrlName(clipPathName));
-                //Clone template to avoid muddying the state
                 if (template is ClipPathSvgNodeRenderer) {
+                    // Clone template to avoid muddying the state
                     ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
                     // Resolve parent inheritance
                     SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clipPath, context.GetCssContext());

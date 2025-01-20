@@ -194,17 +194,6 @@ namespace iText.Svg.Renderers.Impl {
         public abstract override ISvgNodeRenderer CreateDeepCopy();
 
 //\cond DO_NOT_DOCUMENT
-        internal override void SetPartOfClipPath(bool isPart) {
-            base.SetPartOfClipPath(isPart);
-            foreach (ISvgNodeRenderer child in children) {
-                if (child is AbstractSvgNodeRenderer) {
-                    ((AbstractSvgNodeRenderer)child).SetPartOfClipPath(isPart);
-                }
-            }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal virtual void CalculateAndApplyViewBox(SvgDrawContext context, float[] values, Rectangle currentViewPort
             ) {
             // If viewBox width or height is zero we should disable rendering of the element.

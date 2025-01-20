@@ -52,9 +52,6 @@ namespace iText.Svg.Renderers.Impl {
                         // Resolve parent inheritance
                         SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clonedObject, context.GetCssContext());
                         if (clonedObject != null) {
-                            if (clonedObject is AbstractSvgNodeRenderer) {
-                                ((AbstractSvgNodeRenderer)clonedObject).SetPartOfClipPath(partOfClipPath);
-                            }
                             PdfCanvas currentCanvas = context.GetCurrentCanvas();
                             // If X or Y attribute is null, then default 0 value will be returned
                             float x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
@@ -63,7 +60,7 @@ namespace iText.Svg.Renderers.Impl {
                             if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {
                                 AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
                                 currentCanvas.ConcatMatrix(translation);
-                                if (partOfClipPath) {
+                                if (GetParentClipPath() != null) {
                                     try {
                                         inverseMatrix = translation.CreateInverse();
                                     }

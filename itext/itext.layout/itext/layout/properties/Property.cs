@@ -63,6 +63,8 @@ namespace iText.Layout.Properties {
 
         public const int BASE_DIRECTION = 7;
 
+        public const int BEFORE_TEXT_RESTORE_EXECUTOR = 157;
+
         public const int BOLD_SIMULATION = 8;
 
         public const int BORDER_BOTTOM = 10;
@@ -417,12 +419,13 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 156;
+        private const int MAX_INHERITED_PROPERTY_ID = 157;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.BEFORE_TEXT_RESTORE_EXECUTOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CAPTION_SIDE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;

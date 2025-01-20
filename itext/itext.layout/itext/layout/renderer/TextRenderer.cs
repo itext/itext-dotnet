@@ -938,7 +938,13 @@ namespace iText.Layout.Renderer {
                 if (savedWordBreakAtLineEnding != null) {
                     canvas.ShowText(savedWordBreakAtLineEnding);
                 }
-                canvas.EndText().RestoreState();
+                canvas.EndText();
+                IBeforeTextRestoreExecutor beforeTextRestoreExecutor = this.GetProperty<IBeforeTextRestoreExecutor>(Property
+                    .BEFORE_TEXT_RESTORE_EXECUTOR);
+                if (beforeTextRestoreExecutor != null) {
+                    beforeTextRestoreExecutor.Execute();
+                }
+                canvas.RestoreState();
                 EndElementOpacityApplying(drawContext);
                 if (isTagged) {
                     canvas.CloseTag();
@@ -1476,12 +1482,14 @@ namespace iText.Layout.Renderer {
                 (), underline.GetOpacity()) : null;
             TransparentColor underlineStrokeColor = underline.GetStrokeColor();
             bool doStroke = underlineStrokeColor != null;
-            RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
-            // In SVG mode we should always use underline color, it is not related to the font color of the current text,
+            bool isClippingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE) > PdfCanvasConstants.TextRenderingMode
+                .INVISIBLE;
+            RenderingMode? renderingMode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            // In SVG renderingMode we should always use underline color, it is not related to the font color of the current text,
             // but to the font color of the text element where text-decoration has been declared. In case of none value
-            // for fill and stroke in SVG mode, underline shouldn't be drawn at all.
+            // for fill and stroke in SVG renderingMode, underline shouldn't be drawn at all.
             if (underlineFillColor == null && !doStroke) {
-                if (RenderingMode.SVG_MODE == mode) {
+                if (RenderingMode.SVG_MODE == renderingMode && !isClippingMode) {
                     return;
                 }
                 underlineFillColor = fontColor;
@@ -1513,19 +1521,29 @@ namespace iText.Layout.Renderer {
                 Rectangle underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, 
                     innerAreaBbox.GetWidth() - italicWidthSubstraction, underlineThickness);
                 canvas.Rectangle(underlineBBox);
-                if (doFill && doStroke) {
-                    canvas.FillStroke();
+                if (isClippingMode) {
+                    canvas.Clip().EndPath();
                 }
                 else {
-                    if (doStroke) {
-                        canvas.Stroke();
+                    if (doFill && doStroke) {
+                        canvas.FillStroke();
                     }
                     else {
-                        // In layout/html we should use default color in case underline and fontColor are null
-                        // and still draw underline.
-                        canvas.Fill();
+                        if (doStroke) {
+                            canvas.Stroke();
+                        }
+                        else {
+                            // In layout/html we should use default color in case underline and fontColor are null
+                            // and still draw underline.
+                            canvas.Fill();
+                        }
                     }
                 }
+            }
+            IBeforeTextRestoreExecutor beforeTextRestoreExecutor = this.GetProperty<IBeforeTextRestoreExecutor>(Property
+                .BEFORE_TEXT_RESTORE_EXECUTOR);
+            if (beforeTextRestoreExecutor != null) {
+                beforeTextRestoreExecutor.Execute();
             }
             canvas.RestoreState();
         }

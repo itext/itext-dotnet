@@ -20,8 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
@@ -30,6 +33,7 @@ namespace iText.Svg.Renderers.Impl {
     /// This renderer represents a collection of elements (simple shapes and paths).
     /// The elements are not drawn visibly, but the union of their shapes will be used
     /// to only show the parts of the drawn objects that fall within the clipping path.
+    /// <para />
     /// In PDF, the clipping path operators use the intersection of all its elements, not the union (as in SVG);
     /// thus, we need to draw the clipped elements multiple times if the clipping path consists of multiple elements.
     /// </remarks>
@@ -53,25 +57,47 @@ namespace iText.Svg.Renderers.Impl {
 //\endcond
 
         protected internal override void DoDraw(SvgDrawContext context) {
+            if (clippedRenderer == null) {
+                // clipPath element is applicable only for some particular elements, without it, no drawing needed
+                return;
+            }
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             foreach (ISvgNodeRenderer child in GetChildren()) {
                 currentCanvas.SaveState();
-                if (child is AbstractSvgNodeRenderer) {
-                    ((AbstractSvgNodeRenderer)child).SetPartOfClipPath(true);
-                }
+                child.SetParent(this);
                 child.Draw(context);
-                if (child is AbstractSvgNodeRenderer) {
-                    ((AbstractSvgNodeRenderer)child).SetPartOfClipPath(false);
+                if (!(child is TextSvgBranchRenderer)) {
+                    // TextSvgBranchRenderer by itself will call drawClippedRenderer after each sub-element drawing
+                    DrawClippedRenderer(context);
                 }
-                if (clippedRenderer != null) {
-                    clippedRenderer.PreDraw(context);
-                    clippedRenderer.DoDraw(context);
-                    clippedRenderer.PostDraw(context);
+                if (!context.GetClippingElementTransform().IsIdentity()) {
+                    context.ResetClippingElementTransform();
                 }
                 currentCanvas.RestoreState();
             }
         }
 
+        /// <summary>Draw the clipped renderer.</summary>
+        /// <param name="context">the context on which clipped renderer will be drawn</param>
+        public virtual void DrawClippedRenderer(SvgDrawContext context) {
+            if (!context.GetClippingElementTransform().IsIdentity()) {
+                try {
+                    context.GetCurrentCanvas().ConcatMatrix(context.GetClippingElementTransform().CreateInverse());
+                }
+                catch (NoninvertibleTransformException) {
+                    ILogger logger = ITextLogManager.GetLogger(typeof(ClipPathSvgNodeRenderer));
+                    logger.LogWarning(SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH);
+                }
+            }
+            clippedRenderer.PreDraw(context);
+            clippedRenderer.DoDraw(context);
+            clippedRenderer.PostDraw(context);
+        }
+
+        // Returning canvas matrix to its original state isn't required
+        // because after drawClippedRenderer graphic state will be restored
+        /// <summary>Sets the clipped renderer.</summary>
+        /// <param name="clippedRenderer">the clipped renderer</param>
         public virtual void SetClippedRenderer(AbstractSvgNodeRenderer clippedRenderer) {
             this.clippedRenderer = clippedRenderer;
         }

@@ -62,6 +62,8 @@ namespace iText.Svg.Renderers {
 
         private AffineTransform rootTransform;
 
+        private AffineTransform clippingElementTransform = new AffineTransform();
+
         private float[] textMove = new float[] { 0.0f, 0.0f };
 
         private float[] relativePosition;
@@ -424,6 +426,31 @@ namespace iText.Svg.Renderers {
         /// <summary>Resets current relative position for the text SVG element.</summary>
         public virtual void ResetRelativePosition() {
             relativePosition = new float[] { 0.0f, 0.0f };
+        }
+
+        /// <summary>Gets clipping element transformation matrix.</summary>
+        /// <remarks>
+        /// Gets clipping element transformation matrix.
+        /// <para />
+        /// It is used to preserve clipping element transformation matrix and before drawing clipped element revert canvas
+        /// transformation matrix into original state. After clipped element will be drawn, clipping element transformation
+        /// matrix will be used once again to return clipping element matrix for next siblings.
+        /// </remarks>
+        /// <returns>the current clipping element transformation matrix</returns>
+        public virtual AffineTransform GetClippingElementTransform() {
+            return clippingElementTransform;
+        }
+
+        /// <summary>Resets clipping element transformation matrix.</summary>
+        /// <remarks>
+        /// Resets clipping element transformation matrix.
+        /// <para />
+        /// See
+        /// <see cref="GetClippingElementTransform()"/>
+        /// for more info about clipping element transformation matrix.
+        /// </remarks>
+        public virtual void ResetClippingElementTransform() {
+            this.clippingElementTransform.SetToIdentity();
         }
     }
 }

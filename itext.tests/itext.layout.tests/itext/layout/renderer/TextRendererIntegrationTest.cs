@@ -469,19 +469,19 @@ namespace iText.Layout.Renderer {
             Document doc = new Document(pdfDoc);
             Text text = new Text("If getNextRenderer() is not overridden and text overflows to the next line," + " then customizations are not applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_742(text));
+            text.SetNextRenderer(new _TextRenderer_745(text));
             doc.Add(new Paragraph(text));
             text = new Text("If getNextRenderer() is overridden and text overflows to the next line, " + "then customizations are applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_758(text));
+            text.SetNextRenderer(new _TextRenderer_761(text));
             doc.Add(new Paragraph(text));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
 
-        private sealed class _TextRenderer_742 : TextRenderer {
-            public _TextRenderer_742(Text baseArg1)
+        private sealed class _TextRenderer_745 : TextRenderer {
+            public _TextRenderer_745(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -492,8 +492,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_758 : TextRenderer {
-            public _TextRenderer_758(Text baseArg1)
+        private sealed class _TextRenderer_761 : TextRenderer {
+            public _TextRenderer_761(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -587,7 +587,7 @@ namespace iText.Layout.Renderer {
                 longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
             }
             iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
-            text.SetNextRenderer(new _TextRenderer_893(text));
+            text.SetNextRenderer(new _TextRenderer_896(text));
             doc.Add(new Paragraph(text));
             text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
             doc.Add(new Paragraph(text));
@@ -596,8 +596,8 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _TextRenderer_893 : TextRenderer {
-            public _TextRenderer_893(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_896 : TextRenderer {
+            public _TextRenderer_896(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -621,7 +621,7 @@ namespace iText.Layout.Renderer {
                 iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRise(0).SetWordSpacing
                     (0).SetSkew(10, 10).SetHorizontalScaling(2);
                 Paragraph paragraph = new Paragraph().Add(text);
-                paragraph.SetNextRenderer(new _TextRenderer_932(text));
+                paragraph.SetNextRenderer(new _TextRenderer_935(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
                     (), System.Text.Encoding.UTF8);
@@ -629,8 +629,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_932 : TextRenderer {
-            public _TextRenderer_932(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_935 : TextRenderer {
+            public _TextRenderer_935(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -654,7 +654,7 @@ namespace iText.Layout.Renderer {
                     .FILL_STROKE);
                 Paragraph paragraph = new Paragraph().Add(text).SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetStrokeWidth
                     (1f).SetStrokeColor(null).SetBorder(new SolidBorder(1));
-                paragraph.SetNextRenderer(new _TextRenderer_970(text));
+                paragraph.SetNextRenderer(new _TextRenderer_973(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
                     (), System.Text.Encoding.UTF8);
@@ -662,8 +662,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_970 : TextRenderer {
-            public _TextRenderer_970(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_973 : TextRenderer {
+            public _TextRenderer_973(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -686,7 +686,7 @@ namespace iText.Layout.Renderer {
                 iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                     .FILL_STROKE);
                 Paragraph paragraph = new Paragraph().Add(text);
-                paragraph.SetNextRenderer(new _TextRenderer_1003(text));
+                paragraph.SetNextRenderer(new _TextRenderer_1006(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
                     (), System.Text.Encoding.UTF8);
@@ -694,8 +694,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_1003 : TextRenderer {
-            public _TextRenderer_1003(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_1006 : TextRenderer {
+            public _TextRenderer_1006(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -709,6 +709,86 @@ namespace iText.Layout.Renderer {
                 return new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer((iText.Layout.Element.Text
                     )this.modelElement);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleClippedTextTest() {
+            // Pure layout doesn't support text clipping and CLIPPED_BY_TEXT_ELEMENT_DRAWER was developed for SVG.
+            // This test just show that there is a not user-friendly way to achieve text clipping.
+            String outFileName = destinationFolder + "simpleClippedTextTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_simpleClippedTextTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDocument.GetPage(1).GetMediaBox());
+            Paragraph paragraph = new Paragraph("Hello World! Some long text to the end of the page").SetTextRenderingMode
+                (PdfCanvasConstants.TextRenderingMode.CLIP);
+            paragraph.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new _IBeforeTextRestoreExecutor_1046(canvas));
+            doc.Add(paragraph);
+            Paragraph paragraph2 = new Paragraph("Another text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                .STROKE_CLIP);
+            paragraph2.SetStrokeColor(ColorConstants.YELLOW);
+            paragraph2.SetStrokeWidth(5);
+            paragraph2.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new _IBeforeTextRestoreExecutor_1062(canvas)
+                );
+            doc.Add(paragraph2);
+            doc.Add(new Paragraph("Bye World!"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        private sealed class _IBeforeTextRestoreExecutor_1046 : IBeforeTextRestoreExecutor {
+            public _IBeforeTextRestoreExecutor_1046(iText.Layout.Canvas canvas) {
+                this.canvas = canvas;
+            }
+
+            public void Execute() {
+                Div div = new Div();
+                div.SetFixedPosition(0, 0, 300);
+                div.SetHeight(1200);
+                div.SetBackgroundColor(ColorConstants.RED);
+                canvas.Add(div);
+            }
+
+            private readonly iText.Layout.Canvas canvas;
+        }
+
+        private sealed class _IBeforeTextRestoreExecutor_1062 : IBeforeTextRestoreExecutor {
+            public _IBeforeTextRestoreExecutor_1062(iText.Layout.Canvas canvas) {
+                this.canvas = canvas;
+            }
+
+            public void Execute() {
+                Div div = new Div();
+                div.SetFixedPosition(0, 0, 300);
+                div.SetHeight(1200);
+                div.SetBackgroundColor(ColorConstants.GREEN);
+                canvas.Add(div);
+            }
+
+            private readonly iText.Layout.Canvas canvas;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClippedTextWithoutDrawerTest() {
+            String outFileName = destinationFolder + "clippedTextWithoutDrawerTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_clippedTextWithoutDrawerTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            doc.SetFontSize(20);
+            Paragraph paragraph = new Paragraph("Hello World! Some long text to the end of the page").SetTextRenderingMode
+                (PdfCanvasConstants.TextRenderingMode.CLIP);
+            doc.Add(paragraph);
+            Div div = new Div();
+            div.SetWidth(300);
+            div.SetHeight(400);
+            div.SetBackgroundColor(ColorConstants.RED);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
         }
 
         private class TextRendererWithOverriddenGetNextRenderer : TextRenderer {
