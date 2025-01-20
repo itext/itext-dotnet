@@ -81,6 +81,7 @@ namespace iText.Layout.Tagging {
                     taggingHelper.MoveKidHint(nonCellKid, tableHintKey);
                 }
             }
+            IList<TaggingDummyElement> rows = new List<TaggingDummyElement>();
             foreach (SortedDictionary<int, TaggingHintKey> rowTags in tableTags.Values) {
                 TaggingDummyElement row = new TaggingDummyElement(StandardRoles.TR);
                 TaggingHintKey rowTagHint = LayoutTaggingHelper.GetOrCreateHintKey(row);
@@ -93,8 +94,9 @@ namespace iText.Layout.Tagging {
                     }
                     tableCellTagsUnindexed = null;
                 }
-                taggingHelper.AddKidsHint(tbodyTag, JavaCollectionsUtil.SingletonList<TaggingDummyElement>(row), -1);
+                rows.Add(row);
             }
+            taggingHelper.AddKidsHint(tbodyTag, rows, -1);
             foreach (TaggingHintKey nonCellKid in nonCellKids) {
                 if (StandardRoles.CAPTION.Equals(GetKidRole(nonCellKid, taggingHelper))) {
                     MoveCaption(taggingHelper, nonCellKid, tableHintKey);
