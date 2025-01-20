@@ -645,8 +645,7 @@ namespace iText.Layout.Tagging {
         }
 
         private static bool IsNonAccessibleHint(TaggingHintKey hintKey) {
-            return hintKey.GetAccessibleElement() == null || hintKey.GetAccessibleElement().GetAccessibilityProperties
-                ().GetRole() == null;
+            return !hintKey.IsAccessible();
         }
 
         private bool IsTagAlreadyExistsForHint(TaggingHintKey tagHint) {
