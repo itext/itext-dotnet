@@ -622,9 +622,10 @@ namespace iText.Layout.Tagging {
             if (!waitingTagsManager.TryMovePointerToWaitingTag(parentPointer, parentKey)) {
                 return;
             }
-            int kidIndInParentKidsHint = GetAccessibleKidsHint(parentKey).IndexOf(kidKey);
-            int ind = GetNearestNextSiblingTagIndex(waitingTagsManager, parentPointer, GetAccessibleKidsHint(parentKey
-                ), kidIndInParentKidsHint);
+            IList<TaggingHintKey> parentKidsHint = GetAccessibleKidsHint(parentKey);
+            int kidIndInParentKidsHint = parentKidsHint.IndexOf(kidKey);
+            int ind = GetNearestNextSiblingTagIndex(waitingTagsManager, parentPointer, parentKidsHint, kidIndInParentKidsHint
+                );
             parentPointer.SetNextNewKidIndex(ind);
             kidPointer.Relocate(parentPointer);
         }
