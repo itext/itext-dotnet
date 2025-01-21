@@ -81,6 +81,9 @@ namespace iText.Layout.Renderer {
 
         private const float BOLD_SIMULATION_STROKE_COEFF = 1 / 30f;
 
+        //Line height is recalculated several times during layout and small difference is expected.
+        private const float HEIGHT_EPS = 5.1e-2F;
+
         protected internal float yLineOffset;
 
         private PdfFont font;
@@ -584,7 +587,7 @@ namespace iText.Layout.Renderer {
             }
             // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
             bool isPlacingForcedWhileNothing = false;
-            if (currentLineHeight > layoutBox.GetHeight()) {
+            if (currentLineHeight > layoutBox.GetHeight() + HEIGHT_EPS) {
                 if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && IsOverflowFit(overflowY)) {
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);

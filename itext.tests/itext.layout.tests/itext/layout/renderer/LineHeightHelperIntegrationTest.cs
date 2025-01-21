@@ -33,6 +33,9 @@ using iText.Test;
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LineHeightHelperIntegrationTest : ExtendedITextTest {
+        private static readonly String FONTS = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
+
         private static readonly String CMP = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/LineHeightHelperIntegrationTest/";
 
@@ -71,6 +74,16 @@ namespace iText.Layout.Renderer {
             String cmpPdf = CMP + "cmp_" + name;
             String outPdf = DESTINATION + name;
             TestFont(PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN), outPdf);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RobotoFontTest() {
+            String name = "robotoFontTest.pdf";
+            String cmpPdf = CMP + "cmp_" + name;
+            String outPdf = DESTINATION + name;
+            String robotoFont = FONTS + "Roboto-Regular.ttf";
+            TestFont(PdfFontFactory.CreateFont(robotoFont), outPdf);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION));
         }
 
