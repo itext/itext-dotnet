@@ -70,10 +70,14 @@ namespace iText.Commons.Actions {
             return @event;
         }
 
+        /// <summary>Obtains the class from context of the wrapped event.</summary>
+        /// <returns>class from context</returns>
         public override Type GetClassFromContext() {
             return GetEvent().GetClassFromContext();
         }
 
+        /// <summary>Obtains the event type of the wrapped event.</summary>
+        /// <returns>event type</returns>
         public override String GetEventType() {
             return GetEvent().GetEventType();
         }
