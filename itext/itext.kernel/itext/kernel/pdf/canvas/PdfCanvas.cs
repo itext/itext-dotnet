@@ -1291,9 +1291,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float phase) {
             PdfArray dashPattern = GetDashPatternArray(phase);
-            if (dashPattern == null) {
-                return this;
-            }
             currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteByte(']').WriteSpace().WriteFloat(phase).WriteSpace().
                 WriteBytes(d);

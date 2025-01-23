@@ -128,12 +128,10 @@ namespace iText.Svg.Renderers.Impl {
 
         private void ApplyGraphicsState(SvgDrawContext context) {
             SvgTextProperties textProperties = context.GetSvgTextProperties();
-            // TODO DEVSIX-8774 support stroke-opacity for text at layout level
-            text.SetFontColor(textProperties.GetFillColor());
+            text.SetFontColor(textProperties.GetFillColor(), textProperties.GetFillOpacity());
             text.SetStrokeWidth(textProperties.GetLineWidth());
-            text.SetStrokeColor(textProperties.GetStrokeColor());
+            text.SetStrokeColor(textProperties.GetStrokeColor(), textProperties.GetStrokeOpacity());
             text.SetDashPattern(textProperties.GetDashArray(), textProperties.GetDashPhase());
-            text.SetOpacity(textProperties.GetFillOpacity());
             text.SetProperty(Property.UNDERLINE, textProperties.GetTextDecoration());
         }
 

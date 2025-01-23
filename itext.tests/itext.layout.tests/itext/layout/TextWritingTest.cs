@@ -98,6 +98,59 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TextStrokeTest() {
+            String outFileName = destinationFolder + "textStrokeTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_textStrokeTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    Text text1 = new Text("Red stroke text via color setter").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .STROKE).SetStrokeColor(ColorConstants.RED).SetStrokeWidth(0.1f);
+                    document.Add(new Paragraph().Add(text1));
+                    Text text2 = new Text("Red transparent stroke text via setter with 2 parameters").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .STROKE).SetStrokeColor(ColorConstants.RED, 0.5f).SetStrokeWidth(0.1f);
+                    document.Add(new Paragraph().Add(text2));
+                    Text text3 = new Text("Red transparent stroke text via transparent color setter").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .STROKE).SetStrokeColor(new TransparentColor(ColorConstants.RED, 0.5f)).SetStrokeWidth(0.1f);
+                    document.Add(new Paragraph().Add(text3));
+                    Text text4 = new Text("Red transparent stroke text via transparent color property").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .STROKE).SetStrokeWidth(0.1f);
+                    text4.SetProperty(Property.STROKE_COLOR, new TransparentColor(ColorConstants.RED, 0.5f));
+                    document.Add(new Paragraph().Add(text4));
+                    Text text5 = new Text("Red transparent stroke text via color property").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .STROKE).SetStrokeWidth(0.1f);
+                    text5.SetProperty(Property.STROKE_COLOR, ColorConstants.RED);
+                    document.Add(new Paragraph().Add(text5));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextFillStrokeTest() {
+            String outFileName = destinationFolder + "textFillStrokeTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_textFillStrokeTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    Text text1 = new Text("Pink text with null stroke color (so font color is used)").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .FILL_STROKE).SetFontColor(ColorConstants.PINK).SetStrokeColor((Color)null).SetStrokeWidth(2).SetFontSize
+                        (50);
+                    document.Add(new Paragraph().Add(text1));
+                    Text text2 = new Text("Pink text with red half-transparent stroke").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .FILL_STROKE).SetFontColor(ColorConstants.PINK).SetStrokeColor(ColorConstants.RED, 0.5f).SetStrokeWidth
+                        (2).SetFontSize(50);
+                    document.Add(new Paragraph().Add(text2));
+                    Text text3 = new Text("Pink text with fully transparent stroke").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                        .FILL_STROKE).SetFontColor(ColorConstants.PINK).SetStrokeColor(new TransparentColor(ColorConstants.RED
+                        , 0f)).SetStrokeWidth(2).SetFontSize(50);
+                    document.Add(new Paragraph().Add(text3));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LeadingTest01() {
             String outFileName = destinationFolder + "leadingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_leadingTest01.pdf";
@@ -292,10 +345,11 @@ namespace iText.Layout {
                         (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f)).SetDashPattern(new float[] { 5, 5, 
                         10, 5 }, 5);
                     p.SetUnderline(underline);
+                    TransparentColor strokeColor = new TransparentColor(ColorConstants.GREEN, 0.5f);
                     Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
-                        (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(ColorConstants.GREEN);
+                        (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(strokeColor);
                     Underline underline2 = new Underline(ColorConstants.DARK_GRAY, 0, 0.1f, 0, 0.3f, PdfCanvasConstants.LineCapStyle
-                        .BUTT).SetStrokeWidth(1).SetStrokeColor(new TransparentColor(ColorConstants.GREEN));
+                        .BUTT).SetStrokeWidth(1).SetStrokeColor(strokeColor);
                     p2.SetUnderline(underline2);
                     p2.SetUnderline();
                     Paragraph p3 = new Paragraph("Text with transparent color and default overline.").SetFontSize(50).SetFontColor

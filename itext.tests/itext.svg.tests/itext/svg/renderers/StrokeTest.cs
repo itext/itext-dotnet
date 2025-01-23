@@ -54,8 +54,23 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void StrokeWithDashesTest() {
-            // TODO DEVSIX-8774 support stroke-opacity for text at layout level
+            // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeWithDashesAcrobatBugTest() {
+            // Acrobat displays the result incorrectly, however e.g. Xodo PDF Studio displays the document exactly the same
+            // as svg (in terms of stroke opacity and view box). Same issue is reproduced in the
+            // DefaultStyleInheritanceIntegrationTest#usePropertiesInheritanceTest and nestedInheritanceTest,
+            // ClipPathSvgNodeRendererIntegrationTest#clipPathComplexTest.
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashesAcrobatBug");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeOpacityTest() {
+            // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOpacity");
         }
 
         [NUnit.Framework.Test]

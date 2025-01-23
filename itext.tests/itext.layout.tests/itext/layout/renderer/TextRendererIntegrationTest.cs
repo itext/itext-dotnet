@@ -653,7 +653,7 @@ namespace iText.Layout.Renderer {
                 iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                     .FILL_STROKE);
                 Paragraph paragraph = new Paragraph().Add(text).SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetStrokeWidth
-                    (1f).SetStrokeColor(null).SetBorder(new SolidBorder(1));
+                    (1f).SetStrokeColor((TransparentColor)null).SetBorder(new SolidBorder(1));
                 paragraph.SetNextRenderer(new _TextRenderer_973(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes

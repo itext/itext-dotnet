@@ -637,8 +637,20 @@ namespace iText.Layout {
         /// The stroke color is the color of the outlines or edges of a shape.
         /// </remarks>
         /// <returns>the current stroke color</returns>
+        [System.ObsoleteAttribute(@"in favour of ElementPropertyContainer{T}.GetTransparentStrokeColor() which should be renamed to getStrokeColor after this method will be removed"
+            )]
         public virtual Color GetStrokeColor() {
-            return this.GetProperty<Color>(Property.STROKE_COLOR);
+            return this.GetProperty<TransparentColor>(Property.STROKE_COLOR).GetColor();
+        }
+
+        /// <summary>Gets the stroke color for the current element.</summary>
+        /// <remarks>
+        /// Gets the stroke color for the current element.
+        /// The stroke color is the color of the outlines or edges of a shape.
+        /// </remarks>
+        /// <returns>the current stroke color</returns>
+        public virtual TransparentColor GetTransparentStrokeColor() {
+            return this.GetProperty<TransparentColor>(Property.STROKE_COLOR);
         }
 
         /// <summary>Sets the stroke color for the current element.</summary>
@@ -647,9 +659,41 @@ namespace iText.Layout {
         /// The stroke color is the color of the outlines or edges of a shape.
         /// </remarks>
         /// <param name="strokeColor">a new stroke color</param>
-        /// <returns>this Element.</returns>
+        /// <returns>this element</returns>
         public virtual T SetStrokeColor(Color strokeColor) {
-            SetProperty(Property.STROKE_COLOR, strokeColor);
+            return SetStrokeColor(strokeColor, 1f);
+        }
+
+        /// <summary>Sets the stroke color for the current element.</summary>
+        /// <remarks>
+        /// Sets the stroke color for the current element.
+        /// The stroke color is the color of the outlines or edges of a shape.
+        /// </remarks>
+        /// <param name="strokeColor">
+        /// a
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// for the stroke
+        /// </param>
+        /// <param name="opacity">
+        /// an opacity for the stroke color; a float between 0 and 1, where 1 stands for fully opaque color
+        /// and 0 - for fully transparent
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetStrokeColor(Color strokeColor, float opacity) {
+            SetProperty(Property.STROKE_COLOR, strokeColor != null ? new TransparentColor(strokeColor, opacity) : null
+                );
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the stroke color for the current element.</summary>
+        /// <remarks>
+        /// Sets the stroke color for the current element.
+        /// The stroke color is the color of the outlines or edges of a shape.
+        /// </remarks>
+        /// <param name="transparentColor">a new stroke color with transparency</param>
+        /// <returns>this element</returns>
+        public virtual T SetStrokeColor(TransparentColor transparentColor) {
+            SetProperty(Property.STROKE_COLOR, transparentColor);
             return (T)(Object)this;
         }
 

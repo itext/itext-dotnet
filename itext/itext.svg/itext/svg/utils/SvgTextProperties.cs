@@ -144,7 +144,6 @@ namespace iText.Svg.Utils {
         /// <summary>Gets text stroke opacity.</summary>
         /// <returns>stroke opacity</returns>
         public virtual float GetStrokeOpacity() {
-            // TODO DEVSIX-8774 support stroke-opacity for text at layout level
             return strokeOpacity;
         }
 

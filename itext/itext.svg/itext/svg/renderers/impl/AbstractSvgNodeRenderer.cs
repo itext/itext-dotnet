@@ -319,6 +319,7 @@ namespace iText.Svg.Renderers.Impl {
                         }
                         else {
                             if (doStroke) {
+                                // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
                                 currentCanvas.FillStroke();
                             }
                             else {
@@ -396,6 +397,7 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 currentCanvas.SetLineWidth(strokeProperties.GetWidth());
                 if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {
+                    // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
                     opacityGraphicsState.SetStrokeOpacity(strokeProperties.GetOpacity());
                 }
             }
