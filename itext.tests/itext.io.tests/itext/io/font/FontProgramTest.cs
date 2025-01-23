@@ -105,5 +105,29 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.AreEqual(1, glyph.GetCode());
             NUnit.Framework.Assert.AreEqual(278, glyph.GetWidth());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void StandardFontsTest() {
+            CheckStandardFont(StandardFonts.COURIER);
+            CheckStandardFont(StandardFonts.COURIER_BOLD);
+            CheckStandardFont(StandardFonts.COURIER_BOLDOBLIQUE);
+            CheckStandardFont(StandardFonts.COURIER_OBLIQUE);
+            CheckStandardFont(StandardFonts.HELVETICA);
+            CheckStandardFont(StandardFonts.HELVETICA_BOLD);
+            CheckStandardFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            CheckStandardFont(StandardFonts.HELVETICA_OBLIQUE);
+            CheckStandardFont(StandardFonts.SYMBOL);
+            CheckStandardFont(StandardFonts.TIMES_BOLD);
+            CheckStandardFont(StandardFonts.TIMES_BOLDITALIC);
+            CheckStandardFont(StandardFonts.TIMES_ITALIC);
+            CheckStandardFont(StandardFonts.TIMES_ROMAN);
+            CheckStandardFont(StandardFonts.ZAPFDINGBATS);
+        }
+
+        private void CheckStandardFont(String fontName) {
+            FontProgram font = FontProgramFactory.CreateFont(fontName, null, false);
+            NUnit.Framework.Assert.IsTrue(font is Type1Font);
+            NUnit.Framework.Assert.AreEqual(fontName, font.GetFontNames().GetFontName());
+        }
     }
 }
