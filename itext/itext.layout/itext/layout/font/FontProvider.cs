@@ -193,9 +193,14 @@ namespace iText.Layout.Font {
         /// cache.
         /// </summary>
         /// <param name="fontPath">
-        /// path to the font file to add. Can be a path to file or font name,
-        /// see
-        /// <see cref="iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>.
+        /// path to the font file to add. Can be a path to file or font name.
+        /// As a font name one of 14 built in fonts can be used, see
+        /// <see cref="iText.IO.Font.Constants.StandardFonts"/>.
+        /// If file is a true type collection, fonts in it should be addressed by index
+        /// such as "msgothic.ttc,1", starting with index 0.
+        /// See
+        /// <see cref="iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>
+        /// for more information.
         /// </param>
         /// <param name="encoding">
         /// font encoding to create
@@ -217,9 +222,14 @@ namespace iText.Layout.Font {
         /// cache.
         /// </summary>
         /// <param name="fontPath">
-        /// path to the font file to add. Can be a path to file or font name,
-        /// see
-        /// <see cref="iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>.
+        /// path to the font file to add. Can be a path to file or font name.
+        /// As a font name one of 14 built in fonts can be used, see
+        /// <see cref="iText.IO.Font.Constants.StandardFonts"/>.
+        /// If file is a true type collection, fonts in it should be addressed by index
+        /// such as "msgothic.ttc,1", starting with index 0.
+        /// See
+        /// <see cref="iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>
+        /// for more information.
         /// </param>
         /// <param name="encoding">
         /// font encoding to create
@@ -240,9 +250,14 @@ namespace iText.Layout.Font {
         /// cache.
         /// </summary>
         /// <param name="fontPath">
-        /// path to the font file to add. Can be a path to file or font name,
-        /// see
-        /// <see cref="iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>.
+        /// path to the font file to add. Can be a path to file or font name.
+        /// As a font name one of 14 built in fonts can be used, see
+        /// <see cref="iText.IO.Font.Constants.StandardFonts"/>.
+        /// If file is a true type collection, fonts in it should be addressed by index
+        /// such as "msgothic.ttc,1", starting with index 0.
+        /// See
+        /// <see cref="iText.IO.Font.FontProgramFactory.CreateFont(System.String)"/>
+        /// for more information.
         /// </param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
         public virtual bool AddFont(String fontPath) {

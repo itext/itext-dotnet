@@ -157,5 +157,25 @@ namespace iText.Layout {
                     , e.Message);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TrueTypeCollectionTest() {
+            String fileName = "trueTypeCollectionFonts.pdf";
+            String outFileName = destinationFolder + fileName;
+            String cmpFileName = sourceFolder + "cmp_" + fileName;
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            FontProvider fontProvider = new FontProvider();
+            fontProvider.AddFont(fontsFolder + "/NotoSansAndSpaceMono.ttc,0");
+            fontProvider.AddFont(fontsFolder + "/NotoSansAndSpaceMono.ttc,1");
+            doc.SetFontProvider(fontProvider);
+            Paragraph paragraph1 = new Paragraph("some test text here").SetFontFamily("Noto Sans");
+            doc.Add(paragraph1);
+            Paragraph paragraph2 = new Paragraph("and here should be different font").SetFontFamily("Space Mono");
+            doc.Add(paragraph2);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff" + fileName));
+        }
     }
 }
