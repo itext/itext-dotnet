@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Test;
 
@@ -40,8 +41,7 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void DirectionAttributeTest() {
-            //TODO DEVSIX-8779: update cmp file after supporting
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "direction");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, SvgConstants.Attributes.DIRECTION);
         }
     }
 }

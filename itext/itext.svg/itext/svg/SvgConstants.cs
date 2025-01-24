@@ -349,6 +349,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the outline of a shape.</summary>
             public const String D = "d";
 
+            /// <summary>Attribute defining the direction used by the text</summary>
+            public const String DIRECTION = "direction";
+
             /// <summary>Attribute defining the relative x-translation of a text-element</summary>
             public const String DX = "dx";
 

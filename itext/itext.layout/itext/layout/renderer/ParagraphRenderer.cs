@@ -73,6 +73,12 @@ namespace iText.Layout.Renderer {
                 return OrphansWidowsLayoutHelper.OrphansWidowsAwareLayout(this, layoutContext, orphansControl, widowsControl
                     );
             }
+            if (RenderingMode.SVG_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && !TypographyUtils
+                .IsPdfCalligraphAvailable()) {
+                // BASE_DIRECTION property is always set to the SVG text since we can't easily check whether typography is
+                // available at svg module level, but it makes no sense without typography, so it is removed here.
+                this.DeleteProperty(Property.BASE_DIRECTION);
+            }
             LayoutResult layoutResult = DirectLayout(layoutContext);
             UpdateParentLines(this);
             UpdateParentLines((iText.Layout.Renderer.ParagraphRenderer)layoutResult.GetSplitRenderer());

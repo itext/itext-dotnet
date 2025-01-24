@@ -235,6 +235,14 @@ namespace iText.Svg.Renderers.Impl {
                     (GetParentClipPath(), context));
             }
             this.paragraph.SetMargin(0);
+            String direction = this.attributesAndStyles.Get(SvgConstants.Attributes.DIRECTION);
+            bool isRtl = "rtl".Equals(direction);
+            if (isRtl) {
+                paragraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
+            }
+            else {
+                paragraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.LEFT_TO_RIGHT);
+            }
             ApplyTextRenderingMode(paragraph);
             ApplyFontProperties(paragraph, context);
             // We resolve and draw absolutely positioned text chunks similar to getTextRectangle method. We are interested
@@ -461,23 +469,27 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private void ApplyTextAnchor() {
-            if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_ANCHOR
-                )) {
-                String textAnchorValue = this.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
-                ApplyTextAnchor(textAnchorValue);
+            if (this.attributesAndStyles != null && (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_ANCHOR
+                ) || this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.DIRECTION))) {
+                String textAnchorValue = GetAttributeOrDefault(SvgConstants.Attributes.TEXT_ANCHOR, SvgConstants.Values.TEXT_ANCHOR_START
+                    );
+                String direction = this.attributesAndStyles.Get(SvgConstants.Attributes.DIRECTION);
+                bool isRtl = "rtl".Equals(direction);
+                ApplyTextAnchor(textAnchorValue, isRtl);
             }
         }
 
-        private void ApplyTextAnchor(String textAnchorValue) {
+        private void ApplyTextAnchor(String textAnchorValue, bool isRtl) {
             if (GetParent() is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
-                ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)GetParent()).ApplyTextAnchor(textAnchorValue);
+                ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)GetParent()).ApplyTextAnchor(textAnchorValue, isRtl);
                 return;
             }
             if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
                 paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.MIDDLE);
                 return;
             }
-            if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue)) {
+            if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue) && !isRtl || !SvgConstants.Values.TEXT_ANCHOR_END
+                .Equals(textAnchorValue) && isRtl) {
                 paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.END);
                 return;
             }
