@@ -1588,6 +1588,19 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DirtyCheckBoxAnnotationMergedTest() {
+            String outputFileName = destinationFolder + "dirtyCheckBoxAnnotationMergedTest.pdf";
+            String inputFileName = sourceFolder + "dirtyCheckBoxAnnotationMergedTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_dirtyCheckBoxAnnotationMergedTest.pdf";
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(outputFileName))) {
+                PdfFormCreator.GetAcroForm(pdf, false);
+            }
+            // Do nothing.
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(FormsLogMessageConstants.FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE, Ignore = true)]
         public virtual void FormFieldCycleRefTest() {
             String fileName = destinationFolder + "formFieldCycleRefTest.pdf";

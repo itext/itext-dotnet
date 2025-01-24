@@ -224,9 +224,24 @@ namespace iText.Forms.Fields.Merging {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FieldsWithSameNamesTest() {
+            String source = SOURCE_FOLDER + "fieldsWithSameNamesTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(source), new PdfWriter(new MemoryStream()))
+                ) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, false, new AddIndexStrategy());
+                NUnit.Framework.Assert.IsNotNull(form.GetField("test"));
+                NUnit.Framework.Assert.IsNotNull(form.GetField("test_1"));
+                NUnit.Framework.Assert.IsNotNull(form.GetField("test_2"));
+                NUnit.Framework.Assert.IsNotNull(form.GetField("bingbong"));
+                NUnit.Framework.Assert.IsNotNull(form.GetField("bingbong_1"));
+                NUnit.Framework.Assert.IsNotNull(form.GetField("bingbong_2"));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AddIndexStrategySeparatesTheFields() {
             try {
-                PdfFormCreator.SetFactory(new _PdfFormFactory_268());
+                PdfFormCreator.SetFactory(new _PdfFormFactory_282());
                 using (PdfDocument pdfInnerDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "add_index.pdf"))) {
                     Document doc = new Document(pdfInnerDoc);
                     doc.Add(new CheckBox("test1").SetBorder(new SolidBorder(ColorConstants.RED, 1)));
@@ -242,8 +257,8 @@ namespace iText.Forms.Fields.Merging {
             }
         }
 
-        private sealed class _PdfFormFactory_268 : PdfFormFactory {
-            public _PdfFormFactory_268() {
+        private sealed class _PdfFormFactory_282 : PdfFormFactory {
+            public _PdfFormFactory_282() {
             }
 
             public override PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {

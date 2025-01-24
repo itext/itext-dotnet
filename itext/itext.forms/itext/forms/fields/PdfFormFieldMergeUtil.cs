@@ -131,16 +131,14 @@ namespace iText.Forms.Fields {
             foreach (PdfFormField field in parentField.GetChildFormFields()) {
                 PdfDictionary formDict = field.GetPdfObject();
                 // Process form fields without PdfName.Widget having only annotations as children
-                if (field.GetChildFields().Count > 0 && field.GetChildFormFields().Count == 0) {
+                if (!field.GetChildFields().IsEmpty() && field.GetChildFormFields().IsEmpty()) {
                     bool shouldBeMerged = true;
-                    // If parent is radio button or signature we don't care about field related keys, always merge
+                    // If parent is radio button, checkbox or signature we don't care about field related keys, always merge
                     // If not - go over all fields to compare with parent's fields
-                    if (!(PdfName.Btn.Equals(parentField.GetFormType()) && parentField.GetFieldFlag(PdfButtonFormField.FF_RADIO
-                        )) && !PdfName.Sig.Equals(parentField.GetFormType())) {
-                        if (formDict.ContainsKey(PdfName.T)) {
-                            // We only want to perform the merge if field doesn't contain any name (even empty one)
-                            continue;
-                        }
+                    bool isRadioOrCheckbox = PdfName.Btn.Equals(parentField.GetFormType()) && !parentField.GetFieldFlag(PdfButtonFormField
+                        .FF_PUSH_BUTTON);
+                    bool isSignature = PdfName.Sig.Equals(parentField.GetFormType());
+                    if (!isRadioOrCheckbox && !isSignature) {
                         foreach (PdfName key in formDict.KeySet()) {
                             // Everything except Parent and Kids must be identical to allow the merge
                             if (!PdfName.Parent.Equals(key) && !PdfName.Kids.Equals(key) && !formDict.Get(key).Equals(parentField.GetPdfObject
@@ -149,6 +147,13 @@ namespace iText.Forms.Fields {
                                 break;
                             }
                         }
+                    }
+                    bool isRadioButton = PdfName.Btn.Equals(parentField.GetFormType()) && parentField.GetFieldFlag(PdfButtonFormField
+                        .FF_RADIO);
+                    if (formDict.ContainsKey(PdfName.T) && !isRadioButton && !isSignature) {
+                        // We only want to perform the merge if field doesn't contain any name (even empty one).
+                        // The only exceptions are radio buttons and signatures.
+                        continue;
                     }
                     if (shouldBeMerged) {
                         parentField.RemoveChild(field);
