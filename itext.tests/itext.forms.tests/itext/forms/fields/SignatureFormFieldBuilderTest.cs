@@ -60,6 +60,12 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateSignatureWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new SignatureFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").
+                SetWidgetRectangle(DUMMY_RECTANGLE).CreateSignature());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateSignatureWithConformanceLevelTest() {
             PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateSignature();

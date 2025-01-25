@@ -63,6 +63,12 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateTextWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new TextFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateText());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateTextWithConformanceLevelTest() {
             PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
                 ).SetConformance(PdfConformance.PDF_A_1A).CreateText();
@@ -87,6 +93,12 @@ namespace iText.Forms.Fields {
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(PdfTextFormField.FF_MULTILINE));
             CompareTexts(expectedDictionary, textFormField, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateMultilineTextWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new TextFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateMultilineText());
         }
 
         [NUnit.Framework.Test]

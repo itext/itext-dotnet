@@ -67,6 +67,12 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreatePushButtonWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name")
+                .SetWidgetRectangle(DUMMY_RECTANGLE).CreatePushButton());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreatePushButtonWithConformanceLevelTest() {
             PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreatePushButton();

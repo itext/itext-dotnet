@@ -815,7 +815,7 @@ namespace iText.Forms.Fields {
             bool multiselect = parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT);
             if (!(formFieldElement is ListBoxField)) {
                 // Create it once and reset properties during each widget regeneration.
-                formFieldElement = new ListBoxField(parent.GetPartialFieldName().ToUnicodeString(), 0, multiselect);
+                formFieldElement = new ListBoxField("", 0, multiselect);
             }
             formFieldElement.SetProperty(FormProperty.FORM_FIELD_MULTIPLE, multiselect);
             ((ListBoxField)formFieldElement).SetTopIndex(parent is PdfChoiceFormField && ((PdfChoiceFormField)parent).
@@ -956,7 +956,7 @@ namespace iText.Forms.Fields {
                 return;
             }
             if (!(formFieldElement is ComboBoxField)) {
-                formFieldElement = new ComboBoxField(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new ComboBoxField("");
             }
             //Apply rotation
             int fieldRotation = GetRotation();
@@ -1156,7 +1156,7 @@ namespace iText.Forms.Fields {
         internal virtual void CreateInputButton() {
             if (!(formFieldElement is Button)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new Button(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new Button("");
             }
             ((Button)formFieldElement).SetFont(GetFont());
             if (GetColor() != null) {
@@ -1169,7 +1169,7 @@ namespace iText.Forms.Fields {
         internal virtual void CreateSigField() {
             if (!(formFieldElement is SignatureFieldAppearance)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new SignatureFieldAppearance(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new SignatureFieldAppearance("");
             }
             if (formFieldElement.GetProperty<Object>(Property.FONT) == null) {
                 ((SignatureFieldAppearance)formFieldElement).SetFont(GetFont());

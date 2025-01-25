@@ -61,6 +61,12 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateCheckBoxWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateCheckBox());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateCheckBoxWithoutWidgetTest() {
             PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateCheckBox
                 ();

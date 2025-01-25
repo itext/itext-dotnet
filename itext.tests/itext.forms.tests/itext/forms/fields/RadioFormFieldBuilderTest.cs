@@ -67,6 +67,12 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateRadioButtonWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new RadioFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateRadioGroup());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithWidgetUseSetWidgetRectangleTest() {
             RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
