@@ -47,7 +47,7 @@ namespace iText.Layout.Renderer {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/NotoSans-Regular.ttf";
 
         public static readonly String KHMER_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/KhmerOS.ttf";
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/NotoSansKhmer-Regular.ttf";
 
         // หากอากาศดีในวันพรุ่งนี้เราจะไปปิกนิก - one sentence, multiple words.
         public const String THAI_TEXT = "\u0E2B\u0E32\u0E01\u0E2D\u0E32\u0E01\u0E32\u0E28\u0E14\u0E35" + "\u0E43\u0E19\u0E27\u0E31\u0E19\u0E1E\u0E23\u0E38\u0E48\u0E07\u0E19\u0E35\u0E49"

@@ -34,9 +34,10 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void VerifyMarkToBaseAttachment() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "KhmerOS.ttf");
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansKhmer-Regular.ttf"
+                );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
-            GposLookupType5 lookup = (GposLookupType5)gposTableReader.GetLookupTable(0);
+            GposLookupType5 lookup = (GposLookupType5)gposTableReader.GetLookupTable(25);
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(445)), new Glyph(fontProgram
                 .GetGlyphByCode(394)));
             GlyphLine gl = new GlyphLine(glyphs);
@@ -45,8 +46,8 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual(2, gl.Size());
             NUnit.Framework.Assert.AreEqual(445, gl.Get(0).GetCode());
             NUnit.Framework.Assert.AreEqual(394, gl.Get(1).GetCode());
-            NUnit.Framework.Assert.AreEqual(-1, gl.Get(1).GetAnchorDelta());
-            NUnit.Framework.Assert.AreEqual(756, gl.Get(1).GetXPlacement());
+            NUnit.Framework.Assert.AreEqual(0, gl.Get(1).GetAnchorDelta());
+            NUnit.Framework.Assert.AreEqual(0, gl.Get(1).GetXPlacement());
         }
 
         [NUnit.Framework.Test]
