@@ -159,5 +159,15 @@ namespace iText.Svg.Renderers.Impl {
                 NUnit.Framework.Assert.AreEqual(expectedPoints[x], attributePoints[x]);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void PolygonIsNotCutTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "polygonIsNotCutTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PolygonIsNotCutEvenOddTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "polygonIsNotCutEvenOddTest");
+        }
     }
 }

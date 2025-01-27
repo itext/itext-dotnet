@@ -429,5 +429,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void PatternHrefTransitivePresAR2Test() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefTransitivePresAR2", properties);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ClosedPathIsCutTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "closedPathIsCutTest", properties);
+        }
     }
 }

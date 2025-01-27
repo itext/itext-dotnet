@@ -41,13 +41,11 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void CircleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circle");
         }
 
-        // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void EllipseTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipse");
@@ -237,7 +235,6 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(sourceFolder, destinationFolder, "arcInsideOtherEllipticalArc");
         }
 
-        // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void PolygonTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "polygon");

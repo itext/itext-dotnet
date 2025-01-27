@@ -120,7 +120,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void CircleWithBigStrokeWidthTest() {
-            // TODO: DEVSIX-3932 update cmp_ after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "circleWithBigStrokeWidth");
         }
 

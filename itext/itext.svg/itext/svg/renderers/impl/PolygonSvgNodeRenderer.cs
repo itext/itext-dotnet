@@ -23,7 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>
@@ -65,5 +67,11 @@ namespace iText.Svg.Renderers.Impl {
             DeepCopyAttributesAndStyles(copy);
             return copy;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal override void DoStrokeOrFill(String fillRuleRawValue, PdfCanvas currentCanvas) {
+            DrawUtils.DoStrokeOrFillForClosedFigure(fillRuleRawValue, currentCanvas, doStroke);
+        }
+//\endcond
     }
 }

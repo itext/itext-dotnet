@@ -128,5 +128,11 @@ namespace iText.Svg.Renderers.Impl {
             DeepCopyAttributesAndStyles(copy);
             return copy;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal override void DoStrokeOrFill(String fillRuleRawValue, PdfCanvas currentCanvas) {
+            DrawUtils.DoStrokeOrFillForClosedFigure(fillRuleRawValue, currentCanvas, doStroke);
+        }
+//\endcond
     }
 }

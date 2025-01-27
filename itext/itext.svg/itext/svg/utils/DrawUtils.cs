@@ -20,8 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf.Canvas;
+using iText.Svg;
 
 namespace iText.Svg.Utils {
     /// <summary>
@@ -54,6 +56,30 @@ namespace iText.Svg.Utils {
             if (!ar.IsEmpty()) {
                 foreach (double[] pt in ar) {
                     cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
+                }
+            }
+        }
+
+        /// <summary>Perform stroke or fill operation for closed figure (e.g. Ellipse, Polygon, Circle).</summary>
+        /// <param name="fillRuleRawValue">fill rule (e.g. evenodd, nonzero)</param>
+        /// <param name="currentCanvas">canvas to draw on</param>
+        /// <param name="doStroke">if true, stroke operation will be performed, fill otherwise</param>
+        public static void DoStrokeOrFillForClosedFigure(String fillRuleRawValue, PdfCanvas currentCanvas, bool doStroke
+            ) {
+            if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                if (doStroke) {
+                    currentCanvas.ClosePathEoFillStroke();
+                }
+                else {
+                    currentCanvas.EoFill();
+                }
+            }
+            else {
+                if (doStroke) {
+                    currentCanvas.ClosePathFillStroke();
+                }
+                else {
+                    currentCanvas.Fill();
                 }
             }
         }

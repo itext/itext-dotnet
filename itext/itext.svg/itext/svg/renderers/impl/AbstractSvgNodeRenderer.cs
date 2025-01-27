@@ -309,23 +309,7 @@ namespace iText.Svg.Renderers.Impl {
                 if (GetParentClipPath() == null) {
                     if (doFill && CanElementFill()) {
                         String fillRuleRawValue = GetAttribute(SvgConstants.Attributes.FILL_RULE);
-                        if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
-                            if (doStroke) {
-                                currentCanvas.EoFillStroke();
-                            }
-                            else {
-                                currentCanvas.EoFill();
-                            }
-                        }
-                        else {
-                            if (doStroke) {
-                                // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
-                                currentCanvas.FillStroke();
-                            }
-                            else {
-                                currentCanvas.Fill();
-                            }
-                        }
+                        DoStrokeOrFill(fillRuleRawValue, currentCanvas);
                     }
                     else {
                         if (doStroke) {
@@ -353,6 +337,35 @@ namespace iText.Svg.Renderers.Impl {
                             ((IMarkerCapable)this).DrawMarker(context, markerVertexType);
                         }
                     }
+                }
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Do stroke or fill based on
+        /// <c>doFill/doStroke</c>
+        /// fields.
+        /// </summary>
+        /// <param name="fillRuleRawValue">fill rule attribute value.</param>
+        /// <param name="currentCanvas">current canvas to draw on.</param>
+        internal virtual void DoStrokeOrFill(String fillRuleRawValue, PdfCanvas currentCanvas) {
+            if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                if (doStroke) {
+                    currentCanvas.EoFillStroke();
+                }
+                else {
+                    currentCanvas.EoFill();
+                }
+            }
+            else {
+                if (doStroke) {
+                    // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
+                    currentCanvas.FillStroke();
+                }
+                else {
+                    currentCanvas.Fill();
                 }
             }
         }

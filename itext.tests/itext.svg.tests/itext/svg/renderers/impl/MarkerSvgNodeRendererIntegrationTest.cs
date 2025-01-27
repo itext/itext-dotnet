@@ -122,7 +122,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolygonElementTest() {
-            // TODO: update when DEVSIX-2719 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElement");
         }
 

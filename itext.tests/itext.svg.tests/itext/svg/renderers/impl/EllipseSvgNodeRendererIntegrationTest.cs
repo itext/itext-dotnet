@@ -153,7 +153,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void EllipseWithBigStrokeWidthTest() {
-            // TODO: DEVSIX-3932 update cmp_ after fix
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseWithBigStrokeWidth");
         }
     }
