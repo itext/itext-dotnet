@@ -112,8 +112,9 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+            )]
         public virtual void InvalidUrlFillTest() {
-            //TODO update cmp file after DEVSIX-3365 will be fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidUrlFillTest");
         }
 
@@ -126,7 +127,6 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void FillLinkToNonExistingGradientTest() {
-            //TODO DEVSIX-8821: update after supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fillLinkToNonExistingGradient");
         }
     }
