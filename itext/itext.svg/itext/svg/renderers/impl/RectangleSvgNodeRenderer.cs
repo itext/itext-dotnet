@@ -118,12 +118,14 @@ namespace iText.Svg.Renderers.Impl {
             width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
             height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RX)) {
-                rx = CheckRadius(ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.RX), context), width);
-                rxPresent = true;
+                float rawRadius = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.RX), context);
+                rx = CheckRadius(rawRadius, width);
+                rxPresent = rawRadius >= 0.0f;
             }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RY)) {
-                ry = CheckRadius(ParseVerticalLength(GetAttribute(SvgConstants.Attributes.RY), context), height);
-                ryPresent = true;
+                float rawRadius = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.RY), context);
+                ry = CheckRadius(rawRadius, height);
+                ryPresent = rawRadius >= 0.0f;
             }
         }
 

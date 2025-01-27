@@ -91,13 +91,11 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeWidthRoundedRectangleTest() {
-            //TODO change cmp-file after DEVSIX-3121 fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeWidthRoundedRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeHeightRoundedRectangleTest() {
-            //TODO change cmp-file after DEVSIX-3121 fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeHeightRoundedRectangle");
         }
 
