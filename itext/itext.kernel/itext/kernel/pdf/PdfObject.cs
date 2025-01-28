@@ -173,6 +173,39 @@ namespace iText.Kernel.Pdf {
             return indirectReference;
         }
 
+        /// <summary>Checks recursively whether the object contains indirect reference at any level.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if indirect reference was found,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool ContainsIndirectReference() {
+            if (IsIndirect()) {
+                return true;
+            }
+            if (IsDictionary()) {
+                PdfDictionary dict = (PdfDictionary)this;
+                foreach (PdfObject value in dict.Values()) {
+                    if (value.ContainsIndirectReference()) {
+                        return true;
+                    }
+                }
+            }
+            else {
+                if (IsArray()) {
+                    PdfArray arr = (PdfArray)this;
+                    foreach (PdfObject value in arr) {
+                        if (value.ContainsIndirectReference()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         /// <summary>Checks if object is indirect.</summary>
         /// <remarks>
         /// Checks if object is indirect.

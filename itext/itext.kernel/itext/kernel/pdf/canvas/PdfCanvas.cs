@@ -1993,11 +1993,11 @@ namespace iText.Kernel.Pdf.Canvas {
                 @out.WriteBytes(BMC);
             }
             else {
-                if (properties.GetIndirectReference() == null) {
-                    @out.Write(properties).WriteSpace().WriteBytes(BDC);
+                if (properties.ContainsIndirectReference()) {
+                    @out.Write(resources.AddProperties(properties)).WriteSpace().WriteBytes(BDC);
                 }
                 else {
-                    @out.Write(resources.AddProperties(properties)).WriteSpace().WriteBytes(BDC);
+                    @out.Write(properties).WriteSpace().WriteBytes(BDC);
                 }
             }
             Tuple2<PdfName, PdfDictionary> tuple2 = new Tuple2<PdfName, PdfDictionary>(tag, properties);
