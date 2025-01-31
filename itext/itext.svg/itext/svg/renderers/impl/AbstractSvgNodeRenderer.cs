@@ -580,9 +580,16 @@ namespace iText.Svg.Renderers.Impl {
 
         private float GetOpacityByAttributeName(String attributeName, float generalOpacity) {
             float opacity = generalOpacity;
-            String opacityValue = GetAttribute(attributeName);
-            if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                opacity *= float.Parse(opacityValue, System.Globalization.CultureInfo.InvariantCulture);
+            String opacityStr = GetAttribute(attributeName);
+            if (opacityStr != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityStr)) {
+                float opacityValue;
+                if (CssTypesValidationUtils.IsPercentageValue(opacityStr)) {
+                    opacityValue = CssDimensionParsingUtils.ParseRelativeValue(opacityStr, 1f);
+                }
+                else {
+                    opacityValue = float.Parse(opacityStr, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                opacity *= opacityValue;
             }
             return opacity;
         }

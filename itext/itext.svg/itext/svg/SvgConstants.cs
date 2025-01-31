@@ -549,6 +549,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the stroke linecap.</summary>
             public const String STROKE_LINECAP = "stroke-linecap";
 
+            /// <summary>Attribute defining the stroke linejoin.</summary>
+            public const String STROKE_LINEJOIN = "stroke-linejoin";
+
             /// <summary>Attribute defining the stroke miterlimit.</summary>
             public const String STROKE_MITERLIMIT = "stroke-miterlimit";
 

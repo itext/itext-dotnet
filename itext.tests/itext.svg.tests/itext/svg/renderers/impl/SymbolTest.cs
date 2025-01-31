@@ -125,7 +125,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void OpacityAttributeTest() {
-            // TODO DEVSIX-2258 Processing of stroke attribute is not currently correct supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityAttrTest");
         }
 

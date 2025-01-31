@@ -131,19 +131,19 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void StrokeObjectsOverlap2Test() {
-            //TODO DEVSIX-7338: Update cmp file
+            //TODO DEVSIX-7338: SVG stroke on group applied incorrectly
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroup2");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeObjectsOverlap3Test() {
-            //TODO DEVSIX-7338: Update cmp file
+            //TODO DEVSIX-7338: SVG stroke on group applied incorrectly
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeObjectsOverlap4Test() {
-            //TODO DEVSIX-7338: Update cmp file
+            //TODO DEVSIX-7338: SVG stroke on group applied incorrectly
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke2");
         }
 

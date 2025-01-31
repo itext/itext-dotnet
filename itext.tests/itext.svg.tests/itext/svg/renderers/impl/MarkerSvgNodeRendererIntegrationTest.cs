@@ -312,5 +312,25 @@ namespace iText.Svg.Renderers.Impl {
             // Compare with Chrome browser
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElement");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerDefinedInStyleTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerDefinedInStyle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerOnGroupTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOnGroup");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerOnSvgTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOnSvg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerOnSymbolTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOnSymbol");
+        }
     }
 }
