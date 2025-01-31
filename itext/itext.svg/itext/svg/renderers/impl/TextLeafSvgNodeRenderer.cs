@@ -71,11 +71,13 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         //Leaf text elements do not contain any kind of transformation
+        [Obsolete]
         public virtual bool ContainsAbsolutePositionChange() {
             return false;
         }
 
         //Leaf text elements do not contain any kind of transformation
+        [Obsolete]
         public virtual float[][] GetAbsolutePositionChanges() {
             float[] part = new float[] { 0f };
             return new float[][] { part, part };

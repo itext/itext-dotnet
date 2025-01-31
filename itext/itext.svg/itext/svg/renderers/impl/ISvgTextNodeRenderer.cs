@@ -63,8 +63,36 @@ namespace iText.Svg.Renderers.Impl {
         [Obsolete]
         bool ContainsRelativeMove();
 
+        /// <summary>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>containsAbsolutePositionChange(SvgDrawContext)</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>containsAbsolutePositionChange(SvgDrawContext)</c>.
+        /// This is needed because x/y can contain relative values, so SvgDrawContext is needed to resolve them.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if an absolute position is specified via x/y attributes,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        [Obsolete]
         bool ContainsAbsolutePositionChange();
 
+        /// <summary>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>getAbsolutePositionChanges(SvgDrawContext)</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>getAbsolutePositionChanges(SvgDrawContext)</c>.
+        /// This is needed because x/y can contain relative values, so SvgDrawContext is needed to resolve them.
+        /// </remarks>
+        /// <returns>text absolute position</returns>
+        [Obsolete]
         float[][] GetAbsolutePositionChanges();
 
         /// <summary>Return the bounding rectangle of the text element.</summary>

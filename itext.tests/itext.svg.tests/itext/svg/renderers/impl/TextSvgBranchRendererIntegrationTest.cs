@@ -318,5 +318,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void TextWhiteSpacePreLineTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreLine");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void TextRelativeXYTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textRelativeXY");
+        }
     }
 }

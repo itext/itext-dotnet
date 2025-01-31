@@ -32,6 +32,7 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Exceptions;
 using iText.Svg;
 using iText.Svg.Css;
 using iText.Svg.Renderers;
@@ -114,7 +115,7 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual float[] GetRelativeTranslation(SvgDrawContext context) {
             if (!moveResolved) {
-                ResolveTextMove(context);
+                ResolveRelativeTextMove(context);
             }
             return new float[] { xMove, yMove };
         }
@@ -126,7 +127,7 @@ namespace iText.Svg.Renderers.Impl {
 
         public virtual bool ContainsRelativeMove(SvgDrawContext context) {
             if (!moveResolved) {
-                ResolveTextMove(context);
+                ResolveRelativeTextMove(context);
             }
             bool isNullMove = CssUtils.CompareFloats(0f, xMove) && CssUtils.CompareFloats(0f, yMove);
             // comparison to 0
@@ -134,15 +135,23 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public virtual bool ContainsAbsolutePositionChange() {
+            return ContainsAbsolutePositionChange(new SvgDrawContext(null, null));
+        }
+
+        public virtual bool ContainsAbsolutePositionChange(SvgDrawContext context) {
             if (!posResolved) {
-                ResolveTextPosition();
+                ResolveAbsoluteTextPosition(context);
             }
             return (xPos != null && xPos.Length > 0) || (yPos != null && yPos.Length > 0);
         }
 
         public virtual float[][] GetAbsolutePositionChanges() {
+            return GetAbsolutePositionChanges(new SvgDrawContext(null, null));
+        }
+
+        public virtual float[][] GetAbsolutePositionChanges(SvgDrawContext context) {
             if (!posResolved) {
-                ResolveTextPosition();
+                ResolveAbsoluteTextPosition(context);
             }
             return new float[][] { xPos, yPos };
         }
@@ -166,12 +175,14 @@ namespace iText.Svg.Renderers.Impl {
             // building of properly positioned rectangles without any drawing or visual properties applying.
             foreach (ISvgTextNodeRenderer child in children) {
                 if (child is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
-                    startPoint = ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)child).GetStartPoint(context, startPoint);
-                    if (child.ContainsAbsolutePositionChange() && textChunkRect != null) {
+                    iText.Svg.Renderers.Impl.TextSvgBranchRenderer childText = (iText.Svg.Renderers.Impl.TextSvgBranchRenderer
+                        )child;
+                    startPoint = childText.GetStartPoint(context, startPoint);
+                    if (childText.ContainsAbsolutePositionChange(context) && textChunkRect != null) {
                         commonRect = GetCommonRectangleWithAnchor(commonRect, textChunkRect, rootX, textAnchorValue);
                         // Start new text chunk.
                         textChunkRect = null;
-                        textAnchorValue = child.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
+                        textAnchorValue = childText.GetAttribute(SvgConstants.Attributes.TEXT_ANCHOR);
                         rootX = (float)startPoint.GetX();
                     }
                 }
@@ -196,7 +207,7 @@ namespace iText.Svg.Renderers.Impl {
             if (objectBoundingBox == null) {
                 // Handle white-spaces
                 if (!whiteSpaceProcessed) {
-                    SvgTextUtil.ProcessWhiteSpace(this, true);
+                    SvgTextUtil.ProcessWhiteSpace(this, true, context);
                 }
                 objectBoundingBox = GetTextRectangle(context, null);
             }
@@ -224,7 +235,7 @@ namespace iText.Svg.Renderers.Impl {
             }
             // Handle white-spaces
             if (!whiteSpaceProcessed) {
-                SvgTextUtil.ProcessWhiteSpace(this, true);
+                SvgTextUtil.ProcessWhiteSpace(this, true, context);
             }
             this.paragraph = new Paragraph();
             this.paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
@@ -307,10 +318,10 @@ namespace iText.Svg.Renderers.Impl {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void PerformDrawing(SvgDrawContext context) {
-            if (this.ContainsAbsolutePositionChange()) {
+            if (this.ContainsAbsolutePositionChange(context)) {
                 DrawLastTextChunk(context);
                 // TODO: DEVSIX-2507 support rotate and other attributes
-                float[][] absolutePositions = this.GetAbsolutePositionChanges();
+                float[][] absolutePositions = this.GetAbsolutePositionChanges(context);
                 AffineTransform newTransform = GetTextTransform(absolutePositions, context);
                 StartNewTextChunk(context, newTransform);
             }
@@ -382,7 +393,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 //\endcond
 
-        private void ResolveTextMove(SvgDrawContext context) {
+        private void ResolveRelativeTextMove(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 String xRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.DX);
                 String yRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.DY);
@@ -400,14 +411,35 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private void ResolveTextPosition() {
+        private void ResolveAbsoluteTextPosition(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 String xRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.X);
                 String yRawValue = this.attributesAndStyles.Get(SvgConstants.Attributes.Y);
-                xPos = GetPositionsFromString(xRawValue);
-                yPos = GetPositionsFromString(yRawValue);
+                xPos = GetPositionsFromString(xRawValue, context, true);
+                yPos = GetPositionsFromString(yRawValue, context, false);
                 posResolved = true;
             }
+        }
+
+        private float[] GetPositionsFromString(String rawValuesString, SvgDrawContext context, bool isHorizontal) {
+            float[] result = null;
+            IList<String> valuesList = SvgCssUtils.SplitValueList(rawValuesString);
+            if (!valuesList.IsEmpty()) {
+                result = new float[valuesList.Count];
+                for (int i = 0; i < valuesList.Count; i++) {
+                    String value = valuesList[i];
+                    if (CssDimensionParsingUtils.DeterminePositionBetweenValueAndUnit(value) == 0) {
+                        throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, value));
+                    }
+                    if (isHorizontal) {
+                        result[i] = ParseHorizontalLength(value, context);
+                    }
+                    else {
+                        result[i] = ParseVerticalLength(value, context);
+                    }
+                }
+            }
+            return result;
         }
 
         private static AffineTransform GetTextTransform(float[][] absolutePositions, SvgDrawContext context) {
@@ -425,18 +457,6 @@ namespace iText.Svg.Renderers.Impl {
             tf.Concatenate(TEXTFLIP);
             tf.Concatenate(AffineTransform.GetTranslateInstance(absolutePositions[0][0], -absolutePositions[1][0]));
             return tf;
-        }
-
-        private static float[] GetPositionsFromString(String rawValuesString) {
-            float[] result = null;
-            IList<String> valuesList = SvgCssUtils.SplitValueList(rawValuesString);
-            if (!valuesList.IsEmpty()) {
-                result = new float[valuesList.Count];
-                for (int i = 0; i < valuesList.Count; i++) {
-                    result[i] = CssDimensionParsingUtils.ParseAbsoluteLength(valuesList[i]);
-                }
-            }
-            return result;
         }
 
         /// <summary>
@@ -499,16 +519,17 @@ namespace iText.Svg.Renderers.Impl {
         private Point GetStartPoint(SvgDrawContext context, Point basePoint) {
             double x = 0;
             double y = 0;
-            if (GetAbsolutePositionChanges()[0] != null) {
-                x = GetAbsolutePositionChanges()[0][0];
+            float[][] absolutePosition = GetAbsolutePositionChanges(context);
+            if (absolutePosition[0] != null) {
+                x = absolutePosition[0][0];
             }
             else {
                 if (basePoint != null) {
                     x = basePoint.GetX();
                 }
             }
-            if (GetAbsolutePositionChanges()[1] != null) {
-                y = GetAbsolutePositionChanges()[1][0];
+            if (absolutePosition[1] != null) {
+                y = absolutePosition[1][0];
             }
             else {
                 if (basePoint != null) {
