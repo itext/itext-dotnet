@@ -56,6 +56,8 @@ namespace iText.Svg.Exceptions {
 
         public const String INVALID_TRANSFORM_DECLARATION = "Transformation declaration is not formed correctly.";
 
+        public const String INVALID_TRANSFORM_VALUE = "Invalid transformation value: {0}";
+
         public const String LINE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for lineTo operator. Got: {0}";
 
         public const String MOVE_TO_EXPECTS_FOLLOWING_PARAMETERS_GOT_0 = "(x y)+ parameters are expected for moveTo operator. Got: {0}";

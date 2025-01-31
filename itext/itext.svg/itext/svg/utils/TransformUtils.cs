@@ -203,7 +203,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians((float)CssDimensionParsingUtils.ParseFloat(values[0])));
+            double tan = Math.Tan(MathUtil.ToRadians(ParseTransformationValue(values[0])));
             //Differs from the notation in the PDF-spec for skews
             return new AffineTransform(1, tan, 0, 1, 0, 0);
         }
@@ -215,7 +215,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1) {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double tan = Math.Tan(MathUtil.ToRadians((float)CssDimensionParsingUtils.ParseFloat(values[0])));
+            double tan = Math.Tan(MathUtil.ToRadians(ParseTransformationValue(values[0])));
             //Differs from the notation in the PDF-spec for skews
             return new AffineTransform(1, 0, tan, 1, 0, 0);
         }
@@ -227,7 +227,7 @@ namespace iText.Svg.Utils {
             if (values.Count != 1 && values.Count != 3) {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.TRANSFORM_INCORRECT_NUMBER_OF_VALUES);
             }
-            double angle = MathUtil.ToRadians((float)CssDimensionParsingUtils.ParseFloat(values[0]));
+            double angle = MathUtil.ToRadians(ParseTransformationValue(values[0]));
             if (values.Count == 3) {
                 float centerX = CssDimensionParsingUtils.ParseAbsoluteLength(values[1]);
                 float centerY = CssDimensionParsingUtils.ParseAbsoluteLength(values[2]);
@@ -293,6 +293,17 @@ namespace iText.Svg.Utils {
         private static IList<String> GetValuesFromTransformationString(String transformation) {
             String numbers = transformation.JSubstring(transformation.IndexOf('(') + 1, transformation.IndexOf(')'));
             return SvgCssUtils.SplitValueList(numbers);
+        }
+
+        private static float ParseTransformationValue(String valueStr) {
+            float? valueParsed = CssDimensionParsingUtils.ParseFloat(valueStr);
+            if (valueParsed == null) {
+                throw new SvgProcessingException(MessageFormatUtil.Format(SvgExceptionMessageConstant.INVALID_TRANSFORM_VALUE
+                    , valueStr));
+            }
+            else {
+                return (float)valueParsed;
+            }
         }
     }
 }

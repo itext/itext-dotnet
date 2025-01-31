@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
 using iText.Test;
@@ -172,6 +173,30 @@ namespace iText.Svg.Utils {
             AffineTransform actual = TransformUtils.ParseTransform("   translate(1)     translate(2)   ");
             AffineTransform expected = AffineTransform.GetTranslateInstance(2.25, 0);
             NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInvalidRotateTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
+                ("rotate(text)"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SvgExceptionMessageConstant.INVALID_TRANSFORM_VALUE
+                , "text"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInvalidSkewXTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
+                ("skewX(text)"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SvgExceptionMessageConstant.INVALID_TRANSFORM_VALUE
+                , "text"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInvalidSkewYTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => TransformUtils.ParseTransform
+                ("skewY(text)"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SvgExceptionMessageConstant.INVALID_TRANSFORM_VALUE
+                , "text"), e.Message);
         }
     }
 }
