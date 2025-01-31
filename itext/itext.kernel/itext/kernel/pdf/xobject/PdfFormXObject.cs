@@ -435,5 +435,21 @@ namespace iText.Kernel.Pdf.Xobject {
             SetModified();
             return this;
         }
+
+        /// <summary>If the form xobject is relative sized.</summary>
+        /// <remarks>
+        /// If the form xobject is relative sized. This information
+        /// is used during xobject layout to resolve it's relative size.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the xobject is relative sized,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsRelativeSized() {
+            return false;
+        }
     }
 }

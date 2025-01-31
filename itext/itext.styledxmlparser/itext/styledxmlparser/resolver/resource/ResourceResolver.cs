@@ -265,7 +265,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 PdfXObject imageXObject = imageCache.GetImage(imageResolvedSrc);
                 if (imageXObject == null) {
                     imageXObject = CreateImageByUrl(url);
-                    if (imageXObject != null) {
+                    //relative sized xObject can't be cached because it's internal state depends on the context
+                    bool isAbsoluteSized = imageXObject != null && !(imageXObject is PdfFormXObject && ((PdfFormXObject)imageXObject
+                        ).IsRelativeSized());
+                    if (isAbsoluteSized) {
                         imageCache.PutImage(imageResolvedSrc, imageXObject);
                     }
                 }

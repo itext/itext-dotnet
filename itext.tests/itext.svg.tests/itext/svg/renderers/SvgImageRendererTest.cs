@@ -201,7 +201,7 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void RelativeSizedSvg5Test() {
+        public virtual void RelativeSizedSvgInImgTest() {
             String svgName = "viewbox_percent_height_percent_width_prRatio_none";
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + ".pdf";
@@ -222,6 +222,289 @@ namespace iText.Svg.Renderers {
                 svgImage.SetHeight(UnitValue.CreatePercentValue(100));
                 div.Add(svgImage);
                 document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg2Test() {
+            String svgName = "viewbox_percent_height_percent_width_prRatio_none";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                Div div = new Div().SetWidth(400).SetHeight(300);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                svgImage.SetWidth(UnitValue.CreatePointValue(300));
+                svgImage.SetHeight(UnitValue.CreatePointValue(200));
+                div.Add(svgImage);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg3Test() {
+            String svgName = "viewbox_percent_height_percent_width_prRatio_max_max";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                Div div = new Div().SetWidth(300).SetHeight(300);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                svgImage.SetWidth(UnitValue.CreatePointValue(200));
+                svgImage.SetHeight(UnitValue.CreatePointValue(100));
+                div.Add(svgImage);
+                document.Add(div);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg4Test() {
+            String svgName = "viewbox_fixed_height_percent_width_no_viewbox";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                svgImage.SetWidth(100);
+                svgImage.SetHeight(300);
+                document.Add(svgImage);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg5Test() {
+            String svgName = "fixed_height_and_width";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                document.Add(svgImage);
+                NUnit.Framework.Assert.IsTrue(svgImageXObject.IsRelativeSized());
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg6Test() {
+            String svgName = "relativeSizedSvg";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                svgImage.SetWidth(100.0F);
+                document.Add(svgImage);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg7Test() {
+            String svgName = "relativeSizedSvg";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "2_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "2_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                svgImage.SetHeight(100.0F);
+                document.Add(svgImage);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg8Test() {
+            String svgName = "fixed_height_and_width_2";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                document.Add(svgImage);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInImg9Test() {
+            String svgName = "fixed_height_and_width_3";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                SvgDrawContext svgDrawContext = new SvgDrawContext(new ResourceResolver(SOURCE_FOLDER), null);
+                SvgImageXObject svgImageXObject = new SvgImageXObject(result, svgDrawContext, 12, document.GetPdfDocument(
+                    ));
+                svgImageXObject.SetIsCreatedByImg(true);
+                SvgImage svgImage = new SvgImage(svgImageXObject);
+                document.Add(svgImage);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInObjTest() {
+            String svgName = "fixed_height_and_width";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_obj" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
+                SvgImageXObject xObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
+                xObject.SetIsCreatedByObject(true);
+                SvgImage image = new SvgImage(xObject);
+                image.SetWidth(200.0F);
+                document.Add(image);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInObj2Test() {
+            String svgName = "fixed_height_and_width";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj2" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_obj2" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
+                SvgImageXObject xObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
+                xObject.SetIsCreatedByObject(true);
+                SvgImage image = new SvgImage(xObject);
+                image.SetWidth(200.0F);
+                image.SetHeight(200.0F);
+                document.Add(image);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInObj3Test() {
+            String svgName = "fixed_height_and_width_2";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_obj" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
+                SvgImageXObject xObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
+                xObject.SetIsCreatedByObject(true);
+                SvgImage image = new SvgImage(xObject);
+                image.SetHeight(200.0F);
+                document.Add(image);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeSizedSvgInObj4Test() {
+            String svgName = "fixed_height_and_width_2";
+            String svgFileName = SOURCE_FOLDER + svgName + ".svg";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj2" + ".pdf";
+            String outFileName = DESTINATION_FOLDER + svgName + "_obj2" + ".pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
+                SetCompressionLevel(0))))) {
+                INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
+                ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
+                    (svgFileName));
+                ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
+                Rectangle wh = SvgCssUtils.ExtractWidthAndHeight(topSvgRenderer, 0.0F, new SvgDrawContext(null, null));
+                SvgImageXObject xObject = new SvgImageXObject(wh, result, new ResourceResolver(SOURCE_FOLDER));
+                xObject.SetIsCreatedByObject(true);
+                SvgImage image = new SvgImage(xObject);
+                image.SetHeight(200.0F);
+                image.SetWidth(200.0F);
+                document.Add(image);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));

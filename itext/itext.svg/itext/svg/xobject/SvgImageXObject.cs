@@ -44,6 +44,10 @@ namespace iText.Svg.Xobject {
 
         private bool isGenerated = false;
 
+        private bool isCreatedByImg = false;
+
+        private bool isCreatedByObject = false;
+
         private float em;
 
         private SvgDrawContext svgDrawContext;
@@ -81,6 +85,30 @@ namespace iText.Svg.Xobject {
             this.svgDrawContext = svgContext;
         }
 
+        /// <summary>Set if SVG image is created from HTML img tag context</summary>
+        /// <param name="isCreatedByImg">true if object is created from HTML img tag, false otherwise</param>
+        public virtual void SetIsCreatedByImg(bool isCreatedByImg) {
+            this.isCreatedByImg = isCreatedByImg;
+        }
+
+        /// <summary>Check if SVG image is created from HTML img tag context</summary>
+        /// <returns>true if object is created from HTML img tag, false otherwise</returns>
+        public virtual bool IsCreatedByImg() {
+            return isCreatedByImg;
+        }
+
+        /// <summary>Set if SVG image is created from HTML object tag context</summary>
+        /// <param name="isCreatedByObject">true if object is created from HTML object tag, false otherwise</param>
+        public virtual void SetIsCreatedByObject(bool isCreatedByObject) {
+            this.isCreatedByObject = isCreatedByObject;
+        }
+
+        /// <summary>Check if SVG image is created from HTML object tag context</summary>
+        /// <returns>true if object is created from HTML object tag, false otherwise</returns>
+        public virtual bool IsCreatedByObject() {
+            return isCreatedByObject;
+        }
+
         /// <summary>If the SVG image is relative sized.</summary>
         /// <remarks>
         /// If the SVG image is relative sized. This information
@@ -93,31 +121,11 @@ namespace iText.Svg.Xobject {
         /// <see langword="false"/>
         /// otherwise
         /// </returns>
-        /// <seealso cref="UpdateBBox(float?, float?)"/>
+        /// <seealso cref="UpdateBBox(float, float)"/>
         /// <seealso cref="SvgImageXObject(iText.Svg.Processors.ISvgProcessorResult, iText.Svg.Renderers.SvgDrawContext, float, iText.Kernel.Pdf.PdfDocument)
         ///     "/>
-        public virtual bool IsRelativeSized() {
+        public override bool IsRelativeSized() {
             return isRelativeSized;
-        }
-
-        /// <summary>Sets if the SVG image is relative sized.</summary>
-        /// <remarks>
-        /// Sets if the SVG image is relative sized. This information
-        /// is used during image layouting to resolve it's relative size.
-        /// </remarks>
-        /// <param name="relativeSized">
-        /// 
-        /// <see langword="true"/>
-        /// if the SVG image is relative sized,
-        /// <see langword="false"/>
-        /// otherwise
-        /// </param>
-        /// <seealso cref="UpdateBBox(float?, float?)"/>
-        /// <seealso cref="SvgImageXObject(iText.Svg.Processors.ISvgProcessorResult, iText.Svg.Renderers.SvgDrawContext, float, iText.Kernel.Pdf.PdfDocument)
-        ///     "/>
-        public virtual void SetRelativeSized(bool relativeSized) {
-            // TODO DEVSIX-8829 remove/deprecate this method after ticket will be done
-            isRelativeSized = relativeSized;
         }
 
         /// <summary>Returns processor result containing the SVG information.</summary>
@@ -167,11 +175,8 @@ namespace iText.Svg.Xobject {
         /// <summary>Updated XObject BBox for relative sized SVG image.</summary>
         /// <param name="areaWidth">the area width where SVG image will be drawn</param>
         /// <param name="areaHeight">the area height where SVG image will be drawn</param>
-        public virtual void UpdateBBox(float? areaWidth, float? areaHeight) {
-            // TODO DEVSIX-8829 change parameters to float, not Float
-            if (areaWidth != null && areaHeight != null) {
-                svgDrawContext.SetCustomViewport(new Rectangle((float)areaWidth, (float)areaHeight));
-            }
+        public virtual void UpdateBBox(float areaWidth, float areaHeight) {
+            svgDrawContext.SetCustomViewport(new Rectangle(areaWidth, areaHeight));
             Rectangle bbox = SvgCssUtils.ExtractWidthAndHeight(result.GetRootRenderer(), em, svgDrawContext);
             SetBBox(new PdfArray(bbox));
         }

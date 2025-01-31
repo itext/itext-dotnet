@@ -455,7 +455,8 @@ namespace iText.Layout.Renderer {
             }
             float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
             float? verticalScaling = this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
-            if (xObject is PdfFormXObject && width != imageWidth) {
+            if (xObject is PdfFormXObject && (JavaUtil.FloatCompare((float)width, imageWidth) != 0 || JavaUtil.FloatCompare
+                ((float)height, imageHeight) != 0)) {
                 horizontalScaling *= width / imageWidth;
                 verticalScaling *= height / imageHeight;
             }
