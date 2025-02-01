@@ -153,6 +153,10 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String TABS_MODIFIED = "Tabs entry in a page dictionary was unexpectedly modified.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String PERMISSIONS_REMOVED = "Permissions dictionary was removed from the catalog.";
 //\endcond
 
@@ -1510,13 +1514,19 @@ namespace iText.Signatures.Validation {
                     previousPageCopy.Remove(PdfName.Annots);
                     previousPageCopy.Remove(PdfName.Parent);
                     previousPageCopy.Remove(PdfName.StructParents);
+                    previousPageCopy.Remove(PdfName.Tabs);
                     PdfDictionary currentPageCopy = new PdfDictionary(currentKid);
                     currentPageCopy.Remove(PdfName.Annots);
                     currentPageCopy.Remove(PdfName.Parent);
                     currentPageCopy.Remove(PdfName.StructParents);
+                    currentPageCopy.Remove(PdfName.Tabs);
                     if (!ComparePdfObjects(previousPageCopy, currentPageCopy, usuallyModifiedObjects) || !CompareIndirectReferencesObjNums
                         (previousKid.Get(PdfName.Parent), currentKid.Get(PdfName.Parent), report, "Page parent")) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_MODIFIED, ReportItem.ReportItemStatus.INVALID));
+                        return false;
+                    }
+                    if (!CompareTabs(previousKid.GetAsName(PdfName.Tabs), currentKid.GetAsName(PdfName.Tabs))) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, TABS_MODIFIED, ReportItem.ReportItemStatus.INVALID));
                         return false;
                     }
                     PdfArray prevNotModifiableAnnots = GetAnnotsNotAllowedToBeModified(previousKid);
@@ -1531,6 +1541,13 @@ namespace iText.Signatures.Validation {
                 }
             }
             return true;
+        }
+
+        private bool CompareTabs(PdfName previousTabs, PdfName currentTabs) {
+            if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
+                return true;
+            }
+            return Object.Equals(previousTabs, currentTabs) || (previousTabs == null && currentTabs.Equals(PdfName.S));
         }
 
         private void CollectRemovedAndAddedAnnotations(PdfArray previousAnnotations, PdfArray currentAnnotations) {

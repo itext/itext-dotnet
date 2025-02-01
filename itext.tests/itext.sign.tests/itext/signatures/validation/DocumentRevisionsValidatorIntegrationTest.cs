@@ -469,6 +469,43 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void AnnotationModificationAllowedTabsChangesTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "annotationModificationAllowedTabsChangesTest.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                    (0));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void AnnotationModificationNotAllowedTabsChangesTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "annotationModificationNotAllowedTabsChangesTest.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .TABS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void AnnotationModificationNotAllowedTabsSetToDefaultTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "annotationModificationNotAllowedTabsSetToDefaultTest.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
+                    (0));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
         public virtual void OutlinesNotModifiedTest(bool continueValidationAfterFail) {
             SetUp(continueValidationAfterFail);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "outlinesNotModified.pdf"))) {
