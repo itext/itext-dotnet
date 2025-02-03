@@ -55,6 +55,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SingleImageHrefTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageHref", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ImageWithRectangleTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithRectangle", properties);
         }

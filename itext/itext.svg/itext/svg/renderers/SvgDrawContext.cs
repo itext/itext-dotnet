@@ -452,5 +452,28 @@ namespace iText.Svg.Renderers {
         public virtual void ResetClippingElementTransform() {
             this.clippingElementTransform.SetToIdentity();
         }
+
+        /// <summary>Concatenates all transformations applied from the top level of the svg to the current one.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance
+        /// </returns>
+        public virtual AffineTransform GetConcatenatedTransform() {
+            IList<PdfCanvas> canvasList = new List<PdfCanvas>();
+            int canvasesSize = this.Size();
+            for (int i = 0; i < canvasesSize; i++) {
+                canvasList.Add(this.PopCanvas());
+            }
+            AffineTransform transform = new AffineTransform();
+            for (int i = canvasList.Count - 1; i >= 0; i--) {
+                PdfCanvas pdfCanvas = canvasList[i];
+                Matrix matrix = pdfCanvas.GetGraphicsState().GetCtm();
+                transform.Concatenate(new AffineTransform(matrix.Get(0), matrix.Get(1), matrix.Get(3), matrix.Get(4), matrix
+                    .Get(6), matrix.Get(7)));
+                this.PushCanvas(pdfCanvas);
+            }
+            return transform;
+        }
     }
 }

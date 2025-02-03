@@ -606,7 +606,10 @@ namespace iText.Svg {
             /// <summary>Attribute defining the second y coordinate value of a line.</summary>
             public const String Y2 = "y2";
 
-            /// <summary>Attribute defining version</summary>
+            /// <summary>Attribute defining vector-effect.</summary>
+            public const String VECTOR_EFFECT = "vector-effect";
+
+            /// <summary>Attribute defining version.</summary>
             public const String VERSION = "version";
         }
 
@@ -657,8 +660,11 @@ namespace iText.Svg {
             /// <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
             public const String MEET = "meet";
 
-            /// <summary>Value representing the "none" value".</summary>
+            /// <summary>Value representing the "none" value.</summary>
             public const String NONE = "none";
+
+            /// <summary>Value representing the "non-scaling-stroke" value for vector-effect attribute.</summary>
+            public const String NONE_SCALING_STROKE = "non-scaling-stroke";
 
             /// <summary>Value representing the units relation "objectBoundingBox".</summary>
             public const String OBJECT_BOUNDING_BOX = "objectBoundingBox";

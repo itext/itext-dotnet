@@ -110,11 +110,13 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% path\n");
+            AffineTransform transform = ApplyNonScalingStrokeTransform(context);
             foreach (IPathShape item in GetShapes()) {
                 if (item is AbstractPathShape) {
                     AbstractPathShape shape = (AbstractPathShape)item;
                     shape.SetParent(this);
                     shape.SetContext(context);
+                    shape.SetTransform(transform);
                 }
                 item.Draw(context.GetCurrentCanvas());
             }

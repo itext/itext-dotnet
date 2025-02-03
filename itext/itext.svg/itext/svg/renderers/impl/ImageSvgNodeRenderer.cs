@@ -50,7 +50,10 @@ namespace iText.Svg.Renderers.Impl {
             if (resourceResolver == null || this.attributesAndStyles == null) {
                 return;
             }
-            String uri = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
+            String uri = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
+            if (uri == null) {
+                uri = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
+            }
             PdfXObject xObject = resourceResolver.RetrieveImage(uri);
             if (xObject == null) {
                 return;

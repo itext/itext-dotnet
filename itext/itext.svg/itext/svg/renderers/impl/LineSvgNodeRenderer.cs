@@ -47,7 +47,13 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% line\n");
             if (SetParameters(context)) {
-                canvas.MoveTo(x1, y1).LineTo(x2, y2);
+                float[] points = new float[] { x1, y1, x2, y2 };
+                AffineTransform transform = ApplyNonScalingStrokeTransform(context);
+                if (transform != null) {
+                    transform.Transform(points, 0, points, 0, points.Length / 2);
+                }
+                int i = 0;
+                canvas.MoveTo(points[i++], points[i++]).LineTo(points[i++], points[i]);
             }
         }
 

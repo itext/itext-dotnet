@@ -49,11 +49,14 @@ namespace iText.Svg.Renderers.Path.Impl {
         /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
         public override void Draw() {
-            float x1 = ParseHorizontalLength(coordinates[0]);
-            float y1 = ParseVerticalLength(coordinates[1]);
-            float x = ParseHorizontalLength(coordinates[2]);
-            float y = ParseVerticalLength(coordinates[3]);
-            context.GetCurrentCanvas().CurveTo(x1, y1, x, y);
+            double x1 = ParseHorizontalLength(coordinates[0]);
+            double y1 = ParseVerticalLength(coordinates[1]);
+            double x = ParseHorizontalLength(coordinates[2]);
+            double y = ParseVerticalLength(coordinates[3]);
+            double[] points = new double[] { x1, y1, x, y };
+            ApplyTransform(points);
+            int i = 0;
+            context.GetCurrentCanvas().CurveTo(points[i++], points[i++], points[i++], points[i]);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

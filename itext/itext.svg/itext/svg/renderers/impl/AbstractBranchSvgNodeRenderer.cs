@@ -269,19 +269,7 @@ namespace iText.Svg.Renderers.Impl {
         /// bbox
         /// </returns>
         private static Rectangle GetBBoxAccordingToVisibleOverflow(SvgDrawContext context) {
-            IList<PdfCanvas> canvases = new List<PdfCanvas>();
-            int canvasesSize = context.Size();
-            for (int i = 0; i < canvasesSize; i++) {
-                canvases.Add(context.PopCanvas());
-            }
-            AffineTransform transform = new AffineTransform();
-            for (int i = canvases.Count - 1; i >= 0; i--) {
-                PdfCanvas canvas = canvases[i];
-                Matrix matrix = canvas.GetGraphicsState().GetCtm();
-                transform.Concatenate(new AffineTransform(matrix.Get(0), matrix.Get(1), matrix.Get(3), matrix.Get(4), matrix
-                    .Get(6), matrix.Get(7)));
-                context.PushCanvas(canvas);
-            }
+            AffineTransform transform = context.GetConcatenatedTransform();
             try {
                 transform = transform.CreateInverse();
             }

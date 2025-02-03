@@ -49,13 +49,17 @@ namespace iText.Svg.Renderers.Path.Impl {
         }
 
         public override void Draw() {
-            float x1 = ParseHorizontalLength(coordinates[0]);
-            float y1 = ParseVerticalLength(coordinates[1]);
-            float x2 = ParseHorizontalLength(coordinates[2]);
-            float y2 = ParseVerticalLength(coordinates[3]);
-            float x = ParseHorizontalLength(coordinates[4]);
-            float y = ParseVerticalLength(coordinates[5]);
-            context.GetCurrentCanvas().CurveTo(x1, y1, x2, y2, x, y);
+            double x1 = ParseHorizontalLength(coordinates[0]);
+            double y1 = ParseVerticalLength(coordinates[1]);
+            double x2 = ParseHorizontalLength(coordinates[2]);
+            double y2 = ParseVerticalLength(coordinates[3]);
+            double x = ParseHorizontalLength(coordinates[4]);
+            double y = ParseVerticalLength(coordinates[5]);
+            double[] points = new double[] { x1, y1, x2, y2, x, y };
+            ApplyTransform(points);
+            int i = 0;
+            context.GetCurrentCanvas().CurveTo(points[i++], points[i++], points[i++], points[i++], points[i++], points
+                [i]);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

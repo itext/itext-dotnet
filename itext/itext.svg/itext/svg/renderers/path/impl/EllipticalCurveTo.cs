@@ -99,7 +99,9 @@ namespace iText.Svg.Renderers.Path.Impl {
                 /* edge case: If rx = 0 or ry = 0 then this arc is treated as a straight line segment (a "lineto")
                 * joining the endpoints.
                 */
-                context.GetCurrentCanvas().LineTo(end.GetX(), end.GetY());
+                double[] points = new double[] { end.GetX(), end.GetY() };
+                ApplyTransform(points);
+                context.GetCurrentCanvas().LineTo(points[0], points[1]);
             }
             else {
                 /* This is the first step of calculating a rotated elliptical path.
@@ -166,8 +168,11 @@ namespace iText.Svg.Renderers.Path.Impl {
         }
 //\endcond
 
-        private static void DrawCurve(PdfCanvas canvas, Point cp1, Point cp2, Point end) {
-            canvas.CurveTo(cp1.GetX(), cp1.GetY(), cp2.GetX(), cp2.GetY(), end.GetX(), end.GetY());
+        private void DrawCurve(PdfCanvas canvas, Point cp1, Point cp2, Point end) {
+            double[] points = new double[] { cp1.GetX(), cp1.GetY(), cp2.GetX(), cp2.GetY(), end.GetX(), end.GetY() };
+            ApplyTransform(points);
+            int i = 0;
+            canvas.CurveTo(points[i++], points[i++], points[i++], points[i++], points[i++], points[i]);
         }
 
         private Point[][] MakePoints(IList<double[]> input) {

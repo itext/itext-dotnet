@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -34,6 +36,7 @@ using iText.StyledXmlParser.Css.Validate;
 using iText.Svg;
 using iText.Svg.Css;
 using iText.Svg.Css.Impl;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
@@ -45,6 +48,8 @@ namespace iText.Svg.Renderers.Impl {
     public abstract class AbstractSvgNodeRenderer : ISvgNodeRenderer {
         private static readonly MarkerVertexType[] MARKER_VERTEX_TYPES = new MarkerVertexType[] { MarkerVertexType
             .MARKER_START, MarkerVertexType.MARKER_MID, MarkerVertexType.MARKER_END };
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractSvgNodeRenderer));
 
         /// <summary>Map that contains attributes and styles used for drawing operations.</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
@@ -272,6 +277,34 @@ namespace iText.Svg.Renderers.Impl {
                 return ((AbstractSvgNodeRenderer)GetParent()).GetParentClipPath();
             }
             return null;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Applies non-scaling-stroke vector-effect to this renderer by concatenating all transformations applied
+        /// from the top level of the svg to the current one, inverting it and applying to the current canvas.
+        /// </summary>
+        /// <param name="context">the SVG draw context</param>
+        /// <returns>
+        /// the transformation that was inverted and applied to this renderer
+        /// to achieve non-scaling-stroke vector-effect
+        /// </returns>
+        internal virtual AffineTransform ApplyNonScalingStrokeTransform(SvgDrawContext context) {
+            AffineTransform transform = null;
+            bool isNonScalingStroke = doStroke && SvgConstants.Values.NONE_SCALING_STROKE.Equals(GetAttribute(SvgConstants.Attributes
+                .VECTOR_EFFECT));
+            if (isNonScalingStroke) {
+                transform = context.GetConcatenatedTransform();
+                try {
+                    context.GetCurrentCanvas().ConcatMatrix(transform.CreateInverse());
+                }
+                catch (NoninvertibleTransformException) {
+                    LOGGER.LogWarning(SvgLogMessageConstant.NON_INVERTIBLE_TRANSFORMATION_MATRIX_FOR_NON_SCALING_STROKE);
+                    transform = null;
+                }
+            }
+            return transform;
         }
 //\endcond
 

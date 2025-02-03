@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Svg;
 
@@ -52,9 +53,41 @@ namespace iText.Svg.Utils {
         /// <param name="cv">canvas to paint on</param>
         public static void Arc(double x1, double y1, double x2, double y2, double startAng, double extent, PdfCanvas
              cv) {
+            Arc(x1, y1, x2, y2, startAng, extent, cv, null);
+        }
+
+        /// <summary>
+        /// Draw an arc on the passed canvas with provided transform,
+        /// enclosed by the rectangle for which two opposite corners are specified.
+        /// </summary>
+        /// <remarks>
+        /// Draw an arc on the passed canvas with provided transform,
+        /// enclosed by the rectangle for which two opposite corners are specified.
+        /// The arc starts at the passed starting angle and extends to the starting angle + extent
+        /// </remarks>
+        /// <param name="x1">corner-coordinate of the enclosing rectangle, first corner</param>
+        /// <param name="y1">corner-coordinate of the enclosing rectangle, first corner</param>
+        /// <param name="x2">corner-coordinate of the enclosing rectangle, second corner</param>
+        /// <param name="y2">corner-coordinate of the enclosing rectangle, second corner</param>
+        /// <param name="startAng">starting angle in degrees</param>
+        /// <param name="extent">extent of the arc</param>
+        /// <param name="cv">canvas to paint on</param>
+        /// <param name="transform">
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing,
+        /// or
+        /// <see langword="null"/>
+        /// in case transform shouldn't be applied
+        /// </param>
+        public static void Arc(double x1, double y1, double x2, double y2, double startAng, double extent, PdfCanvas
+             cv, AffineTransform transform) {
             IList<double[]> ar = PdfCanvas.BezierArc(x1, y1, x2, y2, startAng, extent);
             if (!ar.IsEmpty()) {
                 foreach (double[] pt in ar) {
+                    if (transform != null) {
+                        transform.Transform(pt, 0, pt, 0, pt.Length / 2);
+                    }
                     cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
                 }
             }

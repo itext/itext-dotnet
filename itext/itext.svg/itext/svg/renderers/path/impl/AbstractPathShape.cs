@@ -35,6 +35,8 @@ namespace iText.Svg.Renderers.Path.Impl {
     public abstract class AbstractPathShape : IPathShape {
         private PathSvgNodeRenderer parent;
 
+        private AffineTransform transform = null;
+
         /// <summary>The properties of this shape.</summary>
         protected internal IDictionary<String, String> properties;
 
@@ -109,6 +111,20 @@ namespace iText.Svg.Renderers.Path.Impl {
             this.context = context;
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing the shape.
+        /// </summary>
+        /// <param name="transform">
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing
+        /// </param>
+        public virtual void SetTransform(AffineTransform transform) {
+            this.transform = transform;
+        }
+
         /// <summary>Parse x axis length value.</summary>
         /// <param name="length">
         /// 
@@ -130,6 +146,14 @@ namespace iText.Svg.Renderers.Path.Impl {
         protected internal virtual float ParseVerticalLength(String length) {
             return SvgCssUtils.ParseAbsoluteVerticalLength(parent, length, 0.0F, context);
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void ApplyTransform(double[] points) {
+            if (transform != null) {
+                transform.Transform(points, 0, points, 0, points.Length / 2);
+            }
+        }
+//\endcond
 
         public abstract void SetCoordinates(String[] arg1, Point arg2);
     }

@@ -54,9 +54,14 @@ namespace iText.Svg.Renderers.Impl {
             cv.WriteLiteral("% ellipse\n");
             if (SetParameters(context)) {
                 // Use double type locally to have better precision of the result after applying arithmetic operations
-                cv.MoveTo((double)cx + (double)rx, cy);
+                double[] startPoint = new double[] { (double)cx + (double)rx, cy };
+                AffineTransform transform = ApplyNonScalingStrokeTransform(context);
+                if (transform != null) {
+                    transform.Transform(startPoint, 0, startPoint, 0, startPoint.Length / 2);
+                }
+                cv.MoveTo(startPoint[0], startPoint[1]);
                 DrawUtils.Arc((double)cx - (double)rx, (double)cy - (double)ry, (double)cx + (double)rx, (double)cy + (double
-                    )ry, 0, 360, cv);
+                    )ry, 0, 360, cv, transform);
             }
         }
 

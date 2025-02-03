@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
@@ -120,6 +121,12 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% polyline\n");
             if (points.Count > 1) {
+                AffineTransform transform = ApplyNonScalingStrokeTransform(context);
+                if (transform != null) {
+                    Point[] pt = points.ToArray(new Point[0]);
+                    transform.Transform(pt, 0, pt, 0, pt.Length);
+                    points = JavaUtil.ArraysAsList(pt);
+                }
                 Point currentPoint = points[0];
                 canvas.MoveTo(currentPoint.GetX(), currentPoint.GetY());
                 for (int x = 1; x < points.Count; x++) {
