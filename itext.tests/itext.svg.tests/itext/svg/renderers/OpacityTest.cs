@@ -60,9 +60,7 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void TestFillOpacityWithComma() {
-            //TODO DEVSIX-2678 SVG: Displaying invalid value of fill-opacity incorrectly
-            NUnit.Framework.Assert.Catch(typeof(FormatException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "testFillOpacityWithComma"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "testFillOpacityWithComma");
         }
 
         [NUnit.Framework.Test]
@@ -72,15 +70,12 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void TestFillOpacity() {
-            //TODO: update after DEVSIX-2678 fix
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_fill_opacity");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestStrokeOpacityWithComma() {
-            //TODO DEVSIX-2679
-            NUnit.Framework.Assert.Catch(typeof(Exception), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, 
-                "testStrokeOpacityWithComma"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "testStrokeOpacityWithComma");
         }
 
         [NUnit.Framework.Test]
@@ -90,7 +85,6 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void TestStrokeOpacity() {
-            //TODO: update after DEVSIX-2679 fix
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_stroke_opacity");
         }
     }

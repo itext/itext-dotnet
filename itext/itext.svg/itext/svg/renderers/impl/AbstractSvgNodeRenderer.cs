@@ -620,7 +620,12 @@ namespace iText.Svg.Renderers.Impl {
                     opacityValue = CssDimensionParsingUtils.ParseRelativeValue(opacityStr, 1f);
                 }
                 else {
-                    opacityValue = float.Parse(opacityStr, System.Globalization.CultureInfo.InvariantCulture);
+                    if (CssTypesValidationUtils.IsNumber(opacityStr)) {
+                        opacityValue = (float)CssDimensionParsingUtils.ParseFloat(opacityStr);
+                    }
+                    else {
+                        opacityValue = 1;
+                    }
                 }
                 opacity *= opacityValue;
             }
