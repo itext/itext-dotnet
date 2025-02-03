@@ -643,7 +643,7 @@ namespace iText.Svg.Renderers.Impl {
                     SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clipPath, context.GetCssContext());
                     clipPath.SetClippedRenderer(this);
                     clipPath.Draw(context);
-                    return !clipPath.GetChildren().IsEmpty();
+                    return true;
                 }
             }
             return false;

@@ -43,6 +43,16 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void EmptyClipPathTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "emptyClipPath");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidClipPathTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidClipPath");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void RectClipPathComplexTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "clippath_rect_complex");
         }
