@@ -87,8 +87,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be OEed
@@ -152,8 +154,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be OEed
@@ -236,8 +240,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed to output the metadata in cleartext.
