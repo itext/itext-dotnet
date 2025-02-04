@@ -78,7 +78,7 @@ namespace iText.Svg.Renderers.Impl {
             clipRenderer.AddChild(rectRenderer);
             clipRenderer.SetClippedRenderer(new RectangleSvgNodeRenderer());
             clipRenderer.Draw(sdc);
-            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\n0 0 0 rg\n% rect\n0 0 0 0 re\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\n0 0 0 rg\n% rect\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (cv.GetContentStream().GetBytes()));
         }
 
@@ -93,7 +93,7 @@ namespace iText.Svg.Renderers.Impl {
             clipRenderer.AddChild(rectRenderer);
             clipRenderer.SetClippedRenderer(new RectangleSvgNodeRenderer());
             clipRenderer.Draw(sdc);
-            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\n0 0 0 rg\n% rect\n0 0 0 0 re\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\n0 0 0 rg\n% rect\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (cv.GetContentStream().GetBytes()));
         }
 
@@ -108,8 +108,8 @@ namespace iText.Svg.Renderers.Impl {
             clipRenderer.AddChild(rectRenderer);
             clipRenderer.SetClippedRenderer(new RectangleSvgNodeRenderer());
             clipRenderer.Draw(sdc);
-            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW*\nn\n0 0 0 rg\n% rect\n0 0 0 0 re\nf\nQ\n", 
-                iText.Commons.Utils.JavaUtil.GetStringForBytes(cv.GetContentStream().GetBytes()));
+            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW*\nn\n0 0 0 rg\n% rect\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
+                (cv.GetContentStream().GetBytes()));
         }
 
         [NUnit.Framework.Test]

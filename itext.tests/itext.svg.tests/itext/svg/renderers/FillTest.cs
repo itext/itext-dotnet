@@ -121,7 +121,6 @@ namespace iText.Svg.Renderers {
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 4)]
         public virtual void TextFillFallbackTest() {
-            //TODO update cmp file after DEVSIX-2915 will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFillFallbackTest");
         }
 

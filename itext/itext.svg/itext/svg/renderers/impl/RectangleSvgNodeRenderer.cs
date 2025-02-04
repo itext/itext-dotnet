@@ -58,6 +58,9 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas cv = context.GetCurrentCanvas();
             cv.WriteLiteral("% rect\n");
             SetParameters(context);
+            if (width <= 0 || height <= 0) {
+                return;
+            }
             bool singleValuePresent = (rxPresent && !ryPresent) || (!rxPresent && ryPresent);
             AffineTransform transform = ApplyNonScalingStrokeTransform(context);
             if (!rxPresent && !ryPresent) {
