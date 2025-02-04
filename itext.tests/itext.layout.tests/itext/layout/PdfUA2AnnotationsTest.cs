@@ -169,8 +169,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void PdfUA2ScreenAnnotationsTest() {
-            //TODO DEVSIX-8807 Kernel: addAnnotation method doesn't annotate content elements with Annot tag when PDF version is 2.0
             String outFile = DESTINATION_FOLDER + "pdfuaScreenAnnotationTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_pdfuaScreenAnnotationTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -180,10 +180,9 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(screen);
                 pdfPage.Flush();
             }
-            new VeraPdfValidator().ValidateFailure(outFile);
+            CompareAndValidate(outFile, cmpFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2ScreenNoContentsAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaScreenNoContentsAnnotationTest.pdf";
@@ -263,8 +262,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void PdfUA23DAnnotationsTest() {
-            //TODO DEVSIX-8807 Kernel: addAnnotation method doesn't annotate content elements with Annot tag when PDF version is 2.0
             String outFile = DESTINATION_FOLDER + "pdfua3DAnnotationTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_pdfua3DAnnotationTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -273,10 +272,9 @@ namespace iText.Layout {
                 pdfPage.AddAnnotation(annot);
                 pdfPage.Flush();
             }
-            new VeraPdfValidator().ValidateFailure(outFile);
+            CompareAndValidate(outFile, cmpFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA23DNoContentsAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfua3DNoContentsAnnotationTest.pdf";
@@ -394,8 +392,8 @@ namespace iText.Layout {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2TabAnnotationsTest() {
-            //TODO DEVSIX-8807 Kernel: addAnnotation method doesn't annotate content elements with Annot tag when PDF version is 2.0
             String outFile = DESTINATION_FOLDER + "pdfuaMultipleAnnotsTabAnnotationTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_pdfuaMultipleAnnotsTabAnnotationTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -411,10 +409,9 @@ namespace iText.Layout {
                     NUnit.Framework.Assert.AreEqual(PdfName.S, pageT);
                 }
             }
-            new VeraPdfValidator().ValidateFailure(outFile);
+            CompareAndValidate(outFile, cmpFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void AnnotationInvisibleButNoArtifactTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaInvisibleAnnotationTest.pdf";
