@@ -735,10 +735,13 @@ namespace iText.Svg.Renderers.Impl {
             String strokeRawValue = GetAttributeOrDefault(SvgConstants.Attributes.STROKE, SvgConstants.Values.NONE);
             if (!SvgConstants.Values.NONE.EqualsIgnoreCase(strokeRawValue)) {
                 String strokeWidthRawValue = GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
-                // 1 px = 0,75 pt
-                float strokeWidth = 0.75f;
+                float strokeWidth = -1;
                 if (strokeWidthRawValue != null) {
                     strokeWidth = ParseHorizontalLength(strokeWidthRawValue, context);
+                }
+                if (strokeWidth < 0) {
+                    // Default: 1 px = 0,75 pt
+                    strokeWidth = 0.75f;
                 }
                 float generalOpacity = GetOpacity();
                 float strokeOpacity = GetOpacityByAttributeName(SvgConstants.Attributes.STROKE_OPACITY, generalOpacity);
@@ -753,9 +756,11 @@ namespace iText.Svg.Renderers.Impl {
                 String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
                 SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
                     (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(context), context);
-                doStroke = true;
-                return new AbstractSvgNodeRenderer.StrokeProperties(strokeColor, strokeWidth, strokeOpacity, lineDashParameters
-                    );
+                if (strokeWidth > 0) {
+                    doStroke = true;
+                    return new AbstractSvgNodeRenderer.StrokeProperties(strokeColor, strokeWidth, strokeOpacity, lineDashParameters
+                        );
+                }
             }
             return null;
         }

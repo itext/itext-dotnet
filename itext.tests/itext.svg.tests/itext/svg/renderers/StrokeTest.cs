@@ -101,6 +101,16 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ZeroStrokeWidthTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "zeroStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeStrokeWidthTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void HeightWidthZeroTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "heightWidthZero");
         }
