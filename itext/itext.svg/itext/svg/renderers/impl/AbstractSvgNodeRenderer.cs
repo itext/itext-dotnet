@@ -587,7 +587,7 @@ namespace iText.Svg.Renderers.Impl {
             if (rawColorValue == null) {
                 return null;
             }
-            if (CommonCssConstants.CURRENTCOLOR.Equals(rawColorValue)) {
+            if (CommonCssConstants.CURRENTCOLOR.Equals(rawColorValue.ToLowerInvariant())) {
                 rawColorValue = GetAttributeOrDefault(CommonCssConstants.COLOR, "black");
             }
             CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(rawColorValue);
