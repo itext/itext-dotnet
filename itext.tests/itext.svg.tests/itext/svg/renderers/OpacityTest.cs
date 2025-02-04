@@ -54,7 +54,6 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void TestRGBA() {
-            //TODO: update after DEVSIX-2673 fix
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "svg_rgba");
         }
 

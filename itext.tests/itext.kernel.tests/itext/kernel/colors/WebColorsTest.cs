@@ -174,6 +174,12 @@ namespace iText.Kernel.Colors {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetRGBAColorWithExceptionDuringParsingAlpha() {
+            float[] resultCmyk = WebColors.GetRGBAColor("rgba(44, 100, 0, 0,75)");
+            NUnit.Framework.Assert.IsNull(resultCmyk);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetCMYKColorTest() {
             //corresponding color name = "violet"
             String cmykString = "device-cmyk(44% 100% 0% 0%)";

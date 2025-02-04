@@ -302,6 +302,9 @@ namespace iText.Kernel.Colors {
                             ParseRGBColors(color, tok);
                             if (tok.HasMoreTokens()) {
                                 color[3] = GetAlphaChannelValue(tok.NextToken());
+                                if (tok.HasMoreTokens()) {
+                                    throw new ArgumentException("Too many arguments");
+                                }
                             }
                         }
                         else {
