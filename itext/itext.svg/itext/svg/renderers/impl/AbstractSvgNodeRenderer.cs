@@ -126,6 +126,9 @@ namespace iText.Svg.Renderers.Impl {
         public void Draw(SvgDrawContext context) {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             if (this.attributesAndStyles != null) {
+                if (IsHidden()) {
+                    return;
+                }
                 String transformString = this.attributesAndStyles.Get(SvgConstants.Attributes.TRANSFORM);
                 if (transformString != null && !String.IsNullOrEmpty(transformString)) {
                     AffineTransform transformation = TransformUtils.ParseTransform(transformString);
@@ -250,6 +253,13 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Draws this element to a canvas-like object maintained in the context.</summary>
         /// <param name="context">the object that knows the place to draw this element and maintains its state</param>
         protected internal abstract void DoDraw(SvgDrawContext context);
+
+        /// <summary>Check if this renderer should draw the element based on its attributes (e.g. visibility/display)</summary>
+        /// <returns>true if element won't be drawn, false otherwise</returns>
+        protected internal virtual bool IsHidden() {
+            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY)) || CommonCssConstants
+                .HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
+        }
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>
@@ -566,6 +576,9 @@ namespace iText.Svg.Renderers.Impl {
                     float resolvedOpacity = 1;
                     normalizedName = normalizedName.Substring(1);
                     ISvgNodeRenderer colorRenderer = context.GetNamedObject(normalizedName);
+                    if (colorRenderer is AbstractSvgNodeRenderer && ((AbstractSvgNodeRenderer)colorRenderer).IsHidden()) {
+                        colorRenderer = null;
+                    }
                     if (colorRenderer is ISvgPaintServer) {
                         if (colorRenderer.GetParent() == null) {
                             colorRenderer.SetParent(this);
@@ -639,6 +652,9 @@ namespace iText.Svg.Renderers.Impl {
                 if (template is ClipPathSvgNodeRenderer) {
                     // Clone template to avoid muddying the state
                     ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
+                    if (clipPath.IsHidden()) {
+                        return false;
+                    }
                     // Resolve parent inheritance
                     SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clipPath, context.GetCssContext());
                     clipPath.SetClippedRenderer(this);

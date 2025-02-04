@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.StyledXmlParser.Css;
 using iText.Svg.Logs;
 using iText.Svg.Renderers;
 
@@ -63,6 +64,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             foreach (ISvgNodeRenderer child in GetChildren()) {
+                if (child is AbstractSvgNodeRenderer && ((AbstractSvgNodeRenderer)child).IsHidden()) {
+                    continue;
+                }
                 currentCanvas.SaveState();
                 child.SetParent(this);
                 child.Draw(context);
@@ -100,6 +104,11 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="clippedRenderer">the clipped renderer</param>
         public virtual void SetClippedRenderer(AbstractSvgNodeRenderer clippedRenderer) {
             this.clippedRenderer = clippedRenderer;
+        }
+
+        protected internal override bool IsHidden() {
+            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY)) && !CommonCssConstants
+                .HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
         }
     }
 }

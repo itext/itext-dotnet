@@ -40,8 +40,107 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void VisibilityDiffValuesTest() {
-            //TODO DEVSIX-8753: update cmp file after supporting
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibility");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityDiffValuesTest2() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibility2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInLinearGradientTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInLinearGradient");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInMarkerTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInMarker");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInGTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInG");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInUseTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInDefsTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInDefs");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInPatternTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInPattern");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInClipPathTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInClipPath");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInClipPathWithUseTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInClipPathWithUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VisibilityHiddenInSymbolTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "visibilityHiddenInSymbol");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInLinearGradientTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInLinearGradient");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInMarkerTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInMarker");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInGTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInG");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInG2Test() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInG2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInUseTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInUse");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInDefsTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInDefs");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInPatternTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInPattern");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInSymbolTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInSymbol");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInClipPathTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInClipPath");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DisplayNoneInClipPathWithUseTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "displayNoneInClipPathWithUse");
         }
     }
 }

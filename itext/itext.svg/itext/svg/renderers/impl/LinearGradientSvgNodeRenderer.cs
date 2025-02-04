@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser.Css;
 using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -69,6 +70,10 @@ namespace iText.Svg.Renderers.Impl {
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             return null;
+        }
+
+        protected internal override bool IsHidden() {
+            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY));
         }
 
         // TODO: DEVSIX-4136 opacity is not supported now.

@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Logs;
@@ -66,6 +67,10 @@ namespace iText.Svg.Renderers.Impl {
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             return null;
+        }
+
+        protected internal override bool IsHidden() {
+            return CommonCssConstants.HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
         }
 
 //\cond DO_NOT_DOCUMENT
