@@ -56,10 +56,18 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
-            Count = 19)]
         public virtual void DifferentAspectRatiosTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "differentAspectRatios");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImagePreserveAspectRatioTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imagePreserveAspectRatio");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageNegativeWidthHeightTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageNegativeWidthHeight");
         }
 
         [NUnit.Framework.Test]

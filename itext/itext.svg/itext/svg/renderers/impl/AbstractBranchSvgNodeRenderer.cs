@@ -114,35 +114,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual String[] RetrieveAlignAndMeet() {
-            String meetOrSlice = SvgConstants.Values.MEET;
-            String align = SvgConstants.Values.DEFAULT_ASPECT_RATIO;
-            String preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO
-                );
-            // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-            if (preserveAspectRatioValue == null) {
-                preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
-                    ());
-            }
-            if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO) || this.attributesAndStyles
-                .ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
-                IList<String> aspectRatioValuesSplitValues = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
-                align = aspectRatioValuesSplitValues[0].ToLowerInvariant();
-                if (aspectRatioValuesSplitValues.Count > 1) {
-                    meetOrSlice = aspectRatioValuesSplitValues[1].ToLowerInvariant();
-                }
-            }
-            if (this is MarkerSvgNodeRenderer && !SvgConstants.Values.NONE.Equals(align) && SvgConstants.Values.MEET.Equals
-                (meetOrSlice)) {
-                // Browsers do not correctly display markers with 'meet' option in the preserveAspectRatio attribute.
-                // The Chrome, IE, and Firefox browsers set the align value to 'xMinYMin' regardless of the actual align.
-                align = SvgConstants.Values.XMIN_YMIN;
-            }
-            return new String[] { align, meetOrSlice };
-        }
-//\endcond
-
         /// <summary>Applies a clipping operation based on the view port.</summary>
         /// <param name="context">the svg draw context</param>
         private void ApplyViewportClip(SvgDrawContext context) {
