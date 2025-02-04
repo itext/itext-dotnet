@@ -308,8 +308,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerParentElementTest() {
-            // TODO DEVSIX-4130 fix after ticket will be completed
-            // Compare with Chrome browser
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElement");
         }
 

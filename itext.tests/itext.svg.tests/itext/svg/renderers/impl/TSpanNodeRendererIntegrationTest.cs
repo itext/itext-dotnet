@@ -315,6 +315,24 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TextDecorationOnGroupTest() {
+            // TODO DEVSIX-8888 SVG: support text-decoration inheritance
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationOnGroup");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationOnSvgTest() {
+            // TODO DEVSIX-8888 SVG: support text-decoration inheritance
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationOnSvg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationOnSymbolTest() {
+            // TODO DEVSIX-8888 SVG: support text-decoration inheritance
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationOnSymbol");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TextDecorationTspanSubTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspanSub");
         }
