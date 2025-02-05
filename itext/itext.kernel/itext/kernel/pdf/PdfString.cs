@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,9 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
@@ -326,6 +328,13 @@ namespace iText.Kernel.Pdf {
         /// <param name="bytes">byte array to manipulate with.</param>
         /// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>
         protected internal virtual byte[] EncodeBytes(byte[] bytes) {
+            if (bytes == null) {
+                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.ARG_SHOULD_NOT_BE_NULL, "byte[]"
+                    ));
+            }
+            if (bytes.Length == 0) {
+                return bytes;
+            }
             if (hexWriting) {
                 ByteBuffer buf = new ByteBuffer(bytes.Length * 2);
                 foreach (byte b in bytes) {

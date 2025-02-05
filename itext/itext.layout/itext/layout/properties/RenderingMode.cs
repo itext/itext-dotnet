@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -26,6 +26,8 @@ namespace iText.Layout.Properties {
         /// <summary>Default object layout mode</summary>
         DEFAULT_LAYOUT_MODE,
         /// <summary>Mode in which objects are processed in accordance with the HTML documentation</summary>
-        HTML_MODE
+        HTML_MODE,
+        /// <summary>Mode in which objects are processed in accordance with the SVG documentation</summary>
+        SVG_MODE
     }
 }

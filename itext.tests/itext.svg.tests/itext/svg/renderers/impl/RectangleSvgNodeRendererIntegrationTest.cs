@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -91,13 +91,11 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeWidthRoundedRectangleTest() {
-            //TODO change cmp-file after DEVSIX-3121 fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeWidthRoundedRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeHeightRoundedRectangleTest() {
-            //TODO change cmp-file after DEVSIX-3121 fixed
             ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeHeightRoundedRectangle");
         }
 
@@ -111,6 +109,11 @@ namespace iText.Svg.Renderers.Impl {
             Count = 1)]
         public virtual void NoFillRectangleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "noFillRectangle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RectangleNoWidthNoHeightTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "rectangleNoWidthNoHeight");
         }
     }
 }

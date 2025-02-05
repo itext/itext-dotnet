@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,6 +33,13 @@ namespace iText.Kernel.Geom {
             Point first = new Point();
             NUnit.Framework.Assert.AreEqual(0, first.GetX(), EPSILON_COMPARISON);
             NUnit.Framework.Assert.AreEqual(0, first.GetY(), EPSILON_COMPARISON);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CopyConstructorTest() {
+            Point first = new Point(new Point(4.0, 5.0));
+            NUnit.Framework.Assert.AreEqual(4.0, first.GetX(), EPSILON_COMPARISON);
+            NUnit.Framework.Assert.AreEqual(5.0, first.GetY(), EPSILON_COMPARISON);
         }
 
         [NUnit.Framework.Test]

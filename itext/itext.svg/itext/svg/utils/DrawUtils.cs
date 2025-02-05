@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,8 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Svg;
 
 namespace iText.Svg.Utils {
     /// <summary>
@@ -50,10 +53,66 @@ namespace iText.Svg.Utils {
         /// <param name="cv">canvas to paint on</param>
         public static void Arc(double x1, double y1, double x2, double y2, double startAng, double extent, PdfCanvas
              cv) {
+            Arc(x1, y1, x2, y2, startAng, extent, cv, null);
+        }
+
+        /// <summary>
+        /// Draw an arc on the passed canvas with provided transform,
+        /// enclosed by the rectangle for which two opposite corners are specified.
+        /// </summary>
+        /// <remarks>
+        /// Draw an arc on the passed canvas with provided transform,
+        /// enclosed by the rectangle for which two opposite corners are specified.
+        /// The arc starts at the passed starting angle and extends to the starting angle + extent
+        /// </remarks>
+        /// <param name="x1">corner-coordinate of the enclosing rectangle, first corner</param>
+        /// <param name="y1">corner-coordinate of the enclosing rectangle, first corner</param>
+        /// <param name="x2">corner-coordinate of the enclosing rectangle, second corner</param>
+        /// <param name="y2">corner-coordinate of the enclosing rectangle, second corner</param>
+        /// <param name="startAng">starting angle in degrees</param>
+        /// <param name="extent">extent of the arc</param>
+        /// <param name="cv">canvas to paint on</param>
+        /// <param name="transform">
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing,
+        /// or
+        /// <see langword="null"/>
+        /// in case transform shouldn't be applied
+        /// </param>
+        public static void Arc(double x1, double y1, double x2, double y2, double startAng, double extent, PdfCanvas
+             cv, AffineTransform transform) {
             IList<double[]> ar = PdfCanvas.BezierArc(x1, y1, x2, y2, startAng, extent);
             if (!ar.IsEmpty()) {
                 foreach (double[] pt in ar) {
+                    if (transform != null) {
+                        transform.Transform(pt, 0, pt, 0, pt.Length / 2);
+                    }
                     cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
+                }
+            }
+        }
+
+        /// <summary>Perform stroke or fill operation for closed figure (e.g. Ellipse, Polygon, Circle).</summary>
+        /// <param name="fillRuleRawValue">fill rule (e.g. evenodd, nonzero)</param>
+        /// <param name="currentCanvas">canvas to draw on</param>
+        /// <param name="doStroke">if true, stroke operation will be performed, fill otherwise</param>
+        public static void DoStrokeOrFillForClosedFigure(String fillRuleRawValue, PdfCanvas currentCanvas, bool doStroke
+            ) {
+            if (SvgConstants.Values.FILL_RULE_EVEN_ODD.EqualsIgnoreCase(fillRuleRawValue)) {
+                if (doStroke) {
+                    currentCanvas.ClosePathEoFillStroke();
+                }
+                else {
+                    currentCanvas.EoFill();
+                }
+            }
+            else {
+                if (doStroke) {
+                    currentCanvas.ClosePathFillStroke();
+                }
+                else {
+                    currentCanvas.Fill();
                 }
             }
         }

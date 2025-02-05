@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -513,8 +513,8 @@ namespace iText.Layout.Renderer {
                         overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
                     }
                     // Count the height allowed for the items after the one which was partially layouted
-                    maxHeightInLine = Math.Max(maxHeightInLine, itemInfo.GetRectangle().GetY() + itemInfo.GetRenderer().GetOccupiedAreaBBox
-                        ().GetHeight());
+                    maxHeightInLine = Math.Max(maxHeightInLine, itemInfo.GetRectangle().GetY() + childResult.GetOccupiedArea()
+                        .GetBBox().GetHeight());
                 }
                 else {
                     if (metChildRendererInLine) {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -52,12 +52,8 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DYNAMIC_XFA_FORMS_SHALL_NOT_BE_USED, e.Message
                 );
             FileUtil.Copy(input, output);
-            String result = new VeraPdfValidator().Validate(output);
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-            System.Console.Out.WriteLine(result);
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             // VeraPdf also complains only about the dynamic XFA forms
-            NUnit.Framework.Assert.IsNotNull(result);
+            new VeraPdfValidator().ValidateFailure(output);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

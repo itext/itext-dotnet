@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -41,6 +41,11 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void BasicCircleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "basicCircle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeCircleTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "relativeCircle");
         }
 
         [NUnit.Framework.Test]
@@ -115,8 +120,12 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void CircleWithBigStrokeWidthTest() {
-            // TODO: DEVSIX-3932 update cmp_ after fix
             ConvertAndCompare(sourceFolder, destinationFolder, "circleWithBigStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CircleShapeRenderingTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "shape-rendering");
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,6 +47,15 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant BOTTOM_RIGHT_CORNER.</summary>
         public const String BOTTOM_RIGHT_CORNER = "bottom-right-corner";
+
+        /// <summary>The Constant CHARSET.</summary>
+        public const String CHARSET = "charset";
+
+        /// <summary>The Constant IMPORT.</summary>
+        public const String IMPORT = "import";
+
+        /// <summary>The Constant LAYER.</summary>
+        public const String LAYER = "layer";
 
         /// <summary>The Constant LEFT_BOTTOM.</summary>
         public const String LEFT_BOTTOM = "left-bottom";

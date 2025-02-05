@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -26,8 +26,10 @@ using iText.Layout.Properties;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
 
 namespace iText.Svg.Utils {
+    /// <summary>Utility class that facilitates various methods for calculating/transforming coordinates.</summary>
     public class SvgCoordinateUtils {
         /// <summary>Converts relative coordinates to absolute ones.</summary>
         /// <remarks>
@@ -51,7 +53,7 @@ namespace iText.Svg.Utils {
                     double relativeDouble = Double.Parse(relativeCoordinates[i], System.Globalization.CultureInfo.InvariantCulture
                         );
                     relativeDouble += currentCoordinates[j];
-                    absoluteOperators[i] = SvgCssUtils.ConvertDoubleToString(relativeDouble);
+                    absoluteOperators[i] = Convert.ToString(relativeDouble, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             return absoluteOperators;
@@ -125,6 +127,15 @@ namespace iText.Svg.Utils {
             return defaultValue;
         }
 
+        /// <summary>Calculate normalized diagonal length.</summary>
+        /// <param name="context">svg draw context.</param>
+        /// <returns>diagonal length in px.</returns>
+        public static float CalculateNormalizedDiagonalLength(SvgDrawContext context) {
+            float viewPortHeight = context.GetCurrentViewPort().GetHeight();
+            float viewPortWidth = context.GetCurrentViewPort().GetWidth();
+            return (float)(Math.Sqrt(viewPortHeight * viewPortHeight + viewPortWidth * viewPortWidth) / Math.Sqrt(2));
+        }
+
         /// <summary>Returns the viewBox received after scaling and displacement given preserveAspectRatio.</summary>
         /// <param name="viewBox">
         /// parsed viewBox rectangle. It should be a valid
@@ -179,19 +190,20 @@ namespace iText.Svg.Utils {
                 scaleWidth = scale;
                 scaleHeight = scale;
             }
-            // apply scale
+            // Apply scale for width and height.
             Rectangle appliedViewBox = new Rectangle(viewBox.GetX(), viewBox.GetY(), (float)((double)viewBox.GetWidth(
                 ) * scaleWidth), (float)((double)viewBox.GetHeight() * scaleHeight));
-            double minXOffset = (double)currentViewPort.GetX() - (double)appliedViewBox.GetX();
-            double minYOffset = (double)currentViewPort.GetY() - (double)appliedViewBox.GetY();
-            double midXOffset = (double)currentViewPort.GetX() + ((double)currentViewPort.GetWidth() / 2) - ((double)appliedViewBox
-                .GetX() + ((double)appliedViewBox.GetWidth() / 2));
-            double midYOffset = (double)currentViewPort.GetY() + ((double)currentViewPort.GetHeight() / 2) - ((double)
-                appliedViewBox.GetY() + ((double)appliedViewBox.GetHeight() / 2));
-            double maxXOffset = (double)currentViewPort.GetX() + (double)currentViewPort.GetWidth() - ((double)appliedViewBox
-                .GetX() + (double)appliedViewBox.GetWidth());
-            double maxYOffset = (double)currentViewPort.GetY() + (double)currentViewPort.GetHeight() - ((double)appliedViewBox
-                .GetY() + (double)appliedViewBox.GetHeight());
+            // Calculate offset.
+            double minXOffset = (double)currentViewPort.GetX() - ((double)appliedViewBox.GetX() * scaleWidth);
+            double minYOffset = (double)currentViewPort.GetY() - ((double)appliedViewBox.GetY() * scaleHeight);
+            double midXOffset = (double)currentViewPort.GetX() + ((double)currentViewPort.GetWidth() / 2) - (((double)
+                appliedViewBox.GetX() * scaleWidth) + ((double)appliedViewBox.GetWidth() / 2));
+            double midYOffset = (double)currentViewPort.GetY() + ((double)currentViewPort.GetHeight() / 2) - (((double
+                )appliedViewBox.GetY() * scaleHeight) + ((double)appliedViewBox.GetHeight() / 2));
+            double maxXOffset = (double)currentViewPort.GetX() + (double)currentViewPort.GetWidth() - (((double)appliedViewBox
+                .GetX() * scaleWidth) + (double)appliedViewBox.GetWidth());
+            double maxYOffset = (double)currentViewPort.GetY() + (double)currentViewPort.GetHeight() - (((double)appliedViewBox
+                .GetY() * scaleHeight) + (double)appliedViewBox.GetHeight());
             double xOffset;
             double yOffset;
             switch (align.ToLowerInvariant()) {
@@ -254,9 +266,12 @@ namespace iText.Svg.Utils {
                     return ApplyViewBox(viewBox, currentViewPort, SvgConstants.Values.XMID_YMID, SvgConstants.Values.MEET);
                 }
             }
-            // apply offset
+            // Apply offset.
             appliedViewBox.MoveRight((float)xOffset);
             appliedViewBox.MoveUp((float)yOffset);
+            // Apply scale for coordinates.
+            appliedViewBox.SetX((float)((double)appliedViewBox.GetX() * scaleWidth));
+            appliedViewBox.SetY((float)((double)appliedViewBox.GetY() * scaleHeight));
             return appliedViewBox;
         }
 

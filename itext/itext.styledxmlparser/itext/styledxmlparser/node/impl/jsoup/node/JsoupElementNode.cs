@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -35,10 +35,10 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
     /// </summary>
     public class JsoupElementNode : JsoupNode, IElementNode {
         /// <summary>The JSoup element.</summary>
-        private iText.StyledXmlParser.Jsoup.Nodes.Element element;
+        private readonly iText.StyledXmlParser.Jsoup.Nodes.Element element;
 
         /// <summary>The attributes.</summary>
-        private IAttributes attributes;
+        private readonly IAttributes attributes;
 
         /// <summary>The resolved styles.</summary>
         private IDictionary<String, String> elementResolvedStyles;

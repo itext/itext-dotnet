@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,14 +28,13 @@ using iText.StyledXmlParser.Node;
 namespace iText.StyledXmlParser.Css.Selector.Item {
 //\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNthOfTypeSelectorItem : CssPseudoClassNthSelectorItem {
-        public CssPseudoClassNthOfTypeSelectorItem(String arguments)
+//\cond DO_NOT_DOCUMENT
+        internal CssPseudoClassNthOfTypeSelectorItem(String arguments)
             : base(CommonCssConstants.NTH_OF_TYPE, arguments) {
         }
+//\endcond
 
         public override bool Matches(INode node) {
-            if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {
-                return false;
-            }
             IList<INode> children = GetAllSiblingsOfNodeType(node);
             return !children.IsEmpty() && ResolveNth(node, children);
         }

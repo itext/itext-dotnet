@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -68,6 +68,8 @@ namespace iText.Commons.Exceptions {
         public const String UNKNOWN_ITEXT_EXCEPTION = "Unknown ITextException.";
 
         public const String ZIP_ENTRY_NOT_FOUND = "Zip entry not found for name: {0}";
+
+        public const String UNSUPPORTED_OPERATION = "This operation is not supported.";
 
         private CommonsExceptionMessageConstant() {
         }

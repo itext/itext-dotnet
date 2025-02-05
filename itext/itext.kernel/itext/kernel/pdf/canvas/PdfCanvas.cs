@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -1052,14 +1052,35 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>Draws rounded rectangle.</summary>
-        /// <param name="x">x coordinate of the starting point.</param>
-        /// <param name="y">y coordinate of the starting point.</param>
-        /// <param name="width">width.</param>
-        /// <param name="height">height.</param>
-        /// <param name="radius">radius of the arc corner.</param>
-        /// <returns>current canvas.</returns>
+        /// <param name="x">x coordinate of the starting point</param>
+        /// <param name="y">y coordinate of the starting point</param>
+        /// <param name="width">width</param>
+        /// <param name="height">height</param>
+        /// <param name="radius">radius of the arc corner</param>
+        /// <returns>current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas RoundRectangle(double x, double y, double width, double height
             , double radius) {
+            return RoundRectangle(x, y, width, height, radius, radius, null);
+        }
+
+        /// <summary>Draws rounded rectangle.</summary>
+        /// <param name="x">x coordinate of the starting point</param>
+        /// <param name="y">y coordinate of the starting point</param>
+        /// <param name="width">width</param>
+        /// <param name="height">height</param>
+        /// <param name="rx">x radius of the arc corner</param>
+        /// <param name="ry">y radius of the arc corner</param>
+        /// <param name="transform">
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing,
+        /// or
+        /// <see langword="null"/>
+        /// in case transform shouldn't be applied
+        /// </param>
+        /// <returns>current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas RoundRectangle(double x, double y, double width, double height
+            , double rx, double ry, AffineTransform transform) {
             if (width < 0) {
                 x += width;
                 width = -width;
@@ -1068,20 +1089,22 @@ namespace iText.Kernel.Pdf.Canvas {
                 y += height;
                 height = -height;
             }
-            if (radius < 0) {
-                radius = -radius;
+            if (rx < 0) {
+                rx = -rx;
             }
-            double curv = 0.4477f;
-            MoveTo(x + radius, y);
-            LineTo(x + width - radius, y);
-            CurveTo(x + width - radius * curv, y, x + width, y + radius * curv, x + width, y + radius);
-            LineTo(x + width, y + height - radius);
-            CurveTo(x + width, y + height - radius * curv, x + width - radius * curv, y + height, x + width - radius, 
-                y + height);
-            LineTo(x + radius, y + height);
-            CurveTo(x + radius * curv, y + height, x, y + height - radius * curv, x, y + height - radius);
-            LineTo(x, y + radius);
-            CurveTo(x, y + radius * curv, x + radius * curv, y, x + radius, y);
+            if (ry < 0) {
+                ry = -ry;
+            }
+            double[] points = GetEllipseRoundedRectPoints(x, y, width, height, rx, ry);
+            if (transform != null) {
+                transform.Transform(points, 0, points, 0, points.Length / 2);
+            }
+            int i = 0;
+            this.MoveTo(points[i++], points[i++]).LineTo(points[i++], points[i++]).CurveTo(points[i++], points[i++], points
+                [i++], points[i++], points[i++], points[i++]).LineTo(points[i++], points[i++]).CurveTo(points[i++], points
+                [i++], points[i++], points[i++], points[i++], points[i++]).LineTo(points[i++], points[i++]).CurveTo(points
+                [i++], points[i++], points[i++], points[i++], points[i++], points[i++]).LineTo(points[i++], points[i++
+                ]).CurveTo(points[i++], points[i++], points[i++], points[i++], points[i++], points[i]).ClosePath();
             return this;
         }
 
@@ -1290,7 +1313,8 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="phase">the value of the phase</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(phase));
+            PdfArray dashPattern = GetDashPatternArray(phase);
+            currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteByte(']').WriteSpace().WriteFloat(phase).WriteSpace().
                 WriteBytes(d);
             return this;
@@ -1310,7 +1334,11 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float unitsOn, float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(new float[] { unitsOn }, phase));
+            PdfArray dashPattern = GetDashPatternArray(new float[] { unitsOn }, phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteFloat(unitsOn).WriteByte(']').WriteSpace().WriteFloat(
                 phase).WriteSpace().WriteBytes(d);
             return this;
@@ -1330,7 +1358,11 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="unitsOff">the number of units that must be 'off'</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float unitsOn, float unitsOff, float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(new float[] { unitsOn, unitsOff }, phase));
+            PdfArray dashPattern = GetDashPatternArray(new float[] { unitsOn, unitsOff }, phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             contentStream.GetOutputStream().WriteByte('[').WriteFloat(unitsOn).WriteSpace().WriteFloat(unitsOff).WriteByte
                 (']').WriteSpace().WriteFloat(phase).WriteSpace().WriteBytes(d);
             return this;
@@ -1349,7 +1381,11 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="phase">the value of the phase</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetLineDash(float[] array, float phase) {
-            currentGs.SetDashPattern(GetDashPatternArray(array, phase));
+            PdfArray dashPattern = GetDashPatternArray(array, phase);
+            if (dashPattern == null) {
+                return this;
+            }
+            currentGs.SetDashPattern(dashPattern);
             PdfOutputStream @out = contentStream.GetOutputStream();
             @out.WriteByte('[');
             for (int iter = 0; iter < array.Length; iter++) {
@@ -1636,16 +1672,10 @@ namespace iText.Kernel.Pdf.Canvas {
             }
             else {
                 if (layer is PdfLayer) {
-                    int num = 0;
                     PdfLayer la = (PdfLayer)layer;
-                    while (la != null) {
-                        if (la.GetTitle() == null) {
-                            AddToPropertiesAndBeginLayer(la);
-                            num++;
-                        }
-                        la = la.GetParent();
-                    }
-                    layerDepth.Add(num);
+                    ICollection<PdfLayer> layers = new HashSet<PdfLayer>();
+                    int depth = BeginLayerTree(la, layers);
+                    layerDepth.Add(depth);
                 }
                 else {
                     throw new NotSupportedException("Unsupported type for operand: layer");
@@ -1986,11 +2016,11 @@ namespace iText.Kernel.Pdf.Canvas {
                 @out.WriteBytes(BMC);
             }
             else {
-                if (properties.GetIndirectReference() == null) {
-                    @out.Write(properties).WriteSpace().WriteBytes(BDC);
+                if (properties.ContainsIndirectReference()) {
+                    @out.Write(resources.AddProperties(properties)).WriteSpace().WriteBytes(BDC);
                 }
                 else {
-                    @out.Write(resources.AddProperties(properties)).WriteSpace().WriteBytes(BDC);
+                    @out.Write(properties).WriteSpace().WriteBytes(BDC);
                 }
             }
             Tuple2<PdfName, PdfDictionary> tuple2 = new Tuple2<PdfName, PdfDictionary>(tag, properties);
@@ -2361,8 +2391,18 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfArray dashPatternArray = new PdfArray();
             PdfArray dArray = new PdfArray();
             if (dashArray != null) {
+                float sum = 0;
                 foreach (float fl in dashArray) {
+                    if (fl < 0) {
+                        // Negative values are not allowed.
+                        return null;
+                    }
+                    sum += fl;
                     dArray.Add(new PdfNumber(fl));
+                }
+                if (sum < 1e-6) {
+                    // All 0 values are not allowed.
+                    return null;
                 }
             }
             dashPatternArray.Add(dArray);
@@ -2486,6 +2526,61 @@ namespace iText.Kernel.Pdf.Canvas {
         private static bool IsIdentityMatrix(float a, float b, float c, float d, float e, float f) {
             return Math.Abs(1 - a) < IDENTITY_MATRIX_EPS && Math.Abs(b) < IDENTITY_MATRIX_EPS && Math.Abs(c) < IDENTITY_MATRIX_EPS
                  && Math.Abs(1 - d) < IDENTITY_MATRIX_EPS && Math.Abs(e) < IDENTITY_MATRIX_EPS && Math.Abs(f) < IDENTITY_MATRIX_EPS;
+        }
+
+        private static double[] GetEllipseRoundedRectPoints(double x, double y, double width, double height, double
+             rx, double ry) {
+            /*
+            
+            y+h    ->    ____________________________
+            /                            \
+            /                              \
+            y+h-ry -> /                                \
+            |                                |
+            |                                |
+            |                                |
+            |                                |
+            y+ry   -> \                                /
+            \                              /
+            y      ->   \____________________________/
+            ^  ^                          ^  ^
+            x  x+rx                  x+w-rx  x+w
+            
+            */
+            double[] pt1 = iText.Kernel.Pdf.Canvas.PdfCanvas.BezierArc(x + width - 2 * rx, y, x + width, y + 2 * ry, -
+                90, 90)[0];
+            double[] pt2 = iText.Kernel.Pdf.Canvas.PdfCanvas.BezierArc(x + width, y + height - 2 * ry, x + width - 2 *
+                 rx, y + height, 0, 90)[0];
+            double[] pt3 = iText.Kernel.Pdf.Canvas.PdfCanvas.BezierArc(x + 2 * rx, y + height, x, y + height - 2 * ry, 
+                90, 90)[0];
+            double[] pt4 = iText.Kernel.Pdf.Canvas.PdfCanvas.BezierArc(x, y + 2 * ry, x + 2 * rx, y, 180, 90)[0];
+            return new double[] { x + rx, y, x + width - rx, y, pt1[2], pt1[3], pt1[4], pt1[5], pt1[6], pt1[7], x + width
+                , y + height - ry, pt2[2], pt2[3], pt2[4], pt2[5], pt2[6], pt2[7], x + rx, y + height, pt3[2], pt3[3], 
+                pt3[4], pt3[5], pt3[6], pt3[7], x, y + ry, pt4[2], pt4[3], pt4[4], pt4[5], pt4[6], pt4[7] };
+        }
+
+        /// <summary>This method is used to traverse parent tree and begin all layers in it.</summary>
+        /// <remarks>
+        /// This method is used to traverse parent tree and begin all layers in it.
+        /// If layer was already begun during method call, it will not be processed again.
+        /// </remarks>
+        private int BeginLayerTree(PdfLayer layer, ICollection<PdfLayer> layers) {
+            if (layer == null || layers.Contains(layer)) {
+                return 0;
+            }
+            layers.Add(layer);
+            int depth = 0;
+            if (layer.GetTitle() == null) {
+                AddToPropertiesAndBeginLayer(layer);
+                depth++;
+            }
+            IList<PdfLayer> parentLayers = layer.GetParents();
+            if (parentLayers != null) {
+                foreach (PdfLayer parentLayer in parentLayers) {
+                    depth += BeginLayerTree(parentLayer, layers);
+                }
+            }
+            return depth;
         }
 
         private enum CheckColorMode {

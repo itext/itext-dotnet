@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Apryse Group NV")]
 [assembly: AssemblyProduct("iText")]
-[assembly: AssemblyCopyright("Copyright (c) 1998-2024 Apryse Group NV")]
+[assembly: AssemblyCopyright("Copyright (c) 1998-2025 Apryse Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.styledxmlparser.tests,PublicKey=0024000004800000940000000602000000240000525" +
@@ -21,6 +21,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("8636f290-00df-403e-b841-e4bfd6d9ce7a")]
 
-[assembly: AssemblyVersion("9.0.0.0")]
-[assembly: AssemblyFileVersion("9.0.0.0")]
-[assembly: AssemblyInformationalVersion("9.0.0")]
+[assembly: AssemblyVersion("9.1.0.0")]
+[assembly: AssemblyFileVersion("9.1.0.0")]
+[assembly: AssemblyInformationalVersion("9.1.0")]

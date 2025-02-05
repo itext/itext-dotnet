@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,6 +28,7 @@ using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Responsible for drawing Images to the canvas.</summary>
@@ -51,7 +52,10 @@ namespace iText.Svg.Renderers.Impl {
             if (resourceResolver == null || this.attributesAndStyles == null) {
                 return;
             }
-            String uri = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
+            String uri = this.attributesAndStyles.Get(SvgConstants.Attributes.HREF);
+            if (uri == null) {
+                uri = this.attributesAndStyles.Get(SvgConstants.Attributes.XLINK_HREF);
+            }
             PdfXObject xObject = resourceResolver.RetrieveImage(uri);
             if (xObject == null) {
                 return;
@@ -59,100 +63,48 @@ namespace iText.Svg.Renderers.Impl {
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             float x = 0;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                x = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
+                x = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.X), context);
             }
             float y = 0;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                y = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
+                y = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.Y), context);
             }
-            float width = 0;
+            float width = -1;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
-                width = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH
-                    ));
+                width = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH), context);
             }
-            float height = 0;
+            if (width < 0) {
+                width = CssUtils.ConvertPxToPts(xObject.GetWidth());
+            }
+            float height = -1;
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
-                height = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT
-                    ));
+                height = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT), context);
             }
-            String preserveAspectRatio = "";
-            if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO)) {
-                preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO);
+            if (height < 0) {
+                height = CssUtils.ConvertPxToPts(xObject.GetHeight());
             }
-            else {
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
-                    // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                    preserveAspectRatio = attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
-                        ());
+            if (width != 0 && height != 0) {
+                String[] alignAndMeet = RetrieveAlignAndMeet();
+                String align = alignAndMeet[0];
+                String meetOrSlice = alignAndMeet[1];
+                Rectangle currentViewPort = new Rectangle(0, 0, width, height);
+                Rectangle viewBox = new Rectangle(0, 0, xObject.GetWidth(), xObject.GetHeight());
+                Rectangle appliedViewBox = SvgCoordinateUtils.ApplyViewBox(viewBox, currentViewPort, align, meetOrSlice);
+                float scaleWidth = appliedViewBox.GetWidth() / viewBox.GetWidth();
+                float scaleHeight = appliedViewBox.GetHeight() / viewBox.GetHeight();
+                float xOffset = appliedViewBox.GetX() / scaleWidth - viewBox.GetX();
+                float yOffset = appliedViewBox.GetY() / scaleHeight - viewBox.GetY();
+                x += xOffset;
+                y += yOffset;
+                width = appliedViewBox.GetWidth();
+                height = appliedViewBox.GetHeight();
+                if (SvgConstants.Values.SLICE.Equals(meetOrSlice)) {
+                    currentCanvas.SaveState().Rectangle(currentViewPort).Clip().EndPath().AddXObjectWithTransformationMatrix(xObject
+                        , width, 0, 0, -height, x, y + height).RestoreState();
+                    return;
                 }
             }
-            preserveAspectRatio = preserveAspectRatio.ToLowerInvariant();
-            if (!SvgConstants.Values.NONE.Equals(preserveAspectRatio) && !(width == 0 || height == 0)) {
-                float normalizedWidth;
-                float normalizedHeight;
-                if (xObject.GetWidth() / width > xObject.GetHeight() / height) {
-                    normalizedWidth = width;
-                    normalizedHeight = xObject.GetHeight() / xObject.GetWidth() * width;
-                }
-                else {
-                    normalizedWidth = xObject.GetWidth() / xObject.GetHeight() * height;
-                    normalizedHeight = height;
-                }
-                switch (preserveAspectRatio.ToLowerInvariant()) {
-                    case SvgConstants.Values.XMIN_YMIN: {
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMIN_YMID: {
-                        y += Math.Abs(normalizedHeight - height) / 2;
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMIN_YMAX: {
-                        y += Math.Abs(normalizedHeight - height);
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMID_YMIN: {
-                        x += Math.Abs(normalizedWidth - width) / 2;
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMID_YMAX: {
-                        x += Math.Abs(normalizedWidth - width) / 2;
-                        y += Math.Abs(normalizedHeight - height);
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMAX_YMIN: {
-                        x += Math.Abs(normalizedWidth - width);
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMAX_YMID: {
-                        x += Math.Abs(normalizedWidth - width);
-                        y += Math.Abs(normalizedHeight - height) / 2;
-                        break;
-                    }
-
-                    case SvgConstants.Values.XMAX_YMAX: {
-                        x += Math.Abs(normalizedWidth - width);
-                        y += Math.Abs(normalizedHeight - height);
-                        break;
-                    }
-
-                    case SvgConstants.Values.DEFAULT_ASPECT_RATIO:
-                    default: {
-                        x += Math.Abs(normalizedWidth - width) / 2;
-                        y += Math.Abs(normalizedHeight - height) / 2;
-                        break;
-                    }
-                }
-                width = normalizedWidth;
-                height = normalizedHeight;
-            }
-            float v = y + height;
-            currentCanvas.AddXObjectWithTransformationMatrix(xObject, width, 0, 0, -height, x, v);
+            currentCanvas.AddXObjectWithTransformationMatrix(xObject, width, 0, 0, -height, x, y + height);
         }
     }
 }

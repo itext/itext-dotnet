@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -585,6 +585,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public ITstInfo CreateTSTInfo(IContentInfo contentInfo) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public virtual ITstInfo CreateTSTInfo(IAsn1Object contentInfo) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -71,6 +71,9 @@ namespace iText.Forms.Logs {
         public const String FIELD_VALUE_CANNOT_BE_NULL = "Field value cannot be null.";
 
         public const String FORM_FIELD_MUST_HAVE_A_NAME = "Form field must have a name." + " Set it using PdfFormField#setFieldName call.";
+
+        public const String FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE = "Form field contains parent pointing to itself."
+             + " This form field parent reference will be invalidated.";
 
         public const String DUPLICATE_EXPORT_VALUE = "More than one option with the same value. This is an invalid"
              + " state.";

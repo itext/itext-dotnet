@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -38,7 +38,7 @@ namespace iText.Signatures.Validation.Report {
         public ValidationReport() {
         }
 
-        // Empty constructor.
+        // Declaring default constructor explicitly to avoid removing it unintentionally.
         /// <summary>Get the result of a validation process.</summary>
         /// <returns>
         /// 

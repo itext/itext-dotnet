@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -41,13 +41,11 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateOrClearDestinationFolder(destinationFolder);
         }
 
-        // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void CircleTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "circle");
         }
 
-        // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void EllipseTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "ellipse");
@@ -237,7 +235,6 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(sourceFolder, destinationFolder, "arcInsideOtherEllipticalArc");
         }
 
-        // TODO: DEVSIX-3932 update cmp_ after fix
         [NUnit.Framework.Test]
         public virtual void PolygonTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "polygon");
@@ -317,11 +314,13 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void TextTest() {
-            // TODO DEVSIX-4140 font-relative values doesn't support
             ConvertAndCompare(sourceFolder, destinationFolder, "text");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "tspan");
         }
 
         [NUnit.Framework.Test]
@@ -330,8 +329,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void TextRotatedTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textRotatedTest");
         }
@@ -339,6 +336,21 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void TextDxTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "textDxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChineseTextDxTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "chineseTextDxTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChineseTextDxVerticalTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "chineseTextDxVerticalTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAnchorTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "textAnchorTest");
         }
 
         [NUnit.Framework.Test]
@@ -535,6 +547,126 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void SeveralTransformsInGradientWithObjectBoundingBoxUnitsTest() {
             ConvertAndCompare(sourceFolder, destinationFolder, "severalTransformsInGradientWithObjectBoundingBoxUnits"
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HrefBasicReferenceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "hrefBasicReference");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TransitiveHrefBasicReferenceTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "transitiveHrefBasicReference");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHref");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlink3StopsTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHref3Stops");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkGradientTransformTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefGradientTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkNegativeOffsetTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefNegativeOffset");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkNegativeOpacityTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefNegativeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkOpacityTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkOpacity2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefOpacity2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkSpreadMethodTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefSpreadMethod1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkSpreadMethod2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefSpreadMethod2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkSpreadMethod3Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefSpreadMethod3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHrefXYvalsTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefXYvals1");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHrefXYvals2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefXYvals2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHrefXYvals3Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefXYvals3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradXlinkHreOffsetSwapTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHreOffsetSwap");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradTransitiveHrefOpacityTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHrefOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradTransitiveHrefNegativeOpacityTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHrefNegativeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradTransitiveHrefNegativeOffsetTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHrefNegativeOffset");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradTransitiveHref3stopsTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHref3stops");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradHrefTransitiveSpreadMethodTopLayerTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethodTopLayer");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradHrefTransitiveSpreadMethodBottomLayerTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethodBottomLayer");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradHrefTransitiveSpreadMethod3Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethod3");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradHrefTransitiveSpreadMethod2Test() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethod2");
         }
     }
 }

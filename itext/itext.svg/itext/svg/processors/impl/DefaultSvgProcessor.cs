@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -101,7 +101,6 @@ namespace iText.Svg.Processors.Impl {
             context = new SvgProcessorContext(converterProps);
             cssResolver = new SvgStyleResolver(root, context);
             new SvgFontProcessor(context).AddFontFaceFonts(cssResolver);
-            //TODO DEVSIX-2264
             namedObjects = new Dictionary<String, ISvgNodeRenderer>();
         }
 //\endcond

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Geom;
-using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>Implements lineTo(V) attribute of SVG's path element</summary>
@@ -46,7 +45,8 @@ namespace iText.Svg.Renderers.Path.Impl {
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {
             String[] normalizedCoords = new String[LineTo.ARGUMENT_SIZE];
             // A V or v command is equivalent to an L or l command with 0 specified for the x coordinate.
-            normalizedCoords[0] = IsRelative() ? "0" : SvgCssUtils.ConvertDoubleToString(startPoint.GetX());
+            normalizedCoords[0] = IsRelative() ? "0" : Convert.ToString(startPoint.GetX(), System.Globalization.CultureInfo.InvariantCulture
+                );
             normalizedCoords[1] = inputCoordinates[0];
             base.SetCoordinates(normalizedCoords, startPoint);
         }

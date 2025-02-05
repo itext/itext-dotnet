@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,7 +24,6 @@ using System;
 using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -58,8 +57,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanRelativeMoveInvalidXTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "textspan-relativeMove-invalidX"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-relativeMove-invalidX");
         }
 
         [NUnit.Framework.Test]
@@ -79,8 +77,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TSpanRelativeMoveInvalidYTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "textspan-relativeMove-invalidY"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-relativeMove-invalidY");
         }
 
         [NUnit.Framework.Test]
@@ -160,25 +157,88 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
+        public virtual void TspanTextAnchorTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textspan-textAnchor2");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TspanBasicExample() {
+            //TODO: update after DEVSIX-2507 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBasicExample");
         }
 
         [NUnit.Framework.Test]
-        //TODO: update after DEVSIX-2507 and DEVSIX-3005 fix
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void TspanNestedExample() {
+            //TODO: update after DEVSIX-2507 fix
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanNestedExample");
         }
 
         [NUnit.Framework.Test]
-        public virtual void Text_decoration_Test() {
-            //TODO: update cmp-file after DEVSIX-2270 fixed
-            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "text_decoration");
+        public virtual void TspanDxDyAttributesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanDxDyAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanBaselineShiftTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanBaselineShift");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanRotateTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanRotate");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanLengthAdjustTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanLengthAdjust");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanStretchedTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanStretchedTextLengthTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanShrunkTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanShrunkTextLengthTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanCombinedAttributesTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanCombinedAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationSvgTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationSvg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationCssTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationCss");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationStyleTest() {
+            // TODO update after DEVSIX-4063 is closed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationStyle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationDashedStrokeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationDashedStroke");
         }
 
         [NUnit.Framework.Test]
@@ -224,6 +284,63 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void YWithoutXTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "yWithoutX");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AbsoluteAndRelativePositionTest() {
+            // TODO DEVSIX-2507 support x, y, dx, dy attributes
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "absoluteAndRelativePosition");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeAbsoluteAndRelativePositionTest() {
+            // TODO DEVSIX-2507 support x, y, dx, dy attributes, handle whitespaces
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeAbsoluteAndRelativePosition");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoPositionAfterRelativeTest() {
+            // TODO DEVSIX-2507 support x, y, dx, dy attributes
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "noPositionAfterRelative");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedPositioningTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPositioningTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationTspanTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspan");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationOnGroupTest() {
+            // TODO DEVSIX-8888 SVG: support text-decoration inheritance
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationOnGroup");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationOnSvgTest() {
+            // TODO DEVSIX-8888 SVG: support text-decoration inheritance
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationOnSvg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationOnSymbolTest() {
+            // TODO DEVSIX-8888 SVG: support text-decoration inheritance
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationOnSymbol");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDecorationTspanSubTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDecorationTspanSub");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void TspanFillTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanFill");
         }
     }
 }

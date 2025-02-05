@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -327,6 +327,9 @@ namespace iText.Svg {
 
             /// <summary>Tag defining the vertical kerning values in between two glyphs.</summary>
             public const String VKERN = "vkern";
+
+            /// <summary>Tag defining the xml stylesheet declaration.</summary>
+            public const String XML_STYLESHEET = "xml-stylesheet";
         }
 
         /// <summary>Class containing the constant property names for the attributes of tags in the SVG spec</summary>
@@ -345,6 +348,9 @@ namespace iText.Svg {
 
             /// <summary>Attribute defining the outline of a shape.</summary>
             public const String D = "d";
+
+            /// <summary>Attribute defining the direction used by the text</summary>
+            public const String DIRECTION = "direction";
 
             /// <summary>Attribute defining the relative x-translation of a text-element</summary>
             public const String DX = "dx";
@@ -400,6 +406,9 @@ namespace iText.Svg {
 
             /// <summary>Attribute defining the height of the viewport in which the marker is to be fitted</summary>
             public const String MARKER_HEIGHT = "markerHeight";
+
+            /// <summary>Attribute defining shorthand for marker-start/marker-mid/marker-end</summary>
+            public const String MARKER = "marker";
 
             /// <summary>Attribute defining the marker drawn at every other vertex but the start and end of a path, line, polygon or polyline
             ///     </summary>
@@ -540,6 +549,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining the stroke linecap.</summary>
             public const String STROKE_LINECAP = "stroke-linecap";
 
+            /// <summary>Attribute defining the stroke linejoin.</summary>
+            public const String STROKE_LINEJOIN = "stroke-linejoin";
+
             /// <summary>Attribute defining the stroke miterlimit.</summary>
             public const String STROKE_MITERLIMIT = "stroke-miterlimit";
 
@@ -582,6 +594,9 @@ namespace iText.Svg {
             /// <summary>Attribute defining XML namespace</summary>
             public const String XMLNS = "xmlns";
 
+            /// <summary>Attribute defining the property that sets how white space inside an element is handled.</summary>
+            public const String XML_SPACE = "xml:space";
+
             /// <summary>Attribute defining the y value of an element.</summary>
             public const String Y = "y";
 
@@ -591,7 +606,10 @@ namespace iText.Svg {
             /// <summary>Attribute defining the second y coordinate value of a line.</summary>
             public const String Y2 = "y2";
 
-            /// <summary>Attribute defining version</summary>
+            /// <summary>Attribute defining vector-effect.</summary>
+            public const String VECTOR_EFFECT = "vector-effect";
+
+            /// <summary>Attribute defining version.</summary>
             public const String VERSION = "version";
         }
 
@@ -609,6 +627,27 @@ namespace iText.Svg {
             /// <summary>Value representing the default aspect ratio: xmidymid.</summary>
             public const String DEFAULT_ASPECT_RATIO = SvgConstants.Values.XMID_YMID;
 
+            /// <summary>Default svg view port width value (300px * 0.75 = 225).</summary>
+            /// <remarks>
+            /// Default svg view port width value (300px * 0.75 = 225).
+            /// See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            /// </remarks>
+            public const float DEFAULT_VIEWPORT_WIDTH = 225F;
+
+            /// <summary>Default svg view port height value (150px * 0.75 = 112.5).</summary>
+            /// <remarks>
+            /// Default svg view port height value (150px * 0.75 = 112.5).
+            /// See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            /// </remarks>
+            public const float DEFAULT_VIEWPORT_HEIGHT = 112.5F;
+
+            /// <summary>Default width and height value.</summary>
+            /// <remarks>
+            /// Default width and height value.
+            /// See <a href="https://svgwg.org/specs/integration/#svg-css-sizing">SVG specification</a>.
+            /// </remarks>
+            public const String DEFAULT_WIDTH_AND_HEIGHT_VALUE = "100%";
+
             /// <summary>Value representing how to preserve the aspect ratio when dealing with images.</summary>
             public const String DEFER = "defer";
 
@@ -621,8 +660,11 @@ namespace iText.Svg {
             /// <summary>Value representing the meet for preserve aspect ratio calculations.</summary>
             public const String MEET = "meet";
 
-            /// <summary>Value representing the "none" value".</summary>
+            /// <summary>Value representing the "none" value.</summary>
             public const String NONE = "none";
+
+            /// <summary>Value representing the "non-scaling-stroke" value for vector-effect attribute.</summary>
+            public const String NONE_SCALING_STROKE = "non-scaling-stroke";
 
             /// <summary>Value representing the units relation "objectBoundingBox".</summary>
             public const String OBJECT_BOUNDING_BOX = "objectBoundingBox";
@@ -655,6 +697,9 @@ namespace iText.Svg {
             /// <summary>Value representing the units relation "userSpaceOnUse".</summary>
             public const String USER_SPACE_ON_USE = "userSpaceOnUse";
 
+            /// <summary>The number of viewBox values.</summary>
+            public const int VIEWBOX_VALUES_NUMBER = 4;
+
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMIN_YMIN = "xminymin";
 
@@ -682,6 +727,7 @@ namespace iText.Svg {
             /// <summary>Value representing how to align when scaling.</summary>
             public const String XMAX_YMAX = "xmaxymax";
 
+            [Obsolete]
             public const String VERSION1_1 = "1.1";
         }
     }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
@@ -49,12 +48,15 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         /// <summary>Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point
         ///     </summary>
-        public override void Draw(PdfCanvas canvas) {
-            float x1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
-            float y1 = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
-            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[2]);
-            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[3]);
-            canvas.CurveTo(x1, y1, x, y);
+        public override void Draw() {
+            double x1 = ParseHorizontalLength(coordinates[0]);
+            double y1 = ParseVerticalLength(coordinates[1]);
+            double x = ParseHorizontalLength(coordinates[2]);
+            double y = ParseVerticalLength(coordinates[3]);
+            double[] points = new double[] { x1, y1, x, y };
+            ApplyTransform(points);
+            int i = 0;
+            context.GetCurrentCanvas().CurveTo(points[i++], points[i++], points[i++], points[i]);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

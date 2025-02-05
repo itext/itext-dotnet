@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -70,10 +70,14 @@ namespace iText.Commons.Actions {
             return @event;
         }
 
+        /// <summary>Obtains the class from context of the wrapped event.</summary>
+        /// <returns>class from context</returns>
         public override Type GetClassFromContext() {
             return GetEvent().GetClassFromContext();
         }
 
+        /// <summary>Obtains the event type of the wrapped event.</summary>
+        /// <returns>event type</returns>
         public override String GetEventType() {
             return GetEvent().GetEventType();
         }

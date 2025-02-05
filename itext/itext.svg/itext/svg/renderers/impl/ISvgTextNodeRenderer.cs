@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Svg.Renderers;
@@ -27,14 +28,71 @@ using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     public interface ISvgTextNodeRenderer : ISvgNodeRenderer {
+        [Obsolete]
         float GetTextContentLength(float parentFontSize, PdfFont font);
 
+        /// <summary>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>getRelativeTranslation(SvgDrawContext)</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>getRelativeTranslation(SvgDrawContext)</c>.
+        /// This is needed because xMove/yMove can contain relative values, so SvgDrawContext is needed to resolve them.
+        /// </remarks>
+        /// <returns>text relative translation</returns>
+        [Obsolete]
         float[] GetRelativeTranslation();
 
+        /// <summary>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>containsRelativeMove(SvgDrawContext)</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>containsRelativeMove(SvgDrawContext)</c>.
+        /// This is needed because xMove/yMove can contain relative values, so SvgDrawContext is needed to resolve them.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if there is a relative move,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        [Obsolete]
         bool ContainsRelativeMove();
 
+        /// <summary>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>containsAbsolutePositionChange(SvgDrawContext)</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>containsAbsolutePositionChange(SvgDrawContext)</c>.
+        /// This is needed because x/y can contain relative values, so SvgDrawContext is needed to resolve them.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if an absolute position is specified via x/y attributes,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        [Obsolete]
         bool ContainsAbsolutePositionChange();
 
+        /// <summary>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>getAbsolutePositionChanges(SvgDrawContext)</c>.
+        /// </summary>
+        /// <remarks>
+        /// This method is deprecated and will be replaced with new signature
+        /// <c>getAbsolutePositionChanges(SvgDrawContext)</c>.
+        /// This is needed because x/y can contain relative values, so SvgDrawContext is needed to resolve them.
+        /// </remarks>
+        /// <returns>text absolute position</returns>
+        [Obsolete]
         float[][] GetAbsolutePositionChanges();
 
         /// <summary>Return the bounding rectangle of the text element.</summary>

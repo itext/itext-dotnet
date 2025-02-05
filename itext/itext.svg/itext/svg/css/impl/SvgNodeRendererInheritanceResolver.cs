@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -52,6 +52,12 @@ namespace iText.Svg.Css.Impl {
             // If subtree, iterate over tree
             if (subTree is AbstractBranchSvgNodeRenderer) {
                 AbstractBranchSvgNodeRenderer subTreeAsBranch = (AbstractBranchSvgNodeRenderer)subTree;
+                foreach (ISvgNodeRenderer child in subTreeAsBranch.GetChildren()) {
+                    ApplyInheritanceToSubTree(subTreeAsBranch, child, cssContext);
+                }
+            }
+            if (subTree is TextSvgBranchRenderer) {
+                TextSvgBranchRenderer subTreeAsBranch = (TextSvgBranchRenderer)subTree;
                 foreach (ISvgNodeRenderer child in subTreeAsBranch.GetChildren()) {
                     ApplyInheritanceToSubTree(subTreeAsBranch, child, cssContext);
                 }

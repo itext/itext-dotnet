@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,6 +33,13 @@ namespace iText.Kernel.Pdf.Tagging {
         public PdfStructureAttributes(String owner)
             : base(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.O, PdfStructTreeRoot.ConvertRoleToPdfName(owner));
+        }
+
+        /// <summary>Method to get owner of current pdf object.</summary>
+        /// <returns>Pdf owner</returns>
+        public virtual String GetPdfOwner() {
+            PdfName pdfName = (PdfName)GetPdfObject().Get(PdfName.O);
+            return pdfName == null ? null : pdfName.GetValue();
         }
 
         public PdfStructureAttributes(PdfNamespace @namespace)

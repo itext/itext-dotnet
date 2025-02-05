@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -302,6 +302,9 @@ namespace iText.Kernel.Colors {
                             ParseRGBColors(color, tok);
                             if (tok.HasMoreTokens()) {
                                 color[3] = GetAlphaChannelValue(tok.NextToken());
+                                if (tok.HasMoreTokens()) {
+                                    throw new ArgumentException("Too many arguments");
+                                }
                             }
                         }
                         else {

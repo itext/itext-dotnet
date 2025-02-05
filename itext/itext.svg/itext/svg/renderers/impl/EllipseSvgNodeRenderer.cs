@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,9 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -52,16 +52,21 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas cv = context.GetCurrentCanvas();
             cv.WriteLiteral("% ellipse\n");
-            if (SetParameters()) {
+            if (SetParameters(context)) {
                 // Use double type locally to have better precision of the result after applying arithmetic operations
-                cv.MoveTo((double)cx + (double)rx, cy);
+                double[] startPoint = new double[] { (double)cx + (double)rx, cy };
+                AffineTransform transform = ApplyNonScalingStrokeTransform(context);
+                if (transform != null) {
+                    transform.Transform(startPoint, 0, startPoint, 0, startPoint.Length / 2);
+                }
+                cv.MoveTo(startPoint[0], startPoint[1]);
                 DrawUtils.Arc((double)cx - (double)rx, (double)cy - (double)ry, (double)cx + (double)rx, (double)cy + (double
-                    )ry, 0, 360, cv);
+                    )ry, 0, 360, cv, transform);
             }
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            if (SetParameters()) {
+            if (SetParameters(context)) {
                 return new Rectangle(cx - rx, cy - ry, rx + rx, ry + ry);
             }
             else {
@@ -73,33 +78,54 @@ namespace iText.Svg.Renderers.Impl {
         /// Fetches a map of String values by calling getAttribute(String s) method
         /// and maps it's values to arc parameter cx, cy , rx, ry respectively
         /// </summary>
+        /// <remarks>
+        /// Fetches a map of String values by calling getAttribute(String s) method
+        /// and maps it's values to arc parameter cx, cy , rx, ry respectively
+        /// <para />
+        /// This method is deprecated in favour of
+        /// <see cref="SetParameters(iText.Svg.Renderers.SvgDrawContext)"/>
+        /// , because
+        /// x/y/rx/ry can contain relative values which can't be resolved without
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>.
+        /// </remarks>
         /// <returns>boolean values to indicate whether all values exit or not</returns>
+        [Obsolete]
         protected internal virtual bool SetParameters() {
+            return SetParameters(new SvgDrawContext(null, null));
+        }
+
+        /// <summary>
+        /// Fetches a map of String values by calling getAttribute(String s) method
+        /// and maps it's values to arc parameter cx, cy , rx, ry respectively
+        /// </summary>
+        /// <param name="context">the SVG draw context</param>
+        /// <returns>boolean values to indicate whether all values exit or not</returns>
+        protected internal virtual bool SetParameters(SvgDrawContext context) {
+            InitCenter(context);
+            String rxValue = GetAttribute(SvgConstants.Attributes.RX);
+            String ryValue = GetAttribute(SvgConstants.Attributes.RY);
+            rx = ParseHorizontalLength(rxValue, context);
+            ry = ParseVerticalLength(ryValue, context);
+            if (rxValue == null) {
+                rx = ry;
+            }
+            if (ryValue == null) {
+                ry = rx;
+            }
+            return rx > 0.0F && ry > 0.0F;
+        }
+
+        /// <summary>Initialize ellipse cx and cy.</summary>
+        /// <param name="context">svg draw context</param>
+        protected internal virtual void InitCenter(SvgDrawContext context) {
             cx = 0;
             cy = 0;
             if (GetAttribute(SvgConstants.Attributes.CX) != null) {
-                cx = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CX));
+                cx = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.CX), context);
             }
             if (GetAttribute(SvgConstants.Attributes.CY) != null) {
-                cy = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.CY));
+                cy = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.CY), context);
             }
-            if (GetAttribute(SvgConstants.Attributes.RX) != null && CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute
-                (SvgConstants.Attributes.RX)) > 0) {
-                rx = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX));
-            }
-            else {
-                //No drawing if rx is absent
-                return false;
-            }
-            if (GetAttribute(SvgConstants.Attributes.RY) != null && CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute
-                (SvgConstants.Attributes.RY)) > 0) {
-                ry = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY));
-            }
-            else {
-                //No drawing if ry is absent
-                return false;
-            }
-            return true;
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {
@@ -107,5 +133,11 @@ namespace iText.Svg.Renderers.Impl {
             DeepCopyAttributesAndStyles(copy);
             return copy;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal override void DoStrokeOrFill(String fillRuleRawValue, PdfCanvas currentCanvas) {
+            DrawUtils.DoStrokeOrFillForClosedFigure(fillRuleRawValue, currentCanvas, doStroke);
+        }
+//\endcond
     }
 }

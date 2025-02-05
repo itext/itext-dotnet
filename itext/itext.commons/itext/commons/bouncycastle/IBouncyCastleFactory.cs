@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -1223,6 +1223,13 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="contentInfo">content info wrapper to create TST Info wrapper from</param>
         /// <returns>created TST Info wrapper</returns>
         ITstInfo CreateTSTInfo(IContentInfo contentInfo);
+
+        /// <summary>
+        /// Create TST Info wrapper from content info wrapper.
+        /// </summary>
+        /// <param name="contentInfo">primitive wrapper to create TST Info wrapper from</param>
+        /// <returns>created TST Info wrapper</returns>
+        ITstInfo CreateTSTInfo(IAsn1Object contentInfo);
 
         /// <summary>Create single resp wrapper from basic OCSP Response wrapper.</summary>
         /// <param name="basicResp">basic OCSP Response wrapper to create single resp wrapper from</param>

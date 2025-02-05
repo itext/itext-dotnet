@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -114,8 +114,9 @@ namespace iText.Pdfua.Checkers.Utils {
                 if (PdfName.TrapNet.Equals(subtype)) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED);
                 }
-                if (!PdfName.Widget.Equals(subtype) && !(annotObj.ContainsKey(PdfName.Contents) || annotObj.ContainsKey(PdfName
-                    .Alt))) {
+                PdfStructElem parent = (PdfStructElem)objRef.GetParent();
+                if (!PdfName.Widget.Equals(subtype) && !(annotObj.ContainsKey(PdfName.Contents) || (parent != null && parent
+                    .GetAlt() != null))) {
                     throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY
                         , subtype.GetValue()));
                 }

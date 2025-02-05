@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -70,7 +70,7 @@ namespace iText.Layout.Font {
         /// </remarks>
         /// <returns>the best matched font</returns>
         public FontInfo BestMatch() {
-            // fonts is sorted best to worst, get(0) returns the best matched FontInfo
+            // Fonts are sorted best to worst, get(0) returns the best matched FontInfo
             return fonts[0];
         }
 

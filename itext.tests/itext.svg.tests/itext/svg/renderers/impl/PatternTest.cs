@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -89,6 +89,21 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void HrefAttributeTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefAttribute");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HrefBasicReferenceTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefBasicReference");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HrefAndXlinkHrefPriorityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefAndXlinkHrefPriority");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TransitiveHrefBasicReferenceTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "transitiveHrefBasicReference");
         }
 
         [NUnit.Framework.Test]
@@ -202,17 +217,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 8)]
         public virtual void PatternContentUnitsObjBoundBoxAbsoluteCoordTest() {
-            // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternContentUnitsObjBoundBoxAbsoluteCoord");
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-4834 support relative units in attributes of svg elements
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 8)]
         public virtual void ViewBoxAndAbsoluteCoordinatesTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "viewBoxAndAbsoluteCoordinates");
         }
@@ -308,15 +317,17 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void LinearGradientInsidePatternTextTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradientInsidePatternText");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NestedPatternsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedPatterns");
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 2)]
         public virtual void SeveralComplexElementsInsidePatternTest() {
-            // TODO DEVSIX-4834 support relative units in attributes of svg elements
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "severalComplexElementsInsidePattern");
         }
 
@@ -433,6 +444,16 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CoordSystemTransform() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "coordSystemTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextCoordSystemTransformTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textCoordSystemTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextAnchorTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textAnchorTest");
         }
 
         [NUnit.Framework.Test]

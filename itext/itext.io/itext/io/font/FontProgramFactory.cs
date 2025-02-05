@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -120,12 +120,7 @@ namespace iText.IO.Font {
 
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
-        /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font or
-        /// a CJK font from the Adobe Asian Font Pack.
-        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
-        /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <para />
+        /// Creates a new font program.
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
         /// <para />
@@ -142,12 +137,7 @@ namespace iText.IO.Font {
 
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
-        /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font or
-        /// a CJK font from the Adobe Asian Font Pack.
-        /// Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
-        /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <para />
+        /// Creates a new font program.
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
         /// <para />
@@ -493,6 +483,13 @@ namespace iText.IO.Font {
         /// <returns>the number of fonts registered</returns>
         public static int RegisterFontDirectory(String dir) {
             return fontRegisterProvider.RegisterFontDirectory(dir);
+        }
+
+        /// <summary>Register all the fonts in a directory recursively.</summary>
+        /// <param name="dir">the directory</param>
+        /// <returns>the number of fonts registered</returns>
+        public static int RegisterFontDirectoryRecursively(String dir) {
+            return fontRegisterProvider.RegisterFontDirectory(dir, true);
         }
 
         /// <summary>Register fonts in some probable directories.</summary>

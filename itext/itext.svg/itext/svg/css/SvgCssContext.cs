@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.StyledXmlParser.Css.Resolve;
 using iText.StyledXmlParser.Css.Util;
-using iText.Svg;
+using iText.Svg.Css.Impl;
 
 namespace iText.Svg.Css {
     /// <summary>
@@ -32,8 +32,7 @@ namespace iText.Svg.Css {
     /// </summary>
     public class SvgCssContext : AbstractCssContext {
         /// <summary>The root font size value in pt.</summary>
-        private float rootFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(CssDefaults.GetDefaultValue(SvgConstants.Attributes
-            .FONT_SIZE));
+        private float rootFontSize = SvgStyleResolver.DEFAULT_FONT_SIZE;
 
         /// <summary>Gets the root font size.</summary>
         /// <returns>the root font size in pt</returns>
@@ -45,6 +44,12 @@ namespace iText.Svg.Css {
         /// <param name="fontSizeStr">the new root font size</param>
         public virtual void SetRootFontSize(String fontSizeStr) {
             this.rootFontSize = CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeStr);
+        }
+
+        /// <summary>Sets the root font size.</summary>
+        /// <param name="rootFontSize">the new root font size</param>
+        public virtual void SetRootFontSize(float rootFontSize) {
+            this.rootFontSize = rootFontSize;
         }
     }
 }

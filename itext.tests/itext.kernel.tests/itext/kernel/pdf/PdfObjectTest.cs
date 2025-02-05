@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -212,6 +212,78 @@ namespace iText.Kernel.Pdf {
                 ());
             NUnit.Framework.Assert.IsTrue(dict1 == dict);
             document.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsIndirectReference1Test() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfDictionary testDict = GetTestPdfDictionary();
+            NUnit.Framework.Assert.IsFalse(testDict.ContainsIndirectReference());
+            testDict.Get(new PdfName("b")).MakeIndirect(pdfDoc);
+            NUnit.Framework.Assert.IsTrue(testDict.ContainsIndirectReference());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsIndirectReference2Test() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfDictionary testDict = GetTestPdfDictionary();
+            PdfObject arrValue = new PdfName("arrValue");
+            PdfArray pdfArr = new PdfArray();
+            pdfArr.Add(arrValue);
+            testDict.Put(new PdfName("array"), pdfArr);
+            NUnit.Framework.Assert.IsFalse(testDict.ContainsIndirectReference());
+            arrValue.MakeIndirect(pdfDoc);
+            NUnit.Framework.Assert.IsTrue(testDict.ContainsIndirectReference());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsIndirectReferenceFlushedDictValueTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfDictionary testDict = GetTestPdfDictionary();
+            NUnit.Framework.Assert.IsFalse(testDict.ContainsIndirectReference());
+            testDict.Get(new PdfName("b")).MakeIndirect(pdfDoc).Flush();
+            NUnit.Framework.Assert.IsTrue(testDict.ContainsIndirectReference());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsIndirectReferenceFlushedArrayTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfDictionary testDict = GetTestPdfDictionary();
+            PdfObject arrValue = new PdfName("arrValue");
+            PdfArray pdfArr = new PdfArray();
+            pdfArr.Add(arrValue);
+            pdfArr.MakeIndirect(pdfDoc);
+            pdfArr.Flush();
+            testDict.Put(new PdfName("array"), pdfArr);
+            NUnit.Framework.Assert.IsTrue(testDict.ContainsIndirectReference());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsIndirectReferenceFlushedArrayValueTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfDictionary testDict = GetTestPdfDictionary();
+            PdfObject arrValue = new PdfName("arrValue");
+            PdfArray pdfArr = new PdfArray();
+            pdfArr.Add(arrValue);
+            arrValue.MakeIndirect(pdfDoc);
+            arrValue.Flush();
+            testDict.Put(new PdfName("array"), pdfArr);
+            NUnit.Framework.Assert.IsTrue(testDict.ContainsIndirectReference());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ContainsIndirectReferenceFlushedArrayAndArrayValueTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfDictionary testDict = GetTestPdfDictionary();
+            PdfObject arrValue = new PdfName("arrValue");
+            PdfArray pdfArr = new PdfArray();
+            pdfArr.Add(arrValue);
+            arrValue.MakeIndirect(pdfDoc);
+            arrValue.Flush();
+            pdfArr.MakeIndirect(pdfDoc);
+            pdfArr.Flush();
+            testDict.Put(new PdfName("array"), pdfArr);
+            NUnit.Framework.Assert.IsTrue(testDict.ContainsIndirectReference());
         }
 
         private static PdfDictionary GetTestPdfDictionary() {

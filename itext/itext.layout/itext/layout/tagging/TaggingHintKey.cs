@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -42,6 +42,8 @@ namespace iText.Layout.Tagging {
 
         private TagTreePointer tagPointer;
 
+        private readonly bool isAccessible;
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Instantiate a new
@@ -58,6 +60,12 @@ namespace iText.Layout.Tagging {
         internal TaggingHintKey(IAccessibleElement elem, bool createdElementBased) {
             this.elem = elem;
             this.elementBasedFinishingOnly = createdElementBased;
+            if (elem == null) {
+                isAccessible = false;
+            }
+            else {
+                isAccessible = elem.GetAccessibilityProperties().GetRole() != null;
+            }
         }
 //\endcond
 
@@ -163,6 +171,12 @@ namespace iText.Layout.Tagging {
         /// </returns>
         internal bool IsElementBasedFinishingOnly() {
             return elementBasedFinishingOnly;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal bool IsAccessible() {
+            return isAccessible;
         }
 //\endcond
     }

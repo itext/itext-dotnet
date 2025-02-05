@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -37,16 +37,13 @@ using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
-using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Pdfua.Exceptions;
 using iText.Test;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUAAnnotationsTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -72,12 +69,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_118());
+            framework.AddSuppliers(new _Generator_115());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_118 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_118() {
+        private sealed class _Generator_115 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_115() {
             }
 
             public IBlockElement Generate() {
@@ -121,8 +118,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1PrinterMAnnotNoDirectChildOfAnnotTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNoDirectChildOfAnnotTest.pdf";
-            using (PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
                 PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
@@ -133,10 +129,11 @@ namespace iText.Pdfua {
                 annot.SetFlag(PdfAnnotation.HIDDEN);
                 pdfPage.AddAnnotation(annot);
             }
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
-            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(outPdf))) {
-                IStructureNode docNode = pdfDoc_1.GetStructTreeRoot().GetKids()[0];
+            );
+            framework.AssertBothValid("ua1PrinterMAnnotNoDirectChildOfAnnotTest");
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + "layout_ua1PrinterMAnnotNoDirectChildOfAnnotTest.pdf"
+                ))) {
+                IStructureNode docNode = pdfDoc.GetStructTreeRoot().GetKids()[0];
                 NUnit.Framework.Assert.AreEqual(PdfName.Document, docNode.GetRole());
                 NUnit.Framework.Assert.AreEqual(PdfName.PrinterMark, ((PdfObjRef)docNode.GetKids()[0]).GetReferencedObject
                     ().Get(PdfName.Subtype));
@@ -210,43 +207,32 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1StampAnnotWithAltTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1StampAnnotWithAltTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage pdfPage = pdfDoc.AddNewPage();
-            PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
-            stamp.SetStampName(PdfName.Approved);
-            stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
-            pdfPage.AddAnnotation(stamp);
-            stamp.GetPdfObject().Put(PdfName.Alt, new PdfString("Alt description"));
-            pdfPage.AddAnnotation(stamp);
-            NUnit.Framework.Assert.DoesNotThrow(() => {
-                pdfDoc.Close();
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
+                stamp.SetStampName(PdfName.Approved);
+                stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
+                pdfPage.AddAnnotation(stamp);
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.GetProperties().SetAlternateDescription("Alt description");
             }
             );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_ua1StampAnnotWithAltTest.pdf"
-                , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            framework.AssertBothValid("ua1StampAnnotWithAltTest");
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void Ua1ScreenAnnotWithAltTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1ScreenAnnotWithAltTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage pdfPage = pdfDoc.AddNewPage();
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            pdfPage.AddAnnotation(screen);
-            screen.GetPdfObject().Put(PdfName.Alt, new PdfString("Alt description"));
-            NUnit.Framework.Assert.DoesNotThrow(() => {
-                pdfDoc.Close();
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                pdfPage.AddAnnotation(screen);
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.GetProperties().SetAlternateDescription("Alt description");
             }
             );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_ua1ScreenAnnotWithAltTest.pdf"
-                , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            framework.AssertBothValid("ua1ScreenAnnotWithAltTest");
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void Ua1InkAnnotDirectChildOfAnnotTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
@@ -423,14 +409,13 @@ namespace iText.Pdfua {
                 Document doc = new Document(pdfDoc);
                 Paragraph p2 = new Paragraph("Text");
                 p2.SetFont(LoadFont());
-                p2.GetAccessibilityProperties().SetRole(StandardRoles.LINK);
+                p2.GetAccessibilityProperties().SetRole(StandardRoles.LINK).SetAlternateDescription("Alt description");
                 p2.SetProperty(Property.LINK_ANNOTATION, annot);
                 doc.Add(p2);
-                doc.GetPdfDocument().GetPage(1).GetPdfObject().GetAsArray(PdfName.Annots).GetAsDictionary(0).Put(PdfName.Alt
-                    , new PdfString("Alt description"));
             }
             );
-            framework.AssertBothFail("linkAnnotNestedWithinLinkWithAnAlternateDescriptionTest");
+            framework.AssertBothFail("linkAnnotNestedWithinLinkWithAnAlternateDescriptionTest", PdfUAExceptionMessageConstants
+                .LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY);
         }
 
         [NUnit.Framework.Test]
@@ -481,7 +466,7 @@ namespace iText.Pdfua {
         public virtual void ScreenAnnotationWithMediaDataTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
-                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
                 screen.SetAction(action);
@@ -498,7 +483,7 @@ namespace iText.Pdfua {
         public virtual void ScreenAnnotationAsAAWithMediaDataTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
-                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
                 screen.SetAdditionalAction(PdfName.E, action);
@@ -513,60 +498,56 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithBEMediaDataTest() {
-            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithBEMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDoc.AddNewPage();
-            String file = "sample.wav";
-            String mimeType = "audio/x-wav";
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, file);
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfDictionary be = new PdfDictionary();
-            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
-            mediaClipData.Put(PdfName.Alt, new PdfArray());
-            be.Put(PdfName.C, mediaClipData);
-            PdfDictionary rendition = new PdfDictionary();
-            rendition.Put(PdfName.S, PdfName.MR);
-            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
-            rendition.Put(PdfName.BE, be);
-            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
-                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
-            screen.SetAction(action);
-            screen.SetContents("screen annotation");
-            page.AddAnnotation(screen);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_screenAnnotationWithBEMediaDataTest.pdf"
-                , DESTINATION_FOLDER, "diff_"));
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                String file = "sample.wav";
+                String mimeType = "audio/x-wav";
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfDictionary be = new PdfDictionary();
+                PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+                mediaClipData.Put(PdfName.Alt, new PdfArray());
+                be.Put(PdfName.C, mediaClipData);
+                PdfDictionary rendition = new PdfDictionary();
+                rendition.Put(PdfName.S, PdfName.MR);
+                rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+                rendition.Put(PdfName.BE, be);
+                PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                    (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothValid("screenAnnotationWithBEMediaDataTest");
         }
 
-        //Verapdf throws runtime exception, so we don't do this check here.
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithMHMediaDataTest() {
-            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithMHMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDoc.AddNewPage();
-            String file = "sample.wav";
-            String mimeType = "audio/x-wav";
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, file);
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfDictionary mh = new PdfDictionary();
-            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
-            mediaClipData.Put(PdfName.Alt, new PdfArray());
-            mh.Put(PdfName.C, mediaClipData);
-            PdfDictionary rendition = new PdfDictionary();
-            rendition.Put(PdfName.S, PdfName.MR);
-            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
-            rendition.Put(PdfName.MH, mh);
-            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
-                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
-            screen.SetAction(action);
-            screen.SetContents("screen annotation");
-            page.AddAnnotation(screen);
-            pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_screenAnnotationWithMHMediaDataTest.pdf"
-                , DESTINATION_FOLDER, "diff_"));
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                String file = "sample.wav";
+                String mimeType = "audio/x-wav";
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfDictionary mh = new PdfDictionary();
+                PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+                mediaClipData.Put(PdfName.Alt, new PdfArray());
+                mh.Put(PdfName.C, mediaClipData);
+                PdfDictionary rendition = new PdfDictionary();
+                rendition.Put(PdfName.S, PdfName.MR);
+                rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+                rendition.Put(PdfName.MH, mh);
+                PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                    (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
+            }
+            );
+            framework.AssertBothValid("screenAnnotationWithMHMediaDataTest");
         }
 
-        //Verapdf throws runtime exception, so we don't do this check here.
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest() {
             String outPdf = DESTINATION_FOLDER + "screenAnnotationWithInvalidMHMediaDataTest.pdf";
@@ -574,7 +555,7 @@ namespace iText.Pdfua {
             PdfPage page = pdfDoc.AddNewPage();
             String file = "sample.wav";
             String mimeType = "audio/x-wav";
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, file);
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
             PdfDictionary mh = new PdfDictionary();
             PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
@@ -596,12 +577,12 @@ namespace iText.Pdfua {
                 .Message);
         }
 
-        //Verapdf throws runtime exception, so we don't do this check here.
+        // Verapdf doesn't fail here but it should
         [NUnit.Framework.Test]
         public virtual void ScreenAnnotationWithoutAltInMediaDataTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
-                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
                 screen.SetAction(action);
@@ -617,7 +598,7 @@ namespace iText.Pdfua {
         public virtual void ScreenAnnotationAsAAWithoutAltInMediaDataTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
-                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
                 screen.SetAdditionalAction(PdfName.E, action);
@@ -633,7 +614,7 @@ namespace iText.Pdfua {
         public virtual void ScreenAnnotationWithoutCTInMediaDataTest() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
-                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav");
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
                 screen.SetAction(action);
@@ -739,28 +720,30 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1PrinterMAnnotNotInTagStructureTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNotInTagStructureTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage pdfPage = pdfDoc.AddNewPage();
-            PdfFormXObject form = new PdfFormXObject(PageSize.A4);
-            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
-            canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
-            canvas.Release();
-            PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
-            annot.SetContents("link annot");
-            // Put false as 3rd parameter to not tag annotation
-            pdfPage.AddAnnotation(-1, annot, false);
-            PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
-                , 400, 100));
-            annot2.SetContents("Content of unique annot");
-            pdfPage.AddAnnotation(annot2);
-            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
-            // VeraPdf complains about the fact that PrinterMark annotation isn't wrapped by Annot tag.
-            // But in that test we don't put PrinterMark annot in tag structure at all.
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfFormXObject form = new PdfFormXObject(PageSize.A4);
+                PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
+                canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
+                canvas.Release();
+                PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
+                annot.SetContents("link annot");
+                // Put false as 3rd parameter to not tag annotation
+                pdfPage.AddAnnotation(-1, annot, false);
+                PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
+                    , 400, 100));
+                annot2.SetContents("Content of unique annot");
+                pdfPage.AddAnnotation(annot2);
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetContents("stamp contents");
+                stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
+                pdfPage.AddAnnotation(stamp);
+            }
+            );
+            framework.AssertBothValid("ua1PrinterMAnnotNotInTagStructureTest");
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         private PdfTextAnnotation CreateRichTextAnnotation() {
             PdfTextAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 100, 100, 100));
             annot.SetContents("Rich media annot");

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -75,7 +75,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxRightOrientNoAspectRatioPreservationTest() {
-            // TODO (DEVSIX-3621) fix cmp after fixing
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrientNoAspectRatioPreservation"
                 );
         }
@@ -102,39 +101,64 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MarkerPathPreserveAspectRatioTest() {
-            // TODO (DEVSIX-3621) fix cmp after fixing
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathPreserveAspectRatio");
         }
 
         // Markers in different elements
         [NUnit.Framework.Test]
         public virtual void MarkerTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "marker");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInLineElementTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInLineElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolylineElementTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolylineElement");
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerInPolygonElementTest() {
-            // TODO: update when DEVSIX-3397, DEVSIX-2719 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElement");
         }
 
         [NUnit.Framework.Test]
+        public virtual void MarkerInPolygonElementWithComplexAngleTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPolygonElementWithComplexAngle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandWithFillAndStrokeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandWithFillAndStroke");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MarkerInPathTest() {
-            // TODO: update when DEVSIX-3397 will be closed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPath");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerInPathWithAngledMarkerTest() {
+            // TODO: update when DEVSIX-8749 will be closed
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerInPathWithAngledMarker");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandInPolylineTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandInPolyline");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandInheritanceTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandInheritance");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerShorthandTagInheritanceTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerShorthandTagInheritance");
         }
 
         [NUnit.Framework.Test]
@@ -169,9 +193,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 3)]
         public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsFontRelativeValuesTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsFontRelativeValues");
         }
@@ -182,9 +203,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 3)]
         public virtual void MarkerUnitsStrokeWidthWhenParentStrokeWidthIsPercentageValuesTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "parentStrokeWidthIsPercentageValues");
         }
@@ -259,6 +277,11 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SquareInNotSquareViewBoxTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "squareInNotSquareViewBox");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MarkerOverflowVisibleNestedSvgViewBoxes2Test() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOverflowVisibleNestedSvgViewBoxes2");
         }
@@ -279,16 +302,33 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void DeformationWhenRotationAndPreserveAspectRationNoneTest() {
-            // TODO (DEVSIX-3621) change cmp after fixing
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "deformationWhenRotationAndPreserveAspectRationNone"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void MarkerParentElementTest() {
-            // TODO DEVSIX-4130 fix after ticket will be completed
-            // Compare with Chrome browser
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerParentElement");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerDefinedInStyleTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "markerDefinedInStyle");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerOnGroupTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOnGroup");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerOnSvgTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOnSvg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerOnSymbolTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerOnSymbol");
         }
     }
 }

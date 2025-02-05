@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -180,6 +180,9 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant BREAK_ALL.</summary>
         public const String BREAK_ALL = "break-all";
+
+        /// <summary>The Constant BREAK_SPACES.</summary>
+        public const String BREAK_SPACES = "break-spaces";
 
         /// <summary>The Constant CAPTION_SIDE.</summary>
         public const String CAPTION_SIDE = "caption-side";
@@ -426,6 +429,18 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant MARGIN_TOP.</summary>
         public const String MARGIN_TOP = "margin-top";
+
+        /// <summary>The Constant MARKER</summary>
+        public const String MARKER = "marker";
+
+        /// <summary>The Constant MARKER_MID</summary>
+        public const String MARKER_MID = "marker-mid";
+
+        /// <summary>The Constant MARKER_START</summary>
+        public const String MARKER_START = "marker-start";
+
+        /// <summary>The Constant MARKER_END</summary>
+        public const String MARKER_END = "marker-end";
 
         /// <summary>The Constant MIN_HEIGHT.</summary>
         public const String MIN_HEIGHT = "min-height";
@@ -832,6 +847,15 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant PADDING_BOX.</summary>
         public const String PADDING_BOX = "padding-box";
+
+        /// <summary>The Constant PRE.</summary>
+        public const String PRE = "pre";
+
+        /// <summary>The Constant PRE_LINE.</summary>
+        public const String PRE_LINE = "pre-line";
+
+        /// <summary>The Constant PRE_WRAP.</summary>
+        public const String PRE_WRAP = "pre-wrap";
 
         /// <summary>The Constant RAD.</summary>
         public const String RAD = "rad";

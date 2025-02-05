@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,10 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -50,6 +52,11 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SingleImageTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImage", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SingleImageHrefTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageHref", properties);
         }
 
         [NUnit.Framework.Test]
@@ -115,7 +122,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithTransparencyTest() {
-            //TODO: update cmp_ when DEVSIX-2250, DEVSIX-2258 fixed
+            //TODO: update cmp_ when DEVSIX-2258 fixed
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithTransparency", properties);
         }
 
@@ -183,6 +190,25 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void ImageWithPreserveAspectRatioXMaxYMaxTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMaxYMax", properties
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageRenderingTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "image-rendering", properties);
+        }
+
+        [NUnit.Framework.Test]
+        //TODO DEVSIX-8769: adapt after supporting
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
+        public virtual void ImageWithDescriptionsTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "image-descriptions", properties);
+        }
+
+        //TODO DEVSIX-4589: update after supporting
+        //TODO DEVSIX-4901: update after supporting
+        [NUnit.Framework.Test]
+        public virtual void ImageBase64WithUrlTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "base64Image", properties);
         }
     }
 }

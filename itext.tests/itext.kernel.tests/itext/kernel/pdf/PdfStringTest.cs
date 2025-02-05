@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -26,6 +26,7 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -261,6 +262,24 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "writeUtf8ActualText.pdf"
                 , sourceFolder + "cmp_writeUtf8ActualText.pdf", destinationFolder, "diffActualText_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyHexWriting() {
+            PdfString @string = new PdfString("");
+            NUnit.Framework.Assert.AreEqual("", @string.ToUnicodeString());
+            @string.SetHexWriting(true);
+            NUnit.Framework.Assert.AreEqual("", @string.ToUnicodeString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullHexWriting() {
+            PdfString @string = new PdfString("hello");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                @string.EncodeBytes(null);
+            }
+            );
+            NUnit.Framework.Assert.AreEqual("byte[] should not be null.", e.Message);
         }
     }
 }

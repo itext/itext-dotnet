@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -624,7 +624,7 @@ namespace iText.Pdfa {
         }
 
         private void CompareResult(String outPdf, String cmpPdf, String expectedVeraPdfWarning) {
-            NUnit.Framework.Assert.AreEqual(expectedVeraPdfWarning, new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateWarning(outPdf, expectedVeraPdfWarning);
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {

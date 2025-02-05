@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2025 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -63,6 +63,11 @@ internal static class KernelExtensions {
     }
 
     public static int JRead(this Stream stream, byte[] buffer, int offset, int count) {
+        int result = stream.Read(buffer, offset, count);
+        return result == 0 ? -1 : result;
+    }
+
+    public static int JRead(this BinaryReader stream, byte[] buffer, int offset, int count) {
         int result = stream.Read(buffer, offset, count);
         return result == 0 ? -1 : result;
     }

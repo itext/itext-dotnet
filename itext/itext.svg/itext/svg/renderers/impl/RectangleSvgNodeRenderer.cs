@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
 
@@ -58,86 +57,63 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas cv = context.GetCurrentCanvas();
             cv.WriteLiteral("% rect\n");
-            SetParameters();
+            SetParameters(context);
+            if (width <= 0 || height <= 0) {
+                return;
+            }
             bool singleValuePresent = (rxPresent && !ryPresent) || (!rxPresent && ryPresent);
+            AffineTransform transform = ApplyNonScalingStrokeTransform(context);
             if (!rxPresent && !ryPresent) {
-                cv.Rectangle(x, y, width, height);
+                Point[] points = new Rectangle(x, y, width, height).ToPointsArray();
+                if (transform != null) {
+                    transform.Transform(points, 0, points, 0, points.Length);
+                    if (Math.Abs(transform.GetShearX()) > 0 || Math.Abs(transform.GetShearY()) > 0) {
+                        int i = 0;
+                        cv.MoveTo(points[i].GetX(), points[i++].GetY()).LineTo(points[i].GetX(), points[i++].GetY()).LineTo(points
+                            [i].GetX(), points[i++].GetY()).LineTo(points[i].GetX(), points[i].GetY()).ClosePath();
+                        return;
+                    }
+                }
+                cv.Rectangle(points[0].GetX(), points[0].GetY(), points[1].GetX() - points[0].GetX(), points[2].GetY() - points
+                    [0].GetY());
             }
             else {
                 if (singleValuePresent) {
                     cv.WriteLiteral("% circle rounded rect\n");
-                    // only look for radius in case of circular rounding
+                    // Only look for radius in case of circular rounding.
                     float radius = FindCircularRadius(rx, ry, width, height);
-                    cv.RoundRectangle(x, y, width, height, radius);
+                    cv.RoundRectangle(x, y, width, height, radius, radius, transform);
                 }
                 else {
                     cv.WriteLiteral("% ellipse rounded rect\n");
-                    // TODO (DEVSIX-1878): this should actually be refactored into PdfCanvas.roundRectangle()
-                    /*
-                    
-                    y+h    ->    ____________________________
-                    /                            \
-                    /                              \
-                    y+h-ry -> /                                \
-                    |                                |
-                    |                                |
-                    |                                |
-                    |                                |
-                    y+ry   -> \                                /
-                    \                              /
-                    y      ->   \____________________________/
-                    ^  ^                          ^  ^
-                    x  x+rx                  x+w-rx  x+w
-                    
-                    */
-                    cv.MoveTo(x + rx, y);
-                    cv.LineTo(x + width - rx, y);
-                    Arc(x + width - 2 * rx, y, x + width, y + 2 * ry, -90, 90, cv);
-                    cv.LineTo(x + width, y + height - ry);
-                    Arc(x + width, y + height - 2 * ry, x + width - 2 * rx, y + height, 0, 90, cv);
-                    cv.LineTo(x + rx, y + height);
-                    Arc(x + 2 * rx, y + height, x, y + height - 2 * ry, 90, 90, cv);
-                    cv.LineTo(x, y + ry);
-                    Arc(x, y + 2 * ry, x + 2 * rx, y, 180, 90, cv);
-                    cv.ClosePath();
+                    cv.RoundRectangle(x, y, width, height, rx, ry, transform);
                 }
             }
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            SetParameters();
+            SetParameters(context);
             return new Rectangle(this.x, this.y, this.width, this.height);
         }
 
-        private void SetParameters() {
+        private void SetParameters(SvgDrawContext context) {
             if (GetAttribute(SvgConstants.Attributes.X) != null) {
-                x = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.X));
+                x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
             }
             if (GetAttribute(SvgConstants.Attributes.Y) != null) {
-                y = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.Y));
+                y = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.Y), context);
             }
-            width = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.WIDTH));
-            height = CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.HEIGHT));
+            width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
+            height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RX)) {
-                rx = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RX)), width
-                    );
-                rxPresent = true;
+                float rawRadius = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.RX), context);
+                rx = CheckRadius(rawRadius, width);
+                rxPresent = rawRadius >= 0.0f;
             }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.RY)) {
-                ry = CheckRadius(CssDimensionParsingUtils.ParseAbsoluteLength(GetAttribute(SvgConstants.Attributes.RY)), height
-                    );
-                ryPresent = true;
-            }
-        }
-
-        private void Arc(float x1, float y1, float x2, float y2, float startAng, float extent, PdfCanvas cv) {
-            IList<double[]> ar = PdfCanvas.BezierArc(x1, y1, x2, y2, startAng, extent);
-            if (!ar.IsEmpty()) {
-                double[] pt;
-                for (int k = 0; k < ar.Count; ++k) {
-                    pt = ar[k];
-                    cv.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
-                }
+                float rawRadius = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.RY), context);
+                ry = CheckRadius(rawRadius, height);
+                ryPresent = rawRadius >= 0.0f;
             }
         }
 

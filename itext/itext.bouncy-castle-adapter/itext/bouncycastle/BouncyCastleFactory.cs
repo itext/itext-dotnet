@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -965,6 +965,11 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual ITstInfo CreateTSTInfo(IAsn1Object contentInfo) {
+            return new TstInfoBC(TstInfo.GetInstance(((Asn1ObjectBC) contentInfo).GetPrimitive()));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp) {
             return new SingleResponseBC(basicResp);
         }
@@ -1026,7 +1031,7 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            return new CertIDBC(hashAlgorithm, issuerCert, serialNumber);
+            return new CertIDBC(new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance), issuerCert, serialNumber);
         }
         
         /// <summary><inheritDoc/></summary>

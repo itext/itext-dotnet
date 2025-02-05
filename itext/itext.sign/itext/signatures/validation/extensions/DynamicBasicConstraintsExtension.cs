@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,11 +20,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Kernel.Crypto;
-using iText.Signatures;
 
 namespace iText.Signatures.Validation.Extensions {
     /// <summary>
@@ -33,6 +34,10 @@ namespace iText.Signatures.Validation.Extensions {
     /// </summary>
     public class DynamicBasicConstraintsExtension : DynamicCertificateExtension {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
+        public const String ERROR_MESSAGE = "Expected extension 2.5.29.19 to have a value of at least {0} but found {1}";
+
+        private String errorMessage;
 
         /// <summary>
         /// Create new instance of
@@ -63,15 +68,16 @@ namespace iText.Signatures.Validation.Extensions {
         /// otherwise
         /// </returns>
         public override bool ExistsInCertificate(IX509Certificate certificate) {
-            try {
-                if (CertificateUtil.GetExtensionValue(certificate, OID.X509Extensions.BASIC_CONSTRAINTS) == null) {
-                    return false;
-                }
+            if (certificate.GetBasicConstraints() >= GetCertificateChainSize() - 1) {
+                return true;
             }
-            catch (System.IO.IOException) {
-                return false;
-            }
-            return certificate.GetBasicConstraints() >= GetCertificateChainSize();
+            errorMessage = MessageFormatUtil.Format(ERROR_MESSAGE, GetCertificateChainSize() - 1, certificate.GetBasicConstraints
+                ());
+            return false;
+        }
+
+        public override String GetMessage() {
+            return errorMessage;
         }
     }
 }

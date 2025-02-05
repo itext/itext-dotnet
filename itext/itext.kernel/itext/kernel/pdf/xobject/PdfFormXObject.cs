@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -434,6 +434,22 @@ namespace iText.Kernel.Pdf.Xobject {
             GetPdfObject().Put(key, value);
             SetModified();
             return this;
+        }
+
+        /// <summary>If the form xobject is relative sized.</summary>
+        /// <remarks>
+        /// If the form xobject is relative sized. This information
+        /// is used during xobject layout to resolve it's relative size.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the xobject is relative sized,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsRelativeSized() {
+            return false;
         }
     }
 }

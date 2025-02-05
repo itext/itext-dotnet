@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -48,10 +48,7 @@ namespace iText.Svg.Css {
             , String strokeDashOffset, float fontSize, SvgDrawContext context) {
             if (strokeDashArray != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(strokeDashArray)) {
                 float rem = context.GetCssContext().GetRootFontSize();
-                float viewPortHeight = context.GetCurrentViewPort().GetHeight();
-                float viewPortWidth = context.GetCurrentViewPort().GetWidth();
-                float percentBaseValue = (float)(Math.Sqrt(viewPortHeight * viewPortHeight + viewPortWidth * viewPortWidth
-                    ) / Math.Sqrt(2));
+                float percentBaseValue = SvgCoordinateUtils.CalculateNormalizedDiagonalLength(context);
                 IList<String> dashArray = SvgCssUtils.SplitValueList(strokeDashArray);
                 if (dashArray.Count > 0) {
                     if (dashArray.Count % 2 == 1) {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
@@ -42,10 +40,12 @@ namespace iText.Svg.Renderers.Path.Impl {
             : base(relative) {
         }
 
-        public override void Draw(PdfCanvas canvas) {
-            float x = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[0]);
-            float y = CssDimensionParsingUtils.ParseAbsoluteLength(coordinates[1]);
-            canvas.MoveTo(x, y);
+        public override void Draw() {
+            double x = ParseHorizontalLength(coordinates[0]);
+            double y = ParseVerticalLength(coordinates[1]);
+            double[] points = new double[] { x, y };
+            ApplyTransform(points);
+            context.GetCurrentCanvas().MoveTo(points[0], points[1]);
         }
 
         public override void SetCoordinates(String[] inputCoordinates, Point startPoint) {

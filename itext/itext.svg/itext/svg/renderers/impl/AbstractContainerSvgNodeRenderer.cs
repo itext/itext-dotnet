@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,10 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Geom;
-using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     public abstract class AbstractContainerSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
@@ -45,29 +46,36 @@ namespace iText.Svg.Renderers.Impl {
         /// <param name="context">the SVG draw context</param>
         /// <returns>the viewport that applies to this renderer</returns>
         internal virtual Rectangle CalculateViewPort(SvgDrawContext context) {
-            Rectangle currentViewPort = context.GetCurrentViewPort();
-            // Set default values to parent viewport in the case of a nested svg tag
-            float portX = currentViewPort.GetX();
-            float portY = currentViewPort.GetY();
-            // Default should be parent portWidth if not outermost
-            float portWidth = currentViewPort.GetWidth();
-            // Default should be parent height if not outermost
-            float portHeight = currentViewPort.GetHeight();
+            Rectangle percentBaseBox;
+            if (GetParent() is PdfRootSvgNodeRenderer || !(GetParent() is AbstractSvgNodeRenderer)) {
+                // If the current container is a top level SVG, make a copy of the current viewport.
+                // It is needed to avoid double percent resolving. For absolute sized viewport we
+                // will get the same viewport, so save resources and just make a copy.
+                return context.GetCurrentViewPort().Clone();
+            }
+            else {
+                // If the current container is nested container, take a view box as a percent base
+                percentBaseBox = ((AbstractSvgNodeRenderer)GetParent()).GetCurrentViewBox(context);
+            }
+            float portX = 0;
+            float portY = 0;
+            float portWidth = percentBaseBox.GetWidth();
+            float portHeight = percentBaseBox.GetHeight();
             if (attributesAndStyles != null) {
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X)) {
-                    portX = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.X));
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y)) {
-                    portY = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.Y));
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.WIDTH)) {
-                    portWidth = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.WIDTH
-                        ));
-                }
-                if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.HEIGHT)) {
-                    portHeight = CssDimensionParsingUtils.ParseAbsoluteLength(attributesAndStyles.Get(SvgConstants.Attributes.
-                        HEIGHT));
-                }
+                portX = SvgCssUtils.ParseAbsoluteLength(this, attributesAndStyles.Get(SvgConstants.Attributes.X), percentBaseBox
+                    .GetWidth(), 0, context);
+                portY = SvgCssUtils.ParseAbsoluteLength(this, attributesAndStyles.Get(SvgConstants.Attributes.Y), percentBaseBox
+                    .GetHeight(), 0, context);
+                String widthStr = attributesAndStyles.Get(SvgConstants.Attributes.WIDTH);
+                // In case widthStr==null, according to SVG spec default value is 100%, it is why default
+                // value is percentBaseBox.getWidth(). See SvgConstants.Values.DEFAULT_WIDTH_AND_HEIGHT_VALUE
+                portWidth = SvgCssUtils.ParseAbsoluteLength(this, widthStr, percentBaseBox.GetWidth(), percentBaseBox.GetWidth
+                    (), context);
+                String heightStr = attributesAndStyles.Get(SvgConstants.Attributes.HEIGHT);
+                // In case heightStr==null, according to SVG spec default value is 100%, it is why default
+                // value is percentBaseBox.getHeight(). See SvgConstants.Values.DEFAULT_WIDTH_AND_HEIGHT_VALUE
+                portHeight = SvgCssUtils.ParseAbsoluteLength(this, heightStr, percentBaseBox.GetHeight(), percentBaseBox.GetHeight
+                    (), context);
             }
             return new Rectangle(portX, portY, portWidth, portHeight);
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -72,6 +72,12 @@ namespace iText.Layout.Renderer {
             if (orphansControl != null || widowsControl != null) {
                 return OrphansWidowsLayoutHelper.OrphansWidowsAwareLayout(this, layoutContext, orphansControl, widowsControl
                     );
+            }
+            if (RenderingMode.SVG_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && !TypographyUtils
+                .IsPdfCalligraphAvailable()) {
+                // BASE_DIRECTION property is always set to the SVG text since we can't easily check whether typography is
+                // available at svg module level, but it makes no sense without typography, so it is removed here.
+                this.DeleteProperty(Property.BASE_DIRECTION);
             }
             LayoutResult layoutResult = DirectLayout(layoutContext);
             UpdateParentLines(this);

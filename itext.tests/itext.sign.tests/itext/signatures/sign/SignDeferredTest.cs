@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
@@ -105,23 +106,13 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         public virtual void PrepareDocForSignDeferredLittleSpaceTest() {
             String input = sourceFolder + "helloWorldDoc.pdf";
-            String sigFieldName = "DeferredSignature1";
-            PdfName filter = PdfName.Adobe_PPKLite;
-            PdfName subFilter = PdfName.Adbe_pkcs7_detached;
             PdfReader reader = new PdfReader(input);
-            PdfSigner signer = new PdfSigner(reader, new MemoryStream(), new StampingProperties());
-            SignerProperties signerProperties = new SignerProperties().SetFieldName(sigFieldName);
-            signer.SetSignerProperties(signerProperties);
-            SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID).SetContent
-                ("Signature field which signing is deferred.");
-            signerProperties.SetPageRect(new Rectangle(36, 600, 200, 100)).SetPageNumber(1).SetSignatureAppearance(appearance
-                );
-            IExternalSignatureContainer external = new ExternalBlankSignatureContainer(filter, subFilter);
-            // This size is definitely not enough, however, the size check will pass.
-            // The test will fail lately on an invalid key
-            int estimatedSize = 0;
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => signer.SignExternalContainer(external
-                , estimatedSize));
+            SignDeferredTest.DummySigner dummySigner = new SignDeferredTest.DummySigner(reader, new MemoryStream(), new 
+                StampingProperties());
+            PdfDictionary content = new PdfDictionary();
+            content.Put(PdfName.Contents, new PdfString("test"));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => dummySigner.DummyClose(content
+                ));
             NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.TOO_BIG_KEY, e.Message);
         }
 
@@ -136,11 +127,34 @@ namespace iText.Signatures.Sign {
             IExternalSignatureContainer extSigContainer = new SignDeferredTest.CmsDeferredSigner(signPrivateKey, signChain
                 );
             String sigFieldName = "DeferredSignature1";
-            PdfDocument docToSign = new PdfDocument(new PdfReader(srcFileName));
-            Stream outStream = FileUtil.GetFileOutputStream(outFileName);
-            PdfSigner.SignDeferred(docToSign, sigFieldName, outStream, extSigContainer);
-            docToSign.Close();
-            outStream.Dispose();
+            using (PdfReader reader = new PdfReader(srcFileName)) {
+                using (Stream outStream = FileUtil.GetFileOutputStream(outFileName)) {
+                    PdfSigner.SignDeferred(reader, sigFieldName, outStream, extSigContainer);
+                }
+            }
+            // validate result
+            TestSignUtils.BasicCheckSignedDoc(outFileName, sigFieldName);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
+                , null));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, cmpFileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeferredDeprecatedApiTest() {
+            String srcFileName = sourceFolder + "templateForSignCMSDeferred.pdf";
+            String outFileName = destinationFolder + "deferredDeprecatedApiTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_deferredDeprecatedApiTest.pdf";
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            IExternalSignatureContainer extSigContainer = new SignDeferredTest.CmsDeferredSigner(signPrivateKey, signChain
+                );
+            String sigFieldName = "DeferredSignature1";
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName))) {
+                using (Stream outStream = FileUtil.GetFileOutputStream(outFileName)) {
+                    PdfSigner.SignDeferred(document, sigFieldName, outStream, extSigContainer);
+                }
+            }
             // validate result
             TestSignUtils.BasicCheckSignedDoc(outFileName, sigFieldName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
@@ -181,11 +195,11 @@ namespace iText.Signatures.Sign {
             // fill the signature to the presigned document
             SignDeferredTest.ReadySignatureSigner extSigContainer = new SignDeferredTest.ReadySignatureSigner(cmsSignature
                 );
-            PdfDocument docToSign = new PdfDocument(new PdfReader(new MemoryStream(preSignedBytes)));
-            Stream outStream = FileUtil.GetFileOutputStream(outFileName);
-            PdfSigner.SignDeferred(docToSign, sigFieldName, outStream, extSigContainer);
-            docToSign.Close();
-            outStream.Dispose();
+            using (PdfReader newReader = new PdfReader(new MemoryStream(preSignedBytes))) {
+                using (Stream outStream = FileUtil.GetFileOutputStream(outFileName)) {
+                    PdfSigner.SignDeferred(newReader, sigFieldName, outStream, extSigContainer);
+                }
+            }
             // validate result
             TestSignUtils.BasicCheckSignedDoc(outFileName, sigFieldName);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, destinationFolder
@@ -317,6 +331,21 @@ namespace iText.Signatures.Sign {
             }
 
             public virtual void ModifySigningDictionary(PdfDictionary signDic) {
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal class DummySigner : PdfSigner {
+            public DummySigner(PdfReader reader, Stream outputStream, StampingProperties properties)
+                : base(reader, outputStream, properties) {
+            }
+
+            public virtual void DummyClose(PdfDictionary content) {
+                preClosed = true;
+                exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
+                exclusionLocations.Put(PdfName.Contents, new PdfLiteral(1));
+                Close(content);
             }
         }
 //\endcond

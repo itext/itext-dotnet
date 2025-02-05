@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -85,21 +85,16 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MoreThanOneHParam() {
-            // TODO DEVSIX-2331 Update the cmp after the issue is resolved
-            // UPD: Seems to be fixed now, but leaving the remark and issue open because the scope of the issue might be bigger than
-            // this test
             ConvertAndCompare(sourceFolder, destinationFolder, "moreThanOneHParam");
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest01() {
-            //TODO update after DEVSIX-2331 - several (negative) line operators
             ConvertAndCompare(sourceFolder, destinationFolder, "negativeAfterPositiveHandling");
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest02() {
-            //TODO update after DEVSIX-2333 (negative viewbox) fix
             ConvertAndCompare(sourceFolder, destinationFolder, "negativeAfterPositiveHandlingExtendedViewbox");
         }
 
@@ -115,7 +110,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
-        public virtual void Text_path_Test() {
+        public virtual void TextPathTest() {
             //TODO: update cmp-file after DEVSIX-2255
             ConvertAndCompare(sourceFolder, destinationFolder, "textpath");
         }
@@ -125,6 +120,13 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void TextPathExample() {
             //TODO: update when DEVSIX-2255 implemented
             ConvertAndCompare(sourceFolder, destinationFolder, "textPathExample");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
+        public virtual void TspanInTextPathTest() {
+            //TODO: update when DEVSIX-2255 implemented
+            ConvertAndCompare(sourceFolder, destinationFolder, "tspanInTextPath");
         }
 
         [NUnit.Framework.Test]

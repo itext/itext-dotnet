@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -108,6 +108,33 @@ namespace iText.Layout {
                 SolidBorder(1));
             document.Add(paragraph);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParagraphUsingSvgRenderingModeTest() {
+            String outFileName = destinationFolder + "paragraphUsingSvgRenderingMode.pdf";
+            String cmpFileName = sourceFolder + "cmp_paragraphUsingSvgRenderingMode.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    Paragraph paragraph1 = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 1));
+                    paragraph1.SetWidth(200).SetHorizontalAlignment(HorizontalAlignment.RIGHT);
+                    Paragraph paragraph2 = new Paragraph().SetBorder(new SolidBorder(ColorConstants.PINK, 1));
+                    paragraph2.SetWidth(200).SetHorizontalAlignment(HorizontalAlignment.RIGHT);
+                    paragraph2.SetProperty(Property.RENDERING_MODE, RenderingMode.SVG_MODE);
+                    for (int i = 0; i < 5; i++) {
+                        Text textChunk = new Text("text" + i).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        textChunk.SetRelativePosition(-70 * i, 0, 0, 0);
+                        paragraph1.Add(textChunk);
+                        paragraph2.Add(textChunk);
+                    }
+                    document.Add(new Paragraph("Default rendering mode:"));
+                    document.Add(paragraph1);
+                    document.Add(new Paragraph("SVG rendering mode:"));
+                    document.Add(paragraph2);
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

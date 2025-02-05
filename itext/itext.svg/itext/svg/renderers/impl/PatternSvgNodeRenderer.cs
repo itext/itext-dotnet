@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -58,6 +58,8 @@ namespace iText.Svg.Renderers.Impl {
                 return null;
             }
             try {
+                //create color is an entry point method for pattern when drawing svg, so resolving href values here
+                TemplateResolveUtils.Resolve(this, context);
                 PdfPattern.Tiling tilingPattern = CreateTilingPattern(context, objectBoundingBox);
                 DrawPatternContent(context, tilingPattern);
                 return (tilingPattern == null) ? null : new PatternColor(tilingPattern);
@@ -90,9 +92,9 @@ namespace iText.Svg.Renderers.Impl {
                 patternMatrixTransform.Concatenate(GetTransformToUserSpaceOnUse(objectBoundingBox));
             }
             patternMatrixTransform.Translate(originalPatternRectangle.GetX(), originalPatternRectangle.GetY());
-            float[] viewBoxValues = GetViewBoxValues();
+            float[] viewBoxValues = SvgCssUtils.ParseViewBox(this);
             Rectangle bbox;
-            if (viewBoxValues.Length < VIEWBOX_VALUES_NUMBER) {
+            if (viewBoxValues == null || viewBoxValues.Length < SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
                 if (isObjectBoundingBoxInPatternUnits != isObjectBoundingBoxInPatternContentUnits) {
                     // If pattern units are not the same as pattern content units, then we need to scale
                     // the resulted space into a space to draw pattern content. The pattern rectangle origin
@@ -128,15 +130,16 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 Rectangle viewBox = new Rectangle(viewBoxValues[0], viewBoxValues[1], viewBoxValues[2], viewBoxValues[3]);
                 Rectangle appliedViewBox = CalculateAppliedViewBox(viewBox, xStep, yStep);
-                patternMatrixTransform.Translate(appliedViewBox.GetX(), appliedViewBox.GetY());
                 double scaleX_1 = (double)appliedViewBox.GetWidth() / (double)viewBox.GetWidth();
                 double scaleY_1 = (double)appliedViewBox.GetHeight() / (double)viewBox.GetHeight();
+                double xOffset = (double)appliedViewBox.GetX() / scaleX_1 - (double)viewBox.GetX();
+                double yOffset = (double)appliedViewBox.GetY() / scaleY_1 - (double)viewBox.GetY();
+                patternMatrixTransform.Translate(xOffset, yOffset);
                 patternMatrixTransform.Scale(scaleX_1, scaleY_1);
                 xStep /= scaleX_1;
                 yStep /= scaleY_1;
-                patternMatrixTransform.Translate(-viewBox.GetX(), -viewBox.GetY());
-                double bboxXOriginal = viewBox.GetX() - appliedViewBox.GetX() / scaleX_1;
-                double bboxYOriginal = viewBox.GetY() - appliedViewBox.GetY() / scaleY_1;
+                double bboxXOriginal = -xOffset / scaleX_1;
+                double bboxYOriginal = -yOffset / scaleY_1;
                 bbox = new Rectangle((float)bboxXOriginal, (float)bboxYOriginal, (float)xStep, (float)yStep);
             }
             return CreateColoredTilingPatternInstance(patternMatrixTransform, bbox, xStep, yStep);
@@ -182,12 +185,12 @@ namespace iText.Svg.Renderers.Impl {
                     0) * CONVERT_COEFF;
             }
             else {
-                Rectangle currentViewPort = context.GetCurrentViewPort();
+                Rectangle currentViewPort = this.GetCurrentViewBox(context);
                 double viewPortX = currentViewPort.GetX();
                 double viewPortY = currentViewPort.GetY();
                 double viewPortWidth = currentViewPort.GetWidth();
                 double viewPortHeight = currentViewPort.GetHeight();
-                float em = GetCurrentFontSize();
+                float em = GetCurrentFontSize(context);
                 float rem = context.GetCssContext().GetRootFontSize();
                 // get pattern coordinates in userSpaceOnUse coordinate system
                 xOffset = SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X), viewPortX
@@ -284,7 +287,7 @@ namespace iText.Svg.Renderers.Impl {
             // of the element (according to the viewBox documentation)
             if (viewBoxValues[2] == 0 || viewBoxValues[3] == 0) {
                 if (LOGGER.IsEnabled(LogLevel.Information)) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO));
+                    LOGGER.LogInformation(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
                 }
                 return true;
             }

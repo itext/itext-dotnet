@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -63,7 +63,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(DESTINATION_FOLDER);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
@@ -2621,6 +2621,19 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(PdfAConformance.PDF_A_2B, pdfDoc.GetConformance().GetAConformance());
                 NUnit.Framework.Assert.AreEqual(PdfUAConformance.PDF_UA_1, pdfDoc.GetConformance().GetUAConformance());
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XrefStreamMissingBytesTest() {
+            String inputFile = SOURCE_FOLDER + "xrefStreamMissingBytes.pdf";
+            String outputFile = DESTINATION_FOLDER + "xrefStreamMissingBytes.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_xrefStreamMissingBytes.pdf";
+            PdfReader pdfReader = new PdfReader(inputFile).SetUnethicalReading(true);
+            using (PdfDocument pdfDoc = new PdfDocument(pdfReader, CompareTool.CreateTestPdfWriter(outputFile))) {
+                pdfDoc.RemovePage(2);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, DESTINATION_FOLDER, 
+                "diff_"));
         }
 
         private static PdfDictionary GetTestPdfDictionary() {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -31,6 +31,13 @@ namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class FontProgramTest : ExtendedITextTest {
         private const String notExistingFont = "some-font.ttf";
+
+        [NUnit.Framework.SetUp]
+        public virtual void ClearFonts() {
+            FontProgramFactory.ClearRegisteredFonts();
+            FontProgramFactory.ClearRegisteredFontFamilies();
+            FontCache.ClearSavedFonts();
+        }
 
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
@@ -68,6 +75,16 @@ namespace iText.IO.Font {
                 .CurrentContext.TestDirectory) + "/resources/itext/io/font/type1/");
             FontProgram computerModern = FontProgramFactory.CreateRegisteredFont("computer modern");
             FontProgram cmr10 = FontProgramFactory.CreateRegisteredFont("cmr10");
+            NUnit.Framework.Assert.IsNull(computerModern);
+            NUnit.Framework.Assert.IsNull(cmr10);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RegisterDirectoryType1RecursivelyTest() {
+            FontProgramFactory.RegisterFontDirectoryRecursively(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/type1/");
+            FontProgram computerModern = FontProgramFactory.CreateRegisteredFont("computer modern");
+            FontProgram cmr10 = FontProgramFactory.CreateRegisteredFont("cmr10");
             NUnit.Framework.Assert.IsNotNull(computerModern);
             NUnit.Framework.Assert.IsNotNull(cmr10);
         }
@@ -87,6 +104,30 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.AreEqual(32, glyph.GetUnicode());
             NUnit.Framework.Assert.AreEqual(1, glyph.GetCode());
             NUnit.Framework.Assert.AreEqual(278, glyph.GetWidth());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StandardFontsTest() {
+            CheckStandardFont(StandardFonts.COURIER);
+            CheckStandardFont(StandardFonts.COURIER_BOLD);
+            CheckStandardFont(StandardFonts.COURIER_BOLDOBLIQUE);
+            CheckStandardFont(StandardFonts.COURIER_OBLIQUE);
+            CheckStandardFont(StandardFonts.HELVETICA);
+            CheckStandardFont(StandardFonts.HELVETICA_BOLD);
+            CheckStandardFont(StandardFonts.HELVETICA_BOLDOBLIQUE);
+            CheckStandardFont(StandardFonts.HELVETICA_OBLIQUE);
+            CheckStandardFont(StandardFonts.SYMBOL);
+            CheckStandardFont(StandardFonts.TIMES_BOLD);
+            CheckStandardFont(StandardFonts.TIMES_BOLDITALIC);
+            CheckStandardFont(StandardFonts.TIMES_ITALIC);
+            CheckStandardFont(StandardFonts.TIMES_ROMAN);
+            CheckStandardFont(StandardFonts.ZAPFDINGBATS);
+        }
+
+        private void CheckStandardFont(String fontName) {
+            FontProgram font = FontProgramFactory.CreateFont(fontName, null, false);
+            NUnit.Framework.Assert.IsTrue(font is Type1Font);
+            NUnit.Framework.Assert.AreEqual(fontName, font.GetFontNames().GetFontName());
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -46,13 +46,19 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             PdfCanvas canvas = context.GetCurrentCanvas();
             canvas.WriteLiteral("% line\n");
-            if (SetParameterss()) {
-                canvas.MoveTo(x1, y1).LineTo(x2, y2);
+            if (SetParameters(context)) {
+                float[] points = new float[] { x1, y1, x2, y2 };
+                AffineTransform transform = ApplyNonScalingStrokeTransform(context);
+                if (transform != null) {
+                    transform.Transform(points, 0, points, 0, points.Length / 2);
+                }
+                int i = 0;
+                canvas.MoveTo(points[i++], points[i++]).LineTo(points[i++], points[i]);
             }
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            if (SetParameterss()) {
+            if (SetParameters(context)) {
                 float x = Math.Min(x1, x2);
                 float y = Math.Min(y1, y2);
                 float width = Math.Abs(x1 - x2);
@@ -103,27 +109,25 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public virtual double GetAutoOrientAngle(MarkerSvgNodeRenderer marker, bool reverse) {
-            Vector v = new Vector(GetAttribute(this.attributesAndStyles, SvgConstants.Attributes.X2) - GetAttribute(this
-                .attributesAndStyles, SvgConstants.Attributes.X1), GetAttribute(this.attributesAndStyles, SvgConstants.Attributes
-                .Y2) - GetAttribute(this.attributesAndStyles, SvgConstants.Attributes.Y1), 0f);
+            Vector v = new Vector(this.x2 - this.x1, this.y2 - this.y1, 0.0F);
             Vector xAxis = new Vector(1, 0, 0);
             double rotAngle = SvgCoordinateUtils.CalculateAngleBetweenTwoVectors(xAxis, v);
             return v.Get(1) >= 0 && !reverse ? rotAngle : rotAngle * -1f;
         }
 
-        private bool SetParameterss() {
+        private bool SetParameters(SvgDrawContext context) {
             if (attributesAndStyles.Count > 0) {
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X1)) {
-                    this.x1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X1);
+                    this.x1 = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.X1), context);
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y1)) {
-                    this.y1 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y1);
+                    this.y1 = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.Y1), context);
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.X2)) {
-                    this.x2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.X2);
+                    this.x2 = ParseHorizontalLength(attributesAndStyles.Get(SvgConstants.Attributes.X2), context);
                 }
                 if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.Y2)) {
-                    this.y2 = GetAttribute(attributesAndStyles, SvgConstants.Attributes.Y2);
+                    this.y2 = ParseVerticalLength(attributesAndStyles.Get(SvgConstants.Attributes.Y2), context);
                 }
                 return true;
             }

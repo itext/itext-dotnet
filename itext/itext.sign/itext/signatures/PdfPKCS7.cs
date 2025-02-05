@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -1159,6 +1159,11 @@ namespace iText.Signatures {
                         // Ignore.
                         // Check that encapMessageContent is TSTInfo
                         bool isTSTInfo = JavaUtil.ArraysEquals(tstInfo, encapMessageContent);
+                        if (!isTSTInfo) {
+                            // This additional fallback is required in cases when encapMessageContent is ber encoded.
+                            // In this method we re-encode it into der.
+                            isTSTInfo = VerifyTSTInfoDer(tstInfo);
+                        }
                         IMessageImprint imprint = timeStampTokenInfo.GetMessageImprint();
                         byte[] imphashed = imprint.GetHashedMessage();
                         verifySignedMessageContent = isTSTInfo && JavaUtil.ArraysEquals(msgDigestBytes, imphashed);
@@ -1184,12 +1189,6 @@ namespace iText.Signatures {
             return verifyResult;
         }
 
-        private bool VerifySigAttributes(byte[] attr) {
-            ISigner signature = InitSignature(signCert.GetPublicKey());
-            SignUtils.UpdateVerifier(signature, attr);
-            return signature.VerifySignature(signatureValue);
-        }
-
         /// <summary>Checks if the timestamp refers to this document.</summary>
         /// <returns>true if it checks false otherwise</returns>
         public virtual bool VerifyTimestampImprint() {
@@ -1201,6 +1200,24 @@ namespace iText.Signatures {
             byte[] md = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(algOID)).Digest(signatureValue);
             byte[] imphashed = imprint.GetHashedMessage();
             return JavaUtil.ArraysEquals(md, imphashed);
+        }
+
+        private bool VerifyTSTInfoDer(byte[] tstInfo) {
+            try {
+                byte[] encapMessageContentDer = BOUNCY_CASTLE_FACTORY.CreateTSTInfo(BOUNCY_CASTLE_FACTORY.CreateASN1Sequence
+                    (encapMessageContent)).ToASN1Primitive().GetEncoded(BOUNCY_CASTLE_FACTORY.CreateASN1Encoding().GetDer(
+                    ));
+                return JavaUtil.ArraysEquals(tstInfo, encapMessageContentDer);
+            }
+            catch (Exception) {
+                return false;
+            }
+        }
+
+        private bool VerifySigAttributes(byte[] attr) {
+            ISigner signature = InitSignature(signCert.GetPublicKey());
+            SignUtils.UpdateVerifier(signature, attr);
+            return signature.VerifySignature(signatureValue);
         }
 
         // Certificates
@@ -1234,6 +1251,9 @@ namespace iText.Signatures {
         /// array
         /// </returns>
         public virtual IX509Certificate[] GetTimestampCertificates() {
+            if (timestampCerts == null) {
+                return new IX509Certificate[0];
+            }
             return timestampCerts.ToArray(new IX509Certificate[0]);
         }
 

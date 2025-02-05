@@ -53,6 +53,22 @@ namespace iText.Kernel.Geom {
             SetLocation(x, y);
         }
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="Point"/>
+        /// instance based on other
+        /// <see cref="Point"/>
+        /// instance.
+        /// </summary>
+        /// <param name="other">
+        /// other
+        /// <see cref="Point"/>
+        /// instance from which coordinates will be copied
+        /// </param>
+        public Point(iText.Kernel.Geom.Point other) {
+            SetLocation(other.GetX(), other.GetY());
+        }
+
         /// <summary>Gets x coordinate of the point.</summary>
         /// <returns>the x coordinate</returns>
         public virtual double GetX() {

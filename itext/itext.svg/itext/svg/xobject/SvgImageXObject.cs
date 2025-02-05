@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,15 +20,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Properties;
+using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Xobject {
     /// <summary>A wrapper for Form XObject for SVG images.</summary>
@@ -38,6 +43,16 @@ namespace iText.Svg.Xobject {
         private readonly ResourceResolver resourceResolver;
 
         private bool isGenerated = false;
+
+        private bool isCreatedByImg = false;
+
+        private bool isCreatedByObject = false;
+
+        private float em;
+
+        private SvgDrawContext svgDrawContext;
+
+        private bool isRelativeSized = false;
 
         /// <summary>Creates a new instance of Form XObject for the SVG image.</summary>
         /// <param name="bBox">the form XObject’s bounding box.</param>
@@ -51,6 +66,66 @@ namespace iText.Svg.Xobject {
             : base(bBox) {
             this.result = result;
             this.resourceResolver = resourceResolver;
+            this.svgDrawContext = new SvgDrawContext(resourceResolver, result.GetFontProvider());
+        }
+
+        /// <summary>Creates a new instance of Form XObject for the relative sized SVG image.</summary>
+        /// <param name="result">processor result containing the SVG information</param>
+        /// <param name="svgContext">the svg draw context</param>
+        /// <param name="em">em value in pt</param>
+        /// <param name="pdfDocument">pdf that shall contain the SVG image, can be null</param>
+        public SvgImageXObject(ISvgProcessorResult result, SvgDrawContext svgContext, float em, PdfDocument pdfDocument
+            )
+            : this(null, result, svgContext.GetResourceResolver()) {
+            if (pdfDocument != null) {
+                svgContext.PushCanvas(new PdfCanvas(this, pdfDocument));
+            }
+            this.em = em;
+            this.isRelativeSized = true;
+            this.svgDrawContext = svgContext;
+        }
+
+        /// <summary>Set if SVG image is created from HTML img tag context</summary>
+        /// <param name="isCreatedByImg">true if object is created from HTML img tag, false otherwise</param>
+        public virtual void SetIsCreatedByImg(bool isCreatedByImg) {
+            this.isCreatedByImg = isCreatedByImg;
+        }
+
+        /// <summary>Check if SVG image is created from HTML img tag context</summary>
+        /// <returns>true if object is created from HTML img tag, false otherwise</returns>
+        public virtual bool IsCreatedByImg() {
+            return isCreatedByImg;
+        }
+
+        /// <summary>Set if SVG image is created from HTML object tag context</summary>
+        /// <param name="isCreatedByObject">true if object is created from HTML object tag, false otherwise</param>
+        public virtual void SetIsCreatedByObject(bool isCreatedByObject) {
+            this.isCreatedByObject = isCreatedByObject;
+        }
+
+        /// <summary>Check if SVG image is created from HTML object tag context</summary>
+        /// <returns>true if object is created from HTML object tag, false otherwise</returns>
+        public virtual bool IsCreatedByObject() {
+            return isCreatedByObject;
+        }
+
+        /// <summary>If the SVG image is relative sized.</summary>
+        /// <remarks>
+        /// If the SVG image is relative sized. This information
+        /// is used during image layouting to resolve it's relative size.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the SVG image is relative sized,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        /// <seealso cref="UpdateBBox(float, float)"/>
+        /// <seealso cref="SvgImageXObject(iText.Svg.Processors.ISvgProcessorResult, iText.Svg.Renderers.SvgDrawContext, float, iText.Kernel.Pdf.PdfDocument)
+        ///     "/>
+        public override bool IsRelativeSized() {
+            return isRelativeSized;
         }
 
         /// <summary>Returns processor result containing the SVG information.</summary>
@@ -65,6 +140,7 @@ namespace iText.Svg.Xobject {
         /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
         /// instance
         /// </returns>
+        [System.ObsoleteAttribute(@"not used anymore")]
         public virtual ResourceResolver GetResourceResolver() {
             return resourceResolver;
         }
@@ -74,20 +150,51 @@ namespace iText.Svg.Xobject {
         /// Processes xObject before first image generation to avoid drawing it twice or more. It allows to reuse the same
         /// Form XObject multiple times.
         /// </remarks>
-        /// <param name="document">pdf that shall contain the SVG image.</param>
+        /// <param name="document">
+        /// pdf that shall contain the SVG image, can be null if constructor
+        /// <see cref="SvgImageXObject(iText.Svg.Processors.ISvgProcessorResult, iText.Svg.Renderers.SvgDrawContext, float, iText.Kernel.Pdf.PdfDocument)
+        ///     "/>
+        /// was used
+        /// </param>
         public virtual void Generate(PdfDocument document) {
             if (!isGenerated) {
-                PdfCanvas canvas = new PdfCanvas(this, document);
-                SvgDrawContext context = new SvgDrawContext(resourceResolver, result.GetFontProvider());
                 if (result is SvgProcessorResult) {
-                    context.SetCssContext(((SvgProcessorResult)result).GetContext().GetCssContext());
+                    svgDrawContext.SetCssContext(((SvgProcessorResult)result).GetContext().GetCssContext());
                 }
-                context.AddNamedObjects(result.GetNamedObjects());
-                context.PushCanvas(canvas);
+                svgDrawContext.SetTempFonts(result.GetTempFonts());
+                svgDrawContext.AddNamedObjects(result.GetNamedObjects());
+                if (svgDrawContext.Size() == 0) {
+                    svgDrawContext.PushCanvas(new PdfCanvas(this, document));
+                }
                 ISvgNodeRenderer root = new PdfRootSvgNodeRenderer(result.GetRootRenderer());
-                root.Draw(context);
+                root.Draw(svgDrawContext);
                 isGenerated = true;
             }
+        }
+
+        /// <summary>Updated XObject BBox for relative sized SVG image.</summary>
+        /// <param name="areaWidth">the area width where SVG image will be drawn</param>
+        /// <param name="areaHeight">the area height where SVG image will be drawn</param>
+        public virtual void UpdateBBox(float areaWidth, float areaHeight) {
+            svgDrawContext.SetCustomViewport(new Rectangle(areaWidth, areaHeight));
+            Rectangle bbox = SvgCssUtils.ExtractWidthAndHeight(result.GetRootRenderer(), em, svgDrawContext);
+            SetBBox(new PdfArray(bbox));
+        }
+
+        /// <summary>Gets the SVG element width.</summary>
+        /// <returns>the SVG element width</returns>
+        public virtual UnitValue GetElementWidth() {
+            String widthStr = result.GetRootRenderer().GetAttribute(SvgConstants.Attributes.WIDTH);
+            return CssDimensionParsingUtils.ParseLengthValueToPt(widthStr, em, svgDrawContext.GetCssContext().GetRootFontSize
+                ());
+        }
+
+        /// <summary>Gets the SVG element height.</summary>
+        /// <returns>the SVG element height</returns>
+        public virtual UnitValue GetElementHeight() {
+            String heightStr = result.GetRootRenderer().GetAttribute(SvgConstants.Attributes.HEIGHT);
+            return CssDimensionParsingUtils.ParseLengthValueToPt(heightStr, em, svgDrawContext.GetCssContext().GetRootFontSize
+                ());
         }
     }
 }

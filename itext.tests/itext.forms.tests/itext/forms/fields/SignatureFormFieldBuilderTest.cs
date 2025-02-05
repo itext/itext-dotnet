@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -57,6 +57,12 @@ namespace iText.Forms.Fields {
             PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateSignature
                 ();
             CompareSignatures(signatureFormField, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateSignatureWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new SignatureFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").
+                SetWidgetRectangle(DUMMY_RECTANGLE).CreateSignature());
         }
 
         [NUnit.Framework.Test]

@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -24,55 +24,66 @@ using System;
 using System.IO;
 
 namespace iText.Kernel.Utils {
-	//\cond DO_NOT_DOCUMENT		
-    internal class IdleOutputStream : Stream
+	/// <summary>
+	/// Stream implementation which doesn't write anything.
+	/// </summary>
+	public class IdleOutputStream : Stream
 	{
+		/// <summary><inheritDoc/></summary>
 	    public override void Flush()
 	    {
 	        
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override long Seek(long offset, SeekOrigin origin)
 	    {
 	        throw new NotSupportedException();
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override void SetLength(long value)
 	    {
             throw new NotSupportedException();
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override int Read(byte[] buffer, int offset, int count)
 	    {
             throw new NotSupportedException();
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override void Write(byte[] buffer, int offset, int count)
 	    {
 	        
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override bool CanRead
 	    {
 	        get { return false; }
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override bool CanSeek
 	    {
 	        get { return false; }
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override bool CanWrite
 	    {
 	        get { return true; }
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override long Length
 	    {
             get { throw new NotSupportedException(); }
 	    }
 
+		/// <summary><inheritDoc/></summary>
 	    public override long Position { get; set; }
 	}
-   //\endcond 
 }

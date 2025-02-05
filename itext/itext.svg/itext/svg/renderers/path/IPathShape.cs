@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,7 +28,24 @@ namespace iText.Svg.Renderers.Path {
     /// <summary>Interface for IPathShape, which draws the Path-data's d element instructions.</summary>
     public interface IPathShape {
         /// <summary>Draws this instruction to a canvas object.</summary>
+        /// <remarks>
+        /// Draws this instruction to a canvas object.
+        /// <para />
+        /// Deprecated in favour of
+        /// <see cref="iText.Svg.Renderers.Path.Impl.AbstractPathShape.Draw()"/>
+        /// and later this method should be introduced
+        /// in this interface, along with
+        /// <see cref="iText.Svg.Renderers.Path.Impl.AbstractPathShape.SetContext(iText.Svg.Renderers.SvgDrawContext)"
+        ///     />
+        /// method. Since
+        /// canvas can be got from
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// parameter is no more needed.
+        /// </remarks>
         /// <param name="canvas">to which this instruction is drawn</param>
+        [Obsolete]
         void Draw(PdfCanvas canvas);
 
         /// <summary>

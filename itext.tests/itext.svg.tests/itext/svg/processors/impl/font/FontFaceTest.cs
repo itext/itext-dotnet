@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -49,14 +49,12 @@ namespace iText.Svg.Processors.Impl.Font {
 
         [NUnit.Framework.Test]
         public virtual void UnicodeRangeTest() {
-            // TODO fix cmp file after DEVSIX-2256 is finished. Right now unicode range is not processed correctly
+            // Unicode range is processed correctly: in case Droid Serif font doesn't include current glyph, Times font is used.
             ConvertAndCompare(sourceFolder, destinationFolder, "unicodeRangeTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void DroidSerifSingleQuotesTest() {
-            // TODO fix cmp file after DEVSIX-2534 is finished. Right now droid fonts are not applied if
-            //  their aliases are inside single quotes and contain spaces
             ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifSingleQuotesTest");
         }
 
@@ -88,6 +86,16 @@ namespace iText.Svg.Processors.Impl.Font {
         [NUnit.Framework.Test]
         public virtual void FontSelectorTest01() {
             ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorTest01");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontSelectorTest03() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorTest03");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontSelectorMissingFontWithSize() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorMissingWithFontSize");
         }
 
         [NUnit.Framework.Test]

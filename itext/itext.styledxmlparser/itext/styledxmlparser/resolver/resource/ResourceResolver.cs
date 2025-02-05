@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -230,6 +230,12 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             return uriResolver.ResolveAgainstBaseUri(uri);
         }
 
+        /// <summary>Gets the base URI.</summary>
+        /// <returns>the base uri</returns>
+        public virtual String GetBaseUri() {
+            return uriResolver.GetBaseUri();
+        }
+
         /// <summary>Resets the simple image cache.</summary>
         public virtual void ResetCache() {
             imageCache.Reset();
@@ -259,7 +265,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 PdfXObject imageXObject = imageCache.GetImage(imageResolvedSrc);
                 if (imageXObject == null) {
                     imageXObject = CreateImageByUrl(url);
-                    if (imageXObject != null) {
+                    //relative sized xObject can't be cached because it's internal state depends on the context
+                    bool isAbsoluteSized = imageXObject != null && !(imageXObject is PdfFormXObject && ((PdfFormXObject)imageXObject
+                        ).IsRelativeSized());
+                    if (isAbsoluteSized) {
                         imageCache.PutImage(imageResolvedSrc, imageXObject);
                     }
                 }

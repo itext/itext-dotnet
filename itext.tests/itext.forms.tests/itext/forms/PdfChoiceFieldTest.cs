@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -268,6 +268,23 @@ namespace iText.Forms {
             form.AddField(choice);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetFontSizeChoiceFieldTest() {
+            String outPdf = destinationFolder + "setFontSizeChoiceField.pdf";
+            String cmpPdf = sourceFolder + "cmp_setFontSizeChoiceField.pdf";
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
+                doc.AddNewPage();
+                Rectangle rectangle = new Rectangle(150, 500, 200, 150);
+                PdfChoiceFormField choiceBoxField = new ChoiceFormFieldBuilder(doc, "choiceBox").SetPage(1).SetWidgetRectangle
+                    (rectangle).SetOptions(new String[] { "option1", "option2", "option3" }).CreateList();
+                choiceBoxField.SetFontSize(40);
+                PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(doc, true);
+                acroForm.AddField(choiceBoxField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
                 ));
         }
     }

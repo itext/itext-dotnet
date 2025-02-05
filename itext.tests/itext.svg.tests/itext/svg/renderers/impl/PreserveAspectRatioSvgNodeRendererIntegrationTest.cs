@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Svg.Renderers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -55,11 +56,18 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
-            Count = 19)]
         public virtual void DifferentAspectRatiosTest() {
-            //TODO: update cmp_ when DEVSIX-2250 fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "differentAspectRatios");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImagePreserveAspectRatioTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imagePreserveAspectRatio");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageNegativeWidthHeightTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageNegativeWidthHeight");
         }
 
         [NUnit.Framework.Test]
@@ -139,38 +147,44 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationYMinMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed 
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMinMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationYMidMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMidMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationYMaxMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationYMaxMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationXMinMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMinMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationXMidMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMidMeet");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgTranslationXMaxMeetTest() {
-            //TODO (DEVSIX-3537) change cmp files after the ticket will be fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgTranslationXMaxMeet");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO, LogLevel = LogLevelConstants.INFO)]
+        public virtual void SvgZeroWidthRatioTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgZeroWidthRatio");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO, LogLevel = LogLevelConstants.INFO)]
+        public virtual void SvgZeroHeightRatioTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "svgZeroHeightRatio");
         }
     }
 }

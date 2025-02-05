@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -90,7 +90,7 @@ namespace iText.Signatures.Exceptions {
         public const String NOT_A_VALID_PKCS7_OBJECT_NOT_SIGNED_DATA = "Not a valid PKCS#7 object - not signed " +
              "data.";
 
-        public const String NOT_ENOUGH_SPACE = "Not enough space.";
+        public const String NOT_ENOUGH_SPACE = "Not enough space allocated for the signature.";
 
         public const String NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE = "It was not possible to embed MAC token into signature. Most likely signature container is empty.";
 

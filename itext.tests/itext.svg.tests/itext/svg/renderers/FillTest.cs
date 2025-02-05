@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Svg.Exceptions;
+using iText.Svg.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -58,7 +60,6 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill");
         }
 
-        /* This test should fail when DEVSIX-2251 is resolved*/
         [NUnit.Framework.Test]
         public virtual void EoFillTest01() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofill01");
@@ -84,7 +85,6 @@ namespace iText.Svg.Renderers {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "eofillstroke");
         }
 
-        /* This test should fail when DEVSIX-2251 is resolved*/
         [NUnit.Framework.Test]
         public virtual void NonZeroFillTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nonzerofill");
@@ -112,9 +112,21 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+            )]
         public virtual void InvalidUrlFillTest() {
-            //TODO update cmp file after DEVSIX-3365 will be fixed
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidUrlFillTest");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 4)]
+        public virtual void TextFillFallbackTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textFillFallbackTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FillLinkToNonExistingGradientTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "fillLinkToNonExistingGradient");
         }
     }
 }

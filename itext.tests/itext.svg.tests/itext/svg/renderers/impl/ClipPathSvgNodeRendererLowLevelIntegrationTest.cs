@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -76,8 +76,9 @@ namespace iText.Svg.Renderers.Impl {
             rectRenderer.SetAttribute(SvgConstants.Attributes.WIDTH, "400");
             rectRenderer.SetAttribute(SvgConstants.Attributes.HEIGHT, "400");
             clipRenderer.AddChild(rectRenderer);
+            clipRenderer.SetClippedRenderer(new RectangleSvgNodeRenderer());
             clipRenderer.Draw(sdc);
-            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\n0 0 0 rg\n% rect\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (cv.GetContentStream().GetBytes()));
         }
 
@@ -90,8 +91,9 @@ namespace iText.Svg.Renderers.Impl {
             rectRenderer.SetAttribute(SvgConstants.Attributes.WIDTH, "400");
             rectRenderer.SetAttribute(SvgConstants.Attributes.HEIGHT, "400");
             clipRenderer.AddChild(rectRenderer);
+            clipRenderer.SetClippedRenderer(new RectangleSvgNodeRenderer());
             clipRenderer.Draw(sdc);
-            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW\nn\n0 0 0 rg\n% rect\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (cv.GetContentStream().GetBytes()));
         }
 
@@ -104,8 +106,9 @@ namespace iText.Svg.Renderers.Impl {
             rectRenderer.SetAttribute(SvgConstants.Attributes.HEIGHT, "400");
             rectRenderer.SetAttribute(SvgConstants.Attributes.CLIP_RULE, SvgConstants.Values.FILL_RULE_EVEN_ODD);
             clipRenderer.AddChild(rectRenderer);
+            clipRenderer.SetClippedRenderer(new RectangleSvgNodeRenderer());
             clipRenderer.Draw(sdc);
-            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW*\nn\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
+            NUnit.Framework.Assert.AreEqual("q\n% rect\n0 0 300 300 re\nW*\nn\n0 0 0 rg\n% rect\nf\nQ\n", iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (cv.GetContentStream().GetBytes()));
         }
 

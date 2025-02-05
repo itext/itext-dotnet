@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -62,18 +62,21 @@ namespace iText.Forms.Fields.Merging {
         /// <param name="firstField">the first field</param>
         /// <param name="secondField">the second field</param>
         /// <param name="throwExceptionOnError">if true, an exception will be thrown</param>
-        /// <returns>true if the second field was renamed successfully, false otherwise</returns>
+        /// <returns>
+        /// returns
+        /// <see langword="false"/>
+        /// value, since
+        /// <see cref="AddIndexStrategy"/>
+        /// never merges fields.
+        /// </returns>
         public virtual bool Execute(PdfFormField firstField, PdfFormField secondField, bool throwExceptionOnError) {
-            if (firstField == null || secondField == null) {
-                return false;
+            if (firstField != null && secondField != null && firstField.GetFieldName() != null && secondField.GetFieldName
+                () != null) {
+                String originalFieldName = firstField.GetFieldName().ToUnicodeString();
+                String fieldToAddNewName = originalFieldName + separator + GetNextIndex(originalFieldName);
+                secondField.SetFieldName(fieldToAddNewName);
             }
-            if (firstField.GetFieldName() == null || secondField.GetFieldName() == null) {
-                return true;
-            }
-            String originalFieldName = firstField.GetFieldName().ToUnicodeString();
-            String fieldToAddNewName = originalFieldName + separator + GetNextIndex(originalFieldName);
-            secondField.SetFieldName(fieldToAddNewName);
-            return true;
+            return false;
         }
 
 //\cond DO_NOT_DOCUMENT

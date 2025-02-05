@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -64,6 +64,12 @@ namespace iText.Forms.Fields {
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             CompareRadioButtons(radioAnnotation, radioGroup, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateRadioButtonWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new RadioFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateRadioGroup());
         }
 
         [NUnit.Framework.Test]

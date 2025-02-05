@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -148,6 +148,24 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         [NUnit.Framework.Test]
         public virtual void Test22() {
             NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY, GetSpecificity(":not(.class_name)"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Test23() {
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-last-child(2n - 3)"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Test24() {
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-of-type(2n - 3)"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Test25() {
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-last-of-type(2n - 3)"
                 ));
         }
 

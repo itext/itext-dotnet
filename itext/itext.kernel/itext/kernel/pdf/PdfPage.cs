@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -1120,16 +1120,9 @@ namespace iText.Kernel.Pdf {
                     if (!StandardRoles.ANNOT.Equals(tagPointer.GetRole()) && PdfVersion.PDF_1_4
                                         // "Annot" tag was added starting from PDF 1.5
                                         .CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                        if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) > 0) {
-                            if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfLinkAnnotation) && !(annotation is PdfPrinterMarkAnnotation
-                                )) {
-                                tagPointer.AddTag(StandardRoles.ANNOT);
-                            }
-                        }
-                        else {
-                            if (annotation is PdfMarkupAnnotation) {
-                                tagPointer.AddTag(StandardRoles.ANNOT);
-                            }
+                        if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfLinkAnnotation) && !(annotation is PdfPrinterMarkAnnotation
+                            )) {
+                            tagPointer.AddTag(StandardRoles.ANNOT);
                         }
                     }
                     iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
@@ -1876,9 +1869,15 @@ namespace iText.Kernel.Pdf {
         }
 
         private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument) {
+            RebuildFormFieldParent(field, newField, toDocument, new HashSet<PdfDictionary>());
+        }
+
+        private void RebuildFormFieldParent(PdfDictionary field, PdfDictionary newField, PdfDocument toDocument, ICollection
+            <PdfDictionary> visitedForms) {
             if (newField.ContainsKey(PdfName.Parent)) {
                 return;
             }
+            visitedForms.Add(field);
             PdfDictionary oldParent = field.GetAsDictionary(PdfName.Parent);
             if (oldParent != null) {
                 PdfDictionary newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName
@@ -1887,10 +1886,10 @@ namespace iText.Kernel.Pdf {
                     newParent = oldParent.CopyTo(toDocument, JavaUtil.ArraysAsList(PdfName.P, PdfName.Kids, PdfName.Parent), true
                         , NullCopyFilter.GetInstance());
                 }
-                if (oldParent == oldParent.GetAsDictionary(PdfName.Parent)) {
+                if (visitedForms.Contains(oldParent)) {
                     return;
                 }
-                RebuildFormFieldParent(oldParent, newParent, toDocument);
+                RebuildFormFieldParent(oldParent, newParent, toDocument, visitedForms);
                 PdfArray kids = newParent.GetAsArray(PdfName.Kids);
                 if (kids == null) {
                     // no kids are added here, since we do not know at this point which pages are to be copied,

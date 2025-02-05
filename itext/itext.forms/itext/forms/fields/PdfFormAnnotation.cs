@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -658,13 +658,16 @@ namespace iText.Forms.Fields {
             if (rectangle == null) {
                 return;
             }
+            //Apply rotation
             int fieldRotation = GetRotation();
             PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
             rectangle = ApplyRotation(fieldRotation, rectangle);
-            float width = rectangle.GetWidth();
-            float height = rectangle.GetHeight();
             CreateInputButton();
             SetModelElementProperties(rectangle);
+            float fontSize = GetFontSize(new PdfArray(rectangle), parent.GetDisplayValue());
+            formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
+            float width = rectangle.GetWidth();
+            float height = rectangle.GetHeight();
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             if (matrix != null) {
                 xObject.Put(PdfName.Matrix, matrix);
@@ -805,22 +808,30 @@ namespace iText.Forms.Fields {
             if (rectangle == null) {
                 return;
             }
+            //Apply rotation
+            int fieldRotation = GetRotation();
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+            rectangle = ApplyRotation(fieldRotation, rectangle);
             bool multiselect = parent.GetFieldFlag(PdfChoiceFormField.FF_MULTI_SELECT);
             if (!(formFieldElement is ListBoxField)) {
                 // Create it once and reset properties during each widget regeneration.
-                formFieldElement = new ListBoxField(parent.GetPartialFieldName().ToUnicodeString(), 0, multiselect);
+                formFieldElement = new ListBoxField("", 0, multiselect);
             }
             formFieldElement.SetProperty(FormProperty.FORM_FIELD_MULTIPLE, multiselect);
             ((ListBoxField)formFieldElement).SetTopIndex(parent is PdfChoiceFormField && ((PdfChoiceFormField)parent).
                 GetTopIndex() != null ? ((PdfChoiceFormField)parent).GetTopIndex().IntValue() : 0);
             PdfArray indices = GetParent().GetAsArray(PdfName.I);
             PdfArray options = parent.GetOptions();
+            String longestOption = "";
             for (int index = 0; index < options.Size(); ++index) {
                 PdfObject option = options.Get(index);
                 String exportValue = null;
                 String displayValue = null;
                 if (option.IsString()) {
                     exportValue = option.ToString();
+                    if (longestOption.Length < exportValue.Length) {
+                        longestOption = exportValue;
+                    }
                 }
                 else {
                     if (option.IsArray()) {
@@ -828,6 +839,9 @@ namespace iText.Forms.Fields {
                         if (optionArray.Size() > 1) {
                             exportValue = optionArray.Get(0).ToString();
                             displayValue = optionArray.Get(1).ToString();
+                            if (longestOption.Length < displayValue.Length) {
+                                longestOption = displayValue;
+                            }
                         }
                     }
                 }
@@ -857,6 +871,9 @@ namespace iText.Forms.Fields {
                     existingItem.GetElement().SetProperty(Property.BACKGROUND, null);
                 }
             }
+            float fontSize = GetFontSize(new PdfArray(rectangle), longestOption);
+            formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
+            UpdateParentFontSize(fontSize);
             formFieldElement.SetProperty(Property.FONT, GetFont());
             if (GetColor() != null) {
                 formFieldElement.SetProperty(Property.FONT_COLOR, new TransparentColor(GetColor()));
@@ -864,6 +881,9 @@ namespace iText.Forms.Fields {
             SetModelElementProperties(rectangle);
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
                 )));
+            if (matrix != null) {
+                xObject.Put(PdfName.Matrix, matrix);
+            }
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
             SetMetaInfoToCanvas(canvas);
             canvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
@@ -880,6 +900,10 @@ namespace iText.Forms.Fields {
             if (rectangle == null) {
                 return;
             }
+            //Apply rotation
+            int fieldRotation = GetRotation();
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+            rectangle = ApplyRotation(fieldRotation, rectangle);
             String value = parent.GetDisplayValue();
             if (!(parent.IsMultiline() && formFieldElement is TextArea || !parent.IsMultiline() && formFieldElement is
                  InputField)) {
@@ -911,10 +935,6 @@ namespace iText.Forms.Fields {
             if (GetColor() != null) {
                 formFieldElement.SetProperty(Property.FONT_COLOR, new TransparentColor(GetColor()));
             }
-            // Rotation
-            int fieldRotation = GetRotation();
-            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
-            rectangle = ApplyRotation(fieldRotation, rectangle);
             SetModelElementProperties(rectangle);
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight(
                 )));
@@ -936,8 +956,12 @@ namespace iText.Forms.Fields {
                 return;
             }
             if (!(formFieldElement is ComboBoxField)) {
-                formFieldElement = new ComboBoxField(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new ComboBoxField("");
             }
+            //Apply rotation
+            int fieldRotation = GetRotation();
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+            rectangle = ApplyRotation(fieldRotation, rectangle);
             ComboBoxField comboBoxField = (ComboBoxField)formFieldElement;
             PrepareComboBoxFieldWithCorrectOptionsAndValues(comboBoxField);
             comboBoxField.SetFont(GetFont());
@@ -960,6 +984,9 @@ namespace iText.Forms.Fields {
             comboBoxField.SetTextAlignment(parent.GetJustification());
             Rectangle pdfXobjectRectangle = new Rectangle(0, 0, rectangle.GetWidth(), rectangle.GetHeight());
             PdfFormXObject xObject = new PdfFormXObject(pdfXobjectRectangle);
+            if (matrix != null) {
+                xObject.Put(PdfName.Matrix, matrix);
+            }
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, GetDocument());
             canvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             SetMetaInfoToCanvas(canvas);
@@ -1001,12 +1028,20 @@ namespace iText.Forms.Fields {
             if (rect == null) {
                 return;
             }
+            //Apply rotation
+            int fieldRotation = GetRotation();
+            PdfArray matrix = GetRotationMatrix(fieldRotation, rect.GetHeight(), rect.GetWidth());
+            rect = ApplyRotation(fieldRotation, rect);
             ReconstructCheckBoxType();
             CreateCheckBox();
+            SetModelElementProperties(rect);
             bool wasChecked = true.Equals(formFieldElement.GetProperty<bool?>(FormProperty.FORM_FIELD_CHECKED));
             PdfDictionary normalAppearance = new PdfDictionary();
             ((CheckBox)formFieldElement).SetChecked(false);
             PdfFormXObject xObjectOff = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
+            if (matrix != null) {
+                xObjectOff.Put(PdfName.Matrix, matrix);
+            }
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, GetDocument());
             SetMetaInfoToCanvas(canvasOff);
             canvasOff.Add(formFieldElement);
@@ -1021,6 +1056,9 @@ namespace iText.Forms.Fields {
             }
             ((CheckBox)formFieldElement).SetChecked(true);
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, rect.GetWidth(), rect.GetHeight()));
+            if (matrix != null) {
+                xObject.Put(PdfName.Matrix, matrix);
+            }
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(xObject, this.GetDocument());
             SetMetaInfoToCanvas(canvas);
             canvas.Add(formFieldElement);
@@ -1031,6 +1069,9 @@ namespace iText.Forms.Fields {
             // to retrieve the checkbox type even if the appearance is not present.
             mk.Put(PdfName.CA, new PdfString(PdfCheckBoxRenderingStrategy.ZAPFDINGBATS_CHECKBOX_MAPPING.GetByKey(parent
                 .checkType.GetValue())));
+            if (fieldRotation != 0) {
+                mk.Put(PdfName.R, new PdfNumber(fieldRotation));
+            }
             GetWidget().Put(PdfName.MK, mk);
             formFieldElement.SetInteractive(true);
             ((CheckBox)formFieldElement).SetChecked(wasChecked);
@@ -1115,11 +1156,9 @@ namespace iText.Forms.Fields {
         internal virtual void CreateInputButton() {
             if (!(formFieldElement is Button)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new Button(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new Button("");
             }
             ((Button)formFieldElement).SetFont(GetFont());
-            ((Button)formFieldElement).SetFontSize(GetFontSize(GetPdfObject().GetAsArray(PdfName.Rect), parent.GetDisplayValue
-                ()));
             if (GetColor() != null) {
                 ((Button)formFieldElement).SetFontColor(color);
             }
@@ -1130,7 +1169,7 @@ namespace iText.Forms.Fields {
         internal virtual void CreateSigField() {
             if (!(formFieldElement is SignatureFieldAppearance)) {
                 // Create it one time and re-set properties during each widget regeneration.
-                formFieldElement = new SignatureFieldAppearance(parent.GetPartialFieldName().ToUnicodeString());
+                formFieldElement = new SignatureFieldAppearance("");
             }
             if (formFieldElement.GetProperty<Object>(Property.FONT) == null) {
                 ((SignatureFieldAppearance)formFieldElement).SetFont(GetFont());
@@ -1239,7 +1278,6 @@ namespace iText.Forms.Fields {
                 formFieldElement = new CheckBox("");
             }
             formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(GetFontSize()));
-            SetModelElementProperties(GetRect(GetPdfObject()));
             ((CheckBox)formFieldElement).SetPdfConformance(GetPdfConformance());
             ((CheckBox)formFieldElement).SetCheckBoxType(parent.checkType.GetValue());
         }
@@ -1479,6 +1517,13 @@ namespace iText.Forms.Fields {
                 rectangle = invertedRectangle;
             }
             return rectangle;
+        }
+
+        private void UpdateParentFontSize(float fontSize) {
+            if (parent != null) {
+                parent.UpdateFontAndFontSize(parent.GetFont(), fontSize);
+                parent.UpdateDefaultAppearance();
+            }
         }
     }
 }

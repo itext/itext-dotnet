@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,7 +25,6 @@ using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -64,11 +63,13 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void HeightPercentsAttrTest() {
-            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "heightPercentsAttrTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightEmTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "heightEmTest");
         }
 
         [NUnit.Framework.Test]
@@ -77,10 +78,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void WidthPercentsAttrTest() {
-            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthPercentsAttrTest");
         }
 
@@ -90,10 +88,7 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 2)]
         public virtual void WidthHeightAttrPercentsPxTest() {
-            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrPercentsPxTest");
         }
 
@@ -110,7 +105,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ClassAttributeTestWithCssTest() {
-            // TODO DEVSIX-4563 Processing of attributes from an external CSS is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "classAttrTest");
         }
 
@@ -131,7 +125,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void OpacityAttributeTest() {
-            // TODO DEVSIX-2258 Processing of stroke attribute is not currently correct supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityAttrTest");
         }
 
@@ -166,41 +159,29 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void UseHeightWidthAllUnitsTest() {
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useHeightWidthAllUnitsTest", properties);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            )]
         public virtual void UseSymbolHeightWidthAllUnitsTest() {
-            // TODO DEVSIX-4388 The handling of width and height attributes with percentages is not currently supported
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolHeightWidthAllUnitsTest", properties
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 3)]
         public virtual void UseSymbolXYContrudictionAllUnitsTest() {
-            // TODO DEVSIX-4388 The handling of x and y attributes with percentages is not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolXYContrudictionAllUnitsTest", properties
                 );
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 6)]
         public virtual void UseSymbolCoordinatesContrudictionTest() {
-            // TODO DEVSIX-2654 Percent values are not correctly processed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "useSymbolCoordinatesContrudiction", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthHeightAttrInteractionTest() {
-            // TODO DEVSIX-4566 Processing of width&height attributes in use tag are not currently supported
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "widthHeightAttrInteraction", properties);
         }
     }

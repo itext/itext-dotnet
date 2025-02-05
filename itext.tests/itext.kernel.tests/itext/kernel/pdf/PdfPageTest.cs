@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Geom;
@@ -136,6 +137,31 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsTrue(new CompareTool().CompareArrays(pageDictionary.GetAsArray(PdfName.ArtBox), preExistingArtBoxArr
                 ));
             NUnit.Framework.Assert.IsTrue(pageDictionary.IsModified());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddAnnotationAnnotTagPDF2Test() {
+            byte[] docBytes;
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                using (PdfDocument doc = new PdfDocument(new PdfWriter(outputStream, new WriterProperties().SetPdfVersion(
+                    PdfVersion.PDF_2_0)))) {
+                    doc.SetTagged();
+                    PdfPage page = new PdfPage(doc);
+                    PdfPopupAnnotation annot = new PdfPopupAnnotation(new Rectangle(100, 100, 100, 100));
+                    annot.SetName(new PdfString("this is a pop up"));
+                    page.AddAnnotation(annot);
+                }
+                docBytes = outputStream.ToArray();
+            }
+            using (PdfDocument docReopen = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
+                PdfDictionary structTreeRoot = docReopen.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot
+                    );
+                PdfDictionary structElem = ((PdfDictionary)structTreeRoot.GetAsArray(PdfName.K).Get(0)).GetAsDictionary(PdfName
+                    .K);
+                NUnit.Framework.Assert.AreEqual(PdfName.Annot, structElem.GetAsName(PdfName.S));
+                NUnit.Framework.Assert.AreEqual(new PdfString("this is a pop up"), structElem.GetAsDictionary(PdfName.K).GetAsDictionary
+                    (PdfName.Obj).GetAsString(PdfName.NM));
+            }
         }
 
         /// <summary>Simulates indirect state of object making sure it is not marked as modified.</summary>

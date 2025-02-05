@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -80,6 +80,9 @@ namespace iText.Layout.Renderer {
         private const float ITALIC_ANGLE = 0.21256f;
 
         private const float BOLD_SIMULATION_STROKE_COEFF = 1 / 30f;
+
+        //Line height is recalculated several times during layout and small difference is expected.
+        private const float HEIGHT_EPS = 5.1e-2F;
 
         protected internal float yLineOffset;
 
@@ -466,9 +469,13 @@ namespace iText.Layout.Renderer {
                                         for (int i = hyph.Length() - 1; i >= 0; i--) {
                                             String pre = hyph.GetPreHyphenText(i);
                                             String pos = hyph.GetPostHyphenText(i);
-                                            float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(text.ToUnicodeString(currentTextPos
-                                                , wordBounds[0]) + pre + hyphenationConfig.GetHyphenSymbol()), fontSize.GetValue(), hScale, characterSpacing
-                                                , wordSpacing);
+                                            char hyphen = hyphenationConfig.GetHyphenSymbol();
+                                            String glyphLine = text.ToUnicodeString(currentTextPos, wordBounds[0]) + pre;
+                                            if (font.ContainsGlyph(hyphen)) {
+                                                glyphLine += hyphen;
+                                            }
+                                            float currentHyphenationChoicePreTextWidth = GetGlyphLineWidth(ConvertToGlyphLine(glyphLine), fontSize.GetValue
+                                                (), hScale, characterSpacing, wordSpacing);
                                             if (currentLineWidth + currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition 
                                                 <= layoutBox.GetWidth()) {
                                                 hyphenationApplied = true;
@@ -476,10 +483,12 @@ namespace iText.Layout.Renderer {
                                                     line.SetStart(currentTextPos);
                                                 }
                                                 line.SetEnd(Math.Max(line.GetEnd(), wordBounds[0] + pre.Length));
-                                                GlyphLine lineCopy = line.Copy(line.GetStart(), line.GetEnd());
-                                                lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
-                                                lineCopy.SetEnd(lineCopy.GetEnd() + 1);
-                                                line = lineCopy;
+                                                if (font.ContainsGlyph(hyphen)) {
+                                                    GlyphLine lineCopy = line.Copy(line.GetStart(), line.GetEnd());
+                                                    lineCopy.Add(font.GetGlyph(hyphen));
+                                                    lineCopy.SetEnd(lineCopy.GetEnd() + 1);
+                                                    line = lineCopy;
+                                                }
                                                 // TODO DEVSIX-7010 recalculate line properties in case of word hyphenation.
                                                 // These values are based on whole word. Recalculate properly based on hyphenated part.
                                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
@@ -578,7 +587,7 @@ namespace iText.Layout.Renderer {
             }
             // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
             bool isPlacingForcedWhileNothing = false;
-            if (currentLineHeight > layoutBox.GetHeight()) {
+            if (currentLineHeight > layoutBox.GetHeight() + HEIGHT_EPS) {
                 if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && IsOverflowFit(overflowY)) {
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -592,7 +601,8 @@ namespace iText.Layout.Renderer {
                     isPlacingForcedWhileNothing = true;
                 }
             }
-            yLineOffset = FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender * fontSize.GetValue());
+            yLineOffset = RenderingMode.SVG_MODE == mode ? 0 : FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender
+                 * fontSize.GetValue());
             occupiedArea.GetBBox().MoveDown(currentLineHeight);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight);
             occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth));
@@ -789,7 +799,6 @@ namespace iText.Layout.Renderer {
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
-            float leftBBoxX = GetInnerAreaBBox().GetX();
             if (line.GetEnd() > line.GetStart() || savedWordBreakAtLineEnding != null) {
                 UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
@@ -799,11 +808,6 @@ namespace iText.Layout.Renderer {
                 }
                 TransparentColor fontColor = GetPropertyAsTransparentColor(Property.FONT_COLOR);
                 int? textRenderingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
-                float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
-                float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
-                float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
-                float? horizontalScaling = this.GetProperty<float?>(Property.HORIZONTAL_SCALING);
-                float[] skew = this.GetProperty<float[]>(Property.SKEW);
                 bool italicSimulation = true.Equals(GetPropertyAsBoolean(Property.ITALIC_SIMULATION));
                 bool boldSimulation = true.Equals(GetPropertyAsBoolean(Property.BOLD_SIMULATION));
                 float? strokeWidth = null;
@@ -821,102 +825,43 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 BeginElementOpacityApplying(drawContext);
-                canvas.SaveState().BeginText().SetFontAndSize(font, fontSize.GetValue());
-                if (skew != null && skew.Length == 2) {
-                    canvas.SetTextMatrix(1, skew[0], skew[1], 1, leftBBoxX, GetYLine());
+                canvas.SaveState();
+                // TODO DEVSIX-8808 Refactor this logic to use getPropertyAsTransparentColor(Property.STROKE_COLOR)
+                TransparentColor strokeColor = null;
+                Object color = this.GetProperty<Object>(Property.STROKE_COLOR);
+                if (color is TransparentColor) {
+                    strokeColor = (TransparentColor)color;
                 }
                 else {
-                    if (italicSimulation) {
-                        canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, 1, leftBBoxX, GetYLine());
+                    if (color is Color) {
+                        // Get color for backwards compatibility.
+                        strokeColor = new TransparentColor((Color)color, 1);
                     }
                     else {
-                        canvas.MoveText(leftBBoxX, GetYLine());
-                    }
-                }
-                if (textRenderingMode != PdfCanvasConstants.TextRenderingMode.FILL) {
-                    canvas.SetTextRenderingMode((int)textRenderingMode);
-                }
-                if (textRenderingMode == PdfCanvasConstants.TextRenderingMode.STROKE || textRenderingMode == PdfCanvasConstants.TextRenderingMode
-                    .FILL_STROKE) {
-                    if (strokeWidth == null) {
-                        strokeWidth = this.GetPropertyAsFloat(Property.STROKE_WIDTH);
-                    }
-                    if (strokeWidth != null && strokeWidth != 1f) {
-                        canvas.SetLineWidth((float)strokeWidth);
-                    }
-                    Color strokeColor = GetPropertyAsColor(Property.STROKE_COLOR);
-                    if (strokeColor == null && fontColor != null) {
-                        strokeColor = fontColor.GetColor();
-                    }
-                    if (strokeColor != null) {
-                        canvas.SetStrokeColor(strokeColor);
-                    }
-                }
-                if (fontColor != null) {
-                    canvas.SetFillColor(fontColor.GetColor());
-                    fontColor.ApplyFillTransparency(canvas);
-                }
-                if (textRise != null && textRise != 0) {
-                    canvas.SetTextRise((float)textRise);
-                }
-                if (characterSpacing != null && characterSpacing != 0) {
-                    canvas.SetCharacterSpacing((float)characterSpacing);
-                }
-                if (wordSpacing != null && wordSpacing != 0) {
-                    if (font is PdfType0Font) {
-                        // From the spec: Word spacing is applied to every occurrence of the single-byte character code 32 in
-                        // a string when using a simple font or a composite font that defines code 32 as a single-byte code.
-                        // It does not apply to occurrences of the byte value 32 in multiple-byte codes.
-                        //
-                        // For PdfType0Font we must add word manually with glyph offsets
-                        for (int gInd = line.GetStart(); gInd < line.GetEnd(); gInd++) {
-                            if (iText.IO.Util.TextUtil.IsUni0020(line.Get(gInd))) {
-                                short advance = (short)(FontProgram.ConvertGlyphSpaceToTextSpace((float)wordSpacing) / fontSize.GetValue()
-                                    );
-                                Glyph copy = new Glyph(line.Get(gInd));
-                                copy.SetXAdvance(advance);
-                                line.Set(gInd, copy);
-                            }
+                        if (fontColor != null) {
+                            strokeColor = fontColor;
                         }
                     }
-                    else {
-                        canvas.SetWordSpacing((float)wordSpacing);
-                    }
                 }
-                if (horizontalScaling != null && horizontalScaling != 1) {
-                    canvas.SetHorizontalScaling((float)horizontalScaling * 100);
-                }
-                GlyphLine.IGlyphLineFilter filter = new TextRenderer.CustomGlyphLineFilter();
-                bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
-                if (GetReversedRanges() != null) {
-                    bool writeReversedChars = !appearanceStreamLayout;
-                    List<int> removedIds = new List<int>();
-                    for (int i = line.GetStart(); i < line.GetEnd(); i++) {
-                        if (!filter.Accept(line.Get(i))) {
-                            removedIds.Add(i);
-                        }
-                    }
-                    foreach (int[] range in GetReversedRanges()) {
-                        UpdateRangeBasedOnRemovedCharacters(removedIds, range);
-                    }
-                    line = line.Filter(filter);
-                    if (writeReversedChars) {
-                        canvas.ShowText(line, new TextRenderer.ReversedCharsIterator(reversedRanges, line).SetUseReversed(true));
-                    }
-                    else {
-                        canvas.ShowText(line);
-                    }
+                bool isStrokeTransparent = textRenderingMode == PdfCanvasConstants.TextRenderingMode.FILL_STROKE && strokeColor
+                     != null && strokeColor.GetOpacity() < 1;
+                if (isStrokeTransparent) {
+                    // Most of the viewers display stroke opacity incorrectly, that's why we draw stroked text in 2 steps:
+                    // first only the filled text, and then only the transparent stroke.
+                    DrawText(canvas, fontSize, italicSimulation, PdfCanvasConstants.TextRenderingMode.FILL, strokeWidth, fontColor
+                        , strokeColor);
+                    DrawText(canvas, fontSize, italicSimulation, PdfCanvasConstants.TextRenderingMode.STROKE, strokeWidth, fontColor
+                        , strokeColor);
                 }
                 else {
-                    if (appearanceStreamLayout) {
-                        line.SetActualText(line.GetStart(), line.GetEnd(), null);
-                    }
-                    canvas.ShowText(line.Filter(filter));
+                    DrawText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor);
                 }
-                if (savedWordBreakAtLineEnding != null) {
-                    canvas.ShowText(savedWordBreakAtLineEnding);
+                IBeforeTextRestoreExecutor beforeTextRestoreExecutor = this.GetProperty<IBeforeTextRestoreExecutor>(Property
+                    .BEFORE_TEXT_RESTORE_EXECUTOR);
+                if (beforeTextRestoreExecutor != null) {
+                    beforeTextRestoreExecutor.Execute();
                 }
-                canvas.EndText().RestoreState();
+                canvas.RestoreState();
                 EndElementOpacityApplying(drawContext);
                 if (isTagged) {
                     canvas.CloseTag();
@@ -1448,25 +1393,84 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.TextRenderer[] { splitRenderer, overflowRenderer };
         }
 
-        protected internal virtual void DrawSingleUnderline(Underline underline, TransparentColor fontStrokeColor, 
-            PdfCanvas canvas, float fontSize, float italicAngleTan) {
-            TransparentColor underlineColor = underline.GetColor() != null ? new TransparentColor(underline.GetColor()
-                , underline.GetOpacity()) : fontStrokeColor;
+        protected internal virtual void DrawSingleUnderline(Underline underline, TransparentColor fontColor, PdfCanvas
+             canvas, float fontSize, float italicAngleTan) {
+            TransparentColor underlineFillColor = underline.GetColor() != null ? new TransparentColor(underline.GetColor
+                (), underline.GetOpacity()) : null;
+            TransparentColor underlineStrokeColor = underline.GetStrokeColor();
+            bool doStroke = underlineStrokeColor != null;
+            bool isClippingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE) > PdfCanvasConstants.TextRenderingMode
+                .INVISIBLE;
+            RenderingMode? renderingMode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            // In SVG renderingMode we should always use underline color, it is not related to the font color of the current text,
+            // but to the font color of the text element where text-decoration has been declared. In case of none value
+            // for fill and stroke in SVG renderingMode, underline shouldn't be drawn at all.
+            if (underlineFillColor == null && !doStroke) {
+                if (RenderingMode.SVG_MODE == renderingMode && !isClippingMode) {
+                    return;
+                }
+                underlineFillColor = fontColor;
+            }
+            bool doFill = underlineFillColor != null;
             canvas.SaveState();
-            if (underlineColor != null) {
-                canvas.SetStrokeColor(underlineColor.GetColor());
-                underlineColor.ApplyStrokeTransparency(canvas);
+            if (doFill) {
+                canvas.SetFillColor(underlineFillColor.GetColor());
+                underlineFillColor.ApplyFillTransparency(canvas);
+            }
+            bool isStrokeTransparent = false;
+            if (doStroke) {
+                canvas.SetStrokeColor(underlineStrokeColor.GetColor());
+                underlineStrokeColor.ApplyStrokeTransparency(canvas);
+                isStrokeTransparent = underlineStrokeColor.GetOpacity() < 1;
+                float[] strokeDashArray = underline.GetDashArray();
+                if (strokeDashArray != null) {
+                    canvas.SetLineDash(strokeDashArray, underline.GetDashPhase());
+                }
             }
             canvas.SetLineCapStyle(underline.GetLineCapStyle());
             float underlineThickness = underline.GetThickness(fontSize);
             if (underlineThickness != 0) {
-                canvas.SetLineWidth(underlineThickness);
+                if (doStroke) {
+                    canvas.SetLineWidth(underline.GetStrokeWidth());
+                }
                 float yLine = GetYLine();
                 float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
                 float italicWidthSubstraction = .5f * fontSize * italicAngleTan;
                 Rectangle innerAreaBbox = GetInnerAreaBBox();
-                canvas.MoveTo(innerAreaBbox.GetX(), underlineYPosition).LineTo(innerAreaBbox.GetX() + innerAreaBbox.GetWidth
-                    () - italicWidthSubstraction, underlineYPosition).Stroke();
+                Rectangle underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, 
+                    innerAreaBbox.GetWidth() - italicWidthSubstraction, underlineThickness);
+                canvas.Rectangle(underlineBBox);
+                if (isClippingMode) {
+                    canvas.Clip().EndPath();
+                }
+                else {
+                    if (doFill && doStroke) {
+                        if (isStrokeTransparent) {
+                            // Most of the viewers display stroke opacity incorrectly, that's why we draw stroked underline
+                            // in 2 steps: first only the filled underline, and then only the transparent stroke.
+                            canvas.Fill();
+                            canvas.Rectangle(underlineBBox).Stroke();
+                        }
+                        else {
+                            canvas.FillStroke();
+                        }
+                    }
+                    else {
+                        if (doStroke) {
+                            canvas.Stroke();
+                        }
+                        else {
+                            // In layout/html we should use default color in case underline and fontColor are null
+                            // and still draw underline.
+                            canvas.Fill();
+                        }
+                    }
+                }
+            }
+            IBeforeTextRestoreExecutor beforeTextRestoreExecutor = this.GetProperty<IBeforeTextRestoreExecutor>(Property
+                .BEFORE_TEXT_RESTORE_EXECUTOR);
+            if (beforeTextRestoreExecutor != null) {
+                beforeTextRestoreExecutor.Execute();
             }
             canvas.RestoreState();
         }
@@ -1706,6 +1710,124 @@ namespace iText.Layout.Renderer {
             }
         }
 //\endcond
+
+        private void DrawText(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, int? textRenderingMode, 
+            float? strokeWidth, TransparentColor fontColor, TransparentColor strokeColor) {
+            canvas.BeginText().SetFontAndSize(font, fontSize.GetValue());
+            float leftBBoxX = GetInnerAreaBBox().GetX();
+            float[] skew = this.GetProperty<float[]>(Property.SKEW);
+            float verticalScale = (float)this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
+            if (skew != null && skew.Length == 2) {
+                canvas.SetTextMatrix(1, skew[0], skew[1], verticalScale, leftBBoxX, GetYLine());
+            }
+            else {
+                if (italicSimulation) {
+                    canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, verticalScale, leftBBoxX, GetYLine());
+                }
+                else {
+                    if (Math.Abs(verticalScale - 1) < EPS) {
+                        canvas.MoveText(leftBBoxX, GetYLine());
+                    }
+                    else {
+                        canvas.SetTextMatrix(1, 0, 0, verticalScale, leftBBoxX, GetYLine());
+                    }
+                }
+            }
+            if (textRenderingMode != PdfCanvasConstants.TextRenderingMode.FILL) {
+                canvas.SetTextRenderingMode((int)textRenderingMode);
+            }
+            if (textRenderingMode == PdfCanvasConstants.TextRenderingMode.STROKE || textRenderingMode == PdfCanvasConstants.TextRenderingMode
+                .FILL_STROKE) {
+                IList<float> strokeDashPattern = this.GetProperty<IList<float>>(Property.STROKE_DASH_PATTERN);
+                if (strokeDashPattern != null && !strokeDashPattern.IsEmpty()) {
+                    float[] dashArray = new float[strokeDashPattern.Count - 1];
+                    for (int i = 0; i < strokeDashPattern.Count - 1; ++i) {
+                        dashArray[i] = strokeDashPattern[i];
+                    }
+                    float dashPhase = strokeDashPattern[strokeDashPattern.Count - 1];
+                    canvas.SetLineDash(dashArray, dashPhase);
+                }
+                if (strokeWidth == null) {
+                    strokeWidth = this.GetPropertyAsFloat(Property.STROKE_WIDTH);
+                }
+                if (strokeWidth != null && strokeWidth != 1f) {
+                    canvas.SetLineWidth((float)strokeWidth);
+                }
+                if (strokeColor != null) {
+                    canvas.SetStrokeColor(strokeColor.GetColor());
+                    strokeColor.ApplyStrokeTransparency(canvas);
+                }
+            }
+            if (fontColor != null) {
+                canvas.SetFillColor(fontColor.GetColor());
+                fontColor.ApplyFillTransparency(canvas);
+            }
+            float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
+            if (textRise != null && textRise != 0) {
+                canvas.SetTextRise((float)textRise);
+            }
+            float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
+            if (characterSpacing != null && characterSpacing != 0) {
+                canvas.SetCharacterSpacing((float)characterSpacing);
+            }
+            float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
+            if (wordSpacing != null && wordSpacing != 0) {
+                if (font is PdfType0Font) {
+                    // From the spec: Word spacing is applied to every occurrence of the single-byte character code 32 in
+                    // a string when using a simple font or a composite font that defines code 32 as a single-byte code.
+                    // It does not apply to occurrences of the byte value 32 in multiple-byte codes.
+                    //
+                    // For PdfType0Font we must add word manually with glyph offsets
+                    for (int gInd = line.GetStart(); gInd < line.GetEnd(); gInd++) {
+                        if (iText.IO.Util.TextUtil.IsUni0020(line.Get(gInd))) {
+                            short advance = (short)(FontProgram.ConvertGlyphSpaceToTextSpace((float)wordSpacing) / fontSize.GetValue()
+                                );
+                            Glyph copy = new Glyph(line.Get(gInd));
+                            copy.SetXAdvance(advance);
+                            line.Set(gInd, copy);
+                        }
+                    }
+                }
+                else {
+                    canvas.SetWordSpacing((float)wordSpacing);
+                }
+            }
+            float? horizontalScaling = this.GetProperty<float?>(Property.HORIZONTAL_SCALING);
+            if (horizontalScaling != null && horizontalScaling != 1) {
+                canvas.SetHorizontalScaling((float)horizontalScaling * 100);
+            }
+            GlyphLine.IGlyphLineFilter filter = new TextRenderer.CustomGlyphLineFilter();
+            bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
+            if (GetReversedRanges() != null) {
+                bool writeReversedChars = !appearanceStreamLayout;
+                List<int> removedIds = new List<int>();
+                for (int i = line.GetStart(); i < line.GetEnd(); i++) {
+                    if (!filter.Accept(line.Get(i))) {
+                        removedIds.Add(i);
+                    }
+                }
+                foreach (int[] range in GetReversedRanges()) {
+                    UpdateRangeBasedOnRemovedCharacters(removedIds, range);
+                }
+                line = line.Filter(filter);
+                if (writeReversedChars) {
+                    canvas.ShowText(line, new TextRenderer.ReversedCharsIterator(reversedRanges, line).SetUseReversed(true));
+                }
+                else {
+                    canvas.ShowText(line);
+                }
+            }
+            else {
+                if (appearanceStreamLayout) {
+                    line.SetActualText(line.GetStart(), line.GetEnd(), null);
+                }
+                canvas.ShowText(line.Filter(filter));
+            }
+            if (savedWordBreakAtLineEnding != null) {
+                canvas.ShowText(savedWordBreakAtLineEnding);
+            }
+            canvas.EndText();
+        }
 
         private void DrawAndTagSingleUnderline(bool isTagged, Underline underline, TransparentColor fontStrokeColor
             , PdfCanvas canvas, float fontSize, float italicAngleTan) {

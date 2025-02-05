@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -73,13 +73,11 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void EllipseRxAbsentTest() {
-            //TODO: update cmp_ when DEVSIX-3119
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRxAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseRyAbsentTest() {
-            //TODO: update cmp_ when DEVSIX-3119
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseRyAbsent");
         }
 
@@ -138,11 +136,11 @@ namespace iText.Svg.Renderers.Impl {
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.CY, "339.5");
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.RX, "6");
             ellipseRenderer.SetAttribute(SvgConstants.Attributes.RY, "6");
-            // Parse parameters with better precision (in double type) in the method CssUtils#parseAbsoluteLength
-            ellipseRenderer.SetParameters();
             SvgDrawContext context = new SvgDrawContext(null, null);
             PdfCanvas cv = new PdfCanvas(doc, 1);
             context.PushCanvas(cv);
+            // Parse parameters with better precision (in double type) in the method CssUtils#parseAbsoluteLength
+            ellipseRenderer.SetParameters(context);
             // Calculate coordinates with better precision (in double type) in the method EllipseSvgNodeRenderer#doDraw
             ellipseRenderer.Draw(context);
             String pageContentBytes = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPage(1).GetContentBytes(), 
@@ -155,7 +153,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void EllipseWithBigStrokeWidthTest() {
-            // TODO: DEVSIX-3932 update cmp_ after fix
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipseWithBigStrokeWidth");
         }
     }

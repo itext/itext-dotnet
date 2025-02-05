@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -160,7 +160,7 @@ namespace iText.Pdfua {
                 canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

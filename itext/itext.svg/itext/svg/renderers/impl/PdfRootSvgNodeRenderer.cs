@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,6 +25,9 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Properties;
+using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
@@ -49,18 +52,18 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void SetParent(ISvgNodeRenderer parent) {
         }
 
-        // TODO DEVSIX-2283
+        // Do nothing because it is root
         public virtual ISvgNodeRenderer GetParent() {
-            // TODO DEVSIX-2283
             return null;
         }
 
         public virtual void Draw(SvgDrawContext context) {
             //Set viewport and transformation for pdf-context
-            context.AddViewPort(this.CalculateViewPort(context));
+            context.AddViewPort(CalculateViewPort(context));
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             currentCanvas.ConcatMatrix(this.CalculateTransformation(context));
             currentCanvas.WriteLiteral("% svg root\n");
+            ApplyBackgroundColor(context);
             subTreeRoot.Draw(context);
         }
 
@@ -97,7 +100,7 @@ namespace iText.Svg.Renderers.Impl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual Rectangle CalculateViewPort(SvgDrawContext context) {
+        internal static Rectangle CalculateViewPort(SvgDrawContext context) {
             float portX = 0f;
             float portY = 0f;
             float portWidth = 0f;
@@ -119,6 +122,20 @@ namespace iText.Svg.Renderers.Impl {
             iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer copy = new iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer
                 (subTreeRoot.CreateDeepCopy());
             return copy;
+        }
+
+        private void ApplyBackgroundColor(SvgDrawContext context) {
+            String backgroundColorStr = subTreeRoot.GetAttribute(CommonCssConstants.BACKGROUND_COLOR);
+            if (backgroundColorStr != null && !CommonCssConstants.TRANSPARENT.Equals(backgroundColorStr)) {
+                Rectangle backgroundArea = context.GetCurrentViewPort();
+                //Since we don't have info about margins/paddings/borders, background box can't work correctly, so we don't
+                //count for it when applying background color in svg
+                TransparentColor color = CssDimensionParsingUtils.ParseColor(backgroundColorStr);
+                context.GetCurrentCanvas().SaveState().SetFillColor(color.GetColor());
+                color.ApplyFillTransparency(context.GetCurrentCanvas());
+                context.GetCurrentCanvas().Rectangle((double)backgroundArea.GetX(), (double)backgroundArea.GetY(), (double
+                    )backgroundArea.GetWidth(), (double)backgroundArea.GetHeight()).Fill().RestoreState();
+            }
         }
     }
 }

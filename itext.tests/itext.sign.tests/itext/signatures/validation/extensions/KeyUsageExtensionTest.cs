@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Signatures;
 using iText.Signatures.Testutils;
 using iText.Test;
 
@@ -46,6 +47,14 @@ namespace iText.Signatures.Validation.Extensions {
             IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
             KeyUsageExtension extension = new KeyUsageExtension(8);
             NUnit.Framework.Assert.IsFalse(extension.ExistsInCertificate(certificate));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeyUsageNotSetButConfiguredToReturnFalseTest() {
+            String certName = certsSrc + "keyUsageNotSetCert.pem";
+            IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            KeyUsageExtension extension = new KeyUsageExtension(8, true);
+            NUnit.Framework.Assert.IsTrue(extension.ExistsInCertificate(certificate));
         }
 
         [NUnit.Framework.Test]
@@ -149,6 +158,39 @@ namespace iText.Signatures.Validation.Extensions {
             KeyUsageExtension extension = new KeyUsageExtension(JavaUtil.ArraysAsList(KeyUsage.CRL_SIGN, KeyUsage.DECIPHER_ONLY
                 , KeyUsage.DIGITAL_SIGNATURE));
             NUnit.Framework.Assert.IsFalse(extension.ExistsInCertificate(certificate));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeyUsageTranslationTest() {
+            String certName = certsSrc + "keyUsageDecipherOnlyCert.pem";
+            KeyUsageExtension extension = new KeyUsageExtension(KeyUsage.DECIPHER_ONLY);
+            IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            NUnit.Framework.Assert.AreEqual(CertificateUtil.GetExtensionValue(certificate, extension.GetExtensionOid()
+                ), extension.GetExtensionValue());
+            certName = certsSrc + "keyUsageDigitalSignatureCert.pem";
+            extension = new KeyUsageExtension(KeyUsage.DIGITAL_SIGNATURE);
+            certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            NUnit.Framework.Assert.AreEqual(CertificateUtil.GetExtensionValue(certificate, extension.GetExtensionOid()
+                ), extension.GetExtensionValue());
+            certName = certsSrc + "keyUsageKeyCertSignCert.pem";
+            extension = new KeyUsageExtension(KeyUsage.KEY_CERT_SIGN);
+            certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            NUnit.Framework.Assert.AreEqual(CertificateUtil.GetExtensionValue(certificate, extension.GetExtensionOid()
+                ), extension.GetExtensionValue());
+            certName = certsSrc + "keyUsageSeveralKeys1Cert.pem";
+            //Non-Repudiation, Key Encipherment, Off-line CRL Signing, CRL Signing
+            extension = new KeyUsageExtension(JavaUtil.ArraysAsList(KeyUsage.NON_REPUDIATION, KeyUsage.KEY_ENCIPHERMENT
+                , KeyUsage.CRL_SIGN));
+            certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            NUnit.Framework.Assert.AreEqual(CertificateUtil.GetExtensionValue(certificate, extension.GetExtensionOid()
+                ), extension.GetExtensionValue());
+            certName = certsSrc + "keyUsageSeveralKeys2Cert.pem";
+            //Digital Signature, Key Agreement, Decipher Only
+            extension = new KeyUsageExtension(JavaUtil.ArraysAsList(KeyUsage.DIGITAL_SIGNATURE, KeyUsage.KEY_AGREEMENT
+                , KeyUsage.DECIPHER_ONLY));
+            certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(certName)[0];
+            NUnit.Framework.Assert.AreEqual(CertificateUtil.GetExtensionValue(certificate, extension.GetExtensionOid()
+                ), extension.GetExtensionValue());
         }
     }
 }

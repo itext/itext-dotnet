@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -50,6 +50,8 @@ namespace iText.Kernel.Colors {
         }
 
         // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
+        [iText.Commons.Utils.NoopAnnotation]
+        // java.awt is not compatible with graalvm
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorConstantTest() {
             // RED
@@ -72,6 +74,8 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(1, rgbColorValue[2], 0.0001);
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
+        // java.awt is not compatible with graalvm
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorTest() {
             System.Drawing.Color color = System.Drawing.Color.FromArgb(50, 100, 150);

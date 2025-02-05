@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,9 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Logs;
@@ -36,6 +39,13 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;marker&gt; tag.
     /// </summary>
     public class MarkerSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
+        /// <summary>Attribute defining the marker index on polygon, line or polyline.</summary>
+        /// <remarks>
+        /// Attribute defining the marker index on polygon, line or polyline.
+        /// It is not a property from css standard, used for internal marker processing.
+        /// </remarks>
+        public const String MARKER_INDEX = "marker-index";
+
         // Default marker width in point units (3 px)
         private const float DEFAULT_MARKER_WIDTH = 2.25f;
 
@@ -57,6 +67,10 @@ namespace iText.Svg.Renderers.Impl {
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             return null;
+        }
+
+        protected internal override bool IsHidden() {
+            return CommonCssConstants.HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -98,9 +112,39 @@ namespace iText.Svg.Renderers.Impl {
                 namedObject.SetAttribute(SvgConstants.Tags.MARKER, markerToUse.ToString());
                 namedObject.SetAttribute(SvgConstants.Attributes.X, moveX);
                 namedObject.SetAttribute(SvgConstants.Attributes.Y, moveY);
+                context.GetCurrentCanvas().SaveState();
                 namedObject.Draw(context);
+                context.GetCurrentCanvas().RestoreState();
                 // unsetting the parent of the referenced element
                 namedObject.SetParent(null);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static void DrawMarkers(SvgDrawContext context, int startIndex, IList<Point> markerPoints, MarkerVertexType
+             markerToUse, AbstractSvgNodeRenderer parent) {
+            String elementToReUse = SvgTextUtil.FilterReferenceValue(parent.attributesAndStyles.Get(markerToUse.ToString
+                ()));
+            ISvgNodeRenderer template = context.GetNamedObject(elementToReUse);
+            if (!(template is MarkerSvgNodeRenderer && 
+                        // Having markerWidth or markerHeight with negative or zero value disables rendering of the element .
+                        MarkerWidthHeightAreCorrect((MarkerSvgNodeRenderer)template))) {
+                return;
+            }
+            for (int i = 0; i < markerPoints.Count; ++i) {
+                ISvgNodeRenderer marker = template.CreateDeepCopy();
+                // setting the parent of the referenced element to this instance
+                marker.SetParent(parent);
+                marker.SetAttribute(SvgConstants.Tags.MARKER, markerToUse.ToString());
+                marker.SetAttribute(SvgConstants.Attributes.X, Convert.ToString(markerPoints[i].GetX(), System.Globalization.CultureInfo.InvariantCulture
+                    ));
+                marker.SetAttribute(SvgConstants.Attributes.Y, Convert.ToString(markerPoints[i].GetY(), System.Globalization.CultureInfo.InvariantCulture
+                    ));
+                marker.SetAttribute(MarkerSvgNodeRenderer.MARKER_INDEX, JavaUtil.IntegerToString(startIndex + i));
+                context.GetCurrentCanvas().SaveState();
+                marker.Draw(context);
+                context.GetCurrentCanvas().RestoreState();
             }
         }
 //\endcond
@@ -231,18 +275,12 @@ namespace iText.Svg.Renderers.Impl {
                 String parentValue = this.GetParent().GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
                 if (parentValue != null) {
                     // If stroke width is a percentage value is always computed as a percentage of the normalized viewBox diagonal length.
-                    // TODO DEVSIX-3432 - the code below looks wrong. Issues:
-                    // 1. Why root view port but not current?
-                    // 2. Why do we convert to Pts. Viewport is already in points.
-                    // 3. Diagonal length should be divided by sqrt(2) to be passed to parseAbsoluteLength and used as
-                    // percentBaseValue.
-                    // 4. Conversion to pixels at the end is in question either.
                     double rootViewPortHeight = context.GetRootViewPort().GetHeight();
                     double rootViewPortWidth = context.GetRootViewPort().GetWidth();
                     double viewBoxDiagonalLength = CssUtils.ConvertPxToPts(Math.Sqrt(rootViewPortHeight * rootViewPortHeight +
                          rootViewPortWidth * rootViewPortWidth));
-                    float strokeWidthScale = CssUtils.ConvertPtsToPx(ParseAbsoluteLength(parentValue, (float)viewBoxDiagonalLength
-                        , 1f, context));
+                    float strokeWidthScale = CssUtils.ConvertPtsToPx(SvgCssUtils.ParseAbsoluteLength(this, parentValue, (float
+                        )viewBoxDiagonalLength, 1f, context));
                     context.GetCurrentCanvas().ConcatMatrix(AffineTransform.GetScaleInstance(strokeWidthScale, strokeWidthScale
                         ));
                 }
@@ -252,15 +290,15 @@ namespace iText.Svg.Renderers.Impl {
         private void ApplyCoordinatesTranslation(SvgDrawContext context) {
             float xScale = 1;
             float yScale = 1;
-            float[] viewBox = GetViewBoxValues();
-            if (viewBox.Length == VIEWBOX_VALUES_NUMBER) {
+            float[] viewBox = SvgCssUtils.ParseViewBox(this);
+            if (viewBox != null && viewBox.Length == SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
                 xScale = context.GetCurrentViewPort().GetWidth() / viewBox[2];
                 yScale = context.GetCurrentViewPort().GetHeight() / viewBox[3];
             }
             float moveX = DEFAULT_REF_X;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFX)) {
                 String refX = this.attributesAndStyles.Get(SvgConstants.Attributes.REFX);
-                moveX = ParseAbsoluteLength(refX, context.GetRootViewPort().GetWidth(), moveX, context);
+                moveX = SvgCssUtils.ParseAbsoluteLength(this, refX, context.GetRootViewPort().GetWidth(), moveX, context);
                 //Apply scale
                 moveX *= -1 * xScale;
             }
@@ -268,7 +306,7 @@ namespace iText.Svg.Renderers.Impl {
                 if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFX.ToLowerInvariant())) {
                     // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
                     String refX = this.attributesAndStyles.Get(SvgConstants.Attributes.REFX.ToLowerInvariant());
-                    moveX = ParseAbsoluteLength(refX, context.GetRootViewPort().GetWidth(), moveX, context);
+                    moveX = SvgCssUtils.ParseAbsoluteLength(this, refX, context.GetRootViewPort().GetWidth(), moveX, context);
                     //Apply scale
                     moveX *= -1 * xScale;
                 }
@@ -276,14 +314,14 @@ namespace iText.Svg.Renderers.Impl {
             float moveY = DEFAULT_REF_Y;
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFY)) {
                 String refY = this.attributesAndStyles.Get(SvgConstants.Attributes.REFY);
-                moveY = ParseAbsoluteLength(refY, context.GetRootViewPort().GetHeight(), moveY, context);
+                moveY = SvgCssUtils.ParseAbsoluteLength(this, refY, context.GetRootViewPort().GetHeight(), moveY, context);
                 moveY *= -1 * yScale;
             }
             else {
                 if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFY.ToLowerInvariant())) {
                     // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
                     String refY = this.attributesAndStyles.Get(SvgConstants.Attributes.REFY.ToLowerInvariant());
-                    moveY = ParseAbsoluteLength(refY, context.GetRootViewPort().GetHeight(), moveY, context);
+                    moveY = SvgCssUtils.ParseAbsoluteLength(this, refY, context.GetRootViewPort().GetHeight(), moveY, context);
                     moveY *= -1 * yScale;
                 }
             }
@@ -294,8 +332,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private float[] GetViewBoxValues(float defaultWidth, float defaultHeight) {
-            float[] values = base.GetViewBoxValues();
-            if (values.Length < VIEWBOX_VALUES_NUMBER) {
+            float[] values = SvgCssUtils.ParseViewBox(this);
+            if (values == null || values.Length < SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
                 //If viewBox is not specified or incorrect, it's width and height are the same as passed defaults
                 return new float[] { 0, 0, defaultWidth, defaultHeight };
             }

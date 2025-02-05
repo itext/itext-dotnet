@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -108,6 +108,12 @@ namespace iText.Forms.Fields {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateComboBoxWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateComboBox());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithConformanceLevelTest() {
             PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateComboBox();
@@ -145,6 +151,12 @@ namespace iText.Forms.Fields {
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
             CompareChoices(expectedDictionary, choiceFormField, false);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateListWithIncorrectNameTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateList());
         }
 
         [NUnit.Framework.Test]

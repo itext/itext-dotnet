@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -73,7 +73,6 @@ namespace iText.Svg.Processors.Impl.Font {
 
         [NUnit.Framework.Test]
         public virtual void DiffUnitsOfMeasure() {
-            // TODO DEVSIX-2884 rem in font-size doesn't support correctly
             String name = "diff_units_of_measure";
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, name);
         }

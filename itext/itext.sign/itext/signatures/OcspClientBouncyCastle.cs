@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -34,7 +34,7 @@ using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>OcspClient implementation using BouncyCastle.</summary>
-    public class OcspClientBouncyCastle : IOcspClient {
+    public class OcspClientBouncyCastle : IOcspClientBouncyCastle {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
@@ -51,24 +51,7 @@ namespace iText.Signatures {
         }
 
         // Empty constructor in order for default one to not be removed if another one is added.
-        /// <summary>Gets OCSP response.</summary>
-        /// <remarks>
-        /// Gets OCSP response.
-        /// <para />
-        /// If required,
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
-        /// can be checked using
-        /// <see cref="iText.Signatures.Validation.OCSPValidator"/>
-        /// class.
-        /// </remarks>
-        /// <param name="checkCert">the certificate to check</param>
-        /// <param name="rootCert">parent certificate</param>
-        /// <param name="url">to get the verification</param>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse"/>
-        /// an OCSP response wrapper
-        /// </returns>
+        /// <summary><inheritDoc/></summary>
         public virtual IBasicOcspResponse GetBasicOCSPResp(IX509Certificate checkCert, IX509Certificate rootCert, 
             String url) {
             try {

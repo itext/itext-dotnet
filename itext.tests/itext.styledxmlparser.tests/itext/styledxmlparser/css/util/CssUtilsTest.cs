@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -99,7 +99,7 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NormalizeProperty() {
+        public virtual void NormalizePropertyTest() {
             NUnit.Framework.Assert.AreEqual("part1 part2", CssUtils.NormalizeCssProperty("   part1   part2  "));
             NUnit.Framework.Assert.AreEqual("\" the next quote is ESCAPED \\\\\\\" still  IN string \"", CssUtils.NormalizeCssProperty
                 ("\" the next quote is ESCAPED \\\\\\\" still  IN string \""));
@@ -117,6 +117,9 @@ namespace iText.StyledXmlParser.Css.Util {
                 ));
         }
 
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+            )]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_EMPTY_IN_CSS_EXPRESSION)]
         [NUnit.Framework.Test]
         public virtual void NormalizeUrlTest() {
             NUnit.Framework.Assert.AreEqual("url(data:application/font-woff;base64,2CBPCRXmgywtV1t4oWwjBju0kqkvfhPs0cYdMgFtDSY5uL7MIGT5wiGs078HrvBHekp0Yf=)"
@@ -128,6 +131,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 ));
             NUnit.Framework.Assert.AreEqual("url(haveEscapedEndBracket\\))", CssUtils.NormalizeCssProperty("url(  haveEscapedEndBracket\\) )"
                 ));
+            NUnit.Framework.Assert.AreEqual("url(", CssUtils.NormalizeCssProperty("url(https://example.com/"));
+            NUnit.Framework.Assert.AreEqual("url(", CssUtils.NormalizeCssProperty("url("));
         }
 
         [NUnit.Framework.Test]
@@ -183,7 +188,7 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitStringWithComma(null));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value2", "value3"), CssUtils.SplitStringWithComma
                 ("value1,value2,value3"));
-            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", " value2", " value3"), CssUtils.SplitStringWithComma
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "value2", "value3"), CssUtils.SplitStringWithComma
                 ("value1, value2, value3"));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value,with,comma)", "value3"), CssUtils.
                 SplitStringWithComma("value1,(value,with,comma),value3"));
@@ -202,12 +207,12 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(new List<String>(), CssUtils.SplitString(null, ','));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value,with,comma)", "value3"), CssUtils.
                 SplitString("value1,(value,with,comma),value3", ',', new EscapeGroup('(', ')')));
-            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1 ", " (val(ue,with,comma),value3"), CssUtils.
-                SplitString("value1 , (val(ue,with,comma),value3", ',', new EscapeGroup('(', ')')));
-            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", " (some", " text in", " brackets)", " \"some, text, in quotes,\""
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(val(ue,with,comma),value3"), CssUtils.SplitString
+                ("value1 , (val(ue,with,comma),value3", ',', new EscapeGroup('(', ')')));
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", "(some", "text in", "brackets)", "\"some, text, in quotes,\""
                 ), CssUtils.SplitString("some text, (some, text in, brackets), \"some, text, in quotes,\"", ',', new EscapeGroup
                 ('\"')));
-            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", " (some. text in. brackets)", " \"some. text. in quotes.\""
+            NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("some text", "(some. text in. brackets)", "\"some. text. in quotes.\""
                 ), CssUtils.SplitString("some text. (some. text in. brackets). \"some. text. in quotes.\"", '.', new EscapeGroup
                 ('\"'), new EscapeGroup('(', ')')));
             NUnit.Framework.Assert.AreEqual(JavaUtil.ArraysAsList("value1", "(value", "with", "comma)", "value3"), CssUtils
@@ -370,6 +375,33 @@ namespace iText.StyledXmlParser.Css.Util {
             String strToParse = "attr(str mem lol)";
             String result = CssUtils.ExtractAttributeValue(strToParse, iNode);
             NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractUrlTest() {
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("url(\"file.png\")"));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("url(file.png)"));
+            NUnit.Framework.Assert.AreEqual("\"file.png", CssUtils.ExtractUrl("url(\"file.png)"));
+            NUnit.Framework.Assert.AreEqual("file.png\"", CssUtils.ExtractUrl("url(file.png\")"));
+            // invalid
+            NUnit.Framework.Assert.AreEqual("url\"file.png\"", CssUtils.ExtractUrl("url\"file.png\""));
+            NUnit.Framework.Assert.AreEqual("urlfile.png", CssUtils.ExtractUrl("urlfile.png"));
+            NUnit.Framework.Assert.AreEqual("rl(\"file.png\")", CssUtils.ExtractUrl("rl(\"file.png\")"));
+            // trimming
+            NUnit.Framework.Assert.AreEqual(" url(\"file.png\") ", CssUtils.ExtractUrl(" url(\"file.png\") "));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("url(\"file.png\")  "));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("url(\" file.png \")"));
+            // just string
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("file.png"));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("\"file.png\""));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("\" file.png  \""));
+            NUnit.Framework.Assert.AreEqual(" \"file.png\"", CssUtils.ExtractUrl(" \"file.png\""));
+            NUnit.Framework.Assert.AreEqual("\"file.png\" ", CssUtils.ExtractUrl("\"file.png\" "));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("'file.png'"));
+            NUnit.Framework.Assert.AreEqual("file.png", CssUtils.ExtractUrl("' file.png '"));
+            // src which can be according to the spec
+            NUnit.Framework.Assert.AreEqual("scr(file.png)", CssUtils.ExtractUrl("scr(file.png)"));
+            NUnit.Framework.Assert.AreEqual("scr(\"file.png\")", CssUtils.ExtractUrl("scr(\"file.png\")"));
         }
     }
 }

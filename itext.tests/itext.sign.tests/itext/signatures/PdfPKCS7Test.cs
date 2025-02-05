@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -82,6 +82,16 @@ namespace iText.Signatures {
             // Throws different exceptions on .net and java, bc/bcfips
             NUnit.Framework.Assert.Catch(typeof(Exception), () => new PdfPKCS7(pk, chain, hashAlgorithm, new BouncyCastleDigest
                 (), false));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifySignatureIntegrityAndAuthenticityBerEncodedTimestampTest() {
+            using (PdfDocument outDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timeStampSignatureBerEncoded.pdf"
+                ))) {
+                SignatureUtil sigUtil = new SignatureUtil(outDocument);
+                PdfPKCS7 pkcs7 = sigUtil.ReadSignatureData("timestampSig1");
+                NUnit.Framework.Assert.IsTrue(pkcs7.VerifySignatureIntegrityAndAuthenticity());
+            }
         }
 
         [NUnit.Framework.Test]

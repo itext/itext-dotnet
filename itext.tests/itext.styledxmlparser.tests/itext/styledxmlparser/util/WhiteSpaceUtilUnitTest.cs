@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -71,6 +71,46 @@ namespace iText.StyledXmlParser.Util {
             String toCollapse = "\t  A B  \t";
             String actual = WhiteSpaceUtil.CollapseConsecutiveSpaces(toCollapse);
             String expected = " A B ";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepLineBreaksCollapseSpacesTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = true;
+            bool collapseSpaces = true;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = " A B \n A B ";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepLineBreaksKeepSpacesTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = true;
+            bool collapseSpaces = false;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = "\u200d\t  A B  \n\u200d  A   B   \t";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLineBreaksKeepSpacesTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = false;
+            bool collapseSpaces = true;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = " A B A B ";
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveLineBreaksCollapseSpacesInvalidTest() {
+            String toProcess = "\t  A B  \n  A   B   \t";
+            bool keepLineBreaks = false;
+            bool collapseSpaces = false;
+            String actual = WhiteSpaceUtil.ProcessWhitespaces(toProcess, keepLineBreaks, collapseSpaces);
+            String expected = "\u200d\t  A B  \n\u200d  A   B   \t";
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }

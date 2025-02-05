@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -56,7 +56,7 @@ namespace iText.StyledXmlParser.Css.Font {
             String fontFamily = null;
             String srcs = null;
             foreach (CssDeclaration descriptor in properties) {
-                if ("font-family".Equals(descriptor.GetProperty())) {
+                if (CommonCssConstants.FONT_FAMILY.Equals(descriptor.GetProperty())) {
                     // TODO DEVSIX-2534
                     fontFamily = FontFamilySplitterUtil.RemoveQuotes(descriptor.GetExpression());
                 }

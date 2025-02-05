@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -276,6 +276,7 @@ namespace iText.IO.Util {
         /// <paramref name="len"/>
         /// bytes from an input stream.
         /// </summary>
+        /// <param name="input">the stream to read</param>
         /// <param name="b">the buffer into which the data is read.</param>
         /// <param name="off">an int specifying the offset into the data.</param>
         /// <param name="len">an int specifying the number of bytes to read.</param>

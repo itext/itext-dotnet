@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -961,6 +961,11 @@ namespace iText.Bouncycastlefips {
             content.Write(bOut);
             return new TstInfoBCFips(TstInfo.GetInstance(Asn1Object.FromByteArray(bOut.ToArray())));
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual ITstInfo CreateTSTInfo(IAsn1Object contentInfo) {
+            return new TstInfoBCFips(TstInfo.GetInstance(((Asn1ObjectBCFips) contentInfo).GetPrimitive()));
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual ISingleResponse CreateSingleResp(IBasicOcspResponse basicResp) {
@@ -1052,7 +1057,7 @@ namespace iText.Bouncycastlefips {
 
         /// <summary><inheritDoc/></summary>
         public ICertID CreateCertificateID(string hashAlgorithm, IX509Certificate issuerCert, IBigInteger serialNumber) {
-            return new CertIDBCFips(hashAlgorithm, issuerCert, serialNumber);
+            return new CertIDBCFips(new AlgorithmIdentifier(new DerObjectIdentifier(hashAlgorithm), DerNull.Instance), issuerCert, serialNumber);
         }
 
         /// <summary><inheritDoc/></summary>

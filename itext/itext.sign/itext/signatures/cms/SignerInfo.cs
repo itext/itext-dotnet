@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -402,8 +402,10 @@ namespace iText.Signatures.Cms {
             signerInfoV.Add(BC_FACTORY.CreateASN1Integer(GetCmsVersion()));
             // sid
             IAsn1EncodableVector issuerAndSerialNumberV = BC_FACTORY.CreateASN1EncodableVector();
-            issuerAndSerialNumberV.Add(CertificateInfo.GetIssuer(signerCertificate.GetTbsCertificate()));
-            issuerAndSerialNumberV.Add(BC_FACTORY.CreateASN1Integer(signerCertificate.GetSerialNumber()));
+            if (signerCertificate != null) {
+                issuerAndSerialNumberV.Add(CertificateInfo.GetIssuer(signerCertificate.GetTbsCertificate()));
+                issuerAndSerialNumberV.Add(BC_FACTORY.CreateASN1Integer(signerCertificate.GetSerialNumber()));
+            }
             signerInfoV.Add(BC_FACTORY.CreateDERSequence(issuerAndSerialNumberV));
             // digest algorithm
             IAsn1EncodableVector digestalgorithmV = BC_FACTORY.CreateASN1EncodableVector();

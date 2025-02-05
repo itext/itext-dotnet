@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using iText.Kernel.Colors;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
+using iText.StyledXmlParser.Css;
 using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
@@ -41,6 +42,8 @@ namespace iText.Svg.Renderers.Impl {
             if (objectBoundingBox == null) {
                 return null;
             }
+            //create color is an entry point method for linear gradient when drawing svg, so resolving href values here
+            TemplateResolveUtils.Resolve(this, context);
             LinearGradientBuilder builder = new LinearGradientBuilder();
             foreach (GradientColorStop stopColor in ParseStops(parentOpacity)) {
                 builder.AddColorStop(stopColor);
@@ -67,6 +70,10 @@ namespace iText.Svg.Renderers.Impl {
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
             return null;
+        }
+
+        protected internal override bool IsHidden() {
+            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY));
         }
 
         // TODO: DEVSIX-4136 opacity is not supported now.
@@ -129,12 +136,12 @@ namespace iText.Svg.Renderers.Impl {
                     .Y2), 0) * CONVERT_COEFF);
             }
             else {
-                Rectangle currentViewPort = context.GetCurrentViewPort();
+                Rectangle currentViewPort = this.GetCurrentViewBox(context);
                 double x = currentViewPort.GetX();
                 double y = currentViewPort.GetY();
                 double width = currentViewPort.GetWidth();
                 double height = currentViewPort.GetHeight();
-                float em = GetCurrentFontSize();
+                float em = GetCurrentFontSize(context);
                 float rem = context.GetCssContext().GetRootFontSize();
                 start = new Point(SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes.X1
                     ), x, x, width, em, rem), SvgCoordinateUtils.GetCoordinateForUserSpaceOnUse(GetAttribute(SvgConstants.Attributes

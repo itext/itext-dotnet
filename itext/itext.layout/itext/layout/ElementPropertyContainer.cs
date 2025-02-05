@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -637,8 +637,20 @@ namespace iText.Layout {
         /// The stroke color is the color of the outlines or edges of a shape.
         /// </remarks>
         /// <returns>the current stroke color</returns>
+        [System.ObsoleteAttribute(@"in favour of ElementPropertyContainer{T}.GetTransparentStrokeColor() which should be renamed to getStrokeColor after this method will be removed"
+            )]
         public virtual Color GetStrokeColor() {
-            return this.GetProperty<Color>(Property.STROKE_COLOR);
+            return this.GetProperty<TransparentColor>(Property.STROKE_COLOR).GetColor();
+        }
+
+        /// <summary>Gets the stroke color for the current element.</summary>
+        /// <remarks>
+        /// Gets the stroke color for the current element.
+        /// The stroke color is the color of the outlines or edges of a shape.
+        /// </remarks>
+        /// <returns>the current stroke color</returns>
+        public virtual TransparentColor GetTransparentStrokeColor() {
+            return this.GetProperty<TransparentColor>(Property.STROKE_COLOR);
         }
 
         /// <summary>Sets the stroke color for the current element.</summary>
@@ -647,9 +659,73 @@ namespace iText.Layout {
         /// The stroke color is the color of the outlines or edges of a shape.
         /// </remarks>
         /// <param name="strokeColor">a new stroke color</param>
-        /// <returns>this Element.</returns>
+        /// <returns>this element</returns>
         public virtual T SetStrokeColor(Color strokeColor) {
-            SetProperty(Property.STROKE_COLOR, strokeColor);
+            return SetStrokeColor(strokeColor, 1f);
+        }
+
+        /// <summary>Sets the stroke color for the current element.</summary>
+        /// <remarks>
+        /// Sets the stroke color for the current element.
+        /// The stroke color is the color of the outlines or edges of a shape.
+        /// </remarks>
+        /// <param name="strokeColor">
+        /// a
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// for the stroke
+        /// </param>
+        /// <param name="opacity">
+        /// an opacity for the stroke color; a float between 0 and 1, where 1 stands for fully opaque color
+        /// and 0 - for fully transparent
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetStrokeColor(Color strokeColor, float opacity) {
+            SetProperty(Property.STROKE_COLOR, strokeColor != null ? new TransparentColor(strokeColor, opacity) : null
+                );
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the stroke color for the current element.</summary>
+        /// <remarks>
+        /// Sets the stroke color for the current element.
+        /// The stroke color is the color of the outlines or edges of a shape.
+        /// </remarks>
+        /// <param name="transparentColor">a new stroke color with transparency</param>
+        /// <returns>this element</returns>
+        public virtual T SetStrokeColor(TransparentColor transparentColor) {
+            SetProperty(Property.STROKE_COLOR, transparentColor);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the stroke dash pattern for the current text.</summary>
+        /// <remarks>
+        /// Sets the stroke dash pattern for the current text. Dash pattern is an array of the form [ dashArray dashPhase ],
+        /// where
+        /// <paramref name="dashArray"/>
+        /// is a float array that specifies the length of the alternating dashes and gaps,
+        /// <paramref name="dashPhase"/>
+        /// is a float that specifies the distance into the dash pattern to start the dash.
+        /// </remarks>
+        /// <param name="dashArray">
+        /// float array that specifies the length of the alternating dashes and gaps,
+        /// use
+        /// <see langword="null"/>
+        /// for solid line
+        /// </param>
+        /// <param name="dashPhase">
+        /// float that specifies the distance into the dash pattern to start the dash,
+        /// use 0 in case offset isn't needed
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetDashPattern(float[] dashArray, float dashPhase) {
+            IList<float> dashPattern = new List<float>();
+            if (dashArray != null) {
+                foreach (float fl in dashArray) {
+                    dashPattern.Add(fl);
+                }
+            }
+            dashPattern.Add(dashPhase);
+            SetProperty(Property.STROKE_DASH_PATTERN, dashPattern);
             return (T)(Object)this;
         }
 
@@ -763,9 +839,9 @@ namespace iText.Layout {
             return SetUnderline(color, 1f, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle);
         }
 
-        /// <summary>Sets an horizontal line that can be an underline or a strikethrough.</summary>
+        /// <summary>Sets horizontal line that can be an underline or a strikethrough.</summary>
         /// <remarks>
-        /// Sets an horizontal line that can be an underline or a strikethrough.
+        /// Sets horizontal line that can be an underline or a strikethrough.
         /// Actually, the line can be anywhere vertically due to position parameter.
         /// Multiple call to this method will produce multiple lines.
         /// <para />
@@ -778,8 +854,10 @@ namespace iText.Layout {
         /// the color of the line or <c>null</c> to follow the
         /// text color
         /// </param>
-        /// <param name="opacity">the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
-        ///     </param>
+        /// <param name="opacity">
+        /// the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and
+        /// 0 - for fully transparent
+        /// </param>
         /// <param name="thickness">the absolute thickness of the line</param>
         /// <param name="thicknessMul">the thickness multiplication factor with the font size</param>
         /// <param name="yPosition">the absolute y position relative to the baseline</param>
@@ -791,21 +869,36 @@ namespace iText.Layout {
         /// <returns>this element</returns>
         public virtual T SetUnderline(Color color, float opacity, float thickness, float thicknessMul, float yPosition
             , float yPositionMul, int lineCapStyle) {
-            Underline newUnderline = new Underline(color, opacity, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
-                );
+            return SetUnderline(new Underline(color, opacity, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
+                ));
+        }
+
+        /// <summary>Sets horizontal line that can be an underline, overline or a strikethrough.</summary>
+        /// <remarks>
+        /// Sets horizontal line that can be an underline, overline or a strikethrough.
+        /// Actually, the line can be anywhere vertically due to position parameter.
+        /// Multiple call to this method will produce multiple lines.
+        /// </remarks>
+        /// <param name="underline">
+        /// 
+        /// <see cref="iText.Layout.Properties.Underline"/>
+        /// to set
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetUnderline(Underline underline) {
             Object currentProperty = this.GetProperty<Object>(Property.UNDERLINE);
             if (currentProperty is IList) {
-                ((IList)currentProperty).Add(newUnderline);
+                ((IList)currentProperty).Add(underline);
             }
             else {
                 if (currentProperty is Underline) {
                     IList<Underline> mergedUnderlines = new List<Underline>();
                     mergedUnderlines.Add((Underline)currentProperty);
-                    mergedUnderlines.Add(newUnderline);
+                    mergedUnderlines.Add(underline);
                     SetProperty(Property.UNDERLINE, mergedUnderlines);
                 }
                 else {
-                    SetProperty(Property.UNDERLINE, newUnderline);
+                    SetProperty(Property.UNDERLINE, underline);
                 }
             }
             return (T)(Object)this;

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -236,8 +236,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed
@@ -303,8 +305,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed
@@ -376,8 +380,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed
@@ -440,8 +446,10 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.STANDARD_ENCRYPTION_128"/>
         /// ,
         /// <see cref="EncryptionConstants.ENCRYPTION_AES_128"/>
+        /// ,
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>
         /// or
-        /// <see cref="EncryptionConstants.ENCRYPTION_AES_256"/>.
+        /// <see cref="EncryptionConstants.ENCRYPTION_AES_GCM"/>.
         /// Optionally
         /// <see cref="EncryptionConstants.DO_NOT_ENCRYPT_METADATA"/>
         /// can be ORed

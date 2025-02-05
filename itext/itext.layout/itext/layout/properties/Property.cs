@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -62,6 +62,8 @@ namespace iText.Layout.Properties {
         public const int BACKGROUND_IMAGE = 90;
 
         public const int BASE_DIRECTION = 7;
+
+        public const int BEFORE_TEXT_RESTORE_EXECUTOR = 157;
 
         public const int BOLD_SIMULATION = 8;
 
@@ -330,6 +332,19 @@ namespace iText.Layout.Properties {
 
         public const int STROKE_COLOR = 63;
 
+        /// <summary>
+        /// STROKE_DASH_PATTERN property specifies dash pattern for the text stroke and stores the
+        /// <see cref="System.Collections.IList{E}"/>
+        /// as float array of the form [ dashArray dashPhase ], where
+        /// <c>dashArray</c>
+        /// is a float array that specifies
+        /// the length of the alternating dashes and gaps,
+        /// <c>dashPhase</c>
+        /// is a float that specifies the distance into
+        /// the dash pattern to start the dash.
+        /// </summary>
+        public const int STROKE_DASH_PATTERN = 156;
+
         public const int STROKE_WIDTH = 64;
 
         public const int SKEW = 65;
@@ -349,6 +364,8 @@ namespace iText.Layout.Properties {
         public const int TAGGING_HINT_KEY = 109;
 
         public const int TEXT_ALIGNMENT = 70;
+
+        public const int TEXT_ANCHOR = 155;
 
         /// <summary>
         /// Use values from
@@ -402,12 +419,13 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 154;
+        private const int MAX_INHERITED_PROPERTY_ID = 157;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.BEFORE_TEXT_RESTORE_EXECUTOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CAPTION_SIDE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
@@ -432,8 +450,10 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_DASH_PATTERN] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_WIDTH] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ALIGNMENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ANCHOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RENDERING_MODE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RISE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;

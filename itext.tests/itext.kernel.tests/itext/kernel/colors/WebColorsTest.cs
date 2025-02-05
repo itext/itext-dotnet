@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -170,6 +170,12 @@ namespace iText.Kernel.Colors {
         [NUnit.Framework.Test]
         public virtual void GetRGBAColorWithExceptionDuringParsing() {
             float[] resultCmyk = WebColors.GetRGBAColor(null);
+            NUnit.Framework.Assert.IsNull(resultCmyk);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetRGBAColorWithExceptionDuringParsingAlpha() {
+            float[] resultCmyk = WebColors.GetRGBAColor("rgba(44, 100, 0, 0,75)");
             NUnit.Framework.Assert.IsNull(resultCmyk);
         }
 

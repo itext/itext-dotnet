@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -663,6 +663,7 @@ namespace iText.Layout.Renderer {
             }
             if (anythingPlaced || floatsPlacedInLine) {
                 toProcess.AdjustChildrenYLine().TrimLast();
+                toProcess.AdjustChildrenXLine();
                 result.SetMinMaxWidth(minMaxWidth);
             }
             if (wasXOverflowChanged) {
@@ -729,7 +730,7 @@ namespace iText.Layout.Renderer {
             int baseCharsCount = BaseCharactersCount();
             float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
             //Prevent a NaN when trying to justify a single word with spacing_ratio == 1.0
-            if (float.IsInfinity(baseFactor)) {
+            if (float.IsInfinity(baseFactor) || float.IsNaN(baseFactor)) {
                 baseFactor = 0;
             }
             float wordSpacing = ratio * baseFactor;
@@ -1625,6 +1626,67 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        private void AdjustChildrenXLine() {
+            RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
+            if (RenderingMode.SVG_MODE != mode) {
+                return;
+            }
+            // LineRenderer first child contains initial x of the occupied area, in order to identify originX we need to
+            // also add relative x position of the first text chunk in the svg which is ParagraphRenderer first child.
+            float originX = (float)GetChildRenderers()[0].GetOccupiedArea().GetBBox().GetLeft() + (float)((TextRenderer
+                )GetParent().GetChildRenderers()[0]).GetPropertyAsFloat(Property.LEFT, 0f);
+            float[] minMaxX = GetMinMaxX();
+            float leftmostX = minMaxX[0];
+            float xShift = originX - leftmostX;
+            float textAnchorCorrection = ApplyTextAnchor(minMaxX[1] - minMaxX[0]);
+            xShift += textAnchorCorrection;
+            foreach (IRenderer renderer in GetChildRenderers()) {
+                if (renderer is TextRenderer) {
+                    renderer.Move(xShift, 0);
+                }
+            }
+        }
+
+        private float[] GetMinMaxX() {
+            float leftmostX = float.MaxValue;
+            float rightmostX = float.Epsilon;
+            for (int i = 0; i < GetChildRenderers().Count; i++) {
+                IRenderer renderer = GetChildRenderers()[i];
+                if (renderer is TextRenderer) {
+                    TextRenderer textRenderer = (TextRenderer)renderer;
+                    float x = textRenderer.GetOccupiedArea().GetBBox().GetX();
+                    if (textRenderer.IsRelativePosition()) {
+                        x += (float)textRenderer.GetPropertyAsFloat(Property.LEFT, 0f);
+                    }
+                    if (x < leftmostX) {
+                        leftmostX = x;
+                    }
+                    float width = textRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                    if (x + width > rightmostX) {
+                        rightmostX = x + width;
+                    }
+                }
+            }
+            return new float[] { leftmostX, rightmostX };
+        }
+
+        private float ApplyTextAnchor(float textWidth) {
+            TextAnchor textAnchor = (TextAnchor)this.GetProperty<TextAnchor?>(Property.TEXT_ANCHOR, TextAnchor.START);
+            switch (textAnchor) {
+                case TextAnchor.END: {
+                    return -textWidth;
+                }
+
+                case TextAnchor.MIDDLE: {
+                    return -textWidth / 2;
+                }
+
+                default: {
+                    return 0;
+                }
+            }
         }
 
         public class RendererGlyph {

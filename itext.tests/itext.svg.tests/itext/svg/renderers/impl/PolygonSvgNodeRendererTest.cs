@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -158,6 +158,16 @@ namespace iText.Svg.Renderers.Impl {
             for (int x = 0; x < attributePoints.Count; x++) {
                 NUnit.Framework.Assert.AreEqual(expectedPoints[x], attributePoints[x]);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PolygonIsNotCutTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "polygonIsNotCutTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PolygonIsNotCutEvenOddTest() {
+            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "polygonIsNotCutEvenOddTest");
         }
     }
 }

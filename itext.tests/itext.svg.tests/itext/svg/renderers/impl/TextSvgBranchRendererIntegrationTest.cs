@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -42,6 +42,11 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void HelloWorldTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeHelloWorldTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hello_world_relative");
         }
 
         [NUnit.Framework.Test]
@@ -173,8 +178,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveInvalidXTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "text-relativeMove-invalidX"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-invalidX");
         }
 
         //Y
@@ -195,8 +199,7 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void TextRelativeMoveInvalidYTest() {
-            NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
-                , "text-relativeMove-invalidY"));
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text-relativeMove-invalidY");
         }
 
         [NUnit.Framework.Test]
@@ -217,6 +220,108 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void TspanWithOneAbsoluteCoordinateTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanWithOneAbsoluteCoordinateTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextDxDyAttributesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textDxDyAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextBaselineShiftTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textBaselineShift");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextRotateTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textRotate");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextLengthAdjustTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textLengthAdjust");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextStretchedTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textStretchedTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextShrunkTextLengthTest() {
+            //TODO: DEVSIX-2507, DEVSIX-5477 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textShrunkTextLength");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextCombinedAttributesTest() {
+            //TODO: DEVSIX-2507 update cmp file after fix
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textCombinedAttributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextStrokeDasharrayTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textStrokeDasharray");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextComplexStrokeDasharrayTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textComplexStrokeDasharray");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextDecorationUnderlineTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationUnderline");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextDecorationLineThroughTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationLineThrough");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextTextDecorationOverlineTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textTextDecorationOverline");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpaceNormalTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpaceNormal");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpacePreTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePre");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpaceNoWrapTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpaceNoWrap");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpacePreWrapTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreWrap");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWhiteSpacePreLineTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "textWhiteSpacePreLine");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextRelativeXYTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textRelativeXY");
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Svg;
+using iText.Svg.Renderers;
 using iText.Svg.Renderers.Impl;
 using iText.Test;
 
@@ -185,7 +186,7 @@ namespace iText.Svg.Utils {
                 );
             root.AddChild(textAfter);
             //Run
-            SvgTextUtil.ProcessWhiteSpace(root, true);
+            SvgTextUtil.ProcessWhiteSpace(root, true, new SvgDrawContext(null, null));
             root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
             //Create result array
             String[] actual = new String[] { root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT), 
@@ -217,7 +218,7 @@ namespace iText.Svg.Utils {
                 );
             root.AddChild(textAfter);
             //Run
-            SvgTextUtil.ProcessWhiteSpace(root, true);
+            SvgTextUtil.ProcessWhiteSpace(root, true, new SvgDrawContext(null, null));
             root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT);
             //Create result array
             String[] actual = new String[] { root.GetChildren()[0].GetAttribute(SvgConstants.Attributes.TEXT_CONTENT), 

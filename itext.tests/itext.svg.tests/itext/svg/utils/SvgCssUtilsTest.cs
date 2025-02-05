@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -136,6 +136,13 @@ namespace iText.Svg.Utils {
         public virtual void ConvertLongerFloatToStringTest() {
             String expected = "0.1234567";
             String actual = SvgCssUtils.ConvertFloatToString(0.1234567f);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertLongerDoubleToStringTest() {
+            String expected = "0.1234567";
+            String actual = SvgCssUtils.ConvertDoubleToString(0.1234567d);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
     }

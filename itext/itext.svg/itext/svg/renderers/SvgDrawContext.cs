@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -29,6 +29,7 @@ using iText.StyledXmlParser.Resolver.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Css;
 using iText.Svg.Exceptions;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers {
     /// <summary>
@@ -53,17 +54,21 @@ namespace iText.Svg.Renderers {
 
         private readonly FontProvider fontProvider;
 
+        private SvgTextProperties textProperties = new SvgTextProperties();
+
         private FontSet tempFonts;
 
         private SvgCssContext cssContext;
 
-        private AffineTransform lastTextTransform;
-
         private AffineTransform rootTransform;
+
+        private AffineTransform clippingElementTransform = new AffineTransform();
 
         private float[] textMove = new float[] { 0.0f, 0.0f };
 
-        private float[] previousElementTextMove;
+        private float[] relativePosition;
+
+        private Rectangle customViewport;
 
         /// <summary>Create an instance of the context that is used to store information when converting SVG.</summary>
         /// <param name="resourceResolver">
@@ -84,6 +89,28 @@ namespace iText.Svg.Renderers {
             }
             this.fontProvider = fontProvider;
             cssContext = new SvgCssContext();
+        }
+
+        /// <summary>Gets the custom viewport of SVG.</summary>
+        /// <remarks>
+        /// Gets the custom viewport of SVG.
+        /// <para />
+        /// The custom viewport is used to resolve percent values of the top level svg.
+        /// </remarks>
+        /// <returns>the custom viewport</returns>
+        public virtual Rectangle GetCustomViewport() {
+            return customViewport;
+        }
+
+        /// <summary>Sets the custom viewport of SVG.</summary>
+        /// <remarks>
+        /// Sets the custom viewport of SVG.
+        /// <para />
+        /// The custom viewport is used to resolve percent values of the top level svg.
+        /// </remarks>
+        /// <param name="customViewport">the custom viewport</param>
+        public virtual void SetCustomViewport(Rectangle customViewport) {
+            this.customViewport = customViewport;
         }
 
         /// <summary>Retrieves the current top of the stack, without modifying the stack.</summary>
@@ -132,6 +159,9 @@ namespace iText.Svg.Renderers {
         /// <summary>Get the current viewbox.</summary>
         /// <returns>the viewbox as it is currently set</returns>
         public virtual Rectangle GetCurrentViewPort() {
+            if (viewports.IsEmpty()) {
+                return null;
+            }
             return viewports.JGetFirst();
         }
 
@@ -143,7 +173,7 @@ namespace iText.Svg.Renderers {
 
         /// <summary>Remove the currently set view box.</summary>
         public virtual void RemoveCurrentViewPort() {
-            if (this.viewports.Count > 0) {
+            if (!this.viewports.IsEmpty()) {
                 viewports.RemoveFirst();
             }
         }
@@ -224,25 +254,24 @@ namespace iText.Svg.Renderers {
             this.useIds.Pop();
         }
 
-        /// <summary>Get the text transformation that was last applied</summary>
+        /// <summary>Get the text transformation that was last applied.</summary>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>
         /// representing the last text transformation
         /// </returns>
+        [System.ObsoleteAttribute(@"in favour of GetRootTransform()")]
         public virtual AffineTransform GetLastTextTransform() {
-            if (lastTextTransform == null) {
-                lastTextTransform = new AffineTransform();
-            }
-            return this.lastTextTransform;
+            return new AffineTransform();
         }
 
-        /// <summary>Set the last text transformation</summary>
+        /// <summary>Set the last text transformation.</summary>
         /// <param name="newTransform">last text transformation</param>
+        [System.ObsoleteAttribute(@"in favour of SetRootTransform(iText.Kernel.Geom.AffineTransform)")]
         public virtual void SetLastTextTransform(AffineTransform newTransform) {
-            this.lastTextTransform = newTransform;
         }
 
+        // Do nothing.
         /// <summary>Get the current root transformation that was last applied.</summary>
         /// <returns>
         /// 
@@ -262,7 +291,7 @@ namespace iText.Svg.Renderers {
             this.rootTransform = newTransform;
         }
 
-        /// <summary>Get the stored current text move</summary>
+        /// <summary>Get the stored current text move.</summary>
         /// <returns>[horizontal text move, vertical text move]</returns>
         public virtual float[] GetTextMove() {
             return textMove;
@@ -273,7 +302,7 @@ namespace iText.Svg.Renderers {
             textMove = new float[] { 0.0f, 0.0f };
         }
 
-        /// <summary>Increment the stored text move</summary>
+        /// <summary>Increment the stored text move.</summary>
         /// <param name="additionalMoveX">horizontal value to add</param>
         /// <param name="additionalMoveY">vertical value to add</param>
         public virtual void AddTextMove(float additionalMoveX, float additionalMoveY) {
@@ -281,7 +310,7 @@ namespace iText.Svg.Renderers {
             textMove[1] += additionalMoveY;
         }
 
-        /// <summary>Get the current canvas transformation</summary>
+        /// <summary>Get the current canvas transformation.</summary>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.AffineTransform"/>
@@ -339,12 +368,112 @@ namespace iText.Svg.Renderers {
             this.patternIds.Pop();
         }
 
+        [Obsolete]
         public virtual void SetPreviousElementTextMove(float[] previousElementTextMove) {
-            this.previousElementTextMove = previousElementTextMove;
         }
 
+        // Do nothing.
+        [Obsolete]
         public virtual float[] GetPreviousElementTextMove() {
-            return previousElementTextMove;
+            return new float[] { 0.0f, 0.0f };
+        }
+
+        /// <summary>
+        /// Retrieves
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// for text SVG elements.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// text properties
+        /// </returns>
+        public virtual SvgTextProperties GetSvgTextProperties() {
+            return textProperties;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// for textSVG elements.
+        /// </summary>
+        /// <param name="textProperties">
+        /// 
+        /// <see cref="iText.Svg.Utils.SvgTextProperties"/>
+        /// to set
+        /// </param>
+        public virtual void SetSvgTextProperties(SvgTextProperties textProperties) {
+            this.textProperties = textProperties;
+        }
+
+        /// <summary>
+        /// Retrieves relative position for the current text SVG element relative to the last origin
+        /// identified by absolute position.
+        /// </summary>
+        /// <returns>relative position for the current text SVG element</returns>
+        public virtual float[] GetRelativePosition() {
+            return relativePosition;
+        }
+
+        /// <summary>Adds move to the current relative position for the text SVG element.</summary>
+        /// <param name="dx">x-axis movement</param>
+        /// <param name="dy">y-axis movement</param>
+        public virtual void MoveRelativePosition(float dx, float dy) {
+            relativePosition[0] += dx;
+            relativePosition[1] += dy;
+        }
+
+        /// <summary>Resets current relative position for the text SVG element.</summary>
+        public virtual void ResetRelativePosition() {
+            relativePosition = new float[] { 0.0f, 0.0f };
+        }
+
+        /// <summary>Gets clipping element transformation matrix.</summary>
+        /// <remarks>
+        /// Gets clipping element transformation matrix.
+        /// <para />
+        /// It is used to preserve clipping element transformation matrix and before drawing clipped element revert canvas
+        /// transformation matrix into original state. After clipped element will be drawn, clipping element transformation
+        /// matrix will be used once again to return clipping element matrix for next siblings.
+        /// </remarks>
+        /// <returns>the current clipping element transformation matrix</returns>
+        public virtual AffineTransform GetClippingElementTransform() {
+            return clippingElementTransform;
+        }
+
+        /// <summary>Resets clipping element transformation matrix.</summary>
+        /// <remarks>
+        /// Resets clipping element transformation matrix.
+        /// <para />
+        /// See
+        /// <see cref="GetClippingElementTransform()"/>
+        /// for more info about clipping element transformation matrix.
+        /// </remarks>
+        public virtual void ResetClippingElementTransform() {
+            this.clippingElementTransform.SetToIdentity();
+        }
+
+        /// <summary>Concatenates all transformations applied from the top level of the svg to the current one.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance
+        /// </returns>
+        public virtual AffineTransform GetConcatenatedTransform() {
+            IList<PdfCanvas> canvasList = new List<PdfCanvas>();
+            int canvasesSize = this.Size();
+            for (int i = 0; i < canvasesSize; i++) {
+                canvasList.Add(this.PopCanvas());
+            }
+            AffineTransform transform = new AffineTransform();
+            for (int i = canvasList.Count - 1; i >= 0; i--) {
+                PdfCanvas pdfCanvas = canvasList[i];
+                Matrix matrix = pdfCanvas.GetGraphicsState().GetCtm();
+                transform.Concatenate(new AffineTransform(matrix.Get(0), matrix.Get(1), matrix.Get(3), matrix.Get(4), matrix
+                    .Get(6), matrix.Get(7)));
+                this.PushCanvas(pdfCanvas);
+            }
+            return transform;
         }
     }
 }

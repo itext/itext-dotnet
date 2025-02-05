@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -107,6 +107,29 @@ namespace iText.Kernel.Pdf.Tagging {
                 SetAttributes(attributes);
             }
             return attributes;
+        }
+
+        /// <summary>Gets a list of PDF attribute objects.</summary>
+        /// <returns>list of PDF attribute objects.</returns>
+        public virtual IList<PdfStructureAttributes> GetAttributesList() {
+            IList<PdfStructureAttributes> attributesList = new List<PdfStructureAttributes>();
+            PdfObject elemAttributesObj = GetAttributes(false);
+            if (elemAttributesObj != null) {
+                if (elemAttributesObj.IsDictionary()) {
+                    attributesList.Add(new PdfStructureAttributes((PdfDictionary)elemAttributesObj));
+                }
+                else {
+                    if (elemAttributesObj.IsArray()) {
+                        PdfArray attributesArray = (PdfArray)elemAttributesObj;
+                        foreach (PdfObject attributeObj in attributesArray) {
+                            if (attributeObj.IsDictionary()) {
+                                attributesList.Add(new PdfStructureAttributes((PdfDictionary)attributeObj));
+                            }
+                        }
+                    }
+                }
+            }
+            return attributesList;
         }
 
         public virtual void SetAttributes(PdfObject attributes) {
@@ -308,6 +331,30 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
             }
             return kids;
+        }
+
+        /// <summary>Checks if the kid with the given index is flushed.</summary>
+        /// <param name="index">index of the kid to check.</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the kid with the given index is flushed,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
+        public virtual bool IsKidFlushed(int index) {
+            PdfObject k = GetK();
+            if (k == null) {
+                return false;
+            }
+            if (k.IsArray()) {
+                PdfArray array = (PdfArray)k;
+                if (index >= array.Size()) {
+                    return false;
+                }
+                return array.Get(index).IsFlushed();
+            }
+            return index == 0 && k.IsFlushed();
         }
 
         public virtual PdfObject GetK() {

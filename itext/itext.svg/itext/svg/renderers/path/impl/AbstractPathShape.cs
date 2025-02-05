@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,11 +25,18 @@ using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
+using iText.Svg.Renderers;
+using iText.Svg.Renderers.Impl;
 using iText.Svg.Renderers.Path;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Path.Impl {
     /// <summary>This class handles common behaviour in IPathShape implementations</summary>
     public abstract class AbstractPathShape : IPathShape {
+        private PathSvgNodeRenderer parent;
+
+        private AffineTransform transform = null;
+
         /// <summary>The properties of this shape.</summary>
         protected internal IDictionary<String, String> properties;
 
@@ -40,6 +47,8 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         // Original coordinates from path instruction, according to the (x1 y1 x2 y2 x y)+ spec
         protected internal String[] coordinates;
+
+        protected internal SvgDrawContext context;
 
         public AbstractPathShape()
             : this(false) {
@@ -75,7 +84,76 @@ namespace iText.Svg.Renderers.Path.Impl {
                 (GetEndingPoint().GetY()), 0, 0);
         }
 
-        public abstract void Draw(PdfCanvas arg1);
+        public virtual void Draw(PdfCanvas canvas) {
+            Draw();
+        }
+
+        /// <summary>Draws this instruction to a canvas object.</summary>
+        public abstract void Draw();
+
+        /// <summary>Set parent path for this shape.</summary>
+        /// <param name="parent">
+        /// 
+        /// <see cref="iText.Svg.Renderers.Impl.PathSvgNodeRenderer"/>
+        /// instance
+        /// </param>
+        public virtual void SetParent(PathSvgNodeRenderer parent) {
+            this.parent = parent;
+        }
+
+        /// <summary>Set svg draw context for this shape.</summary>
+        /// <param name="context">
+        /// 
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// instance.
+        /// </param>
+        public virtual void SetContext(SvgDrawContext context) {
+            this.context = context;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing the shape.
+        /// </summary>
+        /// <param name="transform">
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// to apply before drawing
+        /// </param>
+        public virtual void SetTransform(AffineTransform transform) {
+            this.transform = transform;
+        }
+
+        /// <summary>Parse x axis length value.</summary>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// length for parsing
+        /// </param>
+        /// <returns>absolute length in points</returns>
+        protected internal virtual float ParseHorizontalLength(String length) {
+            return SvgCssUtils.ParseAbsoluteHorizontalLength(parent, length, 0.0F, context);
+        }
+
+        /// <summary>Parse y axis length value.</summary>
+        /// <param name="length">
+        /// 
+        /// <see cref="System.String"/>
+        /// length for parsing
+        /// </param>
+        /// <returns>absolute length in points</returns>
+        protected internal virtual float ParseVerticalLength(String length) {
+            return SvgCssUtils.ParseAbsoluteVerticalLength(parent, length, 0.0F, context);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void ApplyTransform(double[] points) {
+            if (transform != null) {
+                transform.Transform(points, 0, points, 0, points.Length / 2);
+            }
+        }
+//\endcond
 
         public abstract void SetCoordinates(String[] arg1, Point arg2);
     }

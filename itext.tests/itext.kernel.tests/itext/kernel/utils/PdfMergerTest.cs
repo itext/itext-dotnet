@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -85,6 +85,24 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        public virtual void MergeDocumentOutlinesWithExplicitRemoteDestinationTest() {
+            String resultFile = destinationFolder + "mergeDocumentWithRemoteGoToTest.pdf";
+            String filename1 = sourceFolder + "docWithRemoteGoTo.pdf";
+            String filename2 = sourceFolder + "doc1.pdf";
+            PdfDocument sourceDocument1 = new PdfDocument(new PdfReader(filename1));
+            PdfDocument sourceDocument2 = new PdfDocument(new PdfReader(filename2));
+            PdfMerger resultDocument = new PdfMerger(new PdfDocument(CompareTool.CreateTestPdfWriter(resultFile)));
+            resultDocument.Merge(sourceDocument1, 1, 1);
+            resultDocument.Merge(sourceDocument2, 1, 1);
+            resultDocument.Close();
+            sourceDocument1.Close();
+            sourceDocument2.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_mergeDocumentWithRemoteGoToTest.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void MergeDocumentWithCycleRefInAcroFormTest() {
             String filename1 = sourceFolder + "doc1.pdf";
             String filename2 = sourceFolder + "pdfWithCycleRefInAnnotationParent.pdf";
@@ -147,6 +165,22 @@ namespace iText.Kernel.Utils {
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_pdfWithCycleRefInParentTag.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MergeDocumentWithCycleReferenceInFormFieldTest() {
+            String filename1 = sourceFolder + "doc1.pdf";
+            String filename2 = sourceFolder + "pdfWithCycleRefInFormField.pdf";
+            String resultFile = destinationFolder + "pdfWithCycleRefInFormField.pdf";
+            using (PdfDocument pdfDocument1 = new PdfDocument(new PdfReader(filename2))) {
+                using (PdfDocument pdfDocument2 = new PdfDocument(new PdfReader(filename1), CompareTool.CreateTestPdfWriter
+                    (resultFile).SetSmartMode(true))) {
+                    PdfMerger merger = new PdfMerger(pdfDocument2);
+                    merger.Merge(pdfDocument1, 1, pdfDocument1.GetNumberOfPages());
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, sourceFolder + "cmp_pdfWithCycleRefInFormField.pdf"
                 , destinationFolder, "diff_"));
         }
 

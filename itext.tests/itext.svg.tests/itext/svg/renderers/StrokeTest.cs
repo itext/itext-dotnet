@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -55,7 +54,28 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void StrokeWithDashesTest() {
+            // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeWithDashesAcrobatBugTest() {
+            // Acrobat displays the result incorrectly, however e.g. Xodo PDF Studio displays the document exactly the same
+            // as svg (in terms of stroke opacity and view box). Same issue is reproduced in the
+            // DefaultStyleInheritanceIntegrationTest#usePropertiesInheritanceTest and nestedInheritanceTest,
+            // ClipPathSvgNodeRendererIntegrationTest#clipPathComplexTest.
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWithDashesAcrobatBug");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeOpacityTest() {
+            // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OverrideStrokeWidthTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "overrideStrokeWidth");
         }
 
         [NUnit.Framework.Test]
@@ -65,11 +85,86 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-3432 relative values doesn't support correctly for stroke-width attribute
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
-            , Count = 12)]
         public virtual void StrokeWidthMeasureUnitsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWidthMeasureUnitsTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PathLengthTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "path-length");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeAttributesTest() {
+            //TODO DEVSIX-2258: update cmp after supporting
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-attributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroStrokeWidthTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "zeroStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NegativeStrokeWidthTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeStrokeWidth");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightWidthZeroTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "heightWidthZero");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HeightWidthNegativeTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "heightWidthNegative");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeDashArrayLinesTest() {
+            //TODO: update cmp-file after DEVSIX-2258
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeDashArrayLines");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void StrokeTextTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeText");
+        }
+
+        //TODO DEVSIX-2507: Update cmp file after supporting
+        [NUnit.Framework.Test]
+        public virtual void StrokeTspanTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeTspan");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap1Test() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroup");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap2Test() {
+            //TODO DEVSIX-7338: SVG stroke on group applied incorrectly
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroup2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap3Test() {
+            //TODO DEVSIX-7338: SVG stroke on group applied incorrectly
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap4Test() {
+            //TODO DEVSIX-7338: SVG stroke on group applied incorrectly
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeObjectsOverlap5Test() {
+            //TODO DEVSIX-7338: Update cmp file
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOnGroupNoInsideStroke3");
         }
     }
 }
