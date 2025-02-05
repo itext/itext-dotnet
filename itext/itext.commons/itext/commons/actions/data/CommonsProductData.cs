@@ -38,7 +38,7 @@ namespace iText.Commons.Actions.Data {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String COMMONS_VERSION = "9.1.0-SNAPSHOT";
+        internal const String COMMONS_VERSION = "9.2.0-SNAPSHOT";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
