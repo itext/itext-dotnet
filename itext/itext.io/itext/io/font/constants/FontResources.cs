@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Font.Constants {
+    /// <summary>Font resources paths.</summary>
     public sealed class FontResources {
         private FontResources() {
         }
