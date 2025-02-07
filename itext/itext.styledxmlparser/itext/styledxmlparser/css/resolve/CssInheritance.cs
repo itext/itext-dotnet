@@ -66,6 +66,12 @@ namespace iText.StyledXmlParser.Css.Resolve {
         /// <param name="cssProperty">the CSS property</param>
         /// <returns>true, if the property is inheritable</returns>
         public virtual bool IsInheritable(String cssProperty) {
+
+            // Always inherit CSS variables
+            if (cssProperty.StartsWith("--")) {
+                return true;
+            }
+
             return INHERITABLE_PROPERTIES.Contains(cssProperty);
         }
     }

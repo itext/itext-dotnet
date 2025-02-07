@@ -187,6 +187,54 @@ namespace iText.Svg.Css {
             NUnit.Framework.Assert.AreEqual("white", resolvedStyles.Get(SvgConstants.Attributes.STROKE));
         }
 
+        [NUnit.Framework.TestCase("a", "30px", "30px")]
+        [NUnit.Framework.TestCase("b", "50px", "30px")]
+        [NUnit.Framework.TestCase("c d", "35px", "35px")]
+        public virtual void ResolveCssVariablesTest(string divClass, string expectedMargin, string expectedVarValue) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("style"), "");
+            TextNode styleContents = new TextNode(@"
+	div {
+		--test-var: 30px;
+	}
+    div.a {
+        margin: var(--test-var,40px);
+    }
+    div.b {
+        margin: var(--other-var,50px);
+    }
+    div.c {
+        --test-var: 35px;
+    }
+    div.c.d {
+        margin: var(--test-var,40px);
+    }
+  ");
+            JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
+            jSoupStyle.AddChild(new JsoupTextNode(styleContents));
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
+            AbstractCssContext svgContext = new SvgCssContext();
+
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("div"), "");
+            JsoupElementNode jSoupDiv = new JsoupElementNode(div);
+            Attributes divAttributes = div.Attributes();
+            divAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("class", divClass));
+
+            IDictionary<String, String> actual = resolver.ResolveStyles(jSoupDiv, svgContext);
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("class", divClass);
+            expected.Put("--test-var", expectedVarValue);
+            expected.Put("margin-top", expectedMargin);
+            expected.Put("margin-right", expectedMargin);
+            expected.Put("margin-bottom", expectedMargin);
+            expected.Put("margin-left", expectedMargin);
+            expected.Put("font-size", "12pt");
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SvgCssResolverStyleTagTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag

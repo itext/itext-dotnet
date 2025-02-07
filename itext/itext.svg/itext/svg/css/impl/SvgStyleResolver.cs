@@ -40,6 +40,7 @@ using iText.Svg.Css;
 using iText.Svg.Exceptions;
 using iText.Svg.Logs;
 using iText.Svg.Processors.Impl;
+using System.Text.RegularExpressions;
 
 namespace iText.Svg.Css.Impl {
     /// <summary>Default implementation of SVG`s styles and attribute resolver .</summary>
@@ -59,6 +60,8 @@ namespace iText.Svg.Css.Impl {
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver
             ));
+
+        private static readonly Regex CssVarDecl = new Regex(@"^\s*var\(\s*(?<decl>--.*)\)\s*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private CssStyleSheet css;
 
@@ -261,6 +264,10 @@ namespace iText.Svg.Css.Impl {
                 // TODO DEVSIX-8792 SVG: implement styles appliers like in html2pdf
                 styles.Put(CommonCssConstants.FONT_FAMILY, fontFamilies[0]);
             }
+
+            // Resolve CSS variables
+            ResolveCssVariables(styles);
+
             // Set root font size
             bool isSvgElement = element is IElementNode && SvgConstants.Tags.SVG.Equals(((IElementNode)element).Name()
                 );
@@ -272,6 +279,57 @@ namespace iText.Svg.Css.Impl {
                 }
             }
             return styles;
+        }
+
+        private static bool IsCssVarDecl(string decl, out string innerDecl) {
+            if (decl == null) {
+                innerDecl = null;
+                return false;
+            }
+
+            var cssVarDecl = CssVarDecl.Match(decl);
+            if (cssVarDecl.Success) {
+                innerDecl = cssVarDecl.Groups["decl"].Value;
+                return true;
+            }
+
+            innerDecl = null;
+            return false;
+        }
+
+        private static void ResolveCssVariables(IDictionary<string, string> styles) {
+            var varOverrides = new Dictionary<string, string>();
+
+            foreach (KeyValuePair<String, String> entry in styles) {
+                if (IsCssVarDecl(entry.Value, out var decl)) {
+                    var value = ResolveVariable(decl);
+                    varOverrides.Add(entry.Key, value);
+                }
+                continue;
+
+                string ResolveVariable(string substring) {
+                    var hasDefault = substring.IndexOf(',');
+                    var varName = hasDefault == -1 ? substring : substring.Substring(0, hasDefault);
+                    var dfltVal = hasDefault == -1 ? null : substring.Substring(hasDefault + 1).Trim();
+                    if (styles.TryGetValue(varName, out var variable)) {
+                        return variable;
+                    }
+
+                    if (dfltVal is null) {
+                        return null;
+                    }
+
+                    if (IsCssVarDecl(dfltVal, out var innerDecl)) {
+                        return ResolveVariable(innerDecl);
+                    }
+
+                    return dfltVal;
+                }
+            }
+
+            foreach (var varOverride in varOverrides) {
+                styles.Put(varOverride.Key, varOverride.Value);
+            }
         }
 
         /// <summary>
