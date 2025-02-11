@@ -23,7 +23,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
+    /// <summary>
+    /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+    /// implementation for the &lt;tspan&gt; tag.
+    /// </summary>
     public class TextSvgTSpanBranchRenderer : TextSvgBranchRenderer {
+        /// <summary>
+        /// Creates new
+        /// <see cref="TextSvgTSpanBranchRenderer"/>
+        /// instance.
+        /// </summary>
         public TextSvgTSpanBranchRenderer() {
             this.performRootTransformations = false;
         }

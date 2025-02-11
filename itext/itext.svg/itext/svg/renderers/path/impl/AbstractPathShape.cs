@@ -50,14 +50,36 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         protected internal SvgDrawContext context;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="AbstractPathShape"/>
+        /// instance.
+        /// </summary>
         public AbstractPathShape()
             : this(false) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="AbstractPathShape"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">boolean defining whether this is a relative operator</param>
         public AbstractPathShape(bool relative)
             : this(relative, new DefaultOperatorConverter()) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="AbstractPathShape"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">boolean defining whether this is a relative operator</param>
+        /// <param name="copier">
+        /// 
+        /// <see cref="IOperatorConverter"/>
+        /// copier for converting relative coordinates to absolute coordinates
+        /// </param>
         public AbstractPathShape(bool relative, IOperatorConverter copier) {
             this.relative = relative;
             this.copier = copier;
@@ -67,6 +89,30 @@ namespace iText.Svg.Renderers.Path.Impl {
             return this.relative;
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// based on provided
+        /// <c>x</c>
+        /// and
+        /// <c>y</c>
+        /// coordinates.
+        /// </summary>
+        /// <param name="coordX">
+        /// 
+        /// <c>x</c>
+        /// coordinate of the point
+        /// </param>
+        /// <param name="coordY">
+        /// 
+        /// <c>y</c>
+        /// coordinate of the point
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// instance
+        /// </returns>
         protected internal virtual Point CreatePoint(String coordX, String coordY) {
             return new Point((double)CssDimensionParsingUtils.ParseDouble(coordX), (double)CssDimensionParsingUtils.ParseDouble
                 (coordY));

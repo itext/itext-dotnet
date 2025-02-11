@@ -129,6 +129,14 @@ namespace iText.Svg.Css.Impl {
             CollectFonts();
         }
 
+        /// <summary>Resolves the font size stored inside the current element.</summary>
+        /// <param name="styles">attributes map of the current element</param>
+        /// <param name="cssContext">
+        /// 
+        /// <see cref="iText.Svg.Css.SvgCssContext"/>
+        /// instance in order to resolve relative font size
+        /// </param>
+        /// <param name="parentFontSizeStr">parent font size value</param>
         public static void ResolveFontSizeStyle(IDictionary<String, String> styles, SvgCssContext cssContext, String
              parentFontSizeStr) {
             String elementFontSize = styles.Get(SvgConstants.Attributes.FONT_SIZE);
@@ -166,6 +174,24 @@ namespace iText.Svg.Css.Impl {
             styles.Put(SvgConstants.Attributes.FONT_SIZE, resolvedFontSize + CommonCssConstants.PT);
         }
 
+        /// <summary>Checks whether element is nested within the passed parent element.</summary>
+        /// <remarks>
+        /// Checks whether element is nested within the passed parent element. Nesting is checked at several levels
+        /// (recursively).
+        /// </remarks>
+        /// <param name="element">
+        /// 
+        /// <see cref="iText.StyledXmlParser.Node.IElementNode"/>
+        /// element to check
+        /// </param>
+        /// <param name="parentElementNameForSearch">expected parent element name</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if element is nested within the expected parent,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public static bool IsElementNested(IElementNode element, String parentElementNameForSearch) {
             if (!(element.ParentNode() is IElementNode)) {
                 return false;

@@ -96,12 +96,34 @@ namespace iText.Svg.Processors.Impl {
             this.customViewport = customViewport;
         }
 
+        /// <summary>Sets renderer factory.</summary>
+        /// <param name="rendererFactory">
+        /// 
+        /// <see cref="iText.Svg.Renderers.Factories.ISvgNodeRendererFactory"/>
+        /// to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetRendererFactory(ISvgNodeRendererFactory
              rendererFactory) {
             this.rendererFactory = rendererFactory;
             return this;
         }
 
+        /// <summary>Sets font provider.</summary>
+        /// <param name="fontProvider">
+        /// 
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetFontProvider(FontProvider fontProvider) {
             this.fontProvider = fontProvider;
             return this;
@@ -116,6 +138,13 @@ namespace iText.Svg.Processors.Impl {
             return charset;
         }
 
+        /// <summary>Sets the character set.</summary>
+        /// <param name="charset">the character set to set</param>
+        /// <returns>
+        /// this
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetCharset(String charset) {
             this.charset = charset;
             return this;

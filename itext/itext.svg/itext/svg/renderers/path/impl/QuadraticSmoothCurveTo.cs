@@ -21,16 +21,33 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements shorthand/smooth quadraticCurveTo (T) attribute of SVG's path element</summary>
+    /// <summary>Implements shorthand/smooth quadraticCurveTo (T) attribute of SVG's path element.</summary>
     public class QuadraticSmoothCurveTo : QuadraticCurveTo {
 //\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 2;
 //\endcond
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="QuadraticSmoothCurveTo"/>
+        /// instance.
+        /// </summary>
         public QuadraticSmoothCurveTo()
             : this(false) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="QuadraticSmoothCurveTo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">
+        /// 
+        /// <see langword="true"/>
+        /// in case it is a relative operator,
+        /// <see langword="false"/>
+        /// if it is an absolute operator
+        /// </param>
         public QuadraticSmoothCurveTo(bool relative)
             : base(relative, new SmoothOperatorConverter()) {
         }

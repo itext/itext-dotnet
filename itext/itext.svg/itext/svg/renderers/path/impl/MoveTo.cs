@@ -26,16 +26,33 @@ using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements moveTo(M) attribute of SVG's path element</summary>
+    /// <summary>Implements moveTo(M) attribute of SVG's path element.</summary>
     public class MoveTo : AbstractPathShape {
 //\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 2;
 //\endcond
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="MoveTo"/>
+        /// instance.
+        /// </summary>
         public MoveTo()
             : this(false) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="MoveTo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">
+        /// 
+        /// <see langword="true"/>
+        /// in case it is a relative operator,
+        /// <see langword="false"/>
+        /// if it is an absolute operator
+        /// </param>
         public MoveTo(bool relative)
             : base(relative) {
         }

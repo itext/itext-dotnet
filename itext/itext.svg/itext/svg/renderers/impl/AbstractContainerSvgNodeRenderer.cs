@@ -27,6 +27,7 @@ using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
+    /// <summary>Abstract class that will be the superclass for any element that instantiates new view port.</summary>
     public abstract class AbstractContainerSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
         public override bool CanConstructViewPort() {
             return true;

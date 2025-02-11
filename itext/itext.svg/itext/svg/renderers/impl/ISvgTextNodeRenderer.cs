@@ -27,7 +27,12 @@ using iText.Svg.Renderers;
 using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
+    /// <summary>Interface for &lt;text&gt; and &lt;tspan&gt; related renderers.</summary>
     public interface ISvgTextNodeRenderer : ISvgNodeRenderer {
+        /// <summary>Gets text content length.</summary>
+        /// <param name="parentFontSize">parent font size</param>
+        /// <param name="font">current font</param>
+        /// <returns>text content length</returns>
         [Obsolete]
         float GetTextContentLength(float parentFontSize, PdfFont font);
 

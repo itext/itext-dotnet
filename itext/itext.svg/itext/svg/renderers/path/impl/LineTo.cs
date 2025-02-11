@@ -26,16 +26,33 @@ using iText.Kernel.Geom;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements lineTo(L) attribute of SVG's path element</summary>
+    /// <summary>Implements lineTo(L) attribute of SVG's path element.</summary>
     public class LineTo : AbstractPathShape {
 //\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 2;
 //\endcond
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="LineTo"/>
+        /// instance.
+        /// </summary>
         public LineTo()
             : this(false) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="LineTo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">
+        /// 
+        /// <see langword="true"/>
+        /// in case it is a relative operator,
+        /// <see langword="false"/>
+        /// if it is an absolute operator
+        /// </param>
         public LineTo(bool relative)
             : base(relative) {
         }
