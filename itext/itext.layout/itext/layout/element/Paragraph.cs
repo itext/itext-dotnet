@@ -312,6 +312,7 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override IRenderer MakeNewRenderer() {
             return new ParagraphRenderer(this);
         }

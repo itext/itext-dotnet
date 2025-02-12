@@ -160,7 +160,7 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
-        /// <summary>Creates new renderer instance.</summary>
+        /// <summary>Creates a new renderer instance.</summary>
         /// <returns>
         /// new
         /// <see cref="iText.Layout.Renderer.IRenderer"/>

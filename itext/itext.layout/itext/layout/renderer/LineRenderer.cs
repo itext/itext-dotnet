@@ -885,6 +885,11 @@ namespace iText.Layout.Renderer {
             return result.GetMinMaxWidth();
         }
 
+        /// <summary><inheritDoc/></summary>
+        protected internal override float? RetrieveResolvedDeclaredHeight() {
+            return ((AbstractRenderer)parent).RetrieveResolvedDeclaredHeight();
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal virtual bool HasChildRendererInHtmlMode() {
             foreach (IRenderer childRenderer in GetChildRenderers()) {
