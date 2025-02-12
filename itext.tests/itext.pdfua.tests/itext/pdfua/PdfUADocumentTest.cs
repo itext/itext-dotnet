@@ -36,9 +36,17 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         [LogMessage(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED, LogLevel = LogLevelConstants
             .WARN)]
-        public virtual void OpenNotUaDocumentTest() {
+        public virtual void OpenNotUa1DocumentTest() {
             NUnit.Framework.Assert.DoesNotThrow(() => new PdfUADocument(new PdfReader(SOURCE_FOLDER + "usualPdf.pdf"), 
                 new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "simple doc", "eng")));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED, LogLevel = LogLevelConstants
+            .WARN)]
+        public virtual void OpenNotUa2DocumentTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new PdfUADocument(new PdfReader(SOURCE_FOLDER + "usualPdf.pdf"), 
+                new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "simple doc", "eng")));
         }
 
         [NUnit.Framework.Test]

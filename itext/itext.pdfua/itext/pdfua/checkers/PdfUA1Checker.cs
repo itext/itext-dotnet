@@ -22,8 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
@@ -39,16 +37,23 @@ using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Checkers.Utils.Headings;
 using iText.Pdfua.Checkers.Utils.Tables;
 using iText.Pdfua.Exceptions;
-using iText.Pdfua.Logs;
 
 namespace iText.Pdfua.Checkers {
-    /// <summary>The class defines the requirements of the PDF/UA-1 standard.</summary>
+    /// <summary>
+    /// The class defines the requirements of the PDF/UA-1 standard and contains
+    /// method implementations from the abstract
+    /// <see cref="PdfUAChecker"/>
+    /// class.
+    /// </summary>
     /// <remarks>
-    /// The class defines the requirements of the PDF/UA-1 standard.
+    /// The class defines the requirements of the PDF/UA-1 standard and contains
+    /// method implementations from the abstract
+    /// <see cref="PdfUAChecker"/>
+    /// class.
     /// <para />
-    /// The specification implemented by this class is ISO 14289-1
+    /// The specification implemented by this class is ISO 14289-1.
     /// </remarks>
-    public class PdfUA1Checker : IValidationChecker {
+    public class PdfUA1Checker : PdfUAChecker {
         private readonly PdfDocument pdfDocument;
 
         private readonly TagStructureContext tagStructureContext;
@@ -57,12 +62,11 @@ namespace iText.Pdfua.Checkers {
 
         private readonly PdfUAValidationContext context;
 
-        private bool warnedOnPageFlush = false;
-
         /// <summary>Creates PdfUA1Checker instance with PDF document which will be validated against PDF/UA-1 standard.
         ///     </summary>
         /// <param name="pdfDocument">the document to validate</param>
-        public PdfUA1Checker(PdfDocument pdfDocument) {
+        public PdfUA1Checker(PdfDocument pdfDocument)
+            : base() {
             this.pdfDocument = pdfDocument;
             this.tagStructureContext = new TagStructureContext(pdfDocument);
             this.context = new PdfUAValidationContext(pdfDocument);
@@ -72,7 +76,7 @@ namespace iText.Pdfua.Checkers {
         /// <summary>
         /// <inheritDoc/>.
         /// </summary>
-        public virtual void Validate(IValidationContext context) {
+        public override void Validate(IValidationContext context) {
             switch (context.GetType()) {
                 case ValidationType.PDF_DOCUMENT: {
                     PdfDocumentValidationContext pdfDocContext = (PdfDocumentValidationContext)context;
@@ -131,17 +135,8 @@ namespace iText.Pdfua.Checkers {
         /// <summary>
         /// <inheritDoc/>.
         /// </summary>
-        public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
+        public override bool IsPdfObjectReadyToFlush(PdfObject @object) {
             return true;
-        }
-
-        /// <summary>Logs a warn on page flushing that page flushing is disabled in PDF/UA mode.</summary>
-        public virtual void WarnOnPageFlush() {
-            if (!warnedOnPageFlush) {
-                ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUA1Checker)).LogWarning(PdfUALogMessageConstants.
-                    PAGE_FLUSHING_DISABLED);
-                warnedOnPageFlush = true;
-            }
         }
 
         /// <summary>Verify the conformity of the file specification dictionary.</summary>

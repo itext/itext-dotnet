@@ -66,6 +66,9 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfConformance PDF_UA_1 = new iText.Kernel.Pdf.PdfConformance(PdfUAConformance
             .PDF_UA_1);
 
+        public static readonly iText.Kernel.Pdf.PdfConformance PDF_UA_2 = new iText.Kernel.Pdf.PdfConformance(PdfUAConformance
+            .PDF_UA_2);
+
         public static readonly iText.Kernel.Pdf.PdfConformance PDF_NONE_CONFORMANCE = new iText.Kernel.Pdf.PdfConformance
             ();
 
@@ -348,6 +351,9 @@ namespace iText.Kernel.Pdf {
         private static PdfUAConformance GetUAConformance(String part) {
             if ("1".Equals(part)) {
                 return PdfUAConformance.PDF_UA_1;
+            }
+            if ("2".Equals(part)) {
+                return PdfUAConformance.PDF_UA_2;
             }
             return null;
         }
