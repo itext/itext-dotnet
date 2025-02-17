@@ -305,6 +305,7 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.P);

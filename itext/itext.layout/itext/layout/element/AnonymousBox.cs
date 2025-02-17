@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -34,6 +35,14 @@ namespace iText.Layout.Element {
         /// </summary>
         public AnonymousBox()
             : base() {
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(null);
+            }
+            return tagProperties;
         }
 
         /// <summary><inheritDoc/></summary>

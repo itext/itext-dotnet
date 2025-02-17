@@ -45,8 +45,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void RelativeHeightTest() {
-            String outFileName = DESTINATION_FOLDER + "relativeHeightTest.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_relativeHeightTest.pdf";
+            String outFileName = DESTINATION_FOLDER + "relativeHeight.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_relativeHeight.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Div div = new Div();
@@ -58,6 +58,22 @@ namespace iText.Layout {
                 ab.Add(image);
                 div.Add(ab);
                 doc.Add(div);
+                doc.Close();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultRoleTest() {
+            String outFileName = DESTINATION_FOLDER + "defaultRole.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_defaultRole.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                pdfDocument.SetTagged();
+                Document doc = new Document(pdfDocument);
+                AnonymousBox ab = new AnonymousBox();
+                ab.Add(new Paragraph("Some text"));
+                doc.Add(ab);
                 doc.Close();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
