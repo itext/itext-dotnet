@@ -91,10 +91,17 @@ namespace iText.Pdfua {
 
         private static PdfWriter ConfigureWriterProperties(PdfWriter writer, PdfUAConformance uaConformance) {
             writer.GetProperties().AddPdfUaXmpMetadata(uaConformance);
-            if (writer.GetPdfVersion() != null && !writer.GetPdfVersion().Equals(PdfVersion.PDF_1_7)) {
-                ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument)).LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants
-                    .WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN, PdfVersion.PDF_1_7));
-                writer.GetProperties().SetPdfVersion(PdfVersion.PDF_1_7);
+            if (writer.GetPdfVersion() != null) {
+                if (uaConformance == PdfUAConformance.PDF_UA_1 && !writer.GetPdfVersion().Equals(PdfVersion.PDF_1_7)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                        , PdfVersion.PDF_1_7));
+                    writer.GetProperties().SetPdfVersion(PdfVersion.PDF_1_7);
+                }
+                if (uaConformance == PdfUAConformance.PDF_UA_2 && !writer.GetPdfVersion().Equals(PdfVersion.PDF_2_0)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                        , PdfVersion.PDF_2_0));
+                    writer.GetProperties().SetPdfVersion(PdfVersion.PDF_2_0);
+                }
             }
             return writer;
         }
