@@ -255,10 +255,9 @@ namespace iText.Layout.Renderer {
             LineRenderer lineRenderer = new LineRenderer();
             Text zeroWidthJoiner = new Text("\u200D");
             zeroWidthJoiner.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
-            TextRenderer zeroWidthJoinerRenderer = new TextRenderer(zeroWidthJoiner);
-            lineRenderer.AddChild(zeroWidthJoinerRenderer);
+            lineRenderer.AddChild(new TextRenderer(zeroWidthJoiner));
             lineRenderer.AddChild(bulletRenderer);
-            lineRenderer.AddChild(zeroWidthJoinerRenderer);
+            lineRenderer.AddChild(new TextRenderer(zeroWidthJoiner));
             return lineRenderer;
         }
 
