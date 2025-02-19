@@ -32,6 +32,7 @@ using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -704,6 +705,23 @@ namespace iText.Layout.Renderer {
                     throw new InvalidOperationException();
                 }
             }
+        }
+
+        public override void DrawChildren(DrawContext drawContext) {
+            ICollection<IPropertyContainer> modelElements = new HashSet<IPropertyContainer>();
+            for (int i = childRenderers.Count - 1; i >= 0; --i) {
+                IRenderer childRenderer = childRenderers[i];
+                if (childRenderer is AbstractRenderer) {
+                    AbstractRenderer child = (AbstractRenderer)childRenderer;
+                    if (modelElements.Contains(child.GetModelElement())) {
+                        child.isLastRendererForModelElement = false;
+                    }
+                    else {
+                        modelElements.Add(child.GetModelElement());
+                    }
+                }
+            }
+            base.DrawChildren(drawContext);
         }
 
         public override IRenderer GetNextRenderer() {

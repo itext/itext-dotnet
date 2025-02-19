@@ -764,9 +764,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
         public virtual void NotAsciiCharTest() {
-            //TODO update cmp-file after DEVSIX-3335 fixed
             PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
