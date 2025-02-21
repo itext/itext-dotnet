@@ -101,6 +101,10 @@ namespace iText.Pdfa {
             : base(ConfigureWriterProperties(writer, aConformance), properties) {
             PdfAChecker checker = GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
             ValidationContainer validationContainer = new ValidationContainer();
+            if (PdfVersion.PDF_2_0.CompareTo(GetPdfVersionAccordingToConformance(GetConformance().GetAConformance())) 
+                <= 0) {
+                validationContainer.AddChecker(new Pdf20Checker());
+            }
             validationContainer.AddChecker(checker);
             GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfAPageFactory(checker);
@@ -128,6 +132,10 @@ namespace iText.Pdfa {
             }
             PdfAChecker checker = GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
             ValidationContainer validationContainer = new ValidationContainer();
+            if (PdfVersion.PDF_2_0.CompareTo(GetPdfVersionAccordingToConformance(GetConformance().GetAConformance())) 
+                <= 0) {
+                validationContainer.AddChecker(new Pdf20Checker());
+            }
             validationContainer.AddChecker(checker);
             GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfAPageFactory(checker);

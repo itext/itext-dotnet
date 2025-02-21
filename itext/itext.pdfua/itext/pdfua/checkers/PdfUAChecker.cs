@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
+using iText.Pdfua.Exceptions;
 using iText.Pdfua.Logs;
 
 namespace iText.Pdfua.Checkers {
@@ -60,6 +61,38 @@ namespace iText.Pdfua.Checkers {
                 warnedOnPageFlush = true;
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Checks that the
+        /// <c>ViewerPreferences</c>
+        /// dictionary of the document catalog dictionary is present and contains
+        /// at least the
+        /// <c>DisplayDocTitle</c>
+        /// key with a value of
+        /// <see langword="true"/>
+        /// , as defined in
+        /// ISO 32000-1:2008, 12.2, Table 150 or ISO 32000-2:2020, Table 147.
+        /// </summary>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// document catalog dictionary
+        /// </param>
+        internal virtual void CheckViewerPreferences(PdfCatalog catalog) {
+            PdfDictionary viewerPreferences = catalog.GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
+            if (viewerPreferences == null) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
+            }
+            PdfObject displayDocTitle = viewerPreferences.Get(PdfName.DisplayDocTitle);
+            if (!(displayDocTitle is PdfBoolean)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
+            }
+            if (PdfBoolean.FALSE.Equals(displayDocTitle)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE);
+            }
+        }
+//\endcond
 
         public abstract bool IsPdfObjectReadyToFlush(PdfObject arg1);
 

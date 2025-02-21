@@ -26,23 +26,31 @@ namespace iText.Pdfua {
     /// <summary>PdfDocument extension for testing purposes.</summary>
     public class PdfUATestPdfDocument : PdfUADocument {
         public PdfUATestPdfDocument(PdfWriter writer)
-            : base(writer, CreateConfig()) {
+            : this(writer, PdfUAConformance.PDF_UA_1) {
+        }
+
+        public PdfUATestPdfDocument(PdfWriter writer, PdfUAConformance conformance)
+            : base(writer, CreateConfig(conformance)) {
         }
 
         public PdfUATestPdfDocument(PdfWriter writer, DocumentProperties properties)
-            : base(writer, properties, CreateConfig()) {
+            : base(writer, properties, CreateConfig(PdfUAConformance.PDF_UA_1)) {
         }
 
         public PdfUATestPdfDocument(PdfReader reader, PdfWriter writer)
-            : base(reader, writer, CreateConfig()) {
+            : this(reader, writer, PdfUAConformance.PDF_UA_1) {
+        }
+
+        public PdfUATestPdfDocument(PdfReader reader, PdfWriter writer, PdfUAConformance conformance)
+            : base(reader, writer, CreateConfig(conformance)) {
         }
 
         public PdfUATestPdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
-            : base(reader, writer, properties, CreateConfig()) {
+            : base(reader, writer, properties, CreateConfig(PdfUAConformance.PDF_UA_1)) {
         }
 
-        private static PdfUAConfig CreateConfig() {
-            return new PdfUAConfig(PdfUAConformance.PDF_UA_1, "English pangram", "en-US");
+        private static PdfUAConfig CreateConfig(PdfUAConformance uaConformance) {
+            return new PdfUAConfig(uaConformance, "English pangram", "en-US");
         }
     }
 }

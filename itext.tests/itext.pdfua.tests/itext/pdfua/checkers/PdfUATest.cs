@@ -197,6 +197,22 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DocumentWithoutViewerPreferencesUA2Test() {
+            String outPdf = DESTINATION_FOLDER + "documentWithoutViewerPreferencesUA2Test.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA2Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES, e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DocumentWithEmptyViewerPreferencesTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
@@ -214,6 +230,23 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DocumentWithEmptyViewerPreferencesUA2Test() {
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesUA2Test.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA2Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences());
+            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES, e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidViewerPreferencesTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
@@ -221,6 +254,23 @@ namespace iText.Pdfua.Checkers {
             pdfDoc.SetTagged();
             ValidationContainer validationContainer = new ValidationContainer();
             validationContainer.AddChecker(new PdfUA1Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(false));
+            pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithInvalidViewerPreferencesUA2Test() {
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesUA2Test.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA2Checker(pdfDoc));
             pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(false));
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));

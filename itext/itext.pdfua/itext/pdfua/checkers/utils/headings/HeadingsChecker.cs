@@ -21,153 +21,52 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using iText.Commons.Utils;
-using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
-using iText.Layout;
 using iText.Layout.Renderer;
-using iText.Layout.Tagging;
 using iText.Pdfua.Checkers.Utils;
-using iText.Pdfua.Exceptions;
+using iText.Pdfua.Checkers.Utils.Ua1;
 
 namespace iText.Pdfua.Checkers.Utils.Headings {
-    /// <summary>Utility class which performs headings check according to PDF/UA specification.</summary>
+    /// <summary>Utility class which performs headings check according to PDF/UA-1 specification.</summary>
+    [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1HeadingsChecker")]
     public sealed class HeadingsChecker {
-        private static readonly Regex Hn_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("^H([1-6])$");
-
-        private readonly PdfUAValidationContext context;
-
-        private readonly ICollection<IRenderer> hRendererParents = new HashSet<IRenderer>();
-
-        private readonly ICollection<PdfDictionary> hPdfDictParents = new HashSet<PdfDictionary>();
-
-        private int previousHn = -1;
-
-        private bool wasAtLeastOneH = false;
+        private PdfUA1HeadingsChecker headingsChecker;
 
         /// <summary>
         /// Creates a new instance of
         /// <see cref="HeadingsChecker"/>.
         /// </summary>
-        /// <param name="context">The validation context.</param>
+        /// <param name="context">the validation context</param>
         public HeadingsChecker(PdfUAValidationContext context) {
-            this.context = context;
+            this.headingsChecker = new PdfUA1HeadingsChecker(context);
         }
 
         /// <summary>Checks if layout element has correct heading.</summary>
         /// <param name="renderer">layout element to check</param>
         public void CheckLayoutElement(IRenderer renderer) {
-            IPropertyContainer element = renderer.GetModelElement();
-            if (element is IAccessibleElement) {
-                IAccessibleElement accessibleElement = (IAccessibleElement)element;
-                String role = context.ResolveToStandardRole(accessibleElement.GetAccessibilityProperties().GetRole());
-                CheckHnSequence(role);
-                if (StandardRoles.H.Equals(role)) {
-                    IRenderer parent = renderer.GetParent();
-                    if (hRendererParents.Contains(parent)) {
-                        // Matterhorn-protocol checkpoint 14-006
-                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MORE_THAN_ONE_H_TAG);
-                    }
-                    else {
-                        if (parent != null) {
-                            hRendererParents.Add(parent);
-                        }
-                    }
-                }
-                CheckHAndHnUsing(role);
-            }
+            this.headingsChecker.CheckLayoutElement(renderer);
         }
 
         /// <summary>Checks if structure element has correct heading.</summary>
         /// <param name="structNode">structure element to check</param>
         public void CheckStructElement(IStructureNode structNode) {
-            String role = context.ResolveToStandardRole(structNode);
-            if (role == null) {
-                return;
-            }
-            CheckHnSequence(role);
-            if (StandardRoles.H.Equals(role)) {
-                PdfDictionary parent = ExtractPdfDictFromNode(structNode.GetParent());
-                if (hPdfDictParents.Contains(parent)) {
-                    // Matterhorn-protocol checkpoint 14-006
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MORE_THAN_ONE_H_TAG);
-                }
-                else {
-                    if (parent != null) {
-                        hPdfDictParents.Add(parent);
-                    }
-                }
-            }
-            CheckHAndHnUsing(role);
-        }
-
-        private void CheckHnSequence(String role) {
-            int currHn = ExtractNumber(role);
-            if (currHn != -1) {
-                if (previousHn == -1) {
-                    if (currHn != 1) {
-                        // Matterhorn-protocol checkpoint 14-002
-                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.H1_IS_SKIPPED);
-                    }
-                }
-                else {
-                    if (currHn - previousHn > 1) {
-                        // Matterhorn-protocol checkpoint 14-003
-                        throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.HN_IS_SKIPPED, 
-                            previousHn + 1));
-                    }
-                }
-                previousHn = currHn;
-            }
-        }
-
-        private void CheckHAndHnUsing(String role) {
-            if (StandardRoles.H.Equals(role)) {
-                wasAtLeastOneH = true;
-            }
-            if (wasAtLeastOneH && previousHn != -1) {
-                // Matterhorn-protocol checkpoint 14-007
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_USES_BOTH_H_AND_HN);
-            }
-        }
-
-        private static int ExtractNumber(String heading) {
-            if (heading == null) {
-                return -1;
-            }
-            Matcher matcher = iText.Commons.Utils.Matcher.Match(Hn_PATTERN, heading);
-            if (matcher.Matches()) {
-                return Convert.ToInt32(matcher.Group(1), System.Globalization.CultureInfo.InvariantCulture);
-            }
-            return -1;
-        }
-
-        private static PdfDictionary ExtractPdfDictFromNode(IStructureNode node) {
-            if (node is PdfStructTreeRoot) {
-                return ((PdfStructTreeRoot)node).GetPdfObject();
-            }
-            else {
-                if (node is PdfStructElem) {
-                    return ((PdfStructElem)node).GetPdfObject();
-                }
-            }
-            return null;
+            this.headingsChecker.CheckStructElement(structNode);
         }
 
         /// <summary>Handler class that checks heading tags while traversing the tag tree.</summary>
+        [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1HeadingsChecker.PdfUA1HeadingHandler"
+            )]
         public class HeadingHandler : ContextAwareTagTreeIteratorHandler {
-            private readonly HeadingsChecker checker;
+            private readonly PdfUA1HeadingsChecker checker;
 
             /// <summary>
             /// Creates a new instance of
-            /// <see cref="HeadingsChecker"/>.
+            /// <see cref="iText.Pdfua.Checkers.Utils.Ua1.PdfUA1HeadingsChecker"/>.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">the validation context</param>
             public HeadingHandler(PdfUAValidationContext context)
                 : base(context) {
-                checker = new HeadingsChecker(context);
+                checker = new PdfUA1HeadingsChecker(context);
             }
 
             public override bool Accept(IStructureNode node) {

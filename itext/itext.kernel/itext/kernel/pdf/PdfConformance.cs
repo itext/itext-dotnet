@@ -255,8 +255,13 @@ namespace iText.Kernel.Pdf {
             // But if e.g. for PDF/A-4 revision wasn't specified, we will fix it.
             if (conformance.IsPdfUA()) {
                 if (xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID, XMPConst.PART) == null) {
-                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
-                        ));
+                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, Convert.ToInt32(conformance.GetUAConformance
+                        ().GetPart(), System.Globalization.CultureInfo.InvariantCulture), new PropertyOptions(PropertyOptions.
+                        SEPARATE_NODE));
+                }
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2 && xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID
+                    , XMPConst.REV) == null) {
+                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.REV, 2024);
                 }
             }
             if (conformance.IsPdfA()) {

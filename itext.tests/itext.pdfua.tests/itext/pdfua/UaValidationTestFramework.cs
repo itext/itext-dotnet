@@ -51,6 +51,8 @@ namespace iText.Pdfua {
 
         private readonly IList<Action<PdfDocument>> beforeGeneratorHook = new List<Action<PdfDocument>>();
 
+        private PdfUAConformance conformance = PdfUAConformance.PDF_UA_1;
+
         public UaValidationTestFramework(String destinationFolder)
             : this(destinationFolder, true) {
         }
@@ -58,6 +60,11 @@ namespace iText.Pdfua {
         public UaValidationTestFramework(String destinationFolder, bool defaultCheckDocClosingByReopening) {
             this.destinationFolder = destinationFolder;
             this.defaultCheckDocClosingByReopening = defaultCheckDocClosingByReopening;
+        }
+
+        public virtual iText.Pdfua.UaValidationTestFramework SetConformance(PdfUAConformance conformance) {
+            this.conformance = conformance;
+            return this;
         }
 
         public virtual void AddSuppliers(params UaValidationTestFramework.Generator<IBlockElement>[] suppliers) {
@@ -121,7 +128,9 @@ namespace iText.Pdfua {
         private String VerAPdfResult(String filename, bool failureExpected) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(conformance == PdfUAConformance.PDF_UA_1 ? PdfVersion.PDF_1_7 : PdfVersion.PDF_2_0)), 
+                conformance);
             Document document = new Document(pdfDoc);
             document.GetPdfDocument().GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer()
                 );
@@ -162,7 +171,8 @@ namespace iText.Pdfua {
             try {
                 String outPath = destinationFolder + filename;
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath));
+                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath, new WriterProperties().SetPdfVersion(
+                    conformance == PdfUAConformance.PDF_UA_1 ? PdfVersion.PDF_1_7 : PdfVersion.PDF_2_0)), conformance);
                 foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
                     pdfDocumentConsumer(pdfDoc);
                 }
@@ -183,7 +193,9 @@ namespace iText.Pdfua {
                 String outPath = destinationFolder + "reopen_" + filename;
                 String inPath = destinationFolder + filename;
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath));
+                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath, new WriterProperties
+                    ().SetPdfVersion(conformance == PdfUAConformance.PDF_UA_1 ? PdfVersion.PDF_1_7 : PdfVersion.PDF_2_0)), 
+                    conformance);
                 pdfDoc.Close();
             }
             catch (Exception e) {

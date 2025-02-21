@@ -1569,6 +1569,9 @@ namespace iText.Signatures {
                 if (GetConformance().IsPdfA()) {
                     PdfAChecker checker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
                     ValidationContainer validationContainer = new ValidationContainer();
+                    if ("4".Equals(GetConformance().GetAConformance().GetPart())) {
+                        validationContainer.AddChecker(new Pdf20Checker());
+                    }
                     validationContainer.AddChecker(checker);
                     GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
                     this.pdfPageFactory = new PdfAPageFactory(checker);

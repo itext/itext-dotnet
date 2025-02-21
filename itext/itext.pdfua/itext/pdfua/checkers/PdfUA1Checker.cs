@@ -34,8 +34,8 @@ using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 using iText.Layout.Validation.Context;
 using iText.Pdfua.Checkers.Utils;
-using iText.Pdfua.Checkers.Utils.Headings;
 using iText.Pdfua.Checkers.Utils.Tables;
+using iText.Pdfua.Checkers.Utils.Ua1;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers {
@@ -58,7 +58,7 @@ namespace iText.Pdfua.Checkers {
 
         private readonly TagStructureContext tagStructureContext;
 
-        private readonly HeadingsChecker headingsChecker;
+        private readonly PdfUA1HeadingsChecker headingsChecker;
 
         private readonly PdfUAValidationContext context;
 
@@ -70,7 +70,7 @@ namespace iText.Pdfua.Checkers {
             this.pdfDocument = pdfDocument;
             this.tagStructureContext = new TagStructureContext(pdfDocument);
             this.context = new PdfUAValidationContext(pdfDocument);
-            this.headingsChecker = new HeadingsChecker(context);
+            this.headingsChecker = new PdfUA1HeadingsChecker(context);
         }
 
         /// <summary>
@@ -162,6 +162,37 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
+        /// <summary>
+        /// Checks that the
+        /// <c>Catalog</c>
+        /// dictionary of a conforming file (the version number of a file may be any value
+        /// from 1.0 to 1.7) contains the
+        /// <c>Metadata</c>
+        /// key whose value is a metadata stream.
+        /// </summary>
+        /// <remarks>
+        /// Checks that the
+        /// <c>Catalog</c>
+        /// dictionary of a conforming file (the version number of a file may be any value
+        /// from 1.0 to 1.7) contains the
+        /// <c>Metadata</c>
+        /// key whose value is a metadata stream. Also checks that the value
+        /// of
+        /// <c>pdfuaid:part</c>
+        /// is 1 for conforming PDF files.
+        /// <para />
+        /// Checks that the
+        /// <c>Metadata</c>
+        /// stream in the document catalog dictionary includes a
+        /// <c>dc:title</c>
+        /// entry
+        /// reflecting the title of the document.
+        /// </remarks>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// document catalog dictionary
+        /// </param>
         protected internal virtual void CheckMetadata(PdfCatalog catalog) {
             if (catalog.GetDocument().GetPdfVersion().CompareTo(PdfVersion.PDF_1_7) > 0) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.INVALID_PDF_VERSION);
@@ -184,20 +215,6 @@ namespace iText.Pdfua.Checkers {
             catch (XMPException e) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM
                     , e);
-            }
-        }
-
-        private void CheckViewerPreferences(PdfCatalog catalog) {
-            PdfDictionary viewerPreferences = catalog.GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
-            if (viewerPreferences == null) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
-            }
-            PdfObject displayDocTitle = viewerPreferences.Get(PdfName.DisplayDocTitle);
-            if (!(displayDocTitle is PdfBoolean)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
-            }
-            if (PdfBoolean.FALSE.Equals(displayDocTitle)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE);
             }
         }
 
@@ -330,7 +347,7 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
             tagTreeIterator.AddHandler(new FormulaCheckUtil.FormulaTagHandler(context));
             tagTreeIterator.AddHandler(new NoteCheckUtil.NoteTagHandler(context));
-            tagTreeIterator.AddHandler(new HeadingsChecker.HeadingHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA1HeadingsChecker.PdfUA1HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             tagTreeIterator.AddHandler(new AnnotationCheckUtil.AnnotationHandler(context));
             tagTreeIterator.AddHandler(new FormCheckUtil.FormTagHandler(context));

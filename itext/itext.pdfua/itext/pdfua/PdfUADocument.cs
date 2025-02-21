@@ -40,6 +40,8 @@ namespace iText.Pdfua {
     public class PdfUADocument : PdfDocument {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument));
 
+        private IValidationChecker pdf20Checker;
+
         /// <summary>Creates a PdfUADocument instance.</summary>
         /// <param name="writer">The writer to write the PDF document.</param>
         /// <param name="config">The configuration for the PDF/UA document.</param>
@@ -57,6 +59,9 @@ namespace iText.Pdfua {
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
             PdfUAChecker checker = GetCorrectCheckerFromConformance(config.GetConformance());
+            if (pdf20Checker != null) {
+                validationContainer.AddChecker(pdf20Checker);
+            }
             validationContainer.AddChecker(checker);
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfUAPageFactory(checker);
@@ -84,6 +89,9 @@ namespace iText.Pdfua {
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
             PdfUAChecker checker = GetCorrectCheckerFromConformance(config.GetConformance());
+            if (pdf20Checker != null) {
+                validationContainer.AddChecker(pdf20Checker);
+            }
             validationContainer.AddChecker(checker);
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfUAPageFactory(checker);
@@ -132,6 +140,7 @@ namespace iText.Pdfua {
 
                 case "2": {
                     checker = new PdfUA2Checker(this);
+                    pdf20Checker = new Pdf20Checker();
                     break;
                 }
 

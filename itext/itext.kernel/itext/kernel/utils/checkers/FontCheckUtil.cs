@@ -29,7 +29,7 @@ namespace iText.Kernel.Utils.Checkers {
         private FontCheckUtil() {
         }
 
-        // Empty constructor
+        // Empty constructor.
         /// <summary>Checks the text by the passed checker and the font.</summary>
         /// <param name="text">the text to check</param>
         /// <param name="font">the font to check</param>
