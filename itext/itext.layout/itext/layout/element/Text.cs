@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Exceptions;
@@ -139,6 +140,17 @@ namespace iText.Layout.Element {
         /// <returns>this Element</returns>
         public virtual iText.Layout.Element.Text SetNeutralRole() {
             this.GetAccessibilityProperties().SetRole(null);
+            return this;
+        }
+
+        /// <summary>Disable otf features applying for this text element.</summary>
+        /// <returns>
+        /// this
+        /// <c>Text</c>
+        /// element
+        /// </returns>
+        public virtual iText.Layout.Element.Text DisableOtfFeatures() {
+            this.SetProperty(Property.FONT_SCRIPT, UnicodeScript.UNKNOWN);
             return this;
         }
 
