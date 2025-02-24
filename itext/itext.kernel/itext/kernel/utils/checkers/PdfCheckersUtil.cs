@@ -36,6 +36,28 @@ namespace iText.Kernel.Utils.Checkers {
 
         // Private constructor will prevent the instantiation of this class directly.
         /// <summary>
+        /// Checks that natural language is declared using the methods described in ISO 32000-2:2020, 14.9.2 or
+        /// ISO 32000-1:2008, 14.9.2 (same requirements).
+        /// </summary>
+        /// <param name="catalogDict">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// document catalog dictionary containing
+        /// <c>Lang</c>
+        /// entry to check
+        /// </param>
+        /// <param name="exceptionSupplier">
+        /// 
+        /// <c>Function&lt;String, PdfException&gt;</c>
+        /// in order to provide correct exception
+        /// </param>
+        public static void ValidateLang(PdfDictionary catalogDict, Func<String, PdfException> exceptionSupplier) {
+            if (!BCP47Validator.Validate(catalogDict.Get(PdfName.Lang).ToString())) {
+                throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY);
+            }
+        }
+
+        /// <summary>
         /// Checks that the
         /// <c>Catalog</c>
         /// dictionary of a conforming file contains the
@@ -76,14 +98,21 @@ namespace iText.Kernel.Utils.Checkers {
         /// document catalog dictionary
         /// </param>
         /// <param name="conformance">either PDF/A or PDF/UA conformance to check</param>
-        public static void CheckMetadata(PdfDictionary catalog, PdfConformance conformance) {
+        /// <param name="exceptionSupplier">
+        /// 
+        /// <c>Function&lt;String, PdfException&gt;</c>
+        /// in order to provide correct exception
+        /// </param>
+        public static void CheckMetadata(PdfDictionary catalog, PdfConformance conformance, Func<String, PdfException
+            > exceptionSupplier) {
             if (!catalog.ContainsKey(PdfName.Metadata)) {
-                throw new PdfException(KernelExceptionMessageConstant.METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY);
+                throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY
+                    );
             }
             try {
                 PdfStream xmpMetadata = catalog.GetAsStream(PdfName.Metadata);
                 if (xmpMetadata == null) {
-                    throw new PdfException(KernelExceptionMessageConstant.INVALID_METADATA_VALUE);
+                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.INVALID_METADATA_VALUE);
                 }
                 XMPMeta metadata = XMPMetaFactory.Parse(new MemoryStream(xmpMetadata.GetBytes()));
                 String NS_ID = conformance.IsPdfA() ? XMPConst.NS_PDFA_ID : XMPConst.NS_PDFUA_ID;
@@ -91,18 +120,18 @@ namespace iText.Kernel.Utils.Checkers {
                 String expectedPart = conformance.IsPdfA() ? conformance.GetAConformance().GetPart() : conformance.GetUAConformance
                     ().GetPart();
                 if (actualPart == null || !expectedPart.Equals(actualPart.GetValue())) {
-                    throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                    throw exceptionSupplier.Invoke(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
                         , expectedPart, (actualPart != null && String.IsNullOrEmpty(actualPart.GetValue())) ? null : actualPart
                         ));
                 }
                 XMPProperty rev = metadata.GetProperty(NS_ID, XMPConst.REV);
                 if (rev == null || !IsValidXmpRevision(rev.GetValue())) {
-                    throw new PdfException(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
                         );
                 }
             }
-            catch (XMPException e) {
-                throw new PdfException(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e);
+            catch (XMPException) {
+                throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.INVALID_METADATA_VALUE);
             }
         }
 

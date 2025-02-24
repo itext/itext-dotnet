@@ -20,8 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils.Checkers;
 using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 
@@ -32,6 +34,9 @@ namespace iText.Kernel.Validation {
     /// the series of ISO 32000 specifications, starting from ISO 32000-2:2020.
     /// </remarks>
     public class Pdf20Checker : IValidationChecker {
+        private static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new Pdf20ConformanceException
+            (msg);
+
         /// <summary>
         /// Creates new
         /// <see cref="Pdf20Checker"/>
@@ -69,8 +74,26 @@ namespace iText.Kernel.Validation {
         /// document catalog dictionary to check
         /// </param>
         private void CheckCatalog(PdfCatalog catalog) {
+            CheckLang(catalog);
             CheckMetadata(catalog);
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks that natural language is declared using the methods described in ISO 32000-2:2020, 14.9.2.
+        ///     </summary>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// document catalog dictionary
+        /// </param>
+        internal virtual void CheckLang(PdfCatalog catalog) {
+            PdfDictionary catalogDict = catalog.GetPdfObject();
+            PdfObject lang = catalogDict.Get(PdfName.Lang);
+            if (lang is PdfString && !String.IsNullOrEmpty(((PdfString)lang).GetValue())) {
+                PdfCheckersUtil.ValidateLang(catalogDict, EXCEPTION_SUPPLIER);
+            }
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>

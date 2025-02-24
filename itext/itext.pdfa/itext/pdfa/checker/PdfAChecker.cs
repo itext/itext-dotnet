@@ -26,12 +26,14 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Colors;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
+using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
@@ -122,6 +124,11 @@ namespace iText.Pdfa.Checker {
 
         protected internal IDictionary<PdfObject, PdfColorSpace> checkedObjectsColorspace = new Dictionary<PdfObject
             , PdfColorSpace>();
+
+//\cond DO_NOT_DOCUMENT
+        internal static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new PdfAConformanceException
+            (msg);
+//\endcond
 
         private bool fullCheckMode = false;
 

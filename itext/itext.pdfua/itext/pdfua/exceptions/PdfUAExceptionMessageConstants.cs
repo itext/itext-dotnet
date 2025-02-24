@@ -35,6 +35,8 @@ namespace iText.Pdfua.Exceptions {
         public const String CANNOT_FIND_PDF_UA_CHECKER_FOR_SPECIFIED_CONFORMANCE = "Cannot find an appropriate " +
              "PDF/UA checker for the specified conformance.";
 
+        public const String CATALOG_SHOULD_CONTAIN_LANG_ENTRY = "Catalog dictionary should contain lang entry.";
+
         public const String CELL_CANT_BE_DETERMINED_ALGORITHMICALLY = "TD cell row:{0} col:{1} in table {2} does" 
             + " not contain a valid Headers attribute, and Headers for this cell cannot be determined algorithmically.";
 

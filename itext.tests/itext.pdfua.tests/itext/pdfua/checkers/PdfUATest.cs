@@ -25,6 +25,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -146,8 +147,25 @@ namespace iText.Pdfua.Checkers {
             PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
             info.SetTitle("English pangram");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
-                Message);
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CATALOG_SHOULD_CONTAIN_LANG_ENTRY, e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithNoLangEntryUA2Test() {
+            String outPdf = DESTINATION_FOLDER + "documentWithNoLangEntryUA2Test.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDoc.SetTagged();
+            ValidationContainer validationContainer = new ValidationContainer();
+            validationContainer.AddChecker(new PdfUA2Checker(pdfDoc));
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
+            pdfDoc.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+            PdfDocumentInfo info = pdfDoc.GetDocumentInfo();
+            info.SetTitle("English pangram");
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CATALOG_SHOULD_CONTAIN_LANG_ENTRY, e.Message
+                );
         }
 
         [NUnit.Framework.Test]
@@ -165,6 +183,28 @@ namespace iText.Pdfua.Checkers {
             info.SetTitle("English pangram");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
+                Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithEmptyStringLangEntryUA2Test() {
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyStringLangEntryTestUA2.pdf";
+            PdfDocument pdfDoc = new PdfUADocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "English pangram"
+                , ""));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
+                Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithInvalidLangEntryUA2Test() {
+            String outPdf = DESTINATION_FOLDER + "documentWithInvalidLangEntryUA2Test.pdf";
+            PdfDocument pdfDoc = new PdfUADocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
+                .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "English pangram"
+                , "inv:alid"));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
                 Message);
         }
 

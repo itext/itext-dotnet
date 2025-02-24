@@ -22,16 +22,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils.Checkers;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Validation {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfCheckerTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/validation/PdfCheckerTest/";
+
+        private static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new PdfException(msg);
 
         [NUnit.Framework.Test]
         public virtual void InvalidTypeSubtypeMetadataUA2Test() {
@@ -64,6 +68,64 @@ namespace iText.Kernel.Validation {
         }
 
         [NUnit.Framework.Test]
+        public virtual void NoMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
+                    .GetPdfObject(), PdfConformance.PDF_UA_2, EXCEPTION_SUPPLIER));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY
+                    , e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotStreamMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.Put(PdfName.Metadata, PdfName.Metadata);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
+                    .GetPdfObject(), PdfConformance.PDF_UA_2, EXCEPTION_SUPPLIER));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
+        public virtual void BrokenMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.Put(PdfName.Metadata, new PdfStream(new byte[] { 1, 2, 3 }));
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
+                    .GetPdfObject(), PdfConformance.PDF_UA_2, EXCEPTION_SUPPLIER));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoPartInMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "no_version_metadata_ua2.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                catalog.Put(PdfName.Metadata, metadata);
+                catalog.Put(PdfName.Type, PdfName.Metadata);
+                catalog.Put(PdfName.Subtype, PdfName.XML);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
+                    .GetPdfObject(), PdfConformance.PDF_UA_2, EXCEPTION_SUPPLIER));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                    , 2, null), e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void NoRevInMetadataUA2Test() {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
                 SetPdfVersion(PdfVersion.PDF_2_0)))) {
@@ -75,7 +137,7 @@ namespace iText.Kernel.Validation {
                 catalog.Put(PdfName.Type, PdfName.Metadata);
                 catalog.Put(PdfName.Subtype, PdfName.XML);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
-                    .GetPdfObject(), PdfConformance.PDF_UA_2));
+                    .GetPdfObject(), PdfConformance.PDF_UA_2, EXCEPTION_SUPPLIER));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
                     , e.Message);
             }
@@ -93,7 +155,46 @@ namespace iText.Kernel.Validation {
                 catalog.Put(PdfName.Type, PdfName.Metadata);
                 catalog.Put(PdfName.Subtype, PdfName.XML);
                 NUnit.Framework.Assert.DoesNotThrow(() => PdfCheckersUtil.CheckMetadata(catalog.GetPdfObject(), PdfConformance
-                    .PDF_UA_2));
+                    .PDF_UA_2, EXCEPTION_SUPPLIER));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidLangTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.SetLang(new PdfString("en-US"));
+                Pdf20Checker checker = new Pdf20Checker();
+                NUnit.Framework.Assert.DoesNotThrow(() => checker.CheckLang(catalog));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyLangTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.SetLang(new PdfString(""));
+                Pdf20Checker checker = new Pdf20Checker();
+                NUnit.Framework.Assert.DoesNotThrow(() => checker.CheckLang(catalog));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidLangTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.SetLang(new PdfString("inva:lid"));
+                Pdf20Checker checker = new Pdf20Checker();
+                Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => checker.CheckLang(catalog
+                    ));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
+                    Message);
             }
         }
     }

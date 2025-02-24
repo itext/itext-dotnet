@@ -377,7 +377,7 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckMetaData(PdfDictionary catalog) {
             try {
                 try {
-                    PdfCheckersUtil.CheckMetadata(catalog, PdfConformance.PDF_A_4);
+                    PdfCheckersUtil.CheckMetadata(catalog, PdfConformance.PDF_A_4, EXCEPTION_SUPPLIER);
                 }
                 catch (PdfException e) {
                     throw new PdfAConformanceException(e.Message);

@@ -20,8 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
 using iText.Pdfua.Exceptions;
@@ -42,6 +44,11 @@ namespace iText.Pdfua.Checkers {
     /// pdfua project.
     /// </remarks>
     public abstract class PdfUAChecker : IValidationChecker {
+//\cond DO_NOT_DOCUMENT
+        internal static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new PdfUAConformanceException
+            (msg);
+//\endcond
+
         private bool warnedOnPageFlush = false;
 
         /// <summary>
@@ -61,6 +68,30 @@ namespace iText.Pdfua.Checkers {
                 warnedOnPageFlush = true;
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Checks that the default natural language for content and text strings is specified using the
+        /// <c>Lang</c>
+        /// entry, with a nonempty value, in the document catalog dictionary.
+        /// </summary>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// document catalog dictionary
+        /// </param>
+        internal virtual void CheckLang(PdfCatalog catalog) {
+            PdfDictionary catalogDict = catalog.GetPdfObject();
+            PdfObject lang = catalogDict.Get(PdfName.Lang);
+            if (!(lang is PdfString)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
+            }
+            if (String.IsNullOrEmpty(((PdfString)lang).GetValue())) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY
+                    );
+            }
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>

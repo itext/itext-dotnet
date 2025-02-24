@@ -20,8 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -124,15 +122,12 @@ namespace iText.Pdfua.Checkers {
         /// document catalog dictionary
         /// </param>
         protected internal virtual void CheckMetadata(PdfCatalog catalog) {
+            PdfCheckersUtil.CheckMetadata(catalog.GetPdfObject(), PdfConformance.PDF_UA_2, EXCEPTION_SUPPLIER);
             try {
-                PdfCheckersUtil.CheckMetadata(catalog.GetPdfObject(), PdfConformance.PDF_UA_2);
                 XMPMeta metadata = catalog.GetDocument().GetXmpMetadata();
                 if (metadata.GetProperty(XMPConst.NS_DC, XMPConst.TITLE) == null) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_DC_TITLE_ENTRY);
                 }
-            }
-            catch (PdfException e) {
-                throw new PdfUAConformanceException(e.Message);
             }
             catch (XMPException e) {
                 throw new PdfUAConformanceException(e.Message);
@@ -155,6 +150,7 @@ namespace iText.Pdfua.Checkers {
         /// document catalog dictionary to check
         /// </param>
         private void CheckCatalog(PdfCatalog catalog) {
+            CheckLang(catalog);
             CheckMetadata(catalog);
             CheckViewerPreferences(catalog);
         }

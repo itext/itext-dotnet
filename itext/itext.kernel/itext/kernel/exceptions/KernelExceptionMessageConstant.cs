@@ -203,6 +203,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String DOCUMENT_HAS_NO_PDF_CATALOG_OBJECT = "Document has no PDF Catalog object.";
 
+        public const String DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY = "Document does not contain valid lang entry.";
+
         public const String DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED = "" + 
             "During decompression multiple streams in sum occupied more memory than allowed. Please either check "
              + "your pdf or increase the allowed single decompressed pdf stream maximum size value by setting " + 
