@@ -121,7 +121,7 @@ namespace iText.Commons.Actions.Producer {
             ProductData productData = new ProductData("public-name", "name", "1.0.0", 2020, 2021);
             ConfirmedEventWrapper @event = new ConfirmedEventWrapper(new ITextTestEvent(new SequenceId(), productData, 
                 null, "testing"), "nonproduction", "iText product");
-            String result = populator.Populate(JavaUtil.ArraysAsList(@event), "'module:'P #V (T)");
+            String result = populator.Populate(JavaCollectionsUtil.SingletonList(@event), "'module:'P #V (T)");
             NUnit.Framework.Assert.AreEqual("module:public-name #1.0.0 (non-production)", result);
         }
 

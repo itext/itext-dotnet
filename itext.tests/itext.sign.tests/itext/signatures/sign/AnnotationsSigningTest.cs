@@ -155,7 +155,7 @@ namespace iText.Signatures.Sign {
 
         private static IDictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
             IDictionary<int, IList<Rectangle>> result = new Dictionary<int, IList<Rectangle>>();
-            result.Put(1, JavaUtil.ArraysAsList(ignoredArea));
+            result.Put(1, JavaCollectionsUtil.SingletonList(ignoredArea));
             return result;
         }
     }

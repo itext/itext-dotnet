@@ -124,7 +124,7 @@ namespace iText.Layout.Renderer {
             float longestWordLength = textRendererFirst.GetMinMaxWidth().GetMaxWidth();
             TextRenderer textRendererSecond = new TextRenderer(new Text(thai.Substring(8)));
             textRendererSecond.SetProperty(Property.FONT, pdfFont);
-            textRendererSecond.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            textRendererSecond.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(5)));
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(longestWordLength * 1.5f, AbstractRenderer.INF));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
@@ -268,10 +268,10 @@ namespace iText.Layout.Renderer {
                 textRenderer.SetProperty(Property.FONT, font);
                 textRenderer.SetText(new String(new char[] { twoWords[i] }));
                 if (i == THAI_WORD.Length - 1 || i == twoWords.Length - 1) {
-                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(1)));
+                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(1)));
                 }
                 else {
-                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(-1)));
+                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(-1)));
                 }
                 lineRenderer.AddChild(textRenderer);
                 LayoutArea layoutArea = new LayoutArea(1, new Rectangle(0, 0, i * 100, 100));
@@ -308,7 +308,8 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new Text(""));
             textRenderer.SetProperty(Property.FONT, font);
             textRenderer.SetText(THAI_WORD);
-            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(THAI_WORD.Length)));
+            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(THAI_WORD.Length
+                )));
             lineRenderer.AddChild(textRenderer);
             LayoutArea layoutArea = new LayoutArea(1, new Rectangle(0, 0, 0, 100));
             specialScriptLayoutResults.Put(indexOfThaiRenderer, new LayoutResult(LayoutResult.NOTHING, layoutArea, null
@@ -334,11 +335,11 @@ namespace iText.Layout.Renderer {
                 textRenderer.SetProperty(Property.FONT, font);
                 if (i == THAI_WORD.Length - 1) {
                     textRenderer.SetText(new String(new char[] { THAI_WORD[i], ' ', ' ', ' ' }));
-                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(4)));
+                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(4)));
                 }
                 else {
                     textRenderer.SetText(new String(new char[] { THAI_WORD[i] }));
-                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(-1)));
+                    textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(-1)));
                 }
                 lineRenderer.AddChild(textRenderer);
                 LayoutArea layoutArea = new LayoutArea(1, new Rectangle(0, 0, i * 100, 100));
@@ -417,7 +418,7 @@ namespace iText.Layout.Renderer {
             Document document = new Document(pdfDocument);
             TextRenderer textRenderer = new TextRenderer(new Text(THAI_WORD));
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
-            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(5)));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(textRenderer);
@@ -723,7 +724,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
             textRenderer.SetProperty(Property.FONT, pdfFont);
             textRenderer.SetText(thai);
-            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(1)));
+            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(1)));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(textRenderer);
@@ -741,7 +742,7 @@ namespace iText.Layout.Renderer {
             TextRenderer thaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
             thaiTextRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             thaiTextRenderer.SetText(THAI_WORD);
-            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(5)));
             TextRenderer nonThaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text("."));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
@@ -760,7 +761,7 @@ namespace iText.Layout.Renderer {
             TextRenderer thaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
             thaiTextRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             thaiTextRenderer.SetText(THAI_WORD);
-            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(5)));
             TableRenderer inlineBlock = new TableRenderer(new Table(3));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
@@ -779,7 +780,7 @@ namespace iText.Layout.Renderer {
             TextRenderer thaiTextRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
             thaiTextRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             thaiTextRenderer.SetText(THAI_WORD);
-            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            thaiTextRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(5)));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(thaiTextRenderer);
@@ -796,7 +797,7 @@ namespace iText.Layout.Renderer {
             TextRenderer textRenderer = new TextRenderer(new iText.Layout.Element.Text(""));
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             textRenderer.SetText(THAI_WORD);
-            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(5)));
             LineRenderer lineRenderer = new LineRenderer();
             lineRenderer.SetParent(document.GetRenderer());
             lineRenderer.AddChild(textRenderer);
@@ -814,7 +815,8 @@ namespace iText.Layout.Renderer {
             TextRenderer textRendererForMinMaxWidth = new TextRenderer(new iText.Layout.Element.Text(THAI_WORD));
             textRendererForMinMaxWidth.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H
                 ));
-            textRendererForMinMaxWidth.SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(5)));
+            textRendererForMinMaxWidth.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList
+                (5)));
             textRendererForMinMaxWidth.SetParent(document.GetRenderer());
             float minWidth = textRendererForMinMaxWidth.GetMinMaxWidth().GetMinWidth();
             LineRenderer lineRenderer = new LineRenderer();
@@ -824,8 +826,8 @@ namespace iText.Layout.Renderer {
                 textRenderers[i] = new TextRenderer(new iText.Layout.Element.Text(""));
                 textRenderers[i].SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
                 textRenderers[i].SetText(new String(new char[] { THAI_WORD[i] }));
-                textRenderers[i].SetSpecialScriptsWordBreakPoints(new List<int>(JavaUtil.ArraysAsList(i + 1 != textRenderers
-                    .Length ? -1 : 1)));
+                textRenderers[i].SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(i + 1 !=
+                     textRenderers.Length ? -1 : 1)));
                 lineRenderer.AddChild(textRenderers[i]);
             }
             lineRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);

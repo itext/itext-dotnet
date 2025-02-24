@@ -95,7 +95,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest02.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
-            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1), destDoc);
+            srcDoc.CopyPagesTo(JavaCollectionsUtil.SingletonList(1), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"

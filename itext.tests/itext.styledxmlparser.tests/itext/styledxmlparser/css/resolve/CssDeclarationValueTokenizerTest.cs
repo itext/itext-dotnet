@@ -31,26 +31,26 @@ namespace iText.StyledXmlParser.Css.Resolve {
     public class CssDeclarationValueTokenizerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void FunctionTest01() {
-            RunTest("func(param)", JavaUtil.ArraysAsList("func(param)"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
-                .FUNCTION));
+            RunTest("func(param)", JavaCollectionsUtil.SingletonList("func(param)"), JavaCollectionsUtil.SingletonList
+                (CssDeclarationValueTokenizer.TokenType.FUNCTION));
         }
 
         [NUnit.Framework.Test]
         public virtual void FunctionTest02() {
-            RunTest("func(param1, param2)", JavaUtil.ArraysAsList("func(param1, param2)"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
-                .FUNCTION));
+            RunTest("func(param1, param2)", JavaCollectionsUtil.SingletonList("func(param1, param2)"), JavaCollectionsUtil
+                .SingletonList(CssDeclarationValueTokenizer.TokenType.FUNCTION));
         }
 
         [NUnit.Framework.Test]
         public virtual void FunctionTest03() {
-            RunTest("func(param,'param)',\"param))\")", JavaUtil.ArraysAsList("func(param,'param)',\"param))\")"), JavaUtil.ArraysAsList
-                (CssDeclarationValueTokenizer.TokenType.FUNCTION));
+            RunTest("func(param,'param)',\"param))\")", JavaCollectionsUtil.SingletonList("func(param,'param)',\"param))\")"
+                ), JavaCollectionsUtil.SingletonList(CssDeclarationValueTokenizer.TokenType.FUNCTION));
         }
 
         [NUnit.Framework.Test]
         public virtual void FunctionTest04() {
-            RunTest("func(param, innerFunc())", JavaUtil.ArraysAsList("func(param, innerFunc())"), JavaUtil.ArraysAsList
-                (CssDeclarationValueTokenizer.TokenType.FUNCTION));
+            RunTest("func(param, innerFunc())", JavaCollectionsUtil.SingletonList("func(param, innerFunc())"), JavaCollectionsUtil
+                .SingletonList(CssDeclarationValueTokenizer.TokenType.FUNCTION));
         }
 
         [NUnit.Framework.Test]
@@ -69,20 +69,20 @@ namespace iText.StyledXmlParser.Css.Resolve {
 
         [NUnit.Framework.Test]
         public virtual void StringTest01() {
-            RunTest("'a b c'", JavaUtil.ArraysAsList("a b c"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+            RunTest("'a b c'", JavaCollectionsUtil.SingletonList("a b c"), JavaCollectionsUtil.SingletonList(CssDeclarationValueTokenizer.TokenType
                 .STRING));
         }
 
         [NUnit.Framework.Test]
         public virtual void StringTest02() {
-            RunTest("\"a b c\"", JavaUtil.ArraysAsList("a b c"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+            RunTest("\"a b c\"", JavaCollectionsUtil.SingletonList("a b c"), JavaCollectionsUtil.SingletonList(CssDeclarationValueTokenizer.TokenType
                 .STRING));
         }
 
         [NUnit.Framework.Test]
         public virtual void StringTest03() {
-            RunTest("[ aa  bb  cc ]", JavaUtil.ArraysAsList("[ aa  bb  cc ]"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
-                .STRING));
+            RunTest("[ aa  bb  cc ]", JavaCollectionsUtil.SingletonList("[ aa  bb  cc ]"), JavaCollectionsUtil.SingletonList
+                (CssDeclarationValueTokenizer.TokenType.STRING));
         }
 
         [NUnit.Framework.Test]

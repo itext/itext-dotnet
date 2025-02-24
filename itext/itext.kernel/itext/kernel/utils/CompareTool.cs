@@ -271,8 +271,8 @@ namespace iText.Kernel.Utils {
             compareResult = new CompareTool.CompareResult(compareByContentErrorsLimit);
             ObjectPath catalogPath = new ObjectPath(cmpDocument.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument
                 .GetCatalog().GetPdfObject().GetIndirectReference());
-            ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Metadata
-                ));
+            ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(JavaCollectionsUtil.SingletonList(
+                PdfName.Metadata));
             CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.GetCatalog().GetPdfObject
                 (), catalogPath, compareResult, ignoredCatalogEntries);
             // Method compareDictionariesExtended eventually calls compareObjects method which doesn't compare page objects.
@@ -1561,8 +1561,8 @@ namespace iText.Kernel.Utils {
                     mergedKeys.AddAll(cmpCfDict.KeySet());
                     foreach (PdfName key in mergedKeys) {
                         objectPath.PushDictItemToPath(key);
-                        LinkedHashSet<PdfName> excludedKeys = new LinkedHashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Recipients)
-                            );
+                        LinkedHashSet<PdfName> excludedKeys = new LinkedHashSet<PdfName>(JavaCollectionsUtil.SingletonList(PdfName
+                            .Recipients));
                         CompareDictionariesExtended(outCfDict.GetAsDictionary(key), cmpCfDict.GetAsDictionary(key), objectPath, compareResult
                             , excludedKeys);
                         objectPath.Pop();

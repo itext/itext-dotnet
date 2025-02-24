@@ -46,10 +46,10 @@ namespace iText.IO.Font.Otf {
         public virtual void TestEquals() {
             Glyph glyph = new Glyph(200, 200, 200);
             GlyphLine.ActualText actualText = new GlyphLine.ActualText("-");
-            GlyphLine one = new GlyphLine(new List<Glyph>(JavaUtil.ArraysAsList(glyph)), new List<GlyphLine.ActualText
-                >(JavaUtil.ArraysAsList(actualText)), 0, 1);
-            GlyphLine two = new GlyphLine(new List<Glyph>(JavaUtil.ArraysAsList(glyph)), new List<GlyphLine.ActualText
-                >(JavaUtil.ArraysAsList(actualText)), 0, 1);
+            GlyphLine one = new GlyphLine(new List<Glyph>(JavaCollectionsUtil.SingletonList(glyph)), new List<GlyphLine.ActualText
+                >(JavaCollectionsUtil.SingletonList(actualText)), 0, 1);
+            GlyphLine two = new GlyphLine(new List<Glyph>(JavaCollectionsUtil.SingletonList(glyph)), new List<GlyphLine.ActualText
+                >(JavaCollectionsUtil.SingletonList(actualText)), 0, 1);
             one.Add(glyph);
             two.Add(glyph);
             one.SetEnd(one.GetEnd() + 1);

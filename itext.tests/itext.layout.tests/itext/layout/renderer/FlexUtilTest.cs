@@ -138,8 +138,9 @@ namespace iText.Layout.Renderer {
         public virtual void SimpleStretchTest01() {
             Style stretchStyle = new Style(WRAP_STYLE);
             stretchStyle.SetProperty(Property.ALIGN_CONTENT, AlignmentPropertyValue.STRETCH);
-            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(stretchStyle, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
-                (100f)), JavaUtil.ArraysAsList(0f), JavaUtil.ArraysAsList(0f));
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(stretchStyle, JavaCollectionsUtil.SingletonList<UnitValue
+                >(UnitValue.CreatePointValue(100f)), JavaCollectionsUtil.SingletonList(0f), JavaCollectionsUtil.SingletonList
+                (0f));
             // after checks
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
@@ -600,8 +601,9 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void BasisGtWidthGrow0Shrink0Test01() {
-            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(WRAP_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
-                (500f)), JavaUtil.ArraysAsList(0f), JavaUtil.ArraysAsList(0f));
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(WRAP_STYLE, JavaCollectionsUtil.SingletonList<UnitValue
+                >(UnitValue.CreatePointValue(500f)), JavaCollectionsUtil.SingletonList(0f), JavaCollectionsUtil.SingletonList
+                (0f));
             // after checks
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {
@@ -614,8 +616,9 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void BasisGtWidthGrow0Shrink1Test01() {
-            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(WRAP_STYLE, JavaUtil.ArraysAsList(UnitValue.CreatePointValue
-                (500f)), JavaUtil.ArraysAsList(0f), JavaUtil.ArraysAsList(1f));
+            IList<IList<FlexItemInfo>> rectangleTable = TestFlex(WRAP_STYLE, JavaCollectionsUtil.SingletonList<UnitValue
+                >(UnitValue.CreatePointValue(500f)), JavaCollectionsUtil.SingletonList(0f), JavaCollectionsUtil.SingletonList
+                (1f));
             // after checks
             NUnit.Framework.Assert.IsFalse(rectangleTable.IsEmpty());
             foreach (IList<FlexItemInfo> line in rectangleTable) {

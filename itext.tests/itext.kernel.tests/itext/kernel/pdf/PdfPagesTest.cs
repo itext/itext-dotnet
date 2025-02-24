@@ -611,7 +611,7 @@ namespace iText.Kernel.Pdf {
         public virtual void BrokenPageTreeWithExcessiveLastPageTest() {
             String inFileName = SOURCE_FOLDER + "brokenPageTreeNullLast.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            IList<int> pages = JavaUtil.ArraysAsList(4);
+            IList<int> pages = JavaCollectionsUtil.SingletonList(4);
             ICollection<int> nullPages = new HashSet<int>(pages);
             FindAndAssertNullPages(pdfDocument, nullPages);
         }
@@ -621,7 +621,7 @@ namespace iText.Kernel.Pdf {
         public virtual void BrokenPageTreeWithExcessiveMiddlePageTest() {
             String inFileName = SOURCE_FOLDER + "brokenPageTreeNullMiddle.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            IList<int> pages = JavaUtil.ArraysAsList(3);
+            IList<int> pages = JavaCollectionsUtil.SingletonList(3);
             ICollection<int> nullPages = new HashSet<int>(pages);
             FindAndAssertNullPages(pdfDocument, nullPages);
         }

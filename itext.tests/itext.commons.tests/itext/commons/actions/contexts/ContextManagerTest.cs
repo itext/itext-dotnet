@@ -68,7 +68,7 @@ namespace iText.Commons.Actions.Contexts {
             ContextManager manager = new ContextManager();
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespaceWithCapitals));
-            manager.RegisterGenericContext(testNamespaces, JavaUtil.ArraysAsList("myProduct"));
+            manager.RegisterGenericContext(testNamespaces, JavaCollectionsUtil.SingletonList("myProduct"));
             NUnit.Framework.Assert.AreEqual(testNamespace, manager.GetRecognisedNamespace(testNamespace + ".MyClass"));
             NUnit.Framework.Assert.AreEqual(testNamespaceWithCapitals.ToLowerInvariant(), manager.GetRecognisedNamespace
                 (testNamespaceWithCapitals + ".MyClass"));
