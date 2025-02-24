@@ -68,13 +68,13 @@ namespace iText.Pdfua {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_115());
-            framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
+        public virtual void LinkAnnotNotDirectChildOfAnnotLayoutTest() {
+            framework.AddSuppliers(new _Generator_116());
+            framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotLayoutTest");
         }
 
-        private sealed class _Generator_115 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_115() {
+        private sealed class _Generator_116 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_116() {
             }
 
             public IBlockElement Generate() {
@@ -88,6 +88,20 @@ namespace iText.Pdfua {
                 paragraph.Add(link);
                 return paragraph;
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotNotDirectChildOfAnnotKernelTest() {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Rectangle rect = new Rectangle(100, 650, 400, 100);
+                PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
+                    ));
+                annot.SetContents("link annot");
+                pdfDoc.AddNewPage();
+                pdfDoc.GetPage(1).AddAnnotation(annot);
+            }
+            );
+            framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotKernelTest");
         }
 
         [NUnit.Framework.Test]
@@ -214,6 +228,7 @@ namespace iText.Pdfua {
                 stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
                 pdfPage.AddAnnotation(stamp);
                 TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.MoveToKid(0);
                 tagPointer.GetProperties().SetAlternateDescription("Alt description");
             }
             );
@@ -227,6 +242,7 @@ namespace iText.Pdfua {
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 pdfPage.AddAnnotation(screen);
                 TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.MoveToKid(0);
                 tagPointer.GetProperties().SetAlternateDescription("Alt description");
             }
             );
@@ -345,21 +361,6 @@ namespace iText.Pdfua {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkTest1() {
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfPage page = pdfDoc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 650, 400, 100);
-                PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
-                    ));
-                annot.SetContents("link annot");
-                page.AddAnnotation(annot);
-            }
-            );
-            framework.AssertBothFail("linkAnnotNotDirectChildOfLinkTest1", PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK
-                );
-        }
-
-        [NUnit.Framework.Test]
         public virtual void LinkAnnotNotDirectChildOfLinkTest2() {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
@@ -378,8 +379,7 @@ namespace iText.Pdfua {
                 doc.Add(p1);
             }
             );
-            framework.AssertBothFail("linkAnnotNotDirectChildOfLinkTest2", PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK
-                );
+            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkTest2");
         }
 
         [NUnit.Framework.Test]
@@ -626,25 +626,6 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
-                );
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkInvalidCropTest() {
-            String outPdf = DESTINATION_FOLDER + "linkAnnotNotDirectChildOfLinkInvalidCropTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDoc.AddNewPage();
-            PdfArray array = new PdfArray();
-            array.Add(new PdfString("hey"));
-            page.Put(PdfName.CropBox, array);
-            Rectangle rect = new Rectangle(10000, 6500, 400, 100);
-            PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
-                ));
-            annot.SetContents("link annot");
-            page.AddAnnotation(annot);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
-            // VeraPdf doesn't complain, but the document is invalid, so it is also accepted behaviour
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK, e.Message
                 );
         }
 

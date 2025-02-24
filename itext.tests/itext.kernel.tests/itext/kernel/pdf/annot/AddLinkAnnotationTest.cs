@@ -212,5 +212,22 @@ namespace iText.Kernel.Pdf.Annot {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void AddLinkAnnotInTagged13PdfTest() {
+            String outPdf = destinationFolder + "addLinkAnnotInTagged13PdfTest.pdf";
+            String cmpPdf = sourceFolder + "cmp_addLinkAnnotInTagged13PdfTest.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf, new WriterProperties()
+                .SetPdfVersion(PdfVersion.PDF_1_3)))) {
+                pdfDoc.SetTagged();
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfLinkAnnotation annot = (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(100, 600, 50, 40)).SetAction
+                    (PdfAction.CreateURI("http://itextpdf.com")).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor
+                    (new PdfArray(new float[] { 1, 0, 0 }));
+                page.AddAnnotation(annot);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+                ));
+        }
     }
 }

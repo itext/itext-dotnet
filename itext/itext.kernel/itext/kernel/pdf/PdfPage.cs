@@ -1117,18 +1117,14 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged()) {
                 if (tagAnnotation) {
                     TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    if (!StandardRoles.ANNOT.Equals(tagPointer.GetRole()) && PdfVersion.PDF_1_4
-                                        // "Annot" tag was added starting from PDF 1.5
-                                        .CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                        if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfLinkAnnotation) && !(annotation is PdfPrinterMarkAnnotation
-                            )) {
-                            tagPointer.AddTag(StandardRoles.ANNOT);
-                        }
-                    }
+                    bool tagAdded = AddAnnotationTag(tagPointer, annotation);
                     iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
                     tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
                     if (prevPage != null) {
                         tagPointer.SetPageForTagging(prevPage);
+                    }
+                    if (tagAdded) {
+                        tagPointer.MoveToParent();
                     }
                 }
                 if (GetTabOrder() == null) {
@@ -1151,6 +1147,30 @@ namespace iText.Kernel.Pdf {
                 annots.SetModified();
             }
             return this;
+        }
+
+        private bool AddAnnotationTag(TagTreePointer tagPointer, PdfAnnotation annotation) {
+            if (annotation is PdfLinkAnnotation) {
+                // "Link" tag was added starting from PDF 1.4
+                if (PdfVersion.PDF_1_3.CompareTo(GetDocument().GetPdfVersion()) < 0) {
+                    if (!StandardRoles.LINK.Equals(tagPointer.GetRole())) {
+                        tagPointer.AddTag(StandardRoles.LINK);
+                        return true;
+                    }
+                }
+            }
+            else {
+                if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfPrinterMarkAnnotation)) {
+                    // "Annot" tag was added starting from PDF 1.5
+                    if (PdfVersion.PDF_1_4.CompareTo(GetDocument().GetPdfVersion()) < 0) {
+                        if (!StandardRoles.ANNOT.Equals(tagPointer.GetRole())) {
+                            tagPointer.AddTag(StandardRoles.ANNOT);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>Removes an annotation from the page.</summary>
