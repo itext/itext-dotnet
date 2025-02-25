@@ -290,5 +290,23 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.IsTrue(((InputFieldRenderer)buttonRenderer.GetChildRenderers()[0].SetParent(buttonRenderer
                 )).IsFlatten());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ButtonAlternativeDescriptionTest() {
+            String outPdf = DESTINATION_FOLDER + "buttonAlternativeDescription.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_buttonAlternativeDescription.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf))) {
+                using (Document document = new Document(pdfDocument)) {
+                    pdfDocument.SetTagged();
+                    Button formButton = new Button("form button");
+                    formButton.SetAlternativeDescription("alt description");
+                    formButton.SetValue("value");
+                    formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                    formButton.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
+                    document.Add(formButton);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
     }
 }

@@ -1623,6 +1623,41 @@ namespace iText.Forms {
                 , destinationFolder, "diff_"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void FormFieldAnnotAlternativeDescriptionTest() {
+            String outputFileName = destinationFolder + "formFieldAnnotAlternativeDescriptionTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_formFieldAnnotAlternativeDescriptionTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outputFileName));
+            pdfDoc.SetTagged();
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, "text name").SetWidgetRectangle(new Rectangle
+                (200, 200, 200, 20)).CreateText();
+            textFormField.GetFirstFormAnnotation().SetAlternativeDescription("text description");
+            PdfButtonFormField buttonFormField = new PushButtonFormFieldBuilder(pdfDoc, "button name").SetWidgetRectangle
+                (new Rectangle(200, 300, 200, 20)).CreatePushButton();
+            buttonFormField.GetFirstFormAnnotation().SetAlternativeDescription("button description");
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, "choice name").SetWidgetRectangle(
+                new Rectangle(200, 400, 200, 20)).CreateComboBox();
+            choiceFormField.GetFirstFormAnnotation().SetAlternativeDescription("choice description");
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, "radio name");
+            PdfButtonFormField radioGroup = builder.CreateRadioGroup();
+            PdfFormAnnotation radioAnnotation = builder.CreateRadioButton("radio button 1", new Rectangle(200, 500, 20
+                , 20));
+            radioAnnotation.SetAlternativeDescription("radio 1 description");
+            PdfFormAnnotation radioAnnotation2 = builder.CreateRadioButton("radio button 2", new Rectangle(200, 550, 20
+                , 20));
+            radioAnnotation2.SetAlternativeDescription("radio 2 description");
+            radioGroup.AddKid(radioAnnotation);
+            radioGroup.AddKid(radioAnnotation2);
+            acroForm.AddField(textFormField);
+            acroForm.AddField(buttonFormField);
+            acroForm.AddField(choiceFormField);
+            acroForm.AddField(radioGroup);
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal class CustomButtonFormField : PdfButtonFormField {
             private int counter = 0;

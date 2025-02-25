@@ -507,5 +507,21 @@ namespace iText.Forms.Form.Element {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ComboBoxAlternativeDescriptionTest() {
+            String outPdf = DESTINATION_FOLDER + "comboBoxAlternativeDescription.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxAlternativeDescription.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                document.GetPdfDocument().SetTagged();
+                ComboBoxField formComboBoxField = new ComboBoxField("form combo box field");
+                formComboBoxField.SetInteractive(true);
+                formComboBoxField.SetAlternativeDescription("description");
+                formComboBoxField.AddOption(new SelectFieldItem("option 1"));
+                formComboBoxField.AddOption(new SelectFieldItem("option 2"));
+                document.Add(formComboBoxField);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
     }
 }

@@ -164,6 +164,11 @@ namespace iText.Forms.Form.Renderer {
             String alternativeDescription = properties.GetAlternateDescription();
             if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
                 formField.SetAlternativeName(alternativeDescription);
+                foreach (PdfFormAnnotation annotation in formField.GetChildFormAnnotations()) {
+                    if (annotation.GetAlternativeDescription() == null) {
+                        annotation.SetAlternativeDescription(alternativeDescription);
+                    }
+                }
             }
         }
 
