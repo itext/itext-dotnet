@@ -205,7 +205,6 @@ namespace iText.Forms.Xfdf {
             if (annotName != null) {
                 switch (annotName) {
                     case XfdfConstants.TEXT: {
-                        //TODO DEVSIX-4027 add all attributes properly one by one
                         PdfTextAnnotation pdfTextAnnotation = new PdfTextAnnotation(XfdfObjectUtils.ConvertRectFromString(annotObject
                             .GetAttributeValue(XfdfConstants.RECT)));
                         AddCommonAnnotationAttributes(pdfTextAnnotation, annotObject);

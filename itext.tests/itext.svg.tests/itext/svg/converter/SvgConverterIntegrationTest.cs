@@ -533,7 +533,6 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-8769: adapt after supporting
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void DescriptionTagsTest() {
             IDictionary<String, ISvgNodeRenderer> map = new Dictionary<String, ISvgNodeRenderer>();

@@ -66,16 +66,13 @@ namespace iText.Pdfa {
                 .FORCE_EMBEDDED);
             PdfPage page1 = pdfDocument.AddNewPage();
             page1.AddOutputIntent(CreateOutputIntent());
-            Stream streamGray = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "BlackWhite.icc");
-            IccBased gray = new IccBased(streamGray, new float[] { 0.2f });
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState();
             PdfExtGState state = new PdfExtGState();
             state.SetFillOpacity(0.6f);
             canvas.SetExtGState(state);
-            canvas.BeginText().SetColor(gray, true)
-                        // required here till TODO: DEVSIX-7775 - Check Output intents and colorspaces is implemented
-                        .MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page with transparency").EndText().RestoreState();
+            canvas.BeginText().MoveText(36, 750).SetFontAndSize(font, 16).ShowText("Page with transparency").EndText()
+                .RestoreState();
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
         }

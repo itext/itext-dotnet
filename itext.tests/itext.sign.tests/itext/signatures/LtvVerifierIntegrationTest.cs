@@ -214,8 +214,6 @@ namespace iText.Signatures {
                 // dummy revision (signing cert of first revision has a chain without any revocation data).
                 // The second is main revision which verifying we want to test.
                 verifier.SwitchToPreviousRevision();
-                // TODO after implementing DEVSIX-6233, 1- pass local CRL for child certificate to LtvVerifier
-                //  2- don't manually change latestRevision field 3- don't use first signature and DSS in test PDF document
                 verifier.latestRevision = true;
                 IList<VerificationOK> verificationOKList = verifier.VerifySignature();
                 NUnit.Framework.Assert.AreEqual(3, verificationOKList.Count);

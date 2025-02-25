@@ -292,11 +292,11 @@ namespace iText.Pdfa.Checker {
             PdfType4Function function = new PdfType4Function(transformArray, new float[] { 0, 1, 0, 1, 0, 1 }, "{0}".GetBytes
                 (iText.Commons.Utils.EncodingUtil.ISO_8859_1));
             PdfDictionary currentColorSpaces = new PdfDictionary();
-            //TODO DEVSIX-4203 should not cause an IndexOutOfBoundException.
-            // Should throw PdfAConformanceException as Colorants dictionary always must be present
-            // for Pdf/A-2
-            NUnit.Framework.Assert.Catch(typeof(Exception), () => pdfA2Checker.CheckColorSpace(new PdfSpecialCs.DeviceN
-                (tmpArray, new PdfDeviceCs.Rgb(), function), null, currentColorSpaces, true, false));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA2Checker.CheckColorSpace
+                (new PdfSpecialCs.DeviceN(tmpArray, new PdfDeviceCs.Rgb(), function), null, currentColorSpaces, true, 
+                false));
+            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.COLORANTS_DICTIONARY_SHALL_NOT_BE_EMPTY_IN_DEVICE_N_COLORSPACE
+                , e.Message);
         }
 
         [NUnit.Framework.Test]

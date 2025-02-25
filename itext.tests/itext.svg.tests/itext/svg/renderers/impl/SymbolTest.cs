@@ -94,7 +94,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PreserveAspectRatioViewBoxTest() {
-            // TODO DEVSIX-3537 Processing of preserveAspectRatio attribute with offsets x and y is not currently supported
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "preserveAspectRatioViewBoxTest");
         }
 

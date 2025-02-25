@@ -198,7 +198,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-8769: adapt after supporting
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void ImageWithDescriptionsTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "image-descriptions", properties);
