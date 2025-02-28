@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
@@ -68,25 +69,43 @@ namespace iText.Pdfua.Checkers {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_TextContentIsNotTagged() {
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_TextContentIsNotTagged(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().BeginText().SetFontAndSize(GetFont(), 10).ShowText("Hello World!");
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_TextContentIsNotTagged", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("textContentIsNotTagged", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("textContentIsNotTagged", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_TextNoContentIsNotTagged() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_TextNoContentIsNotTagged(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().BeginText().SetFontAndSize(GetFont(), 10).EndText();
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_TextNoContentIsNotTagged");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("textNoContentIsNotTagged", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("textNoContentIsNotTagged", pdfUAConformance);
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -184,7 +203,7 @@ namespace iText.Pdfua.Checkers {
             PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
-            PdfCanvas canvas = new _PdfCanvas_249(pdfDoc.AddNewPage());
+            PdfCanvas canvas = new _PdfCanvas_269(pdfDoc.AddNewPage());
             // disable the checkIsoConformance call check by simulating  generating not tagged content
             // same as in annotations of formfields.
             GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
@@ -208,8 +227,8 @@ namespace iText.Pdfua.Checkers {
                 e.Message);
         }
 
-        private sealed class _PdfCanvas_249 : PdfCanvas {
-            public _PdfCanvas_249(PdfPage baseArg1)
+        private sealed class _PdfCanvas_269 : PdfCanvas {
+            public _PdfCanvas_269(PdfPage baseArg1)
                 : base(baseArg1) {
             }
 
@@ -293,43 +312,68 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged(PdfUAConformance pdfUAConformance
+            ) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
                 canvas.LineTo(200, 200).Fill();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_LineContentThatIsContentIsNotTagged", PdfUAExceptionMessageConstants
-                .TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("lineContentThatIsContentIsNotTagged", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("lineContentThatIsContentIsNotTagged", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged_noContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged_noContent(PdfUAConformance pdfUAConformance
+            ) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
                 canvas.LineTo(200, 200);
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_LineContentThatIsContentIsNotTagged_noContent");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("lineContentThatIsContentIsNotTagged_noContent", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("lineContentThatIsContentIsNotTagged_noContent", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact(PdfUAConformance 
+            pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
                 canvas.LineTo(200, 200).Fill();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact", PdfUAExceptionMessageConstants
-                .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("lineContentThatIsContentIsTaggedButIsNotAnArtifact", PdfUAExceptionMessageConstants
+                    .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("lineContentThatIsContentIsTaggedButIsNotAnArtifact", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact_no_drawing() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact_no_drawing(PdfUAConformance
+             pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -337,8 +381,15 @@ namespace iText.Pdfua.Checkers {
                 canvas.LineTo(300, 200);
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact_no_drawing"
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("lineContentThatIsContentIsTaggedButIsNotAnArtifactNoDrawing", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("lineContentThatIsContentIsTaggedButIsNotAnArtifactNoDrawing", pdfUAConformance
+                        );
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -357,8 +408,8 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_RectangleNotMarked() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_RectangleNotMarked(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -366,23 +417,30 @@ namespace iText.Pdfua.Checkers {
                 canvas.Fill();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_RectangleNotMarked", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_RectangleNotMarked", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleNotMarked", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_RectangleNoContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_RectangleNoContent(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
                 canvas.Rectangle(new Rectangle(200, 200, 100, 100));
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_RectangleNoContent");
+            framework.AssertBothValid("checkPoint_01_005_RectangleNoContent", PdfUAConformance.PDF_UA_1);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_RectangleClip() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_RectangleClip(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -390,11 +448,18 @@ namespace iText.Pdfua.Checkers {
                 canvas.Clip();
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_RectangleNoContent");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("checkPoint_01_005_RectangleNoContent", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleNoContent", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_RectangleClosePathStroke() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_RectangleClosePathStroke(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -402,12 +467,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.ClosePathStroke();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_RectangleClosePathStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_RectangleClosePathStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleClosePathStroke", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_Rectangle_EOFIllStroke() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_Rectangle_EOFIllStroke(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -415,12 +487,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.ClosePathEoFillStroke();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_Rectangle_ClosPathEOFIllStroke", PdfUAExceptionMessageConstants
-                .TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_Rectangle_ClosPathEOFIllStroke", PdfUAExceptionMessageConstants
+                    .TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_ClosPathEOFIllStroke", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_Rectangle_FillStroke() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_Rectangle_FillStroke(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -428,12 +507,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.FillStroke();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_Rectangle_FillStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_Rectangle_FillStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_FillStroke", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_Rectangle_eoFill() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_Rectangle_eoFill(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -441,12 +527,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.EoFill();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_Rectangle_eoFill", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_Rectangle_eoFill", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_eoFill", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_Rectangle_eoFillStroke() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_Rectangle_eoFillStroke(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -454,8 +547,15 @@ namespace iText.Pdfua.Checkers {
                 canvas.EoFillStroke();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_Rectangle_eoFillStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_Rectangle_eoFillStroke", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_eoFillStroke", pdfUAConformance);
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -472,27 +572,44 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P)).SetFillColor(ColorConstants.RED);
                 canvas.Rectangle(new Rectangle(200, 200, 100, 100)).Fill();
             }
             );
-            framework.AssertBothFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid", PdfUAExceptionMessageConstants
-                .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid", PdfUAExceptionMessageConstants
+                    .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent(PdfUAConformance pdfUAConformance
+            ) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P)).SetFillColor(ColorConstants.RED);
                 canvas.Rectangle(new Rectangle(200, 200, 100, 100));
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("checkPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent", pdfUAConformance
+                    );
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent", pdfUAConformance
+                        );
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -543,27 +660,41 @@ namespace iText.Pdfua.Checkers {
                 , DESTINATION_FOLDER, "diff_"));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_004_bezierCurveInvalidMCID() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_004_bezierCurveInvalidMCID(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
                     5).MoveTo(20, 20).LineTo(300, 300).SetStrokeColor(ColorConstants.RED).Fill();
             }
             );
-            framework.AssertBothFail("checkPoint_01_004_bezierCurveInvalidMCID", PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("checkPoint_01_004_bezierCurveInvalidMCID", PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_004_bezierCurveInvalidMCID", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_01_004_bezierCurveInvalidMCID_NoContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_01_004_bezierCurveInvalidMCID_NoContent(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
                     5).MoveTo(20, 20).LineTo(300, 300).SetStrokeColor(ColorConstants.RED);
             }
             );
-            framework.AssertBothValid("checkPoint_01_004_bezierCurveInvalidMCID_NoContent");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("checkPoint_01_004_bezierCurveInvalidMCID_NoContent", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("checkPoint_01_004_bezierCurveInvalidMCID_NoContent", pdfUAConformance);
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -703,8 +834,8 @@ namespace iText.Pdfua.Checkers {
                 , "Courier"), e.Message);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_19_003_iDEntryInNoteTagIsNotPresent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_19_003_iDEntryInNoteTagIsNotPresent(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = null;
                 try {
@@ -724,11 +855,19 @@ namespace iText.Pdfua.Checkers {
                     ("Hello World!").EndText().RestoreState().CloseTag();
             }
             );
-            framework.AssertBothFail("invalidNoteTag02", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("invalidNoteTag02", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY, 
+                    pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("invalidNoteTag02", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint_19_003_validNoteTagIsPresent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint_19_003_validNoteTagIsPresent(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfFont font = null;
                 try {
@@ -750,14 +889,21 @@ namespace iText.Pdfua.Checkers {
                     ("Hello World!").EndText().RestoreState().CloseTag();
             }
             );
-            framework.AssertBothValid("validNoteTagPresent");
-            String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent.pdf";
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validNoteTagPresent.pdf"
-                , DESTINATION_FOLDER, "diff_"));
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("validNoteTagPresent", pdfUAConformance);
+                String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent" + pdfUAConformance + ".pdf";
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validNoteTagPresent.pdf"
+                    , DESTINATION_FOLDER, "diff_"));
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("invalidNoteTag02", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void UsingCharacterWithoutUnicodeMappingTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void UsingCharacterWithoutUnicodeMappingTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
@@ -775,8 +921,15 @@ namespace iText.Pdfua.Checkers {
                                 .ShowText("Hello world").EndText().RestoreState().CloseTag();
             }
             );
-            framework.AssertBothFail("usingCharacterWithoutUnicodeMappingTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, " "), false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("usingCharacterWithoutUnicodeMappingTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                    .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, " "), false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("usingCharacterWithoutUnicodeMappingTest", pdfUAConformance);
+                }
+            }
         }
 
         private PdfFont GetFont() {

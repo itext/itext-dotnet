@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel.Colors;
@@ -69,6 +71,10 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        }
+
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.Test]
@@ -181,8 +187,8 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void ManuallyAddToCanvasCorrectFontAndUnTaggedContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ManuallyAddToCanvasCorrectFontAndUnTaggedContent(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 try {
                     MemoryStream os = new MemoryStream();
@@ -208,11 +214,19 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             );
-            framework.AssertBothValid("manuallyAddToCanvasCorrectFontAndUnTaggedContent");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("manuallyAddToCanvasCorrectFontAndUnTaggedContent", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("manuallyAddToCanvasCorrectFontAndUnTaggedContent", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactUnTaggedContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactUnTaggedContent(PdfUAConformance pdfUAConformance
+            ) {
             //Now we are again adding untagged content with some artifacts and embedded font's so we should also be fine
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 MemoryStream os = new MemoryStream();
@@ -239,7 +253,14 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             );
-            framework.AssertBothValid("manuallyAddToCanvasAndCorrectFontAndArtifactUnTaggedContent");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("manuallyAddToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("manuallyAddToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -275,8 +296,9 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideArtifact() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideArtifact(PdfUAConformance
+             pdfUAConformance) {
             // We are adding tagged content to an artifact. Looks like Verapdf doesn't check xobject stream at all because
             // page content is marked as artifact. We think it's wrong though.
             framework.AddBeforeGenerationHook((pdfDoc) => {
@@ -302,11 +324,19 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             );
-            framework.AssertBothValid("manuallyAddToCanvasAndCorrectFontInsideArtifact");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("manuallyAddToCanvasAndCorrectFontInsideArtifact", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("manuallyAddToCanvasAndCorrectFontInsideArtifact", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent(PdfUAConformance
+             pdfUAConformance) {
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
             dummyDoc.SetTagged();
@@ -330,13 +360,20 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObject(xObject);
             }
             );
-            framework.AssertBothFail("untaggedAddXobject", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("untaggedAddXobject", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("untaggedAddXobject", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent
-            () {
+            (PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
@@ -361,13 +398,20 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObjectAt(xObject, 200f, 200f);
             }
             );
-            framework.AssertBothFail("untaggedAddXobjectAt", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("untaggedAddXobjectAt", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("untaggedAddXobjectAt", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContenta
-            () {
+            (PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             MemoryStream os = new MemoryStream();
@@ -392,13 +436,20 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(200, 200, 200, 200));
             }
             );
-            framework.AssertBothFail("addXObjectFitted", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("addXObjectFitted", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("addXObjectFitted", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
+        [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContentab
-            () {
+            (PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
@@ -422,12 +473,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObjectWithTransformationMatrix(xObject, 1, 1, 1, 1, 1, 1);
             }
             );
-            framework.AssertBothFail("addXObjectWithTransfoMatrix", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("addXObjectWithTransfoMatrix", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("addXObjectWithTransfoMatrix", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddImageObjectNotInline() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddImageObjectNotInline(PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -441,12 +499,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageAt(imd, 200, 200, false);
             }
             );
-            framework.AssertBothFail("addIMageObjectNotInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("addIMageObjectNotInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("addIMageObjectNotInline", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddImageObjectInline() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddImageObjectInline(PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -460,12 +525,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageAt(imd, 200, 200, false);
             }
             );
-            framework.AssertBothFail("addIMageObjectInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("addIMageObjectInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("addIMageObjectInline", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddImageTranformationMatrix() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddImageTranformationMatrix(PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -479,12 +551,19 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageWithTransformationMatrix(imd, 1, 1, 1, 1, 1, 1, false);
             }
             );
-            framework.AssertBothFail("addIMageObjectTransfo", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("addIMageObjectTransfo", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("addIMageObjectTransfo", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddImageFittedIntoRectangle() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddImageFittedIntoRectangle(PdfUAConformance pdfUAConformance) {
             //We are adding untagged content we should throw an exception
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -498,8 +577,15 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageFittedIntoRectangle(imd, new Rectangle(200, 200, 200, 200), false);
             }
             );
-            framework.AssertBothFail("addImageFittedIntoRectangle", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                , false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("addImageFittedIntoRectangle", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    , false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("addImageFittedIntoRectangle", pdfUAConformance);
+                }
+            }
         }
     }
 }

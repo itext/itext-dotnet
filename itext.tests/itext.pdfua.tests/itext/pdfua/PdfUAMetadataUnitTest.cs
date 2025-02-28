@@ -132,8 +132,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void ValidMetadataUA2Test() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance
-                .PDF_UA_2)) {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_ua2.xmp"));
@@ -149,8 +148,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void CatalogNoMetadataUA2Test() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance
-                .PDF_UA_2)) {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 catalog.Remove(PdfName.Metadata);
@@ -165,8 +163,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void CatalogInvalidMetadataUA2Test() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance
-                .PDF_UA_2)) {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 catalog.Put(PdfName.Metadata, new PdfString("Error"));
@@ -181,8 +178,7 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
         public virtual void BrokenMetadataUA2Test() {
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance.PDF_UA_2
-                );
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
             pdfDocument.AddNewPage();
             PdfCatalog catalog = pdfDocument.GetCatalog();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_metadata_ua2.xmp"));
@@ -201,8 +197,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoPartInMetadataUA2Test() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance
-                .PDF_UA_2)) {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_no_part_ua2.xmp"));
@@ -221,8 +216,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidPartInMetadataUA2Test() {
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance.PDF_UA_2
-                );
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
             pdfDocument.AddNewPage();
             PdfCatalog catalog = pdfDocument.GetCatalog();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_invalid_part_ua2.xmp"));
@@ -241,8 +235,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoRevInMetadataUA2Test() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance
-                .PDF_UA_2)) {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_no_rev_ua2.xmp"));
@@ -261,8 +254,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidRevInMetadataUA2Test() {
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance.PDF_UA_2
-                );
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
             pdfDocument.AddNewPage();
             PdfCatalog catalog = pdfDocument.GetCatalog();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_invalid_rev_ua2.xmp"));
@@ -281,8 +273,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidLengthRevInMetadataUA2Test() {
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance.PDF_UA_2
-                );
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
             pdfDocument.AddNewPage();
             PdfCatalog catalog = pdfDocument.GetCatalog();
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_invalid_len_rev_ua2.xmp"
@@ -302,8 +293,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithNoTitleInMetadataUA2Test() {
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()), PdfUAConformance
-                .PDF_UA_2)) {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "no_title_metadata_ua2.xmp"));

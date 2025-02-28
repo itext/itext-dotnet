@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -53,8 +55,12 @@ namespace iText.Pdfua.Checkers {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfuaWithEmbeddedFilesWithoutFTest() {
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PdfuaWithEmbeddedFilesWithoutFTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(), "description", "file.txt"
                     , null, null, null);
@@ -63,12 +69,19 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.AddFileAttachment("file.txt", fs);
             }
             );
-            framework.AssertBothFail("pdfuaWithEmbeddedFilesWithoutF", PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("pdfuaWithEmbeddedFilesWithoutF", PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("pdfuaWithEmbeddedFilesWithoutF", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfuaWithEmbeddedFilesWithoutUFTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PdfuaWithEmbeddedFilesWithoutUFTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(), "description", "file.txt"
@@ -78,12 +91,19 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.AddFileAttachment("file.txt", fs);
             }
             );
-            framework.AssertBothFail("pdfuaWithEmbeddedFilesWithoutUF", PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("pdfuaWithEmbeddedFilesWithoutUF", PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("pdfuaWithEmbeddedFilesWithoutUF", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfuaWithValidEmbeddedFileTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PdfuaWithValidEmbeddedFileTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook(((pdfDocument) => {
                 PdfFont font;
                 try {
@@ -105,7 +125,7 @@ namespace iText.Pdfua.Checkers {
                     , "some test pdf file", "foo.pdf", PdfName.ApplicationPdf, null, new PdfName("Data")));
             }
             ));
-            framework.AssertBothValid("pdfuaWithValidEmbeddedFile");
+            framework.AssertBothValid("pdfuaWithValidEmbeddedFile", pdfUAConformance);
         }
     }
 }

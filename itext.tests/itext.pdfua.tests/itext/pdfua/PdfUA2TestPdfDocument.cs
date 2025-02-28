@@ -23,26 +23,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfua {
-    /// <summary>PdfDocument extension for testing purposes.</summary>
-    public class PdfUATestPdfDocument : PdfUADocument {
-        public PdfUATestPdfDocument(PdfWriter writer)
+    public class PdfUA2TestPdfDocument : PdfUADocument {
+        public PdfUA2TestPdfDocument(PdfWriter writer)
             : base(writer, CreateConfig()) {
         }
 
-        public PdfUATestPdfDocument(PdfWriter writer, DocumentProperties properties)
-            : base(writer, properties, CreateConfig()) {
-        }
-
-        public PdfUATestPdfDocument(PdfReader reader, PdfWriter writer)
+        public PdfUA2TestPdfDocument(PdfReader reader, PdfWriter writer)
             : base(reader, writer, CreateConfig()) {
         }
 
-        public PdfUATestPdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
-            : base(reader, writer, properties, CreateConfig()) {
-        }
-
         private static PdfUAConfig CreateConfig() {
-            return new PdfUAConfig(PdfUAConformance.PDF_UA_1, "English pangram", "en-US");
+            return new PdfUAConfig(PdfUAConformance.PDF_UA_2, "English pangram", "en-US");
         }
     }
 }

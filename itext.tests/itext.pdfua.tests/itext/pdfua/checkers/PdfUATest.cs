@@ -336,7 +336,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             framework.AssertBothFail("pdfuaOCGPropertiesCheck01", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
-                );
+                , PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]
@@ -354,7 +354,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             framework.AssertBothFail("pdfuaOCGPropertiesCheck02", PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY
-                );
+                , PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]
@@ -373,7 +373,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             framework.AssertBothFail("pdfuaOCGPropertiesCheck03", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
-                );
+                , PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]
@@ -389,7 +389,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             framework.AssertBothFail("pdfuaOCGPropertiesCheck04", PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
-                );
+                , PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]
@@ -407,7 +407,7 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothValid("pdfuaOCGPropertiesCheck");
+            framework.AssertBothValid("pdfuaOCGPropertiesCheck", PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]
@@ -430,7 +430,7 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothValid("pdfuaOCGsPropertiesCheck");
+            framework.AssertBothValid("pdfuaOCGsPropertiesCheck", PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]

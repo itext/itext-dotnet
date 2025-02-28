@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -33,10 +34,8 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfua.Exceptions;
 using iText.Test;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUAFontsTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -60,8 +59,12 @@ namespace iText.Pdfua {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TryToUseType0Cid0FontTest() {
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TryToUseType0Cid0FontTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -77,12 +80,17 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothFail("tryToUseType0Cid0FontTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("tryToUseType0Cid0FontTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                    .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false, pdfUAConformance);
+            }
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                framework.AssertVeraPdfFail("tryToUseType0Cid0FontTest", pdfUAConformance);
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Type0Cid2FontTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void Type0Cid2FontTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -97,11 +105,11 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("type0Cid2FontTest");
+            framework.AssertBothValid("type0Cid2FontTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TrueTypeFontTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TrueTypeFontTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -117,11 +125,11 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("trueTypeFontTest");
+            framework.AssertBothValid("trueTypeFontTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TrueTypeFontGlyphNotPresentTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TrueTypeFontGlyphNotPresentTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
@@ -138,14 +146,20 @@ namespace iText.Pdfua {
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
             );
-            framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                    .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertVeraPdfFail("trueTypeFontGlyphNotPresentTest", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TrueTypeFontWithDifferencesTest() {
-            String outPdf = DESTINATION_FOLDER + "trueTypeFontWithDifferencesTest.pdf";
-            using (PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TrueTypeFontWithDifferencesTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
                     font = PdfFontFactory.CreateFont(FONT, "# simple 32 0077 006f 0072 006c 0064", PdfFontFactory.EmbeddingStrategy
@@ -160,12 +174,17 @@ namespace iText.Pdfua {
                 canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
-            new VeraPdfValidator().ValidateFailure(outPdf);
+            );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
+            }
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                framework.AssertBothFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
+            }
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void TryToUseStandardFontsTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TryToUseStandardFontsTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -182,12 +201,17 @@ namespace iText.Pdfua {
                 document.Close();
             }
             );
-            framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .FONT_SHOULD_BE_EMBEDDED, "Courier"), false);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                    .FONT_SHOULD_BE_EMBEDDED, "Courier"), false, pdfUAConformance);
+            }
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                framework.AssertVeraPdfFail("tryToUseStandardFontsTest", pdfUAConformance);
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Type1EmbeddedFontTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void Type1EmbeddedFontTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -203,7 +227,7 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("type1EmbeddedFontTest");
+            framework.AssertBothValid("type1EmbeddedFontTest", pdfUAConformance);
         }
     }
 }

@@ -51,8 +51,6 @@ namespace iText.Pdfua {
 
         private readonly IList<Action<PdfDocument>> beforeGeneratorHook = new List<Action<PdfDocument>>();
 
-        private PdfUAConformance conformance = PdfUAConformance.PDF_UA_1;
-
         public UaValidationTestFramework(String destinationFolder)
             : this(destinationFolder, true) {
         }
@@ -62,41 +60,39 @@ namespace iText.Pdfua {
             this.defaultCheckDocClosingByReopening = defaultCheckDocClosingByReopening;
         }
 
-        public virtual iText.Pdfua.UaValidationTestFramework SetConformance(PdfUAConformance conformance) {
-            this.conformance = conformance;
-            return this;
-        }
-
         public virtual void AddSuppliers(params UaValidationTestFramework.Generator<IBlockElement>[] suppliers) {
             elementProducers.AddAll(suppliers);
         }
 
-        public virtual void AssertBothFail(String filename) {
-            AssertBothFail(filename, null);
+        public virtual void AssertBothFail(String filename, PdfUAConformance pdfUAConformance) {
+            AssertBothFail(filename, null, pdfUAConformance);
         }
 
-        public virtual void AssertBothFail(String filename, bool checkDocClosing) {
-            AssertBothFail(filename, null, checkDocClosing);
+        public virtual void AssertBothFail(String filename, bool checkDocClosing, PdfUAConformance pdfUAConformance
+            ) {
+            AssertBothFail(filename, null, checkDocClosing, pdfUAConformance);
         }
 
-        public virtual void AssertBothFail(String filename, String expectedMsg) {
-            AssertBothFail(filename, expectedMsg, defaultCheckDocClosingByReopening);
+        public virtual void AssertBothFail(String filename, String expectedMsg, PdfUAConformance pdfUAConformance) {
+            AssertBothFail(filename, expectedMsg, defaultCheckDocClosingByReopening, pdfUAConformance);
         }
 
-        public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing) {
-            CheckError(CheckErrorLayout("layout_" + filename + ".pdf"), expectedMsg);
-            String createdFileName = "vera_" + filename + ".pdf";
-            VerAPdfResult(createdFileName, true);
+        public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing, PdfUAConformance
+             pdfUAConformance) {
+            CheckError(CheckErrorLayout("layout_" + filename + pdfUAConformance + ".pdf", pdfUAConformance), expectedMsg
+                );
+            String createdFileName = "vera_" + filename + pdfUAConformance + ".pdf";
+            VeraPdfResult(createdFileName, true, pdfUAConformance);
             if (checkDocClosing) {
                 System.Console.Out.WriteLine("Checking closing");
-                CheckError(CheckErrorOnClosing(createdFileName), expectedMsg);
+                CheckError(CheckErrorOnClosing(createdFileName, pdfUAConformance), expectedMsg);
             }
         }
 
-        public virtual void AssertBothValid(String fileName) {
-            Exception e = CheckErrorLayout("layout_" + fileName + ".pdf");
-            String veraPdf = VerAPdfResult("vera_" + fileName + ".pdf", false);
-            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + ".pdf");
+        public virtual void AssertBothValid(String fileName, PdfUAConformance pdfUAConformance) {
+            Exception e = CheckErrorLayout("layout_" + fileName + pdfUAConformance + ".pdf", pdfUAConformance);
+            String veraPdf = VeraPdfResult("vera_" + fileName + pdfUAConformance + ".pdf", false, pdfUAConformance);
+            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + pdfUAConformance + ".pdf", pdfUAConformance);
             if (e == null && veraPdf == null && eClosing == null) {
                 return;
             }
@@ -125,12 +121,22 @@ namespace iText.Pdfua {
             this.beforeGeneratorHook.Add(action);
         }
 
-        private String VerAPdfResult(String filename, bool failureExpected) {
+        public virtual void AssertVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
+            NUnit.Framework.Assert.IsNotNull(VeraPdfResult(filename + pdfUAConformance + ".pdf", false, pdfUAConformance
+                ));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
+            NUnit.Framework.Assert.IsNull(VeraPdfResult(filename + pdfUAConformance + ".pdf", false, pdfUAConformance)
+                );
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        private String VeraPdfResult(String filename, bool failureExpected, PdfUAConformance pdfUAConformance) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties
-                ().SetPdfVersion(conformance == PdfUAConformance.PDF_UA_1 ? PdfVersion.PDF_1_7 : PdfVersion.PDF_2_0)), 
-                conformance);
+            PdfDocument pdfDoc = CreatePdfDocument(destinationFolder + filename, pdfUAConformance);
             Document document = new Document(pdfDoc);
             document.GetPdfDocument().GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer()
                 );
@@ -167,12 +173,11 @@ namespace iText.Pdfua {
             System.Console.Out.WriteLine(PrintStackTrace(e));
         }
 
-        private Exception CheckErrorLayout(String filename) {
+        private Exception CheckErrorLayout(String filename, PdfUAConformance pdfUAConformance) {
             try {
                 String outPath = destinationFolder + filename;
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPath, new WriterProperties().SetPdfVersion(
-                    conformance == PdfUAConformance.PDF_UA_1 ? PdfVersion.PDF_1_7 : PdfVersion.PDF_2_0)), conformance);
+                PdfDocument pdfDoc = CreatePdfDocument(outPath, pdfUAConformance);
                 foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
                     pdfDocumentConsumer(pdfDoc);
                 }
@@ -188,14 +193,12 @@ namespace iText.Pdfua {
             return null;
         }
 
-        private Exception CheckErrorOnClosing(String filename) {
+        private Exception CheckErrorOnClosing(String filename, PdfUAConformance pdfUAConformance) {
             try {
                 String outPath = destinationFolder + "reopen_" + filename;
                 String inPath = destinationFolder + filename;
                 System.Console.Out.WriteLine(UrlUtil.GetNormalizedFileUriString(outPath));
-                PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfReader(inPath), new PdfWriter(outPath, new WriterProperties
-                    ().SetPdfVersion(conformance == PdfUAConformance.PDF_UA_1 ? PdfVersion.PDF_1_7 : PdfVersion.PDF_2_0)), 
-                    conformance);
+                PdfDocument pdfDoc = CreatePdfDocument(inPath, outPath, pdfUAConformance);
                 pdfDoc.Close();
             }
             catch (Exception e) {
@@ -206,6 +209,37 @@ namespace iText.Pdfua {
 
         private static String PrintStackTrace(Exception e) {
             return e.ToString();
+        }
+
+        private PdfDocument CreatePdfDocument(String filename, PdfUAConformance pdfUAConformance) {
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                return new PdfUATestPdfDocument(new PdfWriter(filename));
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    return new PdfUA2TestPdfDocument(new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                        )));
+                }
+                else {
+                    throw new ArgumentException("Unsupported PdfUAConformance: " + pdfUAConformance);
+                }
+            }
+        }
+
+        private PdfDocument CreatePdfDocument(String inputFile, String outputFile, PdfUAConformance pdfUAConformance
+            ) {
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                return new PdfUATestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile));
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    return new PdfUA2TestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile, new WriterProperties(
+                        ).SetPdfVersion(PdfVersion.PDF_2_0)));
+                }
+                else {
+                    throw new ArgumentException("Unsupported PdfUAConformance: " + pdfUAConformance);
+                }
+            }
         }
 
         public interface Generator<IBlockElement> {
