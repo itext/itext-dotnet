@@ -122,11 +122,9 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
-            NUnit.Framework.Assert.IsNotNull(VeraPdfResult(filename + pdfUAConformance + ".pdf", false, pdfUAConformance
-                ));
+            VeraPdfResult(filename + pdfUAConformance + ".pdf", true, pdfUAConformance);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
             NUnit.Framework.Assert.IsNull(VeraPdfResult(filename + pdfUAConformance + ".pdf", false, pdfUAConformance)
                 );
