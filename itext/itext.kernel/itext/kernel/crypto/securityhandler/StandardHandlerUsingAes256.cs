@@ -238,7 +238,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 byte[] ueValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.UE));
                 byte[] perms = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.Perms));
                 PdfNumber pValue = (PdfNumber)encryptionDictionary.Get(PdfName.P);
-                this.permissions = pValue.IntValue();
+                this.permissions = (int)pValue.LongValue();
                 byte[] hash;
                 hash = ComputeHash(password, oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH, uValue);
                 usedOwnerPassword = EqualsArray(hash, oValue, 32);

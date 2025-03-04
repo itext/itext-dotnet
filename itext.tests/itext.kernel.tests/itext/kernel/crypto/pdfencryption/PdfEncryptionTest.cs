@@ -485,6 +485,15 @@ namespace iText.Kernel.Crypto.Pdfencryption {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckPermissionsLongValue() {
+            // The test checks
+            // that no IoLogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY is logged
+            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordAes256_modifiedPermissions.pdf"
+                , new ReaderProperties().SetPassword(PdfEncryptionTestUtils.OWNER)));
+            doc.Close();
+        }
+
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
             EncryptWithPassword2(filename, encryptionType, compression, false);
         }
