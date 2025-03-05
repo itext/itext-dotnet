@@ -21,8 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils.Checkers;
 using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
@@ -37,20 +40,28 @@ namespace iText.Kernel.Validation {
         private static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new Pdf20ConformanceException
             (msg);
 
+        private readonly TagStructureContext tagStructureContext;
+
         /// <summary>
         /// Creates new
         /// <see cref="Pdf20Checker"/>
         /// instance to validate PDF document against PDF 2.0 standard.
         /// </summary>
-        public Pdf20Checker() {
+        /// <param name="pdfDocument">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to check
+        /// </param>
+        public Pdf20Checker(PdfDocument pdfDocument) {
+            this.tagStructureContext = pdfDocument.IsTagged() ? pdfDocument.GetTagStructureContext() : null;
         }
 
-        // Empty constructor.
         public virtual void Validate(IValidationContext validationContext) {
             switch (validationContext.GetType()) {
                 case ValidationType.PDF_DOCUMENT: {
                     PdfDocumentValidationContext pdfDocContext = (PdfDocumentValidationContext)validationContext;
                     CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
+                    CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
                     break;
                 }
             }
@@ -58,24 +69,6 @@ namespace iText.Kernel.Validation {
 
         public virtual bool IsPdfObjectReadyToFlush(PdfObject @object) {
             return true;
-        }
-
-        /// <summary>Validates document catalog dictionary against PDF 2.0 standard.</summary>
-        /// <remarks>
-        /// Validates document catalog dictionary against PDF 2.0 standard.
-        /// <para />
-        /// For now, only
-        /// <c>Metadata</c>
-        /// is checked.
-        /// </remarks>
-        /// <param name="catalog">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
-        /// document catalog dictionary to check
-        /// </param>
-        private void CheckCatalog(PdfCatalog catalog) {
-            CheckLang(catalog);
-            CheckMetadata(catalog);
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -132,5 +125,91 @@ namespace iText.Kernel.Validation {
             }
         }
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Validates document structure tree root dictionary against PDF 2.0 standard.</summary>
+        /// <remarks>
+        /// Validates document structure tree root dictionary against PDF 2.0 standard.
+        /// <para />
+        /// Checks, that all structure elements are belong to, or role mapped to (such role mapping may be transitive through
+        /// other namespaces), at least one of the following namespaces specified in ISO 32000-2:2020, 14.8.6:
+        /// — the PDF 1.7 namespace;
+        /// — the PDF 2.0 namespace;
+        /// — the MathML namespace.
+        /// A structure element with no explicit namespace may be present. Such a structure element shall have, after
+        /// any role mapping, a structure type matching one of the unique PDF 1.7 element types (the default standard
+        /// structure namespace in ISO 32000-2 is defined as the PDF 1.7 namespace).
+        /// </remarks>
+        /// <param name="structTreeRoot">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
+        /// to validate
+        /// </param>
+        internal virtual void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
+            if (tagStructureContext == null) {
+                return;
+            }
+            TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
+            tagTreeIterator.AddHandler(new Pdf20Checker.StructureTreeRootHandler(tagStructureContext));
+            tagTreeIterator.Traverse();
+        }
+//\endcond
+
+        /// <summary>Validates document catalog dictionary against PDF 2.0 standard.</summary>
+        /// <remarks>
+        /// Validates document catalog dictionary against PDF 2.0 standard.
+        /// <para />
+        /// For now, only
+        /// <c>Metadata</c>
+        /// and
+        /// <c>Lang</c>
+        /// are checked.
+        /// </remarks>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// document catalog dictionary to check
+        /// </param>
+        private void CheckCatalog(PdfCatalog catalog) {
+            CheckLang(catalog);
+            CheckMetadata(catalog);
+        }
+
+        /// <summary>Handler class that checks structure nodes while traversing the document structure tree.</summary>
+        private class StructureTreeRootHandler : ITagTreeIteratorHandler {
+            private readonly TagStructureContext tagStructureContext;
+
+            /// <summary>
+            /// Creates new
+            /// <see cref="StructureTreeRootHandler"/>
+            /// instance.
+            /// </summary>
+            /// <param name="tagStructureContext">
+            /// 
+            /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext"/>
+            /// of the current tagged document
+            /// </param>
+            public StructureTreeRootHandler(TagStructureContext tagStructureContext) {
+                this.tagStructureContext = tagStructureContext;
+            }
+
+            public virtual bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public virtual void ProcessElement(IStructureNode elem) {
+                if (!(elem is PdfStructElem)) {
+                    return;
+                }
+                PdfStructElem structElem = (PdfStructElem)elem;
+                String role = structElem.GetRole().GetValue();
+                PdfNamespace @namespace = structElem.GetNamespace();
+                if (!tagStructureContext.CheckIfRoleShallBeMappedToStandardRole(role, @namespace)) {
+                    throw new Pdf20ConformanceException(MessageFormatUtil.Format(@namespace == null ? KernelExceptionMessageConstant
+                        .ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE : KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                        , role, @namespace != null ? @namespace.GetNamespaceName() : null));
+                }
+            }
+        }
     }
 }

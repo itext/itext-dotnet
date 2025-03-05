@@ -88,14 +88,18 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>
         /// Checks if the given namespace is identified as the one that is common within broad ranges of documents types
-        /// and doesn't require a role mapping for it's roles.
+        /// and doesn't require a role mapping for its roles.
         /// </summary>
-        /// <param name="namespace">a namespace to be checked, whether it defines a namespace of the known domain specific language.
+        /// <param name="namespace">a namespace to be checked, whether it defines a namespace of the known domain specific language
         ///     </param>
         /// <returns>
-        /// true, if the given
+        /// 
+        /// <see langword="true"/>
+        /// , if the given
         /// <see cref="PdfNamespace"/>
-        /// belongs to the domain-specific namespace, false otherwise.
+        /// belongs to the domain-specific namespace,
+        /// <see langword="false"/>
+        /// otherwise
         /// </returns>
         public static bool IsKnownDomainSpecificNamespace(PdfNamespace @namespace) {
             return MATH_ML.Equals(@namespace.GetNamespaceName());

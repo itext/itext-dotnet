@@ -1570,7 +1570,7 @@ namespace iText.Signatures {
                     PdfAChecker checker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
                     ValidationContainer validationContainer = new ValidationContainer();
                     if ("4".Equals(GetConformance().GetAConformance().GetPart())) {
-                        validationContainer.AddChecker(new Pdf20Checker());
+                        validationContainer.AddChecker(new Pdf20Checker(this));
                     }
                     validationContainer.AddChecker(checker);
                     GetDiContainer().Register(typeof(ValidationContainer), validationContainer);

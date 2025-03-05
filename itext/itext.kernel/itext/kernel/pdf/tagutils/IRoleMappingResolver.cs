@@ -43,7 +43,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <returns>
         /// the
         /// <see cref="System.String"/>
-        /// which identifies current role of the resolver.
+        /// which identifies current role of the resolver
         /// </returns>
         String GetRole();
 
@@ -59,32 +59,46 @@ namespace iText.Kernel.Pdf.Tagutils {
         PdfNamespace GetNamespace();
 
         /// <summary>Checks if the current role belongs to one of the standard structure namespaces.</summary>
-        /// <returns>true if the current namespace is a standard structure namespace and the current role is defined as standard role in it.
-        ///     </returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the current namespace is a standard structure namespace and the current role is defined
+        /// as standard role in it,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         bool CurrentRoleIsStandard();
 
         /// <summary>
-        /// Checks if the current role and namespace are specified to be obligatory mapped to the standard structure namespace
-        /// in order to be a valid role in the Tagged PDF.
+        /// Checks if the current role and namespace are specified to be obligatory mapped to the standard structure
+        /// namespace in order to be a valid role in the Tagged PDF.
         /// </summary>
         /// <returns>
-        /// true, if the current role in the current namespace either belongs to the standard structure roles or is in the
-        /// domain specific namespace; otherwise false.
+        /// 
+        /// <see langword="true"/>
+        /// , if the current role in the current namespace neither belongs to the standard structure
+        /// roles, nor is in the domain specific namespace; otherwise
+        /// <see langword="false"/>
         /// </returns>
         bool CurrentRoleShallBeMappedToStandard();
 
         /// <summary>Performs a mapping resolving "step".</summary>
         /// <remarks>
-        /// Performs a mapping resolving "step". Essentially finds the role and it's namespace to which the current role is mapped to.
-        /// After this method call
+        /// Performs a mapping resolving "step". Essentially finds the role and its namespace to which the current role is
+        /// mapped to. After this method call
         /// <see cref="GetRole()"/>
         /// and
         /// <see cref="GetNamespace()"/>
-        /// methods might change their return value.
+        /// methods might change their
+        /// return value.
         /// </remarks>
         /// <returns>
-        /// true if current role and/or namespace have changed their values; otherwise false which means that current
-        /// role is not mapped.
+        /// 
+        /// <see langword="true"/>
+        /// if current role and/or namespace have changed their values; otherwise
+        /// <see langword="false"/>
+        /// which
+        /// means that current role is not mapped
         /// </returns>
         bool ResolveNextMapping();
     }

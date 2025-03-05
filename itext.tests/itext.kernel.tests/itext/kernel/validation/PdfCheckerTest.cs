@@ -25,6 +25,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils.Checkers;
 using iText.Test;
 using iText.Test.Attributes;
@@ -46,7 +47,7 @@ namespace iText.Kernel.Validation {
                 byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_ua2.xmp"));
                 PdfStream metadata = new PdfStream(bytes);
                 catalog.Put(PdfName.Metadata, metadata);
-                Pdf20Checker checker = new Pdf20Checker();
+                Pdf20Checker checker = new Pdf20Checker(pdfDocument);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => checker.CheckMetadata(
                     catalog));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.METADATA_STREAM_REQUIRES_METADATA_TYPE_AND_XML_SUBTYPE
@@ -166,7 +167,7 @@ namespace iText.Kernel.Validation {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 catalog.SetLang(new PdfString("en-US"));
-                Pdf20Checker checker = new Pdf20Checker();
+                Pdf20Checker checker = new Pdf20Checker(pdfDocument);
                 NUnit.Framework.Assert.DoesNotThrow(() => checker.CheckLang(catalog));
             }
         }
@@ -178,7 +179,7 @@ namespace iText.Kernel.Validation {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 catalog.SetLang(new PdfString(""));
-                Pdf20Checker checker = new Pdf20Checker();
+                Pdf20Checker checker = new Pdf20Checker(pdfDocument);
                 NUnit.Framework.Assert.DoesNotThrow(() => checker.CheckLang(catalog));
             }
         }
@@ -190,11 +191,60 @@ namespace iText.Kernel.Validation {
                 pdfDocument.AddNewPage();
                 PdfCatalog catalog = pdfDocument.GetCatalog();
                 catalog.SetLang(new PdfString("inva:lid"));
-                Pdf20Checker checker = new Pdf20Checker();
+                Pdf20Checker checker = new Pdf20Checker(pdfDocument);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => checker.CheckLang(catalog
                     ));
                 NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
                     Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RoleIsNotMappedToStandardNamespaceTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.SetTagged();
+                PdfPage page = pdfDocument.AddNewPage();
+                PdfStructElem doc = pdfDocument.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDocument, PdfName.Document
+                    ));
+                PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                doc.SetNamespace(@namespace);
+                pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDocument, PdfName.P));
+                paragraph.AddKid(new PdfStructElem(pdfDocument, new PdfName("chapter"), page));
+                Pdf20Checker checker = new Pdf20Checker(pdfDocument);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => checker.CheckStructureTreeRoot
+                    (pdfDocument.GetStructTreeRoot()));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "chapter"), e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RoleWithNamespaceIsNotMappedToStandardNamespaceTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.SetTagged();
+                PdfPage page = pdfDocument.AddNewPage();
+                PdfStructElem doc = pdfDocument.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDocument, PdfName.Document
+                    ));
+                PdfNamespace namespace20 = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                doc.SetNamespace(namespace20);
+                PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDocument, PdfName.P));
+                PdfStructElem chapter = paragraph.AddKid(new PdfStructElem(pdfDocument, new PdfName("chapter"), page));
+                PdfNamespace @namespace = new PdfNamespace("http://www.w3.org/1999/xhtml");
+                chapter.SetNamespace(@namespace);
+                PdfNamespace otherNamespace = new PdfNamespace("http://www.w3.org/2000/svg");
+                @namespace.AddNamespaceRoleMapping("chapter", "chapterChild", otherNamespace);
+                otherNamespace.AddNamespaceRoleMapping("chapterChild", "chapterGrandchild");
+                pdfDocument.GetStructTreeRoot().AddNamespace(namespace20);
+                pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                pdfDocument.GetStructTreeRoot().AddNamespace(otherNamespace);
+                Pdf20Checker checker = new Pdf20Checker(pdfDocument);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => checker.CheckStructureTreeRoot
+                    (pdfDocument.GetStructTreeRoot()));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                    , "chapter", @namespace.GetNamespaceName()), e.Message);
             }
         }
     }

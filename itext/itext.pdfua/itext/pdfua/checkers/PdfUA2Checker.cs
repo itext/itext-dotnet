@@ -20,6 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -31,6 +36,7 @@ using iText.Layout.Validation.Context;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Checkers.Utils.Ua2;
 using iText.Pdfua.Exceptions;
+using iText.Pdfua.Logs;
 
 namespace iText.Pdfua.Checkers {
     /// <summary>
@@ -159,7 +165,11 @@ namespace iText.Pdfua.Checkers {
         /// <remarks>
         /// Validates structure tree root dictionary against PDF/UA-2 standard.
         /// <para />
-        /// For now, only headings check is performed.
+        /// Checks that within a given explicitly provided namespace, structure types are not role mapped to other structure
+        /// types in the same namespace. In the StructTreeRoot RoleMap there is no explicitly provided namespace, that's why
+        /// it is not checked.
+        /// <para />
+        /// Besides this, only headings check is performed for now.
         /// </remarks>
         /// <param name="structTreeRoot">
         /// 
@@ -167,6 +177,33 @@ namespace iText.Pdfua.Checkers {
         /// structure tree root dictionary to check
         /// </param>
         private void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
+            IList<PdfNamespace> namespaces = structTreeRoot.GetNamespaces();
+            foreach (PdfNamespace @namespace in namespaces) {
+                PdfDictionary roleMap = @namespace.GetNamespaceRoleMap();
+                if (roleMap != null) {
+                    foreach (KeyValuePair<PdfName, PdfObject> entry in roleMap.EntrySet()) {
+                        String role = entry.Key.GetValue();
+                        IRoleMappingResolver roleMappingResolver = pdfDocument.GetTagStructureContext().GetRoleMappingResolver(role
+                            , @namespace);
+                        int i = 0;
+                        // Reasonably large arbitrary number that will help to avoid a possible infinite loop.
+                        int maxIters = 100;
+                        while (roleMappingResolver.ResolveNextMapping()) {
+                            if (++i > maxIters) {
+                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUA2Checker));
+                                logger.LogError(MessageFormatUtil.Format(PdfUALogMessageConstants.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
+                                    , role, @namespace));
+                                break;
+                            }
+                            PdfNamespace roleMapToNamespace = roleMappingResolver.GetNamespace();
+                            if (@namespace.GetNamespaceName().Equals(roleMapToNamespace.GetNamespaceName())) {
+                                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.STRUCTURE_TYPE_IS_ROLE_MAPPED_TO_OTHER_STRUCTURE_TYPE_IN_THE_SAME_NAMESPACE
+                                    , @namespace.GetNamespaceName(), role));
+                            }
+                        }
+                    }
+                }
+            }
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
             tagTreeIterator.Traverse();

@@ -140,7 +140,7 @@ namespace iText.Pdfua {
 
                 case "2": {
                     checker = new PdfUA2Checker(this);
-                    pdf20Checker = new Pdf20Checker();
+                    pdf20Checker = new Pdf20Checker(this);
                     break;
                 }
 

@@ -103,7 +103,7 @@ namespace iText.Pdfa {
             ValidationContainer validationContainer = new ValidationContainer();
             if (PdfVersion.PDF_2_0.CompareTo(GetPdfVersionAccordingToConformance(GetConformance().GetAConformance())) 
                 <= 0) {
-                validationContainer.AddChecker(new Pdf20Checker());
+                validationContainer.AddChecker(new Pdf20Checker(this));
             }
             validationContainer.AddChecker(checker);
             GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
@@ -134,7 +134,7 @@ namespace iText.Pdfa {
             ValidationContainer validationContainer = new ValidationContainer();
             if (PdfVersion.PDF_2_0.CompareTo(GetPdfVersionAccordingToConformance(GetConformance().GetAConformance())) 
                 <= 0) {
-                validationContainer.AddChecker(new Pdf20Checker());
+                validationContainer.AddChecker(new Pdf20Checker(this));
             }
             validationContainer.AddChecker(checker);
             GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
