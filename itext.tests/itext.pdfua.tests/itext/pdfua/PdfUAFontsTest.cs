@@ -84,6 +84,7 @@ namespace iText.Pdfua {
                 framework.AssertBothFail("tryToUseType0Cid0FontTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false, pdfUAConformance);
             }
+            // TODO DEVSIX-8242 The layout level does’t throw an error
             if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                 framework.AssertVeraPdfFail("tryToUseType0Cid0FontTest", pdfUAConformance);
             }
@@ -151,8 +152,9 @@ namespace iText.Pdfua {
                     .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("trueTypeFontGlyphNotPresentTest", pdfUAConformance);
+                    framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", pdfUAConformance);
                 }
             }
         }
@@ -175,6 +177,7 @@ namespace iText.Pdfua {
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
             );
+            // TODO DEVSIX-8242 The layout level does’t throw an error for UA1
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
             }
@@ -205,6 +208,7 @@ namespace iText.Pdfua {
                 framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .FONT_SHOULD_BE_EMBEDDED, "Courier"), false, pdfUAConformance);
             }
+            // TODO DEVSIX-8242 The layout level does’t throw an error
             if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                 framework.AssertVeraPdfFail("tryToUseStandardFontsTest", pdfUAConformance);
             }

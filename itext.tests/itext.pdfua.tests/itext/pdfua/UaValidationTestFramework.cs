@@ -79,9 +79,9 @@ namespace iText.Pdfua {
 
         public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing, PdfUAConformance
              pdfUAConformance) {
-            CheckError(CheckErrorLayout("layout_" + filename + pdfUAConformance + ".pdf", pdfUAConformance), expectedMsg
-                );
-            String createdFileName = "vera_" + filename + pdfUAConformance + ".pdf";
+            CheckError(CheckErrorLayout("layout_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+                ), expectedMsg);
+            String createdFileName = "vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf";
             VeraPdfResult(createdFileName, true, pdfUAConformance);
             if (checkDocClosing) {
                 System.Console.Out.WriteLine("Checking closing");
@@ -90,9 +90,12 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertBothValid(String fileName, PdfUAConformance pdfUAConformance) {
-            Exception e = CheckErrorLayout("layout_" + fileName + pdfUAConformance + ".pdf", pdfUAConformance);
-            String veraPdf = VeraPdfResult("vera_" + fileName + pdfUAConformance + ".pdf", false, pdfUAConformance);
-            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + pdfUAConformance + ".pdf", pdfUAConformance);
+            Exception e = CheckErrorLayout("layout_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+                );
+            String veraPdf = VeraPdfResult("vera_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance
+                );
+            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", 
+                pdfUAConformance);
             if (e == null && veraPdf == null && eClosing == null) {
                 return;
             }
@@ -122,15 +125,9 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
-            VeraPdfResult(filename + pdfUAConformance + ".pdf", true, pdfUAConformance);
+            VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
         }
 
-        public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
-            NUnit.Framework.Assert.IsNull(VeraPdfResult(filename + pdfUAConformance + ".pdf", false, pdfUAConformance)
-                );
-        }
-
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         private String VeraPdfResult(String filename, bool failureExpected, PdfUAConformance pdfUAConformance) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
@@ -242,6 +239,10 @@ namespace iText.Pdfua {
 
         public interface Generator<IBlockElement> {
             IBlockElement Generate();
+        }
+
+        private static String GetUAConformance(PdfUAConformance conformance) {
+            return MessageFormatUtil.Format("_UA_{0}", conformance.GetPart());
         }
     }
 }

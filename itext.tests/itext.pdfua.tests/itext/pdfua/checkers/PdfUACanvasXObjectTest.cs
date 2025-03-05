@@ -215,11 +215,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("manuallyAddToCanvasCorrectFontAndUnTaggedContent", pdfUAConformance);
+                framework.AssertBothValid("addToCanvasCorrectFontUnTaggedContent", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("manuallyAddToCanvasCorrectFontAndUnTaggedContent", pdfUAConformance);
+                    framework.AssertVeraPdfFail("addToCanvasCorrectFontUnTaggedContent", pdfUAConformance);
                 }
             }
         }
@@ -254,11 +255,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("manuallyAddToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
+                framework.AssertBothValid("addToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("manuallyAddToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
+                    framework.AssertVeraPdfFail("addToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
                 }
             }
         }
@@ -325,11 +327,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("manuallyAddToCanvasAndCorrectFontInsideArtifact", pdfUAConformance);
+                framework.AssertBothValid("addToCanvasCorrectFontInsideArtifact", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("manuallyAddToCanvasAndCorrectFontInsideArtifact", pdfUAConformance);
+                    framework.AssertVeraPdfFail("addToCanvasCorrectFontInsideArtifact", pdfUAConformance);
                 }
             }
         }
@@ -365,6 +368,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("untaggedAddXobject", pdfUAConformance);
                 }
@@ -403,6 +407,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("untaggedAddXobjectAt", pdfUAConformance);
                 }
@@ -441,6 +446,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("addXObjectFitted", pdfUAConformance);
                 }
@@ -478,6 +484,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("addXObjectWithTransfoMatrix", pdfUAConformance);
                 }
@@ -504,6 +511,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("addIMageObjectNotInline", pdfUAConformance);
                 }
@@ -530,6 +538,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("addIMageObjectInline", pdfUAConformance);
                 }
@@ -556,6 +565,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("addIMageObjectTransfo", pdfUAConformance);
                 }
@@ -582,6 +592,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("addImageFittedIntoRectangle", pdfUAConformance);
                 }

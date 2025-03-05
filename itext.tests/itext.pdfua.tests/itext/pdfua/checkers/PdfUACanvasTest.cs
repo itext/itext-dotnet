@@ -85,6 +85,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("textContentIsNotTagged", pdfUAConformance);
                 }
@@ -102,6 +103,7 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("textNoContentIsNotTagged", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("textNoContentIsNotTagged", pdfUAConformance);
                 }
@@ -203,7 +205,7 @@ namespace iText.Pdfua.Checkers {
             PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
-            PdfCanvas canvas = new _PdfCanvas_269(pdfDoc.AddNewPage());
+            PdfCanvas canvas = new _PdfCanvas_271(pdfDoc.AddNewPage());
             // disable the checkIsoConformance call check by simulating  generating not tagged content
             // same as in annotations of formfields.
             GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
@@ -227,8 +229,8 @@ namespace iText.Pdfua.Checkers {
                 e.Message);
         }
 
-        private sealed class _PdfCanvas_269 : PdfCanvas {
-            public _PdfCanvas_269(PdfPage baseArg1)
+        private sealed class _PdfCanvas_271 : PdfCanvas {
+            public _PdfCanvas_271(PdfPage baseArg1)
                 : base(baseArg1) {
             }
 
@@ -326,6 +328,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("lineContentThatIsContentIsNotTagged", pdfUAConformance);
                 }
@@ -345,6 +348,7 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("lineContentThatIsContentIsNotTagged_noContent", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("lineContentThatIsContentIsNotTagged_noContent", pdfUAConformance);
                 }
@@ -365,6 +369,7 @@ namespace iText.Pdfua.Checkers {
                     .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("lineContentThatIsContentIsTaggedButIsNotAnArtifact", pdfUAConformance);
                 }
@@ -382,12 +387,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("lineContentThatIsContentIsTaggedButIsNotAnArtifactNoDrawing", pdfUAConformance);
+                framework.AssertBothValid("lineContentTaggedNotAnArtifactNoDrawing", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("lineContentThatIsContentIsTaggedButIsNotAnArtifactNoDrawing", pdfUAConformance
-                        );
+                    framework.AssertVeraPdfFail("lineContentTaggedNotAnArtifactNoDrawing", pdfUAConformance);
                 }
             }
         }
@@ -422,6 +427,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_RectangleNotMarked", pdfUAConformance);
                 }
@@ -452,6 +458,7 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("checkPoint_01_005_RectangleNoContent", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_RectangleNoContent", pdfUAConformance);
                 }
@@ -472,6 +479,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_RectangleClosePathStroke", pdfUAConformance);
                 }
@@ -492,6 +500,7 @@ namespace iText.Pdfua.Checkers {
                     .TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING, false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_ClosPathEOFIllStroke", pdfUAConformance);
                 }
@@ -512,6 +521,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_FillStroke", pdfUAConformance);
                 }
@@ -532,6 +542,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_eoFill", pdfUAConformance);
                 }
@@ -552,6 +563,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_005_Rectangle_eoFillStroke", pdfUAConformance);
                 }
@@ -581,12 +593,13 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid", PdfUAExceptionMessageConstants
-                    .CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT, false, pdfUAConformance);
+                framework.AssertBothFail("rectangleMarkedContentWithoutMcid", PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
+                    , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid", pdfUAConformance);
+                    framework.AssertVeraPdfFail("rectangleMarkedContentWithoutMcid", pdfUAConformance);
                 }
             }
         }
@@ -601,13 +614,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("checkPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent", pdfUAConformance
-                    );
+                framework.AssertBothValid("rectangleMarkedContentWithoutMcid_NoContent", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("checkPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent", pdfUAConformance
-                        );
+                    framework.AssertVeraPdfFail("rectangleMarkedContentWithoutMcid_NoContent", pdfUAConformance);
                 }
             }
         }
@@ -673,6 +685,7 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_004_bezierCurveInvalidMCID", pdfUAConformance);
                 }
@@ -691,6 +704,7 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("checkPoint_01_004_bezierCurveInvalidMCID_NoContent", pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("checkPoint_01_004_bezierCurveInvalidMCID_NoContent", pdfUAConformance);
                 }
@@ -860,6 +874,7 @@ namespace iText.Pdfua.Checkers {
                     pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("invalidNoteTag02", pdfUAConformance);
                 }
@@ -891,11 +906,13 @@ namespace iText.Pdfua.Checkers {
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("validNoteTagPresent", pdfUAConformance);
-                String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent" + pdfUAConformance + ".pdf";
+                String outPdf = DESTINATION_FOLDER + "layout_validNoteTagPresent" + "_UA_" + pdfUAConformance.GetPart() + 
+                    ".pdf";
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_validNoteTagPresent.pdf"
                     , DESTINATION_FOLDER, "diff_"));
             }
             else {
+                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("invalidNoteTag02", pdfUAConformance);
                 }
@@ -926,6 +943,7 @@ namespace iText.Pdfua.Checkers {
                     .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, " "), false, pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("usingCharacterWithoutUnicodeMappingTest", pdfUAConformance);
                 }

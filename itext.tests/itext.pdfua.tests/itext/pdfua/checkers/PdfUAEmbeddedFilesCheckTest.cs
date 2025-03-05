@@ -74,6 +74,7 @@ namespace iText.Pdfua.Checkers {
                     , pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("pdfuaWithEmbeddedFilesWithoutF", pdfUAConformance);
                 }
@@ -96,6 +97,7 @@ namespace iText.Pdfua.Checkers {
                     , pdfUAConformance);
             }
             else {
+                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("pdfuaWithEmbeddedFilesWithoutUF", pdfUAConformance);
                 }
