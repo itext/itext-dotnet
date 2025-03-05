@@ -44,8 +44,13 @@ namespace iText.Layout.Element {
     public class Paragraph : BlockElement<iText.Layout.Element.Paragraph> {
         protected internal DefaultAccessibilityProperties tagProperties;
 
-        /// <summary>Creates a Paragraph.</summary>
-        public Paragraph() {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="Paragraph"/>
+        /// instance.
+        /// </summary>
+        public Paragraph()
+            : base() {
         }
 
         /// <summary>Creates a Paragraph, initialized with a piece of text.</summary>

@@ -31,6 +31,7 @@ using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -170,6 +171,7 @@ namespace iText.Forms.Form.Renderer {
             Paragraph paragraph = new Paragraph().SetWidth(width).SetHeight(height).SetMargin(0).SetVerticalAlignment(
                 VerticalAlignment.MIDDLE).SetHorizontalAlignment(HorizontalAlignment.CENTER).SetTextAlignment(TextAlignment
                 .CENTER);
+            paragraph.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
             paragraph.SetProperty(Property.BOX_SIZING, this.GetProperty<BoxSizingPropertyValue?>(Property.BOX_SIZING));
             modelElement.SetProperty(Property.RENDERING_MODE, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
                 ));

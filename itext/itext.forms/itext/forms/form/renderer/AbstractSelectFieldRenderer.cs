@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
@@ -54,7 +55,15 @@ namespace iText.Forms.Form.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             childRenderers.Clear();
-            AddChild(CreateFlatRenderer());
+            IRenderer renderer = CreateFlatRenderer();
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                //Strictly speaking it's not necessary as no custom content can be added at the moment, but
+                // in the future if we would allow it we won't have to add anything else
+                taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList(renderer));
+                LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+            }
+            AddChild(renderer);
             // Resolve width here in case it's relative, while parent width is still intact.
             // If it's inline-block context, relative width is already resolved.
             float? width = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());

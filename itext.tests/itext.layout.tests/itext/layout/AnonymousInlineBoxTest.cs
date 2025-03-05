@@ -31,12 +31,12 @@ using iText.Test;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class AnonymousBoxTest : ExtendedITextTest {
+    public class AnonymousInlineBoxTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/AnonymousBoxTest/";
+             + "/test/itext/layout/AnonymousInlineBox/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/AnonymousBoxTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/AnonymousInlineBox/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -54,7 +54,7 @@ namespace iText.Layout {
                 PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
                 iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
                 image.SetHeight(UnitValue.CreatePercentValue(50));
-                AnonymousBox ab = new AnonymousBox();
+                AnonymousInlineBox ab = new AnonymousInlineBox();
                 ab.Add(image);
                 div.Add(ab);
                 doc.Add(div);
@@ -71,7 +71,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 pdfDocument.SetTagged();
                 Document doc = new Document(pdfDocument);
-                AnonymousBox ab = new AnonymousBox();
+                AnonymousInlineBox ab = new AnonymousInlineBox();
                 ab.Add(new Paragraph("Some text"));
                 doc.Add(ab);
                 doc.Close();

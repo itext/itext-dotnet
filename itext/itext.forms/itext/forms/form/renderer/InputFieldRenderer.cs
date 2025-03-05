@@ -33,12 +33,14 @@ using iText.Forms.Logs;
 using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -133,6 +135,10 @@ namespace iText.Forms.Form.Renderer {
                 flatRenderer = new Paragraph(text).SetMargin(0).CreateRendererSubTree();
             }
             flatRenderer.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
+            if (flatRenderer.GetModelElement() is IAccessibleElement) {
+                ((IAccessibleElement)flatRenderer.GetModelElement()).GetAccessibilityProperties().SetRole(StandardRoles.LBL
+                    );
+            }
             return flatRenderer;
         }
 //\endcond

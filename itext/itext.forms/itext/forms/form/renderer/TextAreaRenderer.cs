@@ -32,10 +32,13 @@ using iText.Forms.Logs;
 using iText.Forms.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
+using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -199,11 +202,16 @@ namespace iText.Forms.Form.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal override IRenderer CreateParagraphRenderer(String defaultValue) {
-            if (String.IsNullOrEmpty(defaultValue) && null != ((TextArea)modelElement).GetPlaceholder() && !((TextArea
-                )modelElement).GetPlaceholder().IsEmpty()) {
-                return ((TextArea)modelElement).GetPlaceholder().CreateRendererSubTree();
+            TextArea modelElementTextArea = (TextArea)GetModelElement();
+            if (String.IsNullOrEmpty(defaultValue) && modelElementTextArea.GetPlaceholder() != null && !modelElementTextArea
+                .GetPlaceholder().IsEmpty()) {
+                Paragraph placeholder = modelElementTextArea.GetPlaceholder();
+                placeholder.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
+                return placeholder.CreateRendererSubTree();
             }
             IRenderer flatRenderer = base.CreateParagraphRenderer(defaultValue);
+            ((IAccessibleElement)flatRenderer.GetModelElement()).GetAccessibilityProperties().SetRole(StandardRoles.LBL
+                );
             flatRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
             return flatRenderer;
         }

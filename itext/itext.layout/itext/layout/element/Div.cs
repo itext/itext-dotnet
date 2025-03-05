@@ -42,8 +42,17 @@ namespace iText.Layout.Element {
     /// <para />
     /// The concept is very similar to that of the div tag in HTML.
     /// </remarks>
-    public class Div : BlockElement<Div> {
+    public class Div : BlockElement<iText.Layout.Element.Div> {
         protected internal DefaultAccessibilityProperties tagProperties;
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="Div"/>
+        /// instance.
+        /// </summary>
+        public Div()
+            : base() {
+        }
 
         /// <summary>Adds any block element to the div's contents.</summary>
         /// <param name="element">
@@ -51,7 +60,7 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual Div Add(IBlockElement element) {
+        public virtual iText.Layout.Element.Div Add(IBlockElement element) {
             childElements.Add(element);
             return this;
         }
@@ -62,7 +71,7 @@ namespace iText.Layout.Element {
         /// <see cref="Image"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual Div Add(Image element) {
+        public virtual iText.Layout.Element.Div Add(Image element) {
             childElements.Add(element);
             return this;
         }
@@ -73,7 +82,7 @@ namespace iText.Layout.Element {
         /// <see cref="AreaBreak"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual Div Add(AreaBreak areaBreak) {
+        public virtual iText.Layout.Element.Div Add(AreaBreak areaBreak) {
             childElements.Add(areaBreak);
             return this;
         }
@@ -96,7 +105,7 @@ namespace iText.Layout.Element {
         /// this
         /// <see cref="Div"/>
         /// </returns>
-        public virtual Div SetFillAvailableArea(bool fillArea) {
+        public virtual iText.Layout.Element.Div SetFillAvailableArea(bool fillArea) {
             SetProperty(Property.FILL_AVAILABLE_AREA, fillArea);
             return this;
         }
@@ -112,7 +121,7 @@ namespace iText.Layout.Element {
         /// this
         /// <see cref="Div"/>
         /// </returns>
-        public virtual Div SetFillAvailableAreaOnSplit(bool fillAreaOnSplit) {
+        public virtual iText.Layout.Element.Div SetFillAvailableAreaOnSplit(bool fillAreaOnSplit) {
             SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, fillAreaOnSplit);
             return this;
         }

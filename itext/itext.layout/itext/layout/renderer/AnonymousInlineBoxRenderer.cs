@@ -29,29 +29,29 @@ namespace iText.Layout.Renderer {
     /// This class represents the
     /// <see cref="IRenderer"/>
     /// object for a
-    /// <see cref="iText.Layout.Element.AnonymousBox"/>
+    /// <see cref="iText.Layout.Element.AnonymousInlineBox"/>
     /// object.
     /// </summary>
-    public class AnonymousBoxRenderer : ParagraphRenderer {
+    public class AnonymousInlineBoxRenderer : ParagraphRenderer {
         /// <summary>
         /// Creates an
-        /// <see cref="AnonymousBoxRenderer"/>
+        /// <see cref="AnonymousInlineBoxRenderer"/>
         /// from its corresponding layout model element.
         /// </summary>
         /// <param name="modelElement">
         /// the
-        /// <see cref="iText.Layout.Element.AnonymousBox"/>
+        /// <see cref="iText.Layout.Element.AnonymousInlineBox"/>
         /// layout model element to render
         /// </param>
-        public AnonymousBoxRenderer(AnonymousBox modelElement)
+        public AnonymousInlineBoxRenderer(AnonymousInlineBox modelElement)
             : base(modelElement) {
         }
 
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
-            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.AnonymousBoxRenderer), this.GetType(
-                ));
-            return new iText.Layout.Renderer.AnonymousBoxRenderer((AnonymousBox)modelElement);
+            LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.AnonymousInlineBoxRenderer), this.GetType
+                ());
+            return new iText.Layout.Renderer.AnonymousInlineBoxRenderer((AnonymousInlineBox)modelElement);
         }
 
         /// <summary><inheritDoc/></summary>

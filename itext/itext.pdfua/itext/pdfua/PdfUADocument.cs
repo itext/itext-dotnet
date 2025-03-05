@@ -26,6 +26,7 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
+using iText.Layout.Tagging;
 using iText.Pdfua.Checkers;
 using iText.Pdfua.Exceptions;
 using iText.Pdfua.Logs;
@@ -65,6 +66,8 @@ namespace iText.Pdfua {
             validationContainer.AddChecker(checker);
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfUAPageFactory(checker);
+            GetDiContainer().Register(typeof(ProhibitedTagRelationsResolver), new ProhibitedTagRelationsResolver(this)
+                );
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>

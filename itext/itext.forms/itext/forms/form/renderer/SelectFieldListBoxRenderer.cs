@@ -33,12 +33,14 @@ using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -106,6 +108,11 @@ namespace iText.Forms.Form.Renderer {
             foreach (SelectFieldItem option in visibleOptions) {
                 optionsContainer.Add(option.GetElement());
             }
+            foreach (IElement child in optionsContainer.GetChildren()) {
+                if (child is IAccessibleElement) {
+                    ((IAccessibleElement)child).GetAccessibilityProperties().SetRole(StandardRoles.LBL);
+                }
+            }
             String lang = GetLang();
             if (lang != null) {
                 AccessibilityProperties properties = optionsContainer.GetAccessibilityProperties();
@@ -116,6 +123,7 @@ namespace iText.Forms.Form.Renderer {
             IRenderer rendererSubTree;
             if (optionsContainer.GetChildren().IsEmpty()) {
                 Paragraph pStub = new Paragraph("\u00A0").SetMargin(0);
+                pStub.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
                 pStub.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                 pStub.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
                 // applying this property for the sake of finding this element as option

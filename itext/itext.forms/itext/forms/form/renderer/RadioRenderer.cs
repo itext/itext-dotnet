@@ -33,6 +33,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -131,6 +132,7 @@ namespace iText.Forms.Form.Renderer {
             paragraph.SetBorderLeft(this.GetProperty<Border>(Property.BORDER_LEFT));
             paragraph.SetProperty(Property.BACKGROUND, this.GetProperty<Background>(Property.BACKGROUND));
             paragraph.SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
+            paragraph.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
             return new RadioRenderer.FlatParagraphRenderer(this, paragraph);
         }
 

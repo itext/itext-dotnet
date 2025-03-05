@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Renderer;
 
@@ -28,26 +29,26 @@ namespace iText.Layout.Element {
     /// A layout element that represents anonymous box,
     /// see https://developer.mozilla.org/en-US/docs/Web/CSS/Visual_formatting_model#anonymous_boxes.
     /// </summary>
-    public class AnonymousBox : Paragraph {
+    public class AnonymousInlineBox : Paragraph {
         /// <summary>
         /// Creates an
-        /// <see cref="AnonymousBox"/>.
+        /// <see cref="AnonymousInlineBox"/>.
         /// </summary>
-        public AnonymousBox()
+        public AnonymousInlineBox()
             : base() {
         }
 
         /// <summary><inheritDoc/></summary>
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
-                tagProperties = new DefaultAccessibilityProperties(null);
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.NONSTRUCT);
             }
             return tagProperties;
         }
 
         /// <summary><inheritDoc/></summary>
         protected internal override IRenderer MakeNewRenderer() {
-            return new AnonymousBoxRenderer(this);
+            return new AnonymousInlineBoxRenderer(this);
         }
     }
 }
