@@ -128,6 +128,10 @@ namespace iText.Pdfua {
             VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
         }
 
+        public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
+            VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance);
+        }
+
         private String VeraPdfResult(String filename, bool failureExpected, PdfUAConformance pdfUAConformance) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);

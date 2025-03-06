@@ -178,7 +178,7 @@ namespace iText.Pdfua {
                 }
             }
             else {
-                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
+                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
                 }
@@ -839,7 +839,7 @@ namespace iText.Pdfua {
                     , pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242, DEVSIX-8865 The layout level does’t throw an error
+                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("printerMAnnotIsInLogicalStructureTest", pdfUAConformance);
                 }

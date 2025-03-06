@@ -960,6 +960,40 @@ namespace iText.Layout {
             CompareResult(outFile, "cmp_" + outFile);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void EmptyTaggedDocumentStillAddsDocumentTag() {
+            String outFile = "emptyTaggedDocumentStillAddsDocumentTag.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            document.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTaggedCanvasStillAddsDocumentTag1() {
+            String outFile = "emptyTaggedCanvasStillAddsDocumentTag1.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetMediaBox());
+            canvas.Close();
+            pdfDocument.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTaggedCanvasStillAddsDocumentTag2() {
+            String outFile = "emptyTaggedCanvasStillAddsDocumentTag2.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfFormXObject(page), pdfDocument);
+            canvas.Close();
+            pdfDocument.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");

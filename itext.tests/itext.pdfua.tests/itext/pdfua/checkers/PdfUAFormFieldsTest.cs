@@ -2652,7 +2652,6 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("FormFieldAsStream", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8865 PDF document does not contain Document tag if it does not contain any content
                 // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     framework.AssertVeraPdfFail("FormFieldAsStream", pdfUAConformance);
