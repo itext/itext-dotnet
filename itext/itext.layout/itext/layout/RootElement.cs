@@ -361,6 +361,9 @@ namespace iText.Layout {
 
         /// <summary>Ensures that the root tag is created in the tagging structure.</summary>
         protected internal void EnsureRootTagIsCreated() {
+            if (this.pdfDocument == null) {
+                return;
+            }
             if (!this.pdfDocument.IsTagged()) {
                 return;
             }

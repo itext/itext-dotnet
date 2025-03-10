@@ -994,6 +994,16 @@ namespace iText.Layout {
             CompareResult(outFile, "cmp_" + outFile);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NullPdfDoesNotThrowNPE() {
+            Rectangle rect = new Rectangle(0, 0);
+            PdfCanvas pdfCanvas = new PdfCanvas(new PdfStream(), null, null);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                new iText.Layout.Canvas(pdfCanvas, rect);
+            }
+            );
+        }
+
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
