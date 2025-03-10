@@ -21,9 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -54,14 +56,18 @@ namespace iText.Pdfua.Checkers {
 
         private UaValidationTestFramework framework;
 
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Before() {
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.OneTimeSetUp]
-        public static void Before() {
-            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.Test]
@@ -131,15 +137,24 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        public virtual void AddNoteWithoutIdTest() {
-            framework.AddSuppliers(new _Generator_163());
-            framework.AssertBothFail("noteWithoutID", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY, PdfUAConformance
-                .PDF_UA_1);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddNoteWithoutIdTest(PdfUAConformance pdfUAConformance) {
+            framework.AddSuppliers(new _Generator_169());
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("noteWithoutID", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY, pdfUAConformance
+                    );
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    NUnit.Framework.Assert.Catch(typeof(PdfException), () => framework.AssertVeraPdfFail("noteWithoutID", pdfUAConformance
+                        ), MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                        , StandardRoles.NOTE, StandardNamespaces.PDF_2_0));
+                }
+            }
         }
 
-        private sealed class _Generator_163 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_163() {
+        private sealed class _Generator_169 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_169() {
             }
 
             public IBlockElement Generate() {
@@ -158,16 +173,25 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 2)]
-        public virtual void AddTwoNotesWithSameIdTest() {
-            framework.AddSuppliers(new _Generator_185(), new _Generator_201());
-            framework.AssertBothFail("twoNotesWithSameId", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
-                , "123"), false, PdfUAConformance.PDF_UA_1);
+        [NUnit.Framework.TestCaseSource("Data")]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Ignore = true)]
+        public virtual void AddTwoNotesWithSameIdTest(PdfUAConformance pdfUAConformance) {
+            framework.AddSuppliers(new _Generator_200(), new _Generator_216());
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("twoNotesWithSameId", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
+                    , "123"), false, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    NUnit.Framework.Assert.Catch(typeof(PdfException), () => framework.AssertVeraPdfFail("twoNotesWithSameId", 
+                        pdfUAConformance), MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                        , StandardRoles.NOTE, StandardNamespaces.PDF_2_0));
+                }
+            }
         }
 
-        private sealed class _Generator_185 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_185() {
+        private sealed class _Generator_200 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_200() {
             }
 
             public IBlockElement Generate() {
@@ -187,8 +211,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_201 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_201() {
+        private sealed class _Generator_216 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_216() {
             }
 
             public IBlockElement Generate() {
@@ -208,14 +232,23 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddNoteWithValidIdTest() {
-            framework.AddSuppliers(new _Generator_224());
-            framework.AssertBothValid("noteWithValidID", PdfUAConformance.PDF_UA_1);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddNoteWithValidIdTest(PdfUAConformance pdfUAConformance) {
+            framework.AddSuppliers(new _Generator_248());
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("noteWithValidID", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    NUnit.Framework.Assert.Catch(typeof(PdfException), () => framework.AssertVeraPdfFail("noteWithValidID", pdfUAConformance
+                        ), MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                        , StandardRoles.NOTE, StandardNamespaces.PDF_2_0));
+                }
+            }
         }
 
-        private sealed class _Generator_224 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_224() {
+        private sealed class _Generator_248 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_248() {
             }
 
             public IBlockElement Generate() {
@@ -235,14 +268,23 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void AddTwoNotesWithDifferentIdTest() {
-            framework.AddSuppliers(new _Generator_245(), new _Generator_261());
-            framework.AssertBothValid("twoNotesWithDifferentId", PdfUAConformance.PDF_UA_1);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddTwoNotesWithDifferentIdTest(PdfUAConformance pdfUAConformance) {
+            framework.AddSuppliers(new _Generator_278(), new _Generator_294());
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("twoNotesWithDifferentId", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    NUnit.Framework.Assert.Catch(typeof(PdfException), () => framework.AssertVeraPdfFail("twoNotesWithDifferentId"
+                        , pdfUAConformance), MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                        , StandardRoles.NOTE, StandardNamespaces.PDF_2_0));
+                }
+            }
         }
 
-        private sealed class _Generator_245 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_245() {
+        private sealed class _Generator_278 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_278() {
             }
 
             public IBlockElement Generate() {
@@ -262,8 +304,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_261 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_261() {
+        private sealed class _Generator_294 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_294() {
             }
 
             public IBlockElement Generate() {

@@ -360,8 +360,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("untaggedAddXobject", pdfUAConformance);
                 }
             }
@@ -399,8 +399,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("untaggedAddXobjectAt", pdfUAConformance);
                 }
             }
@@ -438,8 +438,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("addXObjectFitted", pdfUAConformance);
                 }
             }
@@ -476,8 +476,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("addXObjectWithTransfoMatrix", pdfUAConformance);
                 }
             }
@@ -503,8 +503,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("addIMageObjectNotInline", pdfUAConformance);
                 }
             }
@@ -530,8 +530,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("addIMageObjectInline", pdfUAConformance);
                 }
             }
@@ -557,8 +557,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("addIMageObjectTransfo", pdfUAConformance);
                 }
             }
@@ -584,8 +584,8 @@ namespace iText.Pdfua.Checkers {
                     , false, pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("addImageFittedIntoRectangle", pdfUAConformance);
                 }
             }

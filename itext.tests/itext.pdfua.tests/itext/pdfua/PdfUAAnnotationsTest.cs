@@ -123,8 +123,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 PDF/UA-2 checks
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 PDF/UA-2 checks
                     framework.AssertVeraPdfFail("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
                 }
             }
@@ -145,8 +145,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 PDF/UA-2 checks
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 PDF/UA-2 checks
                     framework.AssertVeraPdfFail("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
                 }
             }
@@ -178,8 +178,8 @@ namespace iText.Pdfua {
                 }
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
                 }
             }
@@ -240,8 +240,8 @@ namespace iText.Pdfua {
                     .ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY, "Screen"), pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("screenAnnotWithoutContentsAndAltTest", pdfUAConformance);
                 }
             }
@@ -259,8 +259,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("popupWithoutContentOrAltTest", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("popupWithoutContentOrAltTest", pdfUAConformance);
                 }
             }
@@ -297,8 +297,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("screenAnnotWithAltTest", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("screenAnnotWithAltTest", pdfUAConformance);
                 }
             }
@@ -371,8 +371,8 @@ namespace iText.Pdfua {
                     , pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("trapNetAnnotNotPermittedTest", pdfUAConformance);
                 }
             }
@@ -397,8 +397,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("invisibleTrapNetAnnotTest", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("invisibleTrapNetAnnotTest", pdfUAConformance);
                 }
             }
@@ -418,8 +418,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("soundAnnotDirectChildOfAnnotTest", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("soundAnnotDirectChildOfAnnotTest", pdfUAConformance);
                 }
             }
@@ -440,8 +440,8 @@ namespace iText.Pdfua {
                 framework.AssertBothValid("pushBtnNestedWithinFormTest", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 PDF/UA-2 checks
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 PDF/UA-2 checks
                     framework.AssertVeraPdfFail("pushBtnNestedWithinFormTest", pdfUAConformance);
                 }
             }
@@ -771,8 +771,8 @@ namespace iText.Pdfua {
                     , pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("tabsEntryAbsentInPageTest", pdfUAConformance);
                 }
             }
@@ -792,8 +792,8 @@ namespace iText.Pdfua {
                     , pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("tabsEntryNotSInPageTest", pdfUAConformance);
                 }
             }
@@ -814,8 +814,8 @@ namespace iText.Pdfua {
                     , pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("invalidTabsEntryButAnnotInvisibleTest", pdfUAConformance);
                 }
             }
@@ -839,8 +839,8 @@ namespace iText.Pdfua {
                     , pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8242 The layout level does’t throw an error
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
                     framework.AssertVeraPdfFail("printerMAnnotIsInLogicalStructureTest", pdfUAConformance);
                 }
             }

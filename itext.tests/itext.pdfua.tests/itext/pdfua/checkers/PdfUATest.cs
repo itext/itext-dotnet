@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
@@ -75,6 +76,10 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        }
+
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.Test]
@@ -320,8 +325,8 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE, e.Message);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckNameEntryShouldPresentInAllOCGDictionariesTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckNameEntryShouldPresentInAllOCGDictionariesTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfDictionary ocProperties = new PdfDictionary();
@@ -335,12 +340,20 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothFail("pdfuaOCGPropertiesCheck01", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
-                , PdfUAConformance.PDF_UA_1);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("pdfuaOCGPropertiesCheck01", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 PDF/UA-2 checks
+                    framework.AssertVeraPdfFail("pdfuaOCGPropertiesCheck01", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckAsKeyInContentConfigDictTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckAsKeyInContentConfigDictTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfDictionary ocProperties = new PdfDictionary();
@@ -353,12 +366,20 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothFail("pdfuaOCGPropertiesCheck02", PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY
-                , PdfUAConformance.PDF_UA_1);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("pdfuaOCGPropertiesCheck02", PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 PDF/UA-2 checks
+                    framework.AssertVeraPdfFail("pdfuaOCGPropertiesCheck02", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void NameEntryisEmptyTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NameEntryisEmptyTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfDictionary ocProperties = new PdfDictionary();
                 PdfDictionary d = new PdfDictionary();
@@ -372,12 +393,20 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothFail("pdfuaOCGPropertiesCheck03", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
-                , PdfUAConformance.PDF_UA_1);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("pdfuaOCGPropertiesCheck03", PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 PDF/UA-2 checks
+                    framework.AssertVeraPdfFail("pdfuaOCGPropertiesCheck03", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ConfigsEntryisNotAnArrayTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ConfigsEntryisNotAnArrayTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfDictionary ocProperties = new PdfDictionary();
                 PdfDictionary d = new PdfDictionary();
@@ -388,12 +417,20 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothFail("pdfuaOCGPropertiesCheck04", PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
-                , PdfUAConformance.PDF_UA_1);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("pdfuaOCGPropertiesCheck04", PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("pdfuaOCGPropertiesCheck04", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void NameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigsTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NameEntryShouldBeUniqueBetweenDefaultAndAdditionalConfigsTest(PdfUAConformance pdfUAConformance
+            ) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfDictionary ocProperties = new PdfDictionary();
                 PdfDictionary d = new PdfDictionary();
@@ -407,11 +444,11 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothValid("pdfuaOCGPropertiesCheck", PdfUAConformance.PDF_UA_1);
+            framework.AssertBothValid("pdfuaOCGPropertiesCheck", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ValidOCGsTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ValidOCGsTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfDictionary ocProperties = new PdfDictionary();
                 PdfDictionary d = new PdfDictionary();
@@ -430,7 +467,7 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            framework.AssertBothValid("pdfuaOCGsPropertiesCheck", PdfUAConformance.PDF_UA_1);
+            framework.AssertBothValid("pdfuaOCGsPropertiesCheck", pdfUAConformance);
         }
 
         [NUnit.Framework.Test]

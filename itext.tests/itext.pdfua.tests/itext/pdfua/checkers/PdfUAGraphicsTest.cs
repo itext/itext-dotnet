@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -39,7 +41,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua.Checkers {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUAGraphicsTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -64,6 +66,10 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        }
+
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.Test]
@@ -96,19 +102,25 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, e.Message);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ImageCustomRole_Ok() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ImageCustomRole_Ok(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                    pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
+                    pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                    @namespace.AddNamespaceRoleMapping("CustomImage", StandardRoles.FIGURE);
+                }
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_122());
-            framework.AssertBothValid("imageWithCustomRoleOk", PdfUAConformance.PDF_UA_1);
+            framework.AddSuppliers(new _Generator_139());
+            framework.AssertBothValid("imageWithCustomRoleOk", pdfUAConformance);
         }
 
-        private sealed class _Generator_122 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_122() {
+        private sealed class _Generator_139 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_139() {
             }
 
             public IBlockElement Generate() {
@@ -125,20 +137,27 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ImageCustomDoubleMapping_Ok() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ImageCustomDoubleMapping_Ok(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                    pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
+                    pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                    @namespace.AddNamespaceRoleMapping("CustomImage", StandardRoles.FIGURE);
+                    @namespace.AddNamespaceRoleMapping("CustomImage2", "CustomImage");
+                }
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_146());
-            framework.AssertBothValid("imageWithDoubleMapping", PdfUAConformance.PDF_UA_1);
+            framework.AddSuppliers(new _Generator_172());
+            framework.AssertBothValid("imageWithDoubleMapping", pdfUAConformance);
         }
 
-        private sealed class _Generator_146 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_146() {
+        private sealed class _Generator_172 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_172() {
             }
 
             public IBlockElement Generate() {
@@ -155,19 +174,33 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ImageCustomRoleNoAlternateDescription_Throws() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ImageCustomRoleNoAlternateDescription_Throws(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                    pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
+                    pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                    @namespace.AddNamespaceRoleMapping("CustomImage", StandardRoles.FIGURE);
+                }
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_169());
-            framework.AssertBothFail("imageWithCustomRoleAndNoDescription", PdfUAConformance.PDF_UA_1);
+            framework.AddSuppliers(new _Generator_202());
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("imageWithCustomRoleAndNoDescription", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
+                    framework.AssertVeraPdfFail("imageWithCustomRoleAndNoDescription", pdfUAConformance);
+                }
+            }
         }
 
-        private sealed class _Generator_169 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_169() {
+        private sealed class _Generator_202 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_202() {
             }
 
             public IBlockElement Generate() {
@@ -183,20 +216,35 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ImageCustomDoubleMapping_Throws() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ImageCustomDoubleMapping_Throws(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDocument) => {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                    pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
+                    pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                    @namespace.AddNamespaceRoleMapping("CustomImage", StandardRoles.FIGURE);
+                    @namespace.AddNamespaceRoleMapping("CustomImage2", "CustomImage");
+                }
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_192());
-            framework.AssertBothFail("imageCustomDoubleMapping_Throws", PdfUAConformance.PDF_UA_1);
+            framework.AddSuppliers(new _Generator_239());
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("imageCustomDoubleMapping_Throws", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
+                    framework.AssertVeraPdfFail("imageCustomDoubleMapping_Throws", pdfUAConformance);
+                }
+            }
         }
 
-        private sealed class _Generator_192 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_192() {
+        private sealed class _Generator_239 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_239() {
             }
 
             public IBlockElement Generate() {
