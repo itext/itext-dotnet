@@ -35,13 +35,13 @@ namespace iText.Pdfua.Checkers.Utils {
         /// <see cref="LayoutCheckUtil"/>
         /// instance.
         /// </summary>
-        /// <param name="context">The validation context.</param>
+        /// <param name="context">the validation context</param>
         public LayoutCheckUtil(PdfUAValidationContext context) {
             this.context = context;
         }
 
         /// <summary>Checks renderer for PDF UA compliance.</summary>
-        /// <param name="renderer">The renderer to check.</param>
+        /// <param name="renderer">the renderer to check</param>
         public void CheckRenderer(IRenderer renderer) {
             if (renderer == null) {
                 return;

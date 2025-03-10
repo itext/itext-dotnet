@@ -30,24 +30,24 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see langword="true"/>
         /// if there is a next element,
         /// <see langword="false"/>
-        /// otherwise.
+        /// otherwise
         /// </returns>
         bool HasNext();
 
         /// <summary>Gets the next element in the iteration.</summary>
-        /// <returns>The next element.</returns>
+        /// <returns>the next element</returns>
         T Next();
 
         /// <summary>Gets the number of rows in the body of the table.</summary>
-        /// <returns>The number of rows in the body of the table.</returns>
+        /// <returns>the number of rows in the body of the table</returns>
         int GetAmountOfRowsBody();
 
         /// <summary>Gets the number of rows in the header of the table.</summary>
-        /// <returns>The number of rows in the header of the table.</returns>
+        /// <returns>the number of rows in the header of the table</returns>
         int GetAmountOfRowsHeader();
 
         /// <summary>Gets the number of rows in the footer of the table.</summary>
-        /// <returns>The number of rows in the footer of the table.</returns>
+        /// <returns>the number of rows in the footer of the table</returns>
         int GetAmountOfRowsFooter();
 
         /// <summary>Returns the amount of columns the table has.</summary>
@@ -60,11 +60,11 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         int GetNumberOfColumns();
 
         /// <summary>Gets the row index of the current position.</summary>
-        /// <returns>The row index.</returns>
+        /// <returns>the row index</returns>
         int GetRow();
 
         /// <summary>Gets the column index of current position.</summary>
-        /// <returns>The column index.</returns>
+        /// <returns>the column index</returns>
         int GetCol();
 
         /// <summary>Gets the rowspan of current position.</summary>

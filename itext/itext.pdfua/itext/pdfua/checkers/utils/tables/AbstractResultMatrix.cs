@@ -35,30 +35,38 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
     /// Class that represents a matrix of cells in a table.
     /// It is used to check if the table has valid headers and scopes for the cells.
     /// </remarks>
-    /// <typeparam name="T">The type of the cell.</typeparam>
+    /// <typeparam name="T">the type of the cell</typeparam>
     internal abstract class AbstractResultMatrix<T> {
         protected internal readonly ITableIterator<T> iterator;
 
-        //We can't use an array because it is not autoportable
+        // We can't use an array because it is not autoportable.
         private readonly IList<T> cellMatrix;
 
         private readonly int rows;
 
         private readonly int cols;
 
+        private readonly PdfUAConformance conformance;
+
         /// <summary>
         /// Creates a new
         /// <see cref="AbstractResultMatrix{T}"/>
         /// instance.
         /// </summary>
-        /// <param name="iterator">The iterator that will be used to iterate over the cells.</param>
-        protected internal AbstractResultMatrix(ITableIterator<T> iterator) {
+        /// <param name="iterator">the iterator that will be used to iterate over the cells</param>
+        /// <param name="conformance">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfUAConformance"/>
+        /// of the document that is being checked
+        /// </param>
+        protected internal AbstractResultMatrix(ITableIterator<T> iterator, PdfUAConformance conformance) {
+            this.conformance = conformance;
             this.rows = iterator.GetAmountOfRowsHeader() + iterator.GetAmountOfRowsBody() + iterator.GetAmountOfRowsFooter
                 ();
             this.cols = iterator.GetNumberOfColumns();
             this.iterator = iterator;
-            cellMatrix = iText.Pdfua.Checkers.Utils.Tables.AbstractResultMatrix<T>.CreateFixedSizedList<T>(rows * cols
-                , null);
+            this.cellMatrix = iText.Pdfua.Checkers.Utils.Tables.AbstractResultMatrix<T>.CreateFixedSizedList<T>(rows *
+                 cols, null);
         }
 
         /// <summary>Runs the algorithm to check if the table has valid headers and scopes for the cells.</summary>
@@ -97,6 +105,7 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
                             }
                             else {
                                 hasUnknownHeaders = true;
+                                DetermineDefaultScope(rowIdx, rowspan, colIdx, colspan, scopeMatrix);
                             }
                         }
                     }
@@ -110,10 +119,6 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
                 }
             }
             ValidateTableCells(knownIds, scopeMatrix, hasUnknownHeaders);
-        }
-
-        private void SetRowValue(int row, int rowSpan, IList<bool> arr, bool value) {
-            SetCell(row, rowSpan, 0, this.cols, arr, value);
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -131,6 +136,29 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
 //\cond DO_NOT_DOCUMENT
         internal abstract String GetRole(T cell);
 //\endcond
+
+        private void DetermineDefaultScope(int rowIdx, int rowspan, int colIdx, int colspan, IList<bool> scopeMatrix
+            ) {
+            if (conformance == PdfUAConformance.PDF_UA_1) {
+                // Default values were introduced in PDF 2.0
+                return;
+            }
+            // Assumed value for the Scope shall be determined (see Table 384 in ISO 32000-2:2020). These
+            // assumptions are used by the algorithm for determining which headers are associated with a cell.
+            // LrTb writing mode is taken into account, so default scope is applied to right/bottom cells.
+            if ((rowIdx == 0 && colIdx == 0) || (rowIdx != 0 && colIdx != 0)) {
+                SetRowAndColumnValue(rowIdx, this.rows - rowIdx, colIdx, colspan, scopeMatrix, true);
+                SetRowAndColumnValue(rowIdx, rowspan, colIdx, this.cols - colIdx, scopeMatrix, true);
+            }
+            else {
+                if (rowIdx == 0) {
+                    SetRowAndColumnValue(rowIdx, this.rows - rowIdx, colIdx, colspan, scopeMatrix, true);
+                }
+                else {
+                    SetRowAndColumnValue(rowIdx, rowspan, colIdx, this.cols - colIdx, scopeMatrix, true);
+                }
+            }
+        }
 
         private void ValidateTableCells(ICollection<String> knownIds, IList<bool> scopeMatrix, bool hasUnknownHeaders
             ) {
@@ -203,16 +231,21 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
             }
         }
 
+        private void SetRowValue(int row, int rowSpan, IList<bool> arr, bool value) {
+            SetCell(row, rowSpan, 0, this.cols, arr, value);
+        }
+
         private void SetColumnValue(int col, int colSpan, IList<bool> arr, bool value) {
             SetCell(0, this.rows, col, colSpan, arr, value);
         }
 
+        private void SetRowAndColumnValue(int row, int rowSpan, int col, int colSpan, IList<bool> arr, bool value) {
+            SetCell(row, rowSpan, col, colSpan, arr, value);
+        }
+
         private bool HasValidHeaderIds(T cell, ICollection<String> knownIds) {
             IList<byte[]> headers = GetHeaders(cell);
-            if (headers == null) {
-                return false;
-            }
-            if (headers.IsEmpty()) {
+            if (headers == null || headers.IsEmpty()) {
                 return false;
             }
             foreach (byte[] knownId in headers) {

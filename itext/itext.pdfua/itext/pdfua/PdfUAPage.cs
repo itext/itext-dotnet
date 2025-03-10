@@ -135,9 +135,10 @@ namespace iText.Pdfua {
         public override void Flush(bool flushResourcesContentStreams) {
             if (GetDocument().IsClosing()) {
                 base.Flush(flushResourcesContentStreams);
-                return;
             }
-            checker.WarnOnPageFlush();
+            else {
+                checker.WarnOnPageFlush();
+            }
         }
     }
 //\endcond

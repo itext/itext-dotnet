@@ -34,6 +34,7 @@ using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 using iText.Layout.Validation.Context;
 using iText.Pdfua.Checkers.Utils;
+using iText.Pdfua.Checkers.Utils.Tables;
 using iText.Pdfua.Checkers.Utils.Ua2;
 using iText.Pdfua.Exceptions;
 using iText.Pdfua.Logs;
@@ -84,6 +85,7 @@ namespace iText.Pdfua.Checkers {
 
                 case ValidationType.LAYOUT: {
                     LayoutValidationContext layoutContext = (LayoutValidationContext)context;
+                    new LayoutCheckUtil(this.context).CheckRenderer(layoutContext.GetRenderer());
                     headingsChecker.CheckLayoutElement(layoutContext.GetRenderer());
                     break;
                 }
@@ -91,7 +93,7 @@ namespace iText.Pdfua.Checkers {
         }
 
         public override bool IsPdfObjectReadyToFlush(PdfObject @object) {
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -206,6 +208,7 @@ namespace iText.Pdfua.Checkers {
             }
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
+            tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             tagTreeIterator.Traverse();
         }
     }

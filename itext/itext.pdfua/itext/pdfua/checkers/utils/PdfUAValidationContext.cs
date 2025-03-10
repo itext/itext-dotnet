@@ -38,7 +38,11 @@ namespace iText.Pdfua.Checkers.Utils {
         /// Creates a new instance of
         /// <see cref="PdfUAValidationContext"/>.
         /// </summary>
-        /// <param name="pdfDocument">The pdfDocument where the validation is happening.</param>
+        /// <param name="pdfDocument">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance that is being validated
+        /// </param>
         public PdfUAValidationContext(PdfDocument pdfDocument) {
             this.pdfDocument = pdfDocument;
         }
@@ -105,6 +109,19 @@ namespace iText.Pdfua.Checkers.Utils {
                 return (PdfStructElem)structureNode;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Retrieves the PDF/UA conformance of the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfUAConformance"/>
+        /// value
+        /// </returns>
+        public virtual PdfUAConformance GetUAConformance() {
+            return this.pdfDocument.GetConformance().GetUAConformance();
         }
     }
 }

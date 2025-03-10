@@ -136,7 +136,7 @@ namespace iText.Pdfua.Checkers {
         /// <inheritDoc/>.
         /// </summary>
         public override bool IsPdfObjectReadyToFlush(PdfObject @object) {
-            return true;
+            return false;
         }
 
         /// <summary>Verify the conformity of the file specification dictionary.</summary>
