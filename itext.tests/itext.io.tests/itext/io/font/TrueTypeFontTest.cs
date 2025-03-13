@@ -94,6 +94,14 @@ namespace iText.IO.Font {
             CheckCmapTableEntry(fontProgram, 'i', 3);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void CheckSxHeightTtfTest() {
+            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs-fmt-6.ttf");
+            FontMetrics metrics = fontProgram.GetFontMetrics();
+            int xHeight = metrics.GetXHeight();
+            NUnit.Framework.Assert.AreEqual(536, xHeight);
+        }
+
         private void CheckCmapTableEntry(FontProgram fontProgram, char uniChar, int expectedGlyphId) {
             Glyph glyph = fontProgram.GetGlyph(uniChar);
             NUnit.Framework.Assert.AreEqual(expectedGlyphId, glyph.GetCode());

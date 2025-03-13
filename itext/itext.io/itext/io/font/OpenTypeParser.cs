@@ -952,11 +952,12 @@ namespace iText.IO.Font {
                 os_2.ulCodePageRange2 = raf.ReadInt();
             }
             if (version > 1) {
-                raf.SkipBytes(2);
+                os_2.sxHeight = raf.ReadShort();
                 os_2.sCapHeight = raf.ReadShort();
             }
             else {
                 os_2.sCapHeight = (int)(0.7 * head.unitsPerEm);
+                os_2.sxHeight = (int)(0.5 * head.unitsPerEm);
             }
         }
 

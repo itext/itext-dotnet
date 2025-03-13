@@ -539,6 +539,60 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MiddleAlignmentWithTtfOS2Version3Test() {
+            String outFileName = DESTINATION_FOLDER + "middleAlignmentWithTtfOS2Version3Test.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_middleAlignmentWithTtfOS2Version3Test.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDoc);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Open_Sans/OpenSans-Bold.ttf");
+                document.SetFont(font);
+                Paragraph p = new Paragraph();
+                p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+                p.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                p.SetFontSize(30);
+                Text heightDefiner = new Text(" Xj ");
+                p.Add(heightDefiner).SetMarginTop(30);
+                Text text1 = new Text(" mAlign Middle Alignment ");
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(InlineVerticalAlignmentType
+                    .MIDDLE));
+                text1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                text1.SetFontSize(12);
+                p.Add(text1);
+                p.Add(heightDefiner);
+                document.Add(p);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MiddleAlignmentWithTtfOS2Version1Test() {
+            String outFileName = DESTINATION_FOLDER + "middleAlignmentWithTtfOS2Version1Test.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_middleAlignmentWithTtfOS2Version1Test.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDoc);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf");
+                document.SetFont(font);
+                Paragraph p = new Paragraph();
+                p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+                p.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                p.SetFontSize(30);
+                Text heightDefiner = new Text(" Xj ");
+                p.Add(heightDefiner).SetMarginTop(30);
+                Text text1 = new Text(" mAlign Middle Alignment ");
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(InlineVerticalAlignmentType
+                    .MIDDLE));
+                text1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                text1.SetFontSize(12);
+                p.Add(text1);
+                p.Add(heightDefiner);
+                document.Add(p);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         private static void CreateDocumentWithInlineAlignment(String outPdf, String cmpPdf, InlineVerticalAlignmentType?
              verticalAlignment1) {
             CreateDocumentWithInlineAlignment(outPdf, cmpPdf, verticalAlignment1, null);
