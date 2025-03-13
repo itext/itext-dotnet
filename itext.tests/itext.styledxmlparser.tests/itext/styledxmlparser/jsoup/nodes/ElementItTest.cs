@@ -31,7 +31,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         [NUnit.Framework.Test]
         public virtual void TestFastReparent() {
             StringBuilder htmlBuf = new StringBuilder();
-            int rows = 300000;
+            int rows = 30000;
             for (int i = 1; i <= rows; i++) {
                 htmlBuf.Append("<p>El-").Append(i).Append("</p>");
             }
@@ -52,13 +52,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual(wrapper, wrapperAcutal);
             NUnit.Framework.Assert.AreEqual("El-1", wrapperAcutal.Children()[0].Text());
             NUnit.Framework.Assert.AreEqual("El-" + rows, wrapperAcutal.Children()[rows - 1].Text());
-            NUnit.Framework.Assert.IsTrue(runtime <= 10000);
+            NUnit.Framework.Assert.IsTrue(runtime <= 1000);
         }
 
         [NUnit.Framework.Test]
         public virtual void TestFastReparentExistingContent() {
             StringBuilder htmlBuf = new StringBuilder();
-            int rows = 300000;
+            int rows = 30000;
             for (int i = 1; i <= rows; i++) {
                 htmlBuf.Append("<p>El-").Append(i).Append("</p>");
             }
@@ -84,7 +84,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual("El-1", wrapperAcutal.Children()[1].Text());
             NUnit.Framework.Assert.AreEqual("El-" + rows, wrapperAcutal.Children()[rows].Text());
             NUnit.Framework.Assert.AreEqual("End Content", wrapperAcutal.Children()[rows + 1].Text());
-            NUnit.Framework.Assert.IsTrue(runtime <= 10000);
+            NUnit.Framework.Assert.IsTrue(runtime <= 1000);
         }
     }
 }
