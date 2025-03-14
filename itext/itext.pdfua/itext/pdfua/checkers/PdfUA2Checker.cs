@@ -209,6 +209,7 @@ namespace iText.Pdfua.Checkers {
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
             tagTreeIterator.Traverse();
         }
     }
