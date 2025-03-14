@@ -22,28 +22,168 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Text;
-using System.Xml;
-using iText.IO.Util;
 using NUnit.Framework;
 
 namespace iText.Test.Pdfa {
+    /// <summary>
+    /// This class is used to validate PDF files with VeraPDF.
+    /// The class can be used in two modes:
+    /// * CLI mode - VeraPDF is executed as a separate process and the result is parsed from the output.
+    /// To enable CLI mode, set the environment variable ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER to false or do not set it at all.
+    ///  The cli command is java -jar VeraPdfValidatorApp.jar cli {pathB64Encoded}
+    /// 
+    /// * Server mode - VeraPDF is executed as a separate server and the result is parsed from the response.
+    /// To enable server mode, set the environment variable ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER to true and
+    /// provide the desired port with ITEXT_VERAPDFVALIDATOR_PORT.
+    ///
+    /// The server has 3 endpoints:
+    ///  /api/validate?pathB64={pathB64Encoded} - validates the PDF file at the given path
+    ///  /api/status - checks if the server is online
+    ///  /api/shutdown - shuts down the server
+    ///
+    /// The enduser is responsible for shutting down the server after you are done with it.
+    /// 
+    /// </summary>
     public class VeraPdfValidator {
-        private const String CLI_COMMAND = "java -classpath \"<libPath>\\*\" -Dfile.encoding=UTF8 " +
-                                           "-XX:+IgnoreUnrecognizedVMOptions -Dapp.name=\"VeraPDF validation GUI\" " +
-                                           "-Dapp.repo=\"<libPath>\" -Dapp.home=\"../\" " +
-                                           "-Dbasedir=\"\" org.verapdf.apps.GreenfieldCliWrapper --addlogs ";
+        private const string ITEXT_VERAPDFVALIDATOR_PORT_VAR = "ITEXT_VERAPDFVALIDATOR_PORT";
+        private const string ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER_VAR = "ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER";
 
-        public String Validate(String dest) {
+       
+        private static readonly string PORT_VALUE = Environment.GetEnvironmentVariable(ITEXT_VERAPDFVALIDATOR_PORT_VAR);
+        private static readonly string ENABLE_SERVER_VALUE = Environment.GetEnvironmentVariable(ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER_VAR);
+        
+        // If this is set to true, we will validate the output of the server and the cli to be the same byte for byte
+        private static bool VERIFY_SAME_OUTPUT = false;
+
+        private static string GetBaseUri() {
+            return "http://localhost:" + GetPort() + "/api/";
+        }
+        
+        private static int GetPort() {
+            string port = PORT_VALUE;
+            if (port == null || port.Trim().Length == 0) {
+                if (!VERIFY_SAME_OUTPUT) {
+                    throw new ArgumentException("Env was set to enable server but no port was provided, please set " +
+                                                ITEXT_VERAPDFVALIDATOR_PORT_VAR);
+                }
+                port = "9090";
+            }
+
+            return int.Parse(port);
+        }
+
+
+        private bool IsServerOnline() {
+            try {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetBaseUri() + "status");
+                request.Method = "GET";
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                HttpStatusCode statusCode = response.StatusCode;
+                response.Close();
+                return statusCode == HttpStatusCode.OK;
+            }
+            catch (WebException e) {
+                return false;
+            }
+        }
+
+
+        private void StartServer() {
+            string command = "java -jar " + TestContext.CurrentContext.TestDirectory +
+                             "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar server " + GetPort();
             Process p = new Process();
-            String currentCommand = CLI_COMMAND.Replace("<libPath>",
-                TestContext.CurrentContext.TestDirectory + "\\lib\\VeraPdf");
 
-            p.StartInfo = new ProcessStartInfo("cmd", "/c" + currentCommand + dest);
+
+            SetCorrectExecutor(p, command);
+
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = false;
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+            p.Start();
+            //wait sometime for server to start
+            System.Threading.Thread.Sleep(1000);
+
+            Console.WriteLine("VeraPDF server started on port " + GetPort());
+            //add shutdown hook
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) => {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetBaseUri() + "stop");
+                request.Method = "GET";
+                request.GetResponse();
+            };
+        }
+
+        private string TryUseServer(string dest) {
+            if (!IsServerOnline()) {
+                StartServer();
+            }
+
+            string b64EncodeDest = Convert.ToBase64String(Encoding.UTF8.GetBytes(dest));
+            HttpWebRequest request =
+                (HttpWebRequest)WebRequest.Create(GetBaseUri() + "validate?pathB64=" + b64EncodeDest);
+            request.Method = "GET";
+
+            try {
+                string responseFromServer;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
+                    using (Stream dataStream = response.GetResponseStream()) {
+                        using (StreamReader reader = new StreamReader(dataStream)) {
+                            responseFromServer = reader.ReadToEnd();
+                            if (responseFromServer.Length == 0) {
+                                return null;
+                            }
+                        }
+                    }
+                }
+
+                //Base64 decode the response
+                byte[] data = Convert.FromBase64String(responseFromServer);
+                return Encoding.UTF8.GetString(data);
+            } catch (WebException e) {
+                //Sometimes the server is flaky so we will fallback to cli
+                Console.WriteLine( "VeraPDF api server execution failed:  " + e.Message);
+                Console.WriteLine("Falling back to cli execution");
+                return RunCli(dest);
+            }
+        }
+
+        private static bool ShouldUseServer() {
+            string enableServer = ENABLE_SERVER_VALUE;
+            return enableServer != null && enableServer.Equals("true");
+        }
+
+        public string Validate(string dest) {
+            if (!VERIFY_SAME_OUTPUT) {
+                String result = ShouldUseServer() ? TryUseServer(dest) : RunCli(dest);
+                return result;
+            }
+            String cliResult = RunCli(dest);
+            String serverResult = TryUseServer(dest);
+            if (serverResult != cliResult) {
+                Assert.AreEqual(cliResult, serverResult);
+            }
+            return cliResult;
+        }
+
+        private static void SetCorrectExecutor(Process p, string command) {
+            // Currently we only support windows 
+            p.StartInfo = new ProcessStartInfo("cmd", "/c " + command);
+        }
+
+        private static string RunCli(string dest) {
+            string command = "java -jar " + TestContext.CurrentContext.TestDirectory +
+                             "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar cli " +
+                             Convert.ToBase64String(Encoding.UTF8.GetBytes(dest));
+
+            Process p = new Process();
+            SetCorrectExecutor(p, command);
+
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
@@ -52,104 +192,11 @@ namespace iText.Test.Pdfa {
             p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             p.Start();
 
-            String result = HandleVeraPdfOutput(p, dest);
             p.WaitForExit();
-
+            string output = p.StandardOutput.ReadToEnd();
+            string result = output.Length == 0 ? null : output.Trim();
             return result;
         }
-
-        private string HandleVeraPdfOutput(Process p, String dest) {
-            StringBuilder standardOutput = new StringBuilder();
-            StringBuilder standardError = new StringBuilder();
-
-            while (!p.HasExited) {
-                standardOutput.Append(p.StandardOutput.ReadToEnd());
-                standardError.Append(p.StandardError.ReadToEnd());
-            }
-
-            String stdErrOutput = standardError.ToString();
-
-            /* If JAVA_TOOL_OPTIONS env var is defined JVM will always print its value to stderr. We filter this line
-               in order to catch other valuable error output. */
-            string javaToolOptionsWarn = "Picked up JAVA_TOOL_OPTIONS: ";
-            stdErrOutput = String.Join("\n",
-                stdErrOutput
-                    .Split('\n').Where(s => !s.StartsWith(javaToolOptionsWarn))
-            );
-
-            if (String.IsNullOrEmpty(standardOutput.ToString())) {
-                return "VeraPDF execution failed: Standard output is empty";
-            }
-
-            VeraPdfReportResult reportResult = GenerateReport(standardOutput.ToString(), dest, true);
-
-            if (reportResult.NonCompliantPdfaCount != 0) {
-                return reportResult.MessageResult;
-            }
-            else if (!String.IsNullOrEmpty(stdErrOutput) && reportResult.VeraPdfLogs == null) {
-                return "The following warnings and errors were logged during validation:" + stdErrOutput;
-            }
-            else if (!String.IsNullOrEmpty(reportResult.VeraPdfLogs)) {
-                Console.WriteLine("The following warnings and errors were logged during validation:\n" + stdErrOutput);
-                return "The following warnings and errors were logged during validation:" + reportResult.VeraPdfLogs;
-            }
-
-            return reportResult.MessageResult;
-        }
-
-        private VeraPdfReportResult GenerateReport(String output, String dest, bool toReportSuccess) {
-            VeraPdfReportResult veraPdfReportResult = new VeraPdfReportResult();
-            XmlDocument document = new XmlDocument();
-
-            try {
-                document.LoadXml(output.Trim());
-            }
-            catch (XmlException exc) {
-                veraPdfReportResult.MessageResult = "VeraPDF verification results parsing failed: " + exc.Message;
-                return veraPdfReportResult;
-            }
-
-            String reportDest = dest.Substring(0, dest.Length - ".pdf".Length) + ".xml";
-
-            XmlAttributeCollection detailsAttributes = document.GetElementsByTagName("details")[0].Attributes;
-
-            if (!detailsAttributes["failedRules"].Value.Equals("0")
-                || !detailsAttributes["failedChecks"].Value.Equals("0")) {
-                WriteToFile(output, reportDest);
-                veraPdfReportResult.MessageResult = "VeraPDF verification failed. See verification results: "
-                                                    + UrlUtil.GetNormalizedFileUriString(reportDest);
-                return veraPdfReportResult;
-            }
-
-            detailsAttributes = document.GetElementsByTagName("validationReports")[0].Attributes;
-            veraPdfReportResult.NonCompliantPdfaCount = int.Parse(detailsAttributes["nonCompliant"].InnerText);
-            if (veraPdfReportResult.NonCompliantPdfaCount != 0) {
-                veraPdfReportResult.MessageResult = "VeraPDF verification failed. See verification results: "
-                                                    + UrlUtil.GetNormalizedFileUriString(reportDest);
-                return veraPdfReportResult;
-            }
-
-            if (toReportSuccess) {
-                WriteToFile(output, reportDest);
-                Console.WriteLine("VeraPDF verification finished. See verification report: "
-                                  + UrlUtil.GetNormalizedFileUriString(reportDest));
-
-                var logs = new List<string>();
-                XmlNodeList elements = document.GetElementsByTagName("logMessage");
-                foreach (XmlElement element in elements) {
-                    logs.Add(element.Attributes["level"].Value + ": " + element.InnerText);
-                }
-
-                logs.Sort();
-
-                foreach (String log in logs) {
-                    veraPdfReportResult.VeraPdfLogs += "\n" + log;
-                }
-            }
-
-            return veraPdfReportResult;
-        }
-
 
         /// <summary>
         ///  Validates PDF file with VeraPdf expecting success.
@@ -158,7 +205,7 @@ namespace iText.Test.Pdfa {
         public void ValidateFailure(String filePath) {
             Assert.NotNull(Validate(filePath));
         }
-        
+
         /// <summary>
         ///  Validates PDF file with VeraPdf expecting success.
         /// </summary>
@@ -166,13 +213,6 @@ namespace iText.Test.Pdfa {
         /// <param name="expectedWarning">True when you expect a warning</param>
         public void ValidateWarning(String filePath, String expectedWarning) {
             Assert.AreEqual(expectedWarning, Validate(filePath));
-        }
-
-        private void WriteToFile(String output, String reportDest) {
-            using (FileStream stream = File.Create(reportDest)) {
-                stream.Write(new UTF8Encoding(true).GetBytes(output),
-                    0, output.Length);
-            }
         }
     }
 }
