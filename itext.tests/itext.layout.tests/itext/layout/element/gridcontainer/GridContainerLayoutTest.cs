@@ -46,8 +46,8 @@ namespace iText.Layout.Element.Gridcontainer {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/GridContainerTest/";
 
-        [NUnit.Framework.SetUp]
-        public virtual void Setup() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Setup() {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 

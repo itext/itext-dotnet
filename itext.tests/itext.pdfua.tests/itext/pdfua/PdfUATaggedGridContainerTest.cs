@@ -44,8 +44,8 @@ namespace iText.Pdfua {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        [NUnit.Framework.SetUp]
-        public virtual void Setup() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Setup() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
