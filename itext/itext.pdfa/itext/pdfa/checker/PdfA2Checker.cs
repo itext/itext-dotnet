@@ -352,6 +352,8 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>Checks the number of components in DeviceN color space.</summary>
+        /// <param name="deviceN">the color space to check</param>
         protected internal virtual void CheckNumberOfDeviceNComponents(PdfSpecialCs.DeviceN deviceN) {
             if (deviceN.GetNumberOfComponents() > MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED

@@ -410,6 +410,7 @@ namespace iText.Layout.Renderer {
             float? GetAdditionalHeightOfEachColumn(MulticolRenderer renderer, MulticolRenderer.MulticolLayoutResult result
                 );
 
+            /// <returns>maximum amount of relayouts which can be done by this height enhancer</returns>
             int MaxAmountOfRelayouts();
         }
 
@@ -425,27 +426,57 @@ namespace iText.Layout.Renderer {
 
             private IRenderer causeOfNothing;
 
+            /// <summary>Gets the split renderers.</summary>
+            /// <returns>
+            /// the split renderers (always not
+            /// <see langword="null"/>
+            /// )
+            /// </returns>
             public virtual IList<IRenderer> GetSplitRenderers() {
                 return splitRenderers;
             }
 
+            /// <summary>Gets the overflow renderer.</summary>
+            /// <returns>
+            /// the overflow renderer, can be
+            /// <see langword="null"/>
+            /// if there is no overflow
+            /// </returns>
             public virtual AbstractRenderer GetOverflowRenderer() {
                 return overflowRenderer;
             }
 
+            /// <summary>Sets the overflow renderer.</summary>
+            /// <param name="overflowRenderer">the overflow renderer to be set</param>
             public virtual void SetOverflowRenderer(AbstractRenderer overflowRenderer) {
                 this.overflowRenderer = overflowRenderer;
             }
 
+            /// <summary>Gets the cause of nothing renderer.</summary>
+            /// <returns>
+            /// the cause of nothing renderer, can be
+            /// <see langword="null"/>
+            /// if
+            /// <see cref="GetSplitRenderers()"/>
+            /// is not empty
+            /// </returns>
             public virtual IRenderer GetCauseOfNothing() {
                 return causeOfNothing;
             }
 
+            /// <summary>Sets the cause of nothing renderer.</summary>
+            /// <param name="causeOfNothing">cause of nothing renderer to be set</param>
             public virtual void SetCauseOfNothing(IRenderer causeOfNothing) {
                 this.causeOfNothing = causeOfNothing;
             }
         }
 
+        /// <summary>
+        /// Default implementation of
+        /// <see cref="ColumnHeightCalculator"/>
+        /// which allows 4 relayouts and performs
+        /// simple additional height calculation (split the elements which don't fit).
+        /// </summary>
         public class LayoutInInfiniteHeightCalculator : MulticolRenderer.ColumnHeightCalculator {
             protected internal int maxRelayoutCount = 4;
 

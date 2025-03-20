@@ -241,6 +241,18 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             imageCache.Reset();
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// based on passed base64 encoded string.
+        /// </summary>
+        /// <param name="src">the base64 encoded string</param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// based on passed base64 encoded string or
+        /// <see langword="null"/>
+        /// </returns>
         protected internal virtual PdfXObject TryResolveBase64ImageSource(String src) {
             try {
                 String fixedSrc = iText.Commons.Utils.StringUtil.ReplaceAll(src, "\\s", "");
@@ -258,6 +270,18 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             return null;
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// based on the string which defines the path to local image.
+        /// </summary>
+        /// <param name="uri">the path to the local image</param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// based on local image or
+        /// <see langword="null"/>
+        /// </returns>
         protected internal virtual PdfXObject TryResolveUrlImageSource(String uri) {
             try {
                 Uri url = uriResolver.ResolveAgainstBaseUri(uri);

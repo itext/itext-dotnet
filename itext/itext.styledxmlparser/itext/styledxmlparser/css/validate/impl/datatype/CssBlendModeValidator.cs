@@ -25,6 +25,10 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Validate.Impl.Datatype {
+    /// <summary>
+    /// <see cref="iText.StyledXmlParser.Css.Validate.ICssDataTypeValidator"/>
+    /// implementation for CSS blend mode property.
+    /// </summary>
     public class CssBlendModeValidator : ICssDataTypeValidator {
         public virtual bool IsValid(String objectString) {
             return CommonCssConstants.BLEND_MODE_VALUES.Contains(objectString);

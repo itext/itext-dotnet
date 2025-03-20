@@ -33,6 +33,10 @@ using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Css.Validate;
 
 namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
+    /// <summary>
+    /// <see cref="iText.StyledXmlParser.Css.Resolve.Shorthand.IShorthandResolver"/>
+    /// implementation for flex-flow.
+    /// </summary>
     public class FlexFlowShorthandResolver : IShorthandResolver {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(FlexFlowShorthandResolver));
 

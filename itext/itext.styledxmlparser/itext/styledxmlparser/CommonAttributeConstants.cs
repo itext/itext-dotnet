@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.StyledXmlParser {
+    /// <summary>Class containing the constant property names for the attributes of tags in the XML.</summary>
     public class CommonAttributeConstants {
         /// <summary>The Constant CLASS.</summary>
         public const String CLASS = "class";

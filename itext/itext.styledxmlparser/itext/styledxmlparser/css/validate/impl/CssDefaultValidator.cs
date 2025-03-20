@@ -42,6 +42,11 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
             new CssEnumValidator(CommonCssConstants.TRANSPARENT, CommonCssConstants.INITIAL, CommonCssConstants.INHERIT
             , CommonCssConstants.CURRENTCOLOR), new CssColorValidator());
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="CssDefaultValidator"/>
+        /// instance with the default validators map.
+        /// </summary>
         public CssDefaultValidator() {
             CssEnumValidator normalValidator = new CssEnumValidator(CommonCssConstants.NORMAL);
             CssEnumValidator relativeSizeValidator = new CssEnumValidator(CommonCssConstants.LARGER, CommonCssConstants

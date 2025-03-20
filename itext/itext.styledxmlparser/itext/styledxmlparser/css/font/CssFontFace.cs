@@ -223,14 +223,26 @@ namespace iText.StyledXmlParser.Css.Font {
             internal readonly bool isLocal;
 //\endcond
 
+            /// <summary>Gets the font format.</summary>
+            /// <returns>the font format</returns>
             public virtual CssFontFace.FontFormat GetFormat() {
                 return format;
             }
 
+            /// <summary>Gets the source path.</summary>
+            /// <returns>the source path</returns>
             public virtual String GetSrc() {
                 return src;
             }
 
+            /// <summary>Checks if the font is local.</summary>
+            /// <returns>
+            /// 
+            /// <see langword="true"/>
+            /// if the font is local,
+            /// <see langword="false"/>
+            /// otherwise
+            /// </returns>
             public virtual bool IsLocal() {
                 return isLocal;
             }

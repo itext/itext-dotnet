@@ -34,6 +34,14 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
     /// to also support device-cmyk color structure.
     /// </remarks>
     public class CssDeviceCmykAwareValidator : CssDefaultValidator {
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="CssDeviceCmykAwareValidator"/>
+        /// instance which extends the
+        /// default
+        /// <see cref="CssDefaultValidator"/>
+        /// to also support device-cmyk color structure.
+        /// </summary>
         public CssDeviceCmykAwareValidator()
             : base() {
             ICssDeclarationValidator colorCmykValidator = new MultiTypeDeclarationValidator(new CssEnumValidator(CommonCssConstants

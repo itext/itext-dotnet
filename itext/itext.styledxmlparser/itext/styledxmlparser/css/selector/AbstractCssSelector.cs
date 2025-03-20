@@ -43,6 +43,8 @@ namespace iText.StyledXmlParser.Css.Selector {
             this.selectorItems = selectorItems;
         }
 
+        /// <summary>Gets selector items.</summary>
+        /// <returns>the selector items</returns>
         public virtual IList<ICssSelectorItem> GetSelectorItems() {
             return JavaCollectionsUtil.UnmodifiableList(selectorItems);
         }
