@@ -811,7 +811,27 @@ namespace iText.Signatures {
                 .GetSignatureMechanismParameters());
             byte[] encodedSig = sgn.GetEncodedPKCS7(hash, sigtype, tsaClient, ocspList, crlBytes);
             if (estimatedSize < encodedSig.Length) {
-                throw new System.IO.IOException($"Size of encoded signature was smaller than the estimated size. Expected {estimatedSize} but got {encodedSig.Length}");
+                var sb = new System.Text.StringBuilder();
+
+                var unexpectedSigSizeMsg = $"Size of encoded signature was larger than the estimated size. Expected {estimatedSize} but got {encodedSig.Length}.";
+                sb.AppendLine(unexpectedSigSizeMsg);
+
+                var hashSizeMsg = $"Hash size: {hash.Length}";
+                sb.AppendLine(hashSizeMsg);
+
+                if (ocspList.Count > 0) {
+                    var ocspListSize = ocspList.Aggregate(0, (acc, l) => acc + l.Length);
+                    var ocspListSizeMsg = $"OCSP list - Count: {ocspList.Count} / Size: {ocspListSize}";
+                    sb.AppendLine(ocspListSizeMsg);
+                }
+
+                if (crlBytes != null) {
+                    var crlBytesSize = crlBytes.Aggregate(0, (acc, l) => acc + l.Length);
+                    var crlBytesMsg = $"CRL bytes - Count: {crlBytes.Count} / Size: {crlBytesSize}";
+                    sb.AppendLine(crlBytesMsg);
+                }
+
+                throw new System.IO.IOException(sb.ToString());
             }
             byte[] paddedSig = new byte[estimatedSize];
             Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
