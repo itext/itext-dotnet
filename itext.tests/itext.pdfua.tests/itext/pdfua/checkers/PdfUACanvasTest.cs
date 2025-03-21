@@ -828,8 +828,8 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("invalidNoteTag02", pdfUAConformance);
+                    framework.AssertBothFail("invalidNoteTag02", PdfUAExceptionMessageConstants.DOCUMENT_USES_NOTE_TAG, pdfUAConformance
+                        );
                 }
             }
         }
@@ -866,8 +866,8 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("invalidNoteTag02", pdfUAConformance);
+                    framework.AssertBothFail("invalidNoteTag02", PdfUAExceptionMessageConstants.DOCUMENT_USES_NOTE_TAG, pdfUAConformance
+                        );
                 }
             }
         }

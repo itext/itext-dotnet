@@ -44,6 +44,11 @@ namespace iText.Pdfua.Exceptions {
 
         public const String CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT = "Content is neither marked as Artifact nor tagged as real content.";
 
+        public const String CONTENT_NOT_REFERENCING_FE_NOTE = "Real content that refers to footnotes or endnotes "
+             + "shall use the Ref entry on the referring structure element to reference the FENote.";
+
+        public const String INCORRECT_NOTE_TYPE_VALUE = "The value of the NoteType attribute shall be either \"Footnote\", \"Endnote\" or \"None\".";
+
         public const String CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT = "Content with MCID, but MCID wasn't found in StructTreeRoot.";
 
         public const String CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP = "CT or Alt entry is missing from the media "
@@ -58,7 +63,12 @@ namespace iText.Pdfua.Exceptions {
         public const String DOCUMENT_USES_H_TAG = "Document uses H tag: conforming files shall use the explicitly "
              + "numbered heading structure types (H1-Hn) and shall not use the H structure type.";
 
+        public const String DOCUMENT_USES_NOTE_TAG = "Document uses Note tag: " + "conforming files shall not use Note structure type. Instead FENote structure type shall be used.";
+
         public const String DYNAMIC_XFA_FORMS_SHALL_NOT_BE_USED = "Dynamic XFA forms shall not be used.";
+
+        public const String FE_NOTE_NOT_REFERENCING_CONTENT = "FENote structure element shall use the Ref entry " 
+            + "to identify all citations that reference it.";
 
         public const String FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY = "File specification dictionary shall contain f key and uf key.";
 

@@ -201,7 +201,6 @@ namespace iText.Pdfua {
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Helloworld");
                 document.Add(paragraph);
-                document.Close();
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
@@ -209,7 +208,7 @@ namespace iText.Pdfua {
                     .FONT_SHOULD_BE_EMBEDDED, "Courier"), false, pdfUAConformance);
             }
             if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                // TODO DEVSIX-8242 The layout level doesn’t throw an error
+                // TODO DEVSIX-8242 The layout level doesn't throw an error
                 framework.AssertVeraPdfFail("tryToUseStandardFontsTest", pdfUAConformance);
             }
         }

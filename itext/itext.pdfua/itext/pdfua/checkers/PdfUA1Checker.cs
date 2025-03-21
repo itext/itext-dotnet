@@ -343,7 +343,7 @@ namespace iText.Pdfua.Checkers {
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
             tagTreeIterator.AddHandler(new FormulaCheckUtil.FormulaTagHandler(context));
-            tagTreeIterator.AddHandler(new NoteCheckUtil.NoteTagHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA1NotesChecker.PdfUA1NotesTagHandler(context));
             tagTreeIterator.AddHandler(new PdfUA1HeadingsChecker.PdfUA1HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             tagTreeIterator.AddHandler(new AnnotationCheckUtil.AnnotationHandler(context));

@@ -2629,7 +2629,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestFormFieldAsStream(PdfUAConformance pdfUAConformance) {
-            framework.AddBeforeGenerationHook((pdfDoc) => {
+            framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfObject page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfStream streamObj = new PdfStream();
                 streamObj.Put(PdfName.Subtype, PdfName.Widget);
@@ -2652,8 +2652,8 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("FormFieldAsStream", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                     framework.AssertVeraPdfFail("FormFieldAsStream", pdfUAConformance);
                 }
             }

@@ -51,6 +51,8 @@ namespace iText.Pdfua {
 
         private readonly IList<Action<PdfDocument>> beforeGeneratorHook = new List<Action<PdfDocument>>();
 
+        private readonly IList<Action<PdfDocument>> afterGeneratorHook = new List<Action<PdfDocument>>();
+
         public UaValidationTestFramework(String destinationFolder)
             : this(destinationFolder, true) {
         }
@@ -124,6 +126,10 @@ namespace iText.Pdfua {
             this.beforeGeneratorHook.Add(action);
         }
 
+        public virtual void AddAfterGenerationHook(Action<PdfDocument> action) {
+            this.afterGeneratorHook.Add(action);
+        }
+
         public virtual void AssertVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
             VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
         }
@@ -136,16 +142,18 @@ namespace iText.Pdfua {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
             PdfDocument pdfDoc = CreatePdfDocument(destinationFolder + filename, pdfUAConformance);
-            Document document = new Document(pdfDoc);
-            document.GetPdfDocument().GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer()
-                );
+            pdfDoc.GetDiContainer().Register(typeof(ValidationContainer), new ValidationContainer());
             foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
                 pdfDocumentConsumer(pdfDoc);
             }
-            foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
-                document.Add(blockElementSupplier.Generate());
+            using (Document document = new Document(pdfDoc)) {
+                foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
+                    document.Add(blockElementSupplier.Generate());
+                }
+                foreach (Action<PdfDocument> pdfDocumentConsumer in this.afterGeneratorHook) {
+                    pdfDocumentConsumer(pdfDoc);
+                }
             }
-            document.Close();
             VeraPdfValidator validator = new VeraPdfValidator();
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             String validate = null;
@@ -180,11 +188,14 @@ namespace iText.Pdfua {
                 foreach (Action<PdfDocument> pdfDocumentConsumer in this.beforeGeneratorHook) {
                     pdfDocumentConsumer(pdfDoc);
                 }
-                Document document = new Document(pdfDoc);
-                foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
-                    document.Add(blockElementSupplier.Generate());
+                using (Document document = new Document(pdfDoc)) {
+                    foreach (UaValidationTestFramework.Generator<IBlockElement> blockElementSupplier in elementProducers) {
+                        document.Add(blockElementSupplier.Generate());
+                    }
+                    foreach (Action<PdfDocument> pdfDocumentConsumer in this.afterGeneratorHook) {
+                        pdfDocumentConsumer(pdfDoc);
+                    }
                 }
-                document.Close();
             }
             catch (Exception e) {
                 return e;
