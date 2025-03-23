@@ -43,24 +43,24 @@ namespace iText.Pdfua.Checkers.Utils {
         }
 
         /// <summary>Checks if image has alternative description or actual text.</summary>
-        /// <param name="image">The image to check</param>
+        /// <param name="image">the image to check</param>
         public void CheckLayoutElement(Image image) {
             if (image.GetAccessibilityProperties() == null) {
                 throw new InvalidOperationException();
             }
             if (!StandardRoles.FIGURE.Equals(context.ResolveToStandardRole(image.GetAccessibilityProperties().GetRole(
                 )))) {
-                // image is not a figure tag, so we don't need to check it
+                // Image is not a figure tag, so we don't need to check it.
                 return;
             }
             AccessibilityProperties props = image.GetAccessibilityProperties();
-            bool hasSomeValue = HasAtleastOneValidValue(props.GetAlternateDescription(), props.GetActualText());
+            bool hasSomeValue = HasAtLeastOneValidValue(props.GetAlternateDescription(), props.GetActualText());
             if (!hasSomeValue) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
             }
         }
 
-        private static bool HasAtleastOneValidValue(Object altText, Object actualText) {
+        private static bool HasAtLeastOneValidValue(Object altText, Object actualText) {
             String altTextValue = null;
             if (altText is PdfString) {
                 altTextValue = ((PdfString)altText).GetValue();
@@ -75,8 +75,8 @@ namespace iText.Pdfua.Checkers.Utils {
             if (actualText is String) {
                 actualTextValue = (String)actualText;
             }
-            // PDF spec is not super clear, but it seems actualText can be an empty string
-            return !(altTextValue == null || String.IsNullOrEmpty(altTextValue)) || actualTextValue != null;
+            // PDF spec is not super clear, but it seems actualText can be an empty string.
+            return (altTextValue != null && !String.IsNullOrEmpty(altTextValue)) || actualTextValue != null;
         }
 
         /// <summary>Helper class that checks the conformance of graphics tags while iterating the tag tree structure.
@@ -86,7 +86,7 @@ namespace iText.Pdfua.Checkers.Utils {
             /// Creates a new instance of the
             /// <see cref="GraphicsHandler"/>.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">the validation context</param>
             public GraphicsHandler(PdfUAValidationContext context)
                 : base(context) {
             }
@@ -101,7 +101,7 @@ namespace iText.Pdfua.Checkers.Utils {
                     return;
                 }
                 PdfDictionary pdfObject = structElem.GetPdfObject();
-                if (!HasAtleastOneValidValue(pdfObject.GetAsString(PdfName.Alt), pdfObject.GetAsString(PdfName.ActualText)
+                if (!HasAtLeastOneValidValue(pdfObject.GetAsString(PdfName.Alt), pdfObject.GetAsString(PdfName.ActualText)
                     )) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
                 }

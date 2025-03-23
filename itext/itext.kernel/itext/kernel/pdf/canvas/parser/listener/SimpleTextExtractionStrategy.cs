@@ -57,8 +57,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                         hardReturn = true;
                     }
                 }
-                // Note:  Technically, we should check both the start and end positions, in case the angle of the text changed without any displacement
-                // but this sort of thing probably doesn't happen much in reality, so we'll leave it alone for now
+                // Note: Technically, we should check both start and end positions in case the angle of the text
+                // changed without any displacement, but this sort of thing probably doesn't happen much in reality,
+                // so we'll leave it alone for now.
                 if (hardReturn) {
                     //System.out.println("<< Hard Return >>");
                     AppendTextChunk("\n");

@@ -47,8 +47,6 @@ namespace iText.Pdfua.Exceptions {
         public const String CONTENT_NOT_REFERENCING_FE_NOTE = "Real content that refers to footnotes or endnotes "
              + "shall use the Ref entry on the referring structure element to reference the FENote.";
 
-        public const String INCORRECT_NOTE_TYPE_VALUE = "The value of the NoteType attribute shall be either \"Footnote\", \"Endnote\" or \"None\".";
-
         public const String CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT = "Content with MCID, but MCID wasn't found in StructTreeRoot.";
 
         public const String CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP = "CT or Alt entry is missing from the media "
@@ -86,6 +84,8 @@ namespace iText.Pdfua.Exceptions {
         public const String IMAGE_SHALL_HAVE_ALT = "Figure tags shall include an alternative representation or " +
              "replacement text. call com.itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setActualText or com"
              + ".itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setAlternateDescription to be PDF/UA compliant.";
+
+        public const String INCORRECT_NOTE_TYPE_VALUE = "The value of the NoteType attribute shall be either \"Footnote\", \"Endnote\" or \"None\".";
 
         public const String INVALID_PDF_VERSION = "Specified document pdf version isn't supported in pdf/ua.";
 
@@ -151,6 +151,8 @@ namespace iText.Pdfua.Exceptions {
 
         public const String VIEWER_PREFERENCES_IS_FALSE = "ViewerPreferences dictionary of the Catalog dictionary "
              + "contains a DisplayDocTitle entry with a value of false.";
+
+        public const String XFA_FORMS_SHALL_NOT_BE_PRESENT = "XFA forms shall not be present.";
 
         private PdfUAExceptionMessageConstants() {
         }

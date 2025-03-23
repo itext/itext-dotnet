@@ -59,8 +59,6 @@ namespace iText.Pdfua.Checkers {
 
         private readonly PdfUAValidationContext context;
 
-        private readonly PdfUA2HeadingsChecker headingsChecker;
-
         /// <summary>
         /// Creates
         /// <see cref="PdfUA2Checker"/>
@@ -71,7 +69,6 @@ namespace iText.Pdfua.Checkers {
             : base() {
             this.pdfDocument = pdfDocument;
             this.context = new PdfUAValidationContext(this.pdfDocument);
-            this.headingsChecker = new PdfUA2HeadingsChecker(this.context);
         }
 
         public override void Validate(IValidationContext context) {
@@ -80,13 +77,34 @@ namespace iText.Pdfua.Checkers {
                     PdfDocumentValidationContext pdfDocContext = (PdfDocumentValidationContext)context;
                     CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
                     CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
+                    CheckFonts(pdfDocContext.GetDocumentFonts());
+                    PdfUA2XfaCheckUtil.Check(pdfDocContext.GetPdfDocument());
+                    break;
+                }
+
+                case ValidationType.FONT: {
+                    FontValidationContext fontContext = (FontValidationContext)context;
+                    CheckText(fontContext.GetText(), fontContext.GetFont());
+                    break;
+                }
+
+                case ValidationType.CANVAS_BEGIN_MARKED_CONTENT: {
+                    CanvasBmcValidationContext bmcContext = (CanvasBmcValidationContext)context;
+                    CheckLogicalStructureInBMC(bmcContext.GetTagStructureStack(), bmcContext.GetCurrentBmc(), this.pdfDocument
+                        );
+                    break;
+                }
+
+                case ValidationType.CANVAS_WRITING_CONTENT: {
+                    CanvasWritingContentValidationContext writingContext = (CanvasWritingContentValidationContext)context;
+                    CheckContentInCanvas(writingContext.GetTagStructureStack(), this.pdfDocument);
                     break;
                 }
 
                 case ValidationType.LAYOUT: {
                     LayoutValidationContext layoutContext = (LayoutValidationContext)context;
                     new LayoutCheckUtil(this.context).CheckRenderer(layoutContext.GetRenderer());
-                    headingsChecker.CheckLayoutElement(layoutContext.GetRenderer());
+                    new PdfUA2HeadingsChecker(this.context).CheckLayoutElement(layoutContext.GetRenderer());
                     break;
                 }
             }
@@ -161,6 +179,7 @@ namespace iText.Pdfua.Checkers {
             CheckLang(catalog);
             CheckMetadata(catalog);
             CheckViewerPreferences(catalog);
+            CheckOCProperties(catalog.GetPdfObject().GetAsDictionary(PdfName.OCProperties));
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
@@ -207,8 +226,10 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
+            tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
+            // TODO DEVSIX-9016 Support PDF/UA-2 rules for annotation types
             tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
             tagTreeIterator.Traverse();

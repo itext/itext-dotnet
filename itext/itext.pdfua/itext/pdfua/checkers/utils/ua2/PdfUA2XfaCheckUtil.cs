@@ -20,31 +20,23 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Forms.Xfa;
 using iText.Kernel.Pdf;
 using iText.Pdfua.Exceptions;
 
-namespace iText.Pdfua.Checkers.Utils {
-    /// <summary>Utility class which performs XFA forms check according to PDF/UA specification.</summary>
-    [System.ObsoleteAttribute(@"in favour of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1XfaCheckUtil")]
-    public sealed class XfaCheckUtil {
-        // Path defined according to XFA specification
-        private const String PATH_TO_DYNAMIC_RENDER = "xdp.config.acrobat.acrobat7.dynamicRender";
-
-        private const String REQUIRED_VALUE = "required";
-
-        private XfaCheckUtil() {
+namespace iText.Pdfua.Checkers.Utils.Ua2 {
+    /// <summary>Utility class which performs XFA forms check according to PDF/UA-2 specification.</summary>
+    public sealed class PdfUA2XfaCheckUtil {
+        private PdfUA2XfaCheckUtil() {
         }
 
-        // empty constructor
-        /// <summary>Checks XFA form of the document if exists.</summary>
+        // Private constructor will prevent the instantiation of this class directly.
+        /// <summary>Checks if XFA form of the document exists.</summary>
         /// <param name="pdfDocument">the document to check</param>
         public static void Check(PdfDocument pdfDocument) {
             XfaForm xfaForm = new XfaForm(pdfDocument);
-            String dynamicValue = xfaForm.GetNodeTextByPath(PATH_TO_DYNAMIC_RENDER);
-            if (REQUIRED_VALUE.Equals(dynamicValue)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.DYNAMIC_XFA_FORMS_SHALL_NOT_BE_USED);
+            if (xfaForm.IsXfaPresent()) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.XFA_FORMS_SHALL_NOT_BE_PRESENT);
             }
         }
     }

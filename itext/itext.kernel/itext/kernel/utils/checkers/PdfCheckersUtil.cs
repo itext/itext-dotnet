@@ -29,7 +29,7 @@ using iText.Kernel.XMP;
 using iText.Kernel.XMP.Properties;
 
 namespace iText.Kernel.Utils.Checkers {
-    /// <summary>Utility class that contains common checks used in both the PDF/A and PDF/UA modules.</summary>
+    /// <summary>Utility class that contains common checks used in both PDF/A and PDF/UA modules.</summary>
     public sealed class PdfCheckersUtil {
         private PdfCheckersUtil() {
         }

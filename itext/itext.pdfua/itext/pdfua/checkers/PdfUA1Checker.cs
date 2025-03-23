@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
-using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -83,7 +82,7 @@ namespace iText.Pdfua.Checkers {
                     CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
                     CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
                     CheckFonts(pdfDocContext.GetDocumentFonts());
-                    XfaCheckUtil.Check(pdfDocContext.GetPdfDocument());
+                    PdfUA1XfaCheckUtil.Check(pdfDocContext.GetPdfDocument());
                     break;
                 }
 
@@ -107,13 +106,14 @@ namespace iText.Pdfua.Checkers {
 
                 case ValidationType.CANVAS_BEGIN_MARKED_CONTENT: {
                     CanvasBmcValidationContext bmcContext = (CanvasBmcValidationContext)context;
-                    CheckOnOpeningBeginMarkedContent(bmcContext.GetTagStructureStack(), bmcContext.GetCurrentBmc());
+                    CheckLogicalStructureInBMC(bmcContext.GetTagStructureStack(), bmcContext.GetCurrentBmc(), this.pdfDocument
+                        );
                     break;
                 }
 
                 case ValidationType.CANVAS_WRITING_CONTENT: {
                     CanvasWritingContentValidationContext writingContext = (CanvasWritingContentValidationContext)context;
-                    CheckOnWritingCanvasToContent(writingContext.GetTagStructureStack());
+                    CheckContentInCanvas(writingContext.GetTagStructureStack(), this.pdfDocument);
                     break;
                 }
 
@@ -151,14 +151,6 @@ namespace iText.Pdfua.Checkers {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
                         );
                 }
-            }
-        }
-
-        private void CheckText(String str, PdfFont font) {
-            int index = FontCheckUtil.CheckGlyphsOfText(str, font, new PdfUA1Checker.UaCharacterChecker());
-            if (index != -1) {
-                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                    , str[index]));
             }
         }
 
@@ -218,40 +210,23 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private void CheckOnWritingCanvasToContent(Stack<Tuple2<PdfName, PdfDictionary>> tagStack) {
-            if (tagStack.IsEmpty()) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+//\cond DO_NOT_DOCUMENT
+        internal override void CheckOCProperties(PdfDictionary ocProperties) {
+            if (ocProperties != null && !(ocProperties.Get(PdfName.Configs) is PdfArray)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
                     );
             }
-            bool insideRealContent = IsInsideRealContent(tagStack);
-            bool insideArtifact = IsInsideArtifact(tagStack);
-            if (insideRealContent && insideArtifact) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA
-                    );
-            }
-            else {
-                if (!insideRealContent && !insideArtifact) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
-                        );
-                }
-            }
+            base.CheckOCProperties(ocProperties);
         }
+//\endcond
 
-        private void CheckOnOpeningBeginMarkedContent(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2<PdfName, 
-            PdfDictionary> currentBmc) {
+//\cond DO_NOT_DOCUMENT
+        internal override void CheckLogicalStructureInBMC(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2<PdfName
+            , PdfDictionary> currentBmc, PdfDocument document) {
             CheckStandardRoleMapping(currentBmc);
-            if (stack.IsEmpty()) {
-                return;
-            }
-            bool isRealContent = IsRealContent(currentBmc);
-            bool isArtifact = PdfName.Artifact.Equals(currentBmc.GetFirst());
-            if (isArtifact && IsInsideRealContent(stack)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ARTIFACT_CANT_BE_INSIDE_REAL_CONTENT);
-            }
-            if (isRealContent && IsInsideArtifact(stack)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT);
-            }
+            base.CheckLogicalStructureInBMC(stack, currentBmc, document);
         }
+//\endcond
 
         private void CheckStandardRoleMapping(Tuple2<PdfName, PdfDictionary> tag) {
             PdfNamespace @namespace = tagStructureContext.GetDocumentDefaultNamespace();
@@ -261,52 +236,6 @@ namespace iText.Pdfua.Checkers {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE
                     , role));
             }
-        }
-
-        private bool IsInsideArtifact(Stack<Tuple2<PdfName, PdfDictionary>> tagStack) {
-            foreach (Tuple2<PdfName, PdfDictionary> tag in tagStack) {
-                if (PdfName.Artifact.Equals(tag.GetFirst())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool IsInsideRealContent(Stack<Tuple2<PdfName, PdfDictionary>> tagStack) {
-            foreach (Tuple2<PdfName, PdfDictionary> tag in tagStack) {
-                if (IsRealContent(tag)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool IsRealContent(Tuple2<PdfName, PdfDictionary> tag) {
-            if (PdfName.Artifact.Equals(tag.GetFirst())) {
-                return false;
-            }
-            PdfDictionary properties = tag.GetSecond();
-            if (properties == null || !properties.ContainsKey(PdfName.MCID)) {
-                return false;
-            }
-            PdfMcr mcr = McrExists(pdfDocument, (int)properties.GetAsInt(PdfName.MCID));
-            if (mcr == null) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
-                    );
-            }
-            return true;
-        }
-
-        private PdfMcr McrExists(PdfDocument document, int mcid) {
-            int amountOfPages = document.GetNumberOfPages();
-            for (int i = 1; i <= amountOfPages; ++i) {
-                PdfPage page = document.GetPage(i);
-                PdfMcr mcr = document.GetStructTreeRoot().FindMcrByMcid(page.GetPdfObject(), mcid);
-                if (mcr != null) {
-                    return mcr;
-                }
-            }
-            return null;
         }
 
         private void CheckCatalog(PdfCatalog catalog) {
@@ -352,56 +281,6 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.Traverse();
         }
 
-        private void CheckOCProperties(PdfDictionary ocProperties) {
-            if (ocProperties == null) {
-                return;
-            }
-            if (!(ocProperties.Get(PdfName.Configs) is PdfArray)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY
-                    );
-            }
-            PdfArray configs = ocProperties.GetAsArray(PdfName.Configs);
-            if (configs != null && !configs.IsEmpty()) {
-                PdfDictionary d = ocProperties.GetAsDictionary(PdfName.D);
-                CheckOCGNameAndASKey(d);
-                foreach (PdfObject config in configs) {
-                    CheckOCGNameAndASKey((PdfDictionary)config);
-                }
-                PdfArray ocgsArray = ocProperties.GetAsArray(PdfName.OCGs);
-                if (ocgsArray != null) {
-                    foreach (PdfObject ocg in ocgsArray) {
-                        CheckOCGNameAndASKey((PdfDictionary)ocg);
-                    }
-                }
-            }
-        }
-
-        private void CheckOCGNameAndASKey(PdfDictionary dict) {
-            if (dict == null) {
-                return;
-            }
-            if (dict.Get(PdfName.AS) != null) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY);
-            }
-            if (!(dict.Get(PdfName.Name) is PdfString) || (String.IsNullOrEmpty(((PdfString)dict.Get(PdfName.Name)).ToString
-                ()))) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG);
-            }
-        }
-
-        private void CheckFonts(ICollection<PdfFont> fontsInDocument) {
-            ICollection<String> fontNamesThatAreNotEmbedded = new HashSet<String>();
-            foreach (PdfFont font in fontsInDocument) {
-                if (!font.IsEmbedded()) {
-                    fontNamesThatAreNotEmbedded.Add(font.GetFontProgram().GetFontNames().GetFontName());
-                }
-            }
-            if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
-                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
-                    , String.Join(", ", fontNamesThatAreNotEmbedded)));
-            }
-        }
-
         private void CheckCrypto(PdfDictionary encryptionDictionary) {
             if (encryptionDictionary != null) {
                 if (!(encryptionDictionary.Get(PdfName.P) is PdfNumber)) {
@@ -427,17 +306,6 @@ namespace iText.Pdfua.Checkers {
                 PdfName type = dict.GetAsName(PdfName.Type);
                 if (PdfName.Filespec.Equals(type)) {
                     CheckFileSpec(dict);
-                }
-            }
-        }
-
-        private sealed class UaCharacterChecker : FontCheckUtil.CharacterChecker {
-            public bool Check(int ch, PdfFont font) {
-                if (font.ContainsGlyph(ch)) {
-                    return !font.GetGlyph(ch).HasValidUnicode();
-                }
-                else {
-                    return true;
                 }
             }
         }

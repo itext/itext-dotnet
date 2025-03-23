@@ -355,22 +355,14 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObject(xObject);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("untaggedAddXobject", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("untaggedAddXobject", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("untaggedAddXobject", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent
             (PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
             dummyDoc.SetTagged();
@@ -394,22 +386,14 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObjectAt(xObject, 200f, 200f);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("untaggedAddXobjectAt", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("untaggedAddXobjectAt", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("untaggedAddXobjectAt", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContenta
             (PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
@@ -433,22 +417,14 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(200, 200, 200, 200));
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addXObjectFitted", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("addXObjectFitted", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("addXObjectFitted", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContentab
             (PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
             Document document = new Document(dummyDoc);
@@ -471,21 +447,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddXObjectWithTransformationMatrix(xObject, 1, 1, 1, 1, 1, 1);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addXObjectWithTransfoMatrix", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("addXObjectWithTransfoMatrix", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("addXObjectWithTransfoMatrix", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageObjectNotInline(PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 ImageData imd = null;
@@ -498,21 +466,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageAt(imd, 200, 200, false);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addIMageObjectNotInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("addIMageObjectNotInline", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("addIMageObjectNotInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageObjectInline(PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 ImageData imd = null;
@@ -525,21 +485,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageAt(imd, 200, 200, false);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addIMageObjectInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("addIMageObjectInline", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("addIMageObjectInline", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageTranformationMatrix(PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 ImageData imd = null;
@@ -552,21 +504,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageWithTransformationMatrix(imd, 1, 1, 1, 1, 1, 1, false);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addIMageObjectTransfo", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("addIMageObjectTransfo", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("addIMageObjectTransfo", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageFittedIntoRectangle(PdfUAConformance pdfUAConformance) {
-            //We are adding untagged content we should throw an exception
+            // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 ImageData imd = null;
@@ -579,16 +523,8 @@ namespace iText.Pdfua.Checkers {
                 canvas.AddImageFittedIntoRectangle(imd, new Rectangle(200, 200, 200, 200), false);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addImageFittedIntoRectangle", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
-                    , false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("addImageFittedIntoRectangle", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("addImageFittedIntoRectangle", PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                , false, pdfUAConformance);
         }
     }
 }

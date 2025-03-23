@@ -155,7 +155,7 @@ namespace iText.Pdfua.Checkers {
             PdfStructElem doc = pdfDoc.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDoc, PdfName.Document));
             PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
             PdfStructElem chapter = paragraph.AddKid(new PdfStructElem(pdfDoc, new PdfName("chapter"), page1));
-            // Napespaces are actual only for PDF-2.0, which is actual only for PDF/UA-2
+            // Namespaces are actual only for PDF-2.0, which is actual only for PDF/UA-2
             PdfNamespace @namespace = new PdfNamespace("http://www.w3.org/1999/xhtml");
             chapter.SetNamespace(@namespace);
             @namespace.AddNamespaceRoleMapping("chapter", StandardRoles.SPAN);

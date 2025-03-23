@@ -80,14 +80,8 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("tryToUseType0Cid0FontTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                    .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false, pdfUAConformance);
-            }
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                framework.AssertVeraPdfFail("tryToUseType0Cid0FontTest", pdfUAConformance);
-            }
+            framework.AssertBothFail("tryToUseType0Cid0FontTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -147,16 +141,8 @@ namespace iText.Pdfua {
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                    .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", pdfUAConformance);
-                }
-            }
+            framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -172,18 +158,13 @@ namespace iText.Pdfua {
                 }
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
-                    .H);
+                    .H1);
                 canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
             );
-            // TODO DEVSIX-8242 The layout level doesn’t throw an error for UA1
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
-            }
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                framework.AssertBothFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
-            }
+            // TODO DEVSIX-9017 Support PDF/UA rules for fonts.
+            framework.AssertVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -203,14 +184,8 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                    .FONT_SHOULD_BE_EMBEDDED, "Courier"), false, pdfUAConformance);
-            }
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                // TODO DEVSIX-8242 The layout level doesn't throw an error
-                framework.AssertVeraPdfFail("tryToUseStandardFontsTest", pdfUAConformance);
-            }
+            framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                .FONT_SHOULD_BE_EMBEDDED, "Courier"), false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]

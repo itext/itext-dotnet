@@ -21,10 +21,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Datastructures;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Utils.Checkers;
 using iText.Kernel.Validation;
 using iText.Pdfua.Exceptions;
 using iText.Pdfua.Logs;
@@ -124,6 +130,214 @@ namespace iText.Pdfua.Checkers {
             }
         }
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Checks that all optional content configuration dictionaries in the file, including the default one, shall contain
+        /// a Name entry (see ISO 32000-2:2020, Table 96, or ISO 32000-1:2008, 8.11.2.1, Table 98) whose value is a non-empty
+        /// text string when document contains a Configs entry in the OCProperties entry of the document catalog dictionary
+        /// (see ISO 32000-2:2020, Table 29, or ISO 32000-1:2008, 7.7.2, Table 28), and the Configs entry contains at least
+        /// one optional content configuration dictionary.
+        /// </summary>
+        /// <remarks>
+        /// Checks that all optional content configuration dictionaries in the file, including the default one, shall contain
+        /// a Name entry (see ISO 32000-2:2020, Table 96, or ISO 32000-1:2008, 8.11.2.1, Table 98) whose value is a non-empty
+        /// text string when document contains a Configs entry in the OCProperties entry of the document catalog dictionary
+        /// (see ISO 32000-2:2020, Table 29, or ISO 32000-1:2008, 7.7.2, Table 28), and the Configs entry contains at least
+        /// one optional content configuration dictionary.
+        /// <para />
+        /// Also checks that the AS key does not appear in any optional content configuration dictionary.
+        /// </remarks>
+        /// <param name="ocProperties">OCProperties entry of the Catalog dictionary</param>
+        internal virtual void CheckOCProperties(PdfDictionary ocProperties) {
+            if (ocProperties == null) {
+                return;
+            }
+            PdfArray configs = ocProperties.GetAsArray(PdfName.Configs);
+            if (configs != null && !configs.IsEmpty()) {
+                PdfDictionary d = ocProperties.GetAsDictionary(PdfName.D);
+                CheckOCGNameAndASKey(d);
+                foreach (PdfObject config in configs) {
+                    CheckOCGNameAndASKey((PdfDictionary)config);
+                }
+                PdfArray ocgsArray = ocProperties.GetAsArray(PdfName.OCGs);
+                if (ocgsArray != null) {
+                    foreach (PdfObject ocg in ocgsArray) {
+                        CheckOCGNameAndASKey((PdfDictionary)ocg);
+                    }
+                }
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks if content marked as Artifact resides in Artifact content, but real content does not.</summary>
+        /// <param name="stack">the tag structure stack</param>
+        /// <param name="currentBmc">the current BMC</param>
+        /// <param name="document">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to check
+        /// </param>
+        internal virtual void CheckLogicalStructureInBMC(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2<PdfName
+            , PdfDictionary> currentBmc, PdfDocument document) {
+            if (stack.IsEmpty()) {
+                return;
+            }
+            bool isRealContent = IsRealContent(currentBmc, document);
+            bool isArtifact = PdfName.Artifact.Equals(currentBmc.GetFirst());
+            if (isArtifact && IsInsideRealContent(stack, document)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ARTIFACT_CANT_BE_INSIDE_REAL_CONTENT);
+            }
+            if (isRealContent && IsInsideArtifact(stack)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks if content is neither marked as Artifact nor tagged as real content.</summary>
+        /// <param name="tagStack">tag structure stack</param>
+        /// <param name="document">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to check
+        /// </param>
+        internal virtual void CheckContentInCanvas(Stack<Tuple2<PdfName, PdfDictionary>> tagStack, PdfDocument document
+            ) {
+            if (tagStack.IsEmpty()) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
+                    );
+            }
+            bool insideRealContent = IsInsideRealContent(tagStack, document);
+            bool insideArtifact = IsInsideArtifact(tagStack);
+            if (insideRealContent && insideArtifact) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA
+                    );
+            }
+            else {
+                if (!insideRealContent && !insideArtifact) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
+                        );
+                }
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Checks that font programs for all fonts used for rendering within a conforming file, as determined by whether at
+        /// least one of its glyphs is referenced from one or more content streams, are embedded within that file, as defined
+        /// in ISO 32000-2:2020, 9.9 and ISO 32000-1:2008, 9.9.
+        /// </summary>
+        /// <param name="fontsInDocument">collection of fonts used in the document</param>
+        internal virtual void CheckFonts(ICollection<PdfFont> fontsInDocument) {
+            ICollection<String> fontNamesThatAreNotEmbedded = new HashSet<String>();
+            foreach (PdfFont font in fontsInDocument) {
+                if (!font.IsEmbedded()) {
+                    fontNamesThatAreNotEmbedded.Add(font.GetFontProgram().GetFontNames().GetFontName());
+                }
+            }
+            if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
+                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.FONT_SHOULD_BE_EMBEDDED
+                    , String.Join(", ", fontNamesThatAreNotEmbedded)));
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks that embedded fonts define all glyphs referenced for rendering within the conforming file.
+        ///     </summary>
+        /// <param name="str">the text to check</param>
+        /// <param name="font">the font to check</param>
+        internal virtual void CheckText(String str, PdfFont font) {
+            int index = FontCheckUtil.CheckGlyphsOfText(str, font, new PdfUAChecker.UaCharacterChecker());
+            if (index != -1) {
+                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                    , str[index]));
+            }
+        }
+//\endcond
+
+        private static void CheckOCGNameAndASKey(PdfDictionary dict) {
+            if (dict == null) {
+                return;
+            }
+            if (dict.Get(PdfName.AS) != null) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.OCG_SHALL_NOT_CONTAIN_AS_ENTRY);
+            }
+            if (!(dict.Get(PdfName.Name) is PdfString) || (String.IsNullOrEmpty(((PdfString)dict.Get(PdfName.Name)).ToString
+                ()))) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NAME_ENTRY_IS_MISSING_OR_EMPTY_IN_OCG);
+            }
+        }
+
+        private static bool IsInsideArtifact(Stack<Tuple2<PdfName, PdfDictionary>> tagStack) {
+            foreach (Tuple2<PdfName, PdfDictionary> tag in tagStack) {
+                if (PdfName.Artifact.Equals(tag.GetFirst())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool IsInsideRealContent(Stack<Tuple2<PdfName, PdfDictionary>> tagStack, PdfDocument document
+            ) {
+            foreach (Tuple2<PdfName, PdfDictionary> tag in tagStack) {
+                if (IsRealContent(tag, document)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool IsRealContent(Tuple2<PdfName, PdfDictionary> tag, PdfDocument document) {
+            if (PdfName.Artifact.Equals(tag.GetFirst())) {
+                return false;
+            }
+            PdfDictionary properties = tag.GetSecond();
+            if (properties == null || !properties.ContainsKey(PdfName.MCID)) {
+                return false;
+            }
+            PdfMcr mcr = McrExists(document, (int)properties.GetAsInt(PdfName.MCID));
+            if (mcr == null) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
+                    );
+            }
+            return true;
+        }
+
+        private static PdfMcr McrExists(PdfDocument document, int mcid) {
+            int amountOfPages = document.GetNumberOfPages();
+            for (int i = 1; i <= amountOfPages; ++i) {
+                PdfPage page = document.GetPage(i);
+                PdfMcr mcr = document.GetStructTreeRoot().FindMcrByMcid(page.GetPdfObject(), mcid);
+                if (mcr != null) {
+                    return mcr;
+                }
+            }
+            return null;
+        }
+
+        private sealed class UaCharacterChecker : FontCheckUtil.CharacterChecker {
+            /// <summary>
+            /// Creates new
+            /// <see cref="UaCharacterChecker"/>
+            /// instance.
+            /// </summary>
+            public UaCharacterChecker() {
+            }
+
+            // Empty constructor.
+            public bool Check(int ch, PdfFont font) {
+                if (font.ContainsGlyph(ch)) {
+                    return !font.GetGlyph(ch).HasValidUnicode();
+                }
+                else {
+                    return true;
+                }
+            }
+        }
 
         public abstract bool IsPdfObjectReadyToFlush(PdfObject arg1);
 

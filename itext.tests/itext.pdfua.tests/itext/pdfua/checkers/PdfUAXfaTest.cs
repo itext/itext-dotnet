@@ -67,6 +67,19 @@ namespace iText.Pdfua.Checkers {
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             NUnit.Framework.Assert.IsNull(result);
         }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void XfaFormInPdfUA2Test() {
+            String input = SOURCE_FOLDER + "xfaInPdfUA2.pdf";
+            String output = DESTINATION_FOLDER + "xfaFormInPdfUA2_reopen.pdf";
+            PdfDocument pdfDoc = new PdfUA2TestPdfDocument(new PdfReader(input), new PdfWriter(output));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.XFA_FORMS_SHALL_NOT_BE_PRESENT, e.Message);
+            FileUtil.Copy(input, output);
+            // VeraPdf also complains only about the presence of the XFA forms
+            new VeraPdfValidator().ValidateFailure(output);
+        }
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     }
 }
