@@ -264,5 +264,29 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepWithNextTest12() {
+            //if we have multiple objects with keepWithNext in a row only the last one seems to follow to the next page
+            String outFileName = destinationFolder + "keepWithNextTest12.pdf";
+            String cmpFileName = sourceFolder + "cmp_keepWithNextTest12.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf, PageSize.A4);
+            for (int i = 0; i < 27; i++) {
+                document.Add(new Paragraph("dummy"));
+            }
+            Paragraph title1 = new Paragraph("THIS IS THE TITLE 1");
+            title1.SetKeepWithNext(true);
+            document.Add(title1);
+            Paragraph title2 = new Paragraph("THIS IS THE TITLE 2");
+            title2.SetKeepWithNext(true);
+            document.Add(title2);
+            for (int i = 0; i < 20; i++) {
+                document.Add(new Paragraph("content of chapter " + i));
+            }
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

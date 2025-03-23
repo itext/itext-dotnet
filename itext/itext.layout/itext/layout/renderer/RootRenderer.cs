@@ -210,6 +210,7 @@ namespace iText.Layout.Renderer {
                         else {
                             keepWithNextHangingRenderer = renderer;
                             keepWithNextHangingRendererLayoutResult = result;
+                            this.AddAllChildRenderers(resultRenderers);
                         }
                     }
                     else {
@@ -457,6 +458,8 @@ namespace iText.Layout.Renderer {
                 if (!ableToProcessKeepWithNext) {
                     ILogger logger = ITextLogManager.GetLogger(typeof(RootRenderer));
                     logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT);
+                    keepWithNextHangingRendererLayoutResult = keepWithNextHangingRenderer.Layout(new LayoutContext(currentArea
+                        .Clone()));
                     ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                         );
                 }
