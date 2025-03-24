@@ -93,7 +93,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
 
             /// <summary>
             /// Creates a new instance of
-            /// <see cref="PdfUA2ListChecker"/>.
+            /// <see cref="PdfUA2ListHandler"/>.
             /// </summary>
             /// <param name="context">the validation context</param>
             public PdfUA2ListHandler(PdfUAValidationContext context)

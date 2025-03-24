@@ -232,6 +232,7 @@ namespace iText.Pdfua.Checkers {
             // TODO DEVSIX-9016 Support PDF/UA-2 rules for annotation types
             tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));
             tagTreeIterator.Traverse();
         }
     }

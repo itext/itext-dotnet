@@ -149,6 +149,9 @@ namespace iText.Pdfua.Exceptions {
 
         public const String TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO = "10th bit of P value of " + "Encryption dictionary should be 1 if the document is tagged.";
 
+        public const String TOCI_SHALL_IDENTIFY_REF = "Each TOCI structure element shall contain the Ref entry, either directly on the TOCI structure element"
+             + " itself or on at least one of its descendant structure elements.";
+
         public const String VIEWER_PREFERENCES_IS_FALSE = "ViewerPreferences dictionary of the Catalog dictionary "
              + "contains a DisplayDocTitle entry with a value of false.";
 
