@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Cert;
