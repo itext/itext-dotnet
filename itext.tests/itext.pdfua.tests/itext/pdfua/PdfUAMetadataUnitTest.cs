@@ -191,7 +191,7 @@ namespace iText.Pdfua {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
                 catalog));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
-            e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => pdfDocument.Close());
+            e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
         }
 

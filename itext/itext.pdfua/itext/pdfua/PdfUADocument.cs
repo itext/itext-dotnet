@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
@@ -41,8 +42,6 @@ namespace iText.Pdfua {
     public class PdfUADocument : PdfDocument {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument));
 
-        private IValidationChecker pdf20Checker;
-
         /// <summary>Creates a PdfUADocument instance.</summary>
         /// <param name="writer">The writer to write the PDF document.</param>
         /// <param name="config">The configuration for the PDF/UA document.</param>
@@ -59,13 +58,12 @@ namespace iText.Pdfua {
             this.pdfConformance = new PdfConformance(config.GetConformance());
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            PdfUAChecker checker = GetCorrectCheckerFromConformance(config.GetConformance());
-            if (pdf20Checker != null) {
-                validationContainer.AddChecker(pdf20Checker);
+            IList<IValidationChecker> checkers = GetCorrectCheckerFromConformance(config.GetConformance());
+            foreach (IValidationChecker checker in checkers) {
+                validationContainer.AddChecker(checker);
             }
-            validationContainer.AddChecker(checker);
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-            this.pdfPageFactory = new PdfUAPageFactory(checker);
+            this.pdfPageFactory = new PdfUAPageFactory(GetUaChecker(checkers));
             GetDiContainer().Register(typeof(ProhibitedTagRelationsResolver), new ProhibitedTagRelationsResolver(this)
                 );
         }
@@ -91,13 +89,12 @@ namespace iText.Pdfua {
             }
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            PdfUAChecker checker = GetCorrectCheckerFromConformance(config.GetConformance());
-            if (pdf20Checker != null) {
-                validationContainer.AddChecker(pdf20Checker);
+            IList<IValidationChecker> checkers = GetCorrectCheckerFromConformance(config.GetConformance());
+            foreach (IValidationChecker checker in checkers) {
+                validationContainer.AddChecker(checker);
             }
-            validationContainer.AddChecker(checker);
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-            this.pdfPageFactory = new PdfUAPageFactory(checker);
+            this.pdfPageFactory = new PdfUAPageFactory(GetUaChecker(checkers));
         }
 
         private static PdfWriter ConfigureWriterProperties(PdfWriter writer, PdfUAConformance uaConformance) {
@@ -117,6 +114,15 @@ namespace iText.Pdfua {
             return writer;
         }
 
+        private static PdfUAChecker GetUaChecker(IList<IValidationChecker> checkers) {
+            foreach (IValidationChecker checker in checkers) {
+                if (checker is PdfUAChecker) {
+                    return (PdfUAChecker)checker;
+                }
+            }
+            return null;
+        }
+
         private void SetupUAConfiguration(PdfUAConfig config) {
             // Basic configuration.
             this.SetTagged();
@@ -133,17 +139,17 @@ namespace iText.Pdfua {
         /// </summary>
         /// <param name="uaConformance">the conformance for which checker is needed</param>
         /// <returns>the correct PDF/UA checker</returns>
-        private PdfUAChecker GetCorrectCheckerFromConformance(PdfUAConformance uaConformance) {
-            PdfUAChecker checker;
+        private IList<IValidationChecker> GetCorrectCheckerFromConformance(PdfUAConformance uaConformance) {
+            IList<IValidationChecker> checkers = new List<IValidationChecker>();
             switch (uaConformance.GetPart()) {
                 case "1": {
-                    checker = new PdfUA1Checker(this);
+                    checkers.Add(new PdfUA1Checker(this));
                     break;
                 }
 
                 case "2": {
-                    checker = new PdfUA2Checker(this);
-                    pdf20Checker = new Pdf20Checker(this);
+                    checkers.Add(new PdfUA2Checker(this));
+                    checkers.Add(new Pdf20Checker(this));
                     break;
                 }
 
@@ -152,7 +158,7 @@ namespace iText.Pdfua {
                         );
                 }
             }
-            return checker;
+            return checkers;
         }
     }
 }

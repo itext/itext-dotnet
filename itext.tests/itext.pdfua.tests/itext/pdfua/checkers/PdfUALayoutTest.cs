@@ -21,12 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -48,9 +51,27 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
+        private UaValidationTestFramework framework;
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        public static IList<PdfUAConformance> Data() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+        }
+
+        public static Object[] RoleData() {
+            return new Object[] { new Object[] { StandardRoles.FORM, StandardRoles.FORM, 
+                        // Parent role, child role, expected exception
+                        false }, new Object[] { StandardRoles.H1, StandardRoles.H1, true }, new Object[] { StandardRoles.P, StandardRoles
+                .P, false }, new Object[] { StandardRoles.DIV, StandardRoles.P, false } };
+        }
+
+        [NUnit.Framework.SetUp]
+        public virtual void InitializeFramework() {
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -85,6 +106,41 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.TestCaseSource("RoleData")]
+        public virtual void TestOfIllegalRelations(String parentRole, String childRole, bool expectException) {
+            //expectException should take into account repair mechanism
+            // in example P:P will be replaced as P:Span so no exceptions should be thrown
+            framework.AddSuppliers(new _Generator_135(parentRole, childRole));
+            if (expectException) {
+                framework.AssertBothFail("testOfIllegalRelation_" + parentRole + "_" + childRole, false, PdfUAConformance.
+                    PDF_UA_2);
+            }
+            else {
+                framework.AssertBothValid("testOfIllegalRelation_" + parentRole + "_" + childRole, PdfUAConformance.PDF_UA_2
+                    );
+            }
+        }
+
+        private sealed class _Generator_135 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_135(String parentRole, String childRole) {
+                this.parentRole = parentRole;
+                this.childRole = childRole;
+            }
+
+            public IBlockElement Generate() {
+                Div div1 = new Div();
+                div1.GetAccessibilityProperties().SetRole(parentRole);
+                Div div2 = new Div();
+                div2.GetAccessibilityProperties().SetRole(childRole);
+                div1.Add(div2);
+                return div1;
+            }
+
+            private readonly String parentRole;
+
+            private readonly String childRole;
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest() {
             String outPdf = DESTINATION_FOLDER + "simpleBorderTest.pdf";

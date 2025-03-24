@@ -679,6 +679,9 @@ namespace iText.Kernel.Exceptions {
         public const String YOU_NEED_A_SINGLE_BOOLEAN_FOR_THIS_COLLECTION_SORT_DICTIONARY = "You need a single " +
              "boolean for this collection sort dictionary.";
 
+        public const String PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED = "Parent-child ({0}:{1}) relation is not " 
+            + "allowed.";
+
         private KernelExceptionMessageConstant() {
         }
     }

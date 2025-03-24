@@ -53,6 +53,7 @@ namespace iText.Layout.Tagging {
             updateRules20.Put(GenerateKey(StandardRoles.H, StandardRoles.P), StandardRoles.SUB);
             updateRules20.Put(GenerateKey(PdfAllowedTagRelations.NUMBERED_HEADER, StandardRoles.P), StandardRoles.SUB);
             updateRules20.Put(GenerateKey(StandardRoles.FORM, StandardRoles.P), StandardRoles.LBL);
+            updateRules20.Put(GenerateKey(StandardRoles.FORM, StandardRoles.FORM), StandardRoles.DIV);
             updateRules20.Put(GenerateKey(StandardRoles.FORM, StandardRoles.SPAN), StandardRoles.LBL);
             updateRules20.Put(GenerateKey(StandardRoles.FORM, PdfAllowedTagRelations.NUMBERED_HEADER), StandardRoles.LBL
                 );

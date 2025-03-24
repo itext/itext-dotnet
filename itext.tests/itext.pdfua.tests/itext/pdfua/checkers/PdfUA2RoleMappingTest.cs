@@ -377,9 +377,9 @@ namespace iText.Pdfua.Checkers {
             pdfDoc.GetStructTreeRoot().AddNamespace(@namespace);
             ShowText(chapter, page1);
             // VeraPDF: Non-standard structure type chapter is not mapped to a standard type
-            Exception e = NUnit.Framework.Assert.Catch(typeof(Pdf20ConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
-                , "chapter", @namespace.GetNamespaceName()), e.Message);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.STRUCTURE_TYPE_IS_ROLE_MAPPED_TO_OTHER_STRUCTURE_TYPE_IN_THE_SAME_NAMESPACE
+                , @namespace.GetNamespaceName(), "Span"), e.Message);
         }
 
         [NUnit.Framework.Test]

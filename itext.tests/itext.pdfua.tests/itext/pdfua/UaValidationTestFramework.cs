@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Utils;
 using iText.IO.Util;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
 using iText.Layout;
@@ -170,7 +171,7 @@ namespace iText.Pdfua {
 
         private void CheckError(Exception e, String expectedMsg) {
             NUnit.Framework.Assert.IsNotNull(e);
-            if (!(e is PdfUAConformanceException)) {
+            if (!(e is PdfUAConformanceException) && !(e is Pdf20ConformanceException)) {
                 System.Console.Out.WriteLine(PrintStackTrace(e));
                 NUnit.Framework.Assert.Fail();
             }

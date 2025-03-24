@@ -1567,14 +1567,15 @@ namespace iText.Signatures {
             public PdfSignerDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
                 : base(reader, writer, properties) {
                 if (GetConformance().IsPdfA()) {
-                    PdfAChecker checker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
+                    PdfAChecker pdfAChecker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance()
+                        );
                     ValidationContainer validationContainer = new ValidationContainer();
+                    validationContainer.AddChecker(pdfAChecker);
                     if ("4".Equals(GetConformance().GetAConformance().GetPart())) {
                         validationContainer.AddChecker(new Pdf20Checker(this));
                     }
-                    validationContainer.AddChecker(checker);
                     GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-                    this.pdfPageFactory = new PdfAPageFactory(checker);
+                    this.pdfPageFactory = new PdfAPageFactory(pdfAChecker);
                     this.documentInfoHelper = new PdfADocumentInfoHelper(this);
                     this.defaultFontStrategy = new PdfADefaultFontStrategy(this);
                     SetFlushUnusedObjects(true);

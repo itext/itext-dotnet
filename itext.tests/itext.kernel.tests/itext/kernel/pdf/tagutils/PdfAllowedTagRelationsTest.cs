@@ -52,16 +52,6 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         [NUnit.Framework.Test]
-        public virtual void IsContentObjectAllowedInRole() {
-            PdfAllowedTagRelations pdfAllowedTagRelations = new PdfAllowedTagRelations();
-            NUnit.Framework.Assert.IsFalse(pdfAllowedTagRelations.IsContentObjectAllowedInRole(StandardRoles.H1));
-            NUnit.Framework.Assert.IsFalse(pdfAllowedTagRelations.IsContentObjectAllowedInRole(StandardRoles.P));
-            NUnit.Framework.Assert.IsFalse(pdfAllowedTagRelations.IsContentObjectAllowedInRole(StandardRoles.SPAN));
-            NUnit.Framework.Assert.IsFalse(pdfAllowedTagRelations.IsContentObjectAllowedInRole(StandardRoles.LBL));
-            NUnit.Framework.Assert.IsFalse(pdfAllowedTagRelations.IsContentAllowedInRole(StandardRoles.DIV));
-        }
-
-        [NUnit.Framework.Test]
         public virtual void NormalizeRole() {
             PdfAllowedTagRelations pdfAllowedTagRelations = new PdfAllowedTagRelations();
             NUnit.Framework.Assert.AreEqual(StandardRoles.P, pdfAllowedTagRelations.NormalizeRole(StandardRoles.P));

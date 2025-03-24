@@ -27,6 +27,7 @@ using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -218,9 +219,10 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("addToCanvasCorrectFontUnTaggedContent", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("addToCanvasCorrectFontUnTaggedContent", pdfUAConformance);
+                    String message = MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
+                        , "Div", "CONTENT");
+                    framework.AssertBothFail("addToCanvasCorrectFontUnTaggedContent", message, pdfUAConformance);
                 }
             }
         }
@@ -258,9 +260,10 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("addToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
             }
             else {
-                // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfFail("addToCanvasCorrectFontArtifactUnTaggedContent", pdfUAConformance);
+                    String message = MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
+                        , "Div", "CONTENT");
+                    framework.AssertBothFail("addToCanvasCorrectFontArtifactUnTaggedContent", message, pdfUAConformance);
                 }
             }
         }

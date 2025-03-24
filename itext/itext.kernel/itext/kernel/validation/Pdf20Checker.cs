@@ -40,6 +40,8 @@ namespace iText.Kernel.Validation {
         private static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new Pdf20ConformanceException
             (msg);
 
+        private static readonly PdfAllowedTagRelations allowedTagRelations = new PdfAllowedTagRelations();
+
         private readonly TagStructureContext tagStructureContext;
 
         /// <summary>
@@ -151,6 +153,7 @@ namespace iText.Kernel.Validation {
             }
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new Pdf20Checker.StructureTreeRootHandler(tagStructureContext));
+            tagTreeIterator.AddHandler(new Pdf20Checker.ParentChildRelationshipHandler(tagStructureContext));
             tagTreeIterator.Traverse();
         }
 //\endcond
@@ -174,6 +177,64 @@ namespace iText.Kernel.Validation {
             CheckLang(catalog);
             CheckMetadata(catalog);
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal sealed class ParentChildRelationshipHandler : ITagTreeIteratorHandler {
+            private readonly TagStructureContext tagStructureContext;
+
+            public ParentChildRelationshipHandler(TagStructureContext context) {
+                this.tagStructureContext = context;
+            }
+
+            private static void ThrowInvalidRelationshipException(String parentRole, String childRole) {
+                throw new Pdf20ConformanceException(MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
+                    , parentRole, childRole));
+            }
+
+            private String ResolveRole(PdfStructElem elem) {
+                IRoleMappingResolver parentResolver = tagStructureContext.ResolveMappingToStandardOrDomainSpecificRole(elem
+                    .GetRole().GetValue(), elem.GetNamespace());
+                if (parentResolver == null) {
+                    return null;
+                }
+                return parentResolver.GetRole();
+            }
+
+            public bool Accept(IStructureNode node) {
+                return node != null;
+            }
+
+            public void ProcessElement(IStructureNode elem) {
+                if (!(elem is PdfStructElem) && !(elem is PdfStructTreeRoot)) {
+                    return;
+                }
+                String parentRole = elem is PdfStructElem ? ResolveRole((PdfStructElem)elem) : PdfName.StructTreeRoot.GetValue
+                    ();
+                if (parentRole == null) {
+                    return;
+                }
+                foreach (IStructureNode kid in elem.GetKids()) {
+                    if (kid is PdfStructTreeRoot) {
+                        continue;
+                    }
+                    if (kid is PdfStructElem) {
+                        String childRole = ResolveRole((PdfStructElem)kid);
+                        if (childRole == null) {
+                            continue;
+                        }
+                        if (!allowedTagRelations.IsRelationAllowed(parentRole, childRole)) {
+                            ThrowInvalidRelationshipException(parentRole, kid.GetRole().GetValue());
+                        }
+                    }
+                    else {
+                        if (!allowedTagRelations.IsContentAllowedInRole(parentRole)) {
+                            ThrowInvalidRelationshipException(parentRole, PdfAllowedTagRelations.ACTUAL_CONTENT);
+                        }
+                    }
+                }
+            }
+        }
+//\endcond
 
         /// <summary>Handler class that checks structure nodes while traversing the document structure tree.</summary>
         private class StructureTreeRootHandler : ITagTreeIteratorHandler {
