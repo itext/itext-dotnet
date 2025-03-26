@@ -27,6 +27,7 @@ using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Css {
+    [NUnit.Framework.Category("UnitTest")]
     public class AttributesRelativeUnitTest : SvgIntegrationTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/AttributesRelativeUnitTest/";

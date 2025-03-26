@@ -27,6 +27,7 @@ using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Validate;
 using iText.StyledXmlParser.Css.Validate.Impl.Datatype;
 using iText.StyledXmlParser.Css.Validate.Impl.Declaration;
+using iText.StyledXmlParser.Util;
 
 namespace iText.StyledXmlParser.Css.Validate.Impl {
     /// <summary>Class that bundles all the CSS declaration validators.</summary>
@@ -166,7 +167,10 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
         /// <returns>true, if the validation was successful</returns>
         public virtual bool IsValid(CssDeclaration declaration) {
             ICssDeclarationValidator validator = defaultValidators.Get(declaration.GetProperty());
-            return validator == null || validator.IsValid(declaration);
+            // In case of var() expression presence in declaration expression we can't validate it.
+            // It should be expanded first by calling com.itextpdf.styledxmlparser.util.StyleUtil#resolveCssVariables
+            bool isVarExpression = CssVariableUtil.ContainsVarExpression(declaration.GetExpression());
+            return isVarExpression || validator == null || validator.IsValid(declaration);
         }
 
         private static void AddColumnRuleValidation(IDictionary<String, ICssDeclarationValidator> container) {

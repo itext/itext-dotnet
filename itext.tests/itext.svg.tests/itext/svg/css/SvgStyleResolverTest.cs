@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
@@ -223,6 +224,142 @@ namespace iText.Svg.Css {
             IList<CssFontFaceRule> fontFaceRuleList = resolver.GetFonts();
             NUnit.Framework.Assert.AreEqual(1, fontFaceRuleList.Count);
             NUnit.Framework.Assert.AreEqual(2, fontFaceRuleList[0].GetProperties().Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedCssVariableTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("style"), "");
+            TextNode styleContents = new TextNode("\tspan {\n" + "\t\t--test-var: 30px;\n" + "\t}\n" + ".a {\n" + "    --test-var2: 50px;\n"
+                 + "}\n" + "div {\n" + "    margin: var(--test-var,var(--test-var2));\n" + "}\n");
+            JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
+            jSoupStyle.AddChild(new JsoupTextNode(styleContents));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("div"), "");
+            div.Attributes().Put("class", "a");
+            JsoupElementNode jSoupDiv = new JsoupElementNode(div);
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
+            AbstractCssContext svgContext = new SvgCssContext();
+            IDictionary<String, String> actual = resolver.ResolveStyles(jSoupDiv, svgContext);
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("class", "a");
+            expected.Put("--test-var2", "50px");
+            expected.Put("margin-top", "50px");
+            expected.Put("margin-right", "50px");
+            expected.Put("margin-bottom", "50px");
+            expected.Put("margin-left", "50px");
+            expected.Put("font-size", "12pt");
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
+            Count = 2)]
+        [NUnit.Framework.Test]
+        public virtual void InvalidValueCssVariableTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("style"), "");
+            TextNode styleContents = new TextNode("    p {\n" + "        word-break: var(--test-var);\n" + "    }\n" +
+                 "    div {\n" + "\t\t--test-var: incorrect;\n" + "\t}");
+            JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
+            jSoupStyle.AddChild(new JsoupTextNode(styleContents));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("div"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Element paragraph = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("p"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Element nestedParagraph = new iText.StyledXmlParser.Jsoup.Nodes.Element(
+                iText.StyledXmlParser.Jsoup.Parser.Tag.ValueOf("p"), "");
+            JsoupElementNode jSoupParagraph = new JsoupElementNode(paragraph);
+            JsoupElementNode jSoupNestedParagraph = new JsoupElementNode(nestedParagraph);
+            JsoupElementNode jSoupDiv = new JsoupElementNode(div);
+            jSoupDiv.AddChild(jSoupNestedParagraph);
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
+            AbstractCssContext svgContext = new SvgCssContext();
+            jSoupDiv.SetStyles(resolver.ResolveStyles(jSoupDiv, svgContext));
+            IDictionary<String, String> nestedStyles = resolver.ResolveStyles(jSoupNestedParagraph, svgContext);
+            IDictionary<String, String> styles = resolver.ResolveStyles(jSoupParagraph, svgContext);
+            IDictionary<String, String> expectedStyles = new Dictionary<String, String>();
+            expectedStyles.Put("font-size", "12pt");
+            NUnit.Framework.Assert.AreEqual(expectedStyles, styles);
+            IDictionary<String, String> expectedNestedStyles = new Dictionary<String, String>();
+            expectedNestedStyles.Put("--test-var", "incorrect");
+            expectedNestedStyles.Put("font-size", "12pt");
+            NUnit.Framework.Assert.AreEqual(expectedNestedStyles, nestedStyles);
+        }
+
+        public static IEnumerable<Object[]> DivVariablesTestProvider() {
+            return JavaUtil.ArraysAsList(new Object[][] { new Object[] { "a", "30px", "30px" }, new Object[] { "b", "50px"
+                , "30px" }, new Object[] { "c d", "35px", "35px" } });
+        }
+
+        [NUnit.Framework.TestCaseSource("DivVariablesTestProvider")]
+        public virtual void CssVariableInTheSameScopeTest(String divClass, String expectedMargin, String expectedVarValue
+            ) {
+            iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("style"), "");
+            TextNode styleContents = new TextNode("\tdiv {\n" + "\t\t--test-var: 30px;\n" + "\t}\n" + "    div.a {\n" 
+                + "        margin: var(--test-var,40px);\n" + "    }\n" + "    div.b {\n" + "        margin: var(--other-var,50px);\n"
+                 + "    }\n" + "    div.c {\n" + "        --test-var: 35px;\n" + "    }\n" + "    div.c.d {\n" + "        margin: var(--test-var,40px);\n"
+                 + "    }");
+            JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
+            jSoupStyle.AddChild(new JsoupTextNode(styleContents));
+            iText.StyledXmlParser.Jsoup.Nodes.Element div = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("div"), "");
+            div.Attributes().Put("class", divClass);
+            JsoupElementNode jSoupDiv = new JsoupElementNode(div);
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
+            AbstractCssContext svgContext = new SvgCssContext();
+            IDictionary<String, String> actual = resolver.ResolveStyles(jSoupDiv, svgContext);
+            IDictionary<String, String> expected = new Dictionary<String, String>();
+            expected.Put("class", divClass);
+            expected.Put("--test-var", expectedVarValue);
+            expected.Put("margin-top", expectedMargin);
+            expected.Put("margin-right", expectedMargin);
+            expected.Put("margin-bottom", expectedMargin);
+            expected.Put("margin-left", expectedMargin);
+            expected.Put("font-size", "12pt");
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssVariableInheritanceTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element styleTag = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("style"), "");
+            TextNode styleContents = new TextNode("\tol {\n" + "\t\t--test-var: circle;\n" + "\t}\n" + "    ul {\n" + 
+                "        list-style-type: var(--test-var, square);\n" + "    }\n" + "    ol {\n" + "        list-style-type: var(--test-var, square);\n"
+                 + "    }");
+            JsoupElementNode jSoupStyle = new JsoupElementNode(styleTag);
+            jSoupStyle.AddChild(new JsoupTextNode(styleContents));
+            iText.StyledXmlParser.Jsoup.Nodes.Element unorderedList = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("ul"), "");
+            iText.StyledXmlParser.Jsoup.Nodes.Element orderedList = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("ol"), "");
+            JsoupElementNode jSoupUnorderedList = new JsoupElementNode(unorderedList);
+            JsoupElementNode jSoupOrderedList = new JsoupElementNode(orderedList);
+            JsoupElementNode jSoupItemUnordered = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("li"), ""));
+            JsoupElementNode jSoupItemOrdered = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("li"), ""));
+            jSoupUnorderedList.AddChild(jSoupItemUnordered);
+            jSoupOrderedList.AddChild(jSoupItemOrdered);
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+            SvgStyleResolver resolver = new SvgStyleResolver(jSoupStyle, context);
+            AbstractCssContext svgContext = new SvgCssContext();
+            jSoupUnorderedList.SetStyles(resolver.ResolveStyles(jSoupUnorderedList, svgContext));
+            jSoupOrderedList.SetStyles(resolver.ResolveStyles(jSoupOrderedList, svgContext));
+            IDictionary<String, String> unorderedStyles = resolver.ResolveStyles(jSoupItemUnordered, svgContext);
+            IDictionary<String, String> orderedStyles = resolver.ResolveStyles(jSoupItemOrdered, svgContext);
+            IDictionary<String, String> expectedUnorderedStyles = new Dictionary<String, String>();
+            expectedUnorderedStyles.Put("font-size", "12pt");
+            expectedUnorderedStyles.Put("list-style-type", "square");
+            NUnit.Framework.Assert.AreEqual(expectedUnorderedStyles, unorderedStyles);
+            IDictionary<String, String> expectedOrderedStyles = new Dictionary<String, String>();
+            expectedOrderedStyles.Put("--test-var", "circle");
+            expectedOrderedStyles.Put("list-style-type", "circle");
+            expectedOrderedStyles.Put("font-size", "12pt");
+            NUnit.Framework.Assert.AreEqual(expectedOrderedStyles, orderedStyles);
         }
 
         [NUnit.Framework.Test]

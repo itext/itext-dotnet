@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Util;
 
 namespace iText.StyledXmlParser.Css.Resolve {
     /// <summary>Helper class that allows you to check if a property is inheritable.</summary>
@@ -63,10 +64,16 @@ namespace iText.StyledXmlParser.Css.Resolve {
         // Lists and Counters Properties
         // Generated Content for Paged Media
         /// <summary>Checks if a property is inheritable.</summary>
+        /// <remarks>
+        /// Checks if a property is inheritable.
+        /// <para />
+        /// If css custom property (--*) is encountered always returns true,
+        /// since css variables are always inheritable
+        /// </remarks>
         /// <param name="cssProperty">the CSS property</param>
         /// <returns>true, if the property is inheritable</returns>
         public virtual bool IsInheritable(String cssProperty) {
-            return INHERITABLE_PROPERTIES.Contains(cssProperty);
+            return INHERITABLE_PROPERTIES.Contains(cssProperty) || CssVariableUtil.IsCssVariable(cssProperty);
         }
     }
 }

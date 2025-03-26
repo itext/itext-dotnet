@@ -255,28 +255,51 @@ namespace iText.Svg.Css.Impl {
             return iText.Svg.Css.Impl.SvgStyleResolver.IsElementNested(element, SvgConstants.Tags.DEFS);
         }
 
+        /// <summary>Merge variables from parent node with current one.</summary>
+        /// <remarks>
+        /// Merge variables from parent node with current one.
+        /// This is needed for svg elements like &lt;defs&gt;, which do not inherit parent styles, but do inherit
+        /// css variables.
+        /// </remarks>
+        /// <param name="styles">current element styles to put variable in</param>
+        /// <param name="parentStyles">styles to search variables for</param>
+        private static void PutMissingVariables(IDictionary<String, String> styles, IDictionary<String, String> parentStyles
+            ) {
+            if (parentStyles == null) {
+                return;
+            }
+            foreach (KeyValuePair<String, String> entry in parentStyles) {
+                if (CssVariableUtil.IsCssVariable(entry.Key) && styles.Get(entry.Key) == null) {
+                    styles.Put(entry.Key, entry.Value);
+                }
+            }
+        }
+
         private IDictionary<String, String> ResolveStyles(INode element, SvgCssContext context) {
             // Resolves node styles without inheritance of parent element styles
             IDictionary<String, String> styles = ResolveNativeStyles(element, context);
-            if (element is IElementNode && iText.Svg.Css.Impl.SvgStyleResolver.OnlyNativeStylesShouldBeResolved((IElementNode
-                )element)) {
-                return styles;
-            }
-            String parentFontSizeStr = null;
-            // Load in and merge inherited styles from parent
+            IDictionary<String, String> parentStyles = null;
             if (element.ParentNode() is IStylesContainer) {
                 IStylesContainer parentNode = (IStylesContainer)element.ParentNode();
-                IDictionary<String, String> parentStyles = parentNode.GetStyles();
+                parentStyles = parentNode.GetStyles();
                 if (parentStyles == null && !(parentNode is IElementNode)) {
                     LOGGER.LogError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_RESOLVING_PARENT_STYLES
                         );
                 }
-                if (parentStyles != null) {
-                    parentFontSizeStr = parentStyles.Get(SvgConstants.Attributes.FONT_SIZE);
-                    foreach (KeyValuePair<String, String> entry in parentStyles) {
-                        styles = StyleUtil.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeStr, INHERITANCE_RULES
-                            );
-                    }
+            }
+            if (element is IElementNode && iText.Svg.Css.Impl.SvgStyleResolver.OnlyNativeStylesShouldBeResolved((IElementNode
+                )element)) {
+                PutMissingVariables(styles, parentStyles);
+                CssVariableUtil.ResolveCssVariables(styles);
+                return styles;
+            }
+            String parentFontSizeStr = null;
+            // Merge inherited styles from parent
+            if (parentStyles != null) {
+                parentFontSizeStr = parentStyles.Get(SvgConstants.Attributes.FONT_SIZE);
+                foreach (KeyValuePair<String, String> entry in parentStyles) {
+                    styles = StyleUtil.MergeParentStyleDeclaration(styles, entry.Key, entry.Value, parentFontSizeStr, INHERITANCE_RULES
+                        );
                 }
             }
             iText.Svg.Css.Impl.SvgStyleResolver.ResolveFontSizeStyle(styles, context, parentFontSizeStr);
@@ -287,6 +310,7 @@ namespace iText.Svg.Css.Impl {
                 // TODO DEVSIX-8792 SVG: implement styles appliers like in html2pdf
                 styles.Put(CommonCssConstants.FONT_FAMILY, fontFamilies[0]);
             }
+            CssVariableUtil.ResolveCssVariables(styles);
             // Set root font size
             bool isSvgElement = element is IElementNode && SvgConstants.Tags.SVG.Equals(((IElementNode)element).Name()
                 );
