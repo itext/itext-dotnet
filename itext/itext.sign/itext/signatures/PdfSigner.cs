@@ -132,7 +132,7 @@ namespace iText.Signatures {
         /// <param name="reader">PdfReader that reads the PDF file</param>
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="properties">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
         /// for the signing document. Note that encryption will be
         /// preserved regardless of what is set in properties.
@@ -151,13 +151,13 @@ namespace iText.Signatures {
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="path">File to which the output is temporarily written</param>
         /// <param name="stampingProperties">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
         /// for the signing document. Note that encryption will be
         /// preserved regardless of what is set in properties.
         /// </param>
         /// <param name="signerProperties">
-        /// 
+        ///
         /// <see cref="SignerProperties"/>
         /// bundled properties to be used in signing operations.
         /// </param>
@@ -189,7 +189,7 @@ namespace iText.Signatures {
         /// <param name="outputStream">OutputStream to write the signed PDF file</param>
         /// <param name="path">File to which the output is temporarily written</param>
         /// <param name="properties">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
         /// for the signing document. Note that encryption will be
         /// preserved regardless of what is set in properties.
@@ -234,17 +234,17 @@ namespace iText.Signatures {
         /// instance by using provided parameters.
         /// </summary>
         /// <param name="reader">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.PdfReader"/>
         /// to be used as a reader in the new document
         /// </param>
         /// <param name="writer">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
         /// to be used as a writer in the new document
         /// </param>
         /// <param name="properties">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.StampingProperties"/>
         /// to be provided in the new document
         /// </param>
@@ -295,7 +295,7 @@ namespace iText.Signatures {
         /// <para />
         /// </remarks>
         /// <returns>
-        /// 
+        ///
         /// <see cref="PdfSignatureAppearance"/>
         /// object.
         /// </returns>
@@ -363,7 +363,7 @@ namespace iText.Signatures {
         /// <see cref="SetCertificationLevel(int)"/>.
         /// </remarks>
         /// <param name="accessPermissions">
-        /// 
+        ///
         /// <see cref="AccessPermissions"/>
         /// enum which specifies which certification level shall be used
         /// </param>
@@ -832,7 +832,7 @@ namespace iText.Signatures {
                     sb.AppendLine(crlBytesMsg);
                 }
 
-                throw new System.IO.IOException(sb.ToString());
+                throw new SignatureSizeExceededException(sb.ToString(), encodedSig, ocspList, crlBytes);
             }
             byte[] paddedSig = new byte[estimatedSize];
             Array.Copy(encodedSig, 0, paddedSig, 0, encodedSig.Length);
@@ -977,7 +977,7 @@ namespace iText.Signatures {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
         /// </summary>
         /// <param name="extension">
-        /// 
+        ///
         /// <see cref="iText.Kernel.Pdf.PdfDeveloperExtension"/>
         /// to be added
         /// </param>
@@ -1118,7 +1118,7 @@ namespace iText.Signatures {
         /// method if the signature field already exists.
         /// </remarks>
         /// <param name="acroForm">
-        /// 
+        ///
         /// <see cref="iText.Forms.PdfAcroForm"/>
         /// object in which the signature field will be populated
         /// </param>
@@ -1164,7 +1164,7 @@ namespace iText.Signatures {
         /// method if the signature field doesn't exist.
         /// </remarks>
         /// <param name="acroForm">
-        /// 
+        ///
         /// <see cref="iText.Forms.PdfAcroForm"/>
         /// object in which new signature field will be added
         /// </param>
@@ -1360,7 +1360,7 @@ namespace iText.Signatures {
 
         /// <summary>Check if current document instance already contains certification or approval signatures.</summary>
         /// <returns>
-        /// 
+        ///
         /// <see langword="true"/>
         /// if document contains certification or approval signatures,
         /// <see langword="false"/>
