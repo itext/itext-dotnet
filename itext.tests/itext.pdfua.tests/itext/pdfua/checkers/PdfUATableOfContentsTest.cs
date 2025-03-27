@@ -211,8 +211,7 @@ namespace iText.Pdfua.Checkers {
                 document.Add(tocTitle);
             }
             );
-            // TODO DEVSIX-8953 Introduce PDF 2.0 tag structure checker
-            framework.AssertVeraPdfFail("invalidStructureTableOfContentsTest", pdfUAConformance);
+            framework.AssertBothValid("invalidStructureTableOfContentsTest", pdfUAConformance);
         }
 
         private static void AddTableOfContentsWithRefInChild(PdfDocument pdfDocument, String childRole) {

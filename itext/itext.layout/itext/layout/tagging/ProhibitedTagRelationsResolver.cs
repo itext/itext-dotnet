@@ -49,6 +49,8 @@ namespace iText.Layout.Tagging {
             updateRules17.Put(GenerateKey(StandardRoles.H, StandardRoles.P), StandardRoles.SPAN);
             updateRules17.Put(GenerateKey(StandardRoles.P, StandardRoles.P), StandardRoles.SPAN);
             updateRules17.Put(GenerateKey(StandardRoles.P, StandardRoles.DIV), StandardRoles.SPAN);
+            updateRules17.Put(GenerateKey(StandardRoles.TOC, StandardRoles.SPAN), StandardRoles.CAPTION);
+            updateRules17.Put(GenerateKey(StandardRoles.TOCI, StandardRoles.SPAN), StandardRoles.LBL);
             //PDF 2.0 rules
             updateRules20.Put(GenerateKey(StandardRoles.H, StandardRoles.P), StandardRoles.SUB);
             updateRules20.Put(GenerateKey(PdfAllowedTagRelations.NUMBERED_HEADER, StandardRoles.P), StandardRoles.SUB);
@@ -65,6 +67,8 @@ namespace iText.Layout.Tagging {
             updateRules20.Put(GenerateKey(StandardRoles.SUB, StandardRoles.P), StandardRoles.SPAN);
             updateRules20.Put(GenerateKey(StandardRoles.SUB, StandardRoles.SUB), StandardRoles.SPAN);
             updateRules20.Put(GenerateKey(StandardRoles.SUB, StandardRoles.DIV), StandardRoles.SPAN);
+            updateRules20.Put(GenerateKey(StandardRoles.TOC, StandardRoles.SPAN), StandardRoles.CAPTION);
+            updateRules20.Put(GenerateKey(StandardRoles.TOCI, StandardRoles.SPAN), StandardRoles.LBL);
             updateRules20.Put(GenerateKey(StandardRoles.DOCUMENT, StandardRoles.SPAN), StandardRoles.P);
         }
 
