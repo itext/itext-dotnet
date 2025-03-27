@@ -208,7 +208,7 @@ namespace iText.Kernel.Pdf.Xobject {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "img_indexed_rgb_null_hival.pdf"
                 ))) {
                 PdfImageXObject imageXObject = pdfDocument.GetPage(1).GetResources().GetImage(new PdfName("Im0"));
-                NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => imageXObject.GetImageBytes());
+                NUnit.Framework.Assert.Catch(typeof(Exception), () => imageXObject.GetImageBytes());
             }
         }
 

@@ -198,7 +198,7 @@ namespace iText.IO.Exceptions {
 
         public const String NOT_FOUND_AS_FILE_OR_RESOURCE = "{0} not found as file or resource.";
 
-        public const String N_VALUE_IS_NOT_SUPPORTED = "N value {1} is not supported.";
+        public const String N_VALUE_IS_NOT_SUPPORTED = "N value {0} is not supported.";
 
         public const String PADDING_OVERFLOW = "woff2 padding overflow exception";
 
