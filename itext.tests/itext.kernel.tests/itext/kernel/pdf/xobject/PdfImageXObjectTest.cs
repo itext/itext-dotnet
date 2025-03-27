@@ -166,6 +166,52 @@ namespace iText.Kernel.Pdf.Xobject {
                 ));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void DecodingIndexedCsWithRgbTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "img_indexed_rgb.pdf"))) {
+                PdfImageXObject imageXObject = pdfDocument.GetPage(1).GetResources().GetImage(new PdfName("Im0"));
+                byte[] imageBytes = imageXObject.GetImageBytes();
+                NUnit.Framework.Assert.IsNotNull(imageBytes);
+                NUnit.Framework.Assert.AreEqual(552, imageBytes.Length);
+                NUnit.Framework.Assert.AreEqual(ImageType.PNG, imageXObject.IdentifyImageType());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecodingIndexedCsWithRgbStringTableTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "img_indexed_rgb_string_table.pdf"
+                ))) {
+                PdfImageXObject imageXObject = pdfDocument.GetPage(1).GetResources().GetImage(new PdfName("Im0"));
+                byte[] imageBytes = imageXObject.GetImageBytes();
+                NUnit.Framework.Assert.IsNotNull(imageBytes);
+                NUnit.Framework.Assert.AreEqual(552, imageBytes.Length);
+                NUnit.Framework.Assert.AreEqual(ImageType.PNG, imageXObject.IdentifyImageType());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecodingIndexedCsWithRgbWrongLookupTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "img_indexed_rgb_wrong_lookup.pdf"
+                ))) {
+                PdfImageXObject imageXObject = pdfDocument.GetPage(1).GetResources().GetImage(new PdfName("Im0"));
+                byte[] imageBytes = imageXObject.GetImageBytes();
+                NUnit.Framework.Assert.IsNotNull(imageBytes);
+                // iText doesn't fail if there is no lookup table, it's just ignored and not added to result bytes
+                NUnit.Framework.Assert.AreEqual(531, imageBytes.Length);
+                NUnit.Framework.Assert.AreNotEqual(552, imageBytes.Length);
+                NUnit.Framework.Assert.AreEqual(ImageType.PNG, imageXObject.IdentifyImageType());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DecodingIndexedCsWithRgbNoHivalTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "img_indexed_rgb_null_hival.pdf"
+                ))) {
+                PdfImageXObject imageXObject = pdfDocument.GetPage(1).GetResources().GetImage(new PdfName("Im0"));
+                NUnit.Framework.Assert.Catch(typeof(IndexOutOfRangeException), () => imageXObject.GetImageBytes());
+            }
+        }
+
         private void ConvertAndCompare(String outFilename, String cmpFilename, String imageFilename) {
             System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outFilename));
             System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpFilename) + "\n");

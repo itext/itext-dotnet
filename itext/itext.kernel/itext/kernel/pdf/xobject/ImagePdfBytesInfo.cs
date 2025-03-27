@@ -68,7 +68,7 @@ namespace iText.Kernel.Pdf.Xobject {
             height = (int)imageXObject.GetHeight();
             colorspace = imageXObject.GetPdfObject().Get(PdfName.ColorSpace);
             decode = imageXObject.GetPdfObject().GetAsArray(PdfName.Decode);
-            FindColorspace(colorspace, true);
+            FindColorspace(colorspace, false);
         }
 
         public virtual int GetPngColorType() {
@@ -188,8 +188,8 @@ namespace iText.Kernel.Pdf.Xobject {
 
         /// <summary>Sets state of this object according to the color space</summary>
         /// <param name="csObj">the colorspace to use</param>
-        /// <param name="allowIndexed">whether indexed color spaces will be resolved (used for recursive call)</param>
-        private void FindColorspace(PdfObject csObj, bool allowIndexed) {
+        /// <param name="checkIndexedBase">whether base of indexed color space is currently resolved or not</param>
+        private void FindColorspace(PdfObject csObj, bool checkIndexedBase) {
             if (PdfName.DeviceGray.Equals(csObj) || (csObj == null && bpc == 1)) {
                 // handle imagemasks
                 stride = (width * bpc + 7) / 8;
@@ -197,7 +197,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             else {
                 if (PdfName.DeviceRGB.Equals(csObj)) {
-                    if (bpc == 8 || bpc == 16) {
+                    if (bpc == 8 || bpc == 16 || checkIndexedBase) {
                         stride = (width * bpc * 3 + 7) / 8;
                         pngColorType = 2;
                     }
@@ -212,7 +212,7 @@ namespace iText.Kernel.Pdf.Xobject {
                         }
                         else {
                             if (PdfName.CalRGB.Equals(tyca)) {
-                                if (bpc == 8 || bpc == 16) {
+                                if (bpc == 8 || bpc == 16 || checkIndexedBase) {
                                     stride = (width * bpc * 3 + 7) / 8;
                                     pngColorType = 2;
                                 }
@@ -235,16 +235,18 @@ namespace iText.Kernel.Pdf.Xobject {
                                     }
                                 }
                                 else {
-                                    if (allowIndexed && PdfName.Indexed.Equals(tyca)) {
-                                        FindColorspace(ca.Get(1), false);
+                                    if (!checkIndexedBase && PdfName.Indexed.Equals(tyca)) {
+                                        // In Indexed color space BitsPerComponent defines amount of bits for Index component, not base.
+                                        // So ignore bpc checks in findColorspace for base color.
+                                        FindColorspace(ca.Get(1), true);
                                         if (pngColorType == 2) {
-                                            PdfObject id2 = ca.Get(3);
-                                            if (id2 is PdfString) {
-                                                palette = ((PdfString)id2).GetValueBytes();
+                                            PdfObject lookupObj = ca.Get(3);
+                                            if (lookupObj is PdfString) {
+                                                palette = ((PdfString)lookupObj).GetValueBytes();
                                             }
                                             else {
-                                                if (id2 is PdfStream) {
-                                                    palette = ((PdfStream)id2).GetBytes();
+                                                if (lookupObj is PdfStream) {
+                                                    palette = ((PdfStream)lookupObj).GetBytes();
                                                 }
                                             }
                                             stride = (width * bpc + 7) / 8;
