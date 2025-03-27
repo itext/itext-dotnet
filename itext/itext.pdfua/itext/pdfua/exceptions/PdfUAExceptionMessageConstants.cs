@@ -99,6 +99,8 @@ namespace iText.Pdfua.Exceptions {
         public const String LIST_NUMBERING_IS_NOT_SPECIFIED = "If Lbl structure elements are present, the " + "ListNumbering attribute shall be specified for the respective L structure element; "
              + "the value None shall not be used.";
 
+        public const String MATH_NOT_CHILD_OF_FORMULA = "The math structure type shall occur only as a child of a Formula structure element.";
+
         public const String METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY = "Metadata shall be present in the catalog dictionary";
 
         public const String METADATA_SHALL_CONTAIN_DC_TITLE_ENTRY = "Metadata shall contain dc:title entry.";

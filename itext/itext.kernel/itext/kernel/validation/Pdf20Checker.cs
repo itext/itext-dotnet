@@ -194,7 +194,8 @@ namespace iText.Kernel.Validation {
             private String ResolveRole(PdfStructElem elem) {
                 IRoleMappingResolver parentResolver = tagStructureContext.ResolveMappingToStandardOrDomainSpecificRole(elem
                     .GetRole().GetValue(), elem.GetNamespace());
-                if (parentResolver == null) {
+                if (parentResolver == null || (parentResolver.GetNamespace() != null && StandardNamespaces.MATH_ML.Equals(
+                    parentResolver.GetNamespace().GetNamespaceName()))) {
                     return null;
                 }
                 return parentResolver.GetRole();

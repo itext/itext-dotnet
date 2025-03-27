@@ -27,6 +27,7 @@ using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Class that provides methods for checking PDF/UA compliance of Formula elements.</summary>
+    [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1FormulaChecker")]
     public sealed class FormulaCheckUtil {
         /// <summary>
         /// Creates a new
