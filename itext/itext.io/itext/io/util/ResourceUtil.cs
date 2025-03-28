@@ -224,7 +224,7 @@ namespace iText.IO.Util {
                 loadedAssemblies = new List<AssemblyName>();
             }
 
-            if (FileUtil.GetBaseDirectory() != null) {
+            if (!String.IsNullOrEmpty(FileUtil.GetBaseDirectory())) {
                 var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
                 foreach (String path in referencedPaths)
                 {
