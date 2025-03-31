@@ -45,8 +45,7 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/DefaultLayoutTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/DefaultLayoutTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/DefaultLayoutTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

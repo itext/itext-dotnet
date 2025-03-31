@@ -37,7 +37,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFontTest : ExtendedITextTest {
 //\cond DO_NOT_DOCUMENT
@@ -46,8 +46,7 @@ namespace iText.Pdfa {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfAFontTest/";
+        internal static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfAFontTest/";
 //\endcond
 
         [NUnit.Framework.OneTimeSetUp]

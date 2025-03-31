@@ -50,8 +50,7 @@ namespace iText.Pdfua {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUAAnnotationsTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUAAnnotationsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAAnnotationsTest/";
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
@@ -74,12 +73,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LinkAnnotNotDirectChildOfAnnotLayoutTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_124());
+            framework.AddSuppliers(new _Generator_125());
             framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotLayoutTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_124 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_124() {
+        private sealed class _Generator_125 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_125() {
             }
 
             public IBlockElement Generate() {

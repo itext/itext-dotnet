@@ -37,7 +37,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         public static readonly String SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/securityhandler/StandardHandlerUsingAesGcmTest/";
 
-        public static readonly String DEST = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/crypto/securityhandler/StandardHandlerUsingAesGcmTest/";
+        public static readonly String DEST = TestUtil.GetOutputPath() + "/kernel/crypto/securityhandler/StandardHandlerUsingAesGcmTest/";
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 

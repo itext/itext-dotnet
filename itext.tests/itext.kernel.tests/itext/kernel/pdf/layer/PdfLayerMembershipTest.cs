@@ -35,8 +35,7 @@ namespace iText.Kernel.Pdf.Layer {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/layer/PdfLayerMembershipTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/layer/PdfLayerMembershipTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/layer/PdfLayerMembershipTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

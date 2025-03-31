@@ -47,8 +47,7 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUACanvasTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUACanvasTest/";
 
         private UaValidationTestFramework framework;
 
@@ -181,7 +180,7 @@ namespace iText.Pdfua.Checkers {
                 (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                 );
-            PdfCanvas canvas = new _PdfCanvas_256(pdfDoc.AddNewPage());
+            PdfCanvas canvas = new _PdfCanvas_257(pdfDoc.AddNewPage());
             // Disable the checkIsoConformance call check by simulating generating not tagged content
             // same as in annotations of form fields.
             GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
@@ -205,8 +204,8 @@ namespace iText.Pdfua.Checkers {
                 e.Message);
         }
 
-        private sealed class _PdfCanvas_256 : PdfCanvas {
-            public _PdfCanvas_256(PdfPage baseArg1)
+        private sealed class _PdfCanvas_257 : PdfCanvas {
+            public _PdfCanvas_257(PdfPage baseArg1)
                 : base(baseArg1) {
             }
 

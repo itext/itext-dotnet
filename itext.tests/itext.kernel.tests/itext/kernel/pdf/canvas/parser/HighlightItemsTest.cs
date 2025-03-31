@@ -38,7 +38,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/parser/HighlightItemsTest/";
 
-        private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/parser/HighlightItemsTest/";
+        private static readonly String outputPath = TestUtil.GetOutputPath() + "/kernel/parser/HighlightItemsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

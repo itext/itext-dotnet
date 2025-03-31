@@ -39,8 +39,7 @@ namespace iText.Svg.Processors.Impl.Font {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/font/FontFaceTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/processors/impl/font/FontFaceTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/processors/impl/font/FontFaceTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

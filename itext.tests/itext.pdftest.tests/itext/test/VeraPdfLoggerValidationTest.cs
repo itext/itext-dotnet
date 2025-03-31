@@ -25,6 +25,7 @@ using iText.Test.Pdfa;
 using iText.Test.Utils;
 
 namespace iText.Test {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     // Android-Conversion-Skip-File (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("UnitTest")]
     public class VeraPdfLoggerValidationTest : ExtendedITextTest {
@@ -34,8 +35,7 @@ namespace iText.Test {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdftest/VeraPdfLoggerValidationTest/";
+        internal static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdftest/VeraPdfLoggerValidationTest/";
 //\endcond
 
         [NUnit.Framework.OneTimeSetUp]

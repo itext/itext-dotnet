@@ -40,14 +40,13 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Forms {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2FormTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfUA2FormTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms//PdfUA2FormTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms//PdfUA2FormTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

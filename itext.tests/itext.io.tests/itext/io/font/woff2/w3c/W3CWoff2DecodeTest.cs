@@ -23,14 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.IO.Font.Woff2;
+using iText.Test;
 
 namespace iText.IO.Font.Woff2.W3c {
     public abstract class W3CWoff2DecodeTest : Woff2DecodeTest {
         private static readonly String baseSourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/woff2/w3c/";
 
-        private static readonly String baseDestinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/io/font/woff2/w3c/";
+        private static readonly String baseDestinationFolder = TestUtil.GetOutputPath() + "/io/font/woff2/w3c/";
 
         protected internal abstract String GetFontName();
 

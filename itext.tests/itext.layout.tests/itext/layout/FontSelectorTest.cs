@@ -41,8 +41,7 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FontSelectorTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/FontSelectorTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/FontSelectorTest/";
 
         public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";

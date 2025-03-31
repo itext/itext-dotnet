@@ -36,7 +36,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/EncodingTest/";
 
-        public static readonly String outputFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/pdf/EncodingTest/";
+        public static readonly String outputFolder = TestUtil.GetOutputPath() + "/kernel/pdf/EncodingTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

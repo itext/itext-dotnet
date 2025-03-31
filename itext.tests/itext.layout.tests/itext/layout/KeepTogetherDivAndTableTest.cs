@@ -39,8 +39,7 @@ namespace iText.Layout {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/KeepTogetherDivAndTableTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/KeepTogetherDivAndTableTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/KeepTogetherDivAndTableTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

@@ -31,8 +31,7 @@ namespace iText.Forms {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/FlatteningWithNullKidElementTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/FlatteningWithNullKidElementTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/FlatteningWithNullKidElementTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

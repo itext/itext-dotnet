@@ -33,8 +33,7 @@ namespace iText.Pdfa {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA4EmbeddedFilesCheckTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4EmbeddedFilesCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

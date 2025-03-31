@@ -45,8 +45,7 @@ namespace iText.Layout {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/KeepTogetherTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/KeepTogetherTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/KeepTogetherTest/";
 
         private const String BIG_TEXT = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n" + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,\n"
              + " sed diam voluptua.\n\n At vero eos et accusam et justo duo dolores et ea rebum.\n\n " + " Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n"

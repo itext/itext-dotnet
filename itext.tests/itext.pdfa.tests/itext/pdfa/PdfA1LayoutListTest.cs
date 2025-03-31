@@ -34,8 +34,7 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA1LayoutListTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA1LayoutListTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA1LayoutListTest/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";

@@ -36,8 +36,7 @@ namespace iText.Forms {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/Utf8FormsTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/Utf8FormsTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/Utf8FormsTest/";
 
         public static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/Utf8FormsTest/NotoSansCJKsc-Regular.otf";

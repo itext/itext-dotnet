@@ -48,8 +48,7 @@ namespace iText.Signatures.Sign {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfPadesWithMissingCertTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/sign/PdfPadesWithMissingCertTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/signatures/sign/PdfPadesWithMissingCertTest/";
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
@@ -84,7 +83,7 @@ namespace iText.Signatures.Sign {
             SignerProperties signerProperties = CreateSignerProperties();
             MemoryStream outputStream = new MemoryStream();
             PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outputStream);
-            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_107(firstMissingCertFileName
+            IIssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_108(firstMissingCertFileName
                 , secondMissingCertFileName);
             padesSigner.SetIssuingCertificateRetriever(issuingCertificateRetriever);
             padesSigner.SignWithBaselineBProfile(signerProperties, new IX509Certificate[] { signCert, rootCert }, signPrivateKey
@@ -101,8 +100,8 @@ namespace iText.Signatures.Sign {
                 );
         }
 
-        private sealed class _IssuingCertificateRetriever_107 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_107(String firstMissingCertFileName, String secondMissingCertFileName) {
+        private sealed class _IssuingCertificateRetriever_108 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_108(String firstMissingCertFileName, String secondMissingCertFileName) {
                 this.firstMissingCertFileName = firstMissingCertFileName;
                 this.secondMissingCertFileName = secondMissingCertFileName;
             }

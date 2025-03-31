@@ -38,8 +38,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfXObjectTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfXObjectTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PdfXObjectTest/";
 
         public static readonly String[] images = new String[] { SOURCE_FOLDER + "WP_20140410_001.bmp", SOURCE_FOLDER
              + "WP_20140410_001.JPC", SOURCE_FOLDER + "WP_20140410_001.jpg", SOURCE_FOLDER + "WP_20140410_001.tif"

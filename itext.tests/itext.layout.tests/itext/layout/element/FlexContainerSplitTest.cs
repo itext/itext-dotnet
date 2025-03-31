@@ -38,8 +38,7 @@ namespace iText.Layout.Element {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FlexContainerSplitTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/FlexContainerSplitTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/FlexContainerSplitTest/";
 
         private const String VERY_LONG_TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do " +
              "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " 

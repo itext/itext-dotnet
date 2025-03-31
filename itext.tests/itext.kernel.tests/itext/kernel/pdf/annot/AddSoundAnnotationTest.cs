@@ -35,8 +35,7 @@ namespace iText.Kernel.Pdf.Annot {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/annot/AddSoundAnnotationTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/annot/AddSoundAnnotationTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/annot/AddSoundAnnotationTest/";
 
         private const String RIFF_TAG = "RIFF";
 

@@ -41,8 +41,7 @@ namespace iText.Signatures {
         private static readonly String PDFA_RESOURCES = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/pdfa/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/Pdf2PhaseSignerUnitTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/signatures/Pdf2PhaseSignerUnitTest/";
 
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";

@@ -40,14 +40,13 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfASigningTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/sign/PdfASigningTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/signatures/sign/PdfASigningTest/";
 
         public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/signCertRsa01.pem";

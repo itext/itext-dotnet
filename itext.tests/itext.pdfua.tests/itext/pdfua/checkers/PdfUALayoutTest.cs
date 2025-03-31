@@ -42,8 +42,7 @@ namespace iText.Pdfua.Checkers {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUALayoutTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUALayoutTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUALayoutTest/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUALayoutTest/";
@@ -110,7 +109,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void TestOfIllegalRelations(String parentRole, String childRole, bool expectException) {
             //expectException should take into account repair mechanism
             // in example P:P will be replaced as P:Span so no exceptions should be thrown
-            framework.AddSuppliers(new _Generator_135(parentRole, childRole));
+            framework.AddSuppliers(new _Generator_136(parentRole, childRole));
             if (expectException) {
                 framework.AssertBothFail("testOfIllegalRelation_" + parentRole + "_" + childRole, false, PdfUAConformance.
                     PDF_UA_2);
@@ -121,8 +120,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_135 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_135(String parentRole, String childRole) {
+        private sealed class _Generator_136 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_136(String parentRole, String childRole) {
                 this.parentRole = parentRole;
                 this.childRole = childRole;
             }

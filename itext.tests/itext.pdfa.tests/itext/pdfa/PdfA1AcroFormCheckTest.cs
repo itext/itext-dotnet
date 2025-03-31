@@ -37,8 +37,7 @@ namespace iText.Pdfa {
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1AcroFormCheckTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA1AcroFormCheckTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA1AcroFormCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

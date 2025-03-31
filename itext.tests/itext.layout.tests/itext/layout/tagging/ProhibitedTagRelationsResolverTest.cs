@@ -35,11 +35,10 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Layout.Tagging {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class ProhibitedTagRelationsResolverTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout" + "/ResolveProhibitedRelationsRuleTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout" + "/ResolveProhibitedRelationsRuleTest/";
 
         public static readonly String FONT_LOCATION = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/NotoSans-Regular.ttf";

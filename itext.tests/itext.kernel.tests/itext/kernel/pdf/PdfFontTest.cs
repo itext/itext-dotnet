@@ -49,8 +49,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfFontTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontTest/";
 
 //\cond DO_NOT_DOCUMENT
         internal const String author = "Alexander Chingarev";

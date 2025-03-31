@@ -32,8 +32,7 @@ using iText.Test;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class AnonymousInlineBoxTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/AnonymousInlineBox/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/AnonymousInlineBox/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/AnonymousInlineBox/";

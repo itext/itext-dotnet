@@ -39,8 +39,7 @@ namespace iText.Layout {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/CollapsingMarginsTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/CollapsingMarginsTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/CollapsingMarginsTest/";
 
         private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
              + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"

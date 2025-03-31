@@ -41,8 +41,7 @@ namespace iText.Pdfa {
         public static readonly String cmpFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/cmp/PdfACheckfieldTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfACheckfieldTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfACheckfieldTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

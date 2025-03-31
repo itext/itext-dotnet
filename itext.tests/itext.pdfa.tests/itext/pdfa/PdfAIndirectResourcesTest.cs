@@ -33,8 +33,7 @@ namespace iText.Pdfa {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/pdfs/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfAIndirectResourcesTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfAIndirectResourcesTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void Configure() {

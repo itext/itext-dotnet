@@ -34,8 +34,7 @@ namespace iText.Forms {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/FlatteningRotatedTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/FlatteningRotatedTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/FlatteningRotatedTest/";
 
         public static ICollection<Object[]> InputFileNames() {
             IList<Object[]> inputFileNames = new List<Object[]>();

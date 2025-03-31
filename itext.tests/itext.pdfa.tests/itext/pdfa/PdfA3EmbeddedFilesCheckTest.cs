@@ -38,8 +38,7 @@ namespace iText.Pdfa {
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA3EmbeddedFilesCheckTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA3EmbeddedFilesCheckTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA3EmbeddedFilesCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

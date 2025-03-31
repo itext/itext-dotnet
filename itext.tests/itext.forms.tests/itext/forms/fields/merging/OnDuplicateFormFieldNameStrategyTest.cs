@@ -38,8 +38,7 @@ using iText.Test.Attributes;
 namespace iText.Forms.Fields.Merging {
     [NUnit.Framework.Category("IntegrationTest")]
     public class OnDuplicateFormFieldNameStrategyTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/merging/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms/merging/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/merging/";
@@ -241,7 +240,7 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void AddIndexStrategySeparatesTheFields() {
             try {
-                PdfFormCreator.SetFactory(new _PdfFormFactory_282());
+                PdfFormCreator.SetFactory(new _PdfFormFactory_283());
                 using (PdfDocument pdfInnerDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "add_index.pdf"))) {
                     Document doc = new Document(pdfInnerDoc);
                     doc.Add(new CheckBox("test1").SetBorder(new SolidBorder(ColorConstants.RED, 1)));
@@ -257,8 +256,8 @@ namespace iText.Forms.Fields.Merging {
             }
         }
 
-        private sealed class _PdfFormFactory_282 : PdfFormFactory {
-            public _PdfFormFactory_282() {
+        private sealed class _PdfFormFactory_283 : PdfFormFactory {
+            public _PdfFormFactory_283() {
             }
 
             public override PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {

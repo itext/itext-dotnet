@@ -30,6 +30,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
+using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
@@ -38,8 +39,7 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TableBorderTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/TableBorderTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/TableBorderTest/";
 
         public const String cmpPrefix = "cmp_";
 

@@ -39,7 +39,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4TransparencyCheckTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -48,8 +48,7 @@ namespace iText.Pdfa {
         public static readonly String CMP_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/cmp/PdfA4TransparencyCheckTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA4TransparencyCheckTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4TransparencyCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

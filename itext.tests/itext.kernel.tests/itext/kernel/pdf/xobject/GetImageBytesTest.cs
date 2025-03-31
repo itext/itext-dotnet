@@ -39,8 +39,7 @@ namespace iText.Kernel.Pdf.Xobject {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/xobject" + "/GetImageBytesTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/xobject/GetImageBytesTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/xobject/GetImageBytesTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

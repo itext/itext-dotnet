@@ -30,8 +30,7 @@ namespace iText.Svg.Googlecharts {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/SteppedAreaChartsTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/googlecharts/SteppedAreaChartsTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/SteppedAreaChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

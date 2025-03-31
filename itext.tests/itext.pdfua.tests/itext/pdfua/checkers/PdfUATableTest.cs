@@ -35,8 +35,7 @@ using iText.Test.Attributes;
 namespace iText.Pdfua.Checkers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUATableTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUATableTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUATableTest/";
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
@@ -282,7 +281,7 @@ namespace iText.Pdfua.Checkers {
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
-            tableBuilder.AddHeaderCell(new _Generator_342());
+            tableBuilder.AddHeaderCell(new _Generator_343());
             for (int i = 0; i < 9; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -291,8 +290,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("tableWithHeaderScopeColumn13", pdfUAConformance);
         }
 
-        private sealed class _Generator_342 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_342() {
+        private sealed class _Generator_343 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_343() {
             }
 
             public Cell Generate() {
@@ -460,7 +459,7 @@ namespace iText.Pdfua.Checkers {
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
-            tableBuilder.AddBodyCell(new _Generator_551());
+            tableBuilder.AddBodyCell(new _Generator_552());
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -468,8 +467,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("tableWithHeaderRowScope07", pdfUAConformance);
         }
 
-        private sealed class _Generator_551 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_551() {
+        private sealed class _Generator_552 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_552() {
             }
 
             public Cell Generate() {
@@ -947,14 +946,14 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             ));
-            tableBuilder.AddBodyCell(new _Generator_1082());
-            tableBuilder.AddBodyCell(new _Generator_1092());
+            tableBuilder.AddBodyCell(new _Generator_1083());
+            tableBuilder.AddBodyCell(new _Generator_1093());
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableCustomRoles", pdfUAConformance);
         }
 
-        private sealed class _Generator_1082 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_1082() {
+        private sealed class _Generator_1083 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_1083() {
             }
 
             public Cell Generate() {
@@ -965,8 +964,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1092 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_1092() {
+        private sealed class _Generator_1093 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_1093() {
             }
 
             public Cell Generate() {

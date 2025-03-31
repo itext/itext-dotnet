@@ -39,8 +39,7 @@ namespace iText.Layout {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/ListItemPositionAlignmentTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/ListItemPositionAlignmentTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/ListItemPositionAlignmentTest/";
 
         private const String PARAMETERS_NAME_PATTERN = "{index}: list-base-direction: {0}; list-item-base-direction: {1};"
              + " list-symbol-alignment: {2}; list-symbol-position: {3};";

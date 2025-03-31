@@ -65,8 +65,7 @@ namespace iText.Kernel.Crypto.Pdfencryption {
     public class PdfEncryptionTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/crypto/pdfencryption/PdfEncryptionTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/crypto/pdfencryption/PdfEncryptionTest/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/pdfencryption/PdfEncryptionTest/";

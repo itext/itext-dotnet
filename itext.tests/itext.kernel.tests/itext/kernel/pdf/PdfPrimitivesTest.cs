@@ -31,8 +31,7 @@ namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfPrimitivesTest : ExtendedITextTest {
 //\cond DO_NOT_DOCUMENT
-        internal static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfPrimitivesTest/";
+        internal static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfPrimitivesTest/";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT

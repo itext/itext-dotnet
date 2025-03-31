@@ -42,8 +42,7 @@ namespace iText.Pdfa {
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfABarcodeTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfABarcodeTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfABarcodeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

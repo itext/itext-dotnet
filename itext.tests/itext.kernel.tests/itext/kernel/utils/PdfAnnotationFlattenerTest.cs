@@ -45,8 +45,7 @@ namespace iText.Kernel.Utils {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/utils/flatteningTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/utils/flatteningTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/utils/flatteningTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -759,13 +758,13 @@ namespace iText.Kernel.Utils {
         internal class CustomPdfAnnotationFlattenFactory : PdfAnnotationFlattenFactory {
             public override IAnnotationFlattener GetAnnotationFlattenWorker(PdfName name) {
                 if (PdfName.Link.Equals(name)) {
-                    return new _IAnnotationFlattener_871();
+                    return new _IAnnotationFlattener_872();
                 }
                 return base.GetAnnotationFlattenWorker(name);
             }
 
-            private sealed class _IAnnotationFlattener_871 : IAnnotationFlattener {
-                public _IAnnotationFlattener_871() {
+            private sealed class _IAnnotationFlattener_872 : IAnnotationFlattener {
+                public _IAnnotationFlattener_872() {
                 }
 
                 public bool Flatten(PdfAnnotation annotation, PdfPage page) {

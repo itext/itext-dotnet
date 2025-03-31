@@ -32,8 +32,7 @@ namespace iText.Commons.Utils {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/ZipFileWriter/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/commons/utils/ZipFileWriter/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/commons/utils/ZipFileWriter/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
