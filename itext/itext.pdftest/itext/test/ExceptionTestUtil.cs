@@ -27,7 +27,7 @@ namespace iText.Test
     /// </summary>
     public static class ExceptionTestUtil
     {
-        private const string DOCTYPE_IS_DISALLOWED =
+        private static string docTypeIsDisallowed =
             "For security reasons DTD is prohibited in this XML document. " +
             "To enable DTD processing set the DtdProcessing property on XmlReaderSettings " +
             "to Parse and pass the settings into XmlReader.Create method.";
@@ -40,7 +40,7 @@ namespace iText.Test
         /// <returns>Message for case when DOCTYPE is disallowed in XML</returns>
         public static string GetDoctypeIsDisallowedExceptionMessage()
         {
-            return DOCTYPE_IS_DISALLOWED;
+            return docTypeIsDisallowed;
         }
 
         /// <summary>
@@ -50,6 +50,11 @@ namespace iText.Test
         public static string GetXxeTestMessage()
         {
             return XXE_TEST_MESSAGE;
+        }
+
+        public static void SetDoctypeIsDisallowedExceptionMessage(string docTypeIsDisallowedString)
+        {
+            docTypeIsDisallowed = docTypeIsDisallowedString;
         }
     }
 }

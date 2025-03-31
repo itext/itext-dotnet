@@ -32,8 +32,7 @@ using NUnit.Framework;
 
 namespace iText.IO.Util {
     public class UrlUtilTest : ExtendedITextTest {
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/io/UrlUtilTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/io/UrlUtilTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

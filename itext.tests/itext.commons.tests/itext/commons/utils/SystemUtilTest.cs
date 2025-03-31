@@ -33,9 +33,7 @@ namespace iText.Commons.Utils {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework
             .TestContext.CurrentContext.TestDirectory) + "/resources/itext/commons/utils/SystemUtilTest/";
         
-
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-                                                           + "/test/itext/commons/utils/SystemUtilTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/commons/utils/SystemUtilTest/";
 
         // This is empty file that used to check the logic for existed execution file
         public static readonly String STUB_EXEC_FILE = SOURCE_FOLDER + "folder with space/stubFile";
