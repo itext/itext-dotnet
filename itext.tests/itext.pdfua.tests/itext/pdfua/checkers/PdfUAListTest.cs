@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -54,17 +53,17 @@ namespace iText.Pdfua.Checkers {
         }
 
         public static IList<PdfUAConformance> TestSources() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void ValidListTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_78());
+            framework.AddSuppliers(new _Generator_77());
             framework.AssertBothValid("validListTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_78 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_78() {
+        private sealed class _Generator_77 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_77() {
             }
 
             public IBlockElement Generate() {
@@ -79,12 +78,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void LblAndLBodyInListItemTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_96());
+            framework.AddSuppliers(new _Generator_95());
             framework.AssertBothValid("lblAndLBodyInListItemTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_96 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_96() {
+        private sealed class _Generator_95 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_95() {
             }
 
             public IBlockElement Generate() {
@@ -106,13 +105,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void InvalidListItemRoleTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_125());
+            framework.AddSuppliers(new _Generator_124());
             framework.AssertBothFail("invalidListItemRoleTest", PdfUAExceptionMessageConstants.LIST_ITEM_CONTENT_HAS_INVALID_TAG
                 , pdfUAConformance);
         }
 
-        private sealed class _Generator_125 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_125() {
+        private sealed class _Generator_124 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_124() {
             }
 
             public IBlockElement Generate() {
@@ -129,12 +128,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void ArtifactInListItemTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_146());
+            framework.AddSuppliers(new _Generator_145());
             framework.AssertBothValid("artifactInListItemTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_146 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_146() {
+        private sealed class _Generator_145 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_145() {
             }
 
             public IBlockElement Generate() {
@@ -213,13 +212,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void InvalidNestedListTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_230());
+            framework.AddSuppliers(new _Generator_229());
             framework.AssertBothFail("invalidNestedListTest", PdfUAExceptionMessageConstants.LIST_ITEM_CONTENT_HAS_INVALID_TAG
                 , pdfUAConformance);
         }
 
-        private sealed class _Generator_230 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_230() {
+        private sealed class _Generator_229 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_229() {
             }
 
             public IBlockElement Generate() {
@@ -244,13 +243,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SeveralListNumberingsFirstValidTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_261());
+            framework.AddSuppliers(new _Generator_260());
             // ListNumbering Decimal will be added to the beginning when processing List layout element.
             framework.AssertBothValid("severalListNumberingsFirstValidTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_261 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_261() {
+        private sealed class _Generator_260 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_260() {
             }
 
             public IBlockElement Generate() {

@@ -74,7 +74,7 @@ namespace iText.Pdfua.Checkers {
         }
 
         public static IList<PdfUAConformance> Data() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.Test]

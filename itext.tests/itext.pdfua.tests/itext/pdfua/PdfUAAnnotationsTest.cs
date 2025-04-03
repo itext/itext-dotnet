@@ -68,17 +68,17 @@ namespace iText.Pdfua {
         }
 
         public static IList<PdfUAConformance> Data() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LinkAnnotNotDirectChildOfAnnotLayoutTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_125());
+            framework.AddSuppliers(new _Generator_121());
             framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotLayoutTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_125 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_125() {
+        private sealed class _Generator_121 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_121() {
             }
 
             public IBlockElement Generate() {
@@ -124,7 +124,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertVeraPdfFail("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertVeraPdfFail("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
                 }
             }
         }
@@ -178,8 +178,7 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
+                    framework.AssertBothFail("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
                 }
             }
         }
@@ -241,7 +240,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("screenAnnotWithoutContentsAndAltTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("screenAnnotWithoutContentsAndAltTest", pdfUAConformance);
                 }
             }
         }
@@ -260,7 +259,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("popupWithoutContentOrAltTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("popupWithoutContentOrAltTest", pdfUAConformance);
                 }
             }
         }
@@ -298,7 +297,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("screenAnnotWithAltTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("screenAnnotWithAltTest", pdfUAConformance);
                 }
             }
         }
@@ -372,7 +371,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("trapNetAnnotNotPermittedTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("trapNetAnnotNotPermittedTest", pdfUAConformance);
                 }
             }
         }
@@ -398,7 +397,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("invisibleTrapNetAnnotTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("invisibleTrapNetAnnotTest", pdfUAConformance);
                 }
             }
         }
@@ -419,7 +418,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("soundAnnotDirectChildOfAnnotTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("soundAnnotDirectChildOfAnnotTest", pdfUAConformance);
                 }
             }
         }
@@ -441,7 +440,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertVeraPdfFail("pushBtnNestedWithinFormTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("pushBtnNestedWithinFormTest", pdfUAConformance);
                 }
             }
         }
@@ -641,36 +640,40 @@ namespace iText.Pdfua {
             framework.AssertBothValid("screenAnnotationWithMHMediaDataTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest() {
-            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithInvalidMHMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDoc.AddNewPage();
-            String file = "sample.wav";
-            String mimeType = "audio/x-wav";
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfDictionary mh = new PdfDictionary();
-            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
-            mh.Put(PdfName.C, mediaClipData);
-            PdfDictionary rendition = new PdfDictionary();
-            rendition.Put(PdfName.S, PdfName.MR);
-            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
-            rendition.Put(PdfName.MH, mh);
-            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
-                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
-            screen.SetAction(action);
-            screen.SetContents("screen annotation");
-            page.AddAnnotation(screen);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                pdfDoc.Close();
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                String file = "sample.wav";
+                String mimeType = "audio/x-wav";
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfDictionary mh = new PdfDictionary();
+                PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+                mh.Put(PdfName.C, mediaClipData);
+                PdfDictionary rendition = new PdfDictionary();
+                rendition.Put(PdfName.S, PdfName.MR);
+                rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+                rendition.Put(PdfName.MH, mh);
+                PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                    (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP, e
-                .Message);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                // Verapdf doesn't fail here but it should
+                framework.AssertITextFail("screenAnnotationWithInvalidMHMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("screenAnnotationWithInvalidMHMediaDataTest", pdfUAConformance);
+                }
+            }
         }
 
-        // Verapdf doesn't fail here but it should
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ScreenAnnotationWithoutAltInMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
@@ -772,7 +775,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("tabsEntryAbsentInPageTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("tabsEntryAbsentInPageTest", pdfUAConformance);
                 }
             }
         }
@@ -793,7 +796,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("tabsEntryNotSInPageTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("tabsEntryNotSInPageTest", pdfUAConformance);
                 }
             }
         }
@@ -815,7 +818,7 @@ namespace iText.Pdfua {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("invalidTabsEntryButAnnotInvisibleTest", pdfUAConformance);
+                    framework.AssertOnlyVeraPdfFail("invalidTabsEntryButAnnotInvisibleTest", pdfUAConformance);
                 }
             }
         }
@@ -839,8 +842,7 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("printerMAnnotIsInLogicalStructureTest", pdfUAConformance);
+                    framework.AssertBothFail("printerMAnnotIsInLogicalStructureTest", pdfUAConformance);
                 }
             }
         }

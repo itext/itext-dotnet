@@ -135,6 +135,13 @@ namespace iText.Pdfua {
             VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
         }
 
+        public virtual void AssertOnlyVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
+            VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
+            Exception e = CheckErrorLayout("layout_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+                );
+            NUnit.Framework.Assert.IsNull(e);
+        }
+
         public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
             VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance);
         }
@@ -228,7 +235,7 @@ namespace iText.Pdfua {
             return e.ToString();
         }
 
-        private PdfDocument CreatePdfDocument(String filename, PdfUAConformance pdfUAConformance) {
+        private static PdfDocument CreatePdfDocument(String filename, PdfUAConformance pdfUAConformance) {
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 return new PdfUATestPdfDocument(new PdfWriter(filename));
             }
@@ -243,7 +250,7 @@ namespace iText.Pdfua {
             }
         }
 
-        private PdfDocument CreatePdfDocument(String inputFile, String outputFile, PdfUAConformance pdfUAConformance
+        private static PdfDocument CreatePdfDocument(String inputFile, String outputFile, PdfUAConformance pdfUAConformance
             ) {
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 return new PdfUATestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile));
@@ -265,6 +272,10 @@ namespace iText.Pdfua {
 
         private static String GetUAConformance(PdfUAConformance conformance) {
             return MessageFormatUtil.Format("_UA_{0}", conformance.GetPart());
+        }
+
+        public static IList<PdfUAConformance> GetConformanceList() {
+            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
         }
     }
 }

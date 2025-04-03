@@ -55,12 +55,12 @@ namespace iText.Pdfua.Checkers {
         }
 
         public static IList<PdfUAConformance> Data() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest01(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_84());
+            framework.AddSuppliers(new _Generator_80());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("layout01", pdfUAConformance);
             }
@@ -71,8 +71,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_84 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_84() {
+        private sealed class _Generator_80 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_80() {
             }
 
             public IBlockElement Generate() {
@@ -84,12 +84,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest02(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_103());
+            framework.AddSuppliers(new _Generator_99());
             framework.AssertBothValid("layout02", pdfUAConformance);
         }
 
-        private sealed class _Generator_103 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_103() {
+        private sealed class _Generator_99 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_99() {
             }
 
             public IBlockElement Generate() {
@@ -102,12 +102,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest03(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_118());
+            framework.AddSuppliers(new _Generator_114());
             framework.AssertBothValid("layout03", pdfUAConformance);
         }
 
-        private sealed class _Generator_118 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_118() {
+        private sealed class _Generator_114 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_114() {
             }
 
             public IBlockElement Generate() {
@@ -120,7 +120,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest04(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_133());
+            framework.AddSuppliers(new _Generator_129());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("layout04", pdfUAConformance);
             }
@@ -131,8 +131,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_133 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_133() {
+        private sealed class _Generator_129 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_129() {
             }
 
             public IBlockElement Generate() {
@@ -145,12 +145,12 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest05(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_153());
+            framework.AddSuppliers(new _Generator_149());
             framework.AssertBothValid("layout05", pdfUAConformance);
         }
 
-        private sealed class _Generator_153 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_153() {
+        private sealed class _Generator_149 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_149() {
             }
 
             public IBlockElement Generate() {
@@ -163,21 +163,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest06(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_168());
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("layout06", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                    , "⫊"), false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("layout06", pdfUAConformance);
-                }
-            }
+            framework.AddSuppliers(new _Generator_164());
+            framework.AssertBothFail("layout06", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false, pdfUAConformance);
         }
 
-        private sealed class _Generator_168 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_168() {
+        private sealed class _Generator_164 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_164() {
             }
 
             public IBlockElement Generate() {
@@ -190,21 +182,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutTest07(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_191());
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("layout07", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                    , "⫊"), false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("layout07", pdfUAConformance);
-                }
-            }
+            framework.AddSuppliers(new _Generator_181());
+            framework.AssertBothFail("layout07", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false, pdfUAConformance);
         }
 
-        private sealed class _Generator_191 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_191() {
+        private sealed class _Generator_181 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_181() {
             }
 
             public IBlockElement Generate() {
@@ -217,7 +201,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutWithValidRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_213());
+            framework.AddSuppliers(new _Generator_198());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -232,8 +216,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothValid("layoutWithValidRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_213 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_213() {
+        private sealed class _Generator_198 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_198() {
             }
 
             public IBlockElement Generate() {
@@ -246,7 +230,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LayoutWithValidRoleButNoAlternateDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_239());
+            framework.AddSuppliers(new _Generator_224());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -268,8 +252,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_239 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_239() {
+        private sealed class _Generator_224 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_224() {
             }
 
             public IBlockElement Generate() {
@@ -279,59 +263,68 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CanvasTest01() {
-            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            PdfFont font = PdfFontFactory.CreateFont(FONT);
-            TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetPageForTagging(document.GetFirstPage());
-            tagPointer.AddTag(StandardRoles.FORMULA);
-            canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).ShowText("E=mc²"
-                ).EndText().CloseTag();
-            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                document.Close();
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CanvasTest01(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                PdfFont font = LoadFont(FONT);
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
+                tagPointer.SetPageForTagging(pdfDoc.GetFirstPage());
+                tagPointer.AddTag(StandardRoles.FORMULA);
+                canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).ShowText("E=mc²"
+                    ).EndText().CloseTag();
             }
             );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("canvasTest01", PdfUAExceptionMessageConstants.FORMULA_SHALL_HAVE_ALT, pdfUAConformance
+                    );
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("canvasTest01", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CanvasTest02() {
-            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            PdfFont font = PdfFontFactory.CreateFont(FONT);
-            TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetPageForTagging(document.GetFirstPage());
-            tagPointer.AddTag(StandardRoles.FORMULA);
-            tagPointer.GetProperties().SetActualText("Einstein smart boy");
-            canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).ShowText("E=mc²"
-                ).EndText().CloseTag();
-            NUnit.Framework.Assert.DoesNotThrow(() => {
-                document.Close();
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CanvasTest02(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                PdfFont font = LoadFont(FONT);
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
+                tagPointer.SetPageForTagging(pdfDoc.GetFirstPage());
+                tagPointer.AddTag(StandardRoles.FORMULA);
+                tagPointer.GetProperties().SetActualText("Einstein smart boy");
+                canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).ShowText("E=mc²"
+                    ).EndText().CloseTag();
             }
             );
+            framework.AssertBothValid("canvasTest02", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CanvasTest03() {
-            PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-            PdfPage page = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            PdfFont font = PdfFontFactory.CreateFont(FONT);
-            TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetPageForTagging(document.GetFirstPage());
-            tagPointer.AddTag(StandardRoles.FORMULA);
-            canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => canvas.ShowText("⫊"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                , "⫊"), e.Message);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CanvasTest03(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
+                PdfPage page = document.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                PdfFont font = LoadFont(FONT);
+                TagTreePointer tagPointer = new TagTreePointer(document);
+                tagPointer.SetPageForTagging(document.GetFirstPage());
+                tagPointer.AddTag(StandardRoles.FORMULA);
+                canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12);
+                canvas.ShowText("⫊");
+            }
+            );
+            framework.AssertITextFail("canvasTest03", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), pdfUAConformance);
         }
 
         [NUnit.Framework.Test]
         public virtual void MathStructureElementInvalidUA2Test() {
-            framework.AddSuppliers(new _Generator_327());
+            framework.AddSuppliers(new _Generator_318());
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
             framework.AssertVeraPdfValid("mathStructureElementInvalidUA2Test", PdfUAConformance.PDF_UA_2);
@@ -339,8 +332,8 @@ namespace iText.Pdfua.Checkers {
                 , PdfUAConformance.PDF_UA_2);
         }
 
-        private sealed class _Generator_327 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_327() {
+        private sealed class _Generator_318 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_318() {
             }
 
             public IBlockElement Generate() {
@@ -356,13 +349,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddAfterGenerationHook((pdfDocument) => {
                 PdfPage page = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                PdfFont font = null;
-                try {
-                    font = PdfFontFactory.CreateFont(FONT);
-                }
-                catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
-                }
+                PdfFont font = LoadFont(FONT);
                 TagTreePointer tagPointer = new TagTreePointer(pdfDocument);
                 tagPointer.SetPageForTagging(pdfDocument.GetFirstPage());
                 tagPointer.AddTag(StandardRoles.FORMULA);

@@ -59,7 +59,7 @@ namespace iText.Pdfua {
         }
 
         public static IList<PdfUAConformance> Data() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -163,7 +163,7 @@ namespace iText.Pdfua {
             }
             );
             // TODO DEVSIX-9017 Support PDF/UA rules for fonts.
-            framework.AssertVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
+            framework.AssertOnlyVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]

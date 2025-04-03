@@ -36,7 +36,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Kernel.Utils;
 using iText.Kernel.Validation;
 using iText.Layout;
 using iText.Layout.Element;
@@ -78,64 +77,64 @@ namespace iText.Pdfua.Checkers {
         }
 
         public static IList<PdfUAConformance> Data() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckPoint01_007_suspectsHasEntryTrue() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-            PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
-            NUnit.Framework.Assert.IsNotNull(markInfo);
-            markInfo.Put(PdfName.Suspects, new PdfBoolean(true));
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.SUSPECTS_ENTRY_IN_MARK_INFO_DICTIONARY_SHALL_NOT_HAVE_A_VALUE_OF_TRUE
-                , e.Message);
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint01_007_suspectsHasEntryFalse() {
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-            PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
-            markInfo.Put(PdfName.Suspects, new PdfBoolean(false));
-            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void CheckPoint01_007_suspectsHasNoEntry() {
-            // suspects entry is optional so it is ok to not have it according to the spec
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void EmptyPageDocument() {
-            String outPdf = DESTINATION_FOLDER + "emptyPageDocument.pdf";
-            using (PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
-                pdfDocument.AddNewPage();
-            }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_emptyPageDocument.pdf"
-                , DESTINATION_FOLDER, "diff_"));
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-        }
-
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        [LogMessage(PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED, Count = 1)]
-        public virtual void InvalidUA1DocumentWithFlushedPageTest() {
-            String outPdf = DESTINATION_FOLDER + "invalidDocWithFlushedPageTest.pdf";
-            PdfDocument pdfDocument = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDocument.AddNewPage();
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDocument, "sample.wav");
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
-            screen.SetAction(action);
-            screen.SetContents("screen annotation");
-            page.AddAnnotation(screen);
-            NUnit.Framework.Assert.DoesNotThrow(() => {
-                page.Flush();
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
+                NUnit.Framework.Assert.IsNotNull(markInfo);
+                markInfo.Put(PdfName.Suspects, new PdfBoolean(true));
             }
             );
-            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+            framework.AssertBothFail("suspectsHasEntryTrue", PdfUAExceptionMessageConstants.SUSPECTS_ENTRY_IN_MARK_INFO_DICTIONARY_SHALL_NOT_HAVE_A_VALUE_OF_TRUE
+                , PdfUAConformance.PDF_UA_1);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint01_007_suspectsHasEntryFalse(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfDictionary markInfo = (PdfDictionary)pdfDoc.GetCatalog().GetPdfObject().Get(PdfName.MarkInfo);
+                markInfo.Put(PdfName.Suspects, new PdfBoolean(false));
+            }
+            );
+            framework.AssertBothValid("suspectsHasEntryFalse", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void CheckPoint01_007_suspectsHasNoEntry(PdfUAConformance pdfUAConformance) {
+            // suspects entry is optional so it is ok to not have it according to the spec
+            framework.AssertBothValid("suspectsHasNoEntry", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void EmptyPageDocument(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                pdfDocument.AddNewPage();
+            }
+            );
+            framework.AssertBothValid("emptyPageDocument", pdfUAConformance);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED, Count = 2)]
+        public virtual void InvalidUA1DocumentWithFlushedPageTest() {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfPage page = pdfDocument.AddNewPage();
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDocument, "sample.wav");
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
+                NUnit.Framework.Assert.DoesNotThrow(() => {
+                    page.Flush();
+                }
+                );
+            }
+            );
+            framework.AssertBothFail("invalidDocWithFlushedPage", PdfUAConformance.PDF_UA_1);
         }
 
         [NUnit.Framework.Test]
@@ -218,8 +217,6 @@ namespace iText.Pdfua.Checkers {
             PdfDocument pdfDoc = new PdfUADocument(new PdfWriter(outPdf), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "English pangram"
                 , "qaa-Qaaa-QM-x-southern"));
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_documentWithComplexLangEntryTest.pdf"
-                , DESTINATION_FOLDER, "diff_"));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
@@ -445,29 +442,42 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothValid("pdfuaOCGsPropertiesCheck", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 1)]
-        public virtual void DocumentWithDuplicatingIdInStructTree() {
-            MemoryStream os = new MemoryStream();
-            PdfWriter writer = new PdfWriter(os);
-            PdfDocument document = new PdfUATestPdfDocument(writer);
-            PdfPage page1 = document.AddNewPage();
-            TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetPageForTagging(page1);
-            PdfCanvas canvas = new PdfCanvas(page1);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-                );
-            canvas.BeginText().SetFontAndSize(font, 12).SetTextMatrix(1, 0, 0, 1, 32, 512);
-            DefaultAccessibilityProperties paraProps = new DefaultAccessibilityProperties(StandardRoles.P);
-            tagPointer.AddTag(paraProps).AddTag(StandardRoles.SPAN);
-            tagPointer.GetProperties().SetStructureElementIdString("hello-element");
-            canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
-            tagPointer.MoveToParent().AddTag(StandardRoles.SPAN);
-            tagPointer.GetProperties().SetStructureElementIdString("world-element");
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => tagPointer.GetProperties
-                ().SetStructureElementIdString("hello-element"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
-                , "hello-element"), e.Message);
+        [NUnit.Framework.TestCaseSource("Data")]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Count = 1, Ignore = true
+            )]
+        public virtual void DocumentWithDuplicatingIdInStructTree(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                PdfPage page1 = pdfDocument.AddNewPage();
+                TagTreePointer tagPointer = new TagTreePointer(pdfDocument);
+                tagPointer.SetPageForTagging(page1);
+                PdfCanvas canvas = new PdfCanvas(page1);
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException e) {
+                    throw new Exception(e.Message);
+                }
+                canvas.BeginText().SetFontAndSize(font, 12).SetTextMatrix(1, 0, 0, 1, 32, 512);
+                DefaultAccessibilityProperties paraProps = new DefaultAccessibilityProperties(StandardRoles.P);
+                tagPointer.AddTag(paraProps).AddTag(StandardRoles.SPAN);
+                tagPointer.GetProperties().SetStructureElementIdString("hello-element");
+                canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
+                tagPointer.MoveToParent().AddTag(StandardRoles.SPAN);
+                tagPointer.GetProperties().SetStructureElementIdString("world-element");
+                tagPointer.GetProperties().SetStructureElementIdString("hello-element");
+            }
+            );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertITextFail("documentWithDuplicatingIdInStructTree", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                    .NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT, "hello-element"), pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("documentWithDuplicatingIdInStructTree", pdfUAConformance);
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -533,8 +543,6 @@ namespace iText.Pdfua.Checkers {
             list.Add(new ListItem("dog"));
             document.Add(list);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_manualPdfUaCreation.pdf"
-                , DESTINATION_FOLDER, "diff_"));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)

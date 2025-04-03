@@ -22,12 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -62,7 +62,7 @@ namespace iText.Pdfua.Checkers {
         }
 
         public static IList<PdfUAConformance> Data() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
+            return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -103,21 +103,17 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextContentIsNotInTagTree(PdfUAConformance pdfUAConformance) {
-            PdfUADocument pdfDoc = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? (PdfUADocument)new PdfUATestPdfDocument
-                (new PdfWriter(new MemoryStream())) : (PdfUADocument)new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream
-                (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.OpenTag(new CanvasTag(PdfName.P)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200, 200
-                );
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = GetPdfFont();
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                canvas.OpenTag(new CanvasTag(PdfName.P)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200, 200
+                    );
                 canvas.ShowText("Hello World!");
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
-                , e.Message);
+            framework.AssertBothFail("01_005_TextArtifactIsNotInTagTree", PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -136,76 +132,64 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextContentWithMCIDButNotInTagTree(PdfUAConformance pdfUAConformance
             ) {
-            PdfUADocument pdfDoc = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? (PdfUADocument)new PdfUATestPdfDocument
-                (new PdfWriter(new MemoryStream())) : (PdfUADocument)new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream
-                (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            canvas.OpenTag(new CanvasTag(PdfName.P, 99)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200
-                , 200);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = GetPdfFont();
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                canvas.OpenTag(new CanvasTag(PdfName.P, 99)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200
+                    , 200);
                 canvas.ShowText("Hello World!");
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
-                , e.Message);
+            framework.AssertBothFail("textContentWithMCIDButNotInTagTree", PdfUAExceptionMessageConstants.CONTENT_WITH_MCID_BUT_MCID_NOT_FOUND_IN_STRUCT_TREE_ROOT
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsTaggedButNotInTagTree(PdfUAConformance pdfUAConformance
             ) {
-            PdfUADocument pdfDoc = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? (PdfUADocument)new PdfUATestPdfDocument
-                (new PdfWriter(new MemoryStream())) : (PdfUADocument)new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream
-                (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
-            canvas.SaveState().OpenTag(new CanvasTag(PdfName.H1)).SetFontAndSize(font, 12).BeginText().MoveText(200, 200
-                ).SetColor(ColorConstants.RED, true);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = GetPdfFont();
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
+                canvas.SaveState().OpenTag(new CanvasTag(PdfName.H1)).SetFontAndSize(font, 12).BeginText().MoveText(200, 200
+                    ).SetColor(ColorConstants.RED, true);
                 canvas.ShowText(glyphLine);
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
-                , e.Message);
+            framework.AssertBothFail("textGlyphLineContentIsTaggedButNotInTagTree", PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextGlyphLineInBadStructure(PdfUAConformance pdfUAConformance) {
-            PdfUADocument pdfDoc = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? (PdfUADocument)new PdfUATestPdfDocument
-                (new PdfWriter(new MemoryStream())) : (PdfUADocument)new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream
-                (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfCanvas canvas = new _PdfCanvas_257(pdfDoc.AddNewPage());
-            // Disable the checkIsoConformance call check by simulating generating not tagged content
-            // same as in annotations of form fields.
-            GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
-            TagTreePointer pointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
-            pointer.AddTag(StandardRoles.DIV);
-            pointer.SetPageForTagging(pdfDoc.GetFirstPage());
-            canvas.SaveState();
-            canvas.OpenTag(pointer.GetTagReference());
-            canvas.OpenTag(new CanvasArtifact());
-            pointer.AddTag(StandardRoles.P);
-            canvas.OpenTag(pointer.GetTagReference());
-            canvas.SetFontAndSize(font, 12);
-            canvas.BeginText();
-            canvas.MoveText(200, 200);
-            canvas.SetColor(ColorConstants.RED, true);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = GetPdfFont();
+                PdfCanvas canvas = new _PdfCanvas_235(pdfDoc.AddNewPage());
+                // Disable the checkIsoConformance call check by simulating generating not tagged content
+                // same as in annotations of form fields.
+                GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
+                TagTreePointer pointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                pointer.AddTag(StandardRoles.DIV);
+                pointer.SetPageForTagging(pdfDoc.GetFirstPage());
+                canvas.SaveState();
+                canvas.OpenTag(pointer.GetTagReference());
+                canvas.OpenTag(new CanvasArtifact());
+                pointer.AddTag(StandardRoles.P);
+                canvas.OpenTag(pointer.GetTagReference());
+                canvas.SetFontAndSize(font, 12);
+                canvas.BeginText();
+                canvas.MoveText(200, 200);
+                canvas.SetColor(ColorConstants.RED, true);
                 canvas.ShowText(glyphLine);
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA, 
-                e.Message);
+            framework.AssertBothFail("textGlyphLineInBadStructure", PdfUAExceptionMessageConstants.REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA
+                , false, pdfUAConformance);
         }
 
-        private sealed class _PdfCanvas_257 : PdfCanvas {
-            public _PdfCanvas_257(PdfPage baseArg1)
+        private sealed class _PdfCanvas_235 : PdfCanvas {
+            public _PdfCanvas_235(PdfPage baseArg1)
                 : base(baseArg1) {
             }
 
@@ -504,8 +488,8 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertVeraPdfFail("01_004_bezierCurveShouldBeTagged", pdfUAConformance);
+                    framework.AssertBothFail("01_004_bezierCurveShouldBeTagged", MessageFormatUtil.Format(KernelExceptionMessageConstant
+                        .PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED, "Div", "CONTENT"), pdfUAConformance);
                 }
             }
         }
@@ -559,22 +543,18 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_003_ContentMarkedAsArtifactsPresentInsideTaggedContent(PdfUAConformance 
             pdfUAConformance) {
-            PdfUADocument pdfDoc = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? (PdfUADocument)new PdfUATestPdfDocument
-                (new PdfWriter(new MemoryStream())) : (PdfUADocument)new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream
-                (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1).AddTag(StandardRoles.P);
-            canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200
-                , 200).ShowText("Hello World!").EndText();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = GetPdfFont();
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1).AddTag(StandardRoles.P);
+                canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200
+                    , 200).ShowText("Hello World!").EndText();
                 canvas.OpenTag(new CanvasTag(PdfName.Artifact));
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.ARTIFACT_CANT_BE_INSIDE_REAL_CONTENT, e.Message
-                );
+            framework.AssertBothFail("contentMarkedAsArtifactsInsideTaggedContent", PdfUAExceptionMessageConstants.ARTIFACT_CANT_BE_INSIDE_REAL_CONTENT
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -646,22 +626,18 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_004_TaggedContentShouldNotBeInsideArtifact(PdfUAConformance pdfUAConformance
             ) {
-            PdfUADocument pdfDoc = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? (PdfUADocument)new PdfUATestPdfDocument
-                (new PdfWriter(new MemoryStream())) : (PdfUADocument)new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream
-                (), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1).AddTag(StandardRoles.P);
-            canvas.OpenTag(new CanvasTag(PdfName.Artifact)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(
-                200, 200).ShowText("Hello World!").EndText();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = GetPdfFont();
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1).AddTag(StandardRoles.P);
+                canvas.OpenTag(new CanvasTag(PdfName.Artifact)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(
+                    200, 200).ShowText("Hello World!").EndText();
                 canvas.OpenTag(tagPointer.GetTagReference());
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT, e.Message
-                );
+            framework.AssertBothFail("taggedContentShouldNotBeInsideArtifact", PdfUAExceptionMessageConstants.REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
