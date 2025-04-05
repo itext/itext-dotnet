@@ -361,6 +361,46 @@ namespace iText.Forms.Fields {
         }
 
         /// <summary>
+        /// Retrieves string value from
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// representing text string or text stream.
+        /// </summary>
+        /// <param name="value">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// representing text string or text stream
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="System.String"/>
+        /// value
+        /// </returns>
+        public static String GetStringValue(PdfObject value) {
+            if (value == null) {
+                return "";
+            }
+            else {
+                if (value is PdfStream) {
+                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.
+                        UTF8);
+                }
+                else {
+                    if (value is PdfName) {
+                        return ((PdfName)value).GetValue();
+                    }
+                    else {
+                        if (value is PdfString) {
+                            return ((PdfString)value).ToUnicodeString();
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the type of the parent form field, or of the wrapped
         /// &lt;PdfDictionary&gt; object.
         /// </summary>
@@ -852,28 +892,7 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual String GetValueAsString() {
             PdfObject value = GetValue();
-            if (value == null) {
-                return "";
-            }
-            else {
-                if (value is PdfStream) {
-                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.
-                        UTF8);
-                }
-                else {
-                    if (value is PdfName) {
-                        return ((PdfName)value).GetValue();
-                    }
-                    else {
-                        if (value is PdfString) {
-                            return ((PdfString)value).ToUnicodeString();
-                        }
-                        else {
-                            return "";
-                        }
-                    }
-                }
-            }
+            return GetStringValue(value);
         }
 
         /// <summary>Gets the current display value of the form field.</summary>
@@ -1157,15 +1176,15 @@ namespace iText.Forms.Fields {
         /// <summary>Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.</summary>
         /// <remarks>
         /// Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.
-        /// May be either
+        /// It may be either
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.PdfString"/>.
         /// </remarks>
-        /// <param name="richText">a new rich text value.</param>
+        /// <param name="richText">a new rich text value</param>
         /// <returns>
         /// the edited
-        /// <see cref="PdfFormField"/>.
+        /// <see cref="PdfFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfFormField SetRichText(PdfObject richText) {
             Put(PdfName.RV, richText);

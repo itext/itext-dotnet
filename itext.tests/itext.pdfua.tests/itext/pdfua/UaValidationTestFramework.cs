@@ -115,7 +115,7 @@ namespace iText.Pdfua {
             }
             if (eClosing != null) {
                 counter++;
-                sb.Append("OnClosing no expection expected but was:\n").Append(eClosing);
+                sb.Append("OnClosing no exception expected but was:\n").Append(eClosing);
             }
             if (counter != 3) {
                 NUnit.Framework.Assert.Fail("One of the checks threw an exception\n\n" + sb.ToString());
@@ -143,7 +143,12 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
-            VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance);
+            String veraPdf = VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance
+                );
+            if (veraPdf == null) {
+                return;
+            }
+            NUnit.Framework.Assert.Fail("Expected no vera pdf message but was: \n" + veraPdf + "\n");
         }
 
         public virtual void AssertITextFail(String filename, String expectedMsg, PdfUAConformance pdfUAConformance

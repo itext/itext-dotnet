@@ -37,6 +37,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
@@ -521,7 +522,7 @@ namespace iText.Pdfa.Checker {
                 CheckResources(form.GetAsDictionary(PdfName.DR), form);
                 PdfArray fields = form.GetAsArray(PdfName.Fields);
                 if (fields != null) {
-                    fields = GetFormFields(fields);
+                    fields = PdfCheckersUtil.GetFormFields(fields);
                     foreach (PdfObject field in fields) {
                         PdfDictionary fieldDic = (PdfDictionary)field;
                         CheckResources(fieldDic.GetAsDictionary(PdfName.DR), fieldDic);

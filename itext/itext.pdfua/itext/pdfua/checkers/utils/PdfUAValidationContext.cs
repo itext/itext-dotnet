@@ -120,6 +120,24 @@ namespace iText.Pdfua.Checkers.Utils {
             return null;
         }
 
+        /// <summary>Retrieves object reference instance by provided structure parent index.</summary>
+        /// <param name="i">index of the structure parent</param>
+        /// <param name="pageDict">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of the page that
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfObjRef"/>
+        /// belong to
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfObjRef"/>
+        /// instance
+        /// </returns>
+        public virtual PdfObjRef FindObjRefByStructParentIndex(int i, PdfDictionary pageDict) {
+            return pdfDocument.GetStructTreeRoot().FindObjRefByStructParentIndex(pageDict, i);
+        }
+
         /// <summary>
         /// Retrieves the PDF/UA conformance of the
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.

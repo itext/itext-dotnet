@@ -30,6 +30,8 @@ namespace iText.Pdfua.Checkers.Utils {
     [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1NotesChecker")]
     public class NoteCheckUtil {
         /// <summary>Handler for checking Note elements in the TagTree.</summary>
+        [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1NotesChecker.PdfUA1NotesTagHandler"
+            )]
         public class NoteTagHandler : ContextAwareTagTreeIteratorHandler {
             /// <summary>
             /// Creates a new

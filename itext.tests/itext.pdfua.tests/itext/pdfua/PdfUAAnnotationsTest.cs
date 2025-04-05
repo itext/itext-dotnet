@@ -115,18 +115,11 @@ namespace iText.Pdfua {
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
                 checkBox.SetAlternativeName("widget");
+                checkBox.GetFirstFormAnnotation().SetAlternativeDescription("widget");
                 acroForm.AddField(checkBox);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertOnlyVeraPdfFail("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
-                }
-            }
+            framework.AssertBothValid("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -137,18 +130,11 @@ namespace iText.Pdfua {
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
                 checkBox.SetAlternativeName("widget");
+                checkBox.GetFirstFormAnnotation().SetAlternativeDescription("widget");
                 acroForm.AddField(checkBox);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertOnlyVeraPdfFail("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
-                }
-            }
+            framework.AssertBothValid("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -431,18 +417,11 @@ namespace iText.Pdfua {
                 PdfFormField button = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).SetFont(LoadFont()).CreatePushButton();
                 button.SetAlternativeName("widget");
+                button.GetFirstFormAnnotation().SetAlternativeDescription("widget");
                 acroForm.AddField(button);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("pushBtnNestedWithinFormTest", pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertOnlyVeraPdfFail("pushBtnNestedWithinFormTest", pdfUAConformance);
-                }
-            }
+            framework.AssertBothValid("pushBtnNestedWithinFormTest", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]

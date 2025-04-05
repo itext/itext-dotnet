@@ -20,6 +20,8 @@ Copyright (c) 1998-2025 Apryse Group NV
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+using System.IO;
 using System.Xml;
 
 namespace iText.IO.Util {
@@ -34,6 +36,18 @@ namespace iText.IO.Util {
         /// <returns>a new Xml document</returns>
         public static XmlDocument InitNewXmlDocument() {
             return new XmlDocument();
+        }
+        
+        /// <summary>
+        /// This method creates a new Xml document from input stream.
+        /// </summary>
+        /// <param name="inputStream">to parse</param>
+        /// <returns>parsed Xml document</returns>
+        public static XmlDocument InitXmlDocument(Stream inputStream) {
+            XmlDocument doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            doc.Load(inputStream);
+            return doc;
         }
     }
 }

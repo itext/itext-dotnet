@@ -180,6 +180,9 @@ namespace iText.Pdfua.Checkers {
             CheckMetadata(catalog);
             CheckViewerPreferences(catalog);
             CheckOCProperties(catalog.GetPdfObject().GetAsDictionary(PdfName.OCProperties));
+            PdfUA2FormChecker formChecker = new PdfUA2FormChecker(context);
+            formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
+            formChecker.CheckWidgetAnnotations(this.pdfDocument);
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
@@ -230,6 +233,7 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
             // TODO DEVSIX-9016 Support PDF/UA-2 rules for annotation types
+            tagTreeIterator.AddHandler(new PdfUA2FormChecker.PdfUA2FormTagHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));

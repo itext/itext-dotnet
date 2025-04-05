@@ -75,6 +75,12 @@ namespace iText.Pdfua.Exceptions {
         public const String FORMULA_SHALL_HAVE_ALT = "Formula tags shall include an alternative representation or "
              + "replacement text.";
 
+        public const String FORM_STRUCT_ELEM_SHALL_CONTAIN_AT_MOST_ONE_WIDGET = "Form structure element shall " + 
+            "contain at most one widget annotation.";
+
+        public const String FORM_STRUCT_ELEM_WITHOUT_ROLE_SHALL_CONTAIN_ONE_WIDGET = "If the Form structure " + "element omits a Role PrintField attribute, it shall have only one child: an object reference "
+             + "identifying the widget annotation.";
+
         public const String GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE = "The '{0}' glyph either isn't defined in embedded font or doesn't have unicode mapping.";
 
         public const String H1_IS_SKIPPED = "Heading level 1 is skipped in a descending sequence of header levels.";
@@ -151,11 +157,27 @@ namespace iText.Pdfua.Exceptions {
 
         public const String TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO = "10th bit of P value of " + "Encryption dictionary should be 1 if the document is tagged.";
 
+        public const String TEXT_FIELD_V_AND_RV_SHALL_BE_TEXTUALLY_EQUIVALENT = "For text fields, when RV entry " 
+            + "is present, a V entry shall also be present, and they shall be textually equivalent.";
+
         public const String TOCI_SHALL_IDENTIFY_REF = "Each TOCI structure element shall contain the Ref entry, either directly on the TOCI structure element"
              + " itself or on at least one of its descendant structure elements.";
 
         public const String VIEWER_PREFERENCES_IS_FALSE = "ViewerPreferences dictionary of the Catalog dictionary "
              + "contains a DisplayDocTitle entry with a value of false.";
+
+        public const String WIDGET_SHALL_BE_FORM_OR_ARTIFACT = "Widget annotation shall be either Form structure "
+             + "element or an Artifact.";
+
+        public const String WIDGET_SHALL_PROVIDE_LABEL_OR_CONTENTS = "If label for a widget annotation is not " + 
+            "present, Contents entry shall be provided.\n" + "For PdfFormAnnotation use PdfFormAnnotation#setAlternativeDescription(\"Your contents description\");\n"
+             + "for PdfAnnotation use PdfAnnotation#setContents(\"Your contents description\");\n" + "for the layout engine use Element#getAccesibilityProperties().setAlternateDescription or "
+             + "FormField#setAlternativeDescription(\"Your contents description\").";
+
+        public const String WIDGET_WITH_AA_SHALL_PROVIDE_CONTENTS = "If an additional action (AA) entry is present"
+             + " in a widget annotation, Contents entry shall describe the action's intent.\n" + "For PdfFormAnnotation use PdfFormAnnotation#setAlternativeDescription(\"Your contents description\");\n"
+             + "for PdfAnnotation use PdfAnnotation#setContents(\"Your contents description\");\n" + "for the layout engine use Element#getAccesibilityProperties().setAlternateDescription or "
+             + "FormField#setAlternativeDescription(\"Your contents description\").";
 
         public const String XFA_FORMS_SHALL_NOT_BE_PRESENT = "XFA forms shall not be present.";
 

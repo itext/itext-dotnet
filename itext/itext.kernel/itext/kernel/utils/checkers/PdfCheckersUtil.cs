@@ -136,6 +136,35 @@ namespace iText.Kernel.Utils.Checkers {
         }
 
         /// <summary>
+        /// Gets all the descending kids including widgets for a given
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// representing array of form fields.
+        /// </summary>
+        /// <param name="array">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of form fields
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// objects
+        /// </param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of all form fields
+        /// </returns>
+        public static PdfArray GetFormFields(PdfArray array) {
+            PdfArray fields = new PdfArray();
+            foreach (PdfObject field in array) {
+                PdfArray kids = ((PdfDictionary)field).GetAsArray(PdfName.Kids);
+                fields.Add(field);
+                if (kids != null) {
+                    fields.AddAll(GetFormFields(kids));
+                }
+            }
+            return fields;
+        }
+
+        /// <summary>
         /// Validates
         /// <c>pdfuaid:rev</c>
         /// value which is four-digit year of the date of publication or revision.

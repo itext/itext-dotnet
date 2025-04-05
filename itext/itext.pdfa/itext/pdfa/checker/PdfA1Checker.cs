@@ -651,7 +651,7 @@ namespace iText.Pdfa.Checker {
             CheckResources(form.GetAsDictionary(PdfName.DR), form);
             PdfArray fields = form.GetAsArray(PdfName.Fields);
             if (fields != null) {
-                fields = GetFormFields(fields);
+                fields = PdfCheckersUtil.GetFormFields(fields);
                 foreach (PdfObject field in fields) {
                     PdfDictionary fieldDic = (PdfDictionary)field;
                     if (fieldDic.ContainsKey(PdfName.A) || fieldDic.ContainsKey(PdfName.AA)) {
@@ -749,6 +749,8 @@ namespace iText.Pdfa.Checker {
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of form fields
         /// </returns>
+        [System.ObsoleteAttribute(@"in favour of iText.Kernel.Utils.Checkers.PdfCheckersUtil.GetFormFields(iText.Kernel.Pdf.PdfArray)"
+            )]
         protected internal virtual PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
             foreach (PdfObject field in array) {
