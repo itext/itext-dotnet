@@ -27,6 +27,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf {
     /// <summary>
@@ -252,9 +253,15 @@ namespace iText.Kernel.Pdf {
         public virtual void AddAction(PdfAction action) {
             PdfName actionType = action.GetPdfObject().GetAsName(PdfName.S);
             if (PdfName.GoTo.Equals(actionType)) {
-                PdfObject destObject = action.GetPdfObject().Get(PdfName.D);
-                if (destObject != null) {
-                    SetDestination(PdfDestination.MakeDestination(destObject));
+                pdfDoc.CheckIsoConformance(new PdfDestinationAdditionContext(action));
+                PdfObject structureDestinationObject = action.GetPdfObject().Get(PdfName.SD);
+                if (structureDestinationObject != null) {
+                    SetDestination(PdfDestination.MakeDestination(structureDestinationObject));
+                }
+                else {
+                    if (action.GetPdfObject().Get(PdfName.D) != null) {
+                        SetDestination(PdfDestination.MakeDestination(action.GetPdfObject().Get(PdfName.D)));
+                    }
                 }
             }
             content.Put(PdfName.A, action.GetPdfObject());

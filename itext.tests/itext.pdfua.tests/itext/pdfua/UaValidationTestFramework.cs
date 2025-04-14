@@ -92,6 +92,17 @@ namespace iText.Pdfua {
             }
         }
 
+        public virtual void AssertITextValid(String fileName, PdfUAConformance pdfUAConformance) {
+            Exception e = CheckErrorLayout("layout_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+                );
+            if (e == null) {
+                return;
+            }
+            String sb = "No exception expected but was: " + e.GetType().FullName + " \n" + "Message: \n" + e.Message +
+                 '\n' + "StackTrace:\n" + PrintStackTrace(e) + '\n';
+            NUnit.Framework.Assert.Fail(sb);
+        }
+
         public virtual void AssertBothValid(String fileName, PdfUAConformance pdfUAConformance) {
             Exception e = CheckErrorLayout("layout_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 );

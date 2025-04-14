@@ -32,6 +32,7 @@ using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf {
     /// <summary>The root of a document’s object hierarchy.</summary>
@@ -198,6 +199,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>destination</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination) {
+            CheckIsoConformanceForDestination(destination);
             return Put(PdfName.OpenAction, destination.GetPdfObject());
         }
 
@@ -212,6 +214,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>action</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfAction action) {
+            CheckIsoConformanceForAction(action);
             return Put(PdfName.OpenAction, action.GetPdfObject());
         }
 
@@ -228,6 +231,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <returns>additional action</returns>
         public virtual iText.Kernel.Pdf.PdfCatalog SetAdditionalAction(PdfName key, PdfAction action) {
+            CheckIsoConformanceForAction(action);
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
@@ -840,6 +844,16 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+        private void CheckIsoConformanceForDestination(PdfDestination destination) {
+            GetDocument().CheckIsoConformance(new PdfDestinationAdditionContext(destination));
+        }
+
+        private void CheckIsoConformanceForAction(PdfAction action) {
+            if (action != null && action.GetPdfObject() != null) {
+                GetDocument().CheckIsoConformance(new PdfDestinationAdditionContext(action));
+            }
+        }
+
         private PdfDestination CreateDestinationFromPageNum(PdfObject dest, PdfDocument toDocument) {
             return new PdfExplicitDestination((PdfArray)dest.CopyTo(toDocument, false, NullCopyFilter.GetInstance()));
         }
@@ -902,6 +916,7 @@ namespace iText.Kernel.Pdf {
             PdfObject dest = item.Get(PdfName.Dest);
             if (dest != null) {
                 PdfDestination destination = PdfDestination.MakeDestination(dest);
+                CheckIsoConformanceForDestination(destination);
                 outline.SetDestination(destination);
                 AddOutlineToPage(outline, names);
             }
@@ -912,13 +927,20 @@ namespace iText.Kernel.Pdf {
                     PdfName actionType = action.GetAsName(PdfName.S);
                     //Check if it is a go to action
                     if (PdfName.GoTo.Equals(actionType)) {
-                        //Retrieve destination if it is.
-                        PdfObject destObject = action.Get(PdfName.D);
-                        if (destObject != null) {
-                            //Page is always the first object
-                            PdfDestination destination = PdfDestination.MakeDestination(destObject);
+                        CheckIsoConformanceForAction(new PdfAction(action));
+                        //First check if structure destination is present.
+                        PdfObject structureDestinationObject = action.Get(PdfName.SD);
+                        if (structureDestinationObject != null) {
+                            PdfDestination destination = PdfDestination.MakeDestination(structureDestinationObject);
                             outline.SetDestination(destination);
                             AddOutlineToPage(outline, names);
+                        }
+                        else {
+                            if (action.Get(PdfName.D) != null) {
+                                PdfDestination destination = PdfDestination.MakeDestination(action.Get(PdfName.D));
+                                outline.SetDestination(destination);
+                                AddOutlineToPage(outline, names);
+                            }
                         }
                     }
                 }

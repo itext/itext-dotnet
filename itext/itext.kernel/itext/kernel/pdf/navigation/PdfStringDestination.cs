@@ -34,8 +34,17 @@ namespace iText.Kernel.Pdf.Navigation {
         }
 
         public override PdfObject GetDestinationPage(IPdfNameTreeAccess names) {
-            PdfArray array = (PdfArray)names.GetEntry((PdfString)GetPdfObject());
-            return array != null ? array.Get(0) : null;
+            PdfObject destination = names.GetEntry((PdfString)GetPdfObject());
+            if (destination is PdfArray) {
+                return ((PdfArray)destination).Get(0);
+            }
+            else {
+                if (destination is PdfDictionary) {
+                    PdfArray destinationArray = ((PdfDictionary)destination).GetAsArray(PdfName.D);
+                    return destinationArray != null ? destinationArray.Get(0) : null;
+                }
+            }
+            return null;
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {

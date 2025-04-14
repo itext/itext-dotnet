@@ -78,6 +78,7 @@ namespace iText.Pdfua.Checkers {
                     CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
                     CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
                     CheckFonts(pdfDocContext.GetDocumentFonts());
+                    new PdfUA2DestinationsChecker(pdfDocument).CheckDestinations();
                     PdfUA2XfaCheckUtil.Check(pdfDocContext.GetPdfDocument());
                     break;
                 }
@@ -105,6 +106,12 @@ namespace iText.Pdfua.Checkers {
                     LayoutValidationContext layoutContext = (LayoutValidationContext)context;
                     new LayoutCheckUtil(this.context).CheckRenderer(layoutContext.GetRenderer());
                     new PdfUA2HeadingsChecker(this.context).CheckLayoutElement(layoutContext.GetRenderer());
+                    break;
+                }
+
+                case ValidationType.DESTINATION_ADDITION: {
+                    PdfDestinationAdditionContext destinationAdditionContext = (PdfDestinationAdditionContext)context;
+                    new PdfUA2DestinationsChecker(destinationAdditionContext, pdfDocument).CheckDestinationsOnCreation();
                     break;
                 }
             }

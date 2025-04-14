@@ -1146,7 +1146,22 @@ namespace iText.Kernel.Pdf {
                 //Annots are indirect so need to be marked as modified
                 annots.SetModified();
             }
+            CheckIsoConformanceForDestinations(annotation);
             return this;
+        }
+
+        private void CheckIsoConformanceForDestinations(PdfAnnotation annotation) {
+            if (annotation is PdfLinkAnnotation) {
+                PdfLinkAnnotation linkAnnotation = (PdfLinkAnnotation)annotation;
+                GetDocument().CheckIsoConformance(new PdfDestinationAdditionContext(linkAnnotation.GetDestinationObject())
+                    );
+                if (linkAnnotation.GetAction() != null && PdfName.GoTo.Equals(linkAnnotation.GetAction().Get(PdfName.S))) {
+                    // We only care about destinations, whose target lies within this document.
+                    // That's why GoToR and GoToE are ignored.
+                    GetDocument().CheckIsoConformance(new PdfDestinationAdditionContext(new PdfAction(linkAnnotation.GetAction
+                        ())));
+                }
+            }
         }
 
         private bool AddAnnotationTag(TagTreePointer tagPointer, PdfAnnotation annotation) {

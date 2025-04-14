@@ -889,10 +889,18 @@ namespace iText.Layout {
             CompareAndValidate(outFile, cmpFile);
             using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(outFile))) {
                 PdfOutline outline = pdfDocument_1.GetOutlines(false);
-                NUnit.Framework.Assert.AreEqual("header1", outline.GetAllChildren()[0].GetDestination().GetPdfObject().ToString
-                    ());
-                NUnit.Framework.Assert.AreEqual("header1.1", outline.GetAllChildren()[0].GetAllChildren()[0].GetDestination
-                    ().GetPdfObject().ToString());
+                PdfDictionary firstAction = outline.GetAllChildren()[0].GetContent().GetAsDictionary(PdfName.A);
+                NUnit.Framework.Assert.AreEqual("header1", firstAction.GetAsString(PdfName.D).ToString());
+                NUnit.Framework.Assert.IsTrue(PdfDestination.MakeDestination(firstAction.Get(PdfName.SD)) is PdfStructureDestination
+                    );
+                NUnit.Framework.Assert.IsTrue(outline.GetAllChildren()[0].GetDestination() is PdfStructureDestination);
+                PdfDictionary secondAction = outline.GetAllChildren()[0].GetAllChildren()[0].GetContent().GetAsDictionary(
+                    PdfName.A);
+                NUnit.Framework.Assert.AreEqual("header1.1", secondAction.GetAsString(PdfName.D).ToString());
+                NUnit.Framework.Assert.IsTrue(PdfDestination.MakeDestination(secondAction.Get(PdfName.SD)) is PdfStructureDestination
+                    );
+                NUnit.Framework.Assert.IsTrue(outline.GetAllChildren()[0].GetAllChildren()[0].GetDestination() is PdfStructureDestination
+                    );
             }
         }
 

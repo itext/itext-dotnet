@@ -52,6 +52,8 @@ namespace iText.Pdfua.Exceptions {
         public const String CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP = "CT or Alt entry is missing from the media "
              + "clip data dictionary.";
 
+        public const String DESTINATION_NOT_STRUCTURE_DESTINATION = "All destinations whose target lies within the same document shall be structure destinations.";
+
         public const String DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY = "Document does not contain valid lang entry.";
 
         public const String DOCUMENT_SHALL_CONTAIN_XMP_METADATA_STREAM = "Document shall contain a XMP metadata stream.";
