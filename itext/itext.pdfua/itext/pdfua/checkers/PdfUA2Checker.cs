@@ -190,6 +190,7 @@ namespace iText.Pdfua.Checkers {
             PdfUA2FormChecker formChecker = new PdfUA2FormChecker(context);
             formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
             formChecker.CheckWidgetAnnotations(this.pdfDocument);
+            PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
@@ -245,6 +246,7 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2FormulaChecker.PdfUA2FormulaTagHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2LinkChecker.PdfUA2LinkAnnotationHandler(context, pdfDocument));
             tagTreeIterator.Traverse();
         }
     }
