@@ -526,8 +526,13 @@ namespace iText.Layout.Renderer {
                         }
                         bool specialScriptWordSplit = TextContainsSpecialScriptGlyphs(true) && !isSplitForcedByNewLine && IsOverflowFit
                             (overflowX);
-                        if ((nonBreakablePartFullWidth > layoutBox.GetWidth() && !anythingPlaced && !hyphenationApplied) || forcePartialSplitOnFirstChar
-                             || -1 != nonBreakingHyphenRelatedChunkStart || specialScriptWordSplit) {
+                        // It's not clear why we need
+                        // nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.getWidth()
+                        // condition. We are already in the branch where we could not fit a word. Removing this condition
+                        // does not change anything. Still leaving it here.
+                        if ((nonBreakablePartFullWidth + italicSkewAddition + boldSimulationAddition > layoutBox.GetWidth() && !anythingPlaced
+                             && !hyphenationApplied) || forcePartialSplitOnFirstChar || -1 != nonBreakingHyphenRelatedChunkStart ||
+                             specialScriptWordSplit) {
                             // if the word is too long for a single line we will have to split it
                             // we also need to split the word here if text contains glyphs from scripts
                             // which require word wrapping for further processing in LineRenderer
