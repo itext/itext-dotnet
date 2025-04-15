@@ -746,8 +746,7 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="childName">the node name to check</param>
 		private void AssertChildNotExisting(String childName)
 		{
-			if (!XMPConst.ARRAY_ITEM_NAME.Equals(childName) && FindChildByName(childName) != 
-				null)
+			if (!GetOptions().IsArray() && FindChildByName(childName) != null)
 			{
 				throw new XMPException("Duplicate property or field node '" + childName + "'", XMPError
 					.BADXMP);
