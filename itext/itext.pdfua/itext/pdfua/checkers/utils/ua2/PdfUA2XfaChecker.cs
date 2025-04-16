@@ -26,8 +26,8 @@ using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils.Ua2 {
     /// <summary>Utility class which performs XFA forms check according to PDF/UA-2 specification.</summary>
-    public sealed class PdfUA2XfaCheckUtil {
-        private PdfUA2XfaCheckUtil() {
+    public sealed class PdfUA2XfaChecker {
+        private PdfUA2XfaChecker() {
         }
 
         // Private constructor will prevent the instantiation of this class directly.

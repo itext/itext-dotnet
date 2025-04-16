@@ -76,7 +76,7 @@ namespace iText.Pdfua {
                 document.Add(gridContainer1);
             }
             );
-            framework.AssertVeraPdfValid("border", pdfUAConformance);
+            framework.AssertBothValid("border", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -94,7 +94,7 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertVeraPdfValid("margin", pdfUAConformance);
+            framework.AssertBothValid("margin", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -112,7 +112,7 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertVeraPdfValid("padding", pdfUAConformance);
+            framework.AssertBothValid("padding", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -127,7 +127,7 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertVeraPdfValid("background", pdfUAConformance);
+            framework.AssertBothValid("background", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -143,7 +143,7 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertVeraPdfValid("emptyGridContainer", pdfUAConformance);
+            framework.AssertBothValid("emptyGridContainer", pdfUAConformance);
         }
 
         private GridContainer CreateGridBoxWithText() {

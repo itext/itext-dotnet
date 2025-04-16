@@ -52,6 +52,9 @@ namespace iText.Pdfua.Exceptions {
         public const String CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP = "CT or Alt entry is missing from the media "
              + "clip data dictionary.";
 
+        public const String DESC_IS_REQUIRED_ON_ALL_FILE_SPEC_FROM_THE_EMBEDDED_FILES = "The Desc entry " + "shall be present on all file specification dictionaries present in the EmbeddedFiles name tree "
+             + "of a conforming file.";
+
         public const String DESTINATION_NOT_STRUCTURE_DESTINATION = "All destinations whose target lies within the same document shall be structure destinations.";
 
         public const String DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM = "Link annotations that target different " + "locations shall be in separate Link or Reference structure elements instead of a single one.";
@@ -149,6 +152,8 @@ namespace iText.Pdfua.Exceptions {
         public const String REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT = "Content marked as content may not reside in Artifact content.";
 
         public const String REAL_CONTENT_INSIDE_ARTIFACT_OR_VICE_VERSA = "Tagged content is present inside content marked as Artifact or vice versa.";
+
+        public const String ROWS_SPAN_DIFFERENT_NUMBER_OF_COLUMNS = "Table rows {0} and {1} span different number of columns.";
 
         public const String SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS = "Multiple link annotations targeting the same "
              + "location shall be included in a single Link or Reference structure element instead of separate ones.";

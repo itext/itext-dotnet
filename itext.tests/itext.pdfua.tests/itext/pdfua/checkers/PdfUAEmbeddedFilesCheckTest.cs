@@ -73,7 +73,7 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfValid("pdfuaWithEmbeddedFilesWithoutF", pdfUAConformance);
+                    framework.AssertBothValid("pdfuaWithEmbeddedFilesWithoutF", pdfUAConformance);
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertVeraPdfValid("pdfuaWithEmbeddedFilesWithoutUF", pdfUAConformance);
+                    framework.AssertBothValid("pdfuaWithEmbeddedFilesWithoutUF", pdfUAConformance);
                 }
             }
         }
@@ -103,27 +103,48 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void PdfuaWithValidEmbeddedFileTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook(((pdfDocument) => {
-                PdfFont font;
-                try {
-                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                        );
-                }
-                catch (System.IO.IOException) {
-                    //rethrow as unchecked to fail the test
-                    throw new Exception();
-                }
-                PdfPage page1 = pdfDocument.AddNewPage();
-                PdfCanvas canvas = new PdfCanvas(page1);
-                TagTreePointer tagPointer = new TagTreePointer(pdfDocument).SetPageForTagging(page1).AddTag(StandardRoles.
-                    P);
-                canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(100
-                    , 100).ShowText("Test text.").EndText().RestoreState().CloseTag();
-                byte[] somePdf = new byte[35];
-                pdfDocument.AddAssociatedFile("some test pdf file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, somePdf
-                    , "some test pdf file", "foo.pdf", PdfName.ApplicationPdf, null, new PdfName("Data")));
+                AddEmbeddedFile(pdfDocument, "some test pdf file");
             }
             ));
             framework.AssertBothValid("pdfuaWithValidEmbeddedFile", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void EmbeddedFilesWithFileSpecWithoutDescTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook(((pdfDocument) => {
+                AddEmbeddedFile(pdfDocument, null);
+            }
+            ));
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("embeddedFilesWithFileSpecWithoutDesc", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("embeddedFilesWithFileSpecWithoutDesc", PdfUAExceptionMessageConstants.DESC_IS_REQUIRED_ON_ALL_FILE_SPEC_FROM_THE_EMBEDDED_FILES
+                        , pdfUAConformance);
+                }
+            }
+        }
+
+        private static void AddEmbeddedFile(PdfDocument pdfDocument, String description) {
+            PdfFont font;
+            try {
+                font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                    );
+            }
+            catch (System.IO.IOException) {
+                // Rethrow as unchecked to fail the test.
+                throw new Exception();
+            }
+            PdfPage page = pdfDocument.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            TagTreePointer tagPointer = new TagTreePointer(pdfDocument).SetPageForTagging(page).AddTag(StandardRoles.P
+                );
+            canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(100
+                , 100).ShowText("Test text.").EndText().RestoreState().CloseTag();
+            byte[] somePdf = new byte[35];
+            pdfDocument.AddAssociatedFile("some test pdf file", PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, somePdf
+                , description, "foo.pdf", PdfName.ApplicationPdf, null, new PdfName("Data")));
         }
     }
 }

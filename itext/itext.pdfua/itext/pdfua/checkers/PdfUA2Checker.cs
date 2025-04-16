@@ -79,7 +79,7 @@ namespace iText.Pdfua.Checkers {
                     CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
                     CheckFonts(pdfDocContext.GetDocumentFonts());
                     new PdfUA2DestinationsChecker(pdfDocument).CheckDestinations();
-                    PdfUA2XfaCheckUtil.Check(pdfDocContext.GetPdfDocument());
+                    PdfUA2XfaChecker.Check(pdfDocContext.GetPdfDocument());
                     break;
                 }
 
@@ -168,15 +168,6 @@ namespace iText.Pdfua.Checkers {
         }
 
         /// <summary>Validates document catalog dictionary against PDF/UA-2 standard.</summary>
-        /// <remarks>
-        /// Validates document catalog dictionary against PDF/UA-2 standard.
-        /// <para />
-        /// For now, only
-        /// <c>Metadata</c>
-        /// and
-        /// <c>ViewerPreferences</c>
-        /// are checked.
-        /// </remarks>
         /// <param name="catalog">
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
@@ -191,17 +182,16 @@ namespace iText.Pdfua.Checkers {
             formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
             formChecker.CheckWidgetAnnotations(this.pdfDocument);
             PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
+            PdfUA2EmbeddedFilesChecker.CheckEmbeddedFiles(catalog);
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
         /// <remarks>
         /// Validates structure tree root dictionary against PDF/UA-2 standard.
         /// <para />
-        /// Checks that within a given explicitly provided namespace, structure types are not role mapped to other structure
-        /// types in the same namespace. In the StructTreeRoot RoleMap there is no explicitly provided namespace, that's why
-        /// it is not checked.
-        /// <para />
-        /// Besides this, only headings check is performed for now.
+        /// Additionally, checks that within a given explicitly provided namespace, structure types are not role mapped to
+        /// other structure types in the same namespace. In the StructTreeRoot RoleMap there is no explicitly provided
+        /// namespace, that's why it is not checked.
         /// </remarks>
         /// <param name="structTreeRoot">
         /// 
