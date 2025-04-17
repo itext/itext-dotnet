@@ -99,6 +99,50 @@ namespace iText.StyledXmlParser.Css.Resolve {
                 .FUNCTION, CssDeclarationValueTokenizer.TokenType.STRING));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ClosingQuoteInsideStringTest() {
+            RunTest("a(\"a12x\")\"", JavaCollectionsUtil.SingletonList("a(\"a12x\")"), JavaCollectionsUtil.SingletonList
+                (CssDeclarationValueTokenizer.TokenType.FUNCTION));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SpaceAfterFunctionTest() {
+            RunTest("a(\"a12x\") ,", JavaUtil.ArraysAsList("a(\"a12x\")", ","), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+                .FUNCTION, CssDeclarationValueTokenizer.TokenType.COMMA));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SpaceAfterFunction123Test() {
+            RunTest("a(\"a12x\") bold", JavaUtil.ArraysAsList("a(\"a12x\")", "bold"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+                .FUNCTION, CssDeclarationValueTokenizer.TokenType.FUNCTION));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClosingSquareBracketOutsideStringTest() {
+            RunTest("a[\"a12x\"] ,", JavaUtil.ArraysAsList("a[", "a12x", "]", ","), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+                .FUNCTION, CssDeclarationValueTokenizer.TokenType.STRING, CssDeclarationValueTokenizer.TokenType.STRING
+                , CssDeclarationValueTokenizer.TokenType.COMMA));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhitespaceTest() {
+            RunTest("a[\"a12x\"]    ", JavaUtil.ArraysAsList("a[", "a12x", "]"), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+                .FUNCTION, CssDeclarationValueTokenizer.TokenType.STRING, CssDeclarationValueTokenizer.TokenType.STRING
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void QuoteInsideFunctionTest() {
+            RunTest("a(\"a12x\"),", JavaUtil.ArraysAsList("a(\"a12x\")", ","), JavaUtil.ArraysAsList(CssDeclarationValueTokenizer.TokenType
+                .FUNCTION, CssDeclarationValueTokenizer.TokenType.COMMA));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TriplingQuotesFunctionTest() {
+            RunTest("p:not([class*=\"\"])", JavaCollectionsUtil.SingletonList("p:not([class*=\"\"])"), JavaCollectionsUtil
+                .SingletonList(CssDeclarationValueTokenizer.TokenType.FUNCTION));
+        }
+
         private void RunTest(String src, IList<String> tokenValues, IList<CssDeclarationValueTokenizer.TokenType> 
             tokenTypes) {
             CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(src);

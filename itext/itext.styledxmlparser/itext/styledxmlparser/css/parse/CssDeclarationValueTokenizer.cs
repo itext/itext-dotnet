@@ -175,7 +175,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                             buff.Append(curChar);
                             if (functionDepth == 0) {
                                 return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.FUNCTION
-                                    );
+                                    , (char)0, IsSpaceNext());
                             }
                         }
                         else {
@@ -196,7 +196,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                                         inString = false;
                                         buff.Append(curChar);
                                         return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.STRING
-                                            , stringQuote);
+                                            , (char)0, IsSpaceNext());
                                     }
                                     else {
                                         if (curChar == ',' && !inString && functionDepth == 0) {
@@ -216,7 +216,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                                                 }
                                                 if (!inString) {
                                                     return new CssDeclarationValueTokenizer.Token(buff.ToString(), functionDepth > 0 ? CssDeclarationValueTokenizer.TokenType
-                                                        .FUNCTION : CssDeclarationValueTokenizer.TokenType.UNKNOWN);
+                                                        .FUNCTION : CssDeclarationValueTokenizer.TokenType.UNKNOWN, (char)0, true);
                                                 }
                                             }
                                             else {
@@ -234,16 +234,20 @@ namespace iText.StyledXmlParser.Css.Parse {
                 );
         }
 
+        private bool IsSpaceNext() {
+            return src.Length - 1 > index && src[index + 1] == ' ';
+        }
+
         /// <summary>Processes a function token.</summary>
         /// <param name="token">the token</param>
         /// <param name="functionBuffer">the function buffer</param>
         private void ProcessFunctionToken(CssDeclarationValueTokenizer.Token token, StringBuilder functionBuffer) {
             if (token.IsString()) {
-                if (stringQuote != 0) {
+                if (stringQuote != 0 && token.GetStringQuote() != 0) {
                     functionBuffer.Append(stringQuote);
                 }
                 functionBuffer.Append(token.GetValue());
-                if (stringQuote != 0) {
+                if (stringQuote != 0 && token.GetStringQuote() != 0) {
                     functionBuffer.Append(stringQuote);
                 }
             }
@@ -269,6 +273,8 @@ namespace iText.StyledXmlParser.Css.Parse {
 
             private readonly char stringQuote;
 
+            private readonly bool hasSpace;
+
             /// <summary>
             /// Creates a new
             /// <see cref="Token"/>
@@ -277,14 +283,21 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// <param name="value">the value</param>
             /// <param name="type">the type</param>
             public Token(String value, CssDeclarationValueTokenizer.TokenType type)
-                : this(value, type, (char)0) {
+                : this(value, type, (char)0, false) {
             }
 
 //\cond DO_NOT_DOCUMENT
-            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote) {
+            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote)
+                : this(value, type, stringQuote, false) {
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote, bool hasSpace) {
                 this.value = value;
                 this.type = type;
                 this.stringQuote = stringQuote;
+                this.hasSpace = hasSpace;
             }
 //\endcond
 
@@ -310,6 +323,12 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// </returns>
             public virtual char GetStringQuote() {
                 return stringQuote;
+            }
+
+            /// <summary>Gets the flag if token contains whitespace.</summary>
+            /// <returns>true, if containing whitespace</returns>
+            public virtual bool HasSpace() {
+                return hasSpace;
             }
 
             /// <summary>Checks if the token is a string.</summary>

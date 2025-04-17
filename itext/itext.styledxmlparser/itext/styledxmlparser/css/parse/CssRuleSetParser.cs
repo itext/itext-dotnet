@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
@@ -111,10 +112,10 @@ namespace iText.StyledXmlParser.Css.Parse {
             IList<CssDeclaration> declarations = ParsePropertyDeclarations(propertiesStr);
             IList<CssRuleSet> ruleSets = new List<CssRuleSet>();
             //check for rules like p, {…}
-            String[] selectors = iText.Commons.Utils.StringUtil.Split(selectorStr, ",");
+            String[] selectors = SplitByTokens(selectorStr);
             for (int i = 0; i < selectors.Length; i++) {
                 selectors[i] = CssUtils.RemoveDoubleSpacesAndTrim(selectors[i]);
-                if (selectors[i].Length == 0) {
+                if (String.IsNullOrEmpty(selectors[i])) {
                     return ruleSets;
                 }
             }
@@ -133,6 +134,37 @@ namespace iText.StyledXmlParser.Css.Parse {
             }
             return ruleSets;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal static String[] SplitByTokens(String selectorGroup) {
+            IList<String> selectors = new List<String>();
+            StringBuilder currentSelector = new StringBuilder();
+            CssDeclarationValueTokenizer cssDeclarationValueTokenizer = new CssDeclarationValueTokenizer(selectorGroup
+                );
+            CssDeclarationValueTokenizer.Token nextValidToken = cssDeclarationValueTokenizer.GetNextValidToken();
+            while (nextValidToken != null) {
+                if (nextValidToken.GetValue().Equals(",")) {
+                    selectors.Add(currentSelector.ToString());
+                    currentSelector.Length = 0;
+                }
+                else {
+                    if (nextValidToken.IsString() && nextValidToken.GetStringQuote() != 0) {
+                        currentSelector.Append(nextValidToken.GetStringQuote()).Append(nextValidToken.GetValue()).Append(nextValidToken
+                            .GetStringQuote());
+                    }
+                    else {
+                        currentSelector.Append(nextValidToken.GetValue());
+                        if (nextValidToken.HasSpace()) {
+                            currentSelector.Append(' ');
+                        }
+                    }
+                }
+                nextValidToken = cssDeclarationValueTokenizer.GetNextValidToken();
+            }
+            selectors.Add(currentSelector.ToString());
+            return selectors.ToArray(new String[0]);
+        }
+//\endcond
 
         /// <summary>
         /// Splits CSS properties into an array of

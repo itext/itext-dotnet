@@ -131,6 +131,22 @@ namespace iText.StyledXmlParser.Css.Parse {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CssExampleWithCommaInsideOfPseudoClassTest() {
+            String cssFile = sourceFolder + "cssExampleWithCommaInsideOfPseudoClassTest.css";
+            String cmpFile = sourceFolder + "cmp_cssExampleWithCommaInsideOfPseudoClassTest.css";
+            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFile));
+            NUnit.Framework.Assert.AreEqual(GetCssFileContents(cmpFile), styleSheet.ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidCssExampleWithCommaInsideOfPseudoClassTest() {
+            String cssFile = sourceFolder + "invalidCssExampleWithCommaInsideOfPseudoClassTest.css";
+            String cmpFile = sourceFolder + "cmp_invalidCssExampleWithCommaInsideOfPseudoClassTest.css";
+            CssStyleSheet styleSheet = CssStyleSheetParser.Parse(FileUtil.GetInputStreamForFile(cssFile));
+            NUnit.Framework.Assert.AreEqual(GetCssFileContents(cmpFile), styleSheet.ToString());
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED, LogLevel = 
             LogLevelConstants.ERROR)]
         public virtual void LayerUsingTest1() {
