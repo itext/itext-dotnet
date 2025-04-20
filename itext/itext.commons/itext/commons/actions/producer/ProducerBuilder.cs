@@ -113,17 +113,31 @@ namespace iText.Commons.Actions.Producer {
                 }
             }
             String newProducer = BuildProducer(confirmedEvents);
-            if (oldProducer == null || String.IsNullOrEmpty(oldProducer)) {
-                return newProducer;
+            //if the last time document was modified or created with the itext of the same version,
+            //then no changes occur.
+            return MergeProducerLines(oldProducer, newProducer);
+        }
+
+        /// <summary>Merges two producer lines.</summary>
+        /// <remarks>
+        /// Merges two producer lines. If first producer line <c>null</c> or empty, it will be replaced with the second one.
+        /// Otherwise second producer line will be attached with <c>modified using</c> prefix. If first producer line
+        /// already contains <c>modified using</c> substring with the second producer line at the end, first producer
+        /// line will be returned unchanged.
+        /// </remarks>
+        /// <param name="firstProducer">first producer line</param>
+        /// <param name="secondProducer">second producer line</param>
+        /// <returns>modified producer line</returns>
+        public static String MergeProducerLines(String firstProducer, String secondProducer) {
+            if (firstProducer == null || String.IsNullOrEmpty(firstProducer)) {
+                return secondProducer;
             }
             else {
-                //if the last time document was modified or created with the itext of the same version,
-                //then no changes occur.
-                if (oldProducer.Equals(newProducer) || oldProducer.EndsWith(MODIFIED_USING + newProducer)) {
-                    return oldProducer;
+                if (firstProducer.Equals(secondProducer) || firstProducer.EndsWith(MODIFIED_USING + secondProducer)) {
+                    return firstProducer;
                 }
                 else {
-                    return oldProducer + MODIFIED_USING + newProducer;
+                    return firstProducer + MODIFIED_USING + secondProducer;
                 }
             }
         }

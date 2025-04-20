@@ -61,30 +61,32 @@ namespace iText.Kernel.Actions.Events {
                 return;
             }
             IList<AbstractProductProcessITextEvent> events = GetEvents(pdfDocument.GetDocumentIdWrapper());
+            String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
+            String newProducer;
             if (events == null || events.IsEmpty()) {
                 ProductData productData = ITextCoreProductData.GetInstance();
-                String noEventProducer = "iText\u00ae \u00a9" + productData.GetSinceCopyrightYear() + "-" + productData.GetToCopyrightYear
-                    () + " Apryse Group NV (no registered products)";
-                pdfDocument.GetDocumentInfo().SetProducer(noEventProducer);
-                return;
+                String noEventProducer = "iText\u00ae " + productData.GetPublicProductName() + " " + productData.GetVersion
+                    () + " \u00a9" + productData.GetSinceCopyrightYear() + "-" + productData.GetToCopyrightYear() + " Apryse Group NV";
+                newProducer = ProducerBuilder.MergeProducerLines(oldProducer, noEventProducer);
             }
-            ICollection<String> products = new HashSet<String>();
-            foreach (AbstractProductProcessITextEvent @event in events) {
-                pdfDocument.GetFingerPrint().RegisterProduct(@event.GetProductData());
-                if (@event.GetConfirmationType() == EventConfirmationType.ON_CLOSE) {
-                    EventManager.GetInstance().OnEvent(new ConfirmEvent(pdfDocument.GetDocumentIdWrapper(), @event));
+            else {
+                ICollection<String> products = new HashSet<String>();
+                foreach (AbstractProductProcessITextEvent @event in events) {
+                    pdfDocument.GetFingerPrint().RegisterProduct(@event.GetProductData());
+                    if (@event.GetConfirmationType() == EventConfirmationType.ON_CLOSE) {
+                        EventManager.GetInstance().OnEvent(new ConfirmEvent(pdfDocument.GetDocumentIdWrapper(), @event));
+                    }
+                    products.Add(@event.GetProductName());
                 }
-                products.Add(@event.GetProductName());
-            }
-            foreach (String product in products) {
-                ITextProductEventProcessor processor = GetActiveProcessor(product);
-                if (processor == null && LOGGER.IsEnabled(LogLevel.Warning)) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
+                foreach (String product in products) {
+                    ITextProductEventProcessor processor = GetActiveProcessor(product);
+                    if (processor == null && LOGGER.IsEnabled(LogLevel.Warning)) {
+                        LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
+                    }
                 }
+                newProducer = ProducerBuilder.ModifyProducer(GetConfirmedEvents(pdfDocument.GetDocumentIdWrapper()), oldProducer
+                    );
             }
-            String oldProducer = pdfDocument.GetDocumentInfo().GetProducer();
-            String newProducer = ProducerBuilder.ModifyProducer(GetConfirmedEvents(pdfDocument.GetDocumentIdWrapper())
-                , oldProducer);
             pdfDocument.GetDocumentInfo().SetProducer(newProducer);
         }
 
