@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -17,6 +18,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("9.2.0.0")]
 [assembly: AssemblyFileVersion("9.2.0.0")]
 [assembly: AssemblyInformationalVersion("9.2.0-SNAPSHOT")]
+
+[assembly: Parallelizable(ParallelScope.ContextMask)]
 
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(300000)]

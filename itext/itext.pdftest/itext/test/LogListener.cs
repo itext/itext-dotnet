@@ -20,77 +20,92 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 using System;
 using System.Collections.Generic;
 using iText.Commons;
-using iText.IO;
 using iText.Test.Attributes;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace iText.Test {
+namespace iText.Test
+{
     [AttributeUsage(AttributeTargets.Class)]
-    public class LogListener : TestActionAttribute {
-        
+    public class LogListener : TestActionAttribute
+    {
         private static readonly ITextTestLoggerFactory TEST_LOGGER_FACTORY;
-        
-        private ILoggerFactory defaultLoggerFactory;
 
-        static LogListener() {
+        static LogListener()
+        {
             TEST_LOGGER_FACTORY = new ITextTestLoggerFactory();
+            ITextLogManager.SetLoggerFactory(TEST_LOGGER_FACTORY);
         }
 
         public override void BeforeTest(ITest testDetails)
         {
-            defaultLoggerFactory = ITextLogManager.GetLoggerFactory();
-            ITextLogManager.SetLoggerFactory(TEST_LOGGER_FACTORY);
             Init(testDetails);
         }
 
-        public override void AfterTest(ITest testDetails) {
+        public override void AfterTest(ITest testDetails)
+        {
             CheckLogMessages(testDetails);
-            ITextLogManager.SetLoggerFactory(defaultLoggerFactory);
         }
 
-        public override ActionTargets Targets {
+        public override ActionTargets Targets
+        {
             get { return ActionTargets.Test; }
         }
 
-        private void CheckLogMessages(ITest testDetails) {
-            int checkedMessages = 0;
-            LogMessageAttribute[] attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
-            if (attributes.Length > 0) {
-                for (int i = 0; i < attributes.Length; i++) {
-                    LogMessageAttribute logMessage = attributes[i];
-                    int foundCount = Contains(logMessage);
-                    if (foundCount != logMessage.Count && !logMessage.Ignore) {
-                        LogListenerHelper.FailWrongMessageCount(logMessage.Count, foundCount, logMessage.GetMessageTemplate(), testDetails);
-                    } else {
-                        checkedMessages += foundCount;
+        private void CheckLogMessages(ITest testDetails)
+        {
+            var checkedMessagesCount = 0;
+            var attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
+            if (attributes.Length > 0)
+            {
+                for (var i = 0; i < attributes.Length; i++)
+                {
+                    var logMessage = attributes[i];
+                    var foundCount = Contains(logMessage);
+                    if (foundCount != logMessage.Count && !logMessage.Ignore)
+                    {
+                        LogListenerHelper.FailWrongMessageCount(logMessage.Count, foundCount,
+                            logMessage.GetMessageTemplate(), testDetails);
+                    }
+                    else
+                    {
+                        checkedMessagesCount += foundCount;
                     }
                 }
             }
 
-            if (GetSize() > checkedMessages) {
-                LogListenerHelper.FailWrongTotalCount(GetSize(), checkedMessages, testDetails);
+            if (GetLogEventsSize() > checkedMessagesCount)
+            {
+                LogListenerHelper.FailWrongTotalCount(GetLogEventsSize(), checkedMessagesCount, testDetails);
             }
         }
 
-        private int Contains(LogMessageAttribute loggingStatement) {
-            IList<ITextTestLoggerFactory.ITextTestLogEvent> eventList = TEST_LOGGER_FACTORY.GetLogEvents();
-            int index = 0;
-            for (int i = 0; i < eventList.Count; i++) {
-                if (IsLevelCompatible(loggingStatement.LogLevel, eventList[i].logLevel) 
-                    && LogListenerHelper.EqualsMessageByTemplate(eventList[i].message, loggingStatement.GetMessageTemplate())) {
+        private int Contains(LogMessageAttribute loggingStatement)
+        {
+            var eventList = TEST_LOGGER_FACTORY.GetLogEvents();
+            var index = 0;
+            for (var i = 0; i < eventList.Count; i++)
+            {
+                if (IsLevelCompatible(loggingStatement.LogLevel, eventList[i].logLevel)
+                    && LogListenerHelper.EqualsMessageByTemplate(eventList[i].message,
+                        loggingStatement.GetMessageTemplate()))
+                {
                     index++;
                 }
             }
+
             return index;
         }
-        
-        private bool IsLevelCompatible(int logMessageLevel, LogLevel eventLevel) {
-            switch (logMessageLevel) {
+
+        private bool IsLevelCompatible(int logMessageLevel, LogLevel eventLevel)
+        {
+            switch (logMessageLevel)
+            {
                 case LogLevelConstants.UNKNOWN:
                     return eventLevel >= LogLevel.Warning;
                 case LogLevelConstants.ERROR:
@@ -106,22 +121,27 @@ namespace iText.Test {
             }
         }
 
-        private void Init(ITest testDetails) {
+        private void Init(ITest testDetails)
+        {
+            // Cleanup on Init. We can cleanup when finishing but there some exception may be thrown on checking messages.
             TEST_LOGGER_FACTORY.Dispose();
-            LogMessageAttribute[] attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
+
+            var attributes = LogListenerHelper.GetTestAttributes<LogMessageAttribute>(testDetails);
             if (attributes.Length > 0)
             {
-                Dictionary<String, Boolean> expectedTemplates = new Dictionary<string, bool>();
-
-                for (int i = 0; i < attributes.Length; i++) {
-                    LogMessageAttribute logMessage = attributes[i];
+                var expectedTemplates = new Dictionary<string, bool>();
+                for (var i = 0; i < attributes.Length; i++)
+                {
+                    var logMessage = attributes[i];
                     expectedTemplates.Add(logMessage.GetMessageTemplate(), logMessage.QuietMode);
                 }
+
                 TEST_LOGGER_FACTORY.SetExpectedTemplates(expectedTemplates);
             }
         }
 
-        private int GetSize() {
+        private int GetLogEventsSize()
+        {
             return TEST_LOGGER_FACTORY.GetLogEvents().Count;
         }
     }
