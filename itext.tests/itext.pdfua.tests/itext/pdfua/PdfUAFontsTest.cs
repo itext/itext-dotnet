@@ -163,6 +163,7 @@ namespace iText.Pdfua {
             }
             );
             // TODO DEVSIX-9017 Support PDF/UA rules for fonts.
+            // TODO DEVSIX-9004 Support Character encodings related rules in UA-2
             framework.AssertOnlyVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
         }
 
@@ -205,6 +206,100 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothValid("type1EmbeddedFontTest", pdfUAConformance);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonSymbolicTtfWithChangedCmapTest() {
+            // TODO DEVSIX-9076 NPE when cmap of True Type Font doesn't contain Microsoft Unicode or Macintosh Roman encodings
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONT_FOLDER +
+                 "FreeSans_changed_cmap.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NonSymbolicTtfWithValidEncodingTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                document.SetFont(font);
+                Paragraph paragraph = new Paragraph("ABC");
+                document.Add(paragraph);
+            }
+            );
+            framework.AssertBothValid("nonSymbolicTtfWithIncompatibleEncoding", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NonSymbolicTtfWithIncompatibleEncodingTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                document.SetFont(font);
+                Paragraph paragraph = new Paragraph("ABC");
+                document.Add(paragraph);
+            }
+            );
+            // TODO DEVSIX-9004 Support Character encodings related rules in UA-2
+            framework.AssertOnlyVeraPdfFail("nonSymbolicTtfWithIncompatibleEncoding", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SymbolicTtfTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf");
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                document.SetFont(font);
+                Paragraph paragraph = new Paragraph("ABC");
+                document.Add(paragraph);
+            }
+            );
+            framework.AssertBothValid("symbolicTtf", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SymbolicTtfWithEncodingTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font;
+                try {
+                    // if we specify encoding, symbolic font is treated as non-symbolic
+                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                document.SetFont(font);
+                Paragraph paragraph = new Paragraph("ABC");
+                document.Add(paragraph);
+            }
+            );
+            framework.AssertBothValid("symbolicTtfWithEncoding", pdfUAConformance);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SymbolicTtfWithChangedCmapTest() {
+            // TODO DEVSIX-9076 NPE when cmap of True Type Font doesn't contain Microsoft Unicode or Macintosh Roman encodings
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONT_FOLDER +
+                 "Symbols1_changed_cmap.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
         }
     }
 }
