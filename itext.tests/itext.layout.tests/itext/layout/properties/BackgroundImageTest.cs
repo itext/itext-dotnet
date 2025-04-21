@@ -87,7 +87,7 @@ namespace iText.Layout.Properties {
                 Build();
             NUnit.Framework.Assert.AreEqual(BackgroundBox.BORDER_BOX, backgroundImage.GetBackgroundClip());
             NUnit.Framework.Assert.AreEqual(BackgroundBox.PADDING_BOX, backgroundImage.GetBackgroundOrigin());
-            BackgroundImageGenericTest("backgroundImage", backgroundImage);
+            BackgroundImageGenericTest("backgroundImageClipOriginDefaults", backgroundImage);
         }
 
         [NUnit.Framework.Test]
@@ -97,7 +97,7 @@ namespace iText.Layout.Properties {
                 SetBackgroundClip(BackgroundBox.CONTENT_BOX).SetBackgroundOrigin(BackgroundBox.CONTENT_BOX).Build();
             NUnit.Framework.Assert.AreEqual(BackgroundBox.CONTENT_BOX, backgroundImage.GetBackgroundClip());
             NUnit.Framework.Assert.AreEqual(BackgroundBox.CONTENT_BOX, backgroundImage.GetBackgroundOrigin());
-            BackgroundImageGenericTest("backgroundImage", backgroundImage);
+            BackgroundImageGenericTest("backgroundImageClipOrigin", backgroundImage);
         }
 
         [NUnit.Framework.Test]
