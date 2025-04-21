@@ -43,7 +43,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua1 {
         /// <param name="form">structure element to check</param>
         public static void CheckFormStructElement(PdfStructElem form) {
             PdfDictionary widget = GetInteractiveKidForm(form);
-            if (widget == null || !AnnotationCheckUtil.IsAnnotationVisible(widget)) {
+            if (widget == null || !PdfUA1AnnotationChecker.IsAnnotationVisible(widget)) {
                 // Check is also not applicable for hidden annotations.
                 return;
             }

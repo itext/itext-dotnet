@@ -1184,6 +1184,13 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                 }
+                if (annotation is PdfPrinterMarkAnnotation && PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) 
+                    <= 0) {
+                    if (!StandardRoles.ARTIFACT.Equals(tagPointer.GetRole())) {
+                        tagPointer.AddTag(StandardRoles.ARTIFACT);
+                        return true;
+                    }
+                }
             }
             return false;
         }

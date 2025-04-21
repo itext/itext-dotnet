@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
+using iText.Pdfua.Checkers.Utils.Ua1;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
@@ -66,7 +67,7 @@ namespace iText.Pdfua.Checkers.Utils {
                     return;
                 }
                 // Check is not applicable for hidden annotations
-                if (!AnnotationCheckUtil.IsAnnotationVisible(formField)) {
+                if (!PdfUA1AnnotationChecker.IsAnnotationVisible(formField)) {
                     return;
                 }
                 // Parent check is required for the case when form field and widget annotation are split up.

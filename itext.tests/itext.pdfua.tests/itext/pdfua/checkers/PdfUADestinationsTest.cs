@@ -445,6 +445,7 @@ namespace iText.Pdfua.Checkers {
             switch (destinationWrapType) {
                 case "GoTo": {
                     PdfLinkAnnotation goToLinkAnnotation = new PdfLinkAnnotation(RECTANGLE);
+                    goToLinkAnnotation.SetContents("GoTo");
                     goToLinkAnnotation.SetAction(PdfAction.CreateGoTo(destination));
                     document.GetPage(1).AddAnnotation(goToLinkAnnotation);
                     break;
@@ -452,6 +453,7 @@ namespace iText.Pdfua.Checkers {
 
                 case "Destination": {
                     PdfLinkAnnotation destinationLinkAnnotation = new PdfLinkAnnotation(RECTANGLE);
+                    destinationLinkAnnotation.SetContents("Destination");
                     destinationLinkAnnotation.SetDestination(destination);
                     document.GetPage(1).AddAnnotation(destinationLinkAnnotation);
                     break;
@@ -471,6 +473,7 @@ namespace iText.Pdfua.Checkers {
 
                 case "GoToR": {
                     PdfLinkAnnotation goToRLinkAnnotation = new PdfLinkAnnotation(RECTANGLE);
+                    goToRLinkAnnotation.SetContents("GoToR");
                     goToRLinkAnnotation.SetAction(PdfAction.CreateGoToR("filename", 1));
                     document.GetPage(1).AddAnnotation(goToRLinkAnnotation);
                     break;
@@ -478,6 +481,7 @@ namespace iText.Pdfua.Checkers {
 
                 case "Manual": {
                     PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(RECTANGLE);
+                    linkAnnotation.SetContents("Manual");
                     linkAnnotation.SetDestination(destination);
                     PdfPage page = document.GetPage(1);
                     PdfArray annots = new PdfArray();

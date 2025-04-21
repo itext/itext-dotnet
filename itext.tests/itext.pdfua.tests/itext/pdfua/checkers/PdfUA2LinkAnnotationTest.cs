@@ -82,6 +82,7 @@ namespace iText.Pdfua.Checkers {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination destination = PdfStructureDestination.CreateFit(structElem);
                 PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+                linkAnnotation.SetContents("Some text");
                 AddDestination(destLocation, linkAnnotation, destination);
                 pdfDoc.GetPage(1).AddAnnotation(-1, linkAnnotation, false);
                 TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer().AddTag(StandardRoles.ANNOT
@@ -99,6 +100,7 @@ namespace iText.Pdfua.Checkers {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination destination = PdfStructureDestination.CreateFit(structElem);
                 PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+                linkAnnotation.SetContents("Some text");
                 AddDestination(destLocation, linkAnnotation, destination);
                 pdfDoc.GetPage(1).AddAnnotation(-1, linkAnnotation, false);
                 TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer().MoveToKid(StandardRoles
@@ -152,11 +154,13 @@ namespace iText.Pdfua.Checkers {
                 TagTreePointer tagPointer = context.GetAutoTaggingPointer();
                 PdfStructElem structElem = context.GetPointerStructElem(tagPointer);
                 PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+                linkAnnotation.SetContents("Some text");
                 PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
                 AddDestination(destLocation, linkAnnotation, dest);
                 PdfLinkAnnotation linkAnnotation2 = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
                 PdfStructureDestination dest2 = PdfStructureDestination.CreateFit(structElem);
                 AddDestination(destLocation, linkAnnotation2, dest2);
+                linkAnnotation2.SetContents("Some text 2");
                 document.Add(new AreaBreak());
                 Link linkElem = new Link("Link to paragraph", linkAnnotation);
                 linkElem.GetAccessibilityProperties().SetRole(StandardRoles.LINK).SetAlternateDescription("Some text");
@@ -336,8 +340,10 @@ namespace iText.Pdfua.Checkers {
         private static void AddLinkAnnotations(PdfName destLocation, PdfDocument pdfDoc, PdfDestination destination
             ) {
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+            linkAnnotation.SetContents("Some text");
             AddDestination(destLocation, linkAnnotation, destination);
             PdfLinkAnnotation linkAnnotation2 = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+            linkAnnotation2.SetContents("Some text2");
             AddDestination(destLocation, linkAnnotation2, destination);
             pdfDoc.GetPage(1).AddAnnotation(linkAnnotation).AddAnnotation(linkAnnotation2);
         }
@@ -350,8 +356,10 @@ namespace iText.Pdfua.Checkers {
         private static void AddLinkAnnotations(PdfName destLocation, PdfDocument pdfDoc, PdfDestination destination1
             , PdfDestination destination2, bool isSeparateAnnots) {
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+            linkAnnotation.SetContents("Some text");
             AddDestination(destLocation, linkAnnotation, destination1);
             PdfLinkAnnotation linkAnnotation2 = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
+            linkAnnotation2.SetContents("Some text2");
             AddDestination(destLocation, linkAnnotation2, destination2);
             if (isSeparateAnnots) {
                 pdfDoc.GetPage(1).AddAnnotation(linkAnnotation).AddAnnotation(linkAnnotation2);

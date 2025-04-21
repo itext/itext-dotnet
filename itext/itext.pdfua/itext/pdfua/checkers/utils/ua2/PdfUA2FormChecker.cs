@@ -22,12 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml;
 using iText.Forms.Fields;
-using iText.IO.Util;
-using iText.Kernel.Exceptions;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
@@ -113,6 +109,17 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                 if (!StandardRoles.ARTIFACT.Equals(role) && !StandardRoles.FORM.Equals(role)) {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.WIDGET_SHALL_BE_FORM_OR_ARTIFACT);
                 }
+                if (StandardRoles.FORM.Equals(role)) {
+                    PdfDictionary widget = ((PdfObjRef)elem).GetReferencedObject();
+                    PdfArray rect = widget.GetAsArray(PdfName.Rect);
+                    if (rect != null && rect.Size() == 4) {
+                        Rectangle rectangle = rect.ToRectangle();
+                        if (rectangle.GetWidth() == 0 && rectangle.GetHeight() == 0) {
+                            throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.WIDGET_WITH_ZERO_HEIGHT_SHALL_BE_AN_ARTIFACT
+                                );
+                        }
+                    }
+                }
                 return;
             }
             PdfStructElem form = context.GetElementIfRoleMatches(PdfName.Form, elem);
@@ -163,19 +170,9 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             return fieldValue;
         }
 
-        private static String ParseRichText(XmlNode node) {
-            StringBuilder richText = new StringBuilder();
-            XmlNodeList allChildren = node.ChildNodes;
-            for (int k = 0; k < allChildren.Count; ++k) {
-                XmlNode child = allChildren.Item(k);
-                richText.Append(child.Value == null ? ParseRichText(child) : child.Value);
-            }
-            return richText.ToString();
-        }
-
         private static void CheckTextField(PdfDictionary fieldDic) {
             if (PdfName.Tx.Equals(PdfFormField.GetFormType(fieldDic)) && fieldDic.ContainsKey(PdfName.RV)) {
-                String richText = GetRichTextStringValue(fieldDic.Get(PdfName.RV));
+                String richText = PdfUA2AnnotationChecker.GetRichTextStringValue(fieldDic.Get(PdfName.RV));
                 if (String.IsNullOrEmpty(richText)) {
                     return;
                 }
@@ -188,20 +185,6 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                     throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TEXT_FIELD_V_AND_RV_SHALL_BE_TEXTUALLY_EQUIVALENT
                         );
                 }
-            }
-        }
-
-        private static String GetRichTextStringValue(PdfObject rv) {
-            String richText = PdfFormField.GetStringValue(rv);
-            if (String.IsNullOrEmpty(richText)) {
-                return richText;
-            }
-            try {
-                return ParseRichText(XmlUtil.InitXmlDocument(new MemoryStream(richText.GetBytes(System.Text.Encoding.UTF8)
-                    )));
-            }
-            catch (Exception e) {
-                throw new PdfException(e.Message, e);
             }
         }
 

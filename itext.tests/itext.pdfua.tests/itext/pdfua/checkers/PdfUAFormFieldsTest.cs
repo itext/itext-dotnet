@@ -90,73 +90,83 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxWithCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_141());
+            framework.AddSuppliers(new _Generator_141(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxWithCustomAppearance", pdfUAConformance);
         }
 
         private sealed class _Generator_141 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_141() {
+            public _Generator_141(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox cb = new CheckBox("name");
-                cb.SetPdfConformance(PdfConformance.PDF_UA_1);
+                cb.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 cb.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
                 cb.SetBackgroundColor(ColorConstants.YELLOW);
                 return cb;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxChecked(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_157());
+            framework.AddSuppliers(new _Generator_157(pdfUAConformance));
             framework.AssertBothValid("testCheckBox", pdfUAConformance);
         }
 
         private sealed class _Generator_157 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_157() {
+            public _Generator_157(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox cb = new CheckBox("name");
-                cb.SetPdfConformance(PdfConformance.PDF_UA_1);
+                cb.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 cb.SetChecked(true);
                 return cb;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxCheckedAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_172());
+            framework.AddSuppliers(new _Generator_172(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxCheckedAlternativeDescription", pdfUAConformance);
         }
 
         private sealed class _Generator_172 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_172() {
+            public _Generator_172(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox cb = new CheckBox("name");
-                cb.SetPdfConformance(PdfConformance.PDF_UA_1);
+                cb.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 cb.GetAccessibilityProperties().SetAlternateDescription("Yello");
                 cb.SetChecked(true);
                 return cb;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxCheckedCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_188());
+            framework.AddSuppliers(new _Generator_188(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxCheckedCustomAppearance", pdfUAConformance);
         }
 
         private sealed class _Generator_188 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_188() {
+            public _Generator_188(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox cb = new CheckBox("name");
-                cb.SetPdfConformance(PdfConformance.PDF_UA_1);
+                cb.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 cb.SetChecked(true);
                 cb.SetBorder(new SolidBorder(ColorConstants.CYAN, 2));
                 cb.SetBackgroundColor(ColorConstants.GREEN);
@@ -164,39 +174,45 @@ namespace iText.Pdfua.Checkers {
                 cb.SetSize(20);
                 return cb;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_207());
+            framework.AddSuppliers(new _Generator_207(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxInteractive", pdfUAConformance);
         }
 
         private sealed class _Generator_207 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_207() {
+            public _Generator_207(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox checkBox = (CheckBox)new CheckBox("name").SetInteractive(true);
-                checkBox.SetPdfConformance(PdfConformance.PDF_UA_1);
+                checkBox.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 checkBox.GetAccessibilityProperties().SetAlternateDescription("Alternative description");
                 return checkBox;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxInteractiveCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_222());
+            framework.AddSuppliers(new _Generator_222(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxInteractiveCustomAppearance", pdfUAConformance);
         }
 
         private sealed class _Generator_222 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_222() {
+            public _Generator_222(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox checkBox = (CheckBox)new CheckBox("name").SetInteractive(true);
-                checkBox.SetPdfConformance(PdfConformance.PDF_UA_1);
+                checkBox.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 checkBox.GetAccessibilityProperties().SetAlternateDescription("Alternative description");
                 checkBox.SetBorder(new SolidBorder(ColorConstants.CYAN, 2));
                 checkBox.SetBackgroundColor(ColorConstants.GREEN);
@@ -204,21 +220,24 @@ namespace iText.Pdfua.Checkers {
                 checkBox.SetCheckBoxType(CheckBoxType.SQUARE);
                 return checkBox;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxInteractiveCustomAppearanceChecked(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_241());
+            framework.AddSuppliers(new _Generator_241(pdfUAConformance));
             framework.AssertBothValid("checkBoxInteractiveCustomAppChecked", pdfUAConformance);
         }
 
         private sealed class _Generator_241 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_241() {
+            public _Generator_241(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox checkBox = (CheckBox)new CheckBox("name").SetInteractive(true);
-                checkBox.SetPdfConformance(PdfConformance.PDF_UA_1);
+                checkBox.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 checkBox.GetAccessibilityProperties().SetAlternateDescription("Alternative description");
                 checkBox.SetBorder(new SolidBorder(ColorConstants.CYAN, 2));
                 checkBox.SetBackgroundColor(ColorConstants.GREEN);
@@ -227,6 +246,8 @@ namespace iText.Pdfua.Checkers {
                 checkBox.SetCheckBoxType(CheckBoxType.SQUARE);
                 return checkBox;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -2004,26 +2025,29 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1628());
+            framework.AddSuppliers(new _Generator_1628(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxDifferentRole", pdfUAConformance);
         }
 
         private sealed class _Generator_1628 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1628() {
+            public _Generator_1628(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox cb = new CheckBox("name");
-                cb.SetPdfConformance(PdfConformance.PDF_UA_1);
+                cb.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 cb.GetAccessibilityProperties().SetRole(StandardRoles.FIGURE);
                 cb.GetAccessibilityProperties().SetAlternateDescription("Hello");
                 return cb;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxArtifactDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1644());
+            framework.AddSuppliers(new _Generator_1644(pdfUAConformance));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("testCheckBoxArtifactRoleua1", pdfUAConformance);
             }
@@ -2038,15 +2062,18 @@ namespace iText.Pdfua.Checkers {
         }
 
         private sealed class _Generator_1644 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1644() {
+            public _Generator_1644(PdfUAConformance pdfUAConformance) {
+                this.pdfUAConformance = pdfUAConformance;
             }
 
             public IBlockElement Generate() {
                 CheckBox cb = new CheckBox("name");
-                cb.SetPdfConformance(PdfConformance.PDF_UA_1);
+                cb.SetPdfConformance(new PdfConformance(pdfUAConformance));
                 cb.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
                 return cb;
             }
+
+            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -3172,10 +3199,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void SignatureAppearanceWithImage(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
             framework.AddSuppliers(new _Generator_2753());
-            // TODO DEVSIX-9067 PdfUA: PdfUAConformanceException when SignatureFieldAppearance contains Image
-            framework.AssertITextFail("signatureAppearanceWithImage", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
-                , pdfUAConformance);
-            framework.AssertVeraPdfValid("signatureAppearanceWithImage", pdfUAConformance);
+            framework.AssertBothValid("signatureAppearanceWithImage", pdfUAConformance);
         }
 
         private sealed class _Generator_2753 : UaValidationTestFramework.Generator<IBlockElement> {
@@ -3203,12 +3227,12 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceWithLineSeparator(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2781());
+            framework.AddSuppliers(new _Generator_2778());
             framework.AssertBothValid("signatureAppearanceLineSep", pdfUAConformance);
         }
 
-        private sealed class _Generator_2781 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2781() {
+        private sealed class _Generator_2778 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2778() {
             }
 
             public IBlockElement Generate() {
@@ -3226,12 +3250,12 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceBackgroundImage(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2801(this));
+            framework.AddSuppliers(new _Generator_2798(this));
             framework.AssertBothValid("signatureAppearanceBackgroundImage", pdfUAConformance);
         }
 
-        private sealed class _Generator_2801 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2801(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_2798 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2798(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

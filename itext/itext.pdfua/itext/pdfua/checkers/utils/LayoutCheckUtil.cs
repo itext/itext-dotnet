@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Forms.Form.Renderer;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
@@ -46,6 +47,10 @@ namespace iText.Pdfua.Checkers.Utils {
             if (renderer == null) {
                 return;
             }
+            if (IsPartOfSignatureAppearance(renderer)) {
+                // Tagging of the current layout element will be skipped in that case.
+                return;
+            }
             IPropertyContainer layoutElement = renderer.GetModelElement();
             if (layoutElement is Image) {
                 new GraphicsCheckUtil(context).CheckLayoutElement((Image)layoutElement);
@@ -55,6 +60,17 @@ namespace iText.Pdfua.Checkers.Utils {
                     new TableCheckUtil(context).CheckTable((Table)layoutElement);
                 }
             }
+        }
+
+        private bool IsPartOfSignatureAppearance(IRenderer renderer) {
+            IRenderer parent = renderer.GetParent();
+            while (parent != null) {
+                if (parent is SignatureAppearanceRenderer) {
+                    return true;
+                }
+                parent = parent.GetParent();
+            }
+            return false;
         }
     }
 }

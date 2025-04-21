@@ -178,11 +178,22 @@ namespace iText.Pdfua.Checkers {
             CheckMetadata(catalog);
             CheckViewerPreferences(catalog);
             CheckOCProperties(catalog.GetPdfObject().GetAsDictionary(PdfName.OCProperties));
+            CheckFormFieldsAndAnnotations(catalog);
+            PdfUA2EmbeddedFilesChecker.CheckEmbeddedFiles(catalog);
+        }
+
+        /// <summary>Validates all annotations and form fields present in the document against PDF/UA-2 standard.</summary>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// to check form fields present in the acroform
+        /// </param>
+        private void CheckFormFieldsAndAnnotations(PdfCatalog catalog) {
             PdfUA2FormChecker formChecker = new PdfUA2FormChecker(context);
             formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
             formChecker.CheckWidgetAnnotations(this.pdfDocument);
             PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
-            PdfUA2EmbeddedFilesChecker.CheckEmbeddedFiles(catalog);
+            PdfUA2AnnotationChecker.CheckAnnotations(this.pdfDocument);
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
@@ -230,8 +241,8 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
             tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
-            // TODO DEVSIX-9016 Support PDF/UA-2 rules for annotation types
             tagTreeIterator.AddHandler(new PdfUA2FormChecker.PdfUA2FormTagHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2AnnotationChecker.PdfUA2AnnotationHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));

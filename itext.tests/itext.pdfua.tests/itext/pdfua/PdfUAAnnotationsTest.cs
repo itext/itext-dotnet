@@ -62,23 +62,33 @@ namespace iText.Pdfua {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        public static IList<PdfUAConformance> Data() {
+            return UaValidationTestFramework.GetConformanceList();
+        }
+
+        private static PdfFont LoadFont() {
+            try {
+                return PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                    );
+            }
+            catch (System.IO.IOException e) {
+                throw new Exception(e.Message);
+            }
+        }
+
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
-            return UaValidationTestFramework.GetConformanceList();
-        }
-
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LinkAnnotNotDirectChildOfAnnotLayoutTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_121());
+            framework.AddSuppliers(new _Generator_129());
             framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotLayoutTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_121 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_121() {
+        private sealed class _Generator_129 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_129() {
             }
 
             public IBlockElement Generate() {
@@ -146,25 +156,29 @@ namespace iText.Pdfua {
                 canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
                 canvas.Release();
                 PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
-                // mark annotation as hidden, because in the scope of the test we check only that PrinterMark isn't enclosed by Annot tag
+                // mark annotation as hidden, because in the scope of the test we check only that PrinterMark isn't
+                // enclosed by Annot tag
                 annot.SetFlag(PdfAnnotation.HIDDEN);
                 pdfPage.AddAnnotation(annot);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
-                String layoutPdf = "layout_printerMAnnotNoDirectChildOfAnnotTest" + "_UA_" + pdfUAConformance.GetPart() + 
-                    ".pdf";
-                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + layoutPdf))) {
-                    IStructureNode docNode = pdfDoc.GetStructTreeRoot().GetKids()[0];
-                    NUnit.Framework.Assert.AreEqual(PdfName.Document, docNode.GetRole());
+            framework.AssertBothValid("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
+            String layoutPdf = "layout_printerMAnnotNoDirectChildOfAnnotTest" + "_UA_" + pdfUAConformance.GetPart() + 
+                ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + layoutPdf))) {
+                IStructureNode docNode = pdfDoc.GetStructTreeRoot().GetKids()[0];
+                NUnit.Framework.Assert.AreEqual(PdfName.Document, docNode.GetRole());
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                     NUnit.Framework.Assert.AreEqual(PdfName.PrinterMark, ((PdfObjRef)docNode.GetKids()[0]).GetReferencedObject
                         ().Get(PdfName.Subtype));
                 }
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
+                else {
+                    if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                        IStructureNode artifactNode = docNode.GetKids()[0];
+                        NUnit.Framework.Assert.AreEqual(PdfName.Artifact, artifactNode.GetRole());
+                        NUnit.Framework.Assert.AreEqual(PdfName.PrinterMark, ((PdfObjRef)artifactNode.GetKids()[0]).GetReferencedObject
+                            ().Get(PdfName.Subtype));
+                    }
                 }
             }
         }
@@ -225,8 +239,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("screenAnnotWithoutContentsAndAltTest", pdfUAConformance);
+                    framework.AssertBothFail("screenAnnotWithoutContentsAndAltTest", PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY
+                        , pdfUAConformance);
                 }
             }
         }
@@ -244,8 +258,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("popupWithoutContentOrAltTest", pdfUAConformance);
+                    framework.AssertBothFail("popupWithoutContentOrAltTest", PdfUAExceptionMessageConstants.POPUP_ANNOTATIONS_ARE_NOT_ALLOWED
+                        , pdfUAConformance);
                 }
             }
         }
@@ -282,8 +296,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("screenAnnotWithAltTest", pdfUAConformance);
+                    framework.AssertBothFail("screenAnnotWithAltTest", PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY
+                        , pdfUAConformance);
                 }
             }
         }
@@ -350,14 +364,14 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
                 framework.AssertBothFail("trapNetAnnotNotPermittedTest", PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED
                     , pdfUAConformance);
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("trapNetAnnotNotPermittedTest", pdfUAConformance);
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertBothFail("trapNetAnnotNotPermittedTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                        .DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED, PdfName.TrapNet.GetValue()), pdfUAConformance);
                 }
             }
         }
@@ -382,8 +396,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("invisibleTrapNetAnnotTest", pdfUAConformance);
+                    framework.AssertBothFail("invisibleTrapNetAnnotTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                        .DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED, PdfName.TrapNet.GetValue()), pdfUAConformance);
                 }
             }
         }
@@ -403,8 +417,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("soundAnnotDirectChildOfAnnotTest", pdfUAConformance);
+                    framework.AssertBothFail("soundAnnotDirectChildOfAnnotTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                        .DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED, PdfName.Sound.GetValue()), pdfUAConformance);
                 }
             }
         }
@@ -753,8 +767,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("tabsEntryAbsentInPageTest", pdfUAConformance);
+                    framework.AssertBothFail("tabsEntryAbsentInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_VALID_CONTENT
+                        , pdfUAConformance);
                 }
             }
         }
@@ -774,8 +788,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("tabsEntryNotSInPageTest", pdfUAConformance);
+                    framework.AssertBothFail("tabsEntryNotSInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_VALID_CONTENT
+                        , pdfUAConformance);
                 }
             }
         }
@@ -796,8 +810,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 The layout level doesn’t throw an error
-                    framework.AssertOnlyVeraPdfFail("invalidTabsEntryButAnnotInvisibleTest", pdfUAConformance);
+                    framework.AssertBothFail("invalidTabsEntryButAnnotInvisibleTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_VALID_CONTENT
+                        , pdfUAConformance);
                 }
             }
         }
@@ -812,7 +826,11 @@ namespace iText.Pdfua {
                 canvas.Release();
                 PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
                 annot.SetContents("link annot");
-                pdfPage.AddAnnotation(annot);
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
+                tagPointer.MoveToParent();
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.SetPage(pdfPage).GetPdfObject()));
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
@@ -821,7 +839,8 @@ namespace iText.Pdfua {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("printerMAnnotIsInLogicalStructureTest", pdfUAConformance);
+                    framework.AssertBothFail("printerMAnnotIsInLogicalStructureTest", PdfUAExceptionMessageConstants.PRINTER_MARK_SHALL_BE_AN_ARTIFACT
+                        , pdfUAConformance);
                 }
             }
         }
@@ -903,16 +922,6 @@ namespace iText.Pdfua {
                 ).SetFontSize(20)).SetOverlayText(new PdfString("Redact CMYK courier-oblique"));
             redact.SetContents("redact annotation");
             return redact;
-        }
-
-        private static PdfFont LoadFont() {
-            try {
-                return PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                    );
-            }
-            catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
-            }
         }
 
         private class PdfCustomAnnot : PdfAnnotation {
