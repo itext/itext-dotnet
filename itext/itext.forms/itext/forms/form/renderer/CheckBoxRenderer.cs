@@ -38,6 +38,7 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -139,6 +140,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary>Applies given paddings to the given rectangle.</summary>
         /// <remarks>
         /// Applies given paddings to the given rectangle.
+        /// <para />
         /// Checkboxes don't support setting of paddings as they are always centered.
         /// So that this method returns the rectangle as is.
         /// </remarks>
@@ -243,8 +245,15 @@ namespace iText.Forms.Form.Renderer {
                 PdfCanvas canvas = drawContext.GetCanvas();
                 bool isTaggingEnabled = drawContext.IsTaggingEnabled();
                 if (isTaggingEnabled) {
-                    TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    canvas.OpenTag(tp.GetTagReference());
+                    LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                    bool isArtifact = taggingHelper != null && taggingHelper.IsArtifact(this);
+                    if (!isArtifact) {
+                        TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                        canvas.OpenTag(tp.GetTagReference());
+                    }
+                    else {
+                        canvas.OpenTag(new CanvasArtifact());
+                    }
                 }
                 this._enclosing.CreateCheckBoxRenderStrategy().DrawCheckBoxContent(drawContext, this._enclosing, rectangle
                     );

@@ -22,11 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Forms.Fields;
+using iText.Forms.Form.Element;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
+using iText.Layout;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -217,6 +219,28 @@ namespace iText.Forms {
             tagPointer.MoveToKid(StandardRoles.FORM);
             acroForm.AddField(pushButton2);
             pdfDoc.Close();
+            CompareOutput(outFileName, cmpFileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FormFieldsAsArtifactsTest() {
+            String outFileName = destinationFolder + "formFieldsAsArtifacts.pdf";
+            String cmpFileName = sourceFolder + "cmp_formFieldsAsArtifacts.pdf";
+            using (PdfWriter writer = new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ))) {
+                using (PdfDocument pdfDoc = new PdfDocument(writer)) {
+                    using (Document document = new Document(pdfDoc)) {
+                        pdfDoc.SetTagged();
+                        Radio radio = new Radio("name1", "group");
+                        radio.SetChecked(true);
+                        radio.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
+                        document.Add(radio);
+                        CheckBox cb = new CheckBox("name");
+                        cb.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
+                        document.Add(cb);
+                    }
+                }
+            }
             CompareOutput(outFileName, cmpFileName);
         }
 
