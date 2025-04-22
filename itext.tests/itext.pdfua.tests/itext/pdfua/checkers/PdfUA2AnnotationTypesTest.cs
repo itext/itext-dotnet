@@ -43,7 +43,7 @@ using iText.Test;
 namespace iText.Pdfua.Checkers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2AnnotationTypesTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUA2LinkAnnotationTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUA2AnnotationTypesTest/";
 
         private UaValidationTestFramework framework;
 

@@ -355,7 +355,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.Clip();
             }
             );
-            framework.AssertBothValid("checkPoint_01_005_RectangleNoContent", pdfUAConformance);
+            framework.AssertBothValid("checkPoint_01_005_RectangleClip", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]

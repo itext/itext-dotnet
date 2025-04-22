@@ -82,7 +82,7 @@ namespace iText.Pdfua {
 
         public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing, PdfUAConformance
              pdfUAConformance) {
-            CheckError(CheckErrorLayout("layout_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+            CheckError(CheckErrorLayout("itext_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 ), expectedMsg);
             String createdFileName = "vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf";
             VeraPdfResult(createdFileName, true, pdfUAConformance);
@@ -93,7 +93,7 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertITextValid(String fileName, PdfUAConformance pdfUAConformance) {
-            Exception e = CheckErrorLayout("layout_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+            Exception e = CheckErrorLayout("itext_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 );
             if (e == null) {
                 return;
@@ -104,7 +104,7 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertBothValid(String fileName, PdfUAConformance pdfUAConformance) {
-            Exception e = CheckErrorLayout("layout_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+            Exception e = CheckErrorLayout("itext_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 );
             String veraPdf = VeraPdfResult("vera_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance
                 );
@@ -143,18 +143,18 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
-            VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
+            VeraPdfResult("vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
         }
 
         public virtual void AssertOnlyVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
-            VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
-            Exception e = CheckErrorLayout("layout_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+            VeraPdfResult("vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
+            Exception e = CheckErrorLayout("itext_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 );
             NUnit.Framework.Assert.IsNull(e);
         }
 
         public virtual void AssertVeraPdfValid(String filename, PdfUAConformance pdfUAConformance) {
-            String veraPdf = VeraPdfResult(filename + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance
+            String veraPdf = VeraPdfResult("vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", false, pdfUAConformance
                 );
             if (veraPdf == null) {
                 return;
@@ -164,7 +164,7 @@ namespace iText.Pdfua {
 
         public virtual void AssertITextFail(String filename, String expectedMsg, PdfUAConformance pdfUAConformance
             ) {
-            CheckError(CheckErrorLayout("layout_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
+            CheckError(CheckErrorLayout("itext_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 ), expectedMsg);
         }
 

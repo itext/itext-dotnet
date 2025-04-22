@@ -163,8 +163,7 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothValid("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
-            String layoutPdf = "layout_printerMAnnotNoDirectChildOfAnnotTest" + "_UA_" + pdfUAConformance.GetPart() + 
-                ".pdf";
+            String layoutPdf = "itext_printerMAnnotNoDirectChildOfAnnotTest" + "_UA_" + pdfUAConformance.GetPart() + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + layoutPdf))) {
                 IStructureNode docNode = pdfDoc.GetStructTreeRoot().GetKids()[0];
                 NUnit.Framework.Assert.AreEqual(PdfName.Document, docNode.GetRole());

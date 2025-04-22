@@ -911,7 +911,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ImageJpeg20002ColorChannelsTest() {
-            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000ColorChannels.pdf";
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();

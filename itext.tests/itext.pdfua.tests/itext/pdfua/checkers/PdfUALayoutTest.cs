@@ -40,9 +40,6 @@ namespace iText.Pdfua.Checkers {
     public class PdfUALayoutTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUALayoutTest/";
 
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUALayoutTest/";
-
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
@@ -95,7 +92,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void TestOfIllegalRelations(String parentRole, String childRole, bool expectException) {
             //expectException should take into account repair mechanism
             // in example P:P will be replaced as P:Span so no exceptions should be thrown
-            framework.AddSuppliers(new _Generator_117(parentRole, childRole));
+            framework.AddSuppliers(new _Generator_116(parentRole, childRole));
             if (expectException) {
                 framework.AssertBothFail("testOfIllegalRelation_" + parentRole + "_" + childRole, false, PdfUAConformance.
                     PDF_UA_2);
@@ -106,8 +103,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_117 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_117(String parentRole, String childRole) {
+        private sealed class _Generator_116 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_116(String parentRole, String childRole) {
                 this.parentRole = parentRole;
                 this.childRole = childRole;
             }
