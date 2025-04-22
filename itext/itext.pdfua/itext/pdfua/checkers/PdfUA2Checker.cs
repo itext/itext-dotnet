@@ -114,6 +114,12 @@ namespace iText.Pdfua.Checkers {
                     new PdfUA2DestinationsChecker(destinationAdditionContext, pdfDocument).CheckDestinationsOnCreation();
                     break;
                 }
+
+                case ValidationType.PDF_OBJECT: {
+                    PdfObjectValidationContext validationContext = (PdfObjectValidationContext)context;
+                    CheckPdfObject(validationContext.GetObject());
+                    break;
+                }
             }
         }
 
@@ -164,6 +170,44 @@ namespace iText.Pdfua.Checkers {
             }
             catch (XMPException e) {
                 throw new PdfUAConformanceException(e.Message);
+            }
+        }
+
+        private void CheckPdfObject(PdfObject obj) {
+            switch (obj.GetObjectType()) {
+                case PdfObject.STRING: {
+                    PdfUA2StringChecker.CheckPdfString((PdfString)obj);
+                    break;
+                }
+
+                case PdfObject.ARRAY: {
+                    CheckArrayRecursively((PdfArray)obj);
+                    break;
+                }
+
+                case PdfObject.DICTIONARY:
+                case PdfObject.STREAM: {
+                    CheckDictionaryRecursively((PdfDictionary)obj);
+                    break;
+                }
+            }
+        }
+
+        private void CheckArrayRecursively(PdfArray array) {
+            for (int i = 0; i < array.Size(); i++) {
+                PdfObject @object = array.Get(i, false);
+                if (@object != null && !@object.IsIndirect()) {
+                    CheckPdfObject(@object);
+                }
+            }
+        }
+
+        private void CheckDictionaryRecursively(PdfDictionary dictionary) {
+            foreach (PdfName name in dictionary.KeySet()) {
+                PdfObject @object = dictionary.Get(name, false);
+                if (@object != null && !@object.IsIndirect()) {
+                    CheckPdfObject(@object);
+                }
             }
         }
 
