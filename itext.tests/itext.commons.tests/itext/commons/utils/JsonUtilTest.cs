@@ -23,6 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if NETSTANDARD2_0
+using System.Text.Json.Serialization;
+#else
+using Newtonsoft.Json;
+#endif
 using iText.Commons.Logs;
 using iText.Test;
 using iText.Test.Attributes;
@@ -33,14 +38,9 @@ namespace iText.Commons.Utils {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/commons/utils/JsonUtilTest/";
 
-        private static bool isRunOnJava = false;
-
         static JsonUtilTest() {
-            // Android-Conversion-Skip-Block-Start (cutting area is used to understand whether code is running on Android or not)
-            isRunOnJava = true;
         }
 
-        // Android-Conversion-Skip-Block-End
         [NUnit.Framework.Test]
         public virtual void Utf8CharsetStringTest() {
             NUnit.Framework.Assert.AreEqual("\"©\"", JsonUtil.SerializeToString("©"));
@@ -61,18 +61,22 @@ namespace iText.Commons.Utils {
             String cmpString = GetJsonStringFromFile(cmp);
             NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(cmpString, resultString));
         }
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void SerializeInstanceWithEnumPrivateStringTest() {
+            String cmp = SOURCE_FOLDER + "classWithEnum.json";
+            JsonUtilTest.ClassWithEnumPrivate classWithEnum = new JsonUtilTest.ClassWithEnumPrivate(JsonUtilTest.SomeEnum.SECOND_VALUE, 
+                new JsonUtilTest.SomeEnum[] { JsonUtilTest.SomeEnum.FIRST_VALUE, JsonUtilTest.SomeEnum
+                .FIRST_VALUE, JsonUtilTest.SomeEnum.SECOND_VALUE });
+            String resultString = JsonUtil.SerializeToString(classWithEnum);
+            String cmpString = GetJsonStringFromFile(cmp);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(cmpString, resultString));
+        }
+#endif
 
         [NUnit.Framework.Test]
         public virtual void SerializeInstanceWithEnumStreamTest() {
-            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
-            String cmp;
-            if (isRunOnJava) {
-                cmp = SOURCE_FOLDER + "classWithEnum.json";
-            }
-            else {
-                // Test is run on Android, so field order will be different from Java.
-                cmp = SOURCE_FOLDER + "classWithEnumAndroid.json";
-            }
+            String cmp = SOURCE_FOLDER + "classWithEnum.json";
             using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
@@ -95,15 +99,7 @@ namespace iText.Commons.Utils {
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalInstanceWithEnumStreamTest() {
-            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
-            String cmp;
-            if (isRunOnJava) {
-                cmp = SOURCE_FOLDER + "minimalClassWithEnum.json";
-            }
-            else {
-                // Test is run on Android, so field order will be different from Java.
-                cmp = SOURCE_FOLDER + "minimalClassWithEnumAndroid.json";
-            }
+            String cmp = SOURCE_FOLDER + "minimalClassWithEnum.json";
             using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
@@ -167,18 +163,21 @@ namespace iText.Commons.Utils {
             String compareString = GetJsonStringFromFile(cmp);
             NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
+        
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void SerializeComplexStructureStringNonReflectionTest() {
+            String cmp = SOURCE_FOLDER + "minimalComplexStructure.json";
+            JsonUtilTest.ComplexStructure complexStructure = CreateComplexStructureObject();
+            String resultString = JsonUtil.SerializeToString(complexStructure, ComplexStructureContext.Default);
+            String compareString = GetJsonStringFromFile(cmp);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
+        }
+#endif
 
         [NUnit.Framework.Test]
         public virtual void SerializeComplexStructureStreamTest() {
-            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
-            String cmp;
-            if (isRunOnJava) {
-                cmp = SOURCE_FOLDER + "complexStructure.json";
-            }
-            else {
-                // Test is run on Android, so field order will be different from Java.
-                cmp = SOURCE_FOLDER + "complexStructureAndroid.json";
-            }
+            String cmp = SOURCE_FOLDER + "complexStructure.json";
             using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
@@ -198,18 +197,21 @@ namespace iText.Commons.Utils {
             String compareString = GetJsonStringFromFile(cmp);
             NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
         }
+        
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void SerializeToMinimalComplexStructureStringNonReflectionTest() {
+            String cmp = SOURCE_FOLDER + "minimalComplexStructure.json";
+            JsonUtilTest.ComplexStructure complexStructure = CreateComplexStructureObject();
+            String resultString = JsonUtil.SerializeToMinimalString(complexStructure, ComplexStructureContext.Default);
+            String compareString = GetJsonStringFromFile(cmp);
+            NUnit.Framework.Assert.IsTrue(JsonUtil.AreTwoJsonObjectEquals(compareString, resultString));
+        }
+#endif
 
         [NUnit.Framework.Test]
         public virtual void SerializeToMinimalComplexStructureStreamTest() {
-            // Android-Conversion-Ignore-Test (TODO DEVSIX-7371 investigate different behavior of a few iTextCore tests on Java and Android)
-            String cmp;
-            if (isRunOnJava) {
-                cmp = SOURCE_FOLDER + "minimalComplexStructure.json";
-            }
-            else {
-                // Test is run on Android, so field order will be different from Java.
-                cmp = SOURCE_FOLDER + "minimalComplexStructureAndroid.json";
-            }
+            String cmp = SOURCE_FOLDER + "minimalComplexStructure.json";
             using (Stream inputStream = FileUtil.GetInputStreamForFile(cmp)) {
                 using (MemoryStream baos = ConvertInputStreamToOutput(inputStream)) {
                     using (MemoryStream serializationResult = new MemoryStream()) {
@@ -292,6 +294,17 @@ namespace iText.Commons.Utils {
                 >(jsonString);
             NUnit.Framework.Assert.AreEqual(CreateClassWithDefaultValueObject(null, 2, 5.0), instance);
         }
+        
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void DeserializeWithDefaultValueStringNonReflectionTest() {
+            String source = SOURCE_FOLDER + "classWithDefaultValue.json";
+            String jsonString = GetJsonStringFromFile(source);
+            JsonUtilTest.ClassWithDefaultValue instance = JsonUtil.DeserializeFromString<JsonUtilTest.ClassWithDefaultValue
+            >(jsonString, ClassWithDefaultValueContext.Default);
+            NUnit.Framework.Assert.AreEqual(CreateClassWithDefaultValueObject(null, 2, 5.0), instance);
+        }
+#endif
 
         [NUnit.Framework.Test]
         public virtual void DeserializeWithDefaultValueStreamTest() {
@@ -311,6 +324,18 @@ namespace iText.Commons.Utils {
                 >(jsonString);
             NUnit.Framework.Assert.AreEqual(CreateComplexStructureObject(), complexStructure);
         }
+        
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void DeserializeComplexStructureStringNonReflectionTest() {
+            String source = SOURCE_FOLDER + "complexStructure.json";
+            String jsonString = GetJsonStringFromFile(source);
+            JsonUtilTest.ComplexStructure complexStructure = JsonUtil.DeserializeFromString<JsonUtilTest.ComplexStructure
+            >(jsonString, ComplexStructureContext.Default);
+            JsonUtilTest.ComplexStructure expected = CreateComplexStructureObject();
+            NUnit.Framework.Assert.AreEqual(expected, complexStructure);
+        }
+#endif
 
         [NUnit.Framework.Test]
         public virtual void DeserializeComplexStructureStreamTest() {
@@ -321,6 +346,18 @@ namespace iText.Commons.Utils {
                 NUnit.Framework.Assert.AreEqual(CreateComplexStructureObject(), complexStructure);
             }
         }
+        
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void DeserializeComplexStructureStreamNonReflectionTest() {
+            String source = SOURCE_FOLDER + "complexStructure.json";
+            using (Stream inputStream = FileUtil.GetInputStreamForFile(source)) {
+                JsonUtilTest.ComplexStructure complexStructure = JsonUtil.DeserializeFromStream<JsonUtilTest.ComplexStructure
+                >(inputStream, ComplexStructureContext.Default);
+                NUnit.Framework.Assert.AreEqual(CreateComplexStructureObject(), complexStructure);
+            }
+        }
+#endif
 
         [NUnit.Framework.Test]
         public virtual void DeserializeInstanceWithEnumStringTest() {
@@ -432,13 +469,28 @@ namespace iText.Commons.Utils {
             return new String[] { "String\n\rtest", "  \n   \t" };
         }
 
-        private class ComplexStructure {
-            public IDictionary<String, int?> map = new LinkedDictionary<String, int?>();
+        public class ComplexStructure
+        {
+#if NETSTANDARD2_0
+            [JsonInclude] 
+#endif
+            public IDictionary<String, int?> map;
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public String str;
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public IDictionary<String, JsonUtilTest.ChildInComplexStructure> childsMap;
 
-            public String str = "";
-
-            public IDictionary<String, JsonUtilTest.ChildInComplexStructure> childsMap = new LinkedDictionary<String, 
-                JsonUtilTest.ChildInComplexStructure>();
+            public ComplexStructure()
+            {
+                this.map = new Dictionary<String, int?>();
+                this.childsMap = new Dictionary<String, 
+                    JsonUtilTest.ChildInComplexStructure>();
+                this.str = "";
+            }
 
             public override bool Equals(Object o) {
                 if (this == o) {
@@ -460,11 +512,24 @@ namespace iText.Commons.Utils {
             }
         }
 
-        private class ChildInComplexStructure {
-            public String[] arrayStr = new String[] { "" };
+        public class ChildInComplexStructure
+        {
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public String[] arrayStr;
 
-            public JsonUtilTest.GrandsonComplexStructure[] grandsons = new JsonUtilTest.GrandsonComplexStructure[] { new 
-                JsonUtilTest.GrandsonComplexStructure() };
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public JsonUtilTest.GrandsonComplexStructure[] grandsons;
+
+            public ChildInComplexStructure()
+            {
+                this.arrayStr = new String[] { "" };
+                this.grandsons = new JsonUtilTest.GrandsonComplexStructure[] { new 
+                    JsonUtilTest.GrandsonComplexStructure() };
+            }
 
             public override bool Equals(Object o) {
                 if (this == o) {
@@ -484,10 +549,23 @@ namespace iText.Commons.Utils {
             }
         }
 
-        private class GrandsonComplexStructure {
-            public int integer = 0;
+        public class GrandsonComplexStructure
+        {
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public int integer;
 
-            public String name = "";
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public String name;
+
+            public GrandsonComplexStructure()
+            {
+                this.integer = 0;
+                this.name = "";
+            }
 
             public override bool Equals(Object o) {
                 if (this == o) {
@@ -507,10 +585,51 @@ namespace iText.Commons.Utils {
             }
         }
 
-        private class ClassWithEnum {
-            public JsonUtilTest.SomeEnum firstValue;
+        public class ClassWithEnumPrivate
+        {
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            private JsonUtilTest.SomeEnum firstValue;
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            private JsonUtilTest.SomeEnum[] enumArray;
 
-            public JsonUtilTest.SomeEnum[] enumArray = new JsonUtilTest.SomeEnum[] {  };
+            public ClassWithEnumPrivate(JsonUtilTest.SomeEnum first, JsonUtilTest.SomeEnum[] array)
+            {
+                this.firstValue = first;
+                this.enumArray = array;
+            }
+
+            public override bool Equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || GetType() != o.GetType()) {
+                    return false;
+                }
+                JsonUtilTest.ClassWithEnumPrivate that = (JsonUtilTest.ClassWithEnumPrivate)o;
+                return firstValue == that.firstValue && JavaUtil.ArraysEquals(enumArray, that.enumArray);
+            }
+
+            public override int GetHashCode() {
+                int result = JavaUtil.ArraysHashCode(firstValue);
+                result = 31 * result + JavaUtil.ArraysHashCode(enumArray);
+                return result;
+            }
+        }
+
+        public class ClassWithEnum
+        {
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public JsonUtilTest.SomeEnum firstValue;
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
+            public JsonUtilTest.SomeEnum[] enumArray;
 
             public override bool Equals(Object o) {
                 if (this == o) {
@@ -530,17 +649,24 @@ namespace iText.Commons.Utils {
             }
         }
 
-        private enum SomeEnum {
+        public enum SomeEnum {
             FIRST_VALUE,
             SECOND_VALUE,
             THIRD_VALUE
         }
 
-        private class ClassWithDefaultValue {
+        public class ClassWithDefaultValue {
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
             public String firstString = "defaultValue";
-
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
             public int? integer = 3;
-
+#if NETSTANDARD2_0
+            [JsonInclude]
+#endif
             public double? doubleValue = 0.0;
 
             public ClassWithDefaultValue(String firstString, int? integer, double? doubleValue) {
@@ -573,4 +699,13 @@ namespace iText.Commons.Utils {
             }
         }
     }
+#if NETSTANDARD2_0
+    public partial class ComplexStructureContext : JsonSerializerContext
+    {
+    }
+    
+    public partial class ClassWithDefaultValueContext : JsonSerializerContext
+    {
+    }
+#endif
 }

@@ -20,6 +20,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#if !NETSTANDARD2_0
+//Since System.Text.Json doesn't have global settings we don't need such tests for it
 using System;
 using System.IO;
 using iText.Test;
@@ -161,3 +163,4 @@ namespace iText.Commons.Utils {
         }
     }
 }
+#endif

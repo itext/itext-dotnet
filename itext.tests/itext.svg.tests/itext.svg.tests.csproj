@@ -37,6 +37,8 @@
   </ItemGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+    <!-- TODO DEVSIX-9075: remove this suppression -->
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

@@ -3,6 +3,7 @@
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <WarningLevel>0</WarningLevel>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
@@ -27,6 +28,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+    <!-- TODO DEVSIX-9075: remove this suppression -->
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings> 
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
