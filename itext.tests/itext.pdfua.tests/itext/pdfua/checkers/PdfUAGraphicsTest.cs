@@ -96,7 +96,7 @@ namespace iText.Pdfua.Checkers {
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     // TODO DEVSIX-8242 PDF/UA-2 checks
-                    framework.AssertITextFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
+                    framework.AssertOnlyITextFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
                         , pdfUAConformance);
                 }
             }
@@ -304,7 +304,7 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            framework.AssertITextFail("imageWithoutActualText", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
+            framework.AssertBothFail("imageWithoutActualText", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
                 );
         }
 

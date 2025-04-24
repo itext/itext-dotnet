@@ -2861,11 +2861,10 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
-                    framework.AssertITextFail("widgetNeitherFormNorArtifact", PdfUAExceptionMessageConstants.WIDGET_SHALL_BE_FORM_OR_ARTIFACT
-                        , pdfUAConformance);
                     // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
                     //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-                    framework.AssertVeraPdfValid("widgetNeitherFormNorArtifact", pdfUAConformance);
+                    framework.AssertOnlyITextFail("widgetNeitherFormNorArtifact", PdfUAExceptionMessageConstants.WIDGET_SHALL_BE_FORM_OR_ARTIFACT
+                        , pdfUAConformance);
                 }
             }
         }
@@ -3231,12 +3230,12 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceWithImage(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2777());
+            framework.AddSuppliers(new _Generator_2776());
             framework.AssertBothValid("signatureAppearanceWithImage", pdfUAConformance);
         }
 
-        private sealed class _Generator_2777 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2777() {
+        private sealed class _Generator_2776 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2776() {
             }
 
             public IBlockElement Generate() {
@@ -3260,12 +3259,12 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceWithLineSeparator(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2802());
+            framework.AddSuppliers(new _Generator_2801());
             framework.AssertBothValid("signatureAppearanceLineSep", pdfUAConformance);
         }
 
-        private sealed class _Generator_2802 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2802() {
+        private sealed class _Generator_2801 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2801() {
             }
 
             public IBlockElement Generate() {
@@ -3283,12 +3282,12 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceBackgroundImage(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2822(this));
+            framework.AddSuppliers(new _Generator_2821(this));
             framework.AssertBothValid("signatureAppearanceBackgroundImage", pdfUAConformance);
         }
 
-        private sealed class _Generator_2822 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2822(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_2821 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2821(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

@@ -196,12 +196,10 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
             }
             );
-            framework.AssertITextFail("sameNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertVeraPdfValid("sameNamedDestinations_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                );
+            framework.AssertOnlyITextFail("sameNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -212,12 +210,10 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
             }
             );
-            framework.AssertITextFail("sameStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertVeraPdfValid("sameStringDestinations_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                );
+            framework.AssertOnlyITextFail("sameStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -234,12 +230,10 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
             }
             );
-            framework.AssertITextFail("sameStringDestinationsSD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertVeraPdfValid("sameStringDestinationsSD_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                );
+            framework.AssertOnlyITextFail("sameStringDestinationsSD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -257,18 +251,16 @@ namespace iText.Pdfua.Checkers {
             );
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertITextFail("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
             if (PdfName.SD.Equals(destLocation)) {
-                framework.AssertVeraPdfValid("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                    );
+                framework.AssertOnlyITextFail("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                    .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
             }
             else {
                 // In case PdfName.D or Dest equals destLocation, VeraPDF doesn't allow actions with structure destination being
                 // placed in D entry. Instead, it requires structure destination to be added into special SD entry. There is
                 // no such requirement in released PDF 2.0 spec. Although it is already mentioned in errata version.
-                framework.AssertVeraPdfFail("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                    );
+                framework.AssertBothFail("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                    .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
             }
         }
 
@@ -297,12 +289,10 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination1, namedDestination2, false);
             }
             );
-            framework.AssertITextFail("differentNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertVeraPdfValid("differentNamedDestinations_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                );
+            framework.AssertOnlyITextFail("differentNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -315,12 +305,10 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination1, namedDestination2, false);
             }
             );
-            framework.AssertITextFail("differentStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertVeraPdfValid("differentStringDestinations_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2
-                );
+            framework.AssertOnlyITextFail("differentStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+                .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -429,15 +417,15 @@ namespace iText.Pdfua.Checkers {
         private void Validate(String filename, String expectedMessage, PdfName destLocation) {
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertITextFail(filename + destLocation.GetValue(), expectedMessage, PdfUAConformance.PDF_UA_2);
             if (PdfName.D.Equals(destLocation)) {
                 // In case PdfName.D equals destLocation, VeraPDF doesn't allow actions with structure destination being
                 // placed in D entry. Instead, it requires structure destination to be added into special SD entry. There is
                 // no such requirement in released PDF 2.0 spec. Although it is already mentioned in errata version.
-                framework.AssertVeraPdfFail(filename + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
+                framework.AssertBothFail(filename + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
             }
             else {
-                framework.AssertVeraPdfValid(filename + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
+                framework.AssertOnlyITextFail(filename + destLocation.GetValue(), expectedMessage, PdfUAConformance.PDF_UA_2
+                    );
             }
         }
     }

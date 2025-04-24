@@ -76,12 +76,11 @@ namespace iText.Pdfua.Checkers {
                 page.AddAnnotation(textAnnotation);
             }
             );
-            framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
-                .PDF_UA_2);
             // In this particular case validators which reopen the document cannot identify the problem, and strictly speaking PDF document is valid.
             // Since PDFDocEncoding doesn't have enough space to allocate this Unicode PUA symbol, it is simply not present in the resulting file.
             // Even though the file is valid, there was clearly an attempt to create human-readable PdfString with Unicode PUA, that's why we fail.
-            framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
+                .PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
@@ -95,10 +94,9 @@ namespace iText.Pdfua.Checkers {
                 page.AddAnnotation(textAnnotation);
             }
             );
-            framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
-                .PDF_UA_2);
             // VeraPdf doesn't fail because they mistakenly don't check all the PdfString entries in the document.
-            framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
+                .PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
@@ -112,10 +110,9 @@ namespace iText.Pdfua.Checkers {
                 page.AddAnnotation(textAnnotation);
             }
             );
-            framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
-                .PDF_UA_2);
             // VeraPdf doesn't fail because they mistakenly don't check all the PdfString entries in the document.
-            framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
+                .PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]

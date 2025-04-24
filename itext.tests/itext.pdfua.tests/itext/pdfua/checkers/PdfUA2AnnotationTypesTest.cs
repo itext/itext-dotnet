@@ -127,10 +127,8 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (PdfName.Redaction.Equals(annotType) || PdfName.Projection.Equals(annotType)) {
-                framework.AssertITextFail("markupAnnotationIsNotTagged_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertOnlyITextFail("markupAnnotationIsNotTagged_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .MARKUP_ANNOT_IS_NOT_TAGGED_AS_ANNOT, PdfUAConformance.PDF_UA_2);
-                framework.AssertVeraPdfValid("markupAnnotationIsNotTagged_" + annotType.GetValue(), PdfUAConformance.PDF_UA_2
-                    );
             }
             else {
                 framework.AssertBothFail("markupAnnotationIsNotTagged_" + annotType.GetValue(), PdfUAExceptionMessageConstants
@@ -156,10 +154,8 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (PdfName.Redaction.Equals(annotType) || PdfName.Projection.Equals(annotType)) {
-                framework.AssertITextFail("markupAnnotationIsNotTaggedAsAnnot_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertOnlyITextFail("markupAnnotationIsNotTaggedAsAnnot_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .MARKUP_ANNOT_IS_NOT_TAGGED_AS_ANNOT, PdfUAConformance.PDF_UA_2);
-                framework.AssertVeraPdfValid("markupAnnotationIsNotTaggedAsAnnot_" + annotType.GetValue(), PdfUAConformance
-                    .PDF_UA_2);
             }
             else {
                 framework.AssertBothFail("markupAnnotationIsNotTaggedAsAnnot_" + annotType.GetValue(), PdfUAExceptionMessageConstants
@@ -184,10 +180,8 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (PdfName.Redaction.Equals(annotType) || PdfName.Projection.Equals(annotType)) {
-                framework.AssertITextFail("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertOnlyITextFail("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .RC_DIFFERENT_FROM_CONTENTS, PdfUAConformance.PDF_UA_2);
-                framework.AssertVeraPdfValid("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAConformance.PDF_UA_2
-                    );
             }
             else {
                 framework.AssertBothFail("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
@@ -256,9 +250,8 @@ namespace iText.Pdfua.Checkers {
                 pdfPage.AddAnnotation(annotation);
             }
             );
-            framework.AssertITextFail("annotationEmptyContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+            framework.AssertOnlyITextFail("annotationEmptyContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                 .ANNOT_CONTENTS_IS_NULL_OR_EMPTY, PdfUAConformance.PDF_UA_2);
-            framework.AssertVeraPdfValid("annotationEmptyContents_" + annotType.GetValue(), PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.Test]
@@ -338,13 +331,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void WidgetAnnotationZeroWidthAndHeightTaggedAsFormTest() {
-            framework.AddSuppliers(new _Generator_362());
+            framework.AddSuppliers(new _Generator_355());
             framework.AssertBothFail("widgetAnnotationZeroWidthAndHeightTaggedAsForm", PdfUAExceptionMessageConstants.
                 WIDGET_WITH_ZERO_HEIGHT_SHALL_BE_AN_ARTIFACT, false, PdfUAConformance.PDF_UA_2);
         }
 
-        private sealed class _Generator_362 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_362() {
+        private sealed class _Generator_355 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_355() {
             }
 
             public IBlockElement Generate() {
@@ -418,9 +411,8 @@ namespace iText.Pdfua.Checkers {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertITextFail("watermarkAnnotationAsRealContent", PdfUAExceptionMessageConstants.RC_DIFFERENT_FROM_CONTENTS
+            framework.AssertOnlyITextFail("watermarkAnnotationAsRealContent", PdfUAExceptionMessageConstants.RC_DIFFERENT_FROM_CONTENTS
                 , PdfUAConformance.PDF_UA_2);
-            framework.AssertVeraPdfValid("watermarkAnnotationAsRealContent", PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.Test]

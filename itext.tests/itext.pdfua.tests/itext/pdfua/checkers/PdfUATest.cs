@@ -470,7 +470,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertITextFail("documentWithDuplicatingIdInStructTree", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                framework.AssertOnlyITextFail("documentWithDuplicatingIdInStructTree", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT, "hello-element"), pdfUAConformance);
             }
             else {

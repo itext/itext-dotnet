@@ -162,10 +162,11 @@ namespace iText.Pdfua {
             NUnit.Framework.Assert.Fail("Expected no vera pdf message but was: \n" + veraPdf + "\n");
         }
 
-        public virtual void AssertITextFail(String filename, String expectedMsg, PdfUAConformance pdfUAConformance
+        public virtual void AssertOnlyITextFail(String filename, String expectedMsg, PdfUAConformance pdfUAConformance
             ) {
             CheckError(CheckErrorLayout("itext_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 ), expectedMsg);
+            AssertVeraPdfValid(filename, pdfUAConformance);
         }
 
         private String VeraPdfResult(String filename, bool failureExpected, PdfUAConformance pdfUAConformance) {

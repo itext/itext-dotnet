@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -307,33 +306,32 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CanvasTest03(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfDocument document = new PdfUATestPdfDocument(new PdfWriter(new MemoryStream()));
-                PdfPage page = document.AddNewPage();
+                PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 PdfFont font = LoadFont(FONT);
-                TagTreePointer tagPointer = new TagTreePointer(document);
-                tagPointer.SetPageForTagging(document.GetFirstPage());
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc);
+                tagPointer.SetPageForTagging(pdfDoc.GetFirstPage());
                 tagPointer.AddTag(StandardRoles.FORMULA);
+                tagPointer.GetProperties().SetAlternateDescription("Alt descr");
                 canvas.OpenTag(tagPointer.GetTagReference()).SaveState().BeginText().SetFontAndSize(font, 12);
                 canvas.ShowText("⫊");
             }
             );
-            framework.AssertITextFail("canvasTest03", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                , "⫊"), pdfUAConformance);
+            framework.AssertBothFail("canvasTest03", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false, pdfUAConformance);
         }
 
         [NUnit.Framework.Test]
         public virtual void MathStructureElementInvalidUA2Test() {
-            framework.AddSuppliers(new _Generator_318());
+            framework.AddSuppliers(new _Generator_317());
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertVeraPdfValid("mathStructureElementInvalidUA2Test", PdfUAConformance.PDF_UA_2);
-            framework.AssertITextFail("mathStructureElementInvalidUA2Test", PdfUAExceptionMessageConstants.MATH_NOT_CHILD_OF_FORMULA
+            framework.AssertOnlyITextFail("mathStructureElementInvalidUA2Test", PdfUAExceptionMessageConstants.MATH_NOT_CHILD_OF_FORMULA
                 , PdfUAConformance.PDF_UA_2);
         }
 
-        private sealed class _Generator_318 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_318() {
+        private sealed class _Generator_317 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_317() {
             }
 
             public IBlockElement Generate() {

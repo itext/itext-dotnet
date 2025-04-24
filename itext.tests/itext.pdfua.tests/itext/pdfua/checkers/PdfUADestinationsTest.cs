@@ -112,12 +112,11 @@ namespace iText.Pdfua.Checkers {
                 }
 
                 case "GoToInRandomPlace": {
-                    framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
-                    framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, 
-                        PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                        , PdfUAConformance.PDF_UA_2);
                     break;
                 }
             }
@@ -203,12 +202,11 @@ namespace iText.Pdfua.Checkers {
                 }
 
                 case "GoToInRandomPlace": {
-                    framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
-                    framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, 
-                        PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                        , PdfUAConformance.PDF_UA_2);
                     break;
                 }
             }
@@ -235,9 +233,8 @@ namespace iText.Pdfua.Checkers {
                     // SD is specifically reserved for structure destinations,
                     // that's why placing not structure destination in there is wrong in the first place.
                     // However, if one is placed there, UA-2 exception is expected.
-                    framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
-                    framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, 
-                        PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                        , PdfUAConformance.PDF_UA_2);
                     break;
                 }
 
@@ -303,12 +300,11 @@ namespace iText.Pdfua.Checkers {
                 }
 
                 case "GoToInRandomPlace": {
-                    framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
-                    framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, 
-                        PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                        , PdfUAConformance.PDF_UA_2);
                     break;
                 }
             }
@@ -395,12 +391,11 @@ namespace iText.Pdfua.Checkers {
                 }
 
                 case "GoToInRandomPlace": {
-                    framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
-                    framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, 
-                        PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                        , PdfUAConformance.PDF_UA_2);
                     break;
                 }
             }
@@ -427,9 +422,8 @@ namespace iText.Pdfua.Checkers {
                     // SD is specifically reserved for structure destinations,
                     // that's why placing not structure destination in there is wrong in the first place.
                     // However, if one is placed there, UA-2 exception is expected.
-                    framework.AssertVeraPdfValid(filename, PdfUAConformance.PDF_UA_2);
-                    framework.AssertITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, 
-                        PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                        , PdfUAConformance.PDF_UA_2);
                     break;
                 }
 
