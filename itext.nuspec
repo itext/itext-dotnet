@@ -89,6 +89,9 @@
     <file src="gnu-agpl-v3.0.md" target="" />
     <file src="LICENSE.md" target="" />
     <file src="ITSC-avatar.png" target="" />
-    <file src="NOTICE.txt" target="" />
+	<file src="itext\itext.kernel\NOTICE.txt" target="NOTICE_kernel.txt" />
+	<file src="itext\itext.layout\NOTICE.txt" target="NOTICE_layout.txt" />
+	<file src="itext\itext.styledxmlparser\NOTICE.txt" target="NOTICE_styledxmlparser.txt" />
+	<file src="itext\itext.io\NOTICE.txt" target="NOTICE_io.txt" />
   </files>
 </package>
