@@ -23,6 +23,7 @@ Copyright (c) 1998-2025 Apryse Group NV
 
 using iText.Commons.Bouncycastle.Asn1.X500;
 using Org.BouncyCastle.Asn1.X500;
+using System;
 
 namespace iText.Bouncycastlefips.Asn1.X500 {
     /// <summary>
@@ -55,6 +56,20 @@ namespace iText.Bouncycastlefips.Asn1.X500 {
         public string GetName()
         {
             return GetX500Name().ToString();
+        }
+
+        public override bool Equals(object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || !this.GetType().IsAssignableFrom(o.GetType()))
+            {
+                return false;
+            }
+            X500NameBCFips that = (X500NameBCFips)o;
+            return GetX500Name().Equivalent(that.GetX500Name());
         }
     }
 }
