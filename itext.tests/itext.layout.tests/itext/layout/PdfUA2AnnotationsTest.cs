@@ -32,6 +32,7 @@ using iText.Kernel.Pdf.Annot.DA;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -420,7 +421,10 @@ namespace iText.Layout {
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfAnnotation annot = CreateRichTextAnnotation();
                 annot.SetFlags(PdfAnnotation.INVISIBLE);
-                pdfPage.AddAnnotation(annot);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
                 pdfPage.Flush();
             }
             new VeraPdfValidator().ValidateFailure(outFile);
@@ -436,7 +440,10 @@ namespace iText.Layout {
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfAnnotation annot = CreateRichTextAnnotation();
                 annot.SetFlags(PdfAnnotation.NO_VIEW);
-                pdfPage.AddAnnotation(annot);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
                 pdfPage.Flush();
             }
             new VeraPdfValidator().ValidateFailure(outFile);

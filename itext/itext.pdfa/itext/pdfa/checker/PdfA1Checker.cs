@@ -580,13 +580,12 @@ namespace iText.Pdfa.Checker {
                     );
             }
             int flags = (int)annotDic.GetAsInt(PdfName.F);
-            if (!CheckFlag(flags, PdfAnnotation.PRINT) || CheckFlag(flags, PdfAnnotation.HIDDEN) || CheckFlag(flags, PdfAnnotation
-                .INVISIBLE) || CheckFlag(flags, PdfAnnotation.NO_VIEW)) {
+            if (IsAnnotationInvisible(flags)) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_AND_NOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
                     );
             }
-            if (subtype.Equals(PdfName.Text) && (!CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !CheckFlag(flags, PdfAnnotation
-                .NO_ROTATE))) {
+            if (subtype.Equals(PdfName.Text) && (!PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !PdfCheckersUtil
+                .CheckFlag(flags, PdfAnnotation.NO_ROTATE))) {
                 throw new PdfAConformanceException(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
                     );
             }
@@ -752,15 +751,13 @@ namespace iText.Pdfa.Checker {
         [System.ObsoleteAttribute(@"in favour of iText.Kernel.Utils.Checkers.PdfCheckersUtil.GetFormFields(iText.Kernel.Pdf.PdfArray)"
             )]
         protected internal virtual PdfArray GetFormFields(PdfArray array) {
-            PdfArray fields = new PdfArray();
-            foreach (PdfObject field in array) {
-                PdfArray kids = ((PdfDictionary)field).GetAsArray(PdfName.Kids);
-                fields.Add(field);
-                if (kids != null) {
-                    fields.AddAll(GetFormFields(kids));
-                }
-            }
-            return fields;
+            return PdfCheckersUtil.GetFormFields(array);
+        }
+
+        private static bool IsAnnotationInvisible(int flags) {
+            return !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.PRINT) || PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                .HIDDEN) || PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || PdfCheckersUtil.CheckFlag(flags
+                , PdfAnnotation.NO_VIEW);
         }
 
         private int GetMaxArrayCapacity() {

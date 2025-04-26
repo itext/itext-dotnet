@@ -25,6 +25,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
 
@@ -51,7 +52,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua1 {
         public static bool IsAnnotationVisible(PdfDictionary annotDict) {
             if (annotDict.GetAsNumber(PdfName.F) != null) {
                 int flags = annotDict.GetAsNumber(PdfName.F).IntValue();
-                if ((flags & PdfAnnotation.HIDDEN) != 0) {
+                if (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.HIDDEN)) {
                     return false;
                 }
             }

@@ -32,6 +32,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
 
@@ -73,7 +74,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                 foreach (PdfAnnotation annot in annotations) {
                     // Check annotations that are not tagged here, other annotations will be checked in the structure tree.
                     if (!annot.GetPdfObject().ContainsKey(PdfName.StructParent)) {
-                        CheckAnnotation(annot.GetPdfObject(), null);
+                        CheckAnnotation(annot.GetPdfObject(), (PdfStructElem)null);
                     }
                 }
             }
@@ -81,14 +82,48 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
 
         /// <summary>Checks PDF/UA-2 compliance of the annotation.</summary>
         /// <param name="annotation">the annotation dictionary to check</param>
+        /// <param name="context">
+        /// 
+        /// <see cref="iText.Pdfua.Checkers.Utils.PdfUAValidationContext"/>
+        /// used to find the structure node enclosing the annotation
+        /// using its
+        /// <c>StructParent</c>
+        /// value
+        /// </param>
+        public static void CheckAnnotation(PdfDictionary annotation, PdfUAValidationContext context) {
+            PdfStructElem parent = null;
+            if (annotation.GetAsNumber(PdfName.StructParent) != null) {
+                int structParentIndex = annotation.GetAsNumber(PdfName.StructParent).IntValue();
+                PdfDictionary pageDict = annotation.GetAsDictionary(PdfName.P);
+                PdfObjRef objRef = context.FindObjRefByStructParentIndex(structParentIndex, pageDict);
+                if (objRef != null) {
+                    parent = (PdfStructElem)objRef.GetParent();
+                }
+            }
+            CheckAnnotation(annotation, parent);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks PDF/UA-2 compliance of the annotation.</summary>
+        /// <param name="annotation">the annotation dictionary to check</param>
         /// <param name="parent">the parent structure element</param>
-        public static void CheckAnnotation(PdfDictionary annotation, PdfStructElem parent) {
+        internal static void CheckAnnotation(PdfDictionary annotation, PdfStructElem parent) {
+            if (parent != null) {
+                PdfString alt = parent.GetAlt();
+                PdfString contents = annotation.GetAsString(PdfName.Contents);
+                if (alt != null && contents != null && !alt.GetValue().Equals(contents.GetValue())) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENTS_AND_ALT_SHALL_BE_IDENTICAL);
+                }
+            }
+            PdfName parentRole = parent == null ? PdfName.Artifact : parent.GetRole();
+            if (!PdfName.Artifact.Equals(parentRole)) {
+                CheckAnnotationFlags(annotation);
+            }
             PdfName subtype = annotation.GetAsName(PdfName.Subtype);
             if (PdfName.Widget.Equals(subtype)) {
                 // Form field annotations are handled by PdfUA2FormChecker.
                 return;
             }
-            PdfName parentRole = parent == null ? PdfName.Artifact : parent.GetRole();
             if (markupAnnotationTypes.Contains(subtype)) {
                 CheckMarkupAnnotations(annotation, parentRole);
             }
@@ -129,6 +164,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                 CheckMarkupAnnotations(annotation, parentRole);
             }
         }
+//\endcond
 
         /// <summary>Checks the PDF/UA-2 8.9.2.3 Markup annotations requirements.</summary>
         /// <param name="annotation">the markup annotations</param>
@@ -174,6 +210,21 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             return richText.ToString();
         }
 
+        private static void CheckAnnotationFlags(PdfDictionary annotation) {
+            PdfNumber f = annotation.GetAsNumber(PdfName.F);
+            if (f == null) {
+                return;
+            }
+            int flags = f.IntValue();
+            if (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.INVISIBLE_ANNOT_SHALL_BE_AN_ARTIFACT);
+            }
+            if (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                .TOGGLE_NO_VIEW)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NO_VIEW_ANNOT_SHALL_BE_AN_ARTIFACT);
+            }
+        }
+
         /// <summary>Handler for checking annotation elements in the tag tree.</summary>
         public class PdfUA2AnnotationHandler : ContextAwareTagTreeIteratorHandler {
             /// <summary>
@@ -198,11 +249,6 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                     return;
                 }
                 PdfStructElem parent = (PdfStructElem)elem.GetParent();
-                PdfString alt = parent.GetAlt();
-                PdfString contents = annotObj.GetAsString(PdfName.Contents);
-                if (alt != null && contents != null && !alt.GetValue().Equals(contents.GetValue())) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.CONTENTS_AND_ALT_SHALL_BE_IDENTICAL);
-                }
                 CheckAnnotation(annotObj, parent);
             }
         }

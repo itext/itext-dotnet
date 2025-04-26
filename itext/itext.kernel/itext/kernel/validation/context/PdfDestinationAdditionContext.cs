@@ -92,6 +92,16 @@ namespace iText.Kernel.Validation.Context {
             return destination;
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// instance
+        /// </returns>
         public virtual PdfAction GetAction() {
             return action;
         }

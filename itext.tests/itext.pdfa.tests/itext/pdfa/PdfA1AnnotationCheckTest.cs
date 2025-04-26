@@ -211,6 +211,38 @@ namespace iText.Pdfa {
             CompareResult(outPdf, cmpPdf);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void AnnotationCheckTest10() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.NO_ROTATE);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AnnotationCheckTest11() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.NO_ZOOM);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
+                , e.Message);
+        }
+
         private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
             if (result != null) {

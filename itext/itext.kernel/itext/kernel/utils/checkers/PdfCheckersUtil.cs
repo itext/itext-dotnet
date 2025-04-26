@@ -194,5 +194,19 @@ namespace iText.Kernel.Utils.Checkers {
             }
             return true;
         }
+
+        /// <summary>Checks if the specified flag is set.</summary>
+        /// <param name="flags">a set of flags specifying various characteristics of the PDF object</param>
+        /// <param name="flag">to be checked</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the specified flag is set,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public static bool CheckFlag(int flags, int flag) {
+            return (flags & flag) != 0;
+        }
     }
 }

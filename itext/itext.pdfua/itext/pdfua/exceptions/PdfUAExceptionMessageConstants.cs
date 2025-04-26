@@ -85,7 +85,7 @@ namespace iText.Pdfua.Exceptions {
         public const String FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY = "File specification dictionary shall contain f key and uf key.";
 
         public const String FILE_SPEC_SHALL_CONTAIN_AFRELATIONSHIP = "When a file attachment annotation references"
-             + "file specification dictionary, that file specification dictionary shall include an AFRelationship entry.";
+             + " file specification dictionary, that file specification dictionary shall include an AFRelationship entry.";
 
         public const String FONT_SHOULD_BE_EMBEDDED = "Following font(s) are not embedded: {0}";
 
@@ -111,6 +111,8 @@ namespace iText.Pdfua.Exceptions {
         public const String INCORRECT_NOTE_TYPE_VALUE = "The value of the NoteType attribute shall be either \"Footnote\", \"Endnote\" or \"None\".";
 
         public const String INVALID_PDF_VERSION = "Specified document pdf version isn't supported in pdf/ua.";
+
+        public const String INVISIBLE_ANNOT_SHALL_BE_AN_ARTIFACT = "Annotations with the Invisible flag set " + "shall be artifacts.";
 
         public const String LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY = "Annotation of type Link " + "shall contain an alternate description via their Contents key.";
 
@@ -148,6 +150,8 @@ namespace iText.Pdfua.Exceptions {
         public const String NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT = "ID entry '{0}' shall be unique among all elements in the document’s structure hierarchy";
 
         public const String NOTE_TAG_SHALL_HAVE_ID_ENTRY = "Note tags shall include a unique ID entry.";
+
+        public const String NO_VIEW_ANNOT_SHALL_BE_AN_ARTIFACT = "Annotations with the NoView flag set and " + "the ToggleNoView flag not set shall be artifacts.";
 
         public const String OCG_PROPERTIES_CONFIG_SHALL_BE_AN_ARRAY = "Optional Content properties " + "configs shall be an array.";
 

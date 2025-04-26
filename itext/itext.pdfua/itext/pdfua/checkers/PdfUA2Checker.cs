@@ -120,6 +120,12 @@ namespace iText.Pdfua.Checkers {
                     CheckPdfObject(validationContext.GetObject());
                     break;
                 }
+
+                case ValidationType.ANNOTATION: {
+                    PdfAnnotationContext annotationContext = (PdfAnnotationContext)context;
+                    PdfUA2AnnotationChecker.CheckAnnotation(annotationContext.GetAnnotation(), this.context);
+                    break;
+                }
             }
         }
 

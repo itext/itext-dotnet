@@ -422,11 +422,10 @@ namespace iText.Pdfua.Checkers {
                 PdfWatermarkAnnotation annot = new PdfWatermarkAnnotation(new Rectangle(100, 100));
                 annot.SetContents("Contents");
                 annot.Put(PdfName.RC, new PdfString("<p>Rich text</p>"));
-                pdfPage.AddAnnotation(annot);
-                PdfObjRef objRef = pdfDoc.GetStructTreeRoot().FindObjRefByStructParentIndex(pdfPage.GetPdfObject(), 0);
-                TagTreePointer p = pdfDoc.GetTagStructureContext().CreatePointerForStructElem((PdfStructElem)objRef.GetParent
-                    ());
-                p.SetRole(StandardRoles.ARTIFACT);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ARTIFACT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
             }
             );
             framework.AssertBothValid("watermarkAnnotationAsArtifact", PdfUAConformance.PDF_UA_2);

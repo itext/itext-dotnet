@@ -83,12 +83,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void LinkAnnotNotDirectChildOfAnnotLayoutTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_129());
+            framework.AddSuppliers(new _Generator_130());
             framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotLayoutTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_129 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_129() {
+        private sealed class _Generator_130 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_130() {
             }
 
             public IBlockElement Generate() {
@@ -868,6 +868,106 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothValid("printerMAnnotNotInTagStructureTest", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InvisibleAnnotationArtifactTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfWatermarkAnnotation annotation = new PdfWatermarkAnnotation(new Rectangle(100, 100));
+                annotation.SetContents("Contents");
+                annotation.SetFlag(PdfAnnotation.INVISIBLE);
+                pdfPage.AddAnnotation(annotation);
+            }
+            );
+            framework.AssertBothValid("invisibleAnnotationArtifact", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InvisibleAnnotationTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
+                stamp.SetContents("Contents");
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetFlag(PdfAnnotation.INVISIBLE);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(stamp.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(stamp);
+            }
+            );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothValid("invisibleAnnotation", pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertBothFail("invisibleAnnotation", PdfUAExceptionMessageConstants.INVISIBLE_ANNOT_SHALL_BE_AN_ARTIFACT
+                        , false, pdfUAConformance);
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NoViewAnnotationArtifactTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfWatermarkAnnotation annotation = new PdfWatermarkAnnotation(new Rectangle(100, 100));
+                annotation.SetContents("Contents");
+                annotation.SetFlag(PdfAnnotation.NO_VIEW);
+                pdfPage.AddAnnotation(annotation);
+            }
+            );
+            framework.AssertBothValid("noViewAnnotationArtifact", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NoViewAnnotationTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
+                stamp.SetContents("Contents");
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetFlag(PdfAnnotation.NO_VIEW);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(stamp.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(stamp);
+            }
+            );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothValid("noViewAnnotation", pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertBothFail("noViewAnnotation", PdfUAExceptionMessageConstants.NO_VIEW_ANNOT_SHALL_BE_AN_ARTIFACT
+                        , false, pdfUAConformance);
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ToggleNoViewAnnotationTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
+                stamp.SetContents("Contents");
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetFlag(PdfAnnotation.NO_VIEW);
+                stamp.SetFlag(PdfAnnotation.TOGGLE_NO_VIEW);
+                pdfPage.AddAnnotation(stamp);
+            }
+            );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothValid("noViewAnnotation", pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    // TODO DEVSIX-9036. VeraPDF claims the document to be invalid, although it is valid.
+                    //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
+                    framework.AssertOnlyVeraPdfFail("toggleNoViewAnnotation", pdfUAConformance);
+                }
+            }
         }
 
         private PdfTextAnnotation CreateRichTextAnnotation() {

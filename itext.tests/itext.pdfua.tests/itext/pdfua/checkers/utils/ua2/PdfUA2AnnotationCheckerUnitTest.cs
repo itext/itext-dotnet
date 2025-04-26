@@ -28,6 +28,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Pdfua;
 using iText.Pdfua.Exceptions;
 using iText.Test;
@@ -318,7 +319,30 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             fsDict.Remove(PdfName.AFRelationship);
             PdfFileAttachmentAnnotation annotation = new PdfFileAttachmentAnnotation(new Rectangle(2, 2, 100, 100), fs
                 );
-            doc.GetPage(1).AddAnnotation(annotation);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => doc.GetPage(1).AddAnnotation
+                (annotation));
+            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.FILE_SPEC_SHALL_CONTAIN_AFRELATIONSHIP, e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfUAWithEmbeddedFilesWithoutAFROnClosingTest() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream(), new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0));
+            PdfUADocument doc = new PdfUADocument(writer, new PdfUAConfig(PdfUAConformance.PDF_UA_2, "hello", "en-US")
+                );
+            doc.AddNewPage();
+            PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(doc, "file".GetBytes(), "description", "file.txt", null
+                , null, null);
+            PdfDictionary fsDict = (PdfDictionary)fs.GetPdfObject();
+            fsDict.Remove(PdfName.AFRelationship);
+            PdfFileAttachmentAnnotation annotation = new PdfFileAttachmentAnnotation(new Rectangle(2, 2, 100, 100), fs
+                );
+            PdfPage page = doc.GetPage(1);
+            page.GetPdfObject().Put(PdfName.Annots, new PdfArray(annotation.GetPdfObject()));
+            TagTreePointer tagPointer = doc.GetTagStructureContext().GetAutoTaggingPointer();
+            tagPointer.AddTag(StandardRoles.ANNOT);
+            tagPointer.SetPageForTagging(page).AddAnnotationTag(annotation);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.FILE_SPEC_SHALL_CONTAIN_AFRELATIONSHIP, e.Message
                 );
