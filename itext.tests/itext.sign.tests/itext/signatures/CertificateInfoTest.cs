@@ -24,8 +24,12 @@ using System;
 using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Pdf;
+using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
@@ -35,6 +39,14 @@ namespace iText.Signatures {
 
         private static readonly String EXPECTED_EXCEPTION_MESSAGE = FACTORY.GetBouncyCastleFactoryTestUtil().GetCertificateInfoTestConst
             ();
+
+        private const String ENCODED_DN = "MD0xCzAJBgNVBAYMAkJFMQ4wDAYDVQQKDAVpVGV4dDEeMBwGA1UEAwwVaVRleHRUZXN0SW50ZXJtZWRpYXRl";
+
+        private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
+
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures" + "/CertificateInfoTest/";
 
         [NUnit.Framework.Test]
         public virtual void X500InvalidDirectoryConstructorTest() {
@@ -85,6 +97,29 @@ namespace iText.Signatures {
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => CertificateInfo.GetSubject(
                 new byte[] { 4, 8, 15, 16, 23, 42 }));
             NUnit.Framework.Assert.AreEqual(EXPECTED_EXCEPTION_MESSAGE, exception.InnerException.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DistinguishedNameEncodingAndComparisonTest() {
+            IX509Certificate cert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "intermediate.pem")[0];
+            IX500Name name = FACTORY.CreateX500Name(cert);
+            IX500Name differentlyEncodedName = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(Convert.FromBase64String
+                (ENCODED_DN)));
+            NUnit.Framework.Assert.IsTrue(differentlyEncodedName.Equals(name));
+            NUnit.Framework.Assert.IsTrue(name.Equals(differentlyEncodedName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DistinguishedNameEncodingAndComparisonIntegrationTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                PdfDocument doc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureWithNameEncodingDifferences.pdf"
+                    ));
+                SignatureUtil signUtil = new SignatureUtil(doc);
+                IList<String> signNames = signUtil.GetSignatureNames();
+                PdfPKCS7 pkcs7 = signUtil.ReadSignatureData(signNames[0]);
+                NUnit.Framework.Assert.IsNotNull(pkcs7);
+            }
+            );
         }
     }
 }
