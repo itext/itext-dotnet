@@ -48,10 +48,6 @@ namespace iText.IO.Util {
         public const String GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED = "Ghostscript command is not specified. Set the "
              + GHOSTSCRIPT_ENVIRONMENT_VARIABLE + " environment variable to a CLI command that can run the Ghostscript application. See BUILDING.MD in the root of the repository for more details.";
 
-        private const String GHOSTSCRIPT_FAILED = "GhostScript failed for <filename>.";
-
-        private const String CANNOT_OPEN_OUTPUT_DIRECTORY = "Cannot open output directory for <filename>.";
-
         private const String GHOSTSCRIPT_PARAMS = " -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 <pageNumberParam> -sOutputFile='<outputfile>' '<inputfile>'";
 
         private const String COMPARE_PARAMS = " '<image1>' '<image2>' '<difference>'";
@@ -108,14 +104,14 @@ namespace iText.IO.Util {
                 throw new ImageHandlerUtil.ImageHandlerExecutionException(this, GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED);
             }
             if (!FileUtil.DirectoryExists(outDir)) {
-                throw new ImageHandlerUtil.ImageHandlerExecutionException(this, CANNOT_OPEN_OUTPUT_DIRECTORY.Replace("<filename>"
+                throw new ImageHandlerUtil.ImageHandlerExecutionException(this, iText.IO.Exceptions.IoExceptionMessageConstant.CANNOT_OPEN_OUTPUT_DIRECTORY.Replace("<filename>"
                     , pdf));
             }
             pageNumber = (pageNumber == null) ? "" : "-sPageList=<pagelist>".Replace("<pagelist>", pageNumber);
             String currGsParams = GHOSTSCRIPT_PARAMS.Replace("<pageNumberParam>", pageNumber).Replace("<outputfile>", 
                 outDir + image).Replace("<inputfile>", pdf);
             if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                throw new ImageHandlerUtil.ImageHandlerExecutionException(this, GHOSTSCRIPT_FAILED.Replace("<filename>", pdf
+                throw new ImageHandlerUtil.ImageHandlerExecutionException(this, iText.IO.Exceptions.IoExceptionMessageConstant.GHOSTSCRIPT_FAILED.Replace("<filename>", pdf
                     ));
             }
         }

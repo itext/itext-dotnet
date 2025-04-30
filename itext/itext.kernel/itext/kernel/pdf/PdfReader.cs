@@ -1780,7 +1780,7 @@ namespace iText.Kernel.Pdf {
 
             public virtual int Get(long offset, byte[] bytes, int off, int len) {
                 if (buffer == null) {
-                    throw new InvalidOperationException("Already closed");
+                    throw new InvalidOperationException(iText.IO.Exceptions.IoExceptionMessageConstant.ALREADY_CLOSED);
                 }
                 if (offset >= buffer.Size()) {
                     return -1;
