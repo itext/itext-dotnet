@@ -28,30 +28,28 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class FormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT, DUMMY_NAME
-                );
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void GetSetConformanceLevelTest() {
-            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT, DUMMY_NAME
-                );
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME);
             builder.SetConformance(PdfConformance.PDF_A_1A);
             NUnit.Framework.Assert.AreSame(PdfAConformance.PDF_A_1A, builder.GetConformance().GetAConformance());
         }
 
         [NUnit.Framework.Test]
         public virtual void GetSetConformanceLevelPdfUATest() {
-            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT, DUMMY_NAME
-                );
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            FormFieldBuilderTest.TestBuilder builder = new FormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME);
             builder.SetConformance(PdfConformance.PDF_UA_1);
             NUnit.Framework.Assert.AreSame(PdfUAConformance.PDF_UA_1, builder.GetConformance().GetUAConformance());
         }

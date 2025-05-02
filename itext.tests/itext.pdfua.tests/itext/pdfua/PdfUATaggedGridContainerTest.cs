@@ -42,16 +42,9 @@ namespace iText.Pdfua {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfUAConformance> Data() {
@@ -60,6 +53,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleBorderBoxSizingTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -81,6 +75,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleMarginTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -99,6 +94,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimplePaddingTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -117,6 +113,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleBackgroundTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -132,6 +129,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void EmptyGridContainerTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 GridContainer gridContainer0 = new GridContainer();

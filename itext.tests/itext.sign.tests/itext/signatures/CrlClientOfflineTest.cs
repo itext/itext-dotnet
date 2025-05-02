@@ -37,12 +37,11 @@ namespace iText.Signatures {
 
         private const String CRL_DISTRIBUTION_POINT = "http://www.example.com/";
 
-        private static ICollection<byte[]> listOfByteArrays;
-
         [NUnit.Framework.Test]
         public virtual void CheckUnknownPdfExceptionWhenCrlIsNull() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => listOfByteArrays = new CrlClientOffline
-                (BouncyCastleFactoryCreator.GetFactory().CreateNullCrl()).GetEncoded(null, ""));
+            ICollection<byte[]> listOfByteArrays = null;
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => listOfByteArrays.AddAll(new CrlClientOffline
+                (BouncyCastleFactoryCreator.GetFactory().CreateNullCrl()).GetEncoded(null, "")));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNKNOWN_PDF_EXCEPTION, e.Message);
         }
 
@@ -131,7 +130,7 @@ namespace iText.Signatures {
             CrlClientOffline crlClientOffline = new CrlClientOffline(testBytes);
             IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "crlDistPoint.pem"
                 )[0];
-            listOfByteArrays = crlClientOffline.GetEncoded(checkCert, crlDistPoint);
+            ICollection<byte[]> listOfByteArrays = crlClientOffline.GetEncoded(checkCert, crlDistPoint);
             //These checks are enough, because there is exactly one element in the collection,
             //and these are the same test bytes 
             NUnit.Framework.Assert.AreEqual(1, listOfByteArrays.Count);

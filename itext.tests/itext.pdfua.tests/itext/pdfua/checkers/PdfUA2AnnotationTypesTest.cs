@@ -45,16 +45,9 @@ namespace iText.Pdfua.Checkers {
     public class PdfUA2AnnotationTypesTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUA2AnnotationTypesTest/";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfName> MarkupAnnotsTypes() {
@@ -74,6 +67,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationContentsAndStructureElementAltTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
@@ -90,6 +84,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PageWithTaggedAnnotTabOrderTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 pdfPage.SetTabOrder(PdfName.C);
@@ -104,6 +99,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PageWithNotTaggedAnnotTabOrderTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 pdfPage.SetTabOrder(PdfName.R);
@@ -118,6 +114,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("MarkupAnnotsTypes")]
         public virtual void MarkupAnnotationIsNotTaggedTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfDictionary annotation = new PdfDictionary();
@@ -138,6 +135,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("MarkupAnnotsTypes")]
         public virtual void MarkupAnnotationIsNotTaggedAsAnnotTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfDictionary annot = new PdfDictionary();
@@ -165,6 +163,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("MarkupAnnotsTypes")]
         public virtual void MarkupAnnotationRCAndContentsTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 String richText = "<body xmlns=\"http://www.w3.org/1999/xhtml\"><p style=\"color:#FF0000;\">Some&#13;</p>"
@@ -191,6 +190,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("MarkupAnnotsTypes")]
         public virtual void MarkupAnnotationValidTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 String value = "Red\rBlue\r";
@@ -211,6 +211,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void RubberStampAnnotationNoNameAndContentsTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
@@ -223,6 +224,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("AnnotTypesToCheckContents")]
         public virtual void AnnotationNoContentsTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfDictionary annot = new PdfDictionary();
@@ -239,6 +241,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("AnnotTypesToCheckContents")]
         public virtual void AnnotationEmptyContentsTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfDictionary annot = new PdfDictionary();
@@ -256,6 +259,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PopupAnnotationTaggedAsAnnotTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfPopupAnnotation popupAnnotation = new PdfPopupAnnotation(new Rectangle(100, 100));
@@ -268,6 +272,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PopupAnnotationTaggedAsArtifactTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfPopupAnnotation popupAnnotation = new PdfPopupAnnotation(new Rectangle(100, 100));
@@ -284,6 +289,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void FileAttachmentAnnotationValidTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
@@ -298,6 +304,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void FileAttachmentAnnotationInvalidFileSpecTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
@@ -315,6 +322,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DeprecatedAnnotTypes")]
         public virtual void DeprecatedAnnotationTypeTest(PdfName annotType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfDictionary annot = new PdfDictionary();
@@ -331,13 +339,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void WidgetAnnotationZeroWidthAndHeightTaggedAsFormTest() {
-            framework.AddSuppliers(new _Generator_355());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_363());
             framework.AssertBothFail("widgetAnnotationZeroWidthAndHeightTaggedAsForm", PdfUAExceptionMessageConstants.
                 WIDGET_WITH_ZERO_HEIGHT_SHALL_BE_AN_ARTIFACT, false, PdfUAConformance.PDF_UA_2);
         }
 
-        private sealed class _Generator_355 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_355() {
+        private sealed class _Generator_363 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_363() {
             }
 
             public IBlockElement Generate() {
@@ -353,6 +362,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PrinterMarkAnnotationTaggedAsAnnotTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -373,6 +383,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PrinterMarkAnnotationTaggedAsArtifactTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -388,6 +399,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PrinterMarkAnnotationNotTaggedTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -403,6 +415,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void WatermarkAnnotationAsRealContentTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfWatermarkAnnotation annot = new PdfWatermarkAnnotation(new Rectangle(100, 100));
@@ -417,6 +430,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void WatermarkAnnotationAsArtifactTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfWatermarkAnnotation annot = new PdfWatermarkAnnotation(new Rectangle(100, 100));

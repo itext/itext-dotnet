@@ -31,31 +31,31 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class NonTerminalFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            NonTerminalFormFieldBuilder builder = new NonTerminalFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NonTerminalFormFieldBuilder builder = new NonTerminalFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateNonTerminalFormField() {
-            PdfFormField nonTerminalFormField = new NonTerminalFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateNonTerminalFormField
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfFormField nonTerminalFormField = new NonTerminalFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateNonTerminalFormField
                 ();
-            CompareNonTerminalFormFields(nonTerminalFormField);
+            CompareNonTerminalFormFields(nonTerminalFormField, pdfDoc);
         }
 
-        private static void CompareNonTerminalFormFields(PdfFormField nonTerminalFormField) {
+        private static void CompareNonTerminalFormFields(PdfFormField nonTerminalFormField, PdfDocument pdfDoc) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             IList<PdfWidgetAnnotation> widgets = nonTerminalFormField.GetWidgets();
             NUnit.Framework.Assert.AreEqual(0, widgets.Count);
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            nonTerminalFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            nonTerminalFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, nonTerminalFormField
                 .GetPdfObject()));
         }

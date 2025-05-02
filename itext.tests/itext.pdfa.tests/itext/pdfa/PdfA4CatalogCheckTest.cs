@@ -176,7 +176,7 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidInfoTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck05.pdf";
+            String outPdf = destinationFolder + "pdfA4_catalogCheck05Invalid.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
@@ -408,7 +408,7 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidLangEntryTest() {
-            String outPdf = destinationFolder + "documentWithEmptyStringLangEntry.pdf";
+            String outPdf = destinationFolder + "documentWithInvalidLangEntry.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"

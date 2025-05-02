@@ -51,12 +51,10 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUATest/PdfUAFormFieldTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAFormFieldTest/";
 
         private static readonly String DOG = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/img/DOG.bmp";
-
-        private UaValidationTestFramework framework;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -67,19 +65,15 @@ namespace iText.Pdfua.Checkers {
             return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_1, PdfUAConformance.PDF_UA_2);
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
-        }
-
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBox(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_126());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_119());
             framework.AssertBothValid("testCheckBox", pdfUAConformance);
         }
 
-        private sealed class _Generator_126 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_126() {
+        private sealed class _Generator_119 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_119() {
             }
 
             public IBlockElement Generate() {
@@ -89,12 +83,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxWithCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_138(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_132(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxWithCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_138 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_138(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_132 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_132(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -111,12 +106,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxChecked(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_154(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_149(pdfUAConformance));
             framework.AssertBothValid("testCheckBox", pdfUAConformance);
         }
 
-        private sealed class _Generator_154 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_154(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_149 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_149(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -132,12 +128,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxCheckedAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_169(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_165(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxCheckedAlternativeDescription", pdfUAConformance);
         }
 
-        private sealed class _Generator_169 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_169(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_165 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_165(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -154,12 +151,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxCheckedCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_185(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_182(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxCheckedCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_185 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_185(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_182 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_182(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -179,12 +177,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_204(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_202(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_204 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_204(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_202 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_202(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -200,12 +199,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxInteractiveCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_219(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_218(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxInteractiveCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_219 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_219(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_218 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_218(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -225,6 +225,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxInteractiveCustomAppearanceChecked(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_238(pdfUAConformance));
             framework.AssertBothValid("checkBoxInteractiveCustomAppChecked", pdfUAConformance);
         }
@@ -251,12 +252,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButton(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_258());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_259());
             framework.AssertBothValid("testRadioButton", pdfUAConformance);
         }
 
-        private sealed class _Generator_258 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_258() {
+        private sealed class _Generator_259 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_259() {
             }
 
             public IBlockElement Generate() {
@@ -266,12 +268,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonChecked(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_270());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_272());
             framework.AssertBothValid("testRadioButtonChecked", pdfUAConformance);
         }
 
-        private sealed class _Generator_270 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_270() {
+        private sealed class _Generator_272 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_272() {
             }
 
             public IBlockElement Generate() {
@@ -283,12 +286,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_284());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_287());
             framework.AssertBothValid("testRadioButtonCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_284 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_284() {
+        private sealed class _Generator_287 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_287() {
             }
 
             public IBlockElement Generate() {
@@ -302,12 +306,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonCustomAppearanceChecked(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_300());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_304());
             framework.AssertBothValid("testRadioButtonCustomAppearanceChecked", pdfUAConformance);
         }
 
-        private sealed class _Generator_300 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_300() {
+        private sealed class _Generator_304 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_304() {
             }
 
             public IBlockElement Generate() {
@@ -322,13 +327,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonGroup(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_317());
-            framework.AddSuppliers(new _Generator_323());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_322());
+            framework.AddSuppliers(new _Generator_328());
             framework.AssertBothValid("testRadioButtonGroup", pdfUAConformance);
         }
 
-        private sealed class _Generator_317 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_317() {
+        private sealed class _Generator_322 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_322() {
             }
 
             public IBlockElement Generate() {
@@ -336,8 +342,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_323 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_323() {
+        private sealed class _Generator_328 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_328() {
             }
 
             public IBlockElement Generate() {
@@ -347,13 +353,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonGroupCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_336());
-            framework.AddSuppliers(new _Generator_346());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_342());
+            framework.AddSuppliers(new _Generator_352());
             framework.AssertBothValid("testRadioButtonGroupCustom", pdfUAConformance);
         }
 
-        private sealed class _Generator_336 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_336() {
+        private sealed class _Generator_342 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_342() {
             }
 
             public IBlockElement Generate() {
@@ -365,8 +372,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_346 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_346() {
+        private sealed class _Generator_352 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_352() {
             }
 
             public IBlockElement Generate() {
@@ -380,13 +387,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonGroupCustomAppearanceChecked(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_362());
-            framework.AddSuppliers(new _Generator_372());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_369());
+            framework.AddSuppliers(new _Generator_379());
             framework.AssertBothValid("testRadioButtonGroupCustomAppearanceChecked", pdfUAConformance);
         }
 
-        private sealed class _Generator_362 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_362() {
+        private sealed class _Generator_369 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_369() {
             }
 
             public IBlockElement Generate() {
@@ -398,8 +406,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_372 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_372() {
+        private sealed class _Generator_379 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_379() {
             }
 
             public IBlockElement Generate() {
@@ -414,12 +422,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_390());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_398());
             framework.AssertBothValid("testRadioButtonInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_390 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_390() {
+        private sealed class _Generator_398 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_398() {
             }
 
             public IBlockElement Generate() {
@@ -432,12 +441,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonCheckedInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_405());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_414());
             framework.AssertBothValid("testRadioButtonChecked", pdfUAConformance);
         }
 
-        private sealed class _Generator_405 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_405() {
+        private sealed class _Generator_414 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_414() {
             }
 
             public IBlockElement Generate() {
@@ -451,12 +461,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_421());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_431());
             framework.AssertBothValid("testRadioButtonCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_421 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_421() {
+        private sealed class _Generator_431 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_431() {
             }
 
             public IBlockElement Generate() {
@@ -472,12 +483,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonCustomAppearanceCheckedInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_440());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_451());
             framework.AssertBothValid("radioBtnCustomAppCheckedInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_440 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_440() {
+        private sealed class _Generator_451 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_451() {
             }
 
             public IBlockElement Generate() {
@@ -494,13 +506,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonGroupInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_459());
-            framework.AddSuppliers(new _Generator_468());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_471());
+            framework.AddSuppliers(new _Generator_480());
             framework.AssertBothValid("testRadioButtonGroupInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_459 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_459() {
+        private sealed class _Generator_471 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_471() {
             }
 
             public IBlockElement Generate() {
@@ -511,8 +524,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_468 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_468() {
+        private sealed class _Generator_480 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_480() {
             }
 
             public IBlockElement Generate() {
@@ -525,13 +538,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonGroupCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_484());
-            framework.AddSuppliers(new _Generator_496());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_497());
+            framework.AddSuppliers(new _Generator_509());
             framework.AssertBothValid("testRadioButtonGroupInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_484 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_484() {
+        private sealed class _Generator_497 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_497() {
             }
 
             public IBlockElement Generate() {
@@ -545,8 +559,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_496 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_496() {
+        private sealed class _Generator_509 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_509() {
             }
 
             public IBlockElement Generate() {
@@ -563,13 +577,14 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonGroupCustomAppearanceCheckedInteractive(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_515());
-            framework.AddSuppliers(new _Generator_527());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_529());
+            framework.AddSuppliers(new _Generator_541());
             framework.AssertBothValid("radioBtnCustomAppCheckedInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_515 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_515() {
+        private sealed class _Generator_529 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_529() {
             }
 
             public IBlockElement Generate() {
@@ -583,8 +598,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_527 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_527() {
+        private sealed class _Generator_541 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_541() {
             }
 
             public IBlockElement Generate() {
@@ -601,12 +616,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButton(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_547(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_562(this));
             framework.AssertBothValid("testButton", pdfUAConformance);
         }
 
-        private sealed class _Generator_547 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_547(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_562 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_562(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -622,12 +638,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_562(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_578(this));
             framework.AssertBothValid("testButtonCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_562 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_562(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_578 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_578(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -645,12 +662,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonSingleLine(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_579(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_596(this));
             framework.AssertBothValid("testButtonSingleLine", pdfUAConformance);
         }
 
-        private sealed class _Generator_579 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_579(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_596 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_596(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -666,12 +684,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonCustomContent(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_594(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_612(this));
             framework.AssertBothValid("testButtonCustomContent", pdfUAConformance);
         }
 
-        private sealed class _Generator_594 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_594(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_612 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_612(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -688,12 +707,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonCustomContentIsAlsoForm(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_610());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_629());
             framework.AssertBothValid("testButtonCustomContentIsAlsoForm", pdfUAConformance);
         }
 
-        private sealed class _Generator_610 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_610() {
+        private sealed class _Generator_629 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_629() {
             }
 
             public IBlockElement Generate() {
@@ -707,12 +727,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_626(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_646(this));
             framework.AssertBothValid("testButtonInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_626 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_626(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_646 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_646(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -730,12 +751,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_644(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_665(this));
             framework.AssertBothValid("testButtonCustomAppearanceInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_644 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_644(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_665 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_665(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -755,12 +777,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonSingleLineInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_664(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_686(this));
             framework.AssertBothValid("testButtonSingleLineInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_664 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_664(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_686 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_686(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -778,12 +801,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonCustomContentInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_682(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_705(this));
             framework.AssertBothValid("testButtonCustomContentInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_682 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_682(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_705 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_705(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -803,12 +827,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonCustomContentIsAlsoFormInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_701(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_725(this));
             framework.AssertBothValid("testButtonCustomContentIsAlsoFormInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_701 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_701(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_725 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_725(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -830,12 +855,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputField(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_722(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_747(this));
             framework.AssertBothValid("testInputField", pdfUAConformance);
         }
 
-        private sealed class _Generator_722 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_722(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_747 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_747(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -850,12 +876,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithValue(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_736(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_762(this));
             framework.AssertBothValid("testInputFieldWithValue", pdfUAConformance);
         }
 
-        private sealed class _Generator_736 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_736(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_762 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_762(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -871,12 +898,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_751(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_778(this));
             framework.AssertBothValid("testInputFieldWithCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_751 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_751(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_778 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_778(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -893,12 +921,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithCustomAppearanceAndValue(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_767(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_795(this));
             framework.AssertBothValid("testInputFieldWithCustomAppearanceAndValue", pdfUAConformance);
         }
 
-        private sealed class _Generator_767 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_767(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_795 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_795(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -916,12 +945,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithCustomAppearanceAndPlaceHolder(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_784(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_813(this));
             framework.AssertBothValid("testInputFieldWithCustomAppearanceAndValue", pdfUAConformance);
         }
 
-        private sealed class _Generator_784 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_784(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_813 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_813(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -939,12 +969,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_801(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_831(this));
             framework.AssertBothValid("testInputFieldInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_801 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_801(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_831 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_831(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -961,12 +992,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithValueInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_817(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_848(this));
             framework.AssertBothValid("testInputFieldWithValueInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_817 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_817(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_848 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_848(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -984,12 +1016,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_834(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_866(this));
             framework.AssertBothValid("inputFieldCustomAppInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_834 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_834(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_866 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_866(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1009,12 +1042,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithCustomAppearanceAndValueInteractive(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_853(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_886(this));
             framework.AssertBothValid("inputFieldCustomAppValueInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_853 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_853(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_886 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_886(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1035,12 +1069,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldWithCustomAppearanceAndPlaceHolderInteractive(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_873(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_907(this));
             framework.AssertBothValid("inpFieldCustomAppPlaceholderInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_873 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_873(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_907 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_907(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1060,12 +1095,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextArea(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_892(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_927(this));
             framework.AssertBothValid("testTextArea", pdfUAConformance);
         }
 
-        private sealed class _Generator_892 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_892(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_927 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_927(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1080,12 +1116,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithValue(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_906(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_942(this));
             framework.AssertBothValid("testTextAreaWithValue", pdfUAConformance);
         }
 
-        private sealed class _Generator_906 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_906(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_942 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_942(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1101,12 +1138,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_921(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_958(this));
             framework.AssertBothValid("testTextAreaWithCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_921 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_921(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_958 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_958(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1123,12 +1161,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithCustomAppearanceAndValue(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_937(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_975(this));
             framework.AssertBothValid("testTextAreaWithCustomAppearanceAndValue", pdfUAConformance);
         }
 
-        private sealed class _Generator_937 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_937(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_975 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_975(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1146,12 +1185,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithCustomAppearanceAndPlaceHolder(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_954(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_993(this));
             framework.AssertBothValid("testTextAreaWithCustomAppearanceAndValue", pdfUAConformance);
         }
 
-        private sealed class _Generator_954 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_954(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_993 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_993(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1169,12 +1209,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_971(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1011(this));
             framework.AssertBothValid("testTextAreaInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_971 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_971(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1011 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1011(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1191,12 +1232,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithValueInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_987(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1028(this));
             framework.AssertBothValid("testTextAreaWithValueInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_987 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_987(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1028 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1028(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1214,12 +1256,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1004(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1046(this));
             framework.AssertBothValid("textAreaWithCustomAppearanceInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1004 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1004(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1046 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1046(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1238,12 +1281,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithCustomAppearanceAndValueInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1023(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1066(this));
             framework.AssertBothValid("textAreaCustomAppValueInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1023 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1023(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1066 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1066(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1264,12 +1308,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaWithCustomAppearanceAndPlaceHolderInteractive(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_1043(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1087(this));
             framework.AssertBothValid("textAreaCustomAppPlaceHolderInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1043 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1043(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1087 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1087(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1289,12 +1334,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBox(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1062(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1107(this));
             framework.AssertBothValid("testListBox", pdfUAConformance);
         }
 
-        private sealed class _Generator_1062 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1062(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1107 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1107(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1311,12 +1357,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBoxCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1078(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1124(this));
             framework.AssertBothValid("testListBoxCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_1078 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1078(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1124 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1124(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1336,12 +1383,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBoxCustomAppearanceSelected(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1097(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1144(this));
             framework.AssertBothValid("testListBoxCustomAppearanceSelected", pdfUAConformance);
         }
 
-        private sealed class _Generator_1097 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1097(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1144 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1144(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1361,12 +1409,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBoxInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1116(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1164(this));
             framework.AssertBothValid("testListBoxInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1116 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1116(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1164 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1164(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1385,12 +1434,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBoxCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1134(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1183(this));
             framework.AssertBothValid("testListBoxCustomAppearanceInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1134 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1134(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1183 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1183(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1412,12 +1462,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBoxCustomAppearanceSelectedInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1155(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1205(this));
             framework.AssertBothValid("listBoxCustomAppSelectedInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1155 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1155(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1205 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1205(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1439,12 +1490,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBox(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1176(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1227(this));
             framework.AssertBothValid("testComboBox", pdfUAConformance);
         }
 
-        private sealed class _Generator_1176 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1176(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1227 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1227(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1461,12 +1513,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBoxCustomAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1192(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1244(this));
             framework.AssertBothValid("testComboBoxCustomAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_1192 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1192(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1244 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1244(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1486,12 +1539,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBoxCustomAppearanceSelected(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1211(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1264(this));
             framework.AssertBothValid("testListBoxCustomAppearanceSelected", pdfUAConformance);
         }
 
-        private sealed class _Generator_1211 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1211(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1264 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1264(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1511,12 +1565,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBoxInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1230(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1284(this));
             framework.AssertBothValid("testComboBoxInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1230 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1230(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1284 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1284(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1535,12 +1590,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBoxCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1248(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1303(this));
             framework.AssertBothValid("comboBoxCustomAppearanceInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1248 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1248(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1303 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1303(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1562,12 +1618,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBoxCustomAppearanceSelectedInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1269(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1325(this));
             framework.AssertBothValid("comboBoxCustomAppInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1269 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1269(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1325 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1325(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1589,12 +1646,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearance(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1290(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1347(this));
             framework.AssertBothValid("testSignatureAppearance", pdfUAConformance);
         }
 
-        private sealed class _Generator_1290 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1290(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1347 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1347(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1610,12 +1668,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceWithSignedAppearanceText(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1305(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1363(this));
             framework.AssertBothValid("signatureAppearanceSignedAppearanceText", pdfUAConformance);
         }
 
-        private sealed class _Generator_1305 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1305(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1363 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1363(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1635,12 +1694,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceWithCustomContent(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1324(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1383(this));
             framework.AssertBothValid("signatureAppearanceSignedAppearanceText", pdfUAConformance);
         }
 
-        private sealed class _Generator_1324 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1324(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1383 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1383(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1659,12 +1719,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceWithSignedAppearanceAndCustomAppearanceText(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_1343(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1403(this));
             framework.AssertBothValid("signAppSignedAppCustomAppText", pdfUAConformance);
         }
 
-        private sealed class _Generator_1343 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1343(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1403 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1403(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1686,12 +1747,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1364(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1425(this));
             framework.AssertBothValid("testSignatureAppearanceInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1364 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1364(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1425 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1425(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1710,12 +1772,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceWithSignedAppearanceTextInteractive(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_1382(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1444(this));
             framework.AssertBothValid("signAppSignedTextInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1382 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1382(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1444 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1444(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1737,12 +1800,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceWithCustomContentInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1404(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1467(this));
             framework.AssertBothValid("signedAppearanceTextInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1404 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1404(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1467 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1467(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1762,12 +1826,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignedAndCustomAppearanceTextInteractive(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1425(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1489(this));
             framework.AssertBothValid("signedCustomAppTextInteractive", pdfUAConformance);
         }
 
-        private sealed class _Generator_1425 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1425(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1489 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1489(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1791,7 +1856,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveCheckBoxNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1448());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1513());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveCheckBoxNoAlternativeDescription", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1804,8 +1870,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1448 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1448() {
+        private sealed class _Generator_1513 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1513() {
             }
 
             public IBlockElement Generate() {
@@ -1817,7 +1883,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveRadioButtonNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1470());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1536());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveRadioButtonNoAltDescr", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1830,8 +1897,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1470 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1470() {
+        private sealed class _Generator_1536 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1536() {
             }
 
             public IBlockElement Generate() {
@@ -1843,7 +1910,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveButtonNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1491(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1558(this));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveButtonNoAlternativeDescription", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1856,8 +1924,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1491 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1491(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1558 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1558(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1873,7 +1941,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveInputFieldNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1514(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1582(this));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveInputFieldNoAltDescr", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1886,8 +1955,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1514 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1514(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1582 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1582(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1903,7 +1972,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveTextAreaNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1536(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1605(this));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveTextAreaNoAlternativeDescription", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1916,8 +1986,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1536 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1536(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1605 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1605(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1933,7 +2003,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveListBoxNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1558(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1628(this));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveListBoxNoAlternativeDescription", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1946,8 +2017,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1558 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1558(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1628 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1628(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1963,7 +2034,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveComboBoxNoAlternativeDescription(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1580(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1651(this));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveComboBoxNoAlternativeDescription", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -1976,8 +2048,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1580 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1580(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1651 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1651(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1994,7 +2066,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInteractiveSignatureAppearanceNoAlternativeDescription(PdfUAConformance pdfUAConformance
             ) {
-            framework.AddSuppliers(new _Generator_1603(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1675(this));
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("interactiveSignAppearanceNoAltDescription", PdfUAExceptionMessageConstants.MISSING_FORM_FIELD_DESCRIPTION
                     , pdfUAConformance);
@@ -2007,8 +2080,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1603 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1603(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1675 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1675(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2024,12 +2097,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1625(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1698(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1625 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1625(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_1698 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1698(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -2046,12 +2120,13 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestCheckBoxArtifactRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1641(pdfUAConformance));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1715(pdfUAConformance));
             framework.AssertBothValid("testCheckBoxArtifactRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1641 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1641(PdfUAConformance pdfUAConformance) {
+        private sealed class _Generator_1715 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1715(PdfUAConformance pdfUAConformance) {
                 this.pdfUAConformance = pdfUAConformance;
             }
 
@@ -2067,14 +2142,15 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1656());
-            framework.AddSuppliers(new _Generator_1666());
-            framework.AddSuppliers(new _Generator_1676());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1731());
+            framework.AddSuppliers(new _Generator_1741());
+            framework.AddSuppliers(new _Generator_1751());
             framework.AssertBothValid("testRadioButtonDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1656 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1656() {
+        private sealed class _Generator_1731 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1731() {
             }
 
             public IBlockElement Generate() {
@@ -2086,8 +2162,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1666 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1666() {
+        private sealed class _Generator_1741 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1741() {
             }
 
             public IBlockElement Generate() {
@@ -2099,8 +2175,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1676 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1676() {
+        private sealed class _Generator_1751 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1751() {
             }
 
             public IBlockElement Generate() {
@@ -2112,14 +2188,15 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonArtifactRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1690());
-            framework.AddSuppliers(new _Generator_1700());
-            framework.AddSuppliers(new _Generator_1710());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1766());
+            framework.AddSuppliers(new _Generator_1776());
+            framework.AddSuppliers(new _Generator_1786());
             framework.AssertBothValid("testRadioButtonArtifactRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1690 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1690() {
+        private sealed class _Generator_1766 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1766() {
             }
 
             public IBlockElement Generate() {
@@ -2130,8 +2207,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1700 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1700() {
+        private sealed class _Generator_1776 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1776() {
             }
 
             public IBlockElement Generate() {
@@ -2143,8 +2220,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1710 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1710() {
+        private sealed class _Generator_1786 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1786() {
             }
 
             public IBlockElement Generate() {
@@ -2156,13 +2233,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1724(this));
-            framework.AddSuppliers(new _Generator_1735(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1801(this));
+            framework.AddSuppliers(new _Generator_1812(this));
             framework.AssertBothValid("testButtonDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1724 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1724(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1801 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1801(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2178,8 +2256,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1735 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1735(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1812 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1812(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2196,14 +2274,15 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestInputFieldDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1751(this));
-            framework.AddSuppliers(new _Generator_1762(this));
-            framework.AddSuppliers(new _Generator_1773(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1829(this));
+            framework.AddSuppliers(new _Generator_1840(this));
+            framework.AddSuppliers(new _Generator_1851(this));
             framework.AssertBothValid("testInputFieldDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1751 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1751(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1829 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1829(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2219,8 +2298,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1762 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1762(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1840 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1840(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2235,8 +2314,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1773 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1773(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1851 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1851(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2253,14 +2332,15 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextAreaDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1789(this));
-            framework.AddSuppliers(new _Generator_1799(this));
-            framework.AddSuppliers(new _Generator_1808(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1868(this));
+            framework.AddSuppliers(new _Generator_1878(this));
+            framework.AddSuppliers(new _Generator_1887(this));
             framework.AssertBothValid("testTextAreaDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1789 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1789(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1868 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1868(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2275,8 +2355,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1799 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1799(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1878 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1878(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2290,8 +2370,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1808 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1808(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1887 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1887(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2307,13 +2387,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestListBoxDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1823(this));
-            framework.AddSuppliers(new _Generator_1833(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1903(this));
+            framework.AddSuppliers(new _Generator_1913(this));
             framework.AssertBothValid("testListBoxDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1823 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1823(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1903 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1903(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2328,8 +2409,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1833 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1833(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1913 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1913(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2345,13 +2426,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestComboBoxDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1850(this));
-            framework.AddSuppliers(new _Generator_1863(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1931(this));
+            framework.AddSuppliers(new _Generator_1944(this));
             framework.AssertBothValid("testComboBoxDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1850 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1850(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1931 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1931(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2368,8 +2450,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1863 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1863(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1944 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1944(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2385,13 +2467,14 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureAppearanceDifferentRole(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1878(this));
-            framework.AddSuppliers(new _Generator_1890(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1960(this));
+            framework.AddSuppliers(new _Generator_1972(this));
             framework.AssertBothValid("testSignatureAppearanceDifferentRole", pdfUAConformance);
         }
 
-        private sealed class _Generator_1878 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1878(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1960 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1960(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2407,8 +2490,8 @@ namespace iText.Pdfua.Checkers {
             private readonly PdfUAFormFieldsTest _enclosing;
         }
 
-        private sealed class _Generator_1890 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1890(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_1972 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1972(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -2425,6 +2508,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextBuilderWithTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -2447,6 +2531,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestTextBuilderNoTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -2469,6 +2554,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestChoiceBuilderWithTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfChoiceFormField field = new ChoiceFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100
@@ -2490,6 +2576,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestChoiceBuilderNoTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfChoiceFormField field = new ChoiceFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100
@@ -2511,6 +2598,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonBuilderWithTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField field = new PushButtonFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
@@ -2532,6 +2620,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonBuilderNoTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField field = new PushButtonFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
@@ -2553,6 +2642,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestButtonBuilderNoTuNotVisible(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField field = new PushButtonFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
@@ -2575,6 +2665,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonBuilderNoTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, "Radio");
@@ -2600,6 +2691,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestRadioButtonBuilderWithTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, "Radio");
@@ -2625,6 +2717,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureBuilderWithTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfSignatureFormField field = new SignatureFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
@@ -2647,6 +2740,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestSignatureBuilderNoTu(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfSignatureFormField field = new SignatureFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle
@@ -2669,6 +2763,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestFormFieldWithAltEntry(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -2692,6 +2787,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestFormFieldWithContentsEntry(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -2714,6 +2810,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestFormFieldAsStream(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfObject page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfStream streamObj = new PdfStream();
@@ -2746,6 +2843,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SeveralWidgetKidsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfObject page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfStream streamObj = new PdfStream();
@@ -2788,6 +2886,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SeveralWidgetKidsWithRoleTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfObject page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfStream streamObj = new PdfStream();
@@ -2833,6 +2932,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void WidgetNeitherFormNorArtifactTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfDictionary page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfDictionary widget = new PdfDictionary();
@@ -2871,6 +2971,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void WidgetNeitherFormNorArtifactInAcroformTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfDictionary page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -2898,6 +2999,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void WidgetIsArtifactInAcroformTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfDictionary page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -2932,6 +3034,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void WidgetLabelNoContentsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfObject page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfStream streamObj = new PdfStream();
@@ -2967,6 +3070,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AdditionalActionAndContentsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfObject page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfDictionary widget = new PdfDictionary();
@@ -2999,6 +3103,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AdditionalActionNoContentsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 TagTreePointer p = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
@@ -3032,6 +3137,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AdditionalActionNoContentsAcroformTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfDictionary page = pdfDoc.AddNewPage().GetPdfObject();
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -3071,6 +3177,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void NoContentsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddAfterGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 TagTreePointer p = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
@@ -3097,6 +3204,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TextFieldRVAndVPositiveTest1(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -3117,6 +3225,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TextFieldRVAndVPositiveTest2(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -3134,6 +3243,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TextFieldRVAndVPositiveTest3(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -3154,6 +3264,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TextFieldRVAndVNegativeTest1(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -3178,6 +3289,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TextFieldRVAndVNegativeTest2(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -3204,6 +3316,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TextFieldRVAndVNegativeTest3(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "hello").SetWidgetRectangle(new Rectangle(100, 100
@@ -3230,12 +3343,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceWithImage(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2776());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_2889());
             framework.AssertBothValid("signatureAppearanceWithImage", pdfUAConformance);
         }
 
-        private sealed class _Generator_2776 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2776() {
+        private sealed class _Generator_2889 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2889() {
             }
 
             public IBlockElement Generate() {
@@ -3259,12 +3373,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceWithLineSeparator(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2801());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_2915());
             framework.AssertBothValid("signatureAppearanceLineSep", pdfUAConformance);
         }
 
-        private sealed class _Generator_2801 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2801() {
+        private sealed class _Generator_2915 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2915() {
             }
 
             public IBlockElement Generate() {
@@ -3282,12 +3397,13 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SignatureAppearanceBackgroundImage(PdfUAConformance pdfUAConformance) {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
-            framework.AddSuppliers(new _Generator_2821(this));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_2936(this));
             framework.AssertBothValid("signatureAppearanceBackgroundImage", pdfUAConformance);
         }
 
-        private sealed class _Generator_2821 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_2821(PdfUAFormFieldsTest _enclosing) {
+        private sealed class _Generator_2936 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_2936(PdfUAFormFieldsTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

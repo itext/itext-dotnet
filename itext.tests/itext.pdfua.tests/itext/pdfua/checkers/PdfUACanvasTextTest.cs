@@ -43,16 +43,9 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/iTextFreeSansWithE001Glyph.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
         }
 
         public static IList<String> TextRepresentation() {
@@ -62,13 +55,14 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.Test]
         public virtual void PuaValueInLayoutTest() {
             String filename = "puaValueInLayoutTest";
-            framework.AddSuppliers(new _Generator_81());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+            framework.AddSuppliers(new _Generator_75());
             framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT, PdfUAConformance
                 .PDF_UA_2);
         }
 
-        private sealed class _Generator_81 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_81() {
+        private sealed class _Generator_75 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_75() {
             }
 
             public IBlockElement Generate() {
@@ -81,6 +75,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
         public virtual void PuaValueWithoutAttributesTest(String textRepresentation) {
             String filename = "puaValueWithoutAttributesTest_" + textRepresentation;
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
                 TagTreePointer pointer = document.GetTagStructureContext().GetAutoTaggingPointer();
@@ -102,6 +97,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
         public virtual void PuaValueWithAltOnTagTest(String textRepresentation) {
             String filename = "puaValueWithAltOnTagTest_" + textRepresentation;
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
                 TagTreePointer pointer = document.GetTagStructureContext().GetAutoTaggingPointer();
@@ -126,6 +122,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
         public virtual void PuaValueWithActualTextOnTagTest(String textRepresentation) {
             String filename = "puaValueWithActualTextOnTagTest_" + textRepresentation;
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
                 TagTreePointer pointer = document.GetTagStructureContext().GetAutoTaggingPointer();
@@ -150,6 +147,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
         public virtual void PuaValueWithAltOnCanvasTest(String textRepresentation) {
             String filename = "puaValueWithAltOnCanvasTest_" + textRepresentation;
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
                 TagTreePointer pointer = document.GetTagStructureContext().GetAutoTaggingPointer();
@@ -173,6 +171,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
         public virtual void PuaValueWithActualTextOnCanvasTest(String textRepresentation) {
             String filename = "puaValueWithActualTextOnCanvasTest_" + textRepresentation;
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
                 TagTreePointer pointer = document.GetTagStructureContext().GetAutoTaggingPointer();
@@ -196,6 +195,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
         public virtual void PuaValueOnTwoPagesTest(String textRepresentation) {
             String filename = "puaValueOnTwoPagesTest_" + textRepresentation;
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 // Text on page 1 contains PUA and alt, which is valid.
                 PdfCanvas canvasOnPageOne = new PdfCanvas(document.AddNewPage());

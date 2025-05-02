@@ -63,11 +63,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void MarkerPathRefXAndRefYTest() {
-            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAutoOrient");
-        }
-
-        [NUnit.Framework.Test]
         public virtual void MarkerPathViewboxRightOrientTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathViewboxRightOrient");
         }

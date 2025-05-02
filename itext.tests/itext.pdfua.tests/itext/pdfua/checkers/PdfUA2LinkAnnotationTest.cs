@@ -46,16 +46,9 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfName> TestSources() {
@@ -64,6 +57,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void LinkAnnotationIsNotTaggedTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination destination = PdfStructureDestination.CreateFit(structElem);
@@ -78,6 +72,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void LinkAnnotationWithInvalidTagTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination destination = PdfStructureDestination.CreateFit(structElem);
@@ -96,6 +91,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void LinkAnnotationWithReferenceTagTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination destination = PdfStructureDestination.CreateFit(structElem);
@@ -124,6 +120,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void DifferentStructureDestinationsInDifferentStructureElementsTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructElem structElem2 = structElem.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
@@ -145,6 +142,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameStructureDestinationsInDifferentParagraphsTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 document.SetFont(LoadFont());
@@ -172,11 +170,12 @@ namespace iText.Pdfua.Checkers {
             );
             String filename = "sameStructDestsParagraph_";
             String expectedMessage = PdfUAExceptionMessageConstants.SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS;
-            Validate(filename, expectedMessage, destLocation);
+            Validate(filename, expectedMessage, destLocation, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameStructureDestinationsInDifferentStructureElementsOnPageTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
@@ -185,11 +184,12 @@ namespace iText.Pdfua.Checkers {
             );
             String filename = "sameStructureDestinations_";
             String expectedMessage = PdfUAExceptionMessageConstants.SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS;
-            Validate(filename, expectedMessage, destLocation);
+            Validate(filename, expectedMessage, destLocation, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameNamedDestinationsInDifferentStructureElementsOnPageTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfNamedDestination namedDestination = GetNamedDestination(pdfDoc, structElem, "dest");
@@ -204,6 +204,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameStringDestinationsInDifferentStructureElementsOnPageTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStringDestination namedDestination = GetStringDestination(pdfDoc, structElem, "dest");
@@ -218,6 +219,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameStringDestinationsInDifferentStructureElementsSDTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
@@ -238,6 +240,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameStringDestinationsInDifferentStructureElementsDTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
@@ -266,6 +269,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void DifferentStructureDestinationsInSameStructureElementTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructElem structElem2 = structElem.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
@@ -276,11 +280,12 @@ namespace iText.Pdfua.Checkers {
             );
             String filename = "differentStructureDestinations_";
             String expectedMessage = PdfUAExceptionMessageConstants.DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM;
-            Validate(filename, expectedMessage, destLocation);
+            Validate(filename, expectedMessage, destLocation, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void DifferentNamedDestinationsInSameStructureElementTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructElem structElem2 = structElem.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
@@ -297,6 +302,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void DifferentStringDestinationsInSameStructureElementTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructElem structElem2 = structElem.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
@@ -313,6 +319,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void SameDestinationsDifferentTypesTest(PdfName destLocation) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfStructElem structElem = GetPdfStructElem(pdfDoc);
                 PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
@@ -322,7 +329,7 @@ namespace iText.Pdfua.Checkers {
             );
             String filename = "sameDestinationsDifferentTypes_";
             String expectedMessage = PdfUAExceptionMessageConstants.SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS;
-            Validate(filename, expectedMessage, destLocation);
+            Validate(filename, expectedMessage, destLocation, framework);
         }
 
         private static void AddLinkAnnotations(PdfName destLocation, PdfDocument pdfDoc, PdfDestination destination
@@ -414,7 +421,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private void Validate(String filename, String expectedMessage, PdfName destLocation) {
+        private void Validate(String filename, String expectedMessage, PdfName destLocation, UaValidationTestFramework
+             framework) {
             // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
             if (PdfName.D.Equals(destLocation)) {

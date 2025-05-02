@@ -164,7 +164,7 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void StandardStructureTypeIsRemappedThroughNonStandardOneTest() {
-            String outPdf = DESTINATION_FOLDER + "standardStructureTypeIsRemappedThroughNonStandardOneTest.pdf";
+            String outPdf = DESTINATION_FOLDER + "stStructTypeRemappedNonStandardOne.pdf";
             PdfUA2TestPdfDocument pdfDoc = new PdfUA2TestPdfDocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)));
             PdfPage page1 = pdfDoc.AddNewPage();

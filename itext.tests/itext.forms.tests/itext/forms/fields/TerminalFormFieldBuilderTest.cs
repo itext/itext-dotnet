@@ -29,33 +29,34 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class TerminalFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT
-                , DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME
+                );
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void GetSetWidgetTest() {
-            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT
-                , DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME
+                );
             builder.SetWidgetRectangle(DUMMY_RECTANGLE);
             NUnit.Framework.Assert.AreSame(DUMMY_RECTANGLE, builder.GetWidgetRectangle());
         }
 
         [NUnit.Framework.Test]
         public virtual void GetSetPageTest() {
-            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT
-                , DUMMY_NAME);
-            PdfPage page = DUMMY_DOCUMENT.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME
+                );
+            PdfPage page = pdfDoc.AddNewPage();
             builder.SetPage(page);
             NUnit.Framework.Assert.AreEqual(1, builder.GetPage());
             builder.SetPage(5);
@@ -64,17 +65,18 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void SetPageToFieldTest() {
-            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(DUMMY_DOCUMENT
-                , DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            TerminalFormFieldBuilderTest.TestBuilder builder = new TerminalFormFieldBuilderTest.TestBuilder(pdfDoc, DUMMY_NAME
+                );
             builder.SetPage(5);
-            PdfFormAnnotation formFieldAnnot = new _PdfFormAnnotation_77((PdfDictionary)new PdfDictionary().MakeIndirect
-                (DUMMY_DOCUMENT));
-            PdfFormField formField = PdfFormCreator.CreateFormField(DUMMY_DOCUMENT).AddKid(formFieldAnnot);
+            PdfFormAnnotation formFieldAnnot = new _PdfFormAnnotation_79((PdfDictionary)new PdfDictionary().MakeIndirect
+                (pdfDoc));
+            PdfFormField formField = PdfFormCreator.CreateFormField(pdfDoc).AddKid(formFieldAnnot);
             builder.SetPageToField(formField);
         }
 
-        private sealed class _PdfFormAnnotation_77 : PdfFormAnnotation {
-            public _PdfFormAnnotation_77(PdfDictionary baseArg1)
+        private sealed class _PdfFormAnnotation_79 : PdfFormAnnotation {
+            public _PdfFormAnnotation_79(PdfDictionary baseArg1)
                 : base(baseArg1) {
             }
 

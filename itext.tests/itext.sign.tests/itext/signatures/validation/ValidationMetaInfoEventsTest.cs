@@ -36,8 +36,6 @@ namespace iText.Signatures.Validation {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/ValidationMetaInfoEventsTest/";
 
-        private static ValidationMetaInfoEventsTest.StoreEventsHandler handler;
-
         private readonly ValidatorChainBuilder builder = new ValidatorChainBuilder();
 
         private readonly ValidationContext validationContext = new ValidationContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
@@ -47,19 +45,11 @@ namespace iText.Signatures.Validation {
         public static void Before() {
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUpHandler() {
-            handler = new ValidationMetaInfoEventsTest.StoreEventsHandler(UnknownContext.PERMISSIVE);
-            EventManager.GetInstance().Register(handler);
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void ResetHandler() {
-            EventManager.GetInstance().Unregister(handler);
-        }
-
         [NUnit.Framework.Test]
         public virtual void DocumentRevisionsValidatorSingleEventTest() {
+            ValidationMetaInfoEventsTest.StoreEventsHandler handler = new ValidationMetaInfoEventsTest.StoreEventsHandler
+                (UnknownContext.PERMISSIVE);
+            EventManager.GetInstance().Register(handler);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -74,10 +64,14 @@ namespace iText.Signatures.Validation {
             NUnit.Framework.Assert.IsTrue(events[1] is ConfirmEvent);
             ConfirmEvent confirmEvent = (ConfirmEvent)events[1];
             NUnit.Framework.Assert.AreEqual(iTextCoreProductEvent, confirmEvent.GetConfirmedEvent());
+            EventManager.GetInstance().Unregister(handler);
         }
 
         [NUnit.Framework.Test]
         public virtual void DocumentRevisionsValidatorZeroEventsTest() {
+            ValidationMetaInfoEventsTest.StoreEventsHandler handler = new ValidationMetaInfoEventsTest.StoreEventsHandler
+                (UnknownContext.PERMISSIVE);
+            EventManager.GetInstance().Register(handler);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ), new DocumentProperties().SetEventCountingMetaInfo(new ValidationMetaInfo()))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
@@ -86,10 +80,14 @@ namespace iText.Signatures.Validation {
             }
             IList<AbstractContextBasedITextEvent> events = handler.GetEvents();
             NUnit.Framework.Assert.AreEqual(0, events.Count);
+            EventManager.GetInstance().Unregister(handler);
         }
 
         [NUnit.Framework.Test]
         public virtual void SignatureValidatorSingleEventTest() {
+            ValidationMetaInfoEventsTest.StoreEventsHandler handler = new ValidationMetaInfoEventsTest.StoreEventsHandler
+                (UnknownContext.PERMISSIVE);
+            EventManager.GetInstance().Register(handler);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ))) {
                 SignatureValidator validator = builder.BuildSignatureValidator(document);
@@ -108,6 +106,9 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void SignatureValidatorZeroEventsTest() {
+            ValidationMetaInfoEventsTest.StoreEventsHandler handler = new ValidationMetaInfoEventsTest.StoreEventsHandler
+                (UnknownContext.PERMISSIVE);
+            EventManager.GetInstance().Register(handler);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "multipleRevisionsDocument.pdf"
                 ), new DocumentProperties().SetEventCountingMetaInfo(new ValidationMetaInfo()))) {
                 SignatureValidator validator = builder.BuildSignatureValidator(document);

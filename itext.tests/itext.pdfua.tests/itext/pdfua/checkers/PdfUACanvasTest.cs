@@ -49,16 +49,9 @@ namespace iText.Pdfua.Checkers {
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUACanvasTest/";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfUAConformance> Data() {
@@ -67,6 +60,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextContentIsNotTagged(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().BeginText().SetFontAndSize(GetPdfFont(), 10).ShowText("Hello World!");
@@ -78,6 +72,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextNoContentIsNotTagged(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().BeginText().SetFontAndSize(GetPdfFont(), 10).EndText();
@@ -89,6 +84,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextContentIsCorrectlyTaggedAsContent(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page1 = pdfDoc.AddNewPage();
                 PdfFont font = GetPdfFont();
@@ -103,6 +99,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextContentIsNotInTagTree(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -118,6 +115,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextArtifactIsNotInTagTree(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page1 = pdfDoc.AddNewPage();
                 PdfFont font = GetPdfFont();
@@ -132,6 +130,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextContentWithMCIDButNotInTagTree(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -148,6 +147,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsTaggedButNotInTagTree(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -163,6 +163,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextGlyphLineInBadStructure(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfCanvas canvas = new _PdfCanvas_235(pdfDoc.AddNewPage());
@@ -203,6 +204,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsArtifact(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -217,6 +219,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_TextGlyphLineContentIsContentCorrect(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -232,6 +235,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_allowPureBmcInArtifact(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -246,6 +250,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_allowNestedPureBmcInArtifact(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
@@ -261,6 +266,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -274,6 +280,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_LineContentThatIsContentIsNotTagged_noContent(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -286,6 +293,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact(PdfUAConformance 
             pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -299,6 +307,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_LineContentThatIsContentIsTaggedButIsNotAnArtifact_no_drawing(PdfUAConformance
              pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -311,6 +320,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_LineContentThatIsMarkedAsArtifact(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
@@ -324,6 +334,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleNotMarked(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -337,6 +348,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleNoContent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -348,6 +360,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleClip(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -360,6 +373,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleClosePathStroke(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -373,6 +387,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_Rectangle_EOFIllStroke(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -386,6 +401,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_Rectangle_FillStroke(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -399,6 +415,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_Rectangle_eoFill(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -412,6 +429,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_Rectangle_eoFillStroke(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
@@ -425,6 +443,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleMarkedArtifact(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetFillColor(ColorConstants.RED).Rectangle(new 
@@ -436,6 +455,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P)).SetFillColor(ColorConstants.RED);
@@ -449,6 +469,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleMarkedContentWithoutMcid_NoContent(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P)).SetFillColor(ColorConstants.RED);
@@ -461,6 +482,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RectangleMarkedContent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
@@ -474,6 +496,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_004_bezierMarkedAsContent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
@@ -496,6 +519,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_004_bezierMarkedAsArtifact(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetColor(ColorConstants.RED, true).SetLineWidth
@@ -508,6 +532,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_004_bezierCurveInvalidMCID(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
@@ -520,6 +545,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_004_bezierCurveInvalidMCID_NoContent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.P, 420)).SetColor(ColorConstants.RED, true).SetLineWidth(
@@ -532,6 +558,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_005_RandomOperationsWithoutActuallyAddingContent(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineCapStyle(1).SetTextMatrix(20, 2).SetLineWidth(2);
@@ -543,6 +570,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_003_ContentMarkedAsArtifactsPresentInsideTaggedContent(PdfUAConformance 
             pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -559,6 +587,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_validRoleAddedInsideMarkedContent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -580,6 +609,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_validRoleAddedInsideMarkedContentMultiple(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -601,6 +631,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_validRoleAddedInsideMarkedContentMCR_IN_MCR(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -626,6 +657,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_01_004_TaggedContentShouldNotBeInsideArtifact(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -642,6 +674,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_31_009_FontIsNotEmbedded(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 PdfFont font = null;
@@ -664,6 +697,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_19_003_iDEntryInNoteTagIsNotPresent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDoc.AddNewPage();
@@ -690,6 +724,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void CheckPoint_19_003_validNoteTagIsPresent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfFont font = GetPdfFont();
                 PdfPage page1 = pdfDocument.AddNewPage();
@@ -720,6 +755,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void UsingCharacterWithoutUnicodeMappingTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {

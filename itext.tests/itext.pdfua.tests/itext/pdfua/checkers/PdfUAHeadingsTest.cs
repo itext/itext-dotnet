@@ -44,13 +44,8 @@ namespace iText.Pdfua.Checkers {
     public class PdfUAHeadingsTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAHeadingsTest/";
 
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUAHeadingsTest/";
-
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
-
-        private UaValidationTestFramework framework;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -71,15 +66,11 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-        }
-
         // -------- Negative tests --------
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddH2AsFirstHeaderTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_96());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_88());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("addH2FirstHeaderTest", PdfUAExceptionMessageConstants.H1_IS_SKIPPED, pdfUAConformance
                     );
@@ -91,8 +82,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_96 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_96() {
+        private sealed class _Generator_88 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_88() {
             }
 
             public IBlockElement Generate() {
@@ -105,8 +96,9 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void BrokenHnParallelSequenceTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_118());
-            framework.AddSuppliers(new _Generator_127());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_111());
+            framework.AddSuppliers(new _Generator_120());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("brokenHnParallelSequenceTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .HN_IS_SKIPPED, 2), pdfUAConformance);
@@ -118,8 +110,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_118 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_118() {
+        private sealed class _Generator_111 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_111() {
             }
 
             public IBlockElement Generate() {
@@ -130,8 +122,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_127 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_127() {
+        private sealed class _Generator_120 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_120() {
             }
 
             public IBlockElement Generate() {
@@ -144,7 +136,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void BrokenHnInheritedSequenceTest1(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_148());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_142());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("brokenHnInheritedSequenceTest1", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .HN_IS_SKIPPED, 2), pdfUAConformance);
@@ -158,8 +151,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_148 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_148() {
+        private sealed class _Generator_142 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_142() {
             }
 
             public IBlockElement Generate() {
@@ -176,7 +169,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void BrokenHnMixedSequenceTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_176());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_171());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("brokenHnMixedSequenceTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .HN_IS_SKIPPED, 3), pdfUAConformance);
@@ -190,8 +184,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_176 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_176() {
+        private sealed class _Generator_171 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_171() {
             }
 
             public IBlockElement Generate() {
@@ -212,7 +206,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void BrokenHnMixedSequenceTest2(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_209());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_205());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("brokenHnMixedSequenceTest2", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .HN_IS_SKIPPED, 3), pdfUAConformance);
@@ -226,8 +221,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_209 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_209() {
+        private sealed class _Generator_205 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_205() {
             }
 
             public IBlockElement Generate() {
@@ -251,7 +246,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void FewHInOneNodeTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_246());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_243());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("fewHInOneNodeTest", PdfUAExceptionMessageConstants.MORE_THAN_ONE_H_TAG, pdfUAConformance
                     );
@@ -264,8 +260,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_246 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_246() {
+        private sealed class _Generator_243 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_243() {
             }
 
             public IBlockElement Generate() {
@@ -285,8 +281,9 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void FewHInDocumentTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_277());
-            framework.AddSuppliers(new _Generator_286());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_275());
+            framework.AddSuppliers(new _Generator_284());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("fewHInDocumentTest", PdfUAExceptionMessageConstants.MORE_THAN_ONE_H_TAG, pdfUAConformance
                     );
@@ -299,8 +296,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_277 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_277() {
+        private sealed class _Generator_275 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_275() {
             }
 
             public IBlockElement Generate() {
@@ -311,8 +308,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_286 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_286() {
+        private sealed class _Generator_284 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_284() {
             }
 
             public IBlockElement Generate() {
@@ -325,8 +322,9 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HAndHnInDocumentTest1(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_308());
-            framework.AddSuppliers(new _Generator_317());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_307());
+            framework.AddSuppliers(new _Generator_316());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("hAndHnInDocumentTest1", PdfUAExceptionMessageConstants.DOCUMENT_USES_BOTH_H_AND_HN
                     , pdfUAConformance);
@@ -339,8 +337,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_308 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_308() {
+        private sealed class _Generator_307 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_307() {
             }
 
             public IBlockElement Generate() {
@@ -351,8 +349,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_317 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_317() {
+        private sealed class _Generator_316 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_316() {
             }
 
             public IBlockElement Generate() {
@@ -365,6 +363,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HAndHnInDocumentTest2(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_339());
             framework.AddSuppliers(new _Generator_348());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
@@ -405,7 +404,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HAndHnInDocumentTest3(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_370());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_371());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("hAndHnInDocumentTest3", PdfUAExceptionMessageConstants.DOCUMENT_USES_BOTH_H_AND_HN
                     , pdfUAConformance);
@@ -418,8 +418,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_370 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_370() {
+        private sealed class _Generator_371 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_371() {
             }
 
             public IBlockElement Generate() {
@@ -440,7 +440,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void RoleMappingTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_401());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_403());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
@@ -466,8 +467,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_401 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_401() {
+        private sealed class _Generator_403 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_403() {
             }
 
             public IBlockElement Generate() {
@@ -484,7 +485,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void RoleMappingTestValid(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_441());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_444());
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -510,8 +512,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_441 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_441() {
+        private sealed class _Generator_444 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_444() {
             }
 
             public IBlockElement Generate() {
@@ -528,6 +530,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void DirectWritingToCanvasTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 TagTreePointer pointer = new TagTreePointer(pdfDoc);
                 PdfPage page = pdfDoc.AddNewPage();
@@ -552,7 +555,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HInDocumentTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_503());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_508());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hInDocumentTest", pdfUAConformance);
             }
@@ -564,8 +568,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_503 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_503() {
+        private sealed class _Generator_508 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_508() {
             }
 
             public IBlockElement Generate() {
@@ -578,7 +582,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HAndHnInDocumentTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_524());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_530());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("hAndHnInDocumentTest", pdfUAConformance);
             }
@@ -590,8 +595,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_524 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_524() {
+        private sealed class _Generator_530 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_530() {
             }
 
             public IBlockElement Generate() {
@@ -612,7 +617,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void IncorrectHeadingLevelInUA2Test(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_555());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_562());
             // Where a heading’s level is evident, the heading level of the structure element enclosing it shall match that
             // heading level, e.g. a heading with the real content “5.1.6.4 Some header” is evidently at heading level 4.
             // This requirement is not checked by both iText and veraPDF.
@@ -626,8 +632,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_555 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_555() {
+        private sealed class _Generator_562 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_562() {
             }
 
             public IBlockElement Generate() {
@@ -649,6 +655,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED, Ignore = true)]
         public virtual void FlushPreviousPageTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document doc = new Document(pdfDoc);
                 String longHeader = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " + "Donec ac malesuada tellus. "
@@ -698,7 +705,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnInheritedSequenceTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_648());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_657());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnInheritedSequenceTest", pdfUAConformance);
             }
@@ -711,8 +719,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_648 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_648() {
+        private sealed class _Generator_657 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_657() {
             }
 
             public IBlockElement Generate() {
@@ -733,8 +741,9 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnCompareWithLastFromAnotherBranchTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_680());
-            framework.AddSuppliers(new _Generator_704());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_690());
+            framework.AddSuppliers(new _Generator_714());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnInheritedSequenceTest", pdfUAConformance);
             }
@@ -747,8 +756,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_680 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_680() {
+        private sealed class _Generator_690 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_690() {
             }
 
             public IBlockElement Generate() {
@@ -771,8 +780,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_704 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_704() {
+        private sealed class _Generator_714 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_714() {
             }
 
             public IBlockElement Generate() {
@@ -785,8 +794,9 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnCompareWithLastFromAnotherBranchTest2(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_726());
-            framework.AddSuppliers(new _Generator_750());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_737());
+            framework.AddSuppliers(new _Generator_761());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest2", pdfUAConformance);
             }
@@ -799,8 +809,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_726 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_726() {
+        private sealed class _Generator_737 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_737() {
             }
 
             public IBlockElement Generate() {
@@ -823,8 +833,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_750 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_750() {
+        private sealed class _Generator_761 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_761() {
             }
 
             public IBlockElement Generate() {
@@ -837,7 +847,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnInheritedSequenceTest2(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_772());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_784());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest2", pdfUAConformance);
             }
@@ -850,8 +861,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_772 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_772() {
+        private sealed class _Generator_784 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_784() {
             }
 
             public IBlockElement Generate() {
@@ -876,14 +887,15 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnParallelSequenceTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_809());
-            framework.AddSuppliers(new _Generator_818());
-            framework.AddSuppliers(new _Generator_827());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_822());
+            framework.AddSuppliers(new _Generator_831());
+            framework.AddSuppliers(new _Generator_840());
             framework.AssertBothValid("hnParallelSequenceTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_809 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_809() {
+        private sealed class _Generator_822 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_822() {
             }
 
             public IBlockElement Generate() {
@@ -894,8 +906,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_818 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_818() {
+        private sealed class _Generator_831 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_831() {
             }
 
             public IBlockElement Generate() {
@@ -906,8 +918,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_827 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_827() {
+        private sealed class _Generator_840 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_840() {
             }
 
             public IBlockElement Generate() {
@@ -920,6 +932,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void UsualHTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document doc = new Document(pdfDoc);
                 Paragraph header = new Paragraph("Header");
@@ -948,8 +961,9 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void UsualHTest2(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_873());
-            framework.AddSuppliers(new _Generator_882());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_888());
+            framework.AddSuppliers(new _Generator_897());
             // The test code is the same as in usualHTest with one exception:
             // the next line where another grouping element is defined.
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
@@ -963,8 +977,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_873 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_873() {
+        private sealed class _Generator_888 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_888() {
             }
 
             public IBlockElement Generate() {
@@ -975,8 +989,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_882 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_882() {
+        private sealed class _Generator_897 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_897() {
             }
 
             public IBlockElement Generate() {
@@ -995,7 +1009,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnMixedSequenceTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_912());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_928());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnMixedSequenceTest", pdfUAConformance);
             }
@@ -1008,8 +1023,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_912 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_912() {
+        private sealed class _Generator_928 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_928() {
             }
 
             public IBlockElement Generate() {
@@ -1035,7 +1050,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnMixedSequenceTest2(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_950());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_967());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnMixedSequenceTest2", pdfUAConformance);
             }
@@ -1048,8 +1064,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_950 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_950() {
+        private sealed class _Generator_967 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_967() {
             }
 
             public IBlockElement Generate() {
@@ -1070,7 +1086,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void HnMixedSequenceTest3(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_982());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1000());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothValid("hnMixedSequenceTest3", pdfUAConformance);
             }
@@ -1083,8 +1100,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_982 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_982() {
+        private sealed class _Generator_1000 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1000() {
             }
 
             public IBlockElement Generate() {
@@ -1108,7 +1125,8 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void NonSequentialHeadersTest(PdfUAConformance pdfUAConformance) {
-            framework.AddSuppliers(new _Generator_1018());
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_1037());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("nonSequentialHeadersTest", pdfUAConformance);
             }
@@ -1119,8 +1137,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1018 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_1018() {
+        private sealed class _Generator_1037 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_1037() {
             }
 
             public IBlockElement Generate() {

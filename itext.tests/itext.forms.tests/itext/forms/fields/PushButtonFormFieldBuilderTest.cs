@@ -32,54 +32,59 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class PushButtonFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            PushButtonFormFieldBuilder builder = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PushButtonFormFieldBuilder builder = new PushButtonFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void SetGetCaptionType() {
-            PushButtonFormFieldBuilder builder = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PushButtonFormFieldBuilder builder = new PushButtonFormFieldBuilder(pdfDoc, DUMMY_NAME);
             builder.SetCaption("Caption");
             NUnit.Framework.Assert.AreEqual("Caption", builder.GetCaption());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreatePushButtonWithWidgetTest() {
-            PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreatePushButton();
-            ComparePushButtons(pushButtonFormField, true);
+            ComparePushButtons(pushButtonFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreatePushButtonWithoutWidgetTest() {
-            PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreatePushButton
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(pdfDoc, DUMMY_NAME).CreatePushButton
                 ();
-            ComparePushButtons(pushButtonFormField, false);
+            ComparePushButtons(pushButtonFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreatePushButtonWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name")
-                .SetWidgetRectangle(DUMMY_RECTANGLE).CreatePushButton());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new PushButtonFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreatePushButton());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreatePushButtonWithConformanceLevelTest() {
-            PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfButtonFormField pushButtonFormField = new PushButtonFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreatePushButton();
-            ComparePushButtons(pushButtonFormField, true);
+            ComparePushButtons(pushButtonFormField, pdfDoc, true);
         }
 
-        private static void ComparePushButtons(PdfButtonFormField pushButtonFormField, bool widgetExpected) {
+        private static void ComparePushButtons(PdfButtonFormField pushButtonFormField, PdfDocument pdfDoc, bool widgetExpected
+            ) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             IList<PdfWidgetAnnotation> widgets = pushButtonFormField.GetWidgets();
             if (widgetExpected) {
@@ -97,8 +102,8 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.Ff, new PdfNumber(PdfButtonFormField.FF_PUSH_BUTTON));
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
             PutIfAbsent(expectedDictionary, PdfName.DA, pushButtonFormField.GetPdfObject().Get(PdfName.DA));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            pushButtonFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            pushButtonFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, pushButtonFormField
                 .GetPdfObject()));
         }

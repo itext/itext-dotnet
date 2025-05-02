@@ -35,8 +35,6 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class ChoiceFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
@@ -46,21 +44,24 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void SetGetOptionsAsPdfArrayTest() {
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME);
             builder.SetOptions(DUMMY_OPTIONS);
             NUnit.Framework.Assert.AreSame(DUMMY_OPTIONS, builder.GetOptions());
         }
 
         [NUnit.Framework.Test]
         public virtual void SetGetOptionsAsStringArrayTest() {
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME);
             String[] options = new String[] { "option1", "option2", "option3" };
             builder.SetOptions(options);
             for (int i = 0; i < options.Length; ++i) {
@@ -71,7 +72,8 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void SetGetOptionsAsTwoDimensionalStringArrayTest() {
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME);
             String[][] options = new String[][] { new String[] { "option1", "option2" }, new String[] { "option3", "option4"
                  } };
             builder.SetOptions(options);
@@ -85,7 +87,8 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void SetGetOptionsAsIllegalTwoDimensionalStringArrayTest() {
-            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            ChoiceFormFieldBuilder builder = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME);
             String[][] options = new String[][] { new String[] { "option1", "option2", "option3" } };
             Exception exception = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => builder.SetOptions(options
                 ));
@@ -95,100 +98,111 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithWidgetTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).CreateComboBox();
-            CompareChoices(new PdfDictionary(), choiceFormField, true);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).CreateComboBox();
+            CompareChoices(new PdfDictionary(), choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithoutWidgetTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateComboBox
-                ();
-            CompareChoices(new PdfDictionary(), choiceFormField, false);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateComboBox();
+            CompareChoices(new PdfDictionary(), choiceFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new ChoiceFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateComboBox());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithConformanceLevelTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateComboBox();
-            CompareChoices(new PdfDictionary(), choiceFormField, true);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).SetConformance(PdfConformance.PDF_A_1A).CreateComboBox();
+            CompareChoices(new PdfDictionary(), choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithOptionsTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetOptions(DUMMY_OPTIONS).CreateComboBox();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).SetOptions(DUMMY_OPTIONS).CreateComboBox();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Opt, DUMMY_OPTIONS);
-            CompareChoices(expectedDictionary, choiceFormField, true);
+            CompareChoices(expectedDictionary, choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateComboBoxWithoutOptionsTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).CreateComboBox();
-            CompareChoices(new PdfDictionary(), choiceFormField, true);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).CreateComboBox();
+            CompareChoices(new PdfDictionary(), choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateListWithWidgetTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).CreateList();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).CreateList();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareChoices(expectedDictionary, choiceFormField, true);
+            CompareChoices(expectedDictionary, choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateListWithoutWidgetTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateList();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateList();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareChoices(expectedDictionary, choiceFormField, false);
+            CompareChoices(expectedDictionary, choiceFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateListWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new ChoiceFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateList());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateListWithConformanceLevelTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateList();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).SetConformance(PdfConformance.PDF_A_1A).CreateList();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareChoices(expectedDictionary, choiceFormField, true);
+            CompareChoices(expectedDictionary, choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateListWithOptionsTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).SetOptions(DUMMY_OPTIONS).CreateList();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).SetOptions(DUMMY_OPTIONS).CreateList();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
             expectedDictionary.Put(PdfName.Opt, DUMMY_OPTIONS);
-            CompareChoices(expectedDictionary, choiceFormField, true);
+            CompareChoices(expectedDictionary, choiceFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateListWithoutOptionsTest() {
-            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
-                (DUMMY_RECTANGLE).CreateList();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfChoiceFormField choiceFormField = new ChoiceFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+                ).CreateList();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareChoices(expectedDictionary, choiceFormField, true);
+            CompareChoices(expectedDictionary, choiceFormField, pdfDoc, true);
         }
 
-        private static void CompareChoices(PdfDictionary expectedDictionary, PdfChoiceFormField choiceFormField, bool
-             widgetExpected) {
+        private static void CompareChoices(PdfDictionary expectedDictionary, PdfChoiceFormField choiceFormField, PdfDocument
+             pdfDoc, bool widgetExpected) {
             IList<PdfWidgetAnnotation> widgets = choiceFormField.GetWidgets();
             if (widgetExpected) {
                 NUnit.Framework.Assert.AreEqual(1, widgets.Count);
@@ -207,8 +221,8 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
             PutIfAbsent(expectedDictionary, PdfName.V, new PdfArray());
             PutIfAbsent(expectedDictionary, PdfName.DA, choiceFormField.GetPdfObject().Get(PdfName.DA));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            choiceFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            choiceFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, choiceFormField
                 .GetPdfObject()));
         }

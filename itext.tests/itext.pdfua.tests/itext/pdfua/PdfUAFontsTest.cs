@@ -46,16 +46,9 @@ namespace iText.Pdfua {
         private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfUAConformance> Data() {
@@ -64,6 +57,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TryToUseType0Cid0FontTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -85,6 +79,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void Type0Cid2FontTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -104,6 +99,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TrueTypeFontTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -124,6 +120,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TrueTypeFontGlyphNotPresentTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
@@ -146,6 +143,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TrueTypeFontWithDifferencesTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
@@ -168,6 +166,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TryToUseStandardFontsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -189,6 +188,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void Type1EmbeddedFontTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -216,6 +216,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void NonSymbolicTtfWithValidEncodingTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -236,6 +237,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void NonSymbolicTtfWithIncompatibleEncodingTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -256,6 +258,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SymbolicTtfTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -276,6 +279,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SymbolicTtfWithEncodingTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -299,6 +303,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SymbolicTtfWithInvalidCmapTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -330,6 +335,7 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void NonSymbolicTtfWithInvalidCmapTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;

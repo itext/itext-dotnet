@@ -47,16 +47,9 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfUAConformance> Data() {
@@ -65,6 +58,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithoutAlternativeDescription_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -82,6 +76,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithEmptyAlternativeDescription_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -104,6 +99,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageCustomRole_Ok(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -115,12 +111,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_133());
+            framework.AddSuppliers(new _Generator_128());
             framework.AssertBothValid("imageWithCustomRoleOk", pdfUAConformance);
         }
 
-        private sealed class _Generator_133 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_133() {
+        private sealed class _Generator_128 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_128() {
             }
 
             public IBlockElement Generate() {
@@ -133,6 +129,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageCustomDoubleMapping_Ok(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -146,12 +143,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_160());
+            framework.AddSuppliers(new _Generator_156());
             framework.AssertBothValid("imageWithDoubleMapping", pdfUAConformance);
         }
 
-        private sealed class _Generator_160 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_160() {
+        private sealed class _Generator_156 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_156() {
             }
 
             public IBlockElement Generate() {
@@ -164,6 +161,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageCustomRoleNoAlternateDescription_Throws(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -175,12 +173,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_185());
+            framework.AddSuppliers(new _Generator_182());
             framework.AssertBothFail("imageWithCustomRoleAndNoDescription", pdfUAConformance);
         }
 
-        private sealed class _Generator_185 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_185() {
+        private sealed class _Generator_182 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_182() {
             }
 
             public IBlockElement Generate() {
@@ -192,6 +190,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageCustomDoubleMapping_Throws(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
@@ -205,12 +204,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_212());
+            framework.AddSuppliers(new _Generator_210());
             framework.AssertBothFail("imageCustomDoubleMapping_Throws", pdfUAConformance);
         }
 
-        private sealed class _Generator_212 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_212() {
+        private sealed class _Generator_210 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_210() {
             }
 
             public IBlockElement Generate() {
@@ -222,6 +221,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithValidAlternativeDescription_OK(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -234,6 +234,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithValidActualText_OK(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -246,6 +247,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithCaption_OK(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Div imgWithCaption = new Div();
@@ -271,6 +273,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithCaptionWithoutAlternateDescription_Throws(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Div imgWithCaption = new Div();
@@ -297,6 +300,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithoutActualText_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -310,6 +314,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageWithEmptyActualText_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 Image img = LoadImage();
@@ -322,6 +327,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageDirectlyOnCanvas_OK(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 try {
                     Document document = new Document(pdfDoc);
@@ -357,6 +363,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageDirectlyOnCanvasWithoutAlternateDescription_ThrowsOnClose(PdfUAConformance pdfUAConformance
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 TagTreePointer pointerForImage = new TagTreePointer(pdfDoc);
                 PdfPage page = pdfDoc.AddNewPage();
@@ -379,6 +386,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ImageDirectlyOnCanvasWithEmptyActualText_OK(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 TagTreePointer pointerForImage = new TagTreePointer(pdfDoc);
                 PdfPage page = pdfDoc.AddNewPage();
@@ -401,6 +409,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestOverflowImage(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);
@@ -413,6 +422,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestEmbeddedImageInTable(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);
@@ -430,6 +440,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestEmbeddedImageInDiv(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);
@@ -444,6 +455,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TestEmbeddedImageInParagraph(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);

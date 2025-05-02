@@ -31,19 +31,6 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfPageTest : ExtendedITextTest {
-        private PdfDocument dummyDoc;
-
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            dummyDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            dummyDoc.AddNewPage();
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void After() {
-            dummyDoc.Close();
-        }
-
         [NUnit.Framework.Test]
         public virtual void PageConstructorModifiedStateTest() {
             PdfDictionary pageDictionary = new PdfDictionary();
@@ -167,7 +154,10 @@ namespace iText.Kernel.Pdf {
         /// <summary>Simulates indirect state of object making sure it is not marked as modified.</summary>
         /// <param name="obj">object to which indirect state simulation is applied</param>
         private void SimulateIndirectState(PdfObject obj) {
-            obj.SetIndirectReference(new PdfIndirectReference(dummyDoc, 0));
+            using (PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                dummyDoc.AddNewPage();
+                obj.SetIndirectReference(new PdfIndirectReference(dummyDoc, 0));
+            }
         }
     }
 }

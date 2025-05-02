@@ -71,6 +71,7 @@ namespace iText.Kernel.Utils
         [Test]
         public virtual void XmlWithoutDtdTest()
         {
+            XmlProcessorCreator.SetXmlParserFactory(null);
             XmlDocument document = new XmlDocument();
             Assert.IsNull(document.FirstChild);
             using (Stream inputStream = new MemoryStream(XML_WITHOUT_DTD.GetBytes(Encoding.UTF8)))

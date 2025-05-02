@@ -41,8 +41,6 @@ namespace iText.Pdfua.Checkers {
 
         private static readonly Rectangle RECTANGLE = new Rectangle(200, 200, 100, 100);
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -53,13 +51,9 @@ namespace iText.Pdfua.Checkers {
                 );
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
-        }
-
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void PureStructureDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "pureStructureDestinationTest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -89,6 +83,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void PureExplicitDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "pureExplicitDestinationTest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -124,6 +119,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithStructureDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithStructureDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -136,6 +132,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithDictionaryWithStructureDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithDictWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -166,6 +163,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithDictionaryAndSDWithStructureDestinationTest(String destinationWrapType
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithDictAndSDWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -178,6 +176,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithExplicitDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -215,6 +214,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithDictionaryAndSDWithExplicitDestinationTest(String destinationWrapType
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithDictAndSDWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -248,6 +248,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithNamedDestinationWithStructureDestinationTest(String destinationWrapType
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithNamedDestWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -276,6 +277,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void NamedDestinationWithCyclicReferenceTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "namedDestWithCyclicReference_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -312,6 +314,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void StringDestinationWithStructureDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "stringDestWithStructureDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -325,6 +328,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void StringDestinationWithDictionaryWithStructureDestinationTest(String destinationWrapType
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "stringDestWithDictWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -355,6 +359,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void StringDestinationWithDictionaryAndSDWithStructureDestinationTest(String destinationWrapType
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "stringDestWithDictAndSDWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -367,6 +372,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void StringDestinationWithExplicitDestinationTest(String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "stringDestWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -404,6 +410,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
         public virtual void StringDestinationWithDictionaryAndSDWithExplicitDestinationTest(String destinationWrapType
             ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "stringDestWithDictAndSDWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();

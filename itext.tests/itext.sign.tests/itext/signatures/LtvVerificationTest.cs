@@ -49,12 +49,9 @@ namespace iText.Signatures {
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private static LtvVerification TEST_VERIFICATION;
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void Before() {
+        public static LtvVerification Setup() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC_PDF));
-            TEST_VERIFICATION = new LtvVerification(pdfDoc);
+            return new LtvVerification(pdfDoc);
         }
 
         [NUnit.Framework.Test]
@@ -117,7 +114,8 @@ namespace iText.Signatures {
             ocsps.Add(new byte[0]);
             IList<byte[]> certs = new List<byte[]>();
             certs.Add(new byte[0]);
-            NUnit.Framework.Assert.IsTrue(TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.IsTrue(testVerification.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
         }
 
         [NUnit.Framework.Test]
@@ -148,20 +146,23 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void ValidateSigNameWithNullCrlOcspCertTest() {
-            NUnit.Framework.Assert.IsTrue(TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, null, null, null));
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.IsTrue(testVerification.AddVerification(SIG_FIELD_NAME, null, null, null));
         }
 
         [NUnit.Framework.Test]
         public virtual void ExceptionWhenValidateNonExistentSigNameTest() {
             //TODO DEVSIX-5696 Sign: NPE is thrown because no such a signature
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => TEST_VERIFICATION.AddVerification("nonExistentSigName"
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testVerification.AddVerification("nonExistentSigName"
                 , null, null, null));
         }
 
         [NUnit.Framework.Test]
         public virtual void ExceptionWhenValidateParticularNonExistentSigNameTest() {
             //TODO DEVSIX-5696 Sign: NPE is thrown because no such a signature
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => TEST_VERIFICATION.AddVerification("nonExistentSigName"
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testVerification.AddVerification("nonExistentSigName"
                 , null, null, LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion
                 .YES));
         }
@@ -464,7 +465,8 @@ namespace iText.Signatures {
             else {
                 crl = new CrlClientOnline(crlUrl);
             }
-            NUnit.Framework.Assert.AreEqual(expectedResult, TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, ocsp, crl
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.AreEqual(expectedResult, testVerification.AddVerification(SIG_FIELD_NAME, ocsp, crl
                 , certificateOption, level, inclusion));
         }
     }
