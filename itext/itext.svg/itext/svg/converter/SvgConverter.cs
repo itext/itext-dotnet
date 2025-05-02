@@ -25,9 +25,12 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
 using iText.StyledXmlParser;
@@ -49,12 +52,15 @@ namespace iText.Svg.Converter {
     /// processing and drawing operations.
     /// </summary>
     public sealed class SvgConverter {
-        private SvgConverter() {
-        }
+        public const String SVG_DEFAULT_ROLE = StandardRoles.FIGURE;
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Converter.SvgConverter
             ));
 
+        private SvgConverter() {
+        }
+
+        //empty constructor
         private static void CheckNull(Object o) {
             if (o == null) {
                 throw new SvgProcessingException(SvgExceptionMessageConstant.PARAMETER_CANNOT_BE_NULL);
@@ -239,7 +245,14 @@ namespace iText.Svg.Converter {
         /// <param name="y">y-coordinate of the location to draw at</param>
         public static void DrawOnPage(String content, PdfPage page, float x, float y) {
             CheckNull(page);
-            DrawOnCanvas(content, new PdfCanvas(page), x, y);
+            PdfCanvas canvas = new PdfCanvas(page);
+            try {
+                WithTaggingIfNeeded(page.GetDocument(), canvas, page, null, () => DrawOnCanvas(content, canvas, x, y));
+            }
+            catch (System.IO.IOException e) {
+                // This can't happen in normal circumstances.
+                throw new PdfException(e);
+            }
         }
 
         /// <summary>Draws a String containing valid SVG to a given page on the provided x and y coordinate.</summary>
@@ -267,7 +280,15 @@ namespace iText.Svg.Converter {
         public static void DrawOnPage(String content, PdfPage page, float x, float y, ISvgConverterProperties props
             ) {
             CheckNull(page);
-            DrawOnCanvas(content, new PdfCanvas(page), x, y, props);
+            PdfCanvas canvas = new PdfCanvas(page);
+            try {
+                WithTaggingIfNeeded(page.GetDocument(), canvas, page, props, () => DrawOnCanvas(content, canvas, x, y, props
+                    ));
+            }
+            catch (System.IO.IOException e) {
+                // This can't happen in normal circumstances.
+                throw new PdfException(e);
+            }
         }
 
         /// <summary>Draws a Stream containing valid SVG to a given page at coordinate 0,0.</summary>
@@ -300,7 +321,8 @@ namespace iText.Svg.Converter {
         /// <param name="y">y-coordinate of the location to draw at</param>
         public static void DrawOnPage(Stream stream, PdfPage page, float x, float y) {
             CheckNull(page);
-            DrawOnCanvas(stream, new PdfCanvas(page), x, y);
+            PdfCanvas canvas = new PdfCanvas(page);
+            WithTaggingIfNeeded(page.GetDocument(), canvas, page, null, () => DrawOnCanvas(stream, canvas, x, y));
         }
 
         /// <summary>Draws a Stream containing valid SVG to a given page at a given location.</summary>
@@ -339,7 +361,9 @@ namespace iText.Svg.Converter {
             if (props is SvgConverterProperties && ((SvgConverterProperties)props).GetCustomViewport() == null) {
                 ((SvgConverterProperties)props).SetCustomViewport(page.GetMediaBox());
             }
-            DrawOnCanvas(stream, new PdfCanvas(page), x, y, props);
+            PdfCanvas canvas = new PdfCanvas(page);
+            WithTaggingIfNeeded(page.GetDocument(), canvas, page, props, () => DrawOnCanvas(stream, canvas, x, y, props
+                ));
         }
 
         /// <summary>Draws a String containing valid SVG to a pre-made canvas object.</summary>
@@ -1038,7 +1062,16 @@ namespace iText.Svg.Converter {
         /// containing the PDF instructions corresponding to the passed SVG content
         /// </returns>
         public static Image ConvertToImage(Stream stream, PdfDocument document, ISvgConverterProperties props) {
-            return new Image(ConvertToXObject(stream, document, props));
+            Image image = new Image(ConvertToXObject(stream, document, props));
+            if (props is SvgConverterProperties) {
+                SvgConverterProperties properties = (SvgConverterProperties)props;
+                if (properties.GetAccessibilityProperties().GetAlternateDescription() != null) {
+                    image.GetAccessibilityProperties().SetAlternateDescription(properties.GetAccessibilityProperties().GetAlternateDescription
+                        ());
+                }
+                image.GetAccessibilityProperties().SetRole(properties.GetAccessibilityProperties().GetRole());
+            }
+            return image;
         }
 
         /*
@@ -1364,6 +1397,33 @@ namespace iText.Svg.Converter {
                 return new ResourceResolver(null);
             }
             return new ResourceResolver(props.GetBaseUri(), props.GetResourceRetriever());
+        }
+
+        private static void WithTaggingIfNeeded(PdfDocument document, PdfCanvas canvas, PdfPage page, ISvgConverterProperties
+             props, IOThrowingAction function) {
+            bool isTagged = document.IsTagged();
+            if (isTagged) {
+                SvgConverterProperties properties = null;
+                if (props is SvgConverterProperties) {
+                    properties = (SvgConverterProperties)props;
+                }
+                String role = SVG_DEFAULT_ROLE;
+                if (properties != null) {
+                    role = properties.GetAccessibilityProperties().GetRole();
+                }
+                TagTreePointer tagTreePointer = new TagTreePointer(document);
+                tagTreePointer.AddTag(role);
+                tagTreePointer.SetPageForTagging(page);
+                if (properties != null && properties.GetAccessibilityProperties().GetAlternateDescription() != null) {
+                    tagTreePointer.GetProperties().SetAlternateDescription(properties.GetAccessibilityProperties().GetAlternateDescription
+                        ());
+                }
+                canvas.OpenTag(tagTreePointer.GetTagReference());
+            }
+            function();
+            if (isTagged) {
+                canvas.CloseTag();
+            }
         }
     }
 }

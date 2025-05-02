@@ -22,10 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Converter;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
 
@@ -57,6 +59,9 @@ namespace iText.Svg.Processors.Impl {
 
         private Rectangle customViewport = null;
 
+        private readonly AccessibilityProperties accessibilityProperties = new DefaultAccessibilityProperties(SvgConverter
+            .SVG_DEFAULT_ROLE);
+
         /// <summary>
         /// Creates a new
         /// <see cref="SvgConverterProperties"/>
@@ -83,6 +88,12 @@ namespace iText.Svg.Processors.Impl {
         public virtual Rectangle GetCustomViewport() {
             // TODO DEVSIX-8808 add this getter to the interface ISvgConverterProperties and remove class casting where getCustomViewport is called
             return customViewport;
+        }
+
+        /// <summary>Gets the accessibility properties.</summary>
+        /// <returns>the accessibility properties.</returns>
+        public virtual AccessibilityProperties GetAccessibilityProperties() {
+            return this.accessibilityProperties;
         }
 
         /// <summary>Sets the custom viewport of SVG.</summary>
