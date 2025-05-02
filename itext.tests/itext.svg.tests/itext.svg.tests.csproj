@@ -49,6 +49,7 @@
     <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj" />
     <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
+    <ProjectReference Include="..\..\itext\itext.pdfua\itext.pdfua.csproj" />
     <ProjectReference Include="..\..\itext\itext.styledxmlparser\itext.styledxmlparser.csproj" />
     <ProjectReference Include="..\..\itext\itext.svg\itext.svg.csproj" />
   </ItemGroup>
