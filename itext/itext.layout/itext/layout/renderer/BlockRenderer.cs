@@ -1032,10 +1032,29 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override MinMaxWidth GetMinMaxWidth() {
+            return GetMinMaxWidth(null);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override MinMaxWidth GetMinMaxWidth(float? parentBoxWidth) {
             MinMaxWidth minMaxWidth = new MinMaxWidth(CalculateAdditionalWidth(this));
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
-                float? minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
-                float? maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
+                float? minWidth;
+                float? maxWidth;
+                if (parentBoxWidth == null) {
+                    minWidth = HasAbsoluteUnitValue(Property.MIN_WIDTH) ? RetrieveMinWidth(0) : null;
+                    maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
+                }
+                else {
+                    minWidth = RetrieveMinWidth(parentBoxWidth);
+                    if (minWidth == null) {
+                        minWidth = RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+                    }
+                    maxWidth = RetrieveMaxWidth(parentBoxWidth);
+                    if (maxWidth == null) {
+                        maxWidth = RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+                    }
+                }
                 if (minWidth == null || maxWidth == null) {
                     AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
                     int epsilonNum = 0;

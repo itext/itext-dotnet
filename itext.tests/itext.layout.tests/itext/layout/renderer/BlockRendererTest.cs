@@ -32,6 +32,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -39,6 +40,8 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("IntegrationTest")]
     public class BlockRendererTest : ExtendedITextTest {
+        private const float EPS = 0.001f;
+
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BlockRendererTest/";
 
@@ -62,6 +65,34 @@ namespace iText.Layout.Renderer {
             AbstractRenderer renderer = blockRenderer.ApplyMinHeight(OverflowPropertyValue.FIT, new Rectangle(0, 243.40012f
                 , 0, leftHeight));
             NUnit.Framework.Assert.IsNull(renderer);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeWidthInMinMaxWidthCalculationsTest() {
+            Div div = new Div();
+            div.SetWidth(UnitValue.CreatePercentValue(42.5F));
+            BlockRenderer divRenderer = (BlockRenderer)div.GetRenderer();
+            MinMaxWidth minMaxWidth = divRenderer.GetMinMaxWidth(200.0F);
+            NUnit.Framework.Assert.AreEqual(85.0F, minMaxWidth.GetMaxWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeMaxWidthInMinMaxWidthCalculationsTest() {
+            Div div = new Div();
+            div.SetProperty(Property.MAX_WIDTH, UnitValue.CreatePercentValue(42.5F));
+            BlockRenderer divRenderer = (BlockRenderer)div.GetRenderer();
+            MinMaxWidth minMaxWidth = divRenderer.GetMinMaxWidth(200.0F);
+            NUnit.Framework.Assert.AreEqual(85.0F, minMaxWidth.GetMaxWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelativeMinWidthInMinMaxWidthCalculationsTest() {
+            Div div = new Div();
+            div.SetProperty(Property.MIN_WIDTH, UnitValue.CreatePercentValue(42.5F));
+            BlockRenderer divRenderer = (BlockRenderer)div.GetRenderer();
+            MinMaxWidth minMaxWidth = divRenderer.GetMinMaxWidth(200.0F);
+            NUnit.Framework.Assert.AreEqual(85.0F, minMaxWidth.GetMinWidth(), EPS);
+            NUnit.Framework.Assert.AreEqual(85.0F, minMaxWidth.GetMaxWidth(), EPS);
         }
 
         [NUnit.Framework.Test]

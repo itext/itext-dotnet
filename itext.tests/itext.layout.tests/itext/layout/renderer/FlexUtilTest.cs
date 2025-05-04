@@ -26,6 +26,7 @@ using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
@@ -79,6 +80,24 @@ namespace iText.Layout.Renderer {
                     NUnit.Framework.Assert.AreEqual(100.0f, flexItemInfo.GetRectangle().GetHeight(), EPS);
                 }
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleColumnDirectionTest() {
+            Rectangle bBox = new Rectangle(545, 842);
+            DocumentRenderer documentRenderer = new DocumentRenderer(new Document(new PdfDocument(new PdfWriter(new MemoryStream
+                ()))));
+            Div div = new Div();
+            FlexContainerRenderer flexContainerRenderer = new FlexContainerRenderer(div);
+            flexContainerRenderer.SetParent(documentRenderer);
+            div.SetNextRenderer(flexContainerRenderer);
+            div.AddStyle(COLUMN_STYLE);
+            Div childDiv = new Div().SetBackgroundColor(ColorConstants.RED).SetWidth(UnitValue.CreatePercentValue(75));
+            div.Add(childDiv);
+            flexContainerRenderer.AddChild(childDiv.CreateRendererSubTree().SetParent(flexContainerRenderer));
+            IList<IList<FlexItemInfo>> rectangleTable = FlexUtil.CalculateChildrenRectangles(bBox, (FlexContainerRenderer
+                )div.GetRenderer());
+            NUnit.Framework.Assert.AreEqual(75.0F, rectangleTable[0][0].GetRectangle().GetWidth(), EPS);
         }
 
         [NUnit.Framework.Test]

@@ -626,7 +626,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (isColumnDirection) {
-                    MinMaxWidth minMaxWidth = info.renderer.GetMinMaxWidth();
+                    MinMaxWidth minMaxWidth = info.renderer.GetMinMaxWidth(crossSize);
                     info.hypotheticalCrossSize = info.GetInnerCrossSize(Math.Max(Math.Min(minMaxWidth.GetMaxWidth(), crossSize
                         ), minMaxWidth.GetMinWidth()));
                     // Cache hypotheticalCrossSize for FlexContainerRenderer

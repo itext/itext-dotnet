@@ -2161,6 +2161,17 @@ namespace iText.Layout.Renderer {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
         }
 
+        /// <summary>Calculates min and max width values for current renderer.</summary>
+        /// <param name="areaMaxWidth">max width of the area on which current renderer will be laid out</param>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Layout.Minmaxwidth.MinMaxWidth"/>
+        /// </returns>
+        public virtual MinMaxWidth GetMinMaxWidth(float? areaMaxWidth) {
+            return areaMaxWidth == null ? GetMinMaxWidth() : MinMaxWidthUtils.CountDefaultMinMaxWidth(this, areaMaxWidth
+                );
+        }
+
         protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {
             // retrieve returns max width, if there is no width.
             if (HasAbsoluteUnitValue(Property.WIDTH)) {

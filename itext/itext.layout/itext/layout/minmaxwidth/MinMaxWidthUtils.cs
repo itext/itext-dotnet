@@ -53,6 +53,13 @@ namespace iText.Layout.Minmaxwidth {
             return Math.Abs(x - y) < eps;
         }
 
+        /// <summary>Default implementation for min max width calculation.</summary>
+        /// <param name="renderer">renderer to calculate min max width for</param>
+        /// <returns>
+        /// 
+        /// <see cref="MinMaxWidth"/>
+        /// instance
+        /// </returns>
         public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer) {
             LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(GetInfWidth(), GetInfHeight
                 ()))));
@@ -60,6 +67,27 @@ namespace iText.Layout.Minmaxwidth {
                 ().GetBBox().GetWidth(), 0);
         }
 
+        /// <summary>Default implementation for min max width calculation.</summary>
+        /// <param name="renderer">renderer to calculate min max width for</param>
+        /// <param name="areaMaxWidth">max available area for layout</param>
+        /// <returns>
+        /// 
+        /// <see cref="MinMaxWidth"/>
+        /// instance
+        /// </returns>
+        public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float areaMaxWidth) {
+            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(areaMaxWidth, GetInfHeight
+                ()))));
+            return result.GetStatus() == LayoutResult.NOTHING ? new MinMaxWidth() : new MinMaxWidth(0, result.GetOccupiedArea
+                ().GetBBox().GetWidth(), 0);
+        }
+
+        /// <summary>Get sum of left and right borders for the element.</summary>
+        /// <param name="element">element to calculate borders width for</param>
+        /// <returns>
+        /// sum of left and right borders as
+        /// <c>float</c>
+        /// </returns>
         public static float GetBorderWidth(IPropertyContainer element) {
             Border rightBorder = element.GetProperty<Border>(Property.BORDER_RIGHT);
             Border leftBorder = element.GetProperty<Border>(Property.BORDER_LEFT);
@@ -68,6 +96,12 @@ namespace iText.Layout.Minmaxwidth {
             return rightBorderWidth + leftBorderWidth;
         }
 
+        /// <summary>Get sum of left and right margins for the element.</summary>
+        /// <param name="element">element to calculate margins width for</param>
+        /// <returns>
+        /// sum of left and right margins as
+        /// <c>float</c>
+        /// </returns>
         public static float GetMarginsWidth(IPropertyContainer element) {
             UnitValue rightMargin = element.GetProperty<UnitValue>(Property.MARGIN_RIGHT);
             if (null != rightMargin && !rightMargin.IsPointValue()) {
@@ -86,6 +120,12 @@ namespace iText.Layout.Minmaxwidth {
             return rightMarginWidth + leftMarginWidth;
         }
 
+        /// <summary>Get sum of left and right paddings for the element.</summary>
+        /// <param name="element">element to calculate paddings width for</param>
+        /// <returns>
+        /// sum of left and right paddings as
+        /// <c>float</c>
+        /// </returns>
         public static float GetPaddingWidth(IPropertyContainer element) {
             UnitValue rightPadding = element.GetProperty<UnitValue>(Property.PADDING_RIGHT);
             if (null != rightPadding && !rightPadding.IsPointValue()) {
