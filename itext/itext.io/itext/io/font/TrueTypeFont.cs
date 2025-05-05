@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
@@ -219,6 +220,43 @@ namespace iText.IO.Font {
                 return i;
             }
             ).ToList();
+        }
+
+        /// <summary>
+        /// Checks whether current
+        /// <see cref="TrueTypeFont"/>
+        /// program contains the “cmap” subtable
+        /// with provided platform ID and encoding ID.
+        /// </summary>
+        /// <param name="platformID">platform ID</param>
+        /// <param name="encodingID">encoding ID</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if “cmap” subtable with provided platform ID and encoding ID is present in the font program,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsCmapPresent(int platformID, int encodingID) {
+            OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
+            if (cmaps == null) {
+                return false;
+            }
+            return cmaps.cmapEncodings.Contains(new Tuple2<int, int>(platformID, encodingID));
+        }
+
+        /// <summary>
+        /// Gets the number of the “cmap” subtables for the current
+        /// <see cref="TrueTypeFont"/>
+        /// program.
+        /// </summary>
+        /// <returns>the number of the “cmap” subtables</returns>
+        public virtual int GetNumberOfCmaps() {
+            OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
+            if (cmaps == null) {
+                return 0;
+            }
+            return cmaps.cmapEncodings.Count;
         }
 
         protected internal virtual void ReadGdefTable() {
@@ -435,9 +473,9 @@ namespace iText.IO.Font {
         /// a
         /// <see cref="System.Collections.IList{E}"/>
         /// of integer arrays, which are constituted by pairs of ints that denote
-        /// each range limits. Each integer array size shall be a multiple of two.
+        /// each range limits. Each integer array size shall be a multiple of two
         /// </param>
-        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range.</returns>
+        /// <returns>single merged array consisting of pairs of integers, each of them denoting a range</returns>
         private static int[] ToCompactRange(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
             foreach (int[] range in ranges) {

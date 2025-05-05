@@ -26,6 +26,8 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
+using iText.IO.Font;
+using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -230,12 +232,32 @@ namespace iText.Pdfua.Checkers {
         /// least one of its glyphs is referenced from one or more content streams, are embedded within that file, as defined
         /// in ISO 32000-2:2020, 9.9 and ISO 32000-1:2008, 9.9.
         /// </summary>
+        /// <remarks>
+        /// Checks that font programs for all fonts used for rendering within a conforming file, as determined by whether at
+        /// least one of its glyphs is referenced from one or more content streams, are embedded within that file, as defined
+        /// in ISO 32000-2:2020, 9.9 and ISO 32000-1:2008, 9.9.
+        /// <para />
+        /// Checks character encodings rules as defined in ISO 14289-2, 8.4.5.7 and ISO 14289-1, 7.21.6.
+        /// </remarks>
         /// <param name="fontsInDocument">collection of fonts used in the document</param>
         internal virtual void CheckFonts(ICollection<PdfFont> fontsInDocument) {
             ICollection<String> fontNamesThatAreNotEmbedded = new HashSet<String>();
             foreach (PdfFont font in fontsInDocument) {
                 if (!font.IsEmbedded()) {
                     fontNamesThatAreNotEmbedded.Add(font.GetFontProgram().GetFontNames().GetFontName());
+                    continue;
+                }
+                if (font is PdfTrueTypeFont) {
+                    PdfTrueTypeFont trueTypeFont = (PdfTrueTypeFont)font;
+                    int flags = trueTypeFont.GetFontProgram().GetPdfFontFlags();
+                    bool symbolic = PdfCheckersUtil.CheckFlag(flags, FontDescriptorFlags.SYMBOLIC) && !PdfCheckersUtil.CheckFlag
+                        (flags, FontDescriptorFlags.NONSYMBOLIC);
+                    if (symbolic) {
+                        CheckSymbolicTrueTypeFont(trueTypeFont);
+                    }
+                    else {
+                        CheckNonSymbolicTrueTypeFont(trueTypeFont);
+                    }
                 }
             }
             if (!fontNamesThatAreNotEmbedded.IsEmpty()) {
@@ -243,6 +265,19 @@ namespace iText.Pdfua.Checkers {
                     , String.Join(", ", fontNamesThatAreNotEmbedded)));
             }
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks cmap entries present in the embedded TrueType font program of the non-symbolic TrueType font.
+        ///     </summary>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal abstract void CheckNonSymbolicCmapSubtable(TrueTypeFont fontProgram);
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.</summary>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal abstract void CheckSymbolicCmapSubtable(TrueTypeFont fontProgram);
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -317,6 +352,32 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             return null;
+        }
+
+        private void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            TrueTypeFont fontProgram = (TrueTypeFont)trueTypeFont.GetFontProgram();
+            CheckNonSymbolicCmapSubtable(fontProgram);
+            String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
+            // Non-symbolic TTF will always have the dictionary value in the Encoding key of the Font dictionary in itext.
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !PdfEncodings.MACROMAN.Equals(encoding)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING
+                    );
+            }
+            if (trueTypeFont.GetFontEncoding().HasDifferences() && !fontProgram.IsCmapPresent(3, 1)) {
+                // If font has differences array, itext ensures that all the glyph names in the Differences array are listed
+                // in the Adobe Glyph List.
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_NOT_DEFINE_DIFFERENCES
+                    );
+            }
+        }
+
+        private void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            if (trueTypeFont.GetPdfObject().ContainsKey(PdfName.Encoding)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_NOT_CONTAIN_ENCODING
+                    );
+            }
+            TrueTypeFont fontProgram = (TrueTypeFont)trueTypeFont.GetFontProgram();
+            CheckSymbolicCmapSubtable(fontProgram);
         }
 
         private sealed class UaCharacterChecker : FontCheckUtil.CharacterChecker {

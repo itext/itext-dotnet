@@ -162,9 +162,8 @@ namespace iText.Pdfua {
                     , 36).ShowText("world").EndText().RestoreState().CloseTag();
             }
             );
-            // TODO DEVSIX-9017 Support PDF/UA rules for fonts.
-            // TODO DEVSIX-9004 Support Character encodings related rules in UA-2
-            framework.AssertOnlyVeraPdfFail("trueTypeFontWithDifferencesTest", pdfUAConformance);
+            framework.AssertBothFail("trueTypeFontWithDifferencesTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -232,7 +231,7 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("nonSymbolicTtfWithIncompatibleEncoding", pdfUAConformance);
+            framework.AssertBothValid("nonSymbolicTtfWithValidEncodingTest", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -251,8 +250,8 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            // TODO DEVSIX-9004 Support Character encodings related rules in UA-2
-            framework.AssertOnlyVeraPdfFail("nonSymbolicTtfWithIncompatibleEncoding", pdfUAConformance);
+            framework.AssertBothFail("nonSymbolicTtfWithIncompatibleEncoding", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING
+                , false, pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -261,7 +260,8 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf");
+                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
+                        .FORCE_EMBEDDED);
                 }
                 catch (System.IO.IOException) {
                     throw new Exception();
@@ -280,9 +280,32 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    // if we specify encoding, symbolic font is treated as non-symbolic
                     font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                font.GetPdfObject().Put(PdfName.Encoding, PdfName.MacRomanEncoding);
+                document.SetFont(font);
+                Paragraph paragraph = new Paragraph("ABC");
+                document.Add(paragraph);
+            }
+            );
+            // VeraPDF is valid since iText fixes symbolic flag to non-symbolic on closing.
+            framework.AssertOnlyITextFail("symbolicTtfWithEncoding", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_NOT_CONTAIN_ENCODING
+                , pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SymbolicTtfWithInvalidCmapTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font;
+                try {
+                    TrueTypeFont fontProgram = new PdfUAFontsTest.CustomSymbolicTrueTypeFont(FONT);
+                    font = PdfFontFactory.CreateFont(fontProgram, PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException) {
                     throw new Exception();
@@ -292,7 +315,48 @@ namespace iText.Pdfua {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("symbolicTtfWithEncoding", pdfUAConformance);
+            // VeraPDF is valid since iText fixes symbolic flag to non-symbolic on closing.
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_EXACTLY_ONE_OR_AT_LEAST_MICROSOFT_SYMBOL_CMAP
+                    , pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
+                        , pdfUAConformance);
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NonSymbolicTtfWithInvalidCmapTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font;
+                try {
+                    TrueTypeFont fontProgram = new PdfUAFontsTest.CustomNonSymbolicTrueTypeFont(FONT);
+                    font = PdfFontFactory.CreateFont(fontProgram, PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException) {
+                    throw new Exception();
+                }
+                document.SetFont(font);
+                Paragraph paragraph = new Paragraph("ABC");
+                document.Add(paragraph);
+            }
+            );
+            // VeraPDF is valid since the file itself is valid, but itext code is modified for testing.
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_NON_SYMBOLIC_CMAP
+                    , pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
+                        , pdfUAConformance);
+                }
+            }
         }
 
         [NUnit.Framework.Test]
@@ -300,6 +364,44 @@ namespace iText.Pdfua {
             // TODO DEVSIX-9076 NPE when cmap of True Type Font doesn't contain Microsoft Unicode or Macintosh Roman encodings
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONT_FOLDER +
                  "Symbols1_changed_cmap.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
+        }
+
+        private class CustomSymbolicTrueTypeFont : TrueTypeFont {
+            public CustomSymbolicTrueTypeFont(String path)
+                : base(path) {
+            }
+
+            public override int GetPdfFontFlags() {
+                return 4;
+            }
+
+            public override bool IsCmapPresent(int platformID, int encodingID) {
+                if (platformID == 1) {
+                    return false;
+                }
+                return base.IsCmapPresent(platformID, encodingID);
+            }
+        }
+
+        private class CustomNonSymbolicTrueTypeFont : TrueTypeFont {
+            public CustomNonSymbolicTrueTypeFont(String path)
+                : base(path) {
+            }
+
+            public override int GetPdfFontFlags() {
+                return 32;
+            }
+
+            public override bool IsCmapPresent(int platformID, int encodingID) {
+                if (platformID == 1 || encodingID == 1) {
+                    return false;
+                }
+                return base.IsCmapPresent(platformID, encodingID);
+            }
+
+            public override int GetNumberOfCmaps() {
+                return 0;
+            }
         }
     }
 }

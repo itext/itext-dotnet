@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -225,6 +226,38 @@ namespace iText.Pdfua.Checkers {
             , PdfDictionary> currentBmc, PdfDocument document) {
             CheckStandardRoleMapping(currentBmc);
             base.CheckLogicalStructureInBMC(stack, currentBmc, document);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// For all non-symbolic TrueType fonts used for rendering, the embedded TrueType font program shall contain one or
+        /// several non-symbolic cmap entries such that all necessary glyph lookups can be carried out.
+        /// </summary>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal override void CheckNonSymbolicCmapSubtable(TrueTypeFont fontProgram) {
+            if ((fontProgram.IsCmapPresent(3, 0) && fontProgram.GetNumberOfCmaps() == 1) || fontProgram.GetNumberOfCmaps
+                () == 0) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_NON_SYMBOLIC_CMAP
+                    );
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.</summary>
+        /// <remarks>
+        /// Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.
+        /// <para />
+        /// The “cmap” table in the embedded font program shall either contain exactly one encoding or it shall contain,
+        /// at least, the Microsoft Symbol (3,0 – Platform ID = 3, Encoding ID = 0) encoding.
+        /// </remarks>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal override void CheckSymbolicCmapSubtable(TrueTypeFont fontProgram) {
+            if (!fontProgram.IsCmapPresent(3, 0) && fontProgram.GetNumberOfCmaps() != 1) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_EXACTLY_ONE_OR_AT_LEAST_MICROSOFT_SYMBOL_CMAP
+                    );
+            }
         }
 //\endcond
 

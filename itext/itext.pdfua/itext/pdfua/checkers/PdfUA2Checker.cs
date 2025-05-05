@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -178,6 +179,38 @@ namespace iText.Pdfua.Checkers {
                 throw new PdfUAConformanceException(e.Message);
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// For all non-symbolic TrueType fonts used for rendering, the embedded TrueType font program shall contain
+        /// at least the Microsoft Unicode (3, 1 – Platform ID = 3, Encoding ID = 1),
+        /// or the Macintosh Roman (1, 0 – Platform ID = 1, Encoding ID = 0) “cmap” subtable.
+        /// </summary>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal override void CheckNonSymbolicCmapSubtable(TrueTypeFont fontProgram) {
+            if (!fontProgram.IsCmapPresent(3, 1) && !fontProgram.IsCmapPresent(1, 0)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
+                    );
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.</summary>
+        /// <remarks>
+        /// Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.
+        /// <para />
+        /// The “cmap” subtable in the embedded font program shall either contain the Microsoft Symbol
+        /// (3, 0 – Platform ID = 3, Encoding ID = 0) or the Mac Roman (1, 0 – Platform ID = 1, Encoding ID = 1) encoding.
+        /// </remarks>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal override void CheckSymbolicCmapSubtable(TrueTypeFont fontProgram) {
+            if (!fontProgram.IsCmapPresent(3, 0) && !fontProgram.IsCmapPresent(1, 0)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
+                    );
+            }
+        }
+//\endcond
 
         private void CheckPdfObject(PdfObject obj) {
             switch (obj.GetObjectType()) {

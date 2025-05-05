@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
@@ -265,6 +266,14 @@ namespace iText.IO.Font {
 
 //\cond DO_NOT_DOCUMENT
         internal class CmapTable {
+//\cond DO_NOT_DOCUMENT
+            /// <summary>
+            /// Collection of the pairs representing Platform ID and Encoding ID of the “cmap” subtables
+            /// present in the font program.
+            /// </summary>
+            internal IList<Tuple2<int, int>> cmapEncodings = new List<Tuple2<int, int>>();
+//\endcond
+
 //\cond DO_NOT_DOCUMENT
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
@@ -597,7 +606,11 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Reads the font data.</summary>
-        /// <param name="all">if true, all tables will be read, otherwise only 'head', 'name', and 'os/2'.</param>
+        /// <param name="all">
+        /// if
+        /// <see langword="true"/>
+        /// , all tables will be read, otherwise only 'head', 'name', and 'os/2'
+        /// </param>
         protected internal virtual void LoadTables(bool all) {
             ReadNameTable();
             ReadHeadTable();
@@ -1010,6 +1023,7 @@ namespace iText.IO.Font {
             for (int k = 0; k < num_tables; ++k) {
                 int platId = raf.ReadUnsignedShort();
                 int platSpecId = raf.ReadUnsignedShort();
+                cmaps.cmapEncodings.Add(new Tuple2<int, int>(platId, platSpecId));
                 int offset = raf.ReadInt();
                 if (platId == 3 && platSpecId == 0) {
                     cmaps.fontSpecific = true;
