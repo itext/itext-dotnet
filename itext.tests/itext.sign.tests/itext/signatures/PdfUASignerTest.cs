@@ -291,8 +291,7 @@ namespace iText.Signatures {
                     (appearance);
             }
             );
-            // TODO DEVSIX-9057 setAlternativeDescription doesn't set Contents entry for PdfSigner
-            new VeraPdfValidator().ValidateFailure(outPdf);
+            new VeraPdfValidator().Validate(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -319,9 +318,8 @@ namespace iText.Signatures {
                     (appearance);
             }
             );
-            // TODO DEVSIX-9057 setAlternativeDescription doesn't set Contents entry for PdfSigner
             // TODO DEVSIX-9060 Image that is in Div element is not rendered in signature
-            new VeraPdfValidator().ValidateFailure(outPdf);
+            new VeraPdfValidator().Validate(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -341,8 +339,7 @@ namespace iText.Signatures {
                     (appearance);
             }
             );
-            // TODO DEVSIX-9057 setAlternativeDescription doesn't set Contents entry for PdfSigner
-            new VeraPdfValidator().ValidateFailure(outPdf);
+            new VeraPdfValidator().Validate(outPdf);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)

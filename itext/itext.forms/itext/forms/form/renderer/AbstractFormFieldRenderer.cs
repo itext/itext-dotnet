@@ -195,23 +195,11 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>Applies the accessibility properties to the form field.</summary>
-        /// <param name="formField">The form field to which the accessibility properties should be applied.</param>
-        /// <param name="pdfDocument">The document to which the form field belongs.</param>
+        /// <param name="formField">the form field to which the accessibility properties should be applied</param>
+        /// <param name="pdfDocument">the document to which the form field belongs</param>
         protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, PdfDocument pdfDocument
             ) {
-            if (!pdfDocument.IsTagged()) {
-                return;
-            }
-            AccessibilityProperties properties = ((IAccessibleElement)this.modelElement).GetAccessibilityProperties();
-            String alternativeDescription = properties.GetAlternateDescription();
-            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
-                formField.SetAlternativeName(alternativeDescription);
-                foreach (PdfFormAnnotation annotation in formField.GetChildFormAnnotations()) {
-                    if (annotation.GetAlternativeDescription() == null) {
-                        annotation.SetAlternativeDescription(alternativeDescription);
-                    }
-                }
-            }
+            PdfFormField.ApplyAccessibilityProperties(formField, ((IAccessibleElement)this.modelElement), pdfDocument);
         }
 
         /// <summary>Adjusts the field layout.</summary>

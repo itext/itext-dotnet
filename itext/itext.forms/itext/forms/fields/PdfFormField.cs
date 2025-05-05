@@ -40,8 +40,10 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Fields {
     /// <summary>
@@ -395,6 +397,43 @@ namespace iText.Forms.Fields {
                         else {
                             return "";
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Applies
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties"/>
+        /// for provided form field and its annotation children.
+        /// </summary>
+        /// <param name="formField">
+        /// 
+        /// <see cref="PdfFormField"/>
+        /// the form field to which the accessibility properties should be applied
+        /// </param>
+        /// <param name="modelElement">
+        /// 
+        /// <see cref="iText.Layout.Tagging.IAccessibleElement"/>
+        /// the form field layout element with accessibility properties
+        /// </param>
+        /// <param name="pdfDocument">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// the document to which the form field belongs
+        /// </param>
+        public static void ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField formField, IAccessibleElement
+             modelElement, PdfDocument pdfDocument) {
+            if (!pdfDocument.IsTagged()) {
+                return;
+            }
+            AccessibilityProperties properties = modelElement.GetAccessibilityProperties();
+            String alternativeDescription = properties.GetAlternateDescription();
+            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
+                formField.SetAlternativeName(alternativeDescription);
+                foreach (PdfFormAnnotation annotation in formField.GetChildFormAnnotations()) {
+                    if (annotation.GetAlternativeDescription() == null) {
+                        annotation.SetAlternativeDescription(alternativeDescription);
                     }
                 }
             }
