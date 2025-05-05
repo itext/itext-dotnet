@@ -2169,7 +2169,7 @@ namespace iText.Layout.Renderer {
         /// </returns>
         public virtual MinMaxWidth GetMinMaxWidth(float? areaMaxWidth) {
             return areaMaxWidth == null ? GetMinMaxWidth() : MinMaxWidthUtils.CountDefaultMinMaxWidth(this, areaMaxWidth
-                );
+                .Value);
         }
 
         protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {

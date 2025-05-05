@@ -1046,13 +1046,13 @@ namespace iText.Layout.Renderer {
                     maxWidth = HasAbsoluteUnitValue(Property.MAX_WIDTH) ? RetrieveMaxWidth(0) : null;
                 }
                 else {
-                    minWidth = RetrieveMinWidth(parentBoxWidth);
+                    minWidth = RetrieveMinWidth(parentBoxWidth.Value);
                     if (minWidth == null) {
-                        minWidth = RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+                        minWidth = RetrieveUnitValue(parentBoxWidth.Value, Property.WIDTH);
                     }
-                    maxWidth = RetrieveMaxWidth(parentBoxWidth);
+                    maxWidth = RetrieveMaxWidth(parentBoxWidth.Value);
                     if (maxWidth == null) {
-                        maxWidth = RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
+                        maxWidth = RetrieveUnitValue(parentBoxWidth.Value, Property.WIDTH);
                     }
                 }
                 if (minWidth == null || maxWidth == null) {
