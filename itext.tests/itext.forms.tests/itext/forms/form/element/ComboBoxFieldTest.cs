@@ -41,8 +41,7 @@ namespace iText.Forms.Form.Element {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/form/element/ComboBoxFieldTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/form/element/ComboBoxFieldTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms/form/element/ComboBoxFieldTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -504,6 +503,22 @@ namespace iText.Forms.Form.Element {
                 flattenComboBoxFieldSelected.AddOption(new SelectFieldItem("option 2"));
                 flattenComboBoxFieldSelected.SetSelected("option 1");
                 document.Add(flattenComboBoxFieldSelected);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ComboBoxAlternativeDescriptionTest() {
+            String outPdf = DESTINATION_FOLDER + "comboBoxAlternativeDescription.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxAlternativeDescription.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+                document.GetPdfDocument().SetTagged();
+                ComboBoxField formComboBoxField = new ComboBoxField("form combo box field");
+                formComboBoxField.SetInteractive(true);
+                formComboBoxField.SetAlternativeDescription("description");
+                formComboBoxField.AddOption(new SelectFieldItem("option 1"));
+                formComboBoxField.AddOption(new SelectFieldItem("option 2"));
+                document.Add(formComboBoxField);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }

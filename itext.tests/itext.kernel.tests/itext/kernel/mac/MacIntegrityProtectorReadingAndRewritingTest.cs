@@ -42,8 +42,7 @@ namespace iText.Kernel.Mac {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/mac/MacIntegrityProtectorReadingAndRewritingTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/mac/MacIntegrityProtectorReadingAndRewritingTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/mac/MacIntegrityProtectorReadingAndRewritingTest/";
 
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/mac/MacIntegrityProtectorReadingAndRewritingTest/certs/";

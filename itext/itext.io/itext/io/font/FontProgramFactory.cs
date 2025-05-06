@@ -201,7 +201,7 @@ namespace iText.IO.Font {
                 String fontFileExtension = null;
                 int extensionBeginIndex = baseName.LastIndexOf('.');
                 if (extensionBeginIndex > 0) {
-                    fontFileExtension = baseName.Substring(extensionBeginIndex).ToLowerInvariant();
+                    fontFileExtension = StringNormalizer.ToLowerCase(baseName.Substring(extensionBeginIndex));
                 }
                 if (isBuiltinFonts14 || ".afm".Equals(fontFileExtension) || ".pfm".Equals(fontFileExtension)) {
                     fontBuilt = new Type1Font(name, null, null, null);
@@ -245,7 +245,7 @@ namespace iText.IO.Font {
                                 fontBuilt = new TrueTypeFont(fontProgram);
                             }
                             else {
-                                int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                                int ttcSplit = StringNormalizer.ToLowerCase(baseName).IndexOf(".ttc,", StringComparison.Ordinal);
                                 if (ttcSplit > 0) {
                                     try {
                                         // count(.ttc) = 4

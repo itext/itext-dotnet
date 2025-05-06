@@ -48,7 +48,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
 
         /// <summary>Set of conditional group rules.</summary>
         private static readonly ICollection<String> CONDITIONAL_GROUP_RULES = JavaCollectionsUtil.UnmodifiableSet(
-            new HashSet<String>(JavaUtil.ArraysAsList(CssRuleName.MEDIA)));
+            new HashSet<String>(JavaCollectionsUtil.SingletonList(CssRuleName.MEDIA)));
 
         /// <summary>The current state.</summary>
         private IParserState currentState;

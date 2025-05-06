@@ -32,8 +32,7 @@ using NUnit.Framework;
 
 namespace iText.IO.Util {
     public class UrlUtilTest : ExtendedITextTest {
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/io/UrlUtilTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/io/UrlUtilTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -102,7 +101,7 @@ namespace iText.IO.Util {
                 // Do not check exception message because it is localized
             } catch(OperationCanceledException e) {
                 exceptionThrown = true;
-                NUnit.Framework.Assert.AreEqual("the operation was canceled.", e.Message.ToLower());
+                NUnit.Framework.Assert.AreEqual("the operation was canceled.", StringNormalizer.ToLowerCase(e.Message));
             }
 
             NUnit.Framework.Assert.True(exceptionThrown);

@@ -37,6 +37,7 @@ using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Utils;
 using iText.Svg.Xobject;
+using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
@@ -45,8 +46,7 @@ namespace iText.Svg.Renderers {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/SvgImageRendererTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/SvgImageRendererTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/SvgImageRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

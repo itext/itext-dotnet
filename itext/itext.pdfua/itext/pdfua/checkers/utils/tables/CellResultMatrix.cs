@@ -40,7 +40,7 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <param name="table">The table that needs to be checked.</param>
         /// <param name="context">The validation context.</param>
         public CellResultMatrix(Table table, PdfUAValidationContext context)
-            : base(new TableCellIterator(table, context)) {
+            : base(new TableCellIterator(table, context), context.GetUAConformance()) {
         }
 
 //\cond DO_NOT_DOCUMENT

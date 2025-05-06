@@ -33,12 +33,14 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Form.Renderer {
     /// <summary>
@@ -131,6 +133,7 @@ namespace iText.Forms.Form.Renderer {
             paragraph.SetBorderLeft(this.GetProperty<Border>(Property.BORDER_LEFT));
             paragraph.SetProperty(Property.BACKGROUND, this.GetProperty<Background>(Property.BACKGROUND));
             paragraph.SetBorderRadius(new BorderRadius(UnitValue.CreatePercentValue(50)));
+            paragraph.GetAccessibilityProperties().SetRole(StandardRoles.LBL);
             return new RadioRenderer.FlatParagraphRenderer(this, paragraph);
         }
 
@@ -208,8 +211,15 @@ namespace iText.Forms.Form.Renderer {
                 PdfCanvas canvas = drawContext.GetCanvas();
                 bool isTaggingEnabled = drawContext.IsTaggingEnabled();
                 if (isTaggingEnabled) {
-                    TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    canvas.OpenTag(tp.GetTagReference());
+                    LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                    bool isArtifact = taggingHelper != null && taggingHelper.IsArtifact(this);
+                    if (isArtifact) {
+                        canvas.OpenTag(new CanvasArtifact());
+                    }
+                    else {
+                        TagTreePointer tp = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                        canvas.OpenTag(tp.GetTagReference());
+                    }
                 }
                 Rectangle rectangle = this.GetOccupiedArea().GetBBox().Clone();
                 Border borderTop = this.GetProperty<Border>(Property.BORDER_TOP);

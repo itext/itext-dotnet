@@ -34,8 +34,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/XmpWriterTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/XmpWriterTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/XmpWriterTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -202,6 +201,93 @@ namespace iText.Kernel.Pdf {
             XMPUtils.RemoveProperties(xmpMeta, XMPConst.NS_PDF, PdfConst.Producer, true, true);
             cmpBytes = XMPMetaFactory.SerializeToBuffer(xmpMeta, new SerializeOptions(SerializeOptions.SORT));
             return cmpBytes;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BagParsingTest() {
+            String xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"Adobe XMP Core 6.0-c006 79.dabacbb, " + "2021/04/14-00:39:44        \">\n"
+                 + "   <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" + "      <rdf:Description rdf:about=\"\"\n"
+                 + "            xmlns:photoshop=\"http://ns.adobe.com/photoshop/1.0/\"\n" + "            xmlns:xmpMM=\"http://ns.adobe.com/xap/1.0/mm/\"\n"
+                 + "            xmlns:stEvt=\"http://ns.adobe.com/xap/1.0/sType/ResourceEvent#\"\n" + "            xmlns:stRef=\"http://ns.adobe.com/xap/1.0/sType/ResourceRef#\"\n"
+                 + "            xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\"\n" + "            xmlns:xmpGImg=\"http://ns.adobe.com/xap/1.0/g/img/\"\n"
+                 + "            xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" + "            xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\">\n"
+                 + "         <photoshop:LegacyIPTCDigest>CDCFFA7DA8C7BE09057076AEAF05C34E</photoshop:LegacyIPTCDigest>\n"
+                 + "         <photoshop:ColorMode>3</photoshop:ColorMode>\n" + "         <photoshop:ICCProfile>sRGB IEC61966-2.1</photoshop:ICCProfile>\n"
+                 + "         <photoshop:DocumentAncestors>\n" + "            <rdf:Bag>\n" + "               <rdf:li>78274CCED3154607AD19599D29855E30</rdf:li>\n"
+                 + "               <rdf:li>A61D41481CEE4032AE7A116AD6C942DC</rdf:li>\n" + "               <rdf:li>A2A26CD02B014819824FC4314B4152FF</rdf:li>\n"
+                 + "               <rdf:li>425FC234DCE84124A5EEAF17C69CCC62</rdf:li>\n" + "               <rdf:li>D2B4867567A547EA9F87B476EB21147E</rdf:li>\n"
+                 + "               <rdf:li>CE995EEDAD734D029F9B27AD04BA7052</rdf:li>\n" + "               <rdf:li>E754B36AD97E49EAABC7E8F7CEA30696</rdf:li>\n"
+                 + "               <rdf:li>713B782250904422BDDCAD1723C25C3C</rdf:li>\n" + "               <rdf:li>DC818BB5F9F1421C87DA05C97DEEB2CF</rdf:li>\n"
+                 + "               \n" + "               <rdf:li>D2B4867567A547EA9F87B476EB21147E</rdf:li>\n" + "               <rdf:li>CE995EEDAD734D029F9B27AD04BA7052</rdf:li>\n"
+                 + "               <rdf:li>E754B36AD97E49EAABC7E8F7CEA30696</rdf:li>\n" + "               <rdf:li>713B782250904422BDDCAD1723C25C3C</rdf:li>\n"
+                 + "               <rdf:li>DC818BB5F9F1421C87DA05C97DEEB2CF</rdf:li>\n" + "            </rdf:Bag>\n" +
+                 "         </photoshop:DocumentAncestors>      \n" + "      </rdf:Description>\n" + "   </rdf:RDF>\n" 
+                + "</x:xmpmeta>";
+            NUnit.Framework.Assert.DoesNotThrow(() => XMPMetaFactory.ParseFromBuffer(xmp.GetBytes(System.Text.Encoding
+                .UTF8)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AltParsingTest() {
+            String xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"Adobe XMP Core 6.0-c006 79.dabacbb, " + "2021/04/14-00:39:44        \">\n"
+                 + "   <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" + "      <rdf:Description rdf:about=\"\"\n"
+                 + "            xmlns:photoshop=\"http://ns.adobe.com/photoshop/1.0/\"\n" + "            xmlns:xmpMM=\"http://ns.adobe.com/xap/1.0/mm/\"\n"
+                 + "            xmlns:stEvt=\"http://ns.adobe.com/xap/1.0/sType/ResourceEvent#\"\n" + "            xmlns:stRef=\"http://ns.adobe.com/xap/1.0/sType/ResourceRef#\"\n"
+                 + "            xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\"\n" + "            xmlns:xmpGImg=\"http://ns.adobe.com/xap/1.0/g/img/\"\n"
+                 + "            xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" + "            xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\">\n"
+                 + "         <photoshop:LegacyIPTCDigest>CDCFFA7DA8C7BE09057076AEAF05C34E</photoshop:LegacyIPTCDigest>\n"
+                 + "         <photoshop:ColorMode>3</photoshop:ColorMode>\n" + "         <photoshop:ICCProfile>sRGB IEC61966-2.1</photoshop:ICCProfile>\n"
+                 + "         <photoshop:DocumentAncestors>\n" + "            <rdf:Alt>\n" + "               <rdf:li>0006528E7FAD8C1170BB8605BDABA5EC</rdf:li>\n"
+                 + "               <rdf:li>00072919E3FCD9243A279B11FA36E751</rdf:li>\n" + "               <rdf:li>D2B4867567A547EA9F87B476EB21147E</rdf:li>\n"
+                 + "               <rdf:li>CE995EEDAD734D029F9B27AD04BA7052</rdf:li>\n" + "               <rdf:li>E754B36AD97E49EAABC7E8F7CEA30696</rdf:li>\n"
+                 + "               <rdf:li>713B782250904422BDDCAD1723C25C3C</rdf:li>\n" + "               <rdf:li>DC818BB5F9F1421C87DA05C97DEEB2CF</rdf:li>\n"
+                 + "               \n" + "               <rdf:li>D2B4867567A547EA9F87B476EB21147E</rdf:li>\n" + "               <rdf:li>CE995EEDAD734D029F9B27AD04BA7052</rdf:li>\n"
+                 + "               <rdf:li>E754B36AD97E49EAABC7E8F7CEA30696</rdf:li>\n" + "               <rdf:li>713B782250904422BDDCAD1723C25C3C</rdf:li>\n"
+                 + "               <rdf:li>DC818BB5F9F1421C87DA05C97DEEB2CF</rdf:li>\n" + "            </rdf:Alt>\n" +
+                 "         </photoshop:DocumentAncestors>      \n" + "      </rdf:Description>\n" + "   </rdf:RDF>\n" 
+                + "</x:xmpmeta>";
+            NUnit.Framework.Assert.DoesNotThrow(() => XMPMetaFactory.ParseFromBuffer(xmp.GetBytes(System.Text.Encoding
+                .UTF8)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SeqParsingTest() {
+            String xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"Adobe XMP Core 6.0-c006 79.dabacbb, " + "2021/04/14-00:39:44        \">\n"
+                 + "   <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" + "      <rdf:Description rdf:about=\"\"\n"
+                 + "            xmlns:photoshop=\"http://ns.adobe.com/photoshop/1.0/\"\n" + "            xmlns:xmpMM=\"http://ns.adobe.com/xap/1.0/mm/\"\n"
+                 + "            xmlns:stEvt=\"http://ns.adobe.com/xap/1.0/sType/ResourceEvent#\"\n" + "            xmlns:stRef=\"http://ns.adobe.com/xap/1.0/sType/ResourceRef#\"\n"
+                 + "            xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\"\n" + "            xmlns:xmpGImg=\"http://ns.adobe.com/xap/1.0/g/img/\"\n"
+                 + "            xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" + "            xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\">\n"
+                 + "         <photoshop:LegacyIPTCDigest>CDCFFA7DA8C7BE09057076AEAF05C34E</photoshop:LegacyIPTCDigest>\n"
+                 + "         <photoshop:ColorMode>3</photoshop:ColorMode>\n" + "         <photoshop:ICCProfile>sRGB IEC61966-2.1</photoshop:ICCProfile>\n"
+                 + "         <photoshop:DocumentAncestors>\n" + "            <rdf:Seq>\n" + "               <rdf:li>78274CCED3154607AD19599D29855E30</rdf:li>\n"
+                 + "               <rdf:li>A61D41481CEE4032AE7A116AD6C942DC</rdf:li>\n" + "               <rdf:li>A2A26CD02B014819824FC4314B4152FF</rdf:li>\n"
+                 + "               <rdf:li>425FC234DCE84124A5EEAF17C69CCC62</rdf:li>\n" + "               <rdf:li>D2B4867567A547EA9F87B476EB21147E</rdf:li>\n"
+                 + "               <rdf:li>CE995EEDAD734D029F9B27AD04BA7052</rdf:li>\n" + "               <rdf:li>E754B36AD97E49EAABC7E8F7CEA30696</rdf:li>\n"
+                 + "               <rdf:li>713B782250904422BDDCAD1723C25C3C</rdf:li>\n" + "               <rdf:li>DC818BB5F9F1421C87DA05C97DEEB2CF</rdf:li>\n"
+                 + "               \n" + "               <rdf:li>D2B4867567A547EA9F87B476EB21147E</rdf:li>\n" + "               <rdf:li>CE995EEDAD734D029F9B27AD04BA7052</rdf:li>\n"
+                 + "               <rdf:li>E754B36AD97E49EAABC7E8F7CEA30696</rdf:li>\n" + "               <rdf:li>713B782250904422BDDCAD1723C25C3C</rdf:li>\n"
+                 + "               <rdf:li>DC818BB5F9F1421C87DA05C97DEEB2CF</rdf:li>\n" + "            </rdf:Seq>\n" +
+                 "         </photoshop:DocumentAncestors>      \n" + "      </rdf:Description>\n" + "   </rdf:RDF>\n" 
+                + "</x:xmpmeta>";
+            NUnit.Framework.Assert.DoesNotThrow(() => XMPMetaFactory.ParseFromBuffer(xmp.GetBytes(System.Text.Encoding
+                .UTF8)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ListParsingTest() {
+            String xmp = "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"Adobe XMP Core 6.0-c006 79.dabacbb, " + "2021/04/14-00:39:44        \">\n"
+                 + "   <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" + "      <rdf:Description rdf:about=\"\"\n"
+                 + "            xmlns:photoshop=\"http://ns.adobe.com/photoshop/1.0/\"\n" + "            xmlns:xmpMM=\"http://ns.adobe.com/xap/1.0/mm/\"\n"
+                 + "            xmlns:stEvt=\"http://ns.adobe.com/xap/1.0/sType/ResourceEvent#\"\n" + "            xmlns:stRef=\"http://ns.adobe.com/xap/1.0/sType/ResourceRef#\"\n"
+                 + "            xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\"\n" + "            xmlns:xmpGImg=\"http://ns.adobe.com/xap/1.0/g/img/\"\n"
+                 + "            xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" + "            xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\">\n"
+                 + "         <photoshop:LegacyIPTCDigest>CDCFFA7DA8C7BE09057076AEAF05C34E</photoshop:LegacyIPTCDigest>\n"
+                 + "         <photoshop:ColorMode>3</photoshop:ColorMode>\n" + "         <photoshop:ICCProfile>sRGB IEC61966-2.1</photoshop:ICCProfile>\n"
+                 + "         <photoshop:ICCProfile>sRGB IEC61966-2.2</photoshop:ICCProfile>\n" + "      </rdf:Description>\n"
+                 + "   </rdf:RDF>\n" + "</x:xmpmeta>";
+            NUnit.Framework.Assert.Catch(typeof(XMPException), () => XMPMetaFactory.ParseFromBuffer(xmp.GetBytes(System.Text.Encoding
+                .UTF8)));
         }
     }
 }

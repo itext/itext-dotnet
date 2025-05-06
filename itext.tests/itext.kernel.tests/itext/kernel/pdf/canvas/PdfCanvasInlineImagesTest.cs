@@ -34,8 +34,7 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf.Canvas {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfCanvasInlineImagesTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/canvas/PdfCanvasInlineImagesTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/PdfCanvasInlineImagesTest/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasInlineImagesTest/";

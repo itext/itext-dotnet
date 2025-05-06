@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using iText.Commons.Actions.Contexts;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -262,7 +263,7 @@ namespace iText.Signatures.Validation {
 
         private ICollection<PdfDictionary> addedTaggedObjects;
 
-        private Pair<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects;
+        private Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects;
 
         /// <summary>
         /// Creates new instance of
@@ -499,8 +500,9 @@ namespace iText.Signatures.Validation {
 
         private bool ValidateRevision(ValidationReport validationReport, ValidationContext context, PdfDocument documentWithoutRevision
             , PdfDocument documentWithRevision, DocumentRevision currentRevision) {
-            usuallyModifiedObjects = new Pair<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>>(CreateUsuallyModifiedObjectsSet
-                (documentWithoutRevision), CreateUsuallyModifiedObjectsSet(documentWithRevision));
+            usuallyModifiedObjects = new Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>>(
+                CreateUsuallyModifiedObjectsSet(documentWithoutRevision), CreateUsuallyModifiedObjectsSet(documentWithRevision
+                ));
             if (!CompareCatalogs(documentWithoutRevision, documentWithRevision, validationReport, context)) {
                 return false;
             }
@@ -1765,21 +1767,21 @@ namespace iText.Signatures.Validation {
         // Compare PDF objects util section:
         //
         //
-        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, Pair<ICollection<PdfIndirectReference
+        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, Tuple2<ICollection<PdfIndirectReference
             >, ICollection<PdfIndirectReference>> usuallyModifiedObjects) {
-            return ComparePdfObjects(pdfObject1, pdfObject2, new List<Pair<PdfObject, PdfObject>>(), usuallyModifiedObjects
+            return ComparePdfObjects(pdfObject1, pdfObject2, new List<Tuple2<PdfObject, PdfObject>>(), usuallyModifiedObjects
                 );
         }
 
-        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, IList<Pair<PdfObject, PdfObject
-            >> visitedObjects, Pair<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects
-            ) {
-            foreach (Pair<PdfObject, PdfObject> pair in visitedObjects) {
-                if (pair.GetKey() == pdfObject1) {
-                    return pair.GetValue() == pdfObject2;
+        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, IList<Tuple2<PdfObject, 
+            PdfObject>> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference
+            >> usuallyModifiedObjects) {
+            foreach (Tuple2<PdfObject, PdfObject> pair in visitedObjects) {
+                if (pair.GetFirst() == pdfObject1) {
+                    return pair.GetSecond() == pdfObject2;
                 }
             }
-            visitedObjects.Add(new Pair<PdfObject, PdfObject>(pdfObject1, pdfObject2));
+            visitedObjects.Add(new Tuple2<PdfObject, PdfObject>(pdfObject1, pdfObject2));
             if (Object.Equals(pdfObject1, pdfObject2)) {
                 return true;
             }
@@ -1789,9 +1791,9 @@ namespace iText.Signatures.Validation {
             if (pdfObject1.GetType() != pdfObject2.GetType()) {
                 return false;
             }
-            if (pdfObject1.GetIndirectReference() != null && usuallyModifiedObjects.GetKey().Any((reference) => IsSameReference
+            if (pdfObject1.GetIndirectReference() != null && usuallyModifiedObjects.GetFirst().Any((reference) => IsSameReference
                 (reference, pdfObject1.GetIndirectReference())) && pdfObject2.GetIndirectReference() != null && usuallyModifiedObjects
-                .GetValue().Any((reference) => IsSameReference(reference, pdfObject2.GetIndirectReference()))) {
+                .GetSecond().Any((reference) => IsSameReference(reference, pdfObject2.GetIndirectReference()))) {
                 // These two objects are expected to not be completely equal, we check them independently.
                 // However, we still need to make sure those are same instances.
                 return IsSameReference(pdfObject1.GetIndirectReference(), pdfObject2.GetIndirectReference());
@@ -1837,8 +1839,9 @@ namespace iText.Signatures.Validation {
             }
         }
 
-        private static bool ComparePdfArrays(PdfArray array1, PdfArray array2, IList<Pair<PdfObject, PdfObject>> visitedObjects
-            , Pair<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects) {
+        private static bool ComparePdfArrays(PdfArray array1, PdfArray array2, IList<Tuple2<PdfObject, PdfObject>>
+             visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects
+            ) {
             if (array1.Size() != array2.Size()) {
                 return false;
             }
@@ -1850,8 +1853,8 @@ namespace iText.Signatures.Validation {
             return true;
         }
 
-        private static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, IList<Pair
-            <PdfObject, PdfObject>> visitedObjects, Pair<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference
+        private static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, IList<Tuple2
+            <PdfObject, PdfObject>> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference
             >> usuallyModifiedObjects) {
             ICollection<KeyValuePair<PdfName, PdfObject>> entrySet1 = dictionary1.EntrySet();
             ICollection<KeyValuePair<PdfName, PdfObject>> entrySet2 = dictionary2.EntrySet();
@@ -1867,8 +1870,8 @@ namespace iText.Signatures.Validation {
             return true;
         }
 
-        private static bool ComparePdfStreams(PdfStream stream1, PdfStream stream2, IList<Pair<PdfObject, PdfObject
-            >> visitedObjects, Pair<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects
+        private static bool ComparePdfStreams(PdfStream stream1, PdfStream stream2, IList<Tuple2<PdfObject, PdfObject
+            >> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects
             ) {
             return JavaUtil.ArraysEquals(stream1.GetBytes(), stream2.GetBytes()) && ComparePdfDictionaries(stream1, stream2
                 , visitedObjects, usuallyModifiedObjects);

@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 
 namespace iText.IO.Font.Constants {
+    /// <summary>Font weight values and utility methods</summary>
     public sealed class FontWeights {
         private FontWeights() {
         }
@@ -54,9 +56,12 @@ namespace iText.IO.Font.Constants {
         // Font weight Black (Heavy)
         public const int BLACK = 900;
 
+        /// <summary>Parses font weight constant to corresponding value.</summary>
+        /// <param name="weight">weight constant</param>
+        /// <returns>corresponding weight int value</returns>
         public static int FromType1FontWeight(String weight) {
             int fontWeight = NORMAL;
-            switch (weight.ToLowerInvariant()) {
+            switch (StringNormalizer.ToLowerCase(weight)) {
                 case "ultralight": {
                     fontWeight = THIN;
                     break;
@@ -105,11 +110,7 @@ namespace iText.IO.Font.Constants {
                 case "heavy":
                 case "black":
                 case "ultra":
-                case "ultrablack": {
-                    fontWeight = BLACK;
-                    break;
-                }
-
+                case "ultrablack":
                 case "fat":
                 case "extrablack": {
                     fontWeight = BLACK;
@@ -119,6 +120,20 @@ namespace iText.IO.Font.Constants {
             return fontWeight;
         }
 
+        /// <summary>
+        /// Normalize font weight to either
+        /// <see cref="THIN"/>
+        /// or
+        /// <see cref="BLACK"/>.
+        /// </summary>
+        /// <param name="fontWeight">font weight int value</param>
+        /// <returns>
+        /// either
+        /// <see cref="THIN"/>
+        /// or
+        /// <see cref="BLACK"/>
+        /// based on a given weight value
+        /// </returns>
         public static int NormalizeFontWeight(int fontWeight) {
             fontWeight = (fontWeight / 100) * 100;
             if (fontWeight < iText.IO.Font.Constants.FontWeights.THIN) {

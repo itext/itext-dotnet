@@ -56,6 +56,15 @@ namespace iText.Layout {
 
         private LayoutTaggingHelper defaultLayoutTaggingHelper;
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="RootElement{T}"/>
+        /// instance.
+        /// </summary>
+        public RootElement() {
+        }
+
+        // Empty constructor.
         /// <summary>Adds an element to the root.</summary>
         /// <remarks>Adds an element to the root. The element is immediately placed in the contents.</remarks>
         /// <param name="element">an element with spacial margins, tabbing, and alignment</param>
@@ -348,6 +357,20 @@ namespace iText.Layout {
             }
             EnsureRootRendererNotNull().AddChild(rendererSubTreeRoot);
             TraverseAndCallIso(pdfDocument, rendererSubTreeRoot);
+        }
+
+        /// <summary>Ensures that the root tag is created in the tagging structure.</summary>
+        protected internal void EnsureRootTagIsCreated() {
+            if (this.pdfDocument == null) {
+                return;
+            }
+            if (!this.pdfDocument.IsTagged()) {
+                return;
+            }
+            if (pdfDocument.GetWriter() == null) {
+                return;
+            }
+            this.pdfDocument.GetTagStructureContext().NormalizeDocumentRootTag();
         }
 
         private LayoutTaggingHelper InitTaggingHelperIfNeeded() {

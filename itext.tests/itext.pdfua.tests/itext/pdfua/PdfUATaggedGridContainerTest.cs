@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Colors;
@@ -32,120 +33,119 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Grid;
 using iText.Test;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfua {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUATaggedGridContainerTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUATaggedGridContainerTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUATaggedGridContainerTest/";
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        [NUnit.Framework.SetUp]
-        public virtual void Setup() {
+        private UaValidationTestFramework framework;
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Setup() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SimpleBorderBoxSizingTest() {
-            String outputPdf = DESTINATION_FOLDER + "border.pdf";
-            PdfUATestPdfDocument doc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
-            Document document = new Document(doc);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            document.SetFont(font);
-            GridContainer gridContainer0 = CreateGridBoxWithText();
-            document.Add(new Paragraph("BOX_SIZING: BORDER_BOX"));
-            gridContainer0.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
-            gridContainer0.SetBorder(new SolidBorder(ColorConstants.BLACK, 20));
-            document.Add(gridContainer0);
-            document.Add(new Paragraph("BOX_SIZING: CONTENT_BOX"));
-            GridContainer gridContainer1 = CreateGridBoxWithText();
-            gridContainer1.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
-            gridContainer1.SetBorder(new SolidBorder(ColorConstants.BLACK, 20));
-            document.Add(gridContainer1);
-            document.Close();
-            ValidateOutputPdf(outputPdf);
+        [NUnit.Framework.SetUp]
+        public virtual void InitializeFramework() {
+            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SimpleMarginTest() {
-            String outputPdf = DESTINATION_FOLDER + "margin.pdf";
-            PdfUATestPdfDocument doc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
-            Document document = new Document(doc);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            document.SetFont(font);
-            document.Add(new Paragraph("Validate Grid Container with Margin "));
-            GridContainer gridContainer0 = CreateGridBoxWithText();
-            gridContainer0.SetMarginTop(50);
-            gridContainer0.SetMarginBottom(100);
-            gridContainer0.SetMarginLeft(10);
-            gridContainer0.SetMarginRight(10);
-            document.Add(gridContainer0);
-            document.Close();
-            ValidateOutputPdf(outputPdf);
+        public static IList<PdfUAConformance> Data() {
+            return UaValidationTestFramework.GetConformanceList();
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SimplePaddingTest() {
-            String outputPdf = DESTINATION_FOLDER + "padding.pdf";
-            PdfUATestPdfDocument doc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
-            Document document = new Document(doc);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            document.SetFont(font);
-            document.Add(new Paragraph("Validate Grid Container with Padding"));
-            GridContainer gridContainer0 = CreateGridBoxWithText();
-            gridContainer0.SetPaddingTop(50);
-            gridContainer0.SetPaddingBottom(100);
-            gridContainer0.SetPaddingLeft(10);
-            gridContainer0.SetPaddingRight(10);
-            document.Add(gridContainer0);
-            document.Close();
-            ValidateOutputPdf(outputPdf);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SimpleBorderBoxSizingTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font = LoadFont();
+                document.SetFont(font);
+                GridContainer gridContainer0 = CreateGridBoxWithText();
+                document.Add(new Paragraph("BOX_SIZING: BORDER_BOX"));
+                gridContainer0.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.BORDER_BOX);
+                gridContainer0.SetBorder(new SolidBorder(ColorConstants.BLACK, 20));
+                document.Add(gridContainer0);
+                document.Add(new Paragraph("BOX_SIZING: CONTENT_BOX"));
+                GridContainer gridContainer1 = CreateGridBoxWithText();
+                gridContainer1.SetProperty(Property.BOX_SIZING, BoxSizingPropertyValue.CONTENT_BOX);
+                gridContainer1.SetBorder(new SolidBorder(ColorConstants.BLACK, 20));
+                document.Add(gridContainer1);
+            }
+            );
+            framework.AssertBothValid("border", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void SimpleBackgroundTest() {
-            String outputPdf = DESTINATION_FOLDER + "background.pdf";
-            PdfUATestPdfDocument doc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
-            Document document = new Document(doc);
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            document.SetFont(font);
-            document.Add(new Paragraph("Validate Grid Container with Background"));
-            GridContainer gridContainer0 = CreateGridBoxWithText();
-            gridContainer0.SetBackgroundColor(ColorConstants.RED);
-            document.Add(gridContainer0);
-            document.Close();
-            ValidateOutputPdf(outputPdf);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SimpleMarginTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font = LoadFont();
+                document.SetFont(font);
+                document.Add(new Paragraph("Validate Grid Container with Margin "));
+                GridContainer gridContainer0 = CreateGridBoxWithText();
+                gridContainer0.SetMarginTop(50);
+                gridContainer0.SetMarginBottom(100);
+                gridContainer0.SetMarginLeft(10);
+                gridContainer0.SetMarginRight(10);
+                document.Add(gridContainer0);
+            }
+            );
+            framework.AssertBothValid("margin", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void EmptyGridContainerTest() {
-            String outputPdf = DESTINATION_FOLDER + "emptyGridContainer.pdf";
-            PdfUATestPdfDocument doc = new PdfUATestPdfDocument(new PdfWriter(outputPdf));
-            Document document = new Document(doc);
-            GridContainer gridContainer0 = new GridContainer();
-            gridContainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
-            gridContainer0.SetBackgroundColor(ColorConstants.RED);
-            gridContainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList((TemplateValue)new PointValue
-                (150.0f), (TemplateValue)new PointValue(150.0f), (TemplateValue)new PointValue(150.0f)));
-            gridContainer0.SetProperty(Property.COLUMN_GAP, 12.0f);
-            document.Add(gridContainer0);
-            document.Close();
-            ValidateOutputPdf(outputPdf);
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SimplePaddingTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font = LoadFont();
+                document.SetFont(font);
+                document.Add(new Paragraph("Validate Grid Container with Padding"));
+                GridContainer gridContainer0 = CreateGridBoxWithText();
+                gridContainer0.SetPaddingTop(50);
+                gridContainer0.SetPaddingBottom(100);
+                gridContainer0.SetPaddingLeft(10);
+                gridContainer0.SetPaddingRight(10);
+                document.Add(gridContainer0);
+            }
+            );
+            framework.AssertBothValid("padding", pdfUAConformance);
         }
 
-        private void ValidateOutputPdf(String outputPdf) {
-            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outputPdf));
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SimpleBackgroundTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                PdfFont font = LoadFont();
+                document.SetFont(font);
+                document.Add(new Paragraph("Validate Grid Container with Background"));
+                GridContainer gridContainer0 = CreateGridBoxWithText();
+                gridContainer0.SetBackgroundColor(ColorConstants.RED);
+                document.Add(gridContainer0);
+            }
+            );
+            framework.AssertBothValid("background", pdfUAConformance);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void EmptyGridContainerTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                Document document = new Document(pdfDoc);
+                GridContainer gridContainer0 = new GridContainer();
+                gridContainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
+                gridContainer0.SetBackgroundColor(ColorConstants.RED);
+                gridContainer0.SetProperty(Property.GRID_TEMPLATE_COLUMNS, JavaUtil.ArraysAsList((TemplateValue)new PointValue
+                    (150.0f), (TemplateValue)new PointValue(150.0f), (TemplateValue)new PointValue(150.0f)));
+                gridContainer0.SetProperty(Property.COLUMN_GAP, 12.0f);
+                document.Add(gridContainer0);
+            }
+            );
+            framework.AssertBothValid("emptyGridContainer", pdfUAConformance);
+        }
+
         private GridContainer CreateGridBoxWithText() {
             GridContainer gridContainer0 = new GridContainer();
             gridContainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
@@ -196,6 +196,16 @@ namespace iText.Pdfua {
             div13.Add(paragraph14);
             gridContainer0.Add(div13);
             return gridContainer0;
+        }
+
+        private static PdfFont LoadFont() {
+            try {
+                return PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                    );
+            }
+            catch (System.IO.IOException e) {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

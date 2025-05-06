@@ -47,12 +47,12 @@
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="lib\verapdf\greenfield-apps-1.26.2.jar">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
 	<Content Include="lib\verapdf\VeraPDF_license.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+    <None Update="lib\verapdf\VeraPdfValidatorApp.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

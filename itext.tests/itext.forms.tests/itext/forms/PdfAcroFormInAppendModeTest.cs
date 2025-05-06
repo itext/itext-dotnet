@@ -33,8 +33,7 @@ namespace iText.Forms {
     public class PdfAcroFormInAppendModeTest : ExtendedITextTest {
         private const String TEST_NAME = "PdfAcroFormInAppendModeTest/";
 
-        private static readonly String DESTINATION_DIR = NUnit.Framework.TestContext.CurrentContext.TestDirectory 
-            + "/test/itext/forms/" + TEST_NAME;
+        private static readonly String DESTINATION_DIR = TestUtil.GetOutputPath() + "/forms/" + TEST_NAME;
 
         private static readonly String SOURCE_DIR = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/" + TEST_NAME;

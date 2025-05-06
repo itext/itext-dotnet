@@ -41,8 +41,7 @@ namespace iText.Layout.Renderer {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/MinWidthTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/MinWidthTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/MinWidthTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

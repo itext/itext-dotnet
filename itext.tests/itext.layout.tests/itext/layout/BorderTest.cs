@@ -40,22 +40,9 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BorderTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/BorderTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/BorderTest/";
 
         public const String cmpPrefix = "cmp_";
-
-//\cond DO_NOT_DOCUMENT
-        internal String fileName;
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal String outFileName;
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal String cmpFileName;
-//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -64,8 +51,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SimpleBordersTest() {
-            fileName = "simpleBordersTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "simpleBordersTest.pdf";
+            Document doc = CreateDocument(fileName);
             List list = new List();
             ListItem solidBorderItem = new ListItem("solid");
             solidBorderItem.SetBorder(new SolidBorder(ColorConstants.RED, 6)).SetMarginBottom(5);
@@ -88,7 +75,7 @@ namespace iText.Layout {
             roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(ColorConstants.BLUE, 5));
             list.Add(roundDotsBorderItem);
             doc.Add(list);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
@@ -114,8 +101,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void Borders3DTest() {
-            fileName = "borders3DTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "borders3DTest.pdf";
+            Document doc = CreateDocument(fileName);
             List list = new List();
             ListItem grooveBorderItem = new ListItem("groove");
             grooveBorderItem.SetBorder(new GrooveBorder(2)).SetMarginBottom(5).SetWidth(100);
@@ -166,13 +153,13 @@ namespace iText.Layout {
             outsetBorderItem.SetBorder(new OutsetBorder(blueRgb, 8)).SetMarginBottom(5);
             list.Add(outsetBorderItem);
             doc.Add(list);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderSidesTest() {
-            fileName = "borderSidesTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "borderSidesTest.pdf";
+            Document doc = CreateDocument(fileName);
             String text = "<p class=\"none\"  >No border.</p>\n" + "<p class=\"dotted\">A dotted border.</p>\n" + "<p class=\"dashed\">A dashed border.</p>\n"
                  + "<p class=\"solid\" >A solid border.</p>\n" + "<p class=\"double\">A double border.</p>\n" + "<p class=\"groove\">A groove border.</p>\n"
                  + "<p class=\"ridge\" >A ridge border.</p>\n" + "<p class=\"inset\" >An inset border.</p>\n" + "<p class=\"outset\">An outset border.</p>\n"
@@ -188,13 +175,13 @@ namespace iText.Layout {
             doc.Add(new Paragraph(text).SetBorderBottom(new RoundDotsBorder(DeviceCmyk.CYAN, 3)));
             doc.Add(new Paragraph(text).SetBorderLeft(new DashedBorder(DeviceGray.BLACK, 5)));
             doc.Add(new Paragraph(text).SetBorder(new DottedBorder(DeviceGray.BLACK, 1)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderBoxTest() {
-            fileName = "borderBoxTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "borderBoxTest.pdf";
+            Document doc = CreateDocument(fileName);
             String textBefore = "At the mid-oceanic ridges, two tectonic plates diverge from one another as new oceanic crust is formed by the cooling and "
                  + "solidifying of hot molten rock. Because the crust is very thin at these ridges due to the pull of the tectonic plates, the release of "
                  + "pressure leads to adiabatic expansion and the partial melting of the mantle, causing volcanism and creating new oceanic crust. Most divergent "
@@ -223,13 +210,13 @@ namespace iText.Layout {
             doc.Add(p);
             doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(ColorConstants.BLACK, 3)).SetBorderRight(new DottedBorder
                 (ColorConstants.BLACK, 12)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderOutlineTest() {
-            fileName = "borderOutlineTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "borderOutlineTest.pdf";
+            Document doc = CreateDocument(fileName);
             String textBefore = "At the mid-oceanic ridges, two tectonic plates diverge from one another as new oceanic crust is formed by the cooling and "
                  + "solidifying of hot molten rock. Because the crust is very thin at these ridges due to the pull of the tectonic plates, the release of "
                  + "pressure leads to adiabatic expansion and the partial melting of the mantle, causing volcanism and creating new oceanic crust. Most divergent "
@@ -250,14 +237,14 @@ namespace iText.Layout {
             p.SetMargins(25, 60, 70, 80);
             p.SetProperty(Property.OUTLINE, new DoubleBorder(ColorConstants.RED, 25));
             doc.Add(p);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void RotatedBordersTest() {
-            fileName = "rotatedBordersTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "rotatedBordersTest.pdf";
+            Document doc = CreateDocument(fileName);
             doc.SetMargins(0, 0, 0, 0);
             Paragraph p = new Paragraph("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n"
@@ -270,17 +257,18 @@ namespace iText.Layout {
             img.SetRotationAngle(Math.PI / 6);
             doc.Add(img);
             doc.Close();
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
-        private Document CreateDocument() {
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+        private static Document CreateDocument(String fileName) {
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             return new Document(pdfDocument);
         }
 
-        private void CloseDocumentAndCompareOutputs(Document document) {
+        private static void CloseDocumentAndCompareOutputs(Document document, String fileName) {
+            String cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String outFileName = destinationFolder + fileName;
             document.Close();
             String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder, "diff"
                 );

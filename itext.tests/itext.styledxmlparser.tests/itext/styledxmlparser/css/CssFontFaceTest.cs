@@ -58,5 +58,32 @@ namespace iText.StyledXmlParser.Css {
             CssFontFace fontFace = CssFontFace.Create(properties);
             NUnit.Framework.Assert.IsNull(fontFace);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseFormatTest() {
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.None, CssFontFace.CssFontFaceSrc.ParseFormat(null));
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.TrueType, CssFontFace.CssFontFaceSrc.ParseFormat("Truetype"
+                ));
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.OpenType, CssFontFace.CssFontFaceSrc.ParseFormat("Opentype"
+                ));
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.WOFF, CssFontFace.CssFontFaceSrc.ParseFormat("Woff"
+                ));
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.WOFF2, CssFontFace.CssFontFaceSrc.ParseFormat("Woff2"
+                ));
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.EOT, CssFontFace.CssFontFaceSrc.ParseFormat("Embedded-opentype"
+                ));
+            NUnit.Framework.Assert.AreEqual(CssFontFace.FontFormat.SVG, CssFontFace.CssFontFaceSrc.ParseFormat("Svg"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsSupportedFontFormatTest() {
+            NUnit.Framework.Assert.IsTrue(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.None));
+            NUnit.Framework.Assert.IsTrue(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.TrueType));
+            NUnit.Framework.Assert.IsTrue(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.OpenType));
+            NUnit.Framework.Assert.IsTrue(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.WOFF));
+            NUnit.Framework.Assert.IsTrue(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.WOFF2));
+            NUnit.Framework.Assert.IsFalse(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.EOT));
+            NUnit.Framework.Assert.IsFalse(CssFontFace.IsSupportedFontFormat(CssFontFace.FontFormat.SVG));
+        }
     }
 }

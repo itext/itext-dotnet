@@ -40,8 +40,7 @@ namespace iText.Pdfa {
         public static readonly String cmpFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/cmp/PdfARadiofieldTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfARadiofieldTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfARadiofieldTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

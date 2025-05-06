@@ -42,8 +42,7 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/ListTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/ListTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/ListTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -609,7 +608,6 @@ namespace iText.Layout {
                 , "diff_"));
         }
 
-        // TODO DEVSIX-6877 wrapping list item content in a div causes the bullet to be misaligned
         [NUnit.Framework.Test]
         public virtual void ListItemWrappedDivSymbolInside() {
             String outFileName = destinationFolder + "listItemWrappedDivSymbolInside.pdf";
@@ -626,6 +624,28 @@ namespace iText.Layout {
             listItem.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
             l.Add(listItem);
             l.Add("Regular item 2");
+            document.Add(l);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ListSymbolOnPageSplit() {
+            String outFileName = destinationFolder + "listSymbolOnPageSplit.pdf";
+            String cmpFileName = sourceFolder + "cmp_listSymbolOnPageSplit.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            Div div = new Div().SetHeight(750);
+            List l = new List();
+            l.SetMarginLeft(50);
+            l.SetListSymbol("\u2022");
+            l.Add("Item 1");
+            ListItem listItem2 = new ListItem();
+            listItem2.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            l.Add(listItem2);
+            l.Add("Item 3");
+            document.Add(div);
             document.Add(l);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

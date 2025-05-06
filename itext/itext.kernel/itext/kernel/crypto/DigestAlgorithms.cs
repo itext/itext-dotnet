@@ -28,6 +28,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Digest;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 
@@ -250,11 +251,11 @@ namespace iText.Kernel.Crypto {
             if (name == null) {
                 throw new ArgumentException(KernelExceptionMessageConstant.THE_NAME_OF_THE_DIGEST_ALGORITHM_IS_NULL);
             }
-            String allowedDigest = allowedDigests.Get(name.ToUpperInvariant());
+            String allowedDigest = allowedDigests.Get(StringNormalizer.ToUpperCase(name));
             if (allowedDigest != null) {
                 return allowedDigest;
             }
-            allowedDigest = BOUNCY_CASTLE_FACTORY.GetDigestAlgorithmOid(name.ToUpperInvariant());
+            allowedDigest = BOUNCY_CASTLE_FACTORY.GetDigestAlgorithmOid(StringNormalizer.ToUpperCase(name));
             if (allowedDigest != null) {
                 LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
             }

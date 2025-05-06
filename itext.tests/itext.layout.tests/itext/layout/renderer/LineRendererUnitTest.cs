@@ -419,5 +419,15 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(5, renderer.GetText().GetEnd());
             NUnit.Framework.Assert.AreEqual(0, renderer.GetText().GetIdx());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void DisableOtfFeaturesTest() {
+            Document dummyDocument = CreateDummyDocument();
+            Text text = new Text("Hello world!");
+            text.DisableOtfFeatures();
+            TextRenderer renderer = (TextRenderer)new TextRenderer(text).SetParent(dummyDocument.GetRenderer());
+            renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(1000, 1000))));
+            NUnit.Framework.Assert.AreEqual(UnicodeScript.UNKNOWN, renderer.GetProperty<Object>(Property.FONT_SCRIPT));
+        }
     }
 }

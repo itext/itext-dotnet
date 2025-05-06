@@ -64,6 +64,12 @@ namespace iText.StyledXmlParser.Logs {
         /// <summary>The Constant INVALID_CSS_PROPERTY_DECLARATION.</summary>
         public const String INVALID_CSS_PROPERTY_DECLARATION = "Invalid css property declaration: {0}";
 
+        /// <summary>The Constant INVALID_CSS_VARIABLE_NESTING.</summary>
+        public const String INVALID_CSS_VARIABLE_COUNT = "Css var expression count too high, possible cyclic backreference at declaration: {0}";
+
+        /// <summary>The Constant ERROR_DURING_CSS_VARIABLE_RESOLVING.</summary>
+        public const String ERROR_DURING_CSS_VARIABLE_RESOLVING = "Css var expression can't be resolved at declaration: {0}";
+
         /// <summary>The Constant INCORRECT_CHARACTER_SEQUENCE.</summary>
         public const String INCORRECT_CHARACTER_SEQUENCE = "Incorrect character sequence.";
 

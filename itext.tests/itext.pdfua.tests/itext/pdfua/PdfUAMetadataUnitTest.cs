@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Pdfua.Checkers;
 using iText.Pdfua.Exceptions;
@@ -128,11 +130,204 @@ namespace iText.Pdfua {
                 e.Message);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ValidMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_ua2.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                metadata.Put(PdfName.Type, PdfName.Metadata);
+                metadata.Put(PdfName.Subtype, PdfName.XML);
+                catalog.Put(PdfName.Metadata, metadata);
+                PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                    );
+                NUnit.Framework.Assert.DoesNotThrow(() => checker.CheckMetadata(catalog));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CatalogNoMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.Remove(PdfName.Metadata);
+                PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                    );
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                    catalog));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY
+                    , e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CatalogInvalidMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                catalog.Put(PdfName.Metadata, new PdfString("Error"));
+                PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                    );
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                    catalog));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
+        public virtual void BrokenMetadataUA2Test() {
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDocument.AddNewPage();
+            PdfCatalog catalog = pdfDocument.GetCatalog();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalid_metadata_ua2.xmp"));
+            PdfStream metadata = new PdfStream(bytes);
+            metadata.Put(PdfName.Type, PdfName.Metadata);
+            metadata.Put(PdfName.Subtype, PdfName.XML);
+            catalog.Put(PdfName.Metadata, metadata);
+            PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                catalog));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
+            e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.INVALID_METADATA_VALUE, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithNoPartInMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_no_part_ua2.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                metadata.Put(PdfName.Type, PdfName.Metadata);
+                metadata.Put(PdfName.Subtype, PdfName.XML);
+                catalog.Put(PdfName.Metadata, metadata);
+                PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                    );
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                    catalog));
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                    , 2, null), e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithInvalidPartInMetadataUA2Test() {
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDocument.AddNewPage();
+            PdfCatalog catalog = pdfDocument.GetCatalog();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_invalid_part_ua2.xmp"));
+            PdfStream metadata = new PdfStream(bytes);
+            metadata.Put(PdfName.Type, PdfName.Metadata);
+            metadata.Put(PdfName.Subtype, PdfName.XML);
+            catalog.Put(PdfName.Metadata, metadata);
+            PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                catalog));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , 2, 1), e.Message);
+            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithNoRevInMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_no_rev_ua2.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                metadata.Put(PdfName.Type, PdfName.Metadata);
+                metadata.Put(PdfName.Subtype, PdfName.XML);
+                catalog.Put(PdfName.Metadata, metadata);
+                PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                    );
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                    catalog));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                    , e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithInvalidRevInMetadataUA2Test() {
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDocument.AddNewPage();
+            PdfCatalog catalog = pdfDocument.GetCatalog();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_invalid_rev_ua2.xmp"));
+            PdfStream metadata = new PdfStream(bytes);
+            metadata.Put(PdfName.Type, PdfName.Metadata);
+            metadata.Put(PdfName.Subtype, PdfName.XML);
+            catalog.Put(PdfName.Metadata, metadata);
+            PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                catalog));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                , e.Message);
+            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithInvalidLengthRevInMetadataUA2Test() {
+            PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()));
+            pdfDocument.AddNewPage();
+            PdfCatalog catalog = pdfDocument.GetCatalog();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "metadata_invalid_len_rev_ua2.xmp"
+                ));
+            PdfStream metadata = new PdfStream(bytes);
+            metadata.Put(PdfName.Type, PdfName.Metadata);
+            metadata.Put(PdfName.Subtype, PdfName.XML);
+            catalog.Put(PdfName.Metadata, metadata);
+            PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                );
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                catalog));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                , e.Message);
+            NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DocumentWithNoTitleInMetadataUA2Test() {
+            using (PdfDocument pdfDocument = new PdfUA2TestPdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "no_title_metadata_ua2.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                metadata.Put(PdfName.Type, PdfName.Metadata);
+                metadata.Put(PdfName.Subtype, PdfName.XML);
+                catalog.Put(PdfName.Metadata, metadata);
+                PdfUAMetadataUnitTest.PdfUA2MetadataChecker checker = new PdfUAMetadataUnitTest.PdfUA2MetadataChecker(pdfDocument
+                    );
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => checker.CheckMetadata(
+                    catalog));
+                NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.METADATA_SHALL_CONTAIN_DC_TITLE_ENTRY, e.Message
+                    );
+            }
+        }
+
         private class PdfUA1MetadataChecker : PdfUA1Checker {
             /// <summary>Creates PdfUA1Checker instance with PDF document which will be validated against PDF/UA-1 standard.
             ///     </summary>
             /// <param name="pdfDocument">the document to validate</param>
             public PdfUA1MetadataChecker(PdfDocument pdfDocument)
+                : base(pdfDocument) {
+            }
+
+            protected internal override void CheckMetadata(PdfCatalog catalog) {
+                base.CheckMetadata(catalog);
+            }
+        }
+
+        private class PdfUA2MetadataChecker : PdfUA2Checker {
+            /// <summary>Creates PdfUA2Checker instance with PDF document which will be validated against PDF/UA-2 standard.
+            ///     </summary>
+            /// <param name="pdfDocument">the document to validate</param>
+            public PdfUA2MetadataChecker(PdfDocument pdfDocument)
                 : base(pdfDocument) {
             }
 

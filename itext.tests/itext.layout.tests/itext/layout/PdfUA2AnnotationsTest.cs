@@ -32,6 +32,7 @@ using iText.Kernel.Pdf.Annot.DA;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -40,14 +41,13 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Layout {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2AnnotationsTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/PdfUA2AnnotationsTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/PdfUA2AnnotationsTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/PdfUA2AnnotationsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -421,7 +421,10 @@ namespace iText.Layout {
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfAnnotation annot = CreateRichTextAnnotation();
                 annot.SetFlags(PdfAnnotation.INVISIBLE);
-                pdfPage.AddAnnotation(annot);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
                 pdfPage.Flush();
             }
             new VeraPdfValidator().ValidateFailure(outFile);
@@ -437,7 +440,10 @@ namespace iText.Layout {
                 PdfPage pdfPage = pdfDocument.AddNewPage();
                 PdfAnnotation annot = CreateRichTextAnnotation();
                 annot.SetFlags(PdfAnnotation.NO_VIEW);
-                pdfPage.AddAnnotation(annot);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDocument.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
                 pdfPage.Flush();
             }
             new VeraPdfValidator().ValidateFailure(outFile);

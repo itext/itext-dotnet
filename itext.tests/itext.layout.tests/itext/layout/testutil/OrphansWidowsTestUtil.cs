@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -106,13 +107,13 @@ namespace iText.Layout.Testutil {
             else {
                 paraOnCanvas.SetWidowsControl(new ParagraphWidowsControl(minOrphansOrWidows, 1, false));
             }
-            String description = "The paragraph beneath has property " + orphansOrWidows.ToUpperInvariant() + "_CONTROL,"
-                 + " limiting the number of allowed " + orphansOrWidows + " to 3. " + "The size of canvas is limited so that the lines that"
+            String description = "The paragraph beneath has property " + StringNormalizer.ToUpperCase(orphansOrWidows)
+                 + "_CONTROL," + " limiting the number of allowed " + orphansOrWidows + " to 3. " + "The size of canvas is limited so that the lines that"
                  + (orphans ? " " : " don't ") + "fit in the canvas cause " + orphansOrWidows + " violation. " + "The entire canvas area is filled in magenta.";
             SingleLimitedCanvasSizeCase(document, paraOnCanvas, description, linesHeight, 1);
             document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             paraOnCanvas.DeleteOwnProperty(orphans ? Property.ORPHANS_CONTROL : Property.WIDOWS_CONTROL);
-            description = "The paragraph beneath has no " + orphansOrWidows.ToUpperInvariant() + "_CONTROL, property.";
+            description = "The paragraph beneath has no " + StringNormalizer.ToUpperCase(orphansOrWidows) + "_CONTROL, property.";
             SingleLimitedCanvasSizeCase(document, paraOnCanvas, description, linesHeight, 2);
             document.Close();
         }
@@ -121,8 +122,8 @@ namespace iText.Layout.Testutil {
             Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
             String orphansOrWidows = orphans ? "orphans" : "widows";
             Paragraph testDescription = new Paragraph().SetBorder(new SolidBorder(ColorConstants.RED, 1));
-            testDescription.Add("The paragraph beneath has property " + orphansOrWidows.ToUpperInvariant() + "_CONTROL,"
-                 + " limiting the number of allowed " + orphansOrWidows + " to 3. " + "The size of div-wrapper of the paragraph is limited so that the lines that"
+            testDescription.Add("The paragraph beneath has property " + StringNormalizer.ToUpperCase(orphansOrWidows) 
+                + "_CONTROL," + " limiting the number of allowed " + orphansOrWidows + " to 3. " + "The size of div-wrapper of the paragraph is limited so that the lines that"
                  + (orphans ? " " : " don't ") + "fit in the canvas cause " + orphansOrWidows + " violation. ");
             document.Add(testDescription);
             Paragraph paragraph = SetParagraphStylingProperties(new Paragraph(PARA_TEXT), false);
@@ -170,8 +171,8 @@ namespace iText.Layout.Testutil {
             String orphansOrWidows = orphans ? "orphans" : "widows";
             Paragraph testDescription = new Paragraph().SetMargin(0).SetBorder(new SolidBorder(ColorConstants.RED, 1))
                 .SetHeight(effectiveArea.GetHeight() - linesHeight - LINES_SPACE_EPS);
-            testDescription.Add("The paragraph beneath has property " + orphansOrWidows.ToUpperInvariant() + "_CONTROL,"
-                 + " limiting the number of allowed " + orphansOrWidows + " to 3. " + "The paragraph has also KEEP_TOGETHER property. The size of this description-paragraph is defined so"
+            testDescription.Add("The paragraph beneath has property " + StringNormalizer.ToUpperCase(orphansOrWidows) 
+                + "_CONTROL," + " limiting the number of allowed " + orphansOrWidows + " to 3. " + "The paragraph has also KEEP_TOGETHER property. The size of this description-paragraph is defined so"
                  + " that " + orphansOrWidows + " violation " + (large ? "occurs." : "should have occurred if not for KEEP_TOGETHER."
                 ));
             document.Add(testDescription);
@@ -179,12 +180,12 @@ namespace iText.Layout.Testutil {
             document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             String referencePagesDescription;
             if (large) {
-                referencePagesDescription = "The paragraph beneath has KEEP_TOGETHER property " + "and no " + orphansOrWidows
-                    .ToUpperInvariant() + "_CONTROL property.";
+                referencePagesDescription = "The paragraph beneath has KEEP_TOGETHER property " + "and no " + StringNormalizer
+                    .ToUpperCase(orphansOrWidows) + "_CONTROL property.";
             }
             else {
-                referencePagesDescription = "The paragraph beneath has neither KEEP_TOGETHER property nor " + orphansOrWidows
-                    .ToUpperInvariant() + "_CONTROL property.";
+                referencePagesDescription = "The paragraph beneath has neither KEEP_TOGETHER property nor " + StringNormalizer
+                    .ToUpperCase(orphansOrWidows) + "_CONTROL property.";
             }
             document.Add(new Paragraph(referencePagesDescription).SetMargin(0).SetBorder(new SolidBorder(ColorConstants
                 .RED, 1)).SetHeight(effectiveArea.GetHeight() - linesHeight - LINES_SPACE_EPS));
@@ -228,16 +229,16 @@ namespace iText.Layout.Testutil {
                 paragraph.SetWidowsControl(new ParagraphWidowsControl(minOrphansOrWidows, 1, false));
             }
             String orphansOrWidows = orphans ? "orphans" : "widows";
-            Paragraph testDescription = new Paragraph("The paragraph beneath has " + orphansOrWidows.ToUpperInvariant(
+            Paragraph testDescription = new Paragraph("The paragraph beneath has " + StringNormalizer.ToUpperCase(orphansOrWidows
                 ) + "_CONTROL property, limiting the number of allowed " + orphansOrWidows + " to 3. Huge image is part of the paragraph."
                 ).SetMargin(0).SetBorder(new SolidBorder(ColorConstants.RED, 1)).SetHeight(effectiveArea.GetHeight() /
                  2);
             document.Add(testDescription);
             document.Add(paragraph);
             document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-            testDescription = new Paragraph("The paragraph beneath has no " + orphansOrWidows.ToUpperInvariant() + "_CONTROL property. Huge image is part of the paragraph."
-                ).SetMargin(0).SetBorder(new SolidBorder(ColorConstants.RED, 1)).SetHeight(effectiveArea.GetHeight() /
-                 2);
+            testDescription = new Paragraph("The paragraph beneath has no " + StringNormalizer.ToUpperCase(orphansOrWidows
+                ) + "_CONTROL property. Huge image is part of the paragraph.").SetMargin(0).SetBorder(new SolidBorder(
+                ColorConstants.RED, 1)).SetHeight(effectiveArea.GetHeight() / 2);
             document.Add(testDescription);
             paragraph.DeleteOwnProperty(orphans ? Property.ORPHANS_CONTROL : Property.WIDOWS_CONTROL);
             document.Add(paragraph);
@@ -524,8 +525,8 @@ namespace iText.Layout.Testutil {
         private static void SingleMaxHeightCase(Document document, bool orphans, bool overflowVisible) {
             String orphansOrWidows = orphans ? "orphans" : "widows";
             Paragraph testDescription = new Paragraph().SetBorder(new SolidBorder(ColorConstants.RED, 1));
-            testDescription.Add("The paragraph beneath has property " + orphansOrWidows.ToUpperInvariant() + "_CONTROL, limiting the number of allowed "
-                 + orphansOrWidows + " to 3. " + "The paragraph also has property MAX_HEIGHT, whose value is defined so that the lines that"
+            testDescription.Add("The paragraph beneath has property " + StringNormalizer.ToUpperCase(orphansOrWidows) 
+                + "_CONTROL, limiting the number of allowed " + orphansOrWidows + " to 3. " + "The paragraph also has property MAX_HEIGHT, whose value is defined so that the lines that"
                  + (orphans ? " " : " don't ") + "fit in the area limited by MAX_HEIGHT value cause " + orphansOrWidows
                  + " violation.\n");
             if (overflowVisible) {
@@ -572,8 +573,8 @@ namespace iText.Layout.Testutil {
             String orphansOrWidows = orphans ? "orphans" : "widows";
             Paragraph testDescription = new Paragraph().SetMargin(0).SetBorder(new SolidBorder(ColorConstants.RED, 1))
                 .SetHeight(effectiveArea.GetHeight() - linesHeight - LINES_SPACE_EPS);
-            testDescription.Add("The paragraph beneath has" + (orphansWidowsEnabled ? " " : " no ") + orphansOrWidows.
-                ToUpperInvariant() + "_CONTROL property" + (orphansWidowsEnabled ? ", limiting the number of allowed "
+            testDescription.Add("The paragraph beneath has" + (orphansWidowsEnabled ? " " : " no ") + StringNormalizer
+                .ToUpperCase(orphansOrWidows) + "_CONTROL property" + (orphansWidowsEnabled ? ", limiting the number of allowed "
                  + orphansOrWidows + " to 3. " : ".") + "The size of this description-paragraph is defined so that " +
                  orphansOrWidows + " violation occurs.");
             document.Add(testDescription);

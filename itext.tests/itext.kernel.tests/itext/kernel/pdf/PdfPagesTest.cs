@@ -40,8 +40,7 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfPagesTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfPagesTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PdfPagesTest/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfPagesTest/";
@@ -611,7 +610,7 @@ namespace iText.Kernel.Pdf {
         public virtual void BrokenPageTreeWithExcessiveLastPageTest() {
             String inFileName = SOURCE_FOLDER + "brokenPageTreeNullLast.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            IList<int> pages = JavaUtil.ArraysAsList(4);
+            IList<int> pages = JavaCollectionsUtil.SingletonList(4);
             ICollection<int> nullPages = new HashSet<int>(pages);
             FindAndAssertNullPages(pdfDocument, nullPages);
         }
@@ -621,7 +620,7 @@ namespace iText.Kernel.Pdf {
         public virtual void BrokenPageTreeWithExcessiveMiddlePageTest() {
             String inFileName = SOURCE_FOLDER + "brokenPageTreeNullMiddle.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            IList<int> pages = JavaUtil.ArraysAsList(3);
+            IList<int> pages = JavaCollectionsUtil.SingletonList(3);
             ICollection<int> nullPages = new HashSet<int>(pages);
             FindAndAssertNullPages(pdfDocument, nullPages);
         }

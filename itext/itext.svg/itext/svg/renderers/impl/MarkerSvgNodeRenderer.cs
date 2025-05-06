@@ -169,10 +169,11 @@ namespace iText.Svg.Renderers.Impl {
                 markerWidth = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidthRawValue);
             }
             else {
-                if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_WIDTH.ToLowerInvariant())) {
+                if (this.attributesAndStyles.ContainsKey(StringNormalizer.ToLowerCase(SvgConstants.Attributes.MARKER_WIDTH
+                    ))) {
                     // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                    String markerWidthRawValue = attributesAndStyles.Get(SvgConstants.Attributes.MARKER_WIDTH.ToLowerInvariant
-                        ());
+                    String markerWidthRawValue = attributesAndStyles.Get(StringNormalizer.ToLowerCase(SvgConstants.Attributes.
+                        MARKER_WIDTH));
                     markerWidth = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidthRawValue);
                 }
             }
@@ -182,10 +183,11 @@ namespace iText.Svg.Renderers.Impl {
                 markerHeight = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeightRawValue);
             }
             else {
-                if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_HEIGHT.ToLowerInvariant())) {
+                if (this.attributesAndStyles.ContainsKey(StringNormalizer.ToLowerCase(SvgConstants.Attributes.MARKER_HEIGHT
+                    ))) {
                     // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                    String markerHeightRawValue = attributesAndStyles.Get(SvgConstants.Attributes.MARKER_HEIGHT.ToLowerInvariant
-                        ());
+                    String markerHeightRawValue = attributesAndStyles.Get(StringNormalizer.ToLowerCase(SvgConstants.Attributes
+                        .MARKER_HEIGHT));
                     markerHeight = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeightRawValue);
                 }
             }
@@ -197,12 +199,13 @@ namespace iText.Svg.Renderers.Impl {
             String markerWidth = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_WIDTH);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (markerWidth == null) {
-                markerWidth = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_WIDTH.ToLowerInvariant());
+                markerWidth = namedObject.GetAttribute(StringNormalizer.ToLowerCase(SvgConstants.Attributes.MARKER_WIDTH));
             }
             String markerHeight = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_HEIGHT);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (markerHeight == null) {
-                markerHeight = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_HEIGHT.ToLowerInvariant());
+                markerHeight = namedObject.GetAttribute(StringNormalizer.ToLowerCase(SvgConstants.Attributes.MARKER_HEIGHT
+                    ));
             }
             bool isCorrect = true;
             if (markerWidth != null) {
@@ -268,9 +271,9 @@ namespace iText.Svg.Renderers.Impl {
                 ) || SvgConstants.Values.STROKEWIDTH.Equals(this.attributesAndStyles.Get(SvgConstants.Attributes.MARKER_UNITS
                 ));
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-            bool markerUnitsLowerEqualsStrokeWidth = !this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.MARKER_UNITS
-                .ToLowerInvariant()) || SvgConstants.Values.STROKEWIDTH.Equals(this.attributesAndStyles.Get(SvgConstants.Attributes
-                .MARKER_UNITS.ToLowerInvariant()));
+            bool markerUnitsLowerEqualsStrokeWidth = !this.attributesAndStyles.ContainsKey(StringNormalizer.ToLowerCase
+                (SvgConstants.Attributes.MARKER_UNITS)) || SvgConstants.Values.STROKEWIDTH.Equals(this.attributesAndStyles
+                .Get(StringNormalizer.ToLowerCase(SvgConstants.Attributes.MARKER_UNITS)));
             if (markerUnitsEqualsStrokeWidth && markerUnitsLowerEqualsStrokeWidth) {
                 String parentValue = this.GetParent().GetAttribute(SvgConstants.Attributes.STROKE_WIDTH);
                 if (parentValue != null) {
@@ -303,9 +306,9 @@ namespace iText.Svg.Renderers.Impl {
                 moveX *= -1 * xScale;
             }
             else {
-                if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFX.ToLowerInvariant())) {
+                if (this.attributesAndStyles.ContainsKey(StringNormalizer.ToLowerCase(SvgConstants.Attributes.REFX))) {
                     // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                    String refX = this.attributesAndStyles.Get(SvgConstants.Attributes.REFX.ToLowerInvariant());
+                    String refX = this.attributesAndStyles.Get(StringNormalizer.ToLowerCase(SvgConstants.Attributes.REFX));
                     moveX = SvgCssUtils.ParseAbsoluteLength(this, refX, context.GetRootViewPort().GetWidth(), moveX, context);
                     //Apply scale
                     moveX *= -1 * xScale;
@@ -318,9 +321,9 @@ namespace iText.Svg.Renderers.Impl {
                 moveY *= -1 * yScale;
             }
             else {
-                if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.REFY.ToLowerInvariant())) {
+                if (this.attributesAndStyles.ContainsKey(StringNormalizer.ToLowerCase(SvgConstants.Attributes.REFY))) {
                     // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
-                    String refY = this.attributesAndStyles.Get(SvgConstants.Attributes.REFY.ToLowerInvariant());
+                    String refY = this.attributesAndStyles.Get(StringNormalizer.ToLowerCase(SvgConstants.Attributes.REFY));
                     moveY = SvgCssUtils.ParseAbsoluteLength(this, refY, context.GetRootViewPort().GetHeight(), moveY, context);
                     moveY *= -1 * yScale;
                 }

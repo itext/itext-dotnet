@@ -37,8 +37,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/parser/GlyphBboxCalculationTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/canvas/parser/GlyphBboxCalculationTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/parser/GlyphBboxCalculationTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
@@ -103,6 +104,11 @@ namespace iText.Forms.Form.Renderer {
                 renderer.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             }
             AddChild(renderer);
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList(renderer));
+                LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+            }
             Rectangle bBox = layoutContext.GetArea().GetBBox().Clone().MoveDown(INF - parentHeight).SetHeight(INF);
             layoutContext.GetArea().SetBBox(bBox);
             // A workaround for the issue that super.layout clears Property.FORCED_PLACEMENT,
@@ -189,18 +195,11 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>Applies the accessibility properties to the form field.</summary>
-        /// <param name="formField">The form field to which the accessibility properties should be applied.</param>
-        /// <param name="pdfDocument">The document to which the form field belongs.</param>
+        /// <param name="formField">the form field to which the accessibility properties should be applied</param>
+        /// <param name="pdfDocument">the document to which the form field belongs</param>
         protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, PdfDocument pdfDocument
             ) {
-            if (!pdfDocument.IsTagged()) {
-                return;
-            }
-            AccessibilityProperties properties = ((IAccessibleElement)this.modelElement).GetAccessibilityProperties();
-            String alternativeDescription = properties.GetAlternateDescription();
-            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
-                formField.SetAlternativeName(alternativeDescription);
-            }
+            PdfFormField.ApplyAccessibilityProperties(formField, ((IAccessibleElement)this.modelElement), pdfDocument);
         }
 
         /// <summary>Adjusts the field layout.</summary>

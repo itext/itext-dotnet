@@ -37,6 +37,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
@@ -352,6 +353,8 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>Checks the number of components in DeviceN color space.</summary>
+        /// <param name="deviceN">the color space to check</param>
         protected internal virtual void CheckNumberOfDeviceNComponents(PdfSpecialCs.DeviceN deviceN) {
             if (deviceN.GetNumberOfComponents() > MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.THE_NUMBER_OF_COLOR_COMPONENTS_IN_DEVICE_N_COLORSPACE_SHOULD_NOT_EXCEED
@@ -361,7 +364,7 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
-            // non-symbolic true type font will always has an encoding entry in font dictionary in itext
+            // non-symbolic true type font will always have an encoding entry in font dictionary in itext
             if (!PdfEncodings.WINANSI.Equals(encoding) && !PdfEncodings.MACROMAN.Equals(encoding)) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.ALL_NON_SYMBOLIC_TRUE_TYPE_FONT_SHALL_SPECIFY_MAC_ROMAN_ENCODING_OR_WIN_ANSI_ENCODING
                     , trueTypeFont);
@@ -403,14 +406,13 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 int flags = f.IntValue();
-                if (!CheckFlag(flags, PdfAnnotation.PRINT) || CheckFlag(flags, PdfAnnotation.HIDDEN) || CheckFlag(flags, PdfAnnotation
-                    .INVISIBLE) || CheckFlag(flags, PdfAnnotation.NO_VIEW) || CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW
-                    )) {
+                if (IsAnnotationInvisible(flags)) {
                     throw new PdfAConformanceException(PdfaExceptionMessageConstant.THE_F_KEYS_PRINT_FLAG_BIT_SHALL_BE_SET_TO_1_AND_ITS_HIDDEN_INVISIBLE_NOVIEW_AND_TOGGLENOVIEW_FLAG_BITS_SHALL_BE_SET_TO_0
                         );
                 }
                 if (subtype.Equals(PdfName.Text)) {
-                    if (!CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !CheckFlag(flags, PdfAnnotation.NO_ROTATE)) {
+                    if (!PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.NO_ZOOM) || !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                        .NO_ROTATE)) {
                         throw new PdfAConformanceException(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
                             );
                     }
@@ -519,7 +521,7 @@ namespace iText.Pdfa.Checker {
                 CheckResources(form.GetAsDictionary(PdfName.DR), form);
                 PdfArray fields = form.GetAsArray(PdfName.Fields);
                 if (fields != null) {
-                    fields = GetFormFields(fields);
+                    fields = PdfCheckersUtil.GetFormFields(fields);
                     foreach (PdfObject field in fields) {
                         PdfDictionary fieldDic = (PdfDictionary)field;
                         CheckResources(fieldDic.GetAsDictionary(PdfName.DR), fieldDic);
@@ -1062,6 +1064,22 @@ namespace iText.Pdfa.Checker {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual void CheckResourcesForTransparency(PdfDictionary resources, ICollection<PdfObject> checkedObjects
+            ) {
+            if (resources != null) {
+                CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.XObject), checkedObjects);
+                CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.Pattern), checkedObjects);
+            }
+        }
+//\endcond
+
+        private static bool IsAnnotationInvisible(int flags) {
+            return !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.PRINT) || PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                .HIDDEN) || PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || PdfCheckersUtil.CheckFlag(flags
+                , PdfAnnotation.NO_VIEW) || PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW);
+        }
+
         private void CheckAppearanceStreamForTransparency(PdfDictionary ap, ICollection<PdfObject> checkedObjects) {
             if (checkedObjects.Contains(ap)) {
                 return;
@@ -1102,16 +1120,6 @@ namespace iText.Pdfa.Checker {
                     );
             }
         }
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual void CheckResourcesForTransparency(PdfDictionary resources, ICollection<PdfObject> checkedObjects
-            ) {
-            if (resources != null) {
-                CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.XObject), checkedObjects);
-                CheckSingleResourceTypeForTransparency(resources.GetAsDictionary(PdfName.Pattern), checkedObjects);
-            }
-        }
-//\endcond
 
         private void CheckSingleResourceTypeForTransparency(PdfDictionary singleResourceDict, ICollection<PdfObject
             > checkedObjects) {

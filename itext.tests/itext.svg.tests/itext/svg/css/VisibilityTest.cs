@@ -30,8 +30,7 @@ namespace iText.Svg.Css {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/VisibilityTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/css/VisibilityTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/VisibilityTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

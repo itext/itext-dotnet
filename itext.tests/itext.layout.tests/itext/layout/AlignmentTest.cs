@@ -42,8 +42,7 @@ namespace iText.Layout {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/AlignmentTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/AlignmentTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/AlignmentTest/";
 
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
@@ -533,6 +532,60 @@ namespace iText.Layout {
                 Text t2 = new Text("期期期").SetFont(font);
                 Paragraph p = new Paragraph(t1).Add(t2).SetSpacingRatio(1).SetWidth(60).SetTextAlignment(TextAlignment.JUSTIFIED
                     );
+                document.Add(p);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MiddleAlignmentWithTtfOS2Version3Test() {
+            String outFileName = DESTINATION_FOLDER + "middleAlignmentWithTtfOS2Version3Test.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_middleAlignmentWithTtfOS2Version3Test.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDoc);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Open_Sans/OpenSans-Bold.ttf");
+                document.SetFont(font);
+                Paragraph p = new Paragraph();
+                p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+                p.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                p.SetFontSize(30);
+                Text heightDefiner = new Text(" Xj ");
+                p.Add(heightDefiner).SetMarginTop(30);
+                Text text1 = new Text(" mAlign Middle Alignment ");
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(InlineVerticalAlignmentType
+                    .MIDDLE));
+                text1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                text1.SetFontSize(12);
+                p.Add(text1);
+                p.Add(heightDefiner);
+                document.Add(p);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MiddleAlignmentWithTtfOS2Version1Test() {
+            String outFileName = DESTINATION_FOLDER + "middleAlignmentWithTtfOS2Version1Test.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_middleAlignmentWithTtfOS2Version1Test.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                Document document = new Document(pdfDoc);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf");
+                document.SetFont(font);
+                Paragraph p = new Paragraph();
+                p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
+                p.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                p.SetFontSize(30);
+                Text heightDefiner = new Text(" Xj ");
+                p.Add(heightDefiner).SetMarginTop(30);
+                Text text1 = new Text(" mAlign Middle Alignment ");
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(InlineVerticalAlignmentType
+                    .MIDDLE));
+                text1.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                text1.SetFontSize(12);
+                p.Add(text1);
+                p.Add(heightDefiner);
                 document.Add(p);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

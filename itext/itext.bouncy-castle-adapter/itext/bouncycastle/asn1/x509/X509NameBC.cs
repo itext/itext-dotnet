@@ -56,5 +56,19 @@ namespace iText.Bouncycastle.Asn1.X509 {
         {
             return GetX509Name().ToString();
         }
+
+        public override bool Equals(object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || !this.GetType().IsAssignableFrom(o.GetType()))
+            {
+                return false;
+            }
+            X509NameBC that = (X509NameBC)o;
+            return GetX509Name().Equivalent(that.GetX509Name());
+        }
     }
 }

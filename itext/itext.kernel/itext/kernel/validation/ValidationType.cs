@@ -42,6 +42,9 @@ namespace iText.Kernel.Validation {
         CANVAS_BEGIN_MARKED_CONTENT,
         CANVAS_WRITING_CONTENT,
         LAYOUT,
-        DUPLICATE_ID_ENTRY
+        DUPLICATE_ID_ENTRY,
+        DESTINATION_ADDITION,
+        ANNOTATION,
+        CANVAS_TEXT_ADDITION
     }
 }

@@ -32,6 +32,7 @@ using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
@@ -706,6 +707,23 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        public override void DrawChildren(DrawContext drawContext) {
+            ICollection<IPropertyContainer> modelElements = new HashSet<IPropertyContainer>();
+            for (int i = childRenderers.Count - 1; i >= 0; --i) {
+                IRenderer childRenderer = childRenderers[i];
+                if (childRenderer is AbstractRenderer) {
+                    AbstractRenderer child = (AbstractRenderer)childRenderer;
+                    if (modelElements.Contains(child.GetModelElement())) {
+                        child.isLastRendererForModelElement = false;
+                    }
+                    else {
+                        modelElements.Add(child.GetModelElement());
+                    }
+                }
+            }
+            base.DrawChildren(drawContext);
+        }
+
         public override IRenderer GetNextRenderer() {
             return new LineRenderer();
         }
@@ -883,6 +901,11 @@ namespace iText.Layout.Renderer {
             LineLayoutResult result = (LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(MinMaxWidthUtils
                 .GetInfWidth(), AbstractRenderer.INF))));
             return result.GetMinMaxWidth();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override float? RetrieveResolvedDeclaredHeight() {
+            return ((AbstractRenderer)parent).RetrieveResolvedDeclaredHeight();
         }
 
 //\cond DO_NOT_DOCUMENT

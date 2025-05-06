@@ -31,8 +31,8 @@ namespace iText.Commons.Actions.Contexts {
     public class ContextManagerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GetRecognisedNamespaceForSpecificNamespaceTest() {
-            String outerNamespaces = NamespaceConstant.ITEXT.ToLowerInvariant();
-            String innerNamespaces = NamespaceConstant.PDF_HTML.ToLowerInvariant();
+            String outerNamespaces = StringNormalizer.ToLowerCase(NamespaceConstant.ITEXT);
+            String innerNamespaces = StringNormalizer.ToLowerCase(NamespaceConstant.PDF_HTML);
             NUnit.Framework.Assert.IsTrue(innerNamespaces.StartsWith(outerNamespaces));
             ContextManager managerOuterBeforeInner = new ContextManager();
             managerOuterBeforeInner.RegisterGenericContext(JavaCollectionsUtil.SingletonList(outerNamespaces), JavaCollectionsUtil
@@ -68,9 +68,9 @@ namespace iText.Commons.Actions.Contexts {
             ContextManager manager = new ContextManager();
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespaceWithCapitals));
-            manager.RegisterGenericContext(testNamespaces, JavaUtil.ArraysAsList("myProduct"));
+            manager.RegisterGenericContext(testNamespaces, JavaCollectionsUtil.SingletonList("myProduct"));
             NUnit.Framework.Assert.AreEqual(testNamespace, manager.GetRecognisedNamespace(testNamespace + ".MyClass"));
-            NUnit.Framework.Assert.AreEqual(testNamespaceWithCapitals.ToLowerInvariant(), manager.GetRecognisedNamespace
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase(testNamespaceWithCapitals), manager.GetRecognisedNamespace
                 (testNamespaceWithCapitals + ".MyClass"));
             manager.UnregisterContext(testNamespaces);
             NUnit.Framework.Assert.IsNull(manager.GetRecognisedNamespace(testNamespace));
@@ -80,8 +80,8 @@ namespace iText.Commons.Actions.Contexts {
         [NUnit.Framework.Test]
         public virtual void RegisteredNamespaceTest() {
             String registeredNamespace = NamespaceConstant.CORE_LAYOUT + "custompackage";
-            NUnit.Framework.Assert.AreEqual(NamespaceConstant.CORE_LAYOUT.ToLowerInvariant(), ContextManager.GetInstance
-                ().GetRecognisedNamespace(registeredNamespace));
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase(NamespaceConstant.CORE_LAYOUT), ContextManager
+                .GetInstance().GetRecognisedNamespace(registeredNamespace));
         }
     }
 }

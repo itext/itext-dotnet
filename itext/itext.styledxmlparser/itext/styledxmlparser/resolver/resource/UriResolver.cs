@@ -160,14 +160,20 @@ namespace iText.StyledXmlParser.Resolver.Resource
             if (baseUriString.Length == 0)
             {
                 isLocalBaseUri = true;
-                return new Uri(Directory.GetCurrentDirectory() + "/");
+                try {
+                    return new Uri(Directory.GetCurrentDirectory() + "/");
+                }
+                catch (Exception)
+                {
+                    return new Uri("file://");
+                }
             }
             Uri baseAsFileUrl = null;
             try
             {
                 if (Path.IsPathRooted(baseUriString))
                 {
-                    baseAsFileUrl = new Uri("file:///" + NormalizeFilePath(Path.GetFullPath(baseUriString)));
+                    baseAsFileUrl = new Uri("file://" + NormalizeFilePath(Path.GetFullPath(baseUriString)));
                 }
                 else
                 {

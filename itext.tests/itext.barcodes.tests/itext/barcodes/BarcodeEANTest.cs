@@ -33,8 +33,7 @@ namespace iText.Barcodes {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/barcodes/BarcodeEAN/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/barcodes/BarcodeEAN/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

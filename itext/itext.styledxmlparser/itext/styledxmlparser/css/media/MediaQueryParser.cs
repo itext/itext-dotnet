@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Css.Media {
     /// <summary>
@@ -94,7 +95,7 @@ namespace iText.StyledXmlParser.Css.Media {
         /// value
         /// </returns>
         internal static MediaQuery ParseMediaQuery(String mediaQueryStr) {
-            mediaQueryStr = mediaQueryStr.Trim().ToLowerInvariant();
+            mediaQueryStr = StringNormalizer.Normalize(mediaQueryStr);
             bool only = false;
             bool not = false;
             if (mediaQueryStr.StartsWith(MediaRuleConstants.ONLY)) {

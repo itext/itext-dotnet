@@ -24,6 +24,10 @@ using iText.Kernel.Geom;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
+    /// <summary>
+    /// <see cref="iText.Svg.Renderers.ISvgNodeRenderer"/>
+    /// implementation for the &lt;symbol&gt; tag.
+    /// </summary>
     public class SymbolSvgNodeRenderer : AbstractContainerSvgNodeRenderer, INoDrawSvgNodeRenderer {
         public override ISvgNodeRenderer CreateDeepCopy() {
             SymbolSvgNodeRenderer copy = new SymbolSvgNodeRenderer();

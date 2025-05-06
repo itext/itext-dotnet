@@ -47,11 +47,31 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             : this(pseudoClass, "") {
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssPseudoClassSelectorItem"/>
+        /// instance.
+        /// </summary>
+        /// <param name="pseudoClass">the pseudo class name</param>
+        /// <param name="arguments">the arguments of the selector</param>
         protected internal CssPseudoClassSelectorItem(String pseudoClass, String arguments) {
             this.pseudoClass = pseudoClass;
             this.arguments = arguments;
         }
 
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="CssPseudoClassSelectorItem"/>
+        /// from
+        /// passed string which contains selector name and its arguments.
+        /// </summary>
+        /// <param name="fullSelectorString">the full selector string</param>
+        /// <returns>
+        /// the
+        /// <see cref="CssPseudoClassSelectorItem"/>
+        /// or
+        /// <see langword="null"/>
+        /// </returns>
         public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem Create(String fullSelectorString
             ) {
             int indexOfParentheses = fullSelectorString.IndexOf('(');
@@ -68,6 +88,20 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return Create(pseudoClass, arguments);
         }
 
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="CssPseudoClassSelectorItem"/>
+        /// from
+        /// passed selector class name and its arguments.
+        /// </summary>
+        /// <param name="pseudoClass">the pseudo class name</param>
+        /// <param name="arguments">the arguments of the selector</param>
+        /// <returns>
+        /// the
+        /// <see cref="CssPseudoClassSelectorItem"/>
+        /// or
+        /// <see langword="null"/>
+        /// </returns>
         public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassSelectorItem Create(String pseudoClass
             , String arguments) {
             switch (pseudoClass) {
@@ -178,6 +212,8 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return ":" + pseudoClass + (!String.IsNullOrEmpty(arguments) ? "(" + arguments + ")" : "");
         }
 
+        /// <summary>Gets the selector pseudo class name.</summary>
+        /// <returns>the pseudo class name</returns>
         public virtual String GetPseudoClass() {
             return pseudoClass;
         }

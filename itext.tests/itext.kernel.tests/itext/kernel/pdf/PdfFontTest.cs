@@ -49,8 +49,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfFontTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontTest/";
 
 //\cond DO_NOT_DOCUMENT
         internal const String author = "Alexander Chingarev";
@@ -1413,9 +1412,10 @@ namespace iText.Kernel.Pdf {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan2.otf"
                 );
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Puritan 2.0 Regular".ToLowerInvariant(
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0 Regular"
                 ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Puritan 2.0".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0"
+                ));
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
@@ -1425,9 +1425,10 @@ namespace iText.Kernel.Pdf {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
                 (FileUtil.GetInputStreamForFile(fontsFolder + "Puritan2.otf")));
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Puritan 2.0 Regular".ToLowerInvariant(
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0 Regular"
                 ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Puritan 2.0".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0"
+                ));
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
@@ -1437,9 +1438,10 @@ namespace iText.Kernel.Pdf {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "abserif4_5.ttf"
                 );
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Aboriginal Serif".ToLowerInvariant());
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Aboriginal Serif".ToLowerInvariant()
-                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
+                ));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
+                ));
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
@@ -1449,9 +1451,10 @@ namespace iText.Kernel.Pdf {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
                 (FileUtil.GetInputStreamForFile(fontsFolder + "abserif4_5.ttf")));
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Aboriginal Serif".ToLowerInvariant());
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Aboriginal Serif".ToLowerInvariant()
-                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
+                ));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
+                ));
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }

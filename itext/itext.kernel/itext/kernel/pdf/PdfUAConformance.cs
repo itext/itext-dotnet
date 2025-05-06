@@ -33,6 +33,10 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfUAConformance PDF_UA_1 = new iText.Kernel.Pdf.PdfUAConformance(
             "1");
 
+        /// <summary>PDF/UA-2 conformance</summary>
+        public static readonly iText.Kernel.Pdf.PdfUAConformance PDF_UA_2 = new iText.Kernel.Pdf.PdfUAConformance(
+            "2");
+
         private readonly String part;
 
 //\cond DO_NOT_DOCUMENT

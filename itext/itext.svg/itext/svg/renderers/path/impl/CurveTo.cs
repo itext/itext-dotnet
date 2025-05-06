@@ -28,7 +28,7 @@ using iText.StyledXmlParser.Css.Util;
 using iText.Svg.Exceptions;
 
 namespace iText.Svg.Renderers.Path.Impl {
-    /// <summary>Implements curveTo(C) attribute of SVG's path element</summary>
+    /// <summary>Implements curveTo(C) attribute of SVG's path element.</summary>
     public class CurveTo : AbstractPathShape, IControlPointCurve {
 //\cond DO_NOT_DOCUMENT
         internal const int ARGUMENT_SIZE = 6;
@@ -36,14 +36,48 @@ namespace iText.Svg.Renderers.Path.Impl {
 
         private const double ZERO_EPSILON = 1e-12;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="CurveTo"/>
+        /// instance.
+        /// </summary>
         public CurveTo()
             : this(false) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="CurveTo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">
+        /// 
+        /// <see langword="true"/>
+        /// in case it is a relative operator,
+        /// <see langword="false"/>
+        /// if it is an absolute operator
+        /// </param>
         public CurveTo(bool relative)
             : this(relative, new DefaultOperatorConverter()) {
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="CurveTo"/>
+        /// instance.
+        /// </summary>
+        /// <param name="relative">
+        /// 
+        /// <see langword="true"/>
+        /// in case it is a relative operator,
+        /// <see langword="false"/>
+        /// if it is an absolute operator
+        /// </param>
+        /// <param name="copier">
+        /// 
+        /// <see cref="IOperatorConverter"/>
+        /// copier for converting relative coordinates to absolute coordinates
+        /// </param>
         public CurveTo(bool relative, IOperatorConverter copier)
             : base(relative, copier) {
         }

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
@@ -48,7 +49,8 @@ namespace iText.Kernel.Font {
             if ((encoding == null || encoding.Length == 0) && ttf.IsFontSpecific()) {
                 encoding = FontEncoding.FONT_SPECIFIC;
             }
-            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLowerInvariant().Equals(encoding.ToLowerInvariant())) {
+            if (encoding != null && StringNormalizer.ToLowerCase(FontEncoding.FONT_SPECIFIC).Equals(StringNormalizer.ToLowerCase
+                (encoding))) {
                 fontEncoding = FontEncoding.CreateFontSpecificEncoding();
             }
             else {

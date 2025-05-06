@@ -31,5 +31,14 @@ namespace iText.IO {
             NUnit.Framework.Assert.AreEqual(4200, AdobeGlyphList.GetNameToUnicodeLength());
             NUnit.Framework.Assert.AreEqual(3680, AdobeGlyphList.GetUnicodeToNameLength());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void NameToUnicodeTest() {
+            NUnit.Framework.Assert.AreEqual(496, AdobeGlyphList.NameToUnicode("jcaron"));
+            NUnit.Framework.Assert.AreEqual(0x1234, AdobeGlyphList.NameToUnicode("uni1234"));
+            NUnit.Framework.Assert.AreEqual(0xaaaa, AdobeGlyphList.NameToUnicode("uniaaaa"));
+            NUnit.Framework.Assert.AreEqual(-1, AdobeGlyphList.NameToUnicode("unixxxx"));
+            NUnit.Framework.Assert.AreEqual(-1, AdobeGlyphList.NameToUnicode("00x1234"));
+        }
     }
 }

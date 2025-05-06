@@ -20,14 +20,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Utility class for delegating notes checks to the correct checking logic.</summary>
+    [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1NotesChecker")]
     public class NoteCheckUtil {
         /// <summary>Handler for checking Note elements in the TagTree.</summary>
+        [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1NotesChecker.PdfUA1NotesTagHandler"
+            )]
         public class NoteTagHandler : ContextAwareTagTreeIteratorHandler {
             /// <summary>
             /// Creates a new

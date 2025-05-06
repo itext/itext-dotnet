@@ -55,7 +55,7 @@ namespace iText.Kernel.Geom {
             Subpath inSubpath = new Subpath();
             inSubpath.AddSegment(inLine);
             inSubpath.AddSegment(inBezierCurve);
-            Path inPath = new Path(JavaUtil.ArraysAsList(inSubpath));
+            Path inPath = new Path(JavaCollectionsUtil.SingletonList(inSubpath));
             Matrix ctm = new Matrix(1, 0, 0, 1, 5, 5);
             Path outPath = ShapeTransformUtil.TransformPath(inPath, ctm);
             Line cmpLine = new Line(new Point(-5, -5), new Point(5, 5));
@@ -64,7 +64,7 @@ namespace iText.Kernel.Geom {
             Subpath cmpSubpath = new Subpath();
             inSubpath.AddSegment(cmpLine);
             inSubpath.AddSegment(cmpBezierCurve);
-            Path cmpPath = new Path(JavaUtil.ArraysAsList(cmpSubpath));
+            Path cmpPath = new Path(JavaCollectionsUtil.SingletonList(cmpSubpath));
             for (int i = 0; i < cmpPath.GetSubpaths().Count; i++) {
                 Subpath subpath = cmpPath.GetSubpaths()[i];
                 for (int j = 0; j < subpath.GetSegments().Count; j++) {

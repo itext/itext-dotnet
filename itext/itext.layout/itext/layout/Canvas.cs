@@ -104,6 +104,7 @@ namespace iText.Layout {
             this.pdfDocument = pdfCanvas.GetDocument();
             this.pdfCanvas = pdfCanvas;
             this.rootArea = rootArea;
+            this.EnsureRootTagIsCreated();
         }
 
         /// <summary>Creates a new Canvas to manipulate a specific document and page.</summary>

@@ -49,8 +49,7 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LayoutTaggingTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/LayoutTaggingTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/LayoutTaggingTest/";
 
         public const String imageName = "Desert.jpg";
 
@@ -764,9 +763,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_CREATE_A_TAG_FOR_FINISHED_HINT)]
         public virtual void NotAsciiCharTest() {
-            //TODO update cmp-file after DEVSIX-3335 fixed
             PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -960,6 +957,50 @@ namespace iText.Layout {
             document.Add(table);
             document.Close();
             CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTaggedDocumentStillAddsDocumentTag() {
+            String outFile = "emptyTaggedDocumentStillAddsDocumentTag.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            document.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTaggedCanvasStillAddsDocumentTag1() {
+            String outFile = "emptyTaggedCanvasStillAddsDocumentTag1.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetMediaBox());
+            canvas.Close();
+            pdfDocument.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyTaggedCanvasStillAddsDocumentTag2() {
+            String outFile = "emptyTaggedCanvasStillAddsDocumentTag2.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            pdfDocument.SetTagged();
+            PdfPage page = pdfDocument.AddNewPage();
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfFormXObject(page), pdfDocument);
+            canvas.Close();
+            pdfDocument.Close();
+            CompareResult(outFile, "cmp_" + outFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullPdfDoesNotThrowNPE() {
+            Rectangle rect = new Rectangle(0, 0);
+            PdfCanvas pdfCanvas = new PdfCanvas(new PdfStream(), null, null);
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                new iText.Layout.Canvas(pdfCanvas, rect);
+            }
+            );
         }
 
         private Paragraph CreateParagraph1() {

@@ -40,14 +40,13 @@ using iText.Test.Attributes;
 namespace iText.Layout.Element.Gridcontainer {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GridContainerLayoutTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/GridContainerTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/GridContainerTest/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/GridContainerTest/";
 
-        [NUnit.Framework.SetUp]
-        public virtual void Setup() {
+        [NUnit.Framework.OneTimeSetUp]
+        public static void Setup() {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 

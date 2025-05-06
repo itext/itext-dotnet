@@ -68,6 +68,12 @@ namespace iText.StyledXmlParser.Css {
             return sb.ToString();
         }
 
+        /// <summary>Resolves `unicode-range` property if it exists in the properties.</summary>
+        /// <returns>
+        /// the resolved range or
+        /// <see langword="null"/>
+        /// if there is no `unicode-range` property
+        /// </returns>
         public virtual Range ResolveUnicodeRange() {
             Range range = null;
             foreach (CssDeclaration descriptor in GetProperties()) {

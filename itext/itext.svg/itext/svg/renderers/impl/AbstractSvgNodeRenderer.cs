@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -262,15 +263,15 @@ namespace iText.Svg.Renderers.Impl {
                 );
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (preserveAspectRatioValue == null) {
-                preserveAspectRatioValue = this.attributesAndStyles.Get(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant
-                    ());
+                preserveAspectRatioValue = this.attributesAndStyles.Get(StringNormalizer.ToLowerCase(SvgConstants.Attributes
+                    .PRESERVE_ASPECT_RATIO));
             }
             if (this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO) || this.attributesAndStyles
-                .ContainsKey(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO.ToLowerInvariant())) {
+                .ContainsKey(StringNormalizer.ToLowerCase(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO))) {
                 IList<String> aspectRatioValuesSplitValues = SvgCssUtils.SplitValueList(preserveAspectRatioValue);
-                align = aspectRatioValuesSplitValues[0].ToLowerInvariant();
+                align = StringNormalizer.ToLowerCase(aspectRatioValuesSplitValues[0]);
                 if (aspectRatioValuesSplitValues.Count > 1) {
-                    meetOrSlice = aspectRatioValuesSplitValues[1].ToLowerInvariant();
+                    meetOrSlice = StringNormalizer.ToLowerCase(aspectRatioValuesSplitValues[1]);
                 }
             }
             if (this is MarkerSvgNodeRenderer && !SvgConstants.Values.NONE.Equals(align) && SvgConstants.Values.MEET.Equals
@@ -587,7 +588,7 @@ namespace iText.Svg.Renderers.Impl {
             if (rawColorValue == null) {
                 return null;
             }
-            if (CommonCssConstants.CURRENTCOLOR.Equals(rawColorValue.ToLowerInvariant())) {
+            if (CommonCssConstants.CURRENTCOLOR.Equals(StringNormalizer.ToLowerCase(rawColorValue))) {
                 rawColorValue = GetAttributeOrDefault(CommonCssConstants.COLOR, "black");
             }
             CssDeclarationValueTokenizer tokenizer = new CssDeclarationValueTokenizer(rawColorValue);

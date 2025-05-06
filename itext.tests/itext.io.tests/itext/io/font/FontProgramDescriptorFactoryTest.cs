@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.IO.Font {
@@ -29,7 +30,8 @@ namespace iText.IO.Font {
         public virtual void KozminNamesTest() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("KozMinPro-Regular");
             NUnit.Framework.Assert.AreEqual("KozMinPro-Regular", descriptor.GetFontName());
-            NUnit.Framework.Assert.AreEqual("KozMinPro-Regular".ToLowerInvariant(), descriptor.GetFullNameLowerCase());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("KozMinPro-Regular"), descriptor.GetFullNameLowerCase
+                ());
             NUnit.Framework.Assert.AreEqual(400, descriptor.GetFontWeight());
         }
 

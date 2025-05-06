@@ -38,7 +38,11 @@ namespace iText.Pdfua.Checkers.Utils {
         /// Creates a new instance of
         /// <see cref="PdfUAValidationContext"/>.
         /// </summary>
-        /// <param name="pdfDocument">The pdfDocument where the validation is happening.</param>
+        /// <param name="pdfDocument">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// instance that is being validated
+        /// </param>
         public PdfUAValidationContext(PdfDocument pdfDocument) {
             this.pdfDocument = pdfDocument;
         }
@@ -54,18 +58,27 @@ namespace iText.Pdfua.Checkers.Utils {
             if (originalRole == null) {
                 return null;
             }
-            return ResolveToStandardRole(originalRole.GetValue());
+            PdfNamespace @namespace = node is PdfStructElem ? ((PdfStructElem)node).GetNamespace() : null;
+            return ResolveToStandardRole(originalRole.GetValue(), @namespace);
         }
 
-        /// <summary>Resolves the  role to a standard role</summary>
-        /// <param name="role">The role you want to resolve the standard role for.</param>
-        /// <returns>The role.</returns>
+        /// <summary>Resolves the role to a standard role.</summary>
+        /// <param name="role">the role you want to resolve the standard role for</param>
+        /// <returns>resolved role</returns>
         public virtual String ResolveToStandardRole(String role) {
+            return ResolveToStandardRole(role, null);
+        }
+
+        /// <summary>Resolves the role to a standard role.</summary>
+        /// <param name="role">the role you want to resolve the standard role for</param>
+        /// <param name="namespace">namespace where role is defined</param>
+        /// <returns>resolved role</returns>
+        public virtual String ResolveToStandardRole(String role, PdfNamespace @namespace) {
             if (role == null) {
                 return null;
             }
             IRoleMappingResolver resolver = pdfDocument.GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole
-                (role, null);
+                (role, @namespace);
             if (resolver == null) {
                 return role;
             }
@@ -99,12 +112,43 @@ namespace iText.Pdfua.Checkers.Utils {
             if (!(structureNode is PdfStructElem)) {
                 return null;
             }
-            //We can get away with the short code without resolving it. Because we have checks in place
-            //that would catch remapped standard roles and cyclic roles.
+            // We can get away with the short code without resolving it. Because we have checks in place
+            // that would catch remapped standard roles and cyclic roles.
             if (role.Equals(structureNode.GetRole()) || role.GetValue().Equals(ResolveToStandardRole(structureNode))) {
                 return (PdfStructElem)structureNode;
             }
             return null;
+        }
+
+        /// <summary>Retrieves object reference instance by provided structure parent index.</summary>
+        /// <param name="i">index of the structure parent</param>
+        /// <param name="pageDict">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of the page that
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfObjRef"/>
+        /// belong to
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfObjRef"/>
+        /// instance
+        /// </returns>
+        public virtual PdfObjRef FindObjRefByStructParentIndex(int i, PdfDictionary pageDict) {
+            return pdfDocument.GetStructTreeRoot().FindObjRefByStructParentIndex(pageDict, i);
+        }
+
+        /// <summary>
+        /// Retrieves the PDF/UA conformance of the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfUAConformance"/>
+        /// value
+        /// </returns>
+        public virtual PdfUAConformance GetUAConformance() {
+            return this.pdfDocument.GetConformance().GetUAConformance();
         }
     }
 }

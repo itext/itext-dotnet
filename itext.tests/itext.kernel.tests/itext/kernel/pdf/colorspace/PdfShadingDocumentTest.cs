@@ -29,8 +29,7 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Colorspace {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfShadingDocumentTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/colorspace/PdfShadingDocumentTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/colorspace/PdfShadingDocumentTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

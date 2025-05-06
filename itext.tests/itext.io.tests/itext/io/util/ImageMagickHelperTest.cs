@@ -33,8 +33,7 @@ namespace iText.IO.Util {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/ImageMagickHelperTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/io/ImageMagickHelperTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/io/ImageMagickHelperTest/";
 
         // In some of the test we will check whether ImageMagick has printed something to the console.
         // For this reason the standard output stream will be customized. In .NET, however,

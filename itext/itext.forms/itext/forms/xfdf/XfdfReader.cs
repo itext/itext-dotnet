@@ -178,7 +178,7 @@ namespace iText.Forms.Xfdf {
                 borderStyle.Put(PdfName.D, XfdfObjectUtils.ConvertDashesFromString(dashes));
             }
             if (style != null && !"cloudy".Equals(style)) {
-                borderStyle.Put(PdfName.S, new PdfName(style.JSubstring(0, 1).ToUpperInvariant()));
+                borderStyle.Put(PdfName.S, new PdfName(StringNormalizer.ToUpperCase(style.JSubstring(0, 1))));
             }
             if (borderStyle.Size() > 0) {
                 annotation.Put(PdfName.BS, borderStyle);
@@ -205,7 +205,6 @@ namespace iText.Forms.Xfdf {
             if (annotName != null) {
                 switch (annotName) {
                     case XfdfConstants.TEXT: {
-                        //TODO DEVSIX-4027 add all attributes properly one by one
                         PdfTextAnnotation pdfTextAnnotation = new PdfTextAnnotation(XfdfObjectUtils.ConvertRectFromString(annotObject
                             .GetAttributeValue(XfdfConstants.RECT)));
                         AddCommonAnnotationAttributes(pdfTextAnnotation, annotObject);

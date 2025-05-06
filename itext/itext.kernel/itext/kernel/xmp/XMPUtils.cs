@@ -7,6 +7,7 @@
 // of the Adobe license agreement accompanying it.
 // =================================================================================================
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.XMP.Impl;
 using iText.Kernel.XMP.Options;
 
@@ -229,7 +230,7 @@ namespace iText.Kernel.XMP {
             if (value == null || value.Length == 0) {
                 throw new XMPException("Empty convert-string", XMPError.BADVALUE);
             }
-            value = value.ToLowerInvariant();
+            value = StringNormalizer.ToLowerCase(value);
             try {
                 // First try interpretation as Integer (anything not 0 is true)
                 return Convert.ToInt32(value, System.Globalization.CultureInfo.InvariantCulture) != 0;

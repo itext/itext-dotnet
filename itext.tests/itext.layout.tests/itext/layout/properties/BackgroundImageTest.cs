@@ -46,8 +46,7 @@ namespace iText.Layout.Properties {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BackgroundImageTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/BackgroundImageTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/BackgroundImageTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -88,7 +87,7 @@ namespace iText.Layout.Properties {
                 Build();
             NUnit.Framework.Assert.AreEqual(BackgroundBox.BORDER_BOX, backgroundImage.GetBackgroundClip());
             NUnit.Framework.Assert.AreEqual(BackgroundBox.PADDING_BOX, backgroundImage.GetBackgroundOrigin());
-            BackgroundImageGenericTest("backgroundImage", backgroundImage);
+            BackgroundImageGenericTest("backgroundImageClipOriginDefaults", backgroundImage);
         }
 
         [NUnit.Framework.Test]
@@ -98,7 +97,7 @@ namespace iText.Layout.Properties {
                 SetBackgroundClip(BackgroundBox.CONTENT_BOX).SetBackgroundOrigin(BackgroundBox.CONTENT_BOX).Build();
             NUnit.Framework.Assert.AreEqual(BackgroundBox.CONTENT_BOX, backgroundImage.GetBackgroundClip());
             NUnit.Framework.Assert.AreEqual(BackgroundBox.CONTENT_BOX, backgroundImage.GetBackgroundOrigin());
-            BackgroundImageGenericTest("backgroundImage", backgroundImage);
+            BackgroundImageGenericTest("backgroundImageClipOrigin", backgroundImage);
         }
 
         [NUnit.Framework.Test]

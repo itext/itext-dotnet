@@ -117,6 +117,11 @@ namespace iText.Layout.Tagging {
                 return;
             }
             TaggingHintKey parentKey = GetOrCreateHintKey(parent);
+            if (parent is IRenderer && this.GetPdfDocument().GetDiContainer().IsRegistered(typeof(ProhibitedTagRelationsResolver
+                ))) {
+                this.GetPdfDocument().GetDiContainer().GetInstance<ProhibitedTagRelationsResolver>().RepairTagStructure(this
+                    , (IRenderer)parent);
+            }
             IList<TaggingHintKey> newKidsKeys = new List<TaggingHintKey>();
             foreach (IPropertyContainer kid in newKids) {
                 if (kid is AreaBreakRenderer) {

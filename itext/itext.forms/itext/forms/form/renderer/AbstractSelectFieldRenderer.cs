@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
 using iText.Forms.Form.Element;
@@ -54,7 +55,15 @@ namespace iText.Forms.Form.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             childRenderers.Clear();
-            AddChild(CreateFlatRenderer());
+            IRenderer renderer = CreateFlatRenderer();
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            if (taggingHelper != null) {
+                //Strictly speaking it's not necessary as no custom content can be added at the moment, but
+                // in the future if we would allow it we won't have to add anything else
+                taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList(renderer));
+                LayoutTaggingHelper.AddTreeHints(taggingHelper, renderer);
+            }
+            AddChild(renderer);
             // Resolve width here in case it's relative, while parent width is still intact.
             // If it's inline-block context, relative width is already resolved.
             float? width = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
@@ -153,18 +162,11 @@ namespace iText.Forms.Form.Renderer {
         }
 
         /// <summary>Applies the accessibility properties to the form field.</summary>
-        /// <param name="formField">The form field to which the accessibility properties should be applied.</param>
-        /// <param name="pdfDocument">The document to which the form field belongs.</param>
+        /// <param name="formField">the form field to which the accessibility properties should be applied</param>
+        /// <param name="pdfDocument">the document to which the form field belongs</param>
         protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, PdfDocument pdfDocument
             ) {
-            if (!pdfDocument.IsTagged()) {
-                return;
-            }
-            AccessibilityProperties properties = ((IAccessibleElement)this.modelElement).GetAccessibilityProperties();
-            String alternativeDescription = properties.GetAlternateDescription();
-            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
-                formField.SetAlternativeName(alternativeDescription);
-            }
+            PdfFormField.ApplyAccessibilityProperties(formField, ((IAccessibleElement)this.modelElement), pdfDocument);
         }
 
         /// <summary>Creates the flat renderer instance.</summary>

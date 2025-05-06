@@ -585,6 +585,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName EndOfLine = CreateDirectName("EndOfLine");
 
+        public static readonly iText.Kernel.Pdf.PdfName Endnote = CreateDirectName("Endnote");
+
         public static readonly iText.Kernel.Pdf.PdfName Enforce = CreateDirectName("Enforce");
 
         public static readonly iText.Kernel.Pdf.PdfName EP = CreateDirectName("EP");
@@ -721,6 +723,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName FontStretch = CreateDirectName("FontStretch");
 
         public static readonly iText.Kernel.Pdf.PdfName Footer = CreateDirectName("Footer");
+
+        public static readonly iText.Kernel.Pdf.PdfName Footnote = CreateDirectName("Footnote");
 
         public static readonly iText.Kernel.Pdf.PdfName ForComment = CreateDirectName("ForComment");
 
@@ -1096,6 +1100,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName NotApproved = CreateDirectName("NotApproved");
 
         public static readonly iText.Kernel.Pdf.PdfName Note = CreateDirectName("Note");
+
+        public static readonly iText.Kernel.Pdf.PdfName NoteType = CreateDirectName("NoteType");
 
         public static readonly iText.Kernel.Pdf.PdfName NotForPublicRelease = CreateDirectName("NotForPublicRelease"
             );

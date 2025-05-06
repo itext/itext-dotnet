@@ -160,6 +160,18 @@ namespace iText.Forms.Form.Element {
             return this;
         }
 
+        /// <summary>Sets the form field's alternative description.</summary>
+        /// <param name="alternativeDescription">form field's alternative description.</param>
+        /// <returns>
+        /// this same
+        /// <see cref="FormField{T}"/>
+        /// element.
+        /// </returns>
+        public virtual IFormField SetAlternativeDescription(String alternativeDescription) {
+            GetAccessibilityProperties().SetAlternateDescription(alternativeDescription);
+            return this;
+        }
+
         public abstract AccessibilityProperties GetAccessibilityProperties();
     }
 }

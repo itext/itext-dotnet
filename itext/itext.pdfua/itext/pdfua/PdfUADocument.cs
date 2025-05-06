@@ -20,12 +20,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
+using iText.Layout.Tagging;
 using iText.Pdfua.Checkers;
+using iText.Pdfua.Exceptions;
 using iText.Pdfua.Logs;
 
 namespace iText.Pdfua {
@@ -50,14 +54,18 @@ namespace iText.Pdfua {
         /// <param name="properties">The properties for the PDF document.</param>
         /// <param name="config">The configuration for the PDF/UA document.</param>
         public PdfUADocument(PdfWriter writer, DocumentProperties properties, PdfUAConfig config)
-            : base(ConfigureWriterProperties(writer), properties) {
+            : base(ConfigureWriterProperties(writer, config.GetConformance()), properties) {
             this.pdfConformance = new PdfConformance(config.GetConformance());
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            PdfUA1Checker checker = new PdfUA1Checker(this);
-            validationContainer.AddChecker(checker);
+            IList<IValidationChecker> checkers = GetCorrectCheckerFromConformance(config.GetConformance());
+            foreach (IValidationChecker checker in checkers) {
+                validationContainer.AddChecker(checker);
+            }
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-            this.pdfPageFactory = new PdfUAPageFactory(checker);
+            this.pdfPageFactory = new PdfUAPageFactory(GetUaChecker(checkers));
+            GetDiContainer().Register(typeof(ProhibitedTagRelationsResolver), new ProhibitedTagRelationsResolver(this)
+                );
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
@@ -81,29 +89,76 @@ namespace iText.Pdfua {
             }
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            PdfUA1Checker checker = new PdfUA1Checker(this);
-            validationContainer.AddChecker(checker);
+            IList<IValidationChecker> checkers = GetCorrectCheckerFromConformance(config.GetConformance());
+            foreach (IValidationChecker checker in checkers) {
+                validationContainer.AddChecker(checker);
+            }
             this.GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-            this.pdfPageFactory = new PdfUAPageFactory(checker);
+            this.pdfPageFactory = new PdfUAPageFactory(GetUaChecker(checkers));
         }
 
-        private static PdfWriter ConfigureWriterProperties(PdfWriter writer) {
-            writer.GetProperties().AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_1);
-            if (writer.GetPdfVersion() != null && !writer.GetPdfVersion().Equals(PdfVersion.PDF_1_7)) {
-                ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument)).LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants
-                    .WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN, PdfVersion.PDF_1_7));
-                writer.GetProperties().SetPdfVersion(PdfVersion.PDF_1_7);
+        private static PdfWriter ConfigureWriterProperties(PdfWriter writer, PdfUAConformance uaConformance) {
+            writer.GetProperties().AddPdfUaXmpMetadata(uaConformance);
+            if (writer.GetPdfVersion() != null) {
+                if (uaConformance == PdfUAConformance.PDF_UA_1 && !writer.GetPdfVersion().Equals(PdfVersion.PDF_1_7)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                        , PdfVersion.PDF_1_7));
+                    writer.GetProperties().SetPdfVersion(PdfVersion.PDF_1_7);
+                }
+                if (uaConformance == PdfUAConformance.PDF_UA_2 && !writer.GetPdfVersion().Equals(PdfVersion.PDF_2_0)) {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                        , PdfVersion.PDF_2_0));
+                    writer.GetProperties().SetPdfVersion(PdfVersion.PDF_2_0);
+                }
             }
             return writer;
         }
 
+        private static PdfUAChecker GetUaChecker(IList<IValidationChecker> checkers) {
+            foreach (IValidationChecker checker in checkers) {
+                if (checker is PdfUAChecker) {
+                    return (PdfUAChecker)checker;
+                }
+            }
+            return null;
+        }
+
         private void SetupUAConfiguration(PdfUAConfig config) {
-            //basic configuration
+            // Basic configuration.
             this.SetTagged();
             this.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
             this.GetCatalog().SetLang(new PdfString(config.GetLanguage()));
             PdfDocumentInfo info = this.GetDocumentInfo();
             info.SetTitle(config.GetTitle());
+        }
+
+        /// <summary>
+        /// Gets correct
+        /// <see cref="iText.Pdfua.Checkers.PdfUAChecker"/>
+        /// for specified PDF/UA conformance.
+        /// </summary>
+        /// <param name="uaConformance">the conformance for which checker is needed</param>
+        /// <returns>the correct PDF/UA checker</returns>
+        private IList<IValidationChecker> GetCorrectCheckerFromConformance(PdfUAConformance uaConformance) {
+            IList<IValidationChecker> checkers = new List<IValidationChecker>();
+            switch (uaConformance.GetPart()) {
+                case "1": {
+                    checkers.Add(new PdfUA1Checker(this));
+                    break;
+                }
+
+                case "2": {
+                    checkers.Add(new PdfUA2Checker(this));
+                    checkers.Add(new Pdf20Checker(this));
+                    break;
+                }
+
+                default: {
+                    throw new ArgumentException(PdfUAExceptionMessageConstants.CANNOT_FIND_PDF_UA_CHECKER_FOR_SPECIFIED_CONFORMANCE
+                        );
+                }
+            }
+            return checkers;
         }
     }
 }

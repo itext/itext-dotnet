@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
@@ -42,7 +43,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         /// </summary>
         /// <param name="tagName">the tag name</param>
         public CssTagSelectorItem(String tagName) {
-            this.tagName = tagName.ToLowerInvariant();
+            this.tagName = StringNormalizer.ToLowerCase(tagName);
             this.isUniversal = "*".Equals(tagName);
         }
 

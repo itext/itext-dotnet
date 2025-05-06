@@ -173,15 +173,16 @@ namespace iText.IO.Font {
                 output.Write("\nFamilyName " + ReadString());
             }
             output.Write("\nWeight ");
-            if (weight > 475 || fname.ToLowerInvariant().Contains("bold")) {
+            String fnameLc = StringNormalizer.ToLowerCase(fname);
+            if (weight > 475 || fnameLc.Contains("bold")) {
                 output.Write("Bold");
             }
             else {
-                if ((weight < 325 && weight != 0) || fname.ToLowerInvariant().Contains("light")) {
+                if ((weight < 325 && weight != 0) || fnameLc.Contains("light")) {
                     output.Write("Light");
                 }
                 else {
-                    if (fname.ToLowerInvariant().Contains("black")) {
+                    if (fnameLc.Contains("black")) {
                         output.Write("Black");
                     }
                     else {
@@ -190,7 +191,7 @@ namespace iText.IO.Font {
                 }
             }
             output.Write("\nItalicAngle ");
-            if (italic != 0 || fname.ToLowerInvariant().Contains("italic")) {
+            if (italic != 0 || fnameLc.Contains("italic")) {
                 output.Write("-12.00");
             }
             else {

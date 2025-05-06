@@ -26,12 +26,15 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.IO.Colors;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Utils.Checkers;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
+using iText.Pdfa.Exceptions;
 using iText.Pdfa.Logs;
 
 namespace iText.Pdfa.Checker {
@@ -122,6 +125,11 @@ namespace iText.Pdfa.Checker {
 
         protected internal IDictionary<PdfObject, PdfColorSpace> checkedObjectsColorspace = new Dictionary<PdfObject
             , PdfColorSpace>();
+
+//\cond DO_NOT_DOCUMENT
+        internal static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new PdfAConformanceException
+            (msg);
+//\endcond
 
         private bool fullCheckMode = false;
 
@@ -889,8 +897,9 @@ namespace iText.Pdfa.Checker {
         /// <param name="flags">a set of flags specifying various characteristics of the PDF object</param>
         /// <param name="flag">to be checked</param>
         /// <returns>true if the specified flag is set</returns>
+        [System.ObsoleteAttribute(@"in favour of iText.Kernel.Utils.Checkers.PdfCheckersUtil.CheckFlag(int, int)")]
         protected internal static bool CheckFlag(int flags, int flag) {
-            return (flags & flag) != 0;
+            return PdfCheckersUtil.CheckFlag(flags, flag);
         }
 
         /// <summary>Checks conformance of PDF/A standard.</summary>

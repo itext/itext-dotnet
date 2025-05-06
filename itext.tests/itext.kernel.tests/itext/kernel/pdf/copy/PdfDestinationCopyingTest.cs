@@ -30,8 +30,7 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Copy {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfDestinationCopyingTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfDestinationCopyingTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PdfDestinationCopyingTest/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf" + "/PdfDestinationCopyingTest/";

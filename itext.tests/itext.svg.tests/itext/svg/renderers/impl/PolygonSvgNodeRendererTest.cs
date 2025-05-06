@@ -37,8 +37,7 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/PolygonSvgNoderendererTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/renderers/impl/PolygonSvgNoderendererTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/PolygonSvgNoderendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

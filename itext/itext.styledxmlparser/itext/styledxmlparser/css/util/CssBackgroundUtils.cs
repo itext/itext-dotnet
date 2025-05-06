@@ -160,6 +160,7 @@ namespace iText.StyledXmlParser.Css.Util {
             return CssBackgroundUtils.BackgroundPropertyType.UNDEFINED;
         }
 
+        /// <summary>Enum for background related properties.</summary>
         public enum BackgroundPropertyType {
             BACKGROUND_COLOR,
             BACKGROUND_IMAGE,

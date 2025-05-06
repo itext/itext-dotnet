@@ -25,6 +25,8 @@ using System;
 namespace iText.Pdfua.Logs {
     /// <summary>Class containing the log message constants.</summary>
     public sealed class PdfUALogMessageConstants {
+        public const String CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS = "Cannot resolve \"{0}\" role in {1} namespace mapping, because of the too much transitive mappings.";
+
         public const String PAGE_FLUSHING_DISABLED = "Page flushing is disabled in PDF/UA mode to allow UA checks "
              + "to be applied. Page will only be flushed on closing.";
 

@@ -42,9 +42,13 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return CssSelectorParser.ParseSelectorItems(arguments);
         }
 
+        // TODO DEVSIX-9069 Add notMatches to ICssSelector interface
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {
                 return false;
+            }
+            if (argumentsSelector is CssSelector) {
+                return ((CssSelector)argumentsSelector).NotMatches(node);
             }
             return !argumentsSelector.Matches(node);
         }

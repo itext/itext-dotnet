@@ -64,5 +64,11 @@ namespace iText.Svg.Renderers.Impl {
             SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
             NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(null));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CanConstructViewPortTest() {
+            SvgTagSvgNodeRenderer renderer = new SvgTagSvgNodeRenderer();
+            NUnit.Framework.Assert.IsTrue(renderer.CanConstructViewPort());
+        }
     }
 }

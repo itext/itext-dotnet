@@ -49,8 +49,7 @@ namespace iText.Signatures.Mac {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/mac/SignedDocumentWithMacTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/mac/SignedDocumentWithMacTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/signatures/mac/SignedDocumentWithMacTest/";
 
         private static readonly byte[] ENCRYPTION_PASSWORD = "123".GetBytes();
 

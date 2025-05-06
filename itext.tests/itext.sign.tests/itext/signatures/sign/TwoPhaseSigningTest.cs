@@ -51,8 +51,7 @@ namespace iText.Signatures.Sign {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/TwoPhaseSigningTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/sign/TwoPhaseSigningTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/signatures/sign/TwoPhaseSigningTest/";
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 

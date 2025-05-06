@@ -26,6 +26,7 @@ using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Logs;
+using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagging;
@@ -39,8 +40,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/ParentTreeTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/ParentTreeTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/ParentTreeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -450,6 +450,27 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithMultipleDocumentTags.pdf"), new 
                 PdfWriter(new MemoryStream()));
             NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.GetTagStructureContext().NormalizeDocumentRootTag());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSeveralAnnotationsWithDifferentTagsTest() {
+            String outName = destinationFolder + "addSeveralAnnotationsWithDifferentTagsTest.pdf";
+            String cmpName = sourceFolder + "cmp_addSeveralAnnotationsWithDifferentTagsTest.pdf";
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outName))) {
+                document.SetTagged();
+                Rectangle rect = new Rectangle(100, 650, 400, 100);
+                document.AddNewPage();
+                PdfPage pdfPage = document.GetPage(1);
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                screen.SetContents("screen annotation");
+                pdfPage.AddAnnotation(screen);
+                PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(rect.MoveDown(200)).SetAction(PdfAction.CreateURI
+                    ("https://itextpdf.com/"));
+                linkAnnotation.SetContents("link annot");
+                pdfPage.AddAnnotation(linkAnnotation);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outName, cmpName, destinationFolder, "diff"
+                ));
         }
 
         private PdfObject GetStructParentEntry(PdfObject obj) {

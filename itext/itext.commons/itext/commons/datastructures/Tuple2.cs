@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 
 namespace iText.Commons.Datastructures {
     /// <summary>Simple tuple container that holds two elements.</summary>
@@ -53,6 +54,40 @@ namespace iText.Commons.Datastructures {
         /// <returns>the second element</returns>
         public virtual T2 GetSecond() {
             return second;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <remarks>
+        /// <inheritDoc/>
+        /// <para />
+        /// Note, that in case current class is overridden, equals should also be overridden.
+        /// </remarks>
+        /// <param name="obj">
+        /// 
+        /// <inheritDoc/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public override bool Equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || GetType() != obj.GetType()) {
+                return false;
+            }
+            iText.Commons.Datastructures.Tuple2<T1, T2> that = (iText.Commons.Datastructures.Tuple2<T1, T2>)obj;
+            return Object.Equals(this.first, that.first) && Object.Equals(this.second, that.second);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public override int GetHashCode() {
+            return JavaUtil.ArraysHashCode((Object)first, (Object)second);
         }
 
         /// <summary><inheritDoc/></summary>

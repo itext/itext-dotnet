@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 using iText.Kernel.XMP.Properties;
@@ -65,6 +66,9 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfConformance PDF_UA_1 = new iText.Kernel.Pdf.PdfConformance(PdfUAConformance
             .PDF_UA_1);
+
+        public static readonly iText.Kernel.Pdf.PdfConformance PDF_UA_2 = new iText.Kernel.Pdf.PdfConformance(PdfUAConformance
+            .PDF_UA_2);
 
         public static readonly iText.Kernel.Pdf.PdfConformance PDF_NONE_CONFORMANCE = new iText.Kernel.Pdf.PdfConformance
             ();
@@ -252,8 +256,13 @@ namespace iText.Kernel.Pdf {
             // But if e.g. for PDF/A-4 revision wasn't specified, we will fix it.
             if (conformance.IsPdfUA()) {
                 if (xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID, XMPConst.PART) == null) {
-                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, 1, new PropertyOptions(PropertyOptions.SEPARATE_NODE
-                        ));
+                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, Convert.ToInt32(conformance.GetUAConformance
+                        ().GetPart(), System.Globalization.CultureInfo.InvariantCulture), new PropertyOptions(PropertyOptions.
+                        SEPARATE_NODE));
+                }
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2 && xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID
+                    , XMPConst.REV) == null) {
+                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.REV, 2024);
                 }
             }
             if (conformance.IsPdfA()) {
@@ -289,7 +298,7 @@ namespace iText.Kernel.Pdf {
         /// if there is no PDF/A conformance for passed parameters
         /// </returns>
         public static PdfAConformance GetAConformance(String part, String level) {
-            String lowLetter = level == null ? null : level.ToUpperInvariant();
+            String lowLetter = StringNormalizer.ToUpperCase(level);
             bool aLevel = "A".Equals(lowLetter);
             bool bLevel = "B".Equals(lowLetter);
             bool uLevel = "U".Equals(lowLetter);
@@ -348,6 +357,9 @@ namespace iText.Kernel.Pdf {
         private static PdfUAConformance GetUAConformance(String part) {
             if ("1".Equals(part)) {
                 return PdfUAConformance.PDF_UA_1;
+            }
+            if ("2".Equals(part)) {
+                return PdfUAConformance.PDF_UA_2;
             }
             return null;
         }

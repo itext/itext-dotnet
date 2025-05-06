@@ -21,14 +21,22 @@ Copyright (c) 1998-2025 Apryse Group NV
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using iText.Commons.Logs;
+#if NETSTANDARD2_0
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+#else
+using System.Globalization;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+#endif
+using Microsoft.Extensions.Logging;
 
 namespace iText.Commons.Utils
 {
@@ -49,10 +57,16 @@ namespace iText.Commons.Utils
         /// <param name="toCompare">string for comparison</param>
         /// <returns>true if two json string are equals, false otherwise</returns>
         public static bool AreTwoJsonObjectEquals(String expectedString, String toCompare) {
+#if NETSTANDARD2_0
+            JsonNode expectedObject = JsonNode.Parse(expectedString);
+            JsonNode actualObject = JsonNode.Parse(toCompare);
+            return JsonNode.DeepEquals(expectedObject, actualObject);
+#else
             JObject expectedObject = JObject.Parse(expectedString);
             JObject actualObject = JObject.Parse(toCompare);
             
             return JObject.DeepEquals(expectedObject, actualObject);
+#endif
         }
         
         /// <summary>
@@ -61,6 +75,9 @@ namespace iText.Commons.Utils
         /// <param name="value">the object which will be serialized</param>
         /// <returns>the JSON string representation of passed object or null if it is impossible to serialize to JSON</returns>
         public static string SerializeToString(Object value) {
+#if NETSTANDARD2_0
+            return SerializeToString(value, null);
+#else
             try
             {
                 JsonSerializer jsonSerializer = CreateAndConfigureJsonSerializer();
@@ -83,7 +100,31 @@ namespace iText.Commons.Utils
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
                 return null;
             }
+#endif
         }
+
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Serializes passed object to JSON string.
+        /// </summary>
+        /// <param name="value">the object which will be serialized</param>
+        /// <param name="context">the object serialization context</param>
+        /// <returns>the JSON string representation of passed object or null if it is impossible to serialize to JSON</returns>
+        public static string SerializeToString(Object value, IJsonTypeInfoResolver context) {
+            try
+            {
+                JsonSerializerOptions jsonSerializerOptions = CreateDefaultSerializerOptions();
+                jsonSerializerOptions.WriteIndented = true;
+                jsonSerializerOptions.TypeInfoResolver = context;
+                return JsonSerializer.Serialize(value, jsonSerializerOptions);
+            }
+            catch (Exception ex) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(
+                    CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
+                return null;
+            }
+        }
+#endif
         
         /// <summary>
         /// Serializes passed object to minimal JSON string without spaces and line breaks.
@@ -91,6 +132,9 @@ namespace iText.Commons.Utils
         /// <param name="value">the object which will be serialized</param>
         /// <returns>the minimal JSON string representation of passed object or null if it is impossible to serialize to JSON</returns>
         public static string SerializeToMinimalString(Object value) {
+#if NETSTANDARD2_0
+            return SerializeToMinimalString(value, null);
+#else
             try {
                 JsonSerializer jsonSerializer = CreateAndConfigureJsonSerializer();
                 jsonSerializer.Formatting = Formatting.None;
@@ -112,9 +156,45 @@ namespace iText.Commons.Utils
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
                 return null;
             }
+#endif
         }
+        
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Serializes passed object to minimal JSON string without spaces and line breaks.
+        /// </summary>
+        /// <param name="value">the object which will be serialized</param>
+        /// <param name="context">the object serialization context</param>
+        /// <returns>the minimal JSON string representation of passed object or null if it is impossible to serialize to JSON</returns>
+        public static string SerializeToMinimalString(Object value, IJsonTypeInfoResolver context) {
+            try {
+                JsonSerializerOptions jsonSerializerOptions = CreateDefaultSerializerOptions();
+                jsonSerializerOptions.WriteIndented = false;
+                jsonSerializerOptions.TypeInfoResolver = context;
+                return JsonSerializer.Serialize(value, jsonSerializerOptions);;
+            }
+            catch (Exception ex)
+            {
+                LOGGER.LogWarning(MessageFormatUtil.Format(
+                    CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
+                return null;
+            }
+        }
+#endif
 
         public static void SerializeToStream(Stream outputStream, Object value) {
+#if NETSTANDARD2_0
+            try {
+                JsonSerializerOptions jsonSerializerOptions = CreateDefaultSerializerOptions();
+                jsonSerializerOptions.WriteIndented = true;
+                JsonSerializer.Serialize(outputStream, value, jsonSerializerOptions);
+            }
+            catch (Exception ex)
+            {
+                LOGGER.LogWarning(MessageFormatUtil.Format(
+                    CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
+            }
+#else
             try {
                 JsonSerializer jsonSerializer = CreateAndConfigureJsonSerializer();
                 jsonSerializer.Formatting = Formatting.Indented;
@@ -133,9 +213,21 @@ namespace iText.Commons.Utils
                 LOGGER.LogWarning(MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
+#endif
         }
         
         public static void SerializeToMinimalStream(Stream outputStream, Object value) {
+#if NETSTANDARD2_0
+            try {
+                JsonSerializerOptions jsonSerializerOptions = CreateDefaultSerializerOptions();
+                jsonSerializerOptions.WriteIndented = false;
+                JsonSerializer.Serialize(outputStream, value, jsonSerializerOptions);
+            }
+            catch (Exception ex) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(
+                    CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
+            }
+#else
             try {
                 JsonSerializer jsonSerializer = CreateAndConfigureJsonSerializer();
                 jsonSerializer.Formatting = Formatting.None;
@@ -151,6 +243,7 @@ namespace iText.Commons.Utils
                 LOGGER.LogWarning(MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
+#endif
         } 
 
         /// <summary>
@@ -161,6 +254,9 @@ namespace iText.Commons.Utils
         /// <typeparam name="T">the type of object which will be deserialized</typeparam>
         /// <returns>the deserialized object or null if operation of deserialization is impossible</returns>
         public static T DeserializeFromStream<T>(Stream content) {
+#if NETSTANDARD2_0
+            return DeserializeFromStream<T>(content, null);
+#else
             try {
                 JsonReader reader = new JsonTextReader(new StreamReader(content));
                 JsonSerializer serializer = new JsonSerializer();
@@ -171,7 +267,32 @@ namespace iText.Commons.Utils
                     CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
                 return default(T);
             }
+#endif
         }
+        
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Deserializes passed JSON stream to object with passed type.
+        /// </summary>
+        /// <param name="content">the JSON stream which represent object</param>
+        /// <param name="context">the object serialization context</param>
+        /// <param name="objectType">the type of object which will be deserialized</param>
+        /// <typeparam name="T">the type of object which will be deserialized</typeparam>
+        /// <returns>the deserialized object or null if operation of deserialization is impossible</returns>
+        public static T DeserializeFromStream<T>(Stream content, IJsonTypeInfoResolver context) {
+            try
+            {
+                var defaultSerializerOptions = CreateDefaultSerializerOptions();
+                defaultSerializerOptions.TypeInfoResolver = context;
+                return JsonSerializer.Deserialize<T>(content, defaultSerializerOptions);
+            }
+            catch (JsonException ex) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(
+                    CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
+                return default(T);
+            }
+        }
+#endif
         
         /// <summary>
         /// Deserializes passed JSON string to object with passed type.
@@ -180,8 +301,10 @@ namespace iText.Commons.Utils
         /// <param name="objectType">the type of object which will be deserialized</param>
         /// <typeparam name="T">the type of object which will be deserialized</typeparam>
         /// <returns>the deserialized object or null if operation of deserialization is impossible</returns>
-        public static T DeserializeFromString<T>(String content)
-        {
+        public static T DeserializeFromString<T>(String content) {
+#if NETSTANDARD2_0
+            return DeserializeFromString<T>(content, null);
+#else
             try
             {
                 return JsonConvert.DeserializeObject<T>(content);
@@ -191,8 +314,52 @@ namespace iText.Commons.Utils
                     CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
                 return default(T);
             }
+#endif
         }
+        
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Deserializes passed JSON string to object with passed type.
+        /// </summary>
+        /// <param name="content">the JSON string which represent object</param>
+        /// <param name="context">the object serialization context</param>
+        /// <param name="objectType">the type of object which will be deserialized</param>
+        /// <typeparam name="T">the type of object which will be deserialized</typeparam>
+        /// <returns>the deserialized object or null if operation of deserialization is impossible</returns>
+        public static T DeserializeFromString<T>(String content, IJsonTypeInfoResolver context) {
+            try
+            {
+                var defaultSerializerOptions = CreateDefaultSerializerOptions();
+                defaultSerializerOptions.TypeInfoResolver = context;
+                return JsonSerializer.Deserialize<T>(content, defaultSerializerOptions);
+            }
+            catch (JsonException ex) {
+                LOGGER.LogWarning(MessageFormatUtil.Format(
+                    CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
+                return default(T);
+            }
 
+        }
+#endif
+
+#if NETSTANDARD2_0
+        private static JsonSerializerOptions CreateDefaultSerializerOptions() {
+            JsonSerializerOptions settings = new JsonSerializerOptions();
+            // Use StringEnumConverter to serialize enum as string
+            settings.Converters.Add(new JsonStringEnumConverter());
+            // Don't serialize null fields
+            settings.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            // Don't escape unicode chars
+            settings.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+            
+            // Allow parsing numbers from strings
+            settings.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            // Always use \n as new line instead of system default
+            // This only takes effect when WriteIndented is true.
+            settings.NewLine = "\n";
+            return settings;
+        }
+#else
         private static JsonSerializer CreateAndConfigureJsonSerializer() {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             // Use StringEnumConverter to serialize enum as string
@@ -202,5 +369,6 @@ namespace iText.Commons.Utils
 
             return JsonSerializer.Create(settings);
         }
+#endif
     }
 }

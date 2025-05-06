@@ -1484,7 +1484,8 @@ namespace iText.Layout.Renderer {
         protected internal virtual float? RetrieveHeight() {
             float? height = null;
             UnitValue heightUV = GetPropertyAsUnitValue(Property.HEIGHT);
-            float? parentResolvedHeight = RetrieveResolvedParentDeclaredHeight();
+            float? parentResolvedHeight = parent == null ? null : ((iText.Layout.Renderer.AbstractRenderer)parent).RetrieveResolvedDeclaredHeight
+                ();
             float? minHeight = null;
             float? maxHeight = null;
             if (heightUV != null) {
@@ -2026,28 +2027,30 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        /// <summary>Retrieve the parent's resolved height declaration.</summary>
+        /// <summary>Retrieve the resolved height declaration.</summary>
         /// <remarks>
-        /// Retrieve the parent's resolved height declaration.
-        /// If the parent has a relative height declaration, it will check it's parent recursively,
+        /// Retrieve the resolved height declaration.
+        /// If it has a relative height declaration,
+        /// <see cref="RetrieveHeight()"/>
+        /// is called.
         /// </remarks>
         /// <returns>
-        /// null if no height declaration is set on the parent, or if it's own height declaration cannot be resolved
-        /// The float value of the resolved height otherwiser
+        /// 
+        /// <see langword="null"/>
+        /// if no height declaration is set on the parent, or if its own height declaration
+        /// cannot be resolved. The float value of the resolved height otherwise
         /// </returns>
-        private float? RetrieveResolvedParentDeclaredHeight() {
-            if (parent != null && parent.GetProperty<UnitValue>(Property.HEIGHT) != null) {
-                UnitValue parentHeightUV = GetPropertyAsUnitValue(parent, Property.HEIGHT);
-                if (parentHeightUV.IsPointValue()) {
-                    return parentHeightUV.GetValue();
+        protected internal virtual float? RetrieveResolvedDeclaredHeight() {
+            if (this.GetProperty<UnitValue>(Property.HEIGHT) != null) {
+                UnitValue heightUV = GetPropertyAsUnitValue(this, Property.HEIGHT);
+                if (heightUV.IsPointValue()) {
+                    return heightUV.GetValue();
                 }
                 else {
-                    return ((iText.Layout.Renderer.AbstractRenderer)parent).RetrieveHeight();
+                    return RetrieveHeight();
                 }
             }
-            else {
-                return null;
-            }
+            return null;
         }
 
         /// <summary>Retrieve the direct parent's absolute height property</summary>
@@ -2087,7 +2090,8 @@ namespace iText.Layout.Renderer {
             }
             // Update height related properties on split or overflow
             // For relative heights, we need the parent's resolved height declaration
-            float? parentResolvedHeightPropertyValue = RetrieveResolvedParentDeclaredHeight();
+            float? parentResolvedHeightPropertyValue = parent == null ? null : ((iText.Layout.Renderer.AbstractRenderer
+                )parent).RetrieveResolvedDeclaredHeight();
             UnitValue maxHeightUV = GetPropertyAsUnitValue(this, Property.MAX_HEIGHT);
             if (maxHeightUV != null) {
                 if (maxHeightUV.IsPointValue()) {
@@ -2155,6 +2159,17 @@ namespace iText.Layout.Renderer {
         /// </returns>
         public virtual MinMaxWidth GetMinMaxWidth() {
             return MinMaxWidthUtils.CountDefaultMinMaxWidth(this);
+        }
+
+        /// <summary>Calculates min and max width values for current renderer.</summary>
+        /// <param name="areaMaxWidth">max width of the area on which current renderer will be laid out</param>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Layout.Minmaxwidth.MinMaxWidth"/>
+        /// </returns>
+        public virtual MinMaxWidth GetMinMaxWidth(float? areaMaxWidth) {
+            return areaMaxWidth == null ? GetMinMaxWidth() : MinMaxWidthUtils.CountDefaultMinMaxWidth(this, areaMaxWidth
+                .Value);
         }
 
         protected internal virtual bool SetMinMaxWidthBasedOnFixedWidth(MinMaxWidth minMaxWidth) {

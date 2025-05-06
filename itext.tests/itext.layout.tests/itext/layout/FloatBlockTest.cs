@@ -38,8 +38,7 @@ namespace iText.Layout {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FloatBlockTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/FloatBlockTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/FloatBlockTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

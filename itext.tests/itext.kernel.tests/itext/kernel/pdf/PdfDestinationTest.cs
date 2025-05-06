@@ -40,8 +40,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfDestinationTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfDestinationTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfDestinationTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -95,7 +94,7 @@ namespace iText.Kernel.Pdf {
             String cmpFile = sourceFolder + "cmp_destCopyingTest02.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFile));
             PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
-            srcDoc.CopyPagesTo(JavaUtil.ArraysAsList(1), destDoc);
+            srcDoc.CopyPagesTo(JavaCollectionsUtil.SingletonList(1), destDoc);
             destDoc.Close();
             srcDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_"

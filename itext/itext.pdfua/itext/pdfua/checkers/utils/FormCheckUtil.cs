@@ -20,12 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
+using iText.Pdfua.Checkers.Utils.Ua1;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Class that provides methods for checking PDF/UA compliance of interactive form fields.</summary>
+    [System.ObsoleteAttribute(@"in favour of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1FormChecker")]
     public class FormCheckUtil {
         /// <summary>
         /// Creates a new
@@ -37,10 +40,12 @@ namespace iText.Pdfua.Checkers.Utils {
 
         // Empty constructor
         /// <summary>Handler for checking form field elements in the tag tree.</summary>
+        [System.ObsoleteAttribute(@"in favour of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1FormChecker.PdfUA1FormTagHandler"
+            )]
         public class FormTagHandler : ContextAwareTagTreeIteratorHandler {
             /// <summary>
             /// Creates a new
-            /// <see cref="FormulaTagHandler"/>
+            /// <see cref="FormTagHandler"/>
             /// instance.
             /// </summary>
             /// <param name="context">The validation context.</param>
@@ -62,7 +67,7 @@ namespace iText.Pdfua.Checkers.Utils {
                     return;
                 }
                 // Check is not applicable for hidden annotations
-                if (!AnnotationCheckUtil.IsAnnotationVisible(formField)) {
+                if (!PdfUA1AnnotationChecker.IsAnnotationVisible(formField)) {
                     return;
                 }
                 // Parent check is required for the case when form field and widget annotation are split up.

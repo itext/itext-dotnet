@@ -40,7 +40,7 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4GraphicsCheckTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -48,8 +48,7 @@ namespace iText.Pdfa {
 
         public static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA4GraphicsCheckTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA4GraphicsCheckTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4GraphicsCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -912,7 +911,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ImageJpeg20002ColorChannelsTest() {
-            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_jpeg2000ColorChannels.pdf";
             PdfDocument pdfDoc = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDoc.AddNewPage();

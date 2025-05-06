@@ -71,6 +71,11 @@ namespace iText.Svg.Renderers.Impl {
 
         private bool whiteSpaceProcessed = false;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="TextSvgBranchRenderer"/>
+        /// instance.
+        /// </summary>
         public TextSvgBranchRenderer() {
             performRootTransformations = true;
             moveResolved = false;
@@ -90,6 +95,16 @@ namespace iText.Svg.Renderers.Impl {
         }
 //\endcond
 
+        /// <summary>
+        /// Adds a child to the current
+        /// <see cref="TextSvgBranchRenderer"/>
+        /// renderer.
+        /// </summary>
+        /// <param name="child">
+        /// 
+        /// <see cref="ISvgTextNodeRenderer"/>
+        /// child to add
+        /// </param>
         public void AddChild(ISvgTextNodeRenderer child) {
             // Final method, in order to disallow adding null
             if (child != null) {
@@ -97,6 +112,16 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        /// <summary>
+        /// Retrieves a list of all children of the current
+        /// <see cref="TextSvgBranchRenderer"/>
+        /// renderer.
+        /// </summary>
+        /// <returns>
+        /// a list of
+        /// <see cref="ISvgTextNodeRenderer"/>
+        /// children
+        /// </returns>
         public IList<ISvgTextNodeRenderer> GetChildren() {
             // Final method, in order to disallow modifying the List
             return JavaCollectionsUtil.UnmodifiableList(children);
@@ -113,6 +138,18 @@ namespace iText.Svg.Renderers.Impl {
             return GetRelativeTranslation(new SvgDrawContext(null, null));
         }
 
+        /// <summary>Gets relative translation of the current &lt;text&gt; or &lt;tspan&gt; element.</summary>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>
+        /// float array that contains relative
+        /// <c>dx</c>
+        /// and
+        /// <c>dy</c>
+        /// translations
+        /// </returns>
         public virtual float[] GetRelativeTranslation(SvgDrawContext context) {
             if (!moveResolved) {
                 ResolveRelativeTextMove(context);
@@ -125,6 +162,18 @@ namespace iText.Svg.Renderers.Impl {
             return ContainsRelativeMove(new SvgDrawContext(null, null));
         }
 
+        /// <summary>Checks whether current &lt;text&gt; or &lt;tspan&gt; element contains relative position change.</summary>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// is current element contains relative position,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool ContainsRelativeMove(SvgDrawContext context) {
             if (!moveResolved) {
                 ResolveRelativeTextMove(context);
@@ -138,6 +187,19 @@ namespace iText.Svg.Renderers.Impl {
             return ContainsAbsolutePositionChange(new SvgDrawContext(null, null));
         }
 
+        /// <summary>Checks whether current &lt;text&gt; or &lt;tspan&gt; element contains absolute position attributes.
+        ///     </summary>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// is current element contains absolute position,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool ContainsAbsolutePositionChange(SvgDrawContext context) {
             if (!posResolved) {
                 ResolveAbsoluteTextPosition(context);
@@ -149,6 +211,19 @@ namespace iText.Svg.Renderers.Impl {
             return GetAbsolutePositionChanges(new SvgDrawContext(null, null));
         }
 
+        /// <summary>Gets absolute position of the current &lt;text&gt; or &lt;tspan&gt; element.</summary>
+        /// <param name="context">
+        /// current
+        /// <see cref="iText.Svg.Renderers.SvgDrawContext"/>
+        /// </param>
+        /// <returns>
+        /// float array that contains absolute
+        /// <c>x</c>
+        /// and
+        /// <c>y</c>
+        /// positions as either single item arrays
+        /// or null if attribute is not present
+        /// </returns>
         public virtual float[][] GetAbsolutePositionChanges(SvgDrawContext context) {
             if (!posResolved) {
                 ResolveAbsoluteTextPosition(context);
@@ -156,6 +231,7 @@ namespace iText.Svg.Renderers.Impl {
             return new float[][] { xPos, yPos };
         }
 
+        /// <summary>Marks white-space property as processed.</summary>
         public virtual void MarkWhiteSpaceProcessed() {
             whiteSpaceProcessed = true;
         }

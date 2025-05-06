@@ -43,7 +43,6 @@ namespace iText.Forms.Fields {
         /// <param name="metaInfoContainer">instance to be set.</param>
         /// <param name="action">action which will be executed while meta info is set to static context.</param>
         public static void UseMetaInfoDuringTheAction(MetaInfoContainer metaInfoContainer, Action action) {
-            // TODO DEVSIX-6368 We want to prevent customer code being run while meta info is in the static context
             try {
                 metaInfoForLayout.Value = metaInfoContainer;
                 action();

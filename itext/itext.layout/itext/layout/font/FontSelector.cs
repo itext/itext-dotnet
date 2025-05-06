@@ -100,7 +100,7 @@ namespace iText.Layout.Font {
                 this.fontStyles = new List<FontCharacteristics>();
                 if (fontFamilies != null && fontFamilies.Count > 0) {
                     foreach (String fontFamily in fontFamilies) {
-                        String lowercaseFontFamily = fontFamily.ToLowerInvariant();
+                        String lowercaseFontFamily = StringNormalizer.ToLowerCase(fontFamily);
                         this.fontFamilies.Add(lowercaseFontFamily);
                         this.fontStyles.Add(ParseFontStyle(lowercaseFontFamily, fc));
                     }
@@ -197,8 +197,8 @@ namespace iText.Layout.Font {
                 if (!fontFamilySetByCharacteristics) {
                     // if alias is set, fontInfo's descriptor should not be checked
                     if (!"".Equals(fontFamily) && (null == fontInfo.GetAlias() && null != fontDescriptor.GetFamilyNameLowerCase
-                        () && fontDescriptor.GetFamilyNameLowerCase().Equals(fontFamily) || (null != fontInfo.GetAlias() && fontInfo
-                        .GetAlias().ToLowerInvariant().Equals(fontFamily)))) {
+                        () && fontDescriptor.GetFamilyNameLowerCase().Equals(fontFamily) || (null != fontInfo.GetAlias() && StringNormalizer
+                        .ToLowerCase(fontInfo.GetAlias()).Equals(fontFamily)))) {
                         score += FONT_FAMILY_EQUALS_AWARD;
                     }
                     else {

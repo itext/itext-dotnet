@@ -27,8 +27,7 @@ using iText.Test;
 namespace iText.Commons.Utils {
     [NUnit.Framework.Category("UnitTest")]
     public class FileUtilTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/commons/utils/FileUtilTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/commons/utils/FileUtilTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

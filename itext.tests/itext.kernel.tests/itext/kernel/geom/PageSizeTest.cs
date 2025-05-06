@@ -29,8 +29,7 @@ using iText.Test;
 namespace iText.Kernel.Geom {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PageSizeTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/geom/PageSizeTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/geom/PageSizeTest/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/geom/PageSizeTest/";

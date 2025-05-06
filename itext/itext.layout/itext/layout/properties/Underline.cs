@@ -55,7 +55,7 @@ namespace iText.Layout.Properties {
 
         /// <summary>Creates an Underline.</summary>
         /// <remarks>
-        /// Creates an Underline. Both the thickness and vertical positioning under
+        /// Creates an Underline. Both thickness and vertical positioning under
         /// the text element's base line can be set to a fixed value, or a variable
         /// one depending on the element's font size.
         /// If you want a fixed-width thickness, set <c>thicknessMul</c> to 0;
@@ -86,7 +86,7 @@ namespace iText.Layout.Properties {
 
         /// <summary>Creates an Underline.</summary>
         /// <remarks>
-        /// Creates an Underline. Both the thickness and vertical positioning under
+        /// Creates an Underline. Both thickness and vertical positioning under
         /// the text element's base line can be set to a fixed value, or a variable
         /// one depending on the element's font size.
         /// If you want a fixed-width thickness, set <c>thicknessMul</c> to 0;

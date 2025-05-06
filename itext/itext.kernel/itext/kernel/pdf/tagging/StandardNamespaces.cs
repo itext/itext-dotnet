@@ -41,8 +41,9 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private static readonly ICollection<String> STD_STRUCT_NAMESPACE_2_0_TYPES;
 
-        // other namespaces
-        private const String MATH_ML = "http://www.w3.org/1998/Math/MathML";
+        /// <summary>Specifies the name of MathML namespace.</summary>
+        /// <remarks>Specifies the name of MathML namespace. MathML is domain-specific namespace defined in PDF 2.0.</remarks>
+        public const String MATH_ML = "http://www.w3.org/1998/Math/MathML";
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 1.7</summary>
         public const String PDF_1_7 = "http://iso.org/pdf/ssn";
@@ -88,14 +89,18 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>
         /// Checks if the given namespace is identified as the one that is common within broad ranges of documents types
-        /// and doesn't require a role mapping for it's roles.
+        /// and doesn't require a role mapping for its roles.
         /// </summary>
-        /// <param name="namespace">a namespace to be checked, whether it defines a namespace of the known domain specific language.
+        /// <param name="namespace">a namespace to be checked, whether it defines a namespace of the known domain specific language
         ///     </param>
         /// <returns>
-        /// true, if the given
+        /// 
+        /// <see langword="true"/>
+        /// , if the given
         /// <see cref="PdfNamespace"/>
-        /// belongs to the domain-specific namespace, false otherwise.
+        /// belongs to the domain-specific namespace,
+        /// <see langword="false"/>
+        /// otherwise
         /// </returns>
         public static bool IsKnownDomainSpecificNamespace(PdfNamespace @namespace) {
             return MATH_ML.Equals(@namespace.GetNamespaceName());

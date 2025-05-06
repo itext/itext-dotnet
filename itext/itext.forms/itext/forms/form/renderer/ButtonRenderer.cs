@@ -34,6 +34,7 @@ using iText.Forms.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
@@ -143,6 +144,7 @@ namespace iText.Forms.Form.Renderer {
         /// </returns>
         protected internal override IRenderer CreateFlatRenderer() {
             Div div = new Div();
+            div.GetAccessibilityProperties().SetRole(StandardRoles.NONSTRUCT);
             foreach (IElement child in ((Button)modelElement).GetChildren()) {
                 if (child is Image) {
                     // Renderer for the image with fixed position will be added to positionedRenderers of the root renderer,

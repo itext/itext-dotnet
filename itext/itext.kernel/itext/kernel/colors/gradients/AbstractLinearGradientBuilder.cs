@@ -323,7 +323,7 @@ namespace iText.Kernel.Colors.Gradients {
         private static IList<GradientColorStop> NormalizeStops(IList<GradientColorStop> toNormalize, double baseVectorLength
             ) {
             if (baseVectorLength < ZERO_EPSILON) {
-                return JavaUtil.ArraysAsList(new GradientColorStop(toNormalize[toNormalize.Count - 1], 0d, GradientColorStop.OffsetType
+                return JavaCollectionsUtil.SingletonList(new GradientColorStop(toNormalize[toNormalize.Count - 1], 0d, GradientColorStop.OffsetType
                     .RELATIVE));
             }
             // get rid of all absolute on vector offsets and hint offsets

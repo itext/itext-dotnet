@@ -30,5 +30,11 @@ namespace iText.Svg.Renderers.Impl {
             SymbolSvgNodeRenderer renderer = new SymbolSvgNodeRenderer();
             NUnit.Framework.Assert.IsNull(renderer.GetObjectBoundingBox(null));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CanConstructViewPortTest() {
+            SymbolSvgNodeRenderer renderer = new SymbolSvgNodeRenderer();
+            NUnit.Framework.Assert.IsTrue(renderer.CanConstructViewPort());
+        }
     }
 }

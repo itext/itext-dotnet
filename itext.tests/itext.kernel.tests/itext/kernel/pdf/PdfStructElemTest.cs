@@ -40,8 +40,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfStructElemTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfStructElemTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfStructElemTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -615,6 +614,34 @@ namespace iText.Kernel.Pdf {
             document = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
             document.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddAnnotationTaggedAsArtifactTest() {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "addAnnotationTaggedAsArtifact.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_2
+                )))) {
+                document.SetTagged();
+                PdfPage page = document.AddNewPage();
+                PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(80, 508, 40, 18));
+                linkAnnotation.SetFlag(PdfAnnotation.INVISIBLE);
+                page.AddAnnotation(linkAnnotation);
+            }
+            CompareResult("addAnnotationTaggedAsArtifact.pdf", "cmp_addAnnotationTaggedAsArtifact.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddNotTaggedAnnotationTest() {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "addNotTaggedAnnotation.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_7).AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_2
+                )))) {
+                document.SetTagged();
+                PdfPage page = document.AddNewPage();
+                PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(80, 508, 40, 18));
+                linkAnnotation.SetFlag(PdfAnnotation.INVISIBLE);
+                page.AddAnnotation(linkAnnotation);
+            }
+            CompareResult("addNotTaggedAnnotation.pdf", "cmp_addNotTaggedAnnotation.pdf");
         }
 
         private void CompareResult(String outFileName, String cmpFileName) {

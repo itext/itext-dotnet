@@ -40,14 +40,13 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Forms {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2FormTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfUA2FormTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms//PdfUA2FormTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms//PdfUA2FormTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -69,7 +68,7 @@ namespace iText.Forms {
                 Rectangle rect = new Rectangle(210, 490, 150, 22);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDocument, "fieldName").SetWidgetRectangle(rect).CreateText
                     ();
-                field.Put(PdfName.Contents, new PdfString("Description"));
+                field.GetFirstFormAnnotation().SetAlternativeDescription("Description");
                 field.SetValue("some value");
                 field.SetFont(font);
                 form.AddField(field);
@@ -117,9 +116,8 @@ namespace iText.Forms {
                 formInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "form input field");
                 formInputField.SetProperty(FormProperty.FORM_FIELD_LABEL, "label form field");
+                formInputField.SetAlternativeDescription("Description");
                 document.Add(formInputField);
-                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDocument, true);
-                form.GetField("form input field").GetPdfObject().Put(PdfName.Contents, new PdfString("Description"));
             }
             CompareAndValidate(outFile, cmpFile);
         }
@@ -141,11 +139,31 @@ namespace iText.Forms {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formSigField.SetContent("form SigField");
+                formSigField.SetAlternativeDescription("Description");
                 formSigField.SetBorder(new SolidBorder(ColorConstants.YELLOW, 1));
                 formSigField.SetFont(font);
                 document.Add(formSigField);
+            }
+            CompareAndValidate(outFile, cmpFile);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetAlternativeDescriptionTest() {
+            String outFile = DESTINATION_FOLDER + "setAlternativeDescription.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_setAlternativeDescription.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                Document document = new Document(pdfDocument);
+                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
+                document.SetFont(font);
+                CreateSimplePdfUA2Document(pdfDocument);
+                Rectangle rect = new Rectangle(200, 200, 200, 200);
+                PdfButtonFormField button = new PushButtonFormFieldBuilder(pdfDocument, "button name").SetWidgetRectangle(
+                    rect).CreatePushButton();
+                button.GetFirstFormAnnotation().SetAlternativeDescription("some description");
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDocument, true);
-                form.GetField("form SigField").GetPdfObject().Put(PdfName.Contents, new PdfString("Description"));
+                form.AddField(button);
             }
             CompareAndValidate(outFile, cmpFile);
         }

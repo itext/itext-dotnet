@@ -22,11 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
+using iText.Commons.Datastructures;
 using iText.IO.Util;
 
 namespace iText.Signatures.Validation.Report.Xml {
 //\cond DO_NOT_DOCUMENT
+    /// <summary>Class which represents signature validation status.</summary>
     internal class SignatureValidationStatus {
         private static readonly IDictionary<SignatureValidationStatus.MainIndication, String> MAIN_INDICATION_VALUE_MAP
              = new Dictionary<SignatureValidationStatus.MainIndication, String>(EnumUtil.GetAllValuesOfEnum<SignatureValidationStatus.MainIndication
@@ -36,7 +37,7 @@ namespace iText.Signatures.Validation.Report.Xml {
             new Dictionary<SignatureValidationStatus.MessageType, String>(EnumUtil.GetAllValuesOfEnum<SignatureValidationStatus.MessageType
             >().Count);
 
-        private readonly IList<Pair<String, String>> messages = new List<Pair<String, String>>();
+        private readonly IList<Tuple2<String, String>> messages = new List<Tuple2<String, String>>();
 
         private SignatureValidationStatus.MainIndication mainIndication;
 
@@ -60,31 +61,59 @@ namespace iText.Signatures.Validation.Report.Xml {
             MESSAGE_TYPE_VALUE_MAP.Put(SignatureValidationStatus.MessageType.ERROR, "urn:cef:dss:message:error");
         }
 
+        /// <summary>
+        /// Creates an empty
+        /// <see cref="SignatureValidationStatus"/>
+        /// instance.
+        /// </summary>
         public SignatureValidationStatus() {
         }
 
         // Declaring default constructor explicitly to avoid removing it unintentionally.
+        /// <summary>Sets the main status indication.</summary>
+        /// <param name="mainIndication">
+        /// 
+        /// <see cref="MainIndication"/>
+        /// value
+        /// </param>
         public virtual void SetMainIndication(SignatureValidationStatus.MainIndication mainIndication) {
             this.mainIndication = mainIndication;
         }
 
+        /// <summary>Gets the main status indication.</summary>
         public virtual SignatureValidationStatus.MainIndication GetMainIndication() {
             return mainIndication;
         }
 
+        /// <summary>Gets URI representation of the validation status (see ETSI TS 119 102 4.3.4.2).</summary>
+        /// <returns>validation status as string</returns>
         public virtual String GetMainIndicationAsString() {
             return MAIN_INDICATION_VALUE_MAP.Get(mainIndication);
         }
 
+        /// <summary>Sets sub-indication that shall clearly identify the reason for the main status indication.</summary>
+        /// <param name="subIndication">
+        /// 
+        /// <see cref="SubIndication"/>
+        /// value
+        /// </param>
         public virtual void SetSubIndication(SignatureValidationStatus.SubIndication subIndication) {
             this.subIndication = subIndication;
             this.subIndicationSet = true;
         }
 
+        /// <summary>Gets sub-indication that shall clearly identify the reason for the main status indication.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="SubIndication"/>
+        /// value
+        /// </returns>
         public virtual SignatureValidationStatus.SubIndication GetSubIndication() {
             return subIndication;
         }
 
+        /// <summary>Gets sub-indication that shall clearly identify the reason for the main status indication.</summary>
+        /// <returns>sub-indication value as string</returns>
         public virtual String GetSubIndicationAsString() {
             if (!subIndicationSet) {
                 return null;
@@ -92,11 +121,19 @@ namespace iText.Signatures.Validation.Report.Xml {
             return subIndication.ToString();
         }
 
+        /// <summary>Adds message for validation report data.</summary>
+        /// <param name="reason">message reason as string</param>
+        /// <param name="messageType">
+        /// 
+        /// <see cref="MessageType"/>
+        /// </param>
         public virtual void AddMessage(String reason, SignatureValidationStatus.MessageType messageType) {
-            this.messages.Add(new Pair<String, String>(reason, MESSAGE_TYPE_VALUE_MAP.Get(messageType)));
+            this.messages.Add(new Tuple2<String, String>(reason, MESSAGE_TYPE_VALUE_MAP.Get(messageType)));
         }
 
-        public virtual ICollection<Pair<String, String>> GetMessages() {
+        /// <summary>Gets all reported messages.</summary>
+        /// <returns>Collection of reported messages</returns>
+        public virtual ICollection<Tuple2<String, String>> GetMessages() {
             return messages;
         }
 

@@ -645,6 +645,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
+            CheckTextOnAddition(text);
             document.CheckIsoConformance(new FontValidationContext(text.ToString(), currentGs.GetFont()));
             float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
@@ -818,13 +819,14 @@ namespace iText.Kernel.Pdf.Canvas {
                     );
             }
             // Take text part to process
-            StringBuilder text = new StringBuilder();
+            StringBuilder decodedText = new StringBuilder();
             foreach (PdfObject obj in textArray) {
                 if (obj is PdfString) {
-                    text.Append(obj);
+                    decodedText.Append(currentGs.GetFont().Decode((PdfString)obj));
                 }
             }
-            document.CheckIsoConformance(new FontValidationContext(text.ToString(), currentGs.GetFont()));
+            CheckTextOnAddition(decodedText.ToString());
+            document.CheckIsoConformance(new FontValidationContext(decodedText.ToString(), currentGs.GetFont()));
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
                 if (obj.IsString()) {
@@ -2354,6 +2356,7 @@ namespace iText.Kernel.Pdf.Canvas {
                     );
             }
             this.CheckIsoConformanceWritingOnContent();
+            CheckTextOnAddition(text);
             document.CheckIsoConformance(new FontValidationContext(text, currentGs.GetFont()));
             currentGs.GetFont().WriteText(text, contentStream.GetOutputStream());
         }
@@ -2557,6 +2560,18 @@ namespace iText.Kernel.Pdf.Canvas {
             return new double[] { x + rx, y, x + width - rx, y, pt1[2], pt1[3], pt1[4], pt1[5], pt1[6], pt1[7], x + width
                 , y + height - ry, pt2[2], pt2[3], pt2[4], pt2[5], pt2[6], pt2[7], x + rx, y + height, pt3[2], pt3[3], 
                 pt3[4], pt3[5], pt3[6], pt3[7], x, y + ry, pt4[2], pt4[3], pt4[4], pt4[5], pt4[6], pt4[7] };
+        }
+
+        private void CheckTextOnAddition(GlyphLine text) {
+            CheckTextOnAddition(text.ToString());
+        }
+
+        private void CheckTextOnAddition(String text) {
+            PdfDictionary attributes = null;
+            if (!tagStructureStack.IsEmpty()) {
+                attributes = tagStructureStack.Peek().GetSecond();
+            }
+            document.CheckIsoConformance(new CanvasTextAdditionContext(text, attributes, contentStream));
         }
 
         /// <summary>This method is used to traverse parent tree and begin all layers in it.</summary>

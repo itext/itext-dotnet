@@ -40,8 +40,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasColorTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/canvas/PdfCanvasColorTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/PdfCanvasColorTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

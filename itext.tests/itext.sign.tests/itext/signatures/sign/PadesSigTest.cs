@@ -48,8 +48,7 @@ namespace iText.Signatures.Sign {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PadesSigTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/sign/PadesSigTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/signatures/sign/PadesSigTest/";
 
         private static readonly char[] password = "testpassphrase".ToCharArray();
 

@@ -47,8 +47,7 @@ namespace iText.Svg.Converter {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/converter/SvgConverterTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/svg/converter/SvgConverterTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/converter/SvgConverterTest/";
 
         private const String ECLIPSESVGSTRING = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
              "<svg\n" + "   xmlns=\"http://www.w3.org/2000/svg\"\n" + "   width=\"200pt\"\n" + "   height=\"200pt\"\n"
@@ -533,7 +532,6 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-8769: adapt after supporting
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void DescriptionTagsTest() {
             IDictionary<String, ISvgNodeRenderer> map = new Dictionary<String, ISvgNodeRenderer>();

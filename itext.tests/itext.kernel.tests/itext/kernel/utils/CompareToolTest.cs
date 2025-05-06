@@ -42,8 +42,7 @@ namespace iText.Kernel.Utils {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/utils/CompareToolTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/utils/CompareToolTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/utils/CompareToolTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
@@ -260,7 +259,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T798358249(this);
+            CompareTool compareTool = new _T128640660(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -274,12 +273,12 @@ namespace iText.Kernel.Utils {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal class _T798358249 : CompareTool {
+        internal class _T128640660 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T798358249(CompareToolTest _enclosing) {
+            internal _T128640660(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 

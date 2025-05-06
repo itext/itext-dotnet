@@ -27,6 +27,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Pdfua.Checkers.Utils;
+using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils.Tables {
     /// <summary>Creates an iterator to iterate over the table structures.</summary>
@@ -184,6 +185,10 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
                             firstOpenColIndex = i;
                             break;
                         }
+                    }
+                    if (firstOpenColIndex == -1) {
+                        throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.ROWS_SPAN_DIFFERENT_NUMBER_OF_COLUMNS
+                            , rowIdx, rowIdx + 1));
                     }
                     // Set the colspan and rowspan of each cell with a placeholder
                     for (int i = rowIdx; i < rowIdx + rowSpan; i++) {

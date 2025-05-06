@@ -595,6 +595,24 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        /// <summary>Changes the alternative description of the annotation to the specified value.</summary>
+        /// <param name="alternativeDescription">string to be used as alternative description.</param>
+        /// <returns>
+        /// The edited
+        /// <see cref="PdfFormAnnotation"/>.
+        /// </returns>
+        public virtual iText.Forms.Fields.PdfFormAnnotation SetAlternativeDescription(String alternativeDescription
+            ) {
+            Put(PdfName.Contents, new PdfString(alternativeDescription));
+            return this;
+        }
+
+        /// <summary>Gets the current alternative description.</summary>
+        /// <returns>the current alternative description.</returns>
+        public virtual PdfString GetAlternativeDescription() {
+            return GetPdfObject().GetAsString(PdfName.Contents);
+        }
+
         /// <summary>
         /// Gets a
         /// <see cref="iText.Kernel.Geom.Rectangle"/>

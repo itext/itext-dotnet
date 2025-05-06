@@ -74,5 +74,25 @@ namespace iText.IO.Font {
             FontEncoding encoding = FontEncoding.CreateFontSpecificEncoding();
             NUnit.Framework.Assert.IsTrue(encoding.IsFontSpecific());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateFontEncodingTest() {
+            FontEncoding encoding = FontEncoding.CreateFontEncoding("# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
+                );
+            NUnit.Framework.Assert.AreEqual(3, encoding.unicodeToCode.Size());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NormalizeEncodingTest() {
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.WINANSI, FontEncoding.NormalizeEncoding(null));
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.WINANSI, FontEncoding.NormalizeEncoding(""));
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.WINANSI, FontEncoding.NormalizeEncoding("winansi"));
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.WINANSI, FontEncoding.NormalizeEncoding("winansiencoding"));
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.MACROMAN, FontEncoding.NormalizeEncoding("macroman"));
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.MACROMAN, FontEncoding.NormalizeEncoding("macromanencoding"));
+            NUnit.Framework.Assert.AreEqual(PdfEncodings.ZAPFDINGBATS, FontEncoding.NormalizeEncoding("zapfdingbatsencoding"
+                ));
+            NUnit.Framework.Assert.AreEqual("notknown", FontEncoding.NormalizeEncoding("notknown"));
+        }
     }
 }

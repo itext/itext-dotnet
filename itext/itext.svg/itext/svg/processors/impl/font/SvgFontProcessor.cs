@@ -35,8 +35,18 @@ using iText.Svg.Processors.Impl;
 namespace iText.Svg.Processors.Impl.Font {
     /// <summary>Class that processes and add resolved css fonts to the FontProvider</summary>
     public class SvgFontProcessor {
-        private SvgProcessorContext context;
+        private readonly SvgProcessorContext context;
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="SvgFontProcessor"/>
+        /// instance.
+        /// </summary>
+        /// <param name="context">
+        /// 
+        /// <see cref="iText.Svg.Processors.Impl.SvgProcessorContext"/>
+        /// to add resolved fonts to
+        /// </param>
         public SvgFontProcessor(SvgProcessorContext context) {
             this.context = context;
         }

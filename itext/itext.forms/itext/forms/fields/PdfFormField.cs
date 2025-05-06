@@ -40,8 +40,10 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Properties;
+using iText.Layout.Tagging;
 
 namespace iText.Forms.Fields {
     /// <summary>
@@ -358,6 +360,83 @@ namespace iText.Forms.Fields {
                 return GetTypeFromParent(fieldDict);
             }
             return formType;
+        }
+
+        /// <summary>
+        /// Retrieves string value from
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// representing text string or text stream.
+        /// </summary>
+        /// <param name="value">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// representing text string or text stream
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="System.String"/>
+        /// value
+        /// </returns>
+        public static String GetStringValue(PdfObject value) {
+            if (value == null) {
+                return "";
+            }
+            else {
+                if (value is PdfStream) {
+                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.
+                        UTF8);
+                }
+                else {
+                    if (value is PdfName) {
+                        return ((PdfName)value).GetValue();
+                    }
+                    else {
+                        if (value is PdfString) {
+                            return ((PdfString)value).ToUnicodeString();
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Applies
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties"/>
+        /// for provided form field and its annotation children.
+        /// </summary>
+        /// <param name="formField">
+        /// 
+        /// <see cref="PdfFormField"/>
+        /// the form field to which the accessibility properties should be applied
+        /// </param>
+        /// <param name="modelElement">
+        /// 
+        /// <see cref="iText.Layout.Tagging.IAccessibleElement"/>
+        /// the form field layout element with accessibility properties
+        /// </param>
+        /// <param name="pdfDocument">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// the document to which the form field belongs
+        /// </param>
+        public static void ApplyAccessibilityProperties(iText.Forms.Fields.PdfFormField formField, IAccessibleElement
+             modelElement, PdfDocument pdfDocument) {
+            if (!pdfDocument.IsTagged()) {
+                return;
+            }
+            AccessibilityProperties properties = modelElement.GetAccessibilityProperties();
+            String alternativeDescription = properties.GetAlternateDescription();
+            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
+                formField.SetAlternativeName(alternativeDescription);
+                foreach (PdfFormAnnotation annotation in formField.GetChildFormAnnotations()) {
+                    if (annotation.GetAlternativeDescription() == null) {
+                        annotation.SetAlternativeDescription(alternativeDescription);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -852,28 +931,7 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual String GetValueAsString() {
             PdfObject value = GetValue();
-            if (value == null) {
-                return "";
-            }
-            else {
-                if (value is PdfStream) {
-                    return iText.Commons.Utils.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes(), System.Text.Encoding.
-                        UTF8);
-                }
-                else {
-                    if (value is PdfName) {
-                        return ((PdfName)value).GetValue();
-                    }
-                    else {
-                        if (value is PdfString) {
-                            return ((PdfString)value).ToUnicodeString();
-                        }
-                        else {
-                            return "";
-                        }
-                    }
-                }
-            }
+            return GetStringValue(value);
         }
 
         /// <summary>Gets the current display value of the form field.</summary>
@@ -1157,15 +1215,15 @@ namespace iText.Forms.Fields {
         /// <summary>Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.</summary>
         /// <remarks>
         /// Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.
-        /// May be either
+        /// It may be either
         /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.PdfString"/>.
         /// </remarks>
-        /// <param name="richText">a new rich text value.</param>
+        /// <param name="richText">a new rich text value</param>
         /// <returns>
         /// the edited
-        /// <see cref="PdfFormField"/>.
+        /// <see cref="PdfFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfFormField SetRichText(PdfObject richText) {
             Put(PdfName.RV, richText);

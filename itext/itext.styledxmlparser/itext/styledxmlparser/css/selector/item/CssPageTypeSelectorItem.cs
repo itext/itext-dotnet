@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Page;
 using iText.StyledXmlParser.Node;
@@ -58,8 +59,8 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             if (!(node is PageContextNode)) {
                 return false;
             }
-            return !CommonCssConstants.AUTO.Equals(pageTypeName.ToLowerInvariant()) && pageTypeName.Equals(((PageContextNode
-                )node).GetPageTypeName());
+            return !CommonCssConstants.AUTO.Equals(StringNormalizer.ToLowerCase(pageTypeName)) && pageTypeName.Equals(
+                ((PageContextNode)node).GetPageTypeName());
         }
     }
 }

@@ -42,8 +42,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/parser/PdfCanvasProcessorTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/parser/PdfCanvasProcessorTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
@@ -194,6 +193,26 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.IsTrue(imageRenderInfo.HasMcid(5));
             NUnit.Framework.Assert.IsFalse(imageRenderInfo.HasMcid(1));
             NUnit.Framework.Assert.AreEqual(5, imageRenderInfo.GetMcid());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BrokenStreamTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "splitTj.pdf")));
+            SimpleTextExtractionStrategy listener = new SimpleTextExtractionStrategy();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            byte[] streamBytes = ((PdfStream)document.GetPdfObject(7)).GetBytes();
+            PdfResources resources = document.GetPage(1).GetResources();
+            //Class cast exception is expected, using generic exception for autoport
+            NUnit.Framework.Assert.Catch(typeof(Exception), () => parser.ProcessContent(streamBytes, resources));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WithPageResourcesStreamTest() {
+            PdfDocument document = new PdfDocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "splitTj.pdf")));
+            SimpleTextExtractionStrategy listener = new SimpleTextExtractionStrategy();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            parser.ProcessContent(document.GetPage(1).GetContentBytes(), document.GetPage(1).GetResources());
+            NUnit.Framework.Assert.AreEqual(listener.GetResultantText(), "test 1\ntest 2");
         }
 
         private class ColorParsingEventListener : IEventListener {

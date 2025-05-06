@@ -60,6 +60,23 @@ namespace iText.StyledXmlParser.Css.Selector {
             return Matches(element, selectorItems.Count - 1);
         }
 
+        /// <summary>Checks if the node not matches all the selectors.</summary>
+        /// <param name="element">the node</param>
+        /// <returns>true, if node doesn't match all the selectors</returns>
+        public virtual bool NotMatches(INode element) {
+            int counter = 0;
+            while (counter != selectorItems.Count) {
+                bool matches = Matches(element, selectorItems.Count - counter - 1);
+                if (matches) {
+                    return false;
+                }
+                else {
+                    counter++;
+                }
+            }
+            return true;
+        }
+
         /// <summary>Checks if a node matches the selector.</summary>
         /// <param name="element">the node</param>
         /// <param name="lastSelectorItemInd">the index of the last selector</param>

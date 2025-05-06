@@ -37,16 +37,26 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;polyline&gt; tag.
     /// </summary>
     public class PolylineSvgNodeRenderer : AbstractSvgNodeRenderer, IMarkerCapable {
-        /// <summary>orientation vector which is used for marker angle calculation.</summary>
+        /// <summary>Orientation vector which is used for marker angle calculation.</summary>
         private Vector previousOrientationVector = new Vector(1, 0, 0);
 
         /// <summary>
         /// A List of
         /// <see cref="iText.Kernel.Geom.Point"/>
-        /// objects representing the path to be drawn by the polyline tag
+        /// objects representing the path to be drawn by the polyline tag.
         /// </summary>
         protected internal IList<Point> points = new List<Point>();
 
+        /// <summary>
+        /// Returns a list of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// objects representing the path to be drawn by the polyline tag.
+        /// </summary>
+        /// <returns>
+        /// a list of
+        /// <see cref="iText.Kernel.Geom.Point"/>
+        /// objects
+        /// </returns>
         protected internal virtual IList<Point> GetPoints() {
             return this.points;
         }

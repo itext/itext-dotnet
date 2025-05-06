@@ -45,5 +45,49 @@ namespace iText.Commons.Datastructures {
             NUnit.Framework.Assert.IsNull(tuple.GetFirst());
             NUnit.Framework.Assert.AreEqual(Convert.ToInt32(1), tuple.GetSecond());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsTest() {
+            Tuple2<String, int> tuple1 = new Tuple2<String, int>("test", 1);
+            Tuple2<String, int> tuple2 = new Tuple2<String, int>("test", 1);
+            NUnit.Framework.Assert.AreEqual(tuple1, tuple2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsSameTest() {
+            Tuple2<String, int> tuple = new Tuple2<String, int>("test", 1);
+            NUnit.Framework.Assert.AreEqual(tuple, tuple);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsNullTest() {
+            Tuple2<String, int> tuple = new Tuple2<String, int>("test", 1);
+            NUnit.Framework.Assert.AreNotEqual(tuple, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotEqualsTest() {
+            Tuple2<String, int> tuple1 = new Tuple2<String, int>("test", 1);
+            Tuple2<String, int> tuple2 = new Tuple2<String, int>("test", 2);
+            Tuple2<String, int> tuple3 = new Tuple2<String, int>("test2", 2);
+            NUnit.Framework.Assert.AreNotEqual(tuple1, tuple2);
+            NUnit.Framework.Assert.AreNotEqual(tuple2, tuple3);
+            NUnit.Framework.Assert.AreNotEqual(tuple1, tuple3);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsWithCustomTest() {
+            Tuple2<String, int> tuple1 = new Tuple2<String, int>("test", 1);
+            Tuple2<String, int> tuple2 = new Tuple2Test.CustomTuple2<String, int>("test", 1);
+            Tuple2<String, int> tuple3 = new Tuple2Test.CustomTuple2<String, int>("test", 1);
+            NUnit.Framework.Assert.AreNotEqual(tuple1, tuple2);
+            NUnit.Framework.Assert.AreEqual(tuple2, tuple3);
+        }
+
+        private class CustomTuple2<T1, T2> : Tuple2<T1, T2> {
+            public CustomTuple2(T1 test, T2 i)
+                : base(test, i) {
+            }
+        }
     }
 }

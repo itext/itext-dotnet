@@ -37,8 +37,7 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/KeepWithNextTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/KeepWithNextTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/KeepWithNextTest/";
 
         private const String MIDDLE_TEXT = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document. To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries. Themes and styles also help keep your document coordinated. When you click Design and choose a new Theme, the pictures, charts, and SmartArt graphics change to match your new theme. When you apply styles, your headings change to match the new theme. Save time in Word with new buttons that show up where you need them.";
 
@@ -260,6 +259,30 @@ namespace iText.Layout {
                 (2)).SetBorderBottom(new SolidBorder(2));
             table.AddCell("Body").AddHeaderCell("Header");
             document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeepWithNextTest12() {
+            //if we have multiple objects with keepWithNext in a row only the last one seems to follow to the next page
+            String outFileName = destinationFolder + "keepWithNextTest12.pdf";
+            String cmpFileName = sourceFolder + "cmp_keepWithNextTest12.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf, PageSize.A4);
+            for (int i = 0; i < 27; i++) {
+                document.Add(new Paragraph("dummy"));
+            }
+            Paragraph title1 = new Paragraph("THIS IS THE TITLE 1");
+            title1.SetKeepWithNext(true);
+            document.Add(title1);
+            Paragraph title2 = new Paragraph("THIS IS THE TITLE 2");
+            title2.SetKeepWithNext(true);
+            document.Add(title2);
+            for (int i = 0; i < 20; i++) {
+                document.Add(new Paragraph("content of chapter " + i));
+            }
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

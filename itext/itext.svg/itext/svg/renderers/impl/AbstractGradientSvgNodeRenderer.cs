@@ -57,7 +57,7 @@ namespace iText.Svg.Renderers.Impl {
             String gradientUnits = GetAttribute(SvgConstants.Attributes.GRADIENT_UNITS);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (gradientUnits == null) {
-                GetAttribute(SvgConstants.Attributes.GRADIENT_UNITS.ToLowerInvariant());
+                GetAttribute(StringNormalizer.ToLowerCase(SvgConstants.Attributes.GRADIENT_UNITS));
             }
             if (SvgConstants.Values.USER_SPACE_ON_USE.Equals(gradientUnits)) {
                 return false;
@@ -81,7 +81,7 @@ namespace iText.Svg.Renderers.Impl {
             String gradientTransform = GetAttribute(SvgConstants.Attributes.GRADIENT_TRANSFORM);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (gradientTransform == null) {
-                gradientTransform = GetAttribute(SvgConstants.Attributes.GRADIENT_TRANSFORM.ToLowerInvariant());
+                gradientTransform = GetAttribute(StringNormalizer.ToLowerCase(SvgConstants.Attributes.GRADIENT_TRANSFORM));
             }
             if (gradientTransform != null && !String.IsNullOrEmpty(gradientTransform)) {
                 return TransformUtils.ParseTransform(gradientTransform);
@@ -114,7 +114,7 @@ namespace iText.Svg.Renderers.Impl {
         protected internal virtual GradientSpreadMethod ParseSpreadMethod() {
             String spreadMethodValue = GetAttribute(SvgConstants.Attributes.SPREAD_METHOD);
             if (spreadMethodValue == null) {
-                spreadMethodValue = GetAttribute(SvgConstants.Attributes.SPREAD_METHOD.ToLowerInvariant());
+                spreadMethodValue = GetAttribute(StringNormalizer.ToLowerCase(SvgConstants.Attributes.SPREAD_METHOD));
             }
             if (spreadMethodValue == null) {
                 // returning svg default spread method

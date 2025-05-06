@@ -140,7 +140,7 @@ namespace iText.Commons.Actions.Contexts {
 
         private static String Normalize(String @namespace) {
             // Conversion to lowercase is done to be compatible with possible changes in case of packages/namespaces
-            return @namespace.ToLowerInvariant();
+            return StringNormalizer.ToLowerCase(@namespace);
         }
 
         private class LengthComparator : IComparer<String> {

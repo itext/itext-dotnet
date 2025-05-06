@@ -60,21 +60,21 @@ namespace iText.Kernel.Pdf.Tagutils {
             ALLOWED_ROOT_TAG_ROLES = JavaCollectionsUtil.UnmodifiableSet(tempSet);
         }
 
-        private PdfDocument document;
+        private readonly PdfDocument document;
 
-        private PdfStructElem rootTagElement;
+        private readonly PdfVersion tagStructureTargetVersion;
+
+        private readonly WaitingTagsManager waitingTagsManager;
+
+        private readonly ICollection<PdfDictionary> namespaces;
+
+        private readonly IDictionary<String, PdfNamespace> nameToNamespace;
 
         protected internal TagTreePointer autoTaggingPointer;
 
-        private PdfVersion tagStructureTargetVersion;
+        private PdfStructElem rootTagElement;
 
         private bool forbidUnknownRoles;
-
-        private WaitingTagsManager waitingTagsManager;
-
-        private ICollection<PdfDictionary> namespaces;
-
-        private IDictionary<String, PdfNamespace> nameToNamespace;
 
         private PdfNamespace documentDefaultNamespace;
 
@@ -372,16 +372,23 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Checks if the given role and namespace are specified to be obligatory mapped to the standard structure namespace
         /// in order to be a valid role in the Tagged PDF.
         /// </summary>
-        /// <param name="role">a role in the given namespace which mapping necessity is to be checked.</param>
+        /// <param name="role">a role in the given namespace which mapping necessity is to be checked</param>
         /// <param name="namespace">
         /// a
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
-        /// which this role belongs to, null value refers to the default standard
-        /// structure namespace.
+        /// which this role belongs to,
+        /// <see langword="null"/>
+        /// value refers to the default
+        /// standard structure namespace
         /// </param>
         /// <returns>
-        /// true, if the given role in the given namespace is either mapped to the standard structure role or doesn't
-        /// have to; otherwise false.
+        /// 
+        /// <see langword="true"/>
+        /// , if the given role in the given namespace is either mapped to the standard structure role
+        /// or doesn't have to; otherwise
+        /// <see langword="false"/>
+        /// which means that role is not mapped to the standard or domain
+        /// specific namespace, and it shall be mapped to standard role to become valid in the Tagged PDF
         /// </returns>
         public virtual bool CheckIfRoleShallBeMappedToStandardRole(String role, PdfNamespace @namespace) {
             return ResolveMappingToStandardOrDomainSpecificRole(role, @namespace) != null;
@@ -599,7 +606,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// For PDF 2.0 and higher root tag is allowed to have only the Document role.
         /// </remarks>
         public virtual void NormalizeDocumentRootTag() {
-            // in this method we could deal with existing document, so we don't won't to throw exceptions here
+            // In this method we could deal with existing document, so we don't want to throw exceptions here.
             bool forbid = forbidUnknownRoles;
             forbidUnknownRoles = false;
             IList<IStructureNode> rootKids = document.GetStructTreeRoot().GetKids();

@@ -28,19 +28,19 @@ namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Tokenizer for CSS declaration values.</summary>
     public class CssDeclarationValueTokenizer {
         /// <summary>The source string.</summary>
-        private readonly String src;
+        protected internal readonly String src;
 
         /// <summary>The current index.</summary>
-        private int index = -1;
+        protected internal int index = -1;
 
         /// <summary>The quote string, either "'" or "\"".</summary>
-        private char stringQuote;
+        protected internal char stringQuote;
 
         /// <summary>Indicates if we're inside a string.</summary>
-        private bool inString;
+        protected internal bool inString;
 
         /// <summary>The depth.</summary>
-        private int functionDepth = 0;
+        protected internal int functionDepth = 0;
 
         /// <summary>
         /// Creates a new
@@ -60,26 +60,49 @@ namespace iText.StyledXmlParser.Css.Parse {
                 token = GetNextToken();
             }
             if (token != null && functionDepth > 0) {
-                StringBuilder functionBuffer = new StringBuilder();
-                while (token != null && functionDepth > 0) {
-                    ProcessFunctionToken(token, functionBuffer);
-                    token = GetNextToken();
-                }
-                functionDepth = 0;
-                if (functionBuffer.Length != 0) {
-                    if (token != null) {
-                        ProcessFunctionToken(token, functionBuffer);
-                    }
-                    return new CssDeclarationValueTokenizer.Token(functionBuffer.ToString(), CssDeclarationValueTokenizer.TokenType
-                        .FUNCTION);
+                CssDeclarationValueTokenizer.Token result = ParseFunctionToken(token, 0);
+                if (result != null) {
+                    return result;
                 }
             }
             return token;
         }
 
+        /// <summary>Parse internal function token to full function token, e.g.</summary>
+        /// <remarks>
+        /// Parse internal function token to full function token, e.g.
+        /// <para />
+        /// <c>calc(calc(</c>
+        /// to
+        /// <c>calc(calc(50px + 5px) + 20px)</c>
+        /// </remarks>
+        /// <param name="token">function token to expand</param>
+        /// <param name="funcDepth">
+        /// function depth for resolving, e.g. if you want to resolve only nested function, not the whole
+        /// declaration
+        /// </param>
+        /// <returns>expanded function token</returns>
+        protected internal virtual CssDeclarationValueTokenizer.Token ParseFunctionToken(CssDeclarationValueTokenizer.Token
+             token, int funcDepth) {
+            StringBuilder functionBuffer = new StringBuilder();
+            while (token != null && functionDepth > funcDepth) {
+                ProcessFunctionToken(token, functionBuffer);
+                token = GetNextToken();
+            }
+            functionDepth = 0;
+            if (functionBuffer.Length != 0) {
+                if (token != null) {
+                    ProcessFunctionToken(token, functionBuffer);
+                }
+                return new CssDeclarationValueTokenizer.Token(functionBuffer.ToString(), CssDeclarationValueTokenizer.TokenType
+                    .FUNCTION);
+            }
+            return null;
+        }
+
         /// <summary>Gets the next token.</summary>
         /// <returns>the next token</returns>
-        private CssDeclarationValueTokenizer.Token GetNextToken() {
+        protected internal virtual CssDeclarationValueTokenizer.Token GetNextToken() {
             StringBuilder buff = new StringBuilder();
             char curChar;
             if (index >= src.Length - 1) {
@@ -152,7 +175,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                             buff.Append(curChar);
                             if (functionDepth == 0) {
                                 return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.FUNCTION
-                                    );
+                                    , (char)0, IsSpaceNext());
                             }
                         }
                         else {
@@ -173,7 +196,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                                         inString = false;
                                         buff.Append(curChar);
                                         return new CssDeclarationValueTokenizer.Token(buff.ToString(), CssDeclarationValueTokenizer.TokenType.STRING
-                                            , stringQuote);
+                                            , (char)0, IsSpaceNext());
                                     }
                                     else {
                                         if (curChar == ',' && !inString && functionDepth == 0) {
@@ -193,7 +216,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                                                 }
                                                 if (!inString) {
                                                     return new CssDeclarationValueTokenizer.Token(buff.ToString(), functionDepth > 0 ? CssDeclarationValueTokenizer.TokenType
-                                                        .FUNCTION : CssDeclarationValueTokenizer.TokenType.UNKNOWN);
+                                                        .FUNCTION : CssDeclarationValueTokenizer.TokenType.UNKNOWN, (char)0, true);
                                                 }
                                             }
                                             else {
@@ -211,11 +234,8 @@ namespace iText.StyledXmlParser.Css.Parse {
                 );
         }
 
-        /// <summary>Checks if a character is a hexadecimal digit.</summary>
-        /// <param name="c">the character</param>
-        /// <returns>true, if it's a hexadecimal digit</returns>
-        private bool IsHexDigit(char c) {
-            return (47 < c && c < 58) || (64 < c && c < 71) || (96 < c && c < 103);
+        private bool IsSpaceNext() {
+            return src.Length - 1 > index && src[index + 1] == ' ';
         }
 
         /// <summary>Processes a function token.</summary>
@@ -223,17 +243,24 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <param name="functionBuffer">the function buffer</param>
         private void ProcessFunctionToken(CssDeclarationValueTokenizer.Token token, StringBuilder functionBuffer) {
             if (token.IsString()) {
-                if (stringQuote != 0) {
+                if (stringQuote != 0 && token.GetStringQuote() != 0) {
                     functionBuffer.Append(stringQuote);
                 }
                 functionBuffer.Append(token.GetValue());
-                if (stringQuote != 0) {
+                if (stringQuote != 0 && token.GetStringQuote() != 0) {
                     functionBuffer.Append(stringQuote);
                 }
             }
             else {
                 functionBuffer.Append(token.GetValue());
             }
+        }
+
+        /// <summary>Checks if a character is a hexadecimal digit.</summary>
+        /// <param name="c">the character</param>
+        /// <returns>true, if it's a hexadecimal digit</returns>
+        private static bool IsHexDigit(char c) {
+            return (47 < c && c < 58) || (64 < c && c < 71) || (96 < c && c < 103);
         }
 
         /// <summary>The Token class.</summary>
@@ -246,6 +273,8 @@ namespace iText.StyledXmlParser.Css.Parse {
 
             private readonly char stringQuote;
 
+            private readonly bool hasSpace;
+
             /// <summary>
             /// Creates a new
             /// <see cref="Token"/>
@@ -254,14 +283,21 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// <param name="value">the value</param>
             /// <param name="type">the type</param>
             public Token(String value, CssDeclarationValueTokenizer.TokenType type)
-                : this(value, type, (char)0) {
+                : this(value, type, (char)0, false) {
             }
 
 //\cond DO_NOT_DOCUMENT
-            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote) {
+            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote)
+                : this(value, type, stringQuote, false) {
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal Token(String value, CssDeclarationValueTokenizer.TokenType type, char stringQuote, bool hasSpace) {
                 this.value = value;
                 this.type = type;
                 this.stringQuote = stringQuote;
+                this.hasSpace = hasSpace;
             }
 //\endcond
 
@@ -287,6 +323,12 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// </returns>
             public virtual char GetStringQuote() {
                 return stringQuote;
+            }
+
+            /// <summary>Gets the flag if token contains whitespace.</summary>
+            /// <returns>true, if containing whitespace</returns>
+            public virtual bool HasSpace() {
+                return hasSpace;
             }
 
             /// <summary>Checks if the token is a string.</summary>

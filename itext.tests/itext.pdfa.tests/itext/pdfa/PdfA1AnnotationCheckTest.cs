@@ -35,7 +35,7 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA1AnnotationCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -43,8 +43,7 @@ namespace iText.Pdfa {
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1AnnotationCheckTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA1AnnotationCheckTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA1AnnotationCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -210,6 +209,38 @@ namespace iText.Pdfa {
             page.AddAnnotation(annot);
             doc.Close();
             CompareResult(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AnnotationCheckTest10() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.NO_ROTATE);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AnnotationCheckTest11() {
+            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
+            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            Rectangle rect = new Rectangle(100, 100, 100, 100);
+            PdfMarkupAnnotation annot = new PdfTextAnnotation(rect);
+            annot.SetFlags(PdfAnnotation.PRINT | PdfAnnotation.NO_ZOOM);
+            page.AddAnnotation(annot);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
+            NUnit.Framework.Assert.AreEqual(PdfAConformanceLogMessageConstant.TEXT_ANNOTATIONS_SHOULD_SET_THE_NOZOOM_AND_NOROTATE_FLAG_BITS_OF_THE_F_KEY_TO_1
+                , e.Message);
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {

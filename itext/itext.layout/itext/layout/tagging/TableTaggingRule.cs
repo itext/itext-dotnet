@@ -107,7 +107,7 @@ namespace iText.Layout.Tagging {
 
         private static String GetKidRole(TaggingHintKey kidKey, LayoutTaggingHelper helper) {
             return helper.GetPdfDocument().GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole(kidKey
-                .GetAccessibilityProperties().GetRole(), null).GetRole();
+                .GetAccessibilityProperties().GetRole(), kidKey.GetAccessibilityProperties().GetNamespace()).GetRole();
         }
 
         /// <summary>

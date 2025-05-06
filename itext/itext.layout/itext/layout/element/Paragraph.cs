@@ -44,8 +44,13 @@ namespace iText.Layout.Element {
     public class Paragraph : BlockElement<iText.Layout.Element.Paragraph> {
         protected internal DefaultAccessibilityProperties tagProperties;
 
-        /// <summary>Creates a Paragraph.</summary>
-        public Paragraph() {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="Paragraph"/>
+        /// instance.
+        /// </summary>
+        public Paragraph()
+            : base() {
         }
 
         /// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
@@ -284,11 +289,29 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Layout.Properties.Leading.FIXED"/>
         /// strategy.
         /// </summary>
+        /// <remarks>
+        /// Sets the leading value, using the
+        /// <see cref="iText.Layout.Properties.Leading.FIXED"/>
+        /// strategy.
+        /// <para />
+        /// If for the element
+        /// <see cref="iText.Layout.Properties.RenderingMode?.HTML_MODE"/>
+        /// is enabled, than
+        /// <see cref="iText.Layout.Properties.Property.LINE_HEIGHT"/>
+        /// property will be set instead of default layout
+        /// <see cref="iText.Layout.Properties.Property.LEADING"/>.
+        /// </remarks>
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="iText.Layout.Properties.Leading"/>
+        /// <seealso cref="iText.Layout.Properties.LineHeight"/>
         public virtual iText.Layout.Element.Paragraph SetFixedLeading(float leading) {
-            SetProperty(Property.LEADING, new Leading(Leading.FIXED, leading));
+            if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+                SetProperty(Property.LINE_HEIGHT, LineHeight.CreateFixedValue(leading));
+            }
+            else {
+                SetProperty(Property.LEADING, new Leading(Leading.FIXED, leading));
+            }
             return this;
         }
 
@@ -297,14 +320,33 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Layout.Properties.Leading.MULTIPLIED"/>
         /// strategy.
         /// </summary>
+        /// <remarks>
+        /// Sets the leading value, using the
+        /// <see cref="iText.Layout.Properties.Leading.MULTIPLIED"/>
+        /// strategy.
+        /// <para />
+        /// If for the element
+        /// <see cref="iText.Layout.Properties.RenderingMode?.HTML_MODE"/>
+        /// is enabled, than
+        /// <see cref="iText.Layout.Properties.Property.LINE_HEIGHT"/>
+        /// property will be set instead of default layout
+        /// <see cref="iText.Layout.Properties.Property.LEADING"/>.
+        /// </remarks>
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="iText.Layout.Properties.Leading"/>
+        /// <seealso cref="iText.Layout.Properties.LineHeight"/>
         public virtual iText.Layout.Element.Paragraph SetMultipliedLeading(float leading) {
-            SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, leading));
+            if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+                SetProperty(Property.LINE_HEIGHT, LineHeight.CreateMultipliedValue(leading));
+            }
+            else {
+                SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, leading));
+            }
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.P);
@@ -312,6 +354,7 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override IRenderer MakeNewRenderer() {
             return new ParagraphRenderer(this);
         }

@@ -49,8 +49,7 @@ namespace iText.Forms.Form.Element {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/form/element/ButtonTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/form/element/ButtonTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms/form/element/ButtonTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -289,6 +288,24 @@ namespace iText.Forms.Form.Element {
             buttonRenderer = (ButtonRenderer)button.CreateRendererSubTree();
             NUnit.Framework.Assert.IsTrue(((InputFieldRenderer)buttonRenderer.GetChildRenderers()[0].SetParent(buttonRenderer
                 )).IsFlatten());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ButtonAlternativeDescriptionTest() {
+            String outPdf = DESTINATION_FOLDER + "buttonAlternativeDescription.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_buttonAlternativeDescription.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf))) {
+                using (Document document = new Document(pdfDocument)) {
+                    pdfDocument.SetTagged();
+                    Button formButton = new Button("form button");
+                    formButton.SetAlternativeDescription("alt description");
+                    formButton.SetValue("value");
+                    formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
+                    formButton.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(100));
+                    document.Add(formButton);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
     }
 }

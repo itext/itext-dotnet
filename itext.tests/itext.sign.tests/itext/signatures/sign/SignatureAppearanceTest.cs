@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
@@ -57,8 +57,7 @@ namespace iText.Signatures.Sign {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/SignatureAppearanceTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/sign/SignatureAppearanceTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/signatures/sign/SignatureAppearanceTest/";
 
         public static readonly String KEYSTORE_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/SignatureAppearanceTest/test.pem";
@@ -182,14 +181,21 @@ namespace iText.Signatures.Sign {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Ignore = true)]
         public virtual void SignaturesOnRotatedPages() {
-            StringBuilder assertionResults = new StringBuilder();
+            String dest = "signaturesOnRotatedPages.pdf";
+            String src = SOURCE_FOLDER + "documentWithRotatedPages.pdf";
+            Stream inputStream = FileUtil.GetInputStreamForFile(src);
             for (int i = 1; i <= 4; i++) {
-                TestSignatureOnRotatedPage(i, true, false, true, assertionResults);
-                TestSignatureOnRotatedPage(i, false, false, true, assertionResults);
-                TestSignatureOnRotatedPage(i, true, true, false, assertionResults);
-                TestSignatureOnRotatedPage(i, true, false, false, assertionResults);
+                inputStream = TestSignatureOnRotatedPage(inputStream, i, 100, true, false, true);
+                inputStream = TestSignatureOnRotatedPage(inputStream, i, 200, false, false, true);
+                inputStream = TestSignatureOnRotatedPage(inputStream, i, 300, true, true, false);
+                inputStream = TestSignatureOnRotatedPage(inputStream, i, 400, true, false, false);
             }
-            NUnit.Framework.Assert.AreEqual("", assertionResults.ToString());
+            new PdfDocument(new PdfReader(inputStream), new PdfWriter(FileUtil.GetFileOutputStream(DESTINATION_FOLDER 
+                + dest))).Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(DESTINATION_FOLDER + dest, SOURCE_FOLDER +
+                 "cmp_" + dest, DESTINATION_FOLDER, "diff_"));
+            NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(DESTINATION_FOLDER + dest, SOURCE_FOLDER
+                 + "cmp_" + dest));
         }
 
         [NUnit.Framework.Test]
@@ -466,56 +472,39 @@ namespace iText.Signatures.Sign {
             CompareSignatureAppearances(dest, SOURCE_FOLDER + "cmp_" + fileName);
         }
 
-        private void TestSignatureOnRotatedPage(int pageNum, bool useDescription, bool useSignerName, bool useImage
-            , StringBuilder assertionResults) {
-            String fileName = "signaturesOnRotatedPages" + pageNum + "_mode_";
-            String src = SOURCE_FOLDER + "documentWithRotatedPages.pdf";
-            String signatureName = "Signature1";
+        private Stream TestSignatureOnRotatedPage(Stream stream, int pageNum, int y, bool useDescription, bool useSignerName
+            , bool useImage) {
+            String signatureName = "Signature" + pageNum + (useDescription ? "t" : "f") + (useSignerName ? "t" : "f") 
+                + (useImage ? "t" : "f");
             SignatureFieldAppearance appearance = new SignatureFieldAppearance(SignerProperties.IGNORED_ID);
             String description = "Digitally signed by Test User. All rights reserved. Take care!";
             if (useImage) {
                 if (useDescription) {
                     appearance.SetContent(description, ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
-                    fileName += "GRAPHIC_AND_DESCRIPTION.pdf";
                 }
                 else {
                     appearance.SetContent(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"));
-                    fileName += "GRAPHIC.pdf";
                 }
             }
             else {
                 if (useSignerName) {
                     appearance.SetContent("signerName", description);
-                    fileName += "NAME_AND_DESCRIPTION.pdf";
                 }
                 else {
                     appearance.SetContent(description);
-                    fileName += "DESCRIPTION.pdf";
                 }
             }
-            String dest = DESTINATION_FOLDER + fileName;
-            PdfSigner signer = new PdfSigner(new PdfReader(src), FileUtil.GetFileOutputStream(dest), new StampingProperties
-                ().UseAppendMode());
+            MemoryStream outputStream = new MemoryStream();
+            PdfSigner signer = new PdfSigner(new PdfReader(stream), outputStream, new StampingProperties().UseAppendMode
+                ());
             SignerProperties signerProperties = new SignerProperties().SetFieldName(signatureName).SetPageRect(new Rectangle
-                (100, 100, 100, 50)).SetPageNumber(pageNum).SetSignatureAppearance(appearance).SetCertificationLevel(AccessPermissions
+                (100, y, 100, 50)).SetPageNumber(pageNum).SetSignatureAppearance(appearance).SetCertificationLevel(AccessPermissions
                 .UNSPECIFIED);
             signer.SetSignerProperties(signerProperties);
             IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
             signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
                 );
-            // Make sure iText can open the document
-            new PdfDocument(new PdfReader(dest)).Close();
-            try {
-                // TODO DEVSIX-864 compareVisually() should be changed to compareByContent() because it slows down the test
-                String testResult = new CompareTool().CompareVisually(dest, SOURCE_FOLDER + "cmp_" + fileName, DESTINATION_FOLDER
-                    , "diff_");
-                if (null != testResult) {
-                    assertionResults.Append(testResult);
-                }
-            }
-            catch (CompareTool.CompareToolExecutionException e) {
-                assertionResults.Append(e.Message);
-            }
+            return new MemoryStream(outputStream.ToArray());
         }
 
         private void TestSignatureAppearanceAutoscale(String dest, Rectangle rect, String signerName, ImageData image

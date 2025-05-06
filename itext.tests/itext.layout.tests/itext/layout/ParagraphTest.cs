@@ -33,21 +33,20 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class ParagraphTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/ParagraphTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/ParagraphTest/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/ParagraphTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotPlaceABigChunkOnALineTest01() {
-            String outFileName = destinationFolder + "cannotPlaceABigChunkOnALineTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_cannotPlaceABigChunkOnALineTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "cannotPlaceABigChunkOnALineTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_cannotPlaceABigChunkOnALineTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0));
@@ -56,14 +55,14 @@ namespace iText.Layout {
             p.Add(new Text("b").SetFontSize(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 0)));
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CannotPlaceABigChunkOnALineTest02() {
-            String outFileName = destinationFolder + "cannotPlaceABigChunkOnALineTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_cannotPlaceABigChunkOnALineTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "cannotPlaceABigChunkOnALineTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_cannotPlaceABigChunkOnALineTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0));
@@ -73,14 +72,14 @@ namespace iText.Layout {
                 ).SetFontSize(20).SetBorder(new SolidBorder(ColorConstants.BLUE, 0)));
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ForceOverflowForTextRendererPartialResult01() {
-            String outFileName = destinationFolder + "forceOverflowForTextRendererPartialResult01.pdf";
-            String cmpFileName = sourceFolder + "cmp_forceOverflowForTextRendererPartialResult01.pdf";
+            String outFileName = DESTINATION_FOLDER + "forceOverflowForTextRendererPartialResult01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_forceOverflowForTextRendererPartialResult01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0)).SetTextAlignment(TextAlignment
@@ -90,7 +89,7 @@ namespace iText.Layout {
             }
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -99,8 +98,8 @@ namespace iText.Layout {
             .INFO)]
         public virtual void WordWasSplitAndItWillFitOntoNextLineTest02() {
             // TODO DEVSIX-4622
-            String outFileName = destinationFolder + "wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().Add(new Text("Short").SetBackgroundColor(ColorConstants.YELLOW)).Add
@@ -108,14 +107,14 @@ namespace iText.Layout {
                 SolidBorder(1));
             document.Add(paragraph);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ParagraphUsingSvgRenderingModeTest() {
-            String outFileName = destinationFolder + "paragraphUsingSvgRenderingMode.pdf";
-            String cmpFileName = sourceFolder + "cmp_paragraphUsingSvgRenderingMode.pdf";
+            String outFileName = DESTINATION_FOLDER + "paragraphUsingSvgRenderingMode.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_paragraphUsingSvgRenderingMode.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Paragraph paragraph1 = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 1));
@@ -135,7 +134,38 @@ namespace iText.Layout {
                     document.Add(paragraph2);
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LeadingInHtmlModeTest() {
+            String outFileName = DESTINATION_FOLDER + "leadingInHtmlModeTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_leadingInHtmlModeTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    String longText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna. " + "Cras in mi at felis aliquet congue. Ut a est eget ligula molestie gravida. Curabitur massa.";
+                    Paragraph paragraph1 = new Paragraph(longText).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                    paragraph1.SetFixedLeading(40);
+                    Paragraph paragraph2 = new Paragraph(longText).SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+                    paragraph2.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    paragraph2.SetFixedLeading(40);
+                    document.Add(new Paragraph("Default rendering mode:"));
+                    document.Add(paragraph1);
+                    document.Add(new Paragraph("HTML rendering mode:"));
+                    document.Add(paragraph2);
+                    Paragraph paragraph3 = new Paragraph(longText).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                    paragraph3.SetMultipliedLeading(5);
+                    Paragraph paragraph4 = new Paragraph(longText).SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
+                    paragraph4.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    paragraph4.SetMultipliedLeading(5);
+                    document.Add(new Paragraph("Default rendering mode:"));
+                    document.Add(paragraph3);
+                    document.Add(new Paragraph("HTML rendering mode:"));
+                    document.Add(paragraph4);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
     }

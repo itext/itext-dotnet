@@ -82,7 +82,7 @@ namespace iText.Layout.Font {
             this.encoding = encoding;
             this.descriptor = descriptor;
             this.range = unicodeRange != null ? unicodeRange : RangeBuilder.GetFullRange();
-            this.alias = alias != null ? alias.ToLowerInvariant() : null;
+            this.alias = StringNormalizer.ToLowerCase(alias);
             this.hash = CalculateHashCode(this.fontName, this.fontData, this.encoding, this.range);
         }
 

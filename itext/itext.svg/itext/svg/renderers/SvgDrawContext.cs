@@ -368,12 +368,16 @@ namespace iText.Svg.Renderers {
             this.patternIds.Pop();
         }
 
-        [Obsolete]
+        /// <summary>Sets a previous element text move.</summary>
+        /// <param name="previousElementTextMove">previous element text move</param>
+        [System.ObsoleteAttribute(@"was replaced by SetSvgTextProperties(iText.Svg.Utils.SvgTextProperties)")]
         public virtual void SetPreviousElementTextMove(float[] previousElementTextMove) {
         }
 
         // Do nothing.
-        [Obsolete]
+        /// <summary>Gets a previous element text move.</summary>
+        /// <returns>the previous element text move</returns>
+        [System.ObsoleteAttribute(@"was replaced by GetSvgTextProperties()")]
         public virtual float[] GetPreviousElementTextMove() {
             return new float[] { 0.0f, 0.0f };
         }

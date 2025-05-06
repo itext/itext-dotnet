@@ -24,12 +24,12 @@ using System;
 using iText.Kernel.Font;
 
 namespace iText.Kernel.Utils.Checkers {
-    /// <summary>Utility class that contains common checks used in both the  PDFA and PDFUA module for fonts.</summary>
+    /// <summary>Utility class that contains common checks used in both PDF/A and PDF/UA modules for fonts.</summary>
     public sealed class FontCheckUtil {
         private FontCheckUtil() {
         }
 
-        // Empty constructor
+        // Empty constructor.
         /// <summary>Checks the text by the passed checker and the font.</summary>
         /// <param name="text">the text to check</param>
         /// <param name="font">the font to check</param>

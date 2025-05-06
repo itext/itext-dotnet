@@ -20,15 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Commons.Utils;
-using iText.Kernel.Exceptions;
+using System;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
-using iText.Pdfua.Exceptions;
+using iText.Pdfua.Checkers.Utils.Ua1;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Class that provides methods for checking PDF/UA compliance of annotations.</summary>
+    [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1AnnotationChecker")]
     public sealed class AnnotationCheckUtil {
         private AnnotationCheckUtil() {
         }
@@ -48,32 +47,12 @@ namespace iText.Pdfua.Checkers.Utils {
         /// <see langword="false"/>
         /// </returns>
         public static bool IsAnnotationVisible(PdfDictionary annotDict) {
-            if (annotDict.GetAsNumber(PdfName.F) != null) {
-                int flags = annotDict.GetAsNumber(PdfName.F).IntValue();
-                if ((flags & PdfAnnotation.HIDDEN) != 0) {
-                    return false;
-                }
-            }
-            if (annotDict.GetAsDictionary(PdfName.P) != null) {
-                PdfDictionary page = annotDict.GetAsDictionary(PdfName.P);
-                PdfArray pageBox = page.GetAsArray(PdfName.CropBox) == null ? page.GetAsArray(PdfName.MediaBox) : page.GetAsArray
-                    (PdfName.CropBox);
-                if (pageBox != null && annotDict.GetAsArray(PdfName.Rect) != null) {
-                    PdfArray annotBox = annotDict.GetAsArray(PdfName.Rect);
-                    try {
-                        if (pageBox.ToRectangle().GetIntersection(annotBox.ToRectangle()) == null) {
-                            return false;
-                        }
-                    }
-                    catch (PdfException) {
-                    }
-                }
-            }
-            // ignore
-            return true;
+            return PdfUA1AnnotationChecker.IsAnnotationVisible(annotDict);
         }
 
         /// <summary>Helper class that checks the conformance of annotations while iterating the tag tree structure.</summary>
+        [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1AnnotationChecker.PdfUA1AnnotationHandler"
+            )]
         public class AnnotationHandler : ContextAwareTagTreeIteratorHandler {
             /// <summary>
             /// Creates a new instance of the
@@ -89,63 +68,7 @@ namespace iText.Pdfua.Checkers.Utils {
             }
 
             public override void ProcessElement(IStructureNode elem) {
-                if (!(elem is PdfObjRef)) {
-                    return;
-                }
-                PdfObjRef objRef = (PdfObjRef)elem;
-                PdfDictionary annotObj = objRef.GetReferencedObject();
-                if (annotObj == null) {
-                    return;
-                }
-                if (annotObj.GetAsDictionary(PdfName.P) != null) {
-                    PdfDictionary pageDict = annotObj.GetAsDictionary(PdfName.P);
-                    if (!PdfName.S.Equals(pageDict.GetAsName(PdfName.Tabs))) {
-                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
-                            );
-                    }
-                }
-                PdfName subtype = annotObj.GetAsName(PdfName.Subtype);
-                if (!IsAnnotationVisible(annotObj) || PdfName.Popup.Equals(subtype)) {
-                    return;
-                }
-                if (PdfName.PrinterMark.Equals(subtype)) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.PRINTER_MARK_IS_NOT_PERMITTED);
-                }
-                if (PdfName.TrapNet.Equals(subtype)) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED);
-                }
-                PdfStructElem parent = (PdfStructElem)objRef.GetParent();
-                if (!PdfName.Widget.Equals(subtype) && !(annotObj.ContainsKey(PdfName.Contents) || (parent != null && parent
-                    .GetAlt() != null))) {
-                    throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY
-                        , subtype.GetValue()));
-                }
-                if (PdfName.Link.Equals(subtype)) {
-                    PdfStructElem parentLink = context.GetElementIfRoleMatches(PdfName.Link, objRef.GetParent());
-                    if (parentLink == null) {
-                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK);
-                    }
-                    if (!annotObj.ContainsKey(PdfName.Contents)) {
-                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY
-                            );
-                    }
-                }
-                if (PdfName.Screen.Equals(subtype)) {
-                    PdfDictionary action = annotObj.GetAsDictionary(PdfName.A);
-                    PdfDictionary additionalActions = annotObj.GetAsDictionary(PdfName.AA);
-                    ActionCheckUtil.CheckAction(action);
-                    CheckAAEntry(additionalActions);
-                }
-            }
-
-            private static void CheckAAEntry(PdfDictionary additionalActions) {
-                if (additionalActions != null) {
-                    foreach (PdfObject val in additionalActions.Values()) {
-                        if (val is PdfDictionary) {
-                            ActionCheckUtil.CheckAction((PdfDictionary)val);
-                        }
-                    }
-                }
+                PdfUA1AnnotationChecker.CheckElement(this.context, elem);
             }
         }
     }

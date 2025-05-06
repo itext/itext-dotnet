@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -49,8 +50,7 @@ namespace iText.Pdfua {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/PdfUAAnnotationsTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfua/PdfUAAnnotationsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAAnnotationsTest/";
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
@@ -62,19 +62,33 @@ namespace iText.Pdfua {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        public static IList<PdfUAConformance> Data() {
+            return UaValidationTestFramework.GetConformanceList();
+        }
+
+        private static PdfFont LoadFont() {
+            try {
+                return PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                    );
+            }
+            catch (System.IO.IOException e) {
+                throw new Exception(e.Message);
+            }
+        }
+
         [NUnit.Framework.SetUp]
         public virtual void InitializeFramework() {
             framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_115());
-            framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNotDirectChildOfAnnotLayoutTest(PdfUAConformance pdfUAConformance) {
+            framework.AddSuppliers(new _Generator_130());
+            framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotLayoutTest", pdfUAConformance);
         }
 
-        private sealed class _Generator_115 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_115() {
+        private sealed class _Generator_130 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_130() {
             }
 
             public IBlockElement Generate() {
@@ -90,34 +104,51 @@ namespace iText.Pdfua {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1WidgetAnnotNoDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNotDirectChildOfAnnotKernelTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
-                PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
-                    (10, 650, 40, 20)).SetConformance(PdfConformance.PDF_UA_1).CreateCheckBox();
-                checkBox.SetAlternativeName("widget");
-                acroForm.AddField(checkBox);
+                Rectangle rect = new Rectangle(100, 650, 400, 100);
+                PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
+                    ));
+                annot.SetContents("link annot");
+                pdfDoc.AddNewPage();
+                pdfDoc.GetPage(1).AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("ua1WidgetAnnotNoDirectChildOfAnnotTest");
+            framework.AssertBothValid("linkAnnotNotDirectChildOfAnnotKernelTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1WidgetAnnotNoDirectChildOfAnnotAutomaticConformanceLevelTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void WidgetAnnotNoDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
                 checkBox.SetAlternativeName("widget");
+                checkBox.GetFirstFormAnnotation().SetAlternativeDescription("widget");
                 acroForm.AddField(checkBox);
             }
             );
-            framework.AssertBothValid("ua1WidgetAnnotNoDirectChildOfAnnotAutomaticConformanceLevelTest");
+            framework.AssertBothValid("widgetAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1PrinterMAnnotNoDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void WidgetAnnotNoDirectChildOfAnnotAutomaticConformanceLevelTest(PdfUAConformance pdfUAConformance
+            ) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox").SetWidgetRectangle(new Rectangle
+                    (10, 650, 40, 20)).CreateCheckBox();
+                checkBox.SetAlternativeName("widget");
+                checkBox.GetFirstFormAnnotation().SetAlternativeDescription("widget");
+                acroForm.AddField(checkBox);
+            }
+            );
+            framework.AssertBothValid("widgetAnnotNoDirectChildAutoConformanceLvl", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PrinterMAnnotNoDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -125,23 +156,34 @@ namespace iText.Pdfua {
                 canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
                 canvas.Release();
                 PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
-                // mark annotation as hidden, because in the scope of the test we check only that PrinterMark isn't enclosed by Annot tag
+                // mark annotation as hidden, because in the scope of the test we check only that PrinterMark isn't
+                // enclosed by Annot tag
                 annot.SetFlag(PdfAnnotation.HIDDEN);
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("ua1PrinterMAnnotNoDirectChildOfAnnotTest");
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + "layout_ua1PrinterMAnnotNoDirectChildOfAnnotTest.pdf"
-                ))) {
+            framework.AssertBothValid("printerMAnnotNoDirectChildOfAnnotTest", pdfUAConformance);
+            String layoutPdf = "itext_printerMAnnotNoDirectChildOfAnnotTest" + "_UA_" + pdfUAConformance.GetPart() + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + layoutPdf))) {
                 IStructureNode docNode = pdfDoc.GetStructTreeRoot().GetKids()[0];
                 NUnit.Framework.Assert.AreEqual(PdfName.Document, docNode.GetRole());
-                NUnit.Framework.Assert.AreEqual(PdfName.PrinterMark, ((PdfObjRef)docNode.GetKids()[0]).GetReferencedObject
-                    ().Get(PdfName.Subtype));
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                    NUnit.Framework.Assert.AreEqual(PdfName.PrinterMark, ((PdfObjRef)docNode.GetKids()[0]).GetReferencedObject
+                        ().Get(PdfName.Subtype));
+                }
+                else {
+                    if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                        IStructureNode artifactNode = docNode.GetKids()[0];
+                        NUnit.Framework.Assert.AreEqual(PdfName.Artifact, artifactNode.GetRole());
+                        NUnit.Framework.Assert.AreEqual(PdfName.PrinterMark, ((PdfObjRef)artifactNode.GetKids()[0]).GetReferencedObject
+                            ().Get(PdfName.Subtype));
+                    }
+                }
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1FileAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void FileAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
@@ -153,11 +195,11 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("ua1FileAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("fileAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1StampAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void StampAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
@@ -167,11 +209,11 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(stamp);
             }
             );
-            framework.AssertBothValid("ua1StampAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("stampAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1ScreenAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
@@ -179,34 +221,50 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(screen);
             }
             );
-            framework.AssertBothValid("ua1ScreenAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("screenAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1ScreenAnnotWithoutContentsAndAltTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotWithoutContentsAndAltTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 pdfPage.AddAnnotation(screen);
             }
             );
-            framework.AssertBothFail("ua1ScreenWithoutContentsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY, "Screen"));
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("screenAnnotWithoutContentsAndAltTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                    .ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_OR_ALT_KEY, "Screen"), pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("screenAnnotWithoutContentsAndAltTest", PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1PopupWithoutContentOrAltTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PopupWithoutContentOrAltTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfPopupAnnotation popup = new PdfPopupAnnotation(new Rectangle(0f, 0f));
                 pdfPage.AddAnnotation(popup);
             }
             );
-            framework.AssertBothValid("ua1PopupWithoutContentOrAltTest");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("popupWithoutContentOrAltTest", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("popupWithoutContentOrAltTest", PdfUAExceptionMessageConstants.POPUP_ANNOTATIONS_ARE_NOT_ALLOWED
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1StampAnnotWithAltTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void StampAnnotWithAltTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
@@ -214,49 +272,59 @@ namespace iText.Pdfua {
                 stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
                 pdfPage.AddAnnotation(stamp);
                 TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.MoveToKid(0);
                 tagPointer.GetProperties().SetAlternateDescription("Alt description");
             }
             );
-            framework.AssertBothValid("ua1StampAnnotWithAltTest");
+            framework.AssertBothValid("stampAnnotWithAltTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1ScreenAnnotWithAltTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotWithAltTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
                 pdfPage.AddAnnotation(screen);
                 TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.MoveToKid(0);
                 tagPointer.GetProperties().SetAlternateDescription("Alt description");
             }
             );
-            framework.AssertBothValid("ua1ScreenAnnotWithAltTest");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("screenAnnotWithAltTest", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("screenAnnotWithAltTest", PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1InkAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InkAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfInkAnnotation ink = CreateInkAnnotation();
                 pdfPage.AddAnnotation(ink);
             }
             );
-            framework.AssertBothValid("ua1InkAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("inkAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1RedactAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void RedactAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfRedactAnnotation redact = CreateRedactionAnnotation();
                 pdfPage.AddAnnotation(redact);
             }
             );
-            framework.AssertBothValid("ua1RedactAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("redactAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua13DAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void Ua3DAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 Pdf3DAnnotation annot = Create3DAnnotation();
@@ -266,11 +334,11 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("ua13DAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("ua3DAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1RichAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void RichAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfTextAnnotation annot = CreateRichTextAnnotation();
@@ -278,11 +346,11 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("ua1RichAnnotDirectChildOfAnnotTest");
+            framework.AssertBothValid("richAnnotDirectChildOfAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TrapNetAnnotNotPermittedTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TrapNetAnnotNotPermittedTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -295,12 +363,20 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothFail("trapNetAnnotNotPermittedTest", PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED
-                );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothFail("trapNetAnnotNotPermittedTest", PdfUAExceptionMessageConstants.ANNOT_TRAP_NET_IS_NOT_PERMITTED
+                    , pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertBothFail("trapNetAnnotNotPermittedTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                        .DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED, PdfName.TrapNet.GetValue()), pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void InvisibleTrapNetAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InvisibleTrapNetAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -314,11 +390,19 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("invisibleTrapNetAnnotTest");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("invisibleTrapNetAnnotTest", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("invisibleTrapNetAnnotTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                        .DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED, PdfName.TrapNet.GetValue()), pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1SoundAnnotDirectChildOfAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void SoundAnnotDirectChildOfAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfAnnotation annot = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), new PdfStream());
@@ -327,40 +411,34 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("ua1SoundAnnotDirectChildOfAnnotTest");
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("soundAnnotDirectChildOfAnnotTest", pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("soundAnnotDirectChildOfAnnotTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                        .DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED, PdfName.Sound.GetValue()), pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1PushBtnNestedWithinFormTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PushBtnNestedWithinFormTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 // The rest of the tests for widgets can be found in com.itextpdf.pdfua.checkers.PdfUAFormFieldsTest
                 PdfFormField button = new PushButtonFormFieldBuilder(pdfDoc, "push button").SetWidgetRectangle(new Rectangle
-                    (10, 650, 40, 20)).SetConformance(PdfConformance.PDF_UA_1).SetFont(LoadFont()).CreatePushButton();
+                    (10, 650, 40, 20)).SetFont(LoadFont()).CreatePushButton();
                 button.SetAlternativeName("widget");
+                button.GetFirstFormAnnotation().SetAlternativeDescription("widget");
                 acroForm.AddField(button);
             }
             );
-            framework.AssertBothValid("ua1PushBtnNestedWithinFormTest");
+            framework.AssertBothValid("pushBtnNestedWithinFormTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkTest1() {
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfPage page = pdfDoc.AddNewPage();
-                Rectangle rect = new Rectangle(100, 650, 400, 100);
-                PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
-                    ));
-                annot.SetContents("link annot");
-                page.AddAnnotation(annot);
-            }
-            );
-            framework.AssertBothFail("linkAnnotNotDirectChildOfLinkTest1", PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK
-                );
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkTest2() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNotDirectChildOfLinkTest2(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
                 PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
@@ -378,12 +456,11 @@ namespace iText.Pdfua {
                 doc.Add(p1);
             }
             );
-            framework.AssertBothFail("linkAnnotNotDirectChildOfLinkTest2", PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK
-                );
+            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkTest2", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNestedWithinLinkTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNestedWithinLinkTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
                 PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
@@ -397,11 +474,11 @@ namespace iText.Pdfua {
                 doc.Add(p2);
             }
             );
-            framework.AssertBothValid("linkAnnotNestedWithinLinkTest");
+            framework.AssertBothValid("linkAnnotNestedWithinLinkTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotWithoutContentsTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotWithoutContentsTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
                 PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
@@ -414,12 +491,19 @@ namespace iText.Pdfua {
                 doc.Add(p2);
             }
             );
-            framework.AssertBothFail("linkAnnotNestedWithinLinkWithAnAlternateDescriptionTest", PdfUAExceptionMessageConstants
-                .LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("linkAnnotNestedWithinLinkWithAnAltDescr", PdfUAExceptionMessageConstants.LINK_ANNOTATION_SHOULD_HAVE_CONTENTS_KEY
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("linkAnnotNestedWithinLinkWithAnAltDescr", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkButHiddenTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNotDirectChildOfLinkButHiddenTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 Rectangle rect = new Rectangle(100, 650, 400, 100);
@@ -430,11 +514,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButHiddenTest");
+            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButHiddenTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkButOutsideTest1() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNotDirectChildOfLinkButOutsideTest1(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 Rectangle rect = new Rectangle(10000, 65000, 400, 100);
@@ -444,11 +528,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButOutsideTest1");
+            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButOutsideTest1", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkButOutsideTest2() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LinkAnnotNotDirectChildOfLinkButOutsideTest2(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.SetCropBox(new Rectangle(1000, 1000, 500, 500));
@@ -459,11 +543,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButOutsideTest2");
+            framework.AssertBothValid("linkAnnotNotDirectChildOfLinkButOutsideTest2", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
@@ -476,11 +560,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest");
+            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationAsAAWithMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationAsAAWithMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
@@ -493,11 +577,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest");
+            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithBEMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithBEMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 String file = "sample.wav";
@@ -519,11 +603,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothValid("screenAnnotationWithBEMediaDataTest");
+            framework.AssertBothValid("screenAnnotationWithBEMediaDataTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithMHMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithMHMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 String file = "sample.wav";
@@ -545,41 +629,45 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothValid("screenAnnotationWithMHMediaDataTest");
+            framework.AssertBothValid("screenAnnotationWithMHMediaDataTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest() {
-            String outPdf = DESTINATION_FOLDER + "screenAnnotationWithInvalidMHMediaDataTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDoc.AddNewPage();
-            String file = "sample.wav";
-            String mimeType = "audio/x-wav";
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
-            PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfDictionary mh = new PdfDictionary();
-            PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
-            mh.Put(PdfName.C, mediaClipData);
-            PdfDictionary rendition = new PdfDictionary();
-            rendition.Put(PdfName.S, PdfName.MR);
-            rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
-            rendition.Put(PdfName.MH, mh);
-            PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
-                (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
-            screen.SetAction(action);
-            screen.SetContents("screen annotation");
-            page.AddAnnotation(screen);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                pdfDoc.Close();
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithMHWithoutAltMediaDataTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage page = pdfDoc.AddNewPage();
+                String file = "sample.wav";
+                String mimeType = "audio/x-wav";
+                PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + file);
+                PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
+                PdfDictionary mh = new PdfDictionary();
+                PdfDictionary mediaClipData = new PdfMediaClipData(file, spec, mimeType).GetPdfObject();
+                mh.Put(PdfName.C, mediaClipData);
+                PdfDictionary rendition = new PdfDictionary();
+                rendition.Put(PdfName.S, PdfName.MR);
+                rendition.Put(PdfName.N, new PdfString(MessageFormatUtil.Format("Rendition for {0}", file)));
+                rendition.Put(PdfName.MH, mh);
+                PdfAction action = new PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber(0)).Put
+                    (PdfName.AN, screen.GetPdfObject()).Put(PdfName.R, new PdfRendition(rendition).GetPdfObject());
+                screen.SetAction(action);
+                screen.SetContents("screen annotation");
+                page.AddAnnotation(screen);
             }
             );
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP, e
-                .Message);
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                // Verapdf doesn't fail here but it should
+                framework.AssertOnlyITextFail("screenAnnotationWithInvalidMHMediaDataTest", PdfUAExceptionMessageConstants
+                    .CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP, pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("screenAnnotationWithInvalidMHMediaDataTest", pdfUAConformance);
+                }
+            }
         }
 
-        // Verapdf doesn't fail here but it should
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithoutAltInMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithoutAltInMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
@@ -590,12 +678,19 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("screenAnnotationWithMediaDataTest", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationAsAAWithoutAltInMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationAsAAWithoutAltInMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
@@ -606,12 +701,19 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("screenAnnotationWithMediaDataTest", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ScreenAnnotationWithoutCTInMediaDataTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ScreenAnnotationWithoutCTInMediaDataTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, SOURCE_FOLDER + "sample.wav");
@@ -625,31 +727,19 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("screenAnnotationWithMediaDataTest", pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void LinkAnnotNotDirectChildOfLinkInvalidCropTest() {
-            String outPdf = DESTINATION_FOLDER + "linkAnnotNotDirectChildOfLinkInvalidCropTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page = pdfDoc.AddNewPage();
-            PdfArray array = new PdfArray();
-            array.Add(new PdfString("hey"));
-            page.Put(PdfName.CropBox, array);
-            Rectangle rect = new Rectangle(10000, 6500, 400, 100);
-            PdfLinkAnnotation annot = new PdfLinkAnnotation(rect).SetAction(PdfAction.CreateURI("https://itextpdf.com/"
-                ));
-            annot.SetContents("link annot");
-            page.AddAnnotation(annot);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDoc.Close());
-            // VeraPdf doesn't complain, but the document is invalid, so it is also accepted behaviour
-            NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.LINK_ANNOT_IS_NOT_NESTED_WITHIN_LINK, e.Message
-                );
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void UndefinedAnnotTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void UndefinedAnnotTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfUAAnnotationsTest.PdfCustomAnnot annot = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
@@ -658,11 +748,11 @@ namespace iText.Pdfua {
                 page.AddAnnotation(annot);
             }
             );
-            framework.AssertBothValid("undefinedAnnotTest");
+            framework.AssertBothValid("undefinedAnnotTest", pdfUAConformance);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TabsEntryAbsentInPageTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TabsEntryAbsentInPageTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfTextAnnotation annot = CreateRichTextAnnotation();
@@ -670,12 +760,20 @@ namespace iText.Pdfua {
                 pdfPage.GetPdfObject().Remove(PdfName.Tabs);
             }
             );
-            framework.AssertBothFail("tabsEntryAbsentInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("tabsEntryAbsentInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("tabsEntryAbsentInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_VALID_CONTENT
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void TabsEntryNotSInPageTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void TabsEntryNotSInPageTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfTextAnnotation annot = CreateRichTextAnnotation();
@@ -683,12 +781,20 @@ namespace iText.Pdfua {
                 pdfPage.SetTabOrder(PdfName.O);
             }
             );
-            framework.AssertBothFail("tabsEntryNotSInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("tabsEntryNotSInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("tabsEntryNotSInPageTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_VALID_CONTENT
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void InvalidTabsEntryButAnnotInvisibleTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InvalidTabsEntryButAnnotInvisibleTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfTextAnnotation annot = CreateRichTextAnnotation();
@@ -697,12 +803,20 @@ namespace iText.Pdfua {
                 pdfPage.SetTabOrder(PdfName.O);
             }
             );
-            framework.AssertBothFail("invalidTabsEntryButAnnotInvisibleTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("invalidTabsEntryButAnnotInvisibleTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_S
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("invalidTabsEntryButAnnotInvisibleTest", PdfUAExceptionMessageConstants.PAGE_WITH_ANNOT_DOES_NOT_HAVE_TABS_WITH_VALID_CONTENT
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1PrinterMAnnotIsInLogicalStructureTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PrinterMAnnotIsInLogicalStructureTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -711,15 +825,27 @@ namespace iText.Pdfua {
                 canvas.Release();
                 PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
                 annot.SetContents("link annot");
-                pdfPage.AddAnnotation(annot);
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(annot);
+                tagPointer.MoveToParent();
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(annot.SetPage(pdfPage).GetPdfObject()));
             }
             );
-            framework.AssertBothFail("ua1PrinterMAnnotIsInLogicalStructureTest", PdfUAExceptionMessageConstants.PRINTER_MARK_IS_NOT_PERMITTED
-                );
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("printerMAnnotIsInLogicalStructureTest", PdfUAExceptionMessageConstants.PRINTER_MARK_IS_NOT_PERMITTED
+                    , pdfUAConformance);
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothFail("printerMAnnotIsInLogicalStructureTest", PdfUAExceptionMessageConstants.PRINTER_MARK_SHALL_BE_AN_ARTIFACT
+                        , pdfUAConformance);
+                }
+            }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void Ua1PrinterMAnnotNotInTagStructureTest() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void PrinterMAnnotNotInTagStructureTest(PdfUAConformance pdfUAConformance) {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage pdfPage = pdfDoc.AddNewPage();
                 PdfFormXObject form = new PdfFormXObject(PageSize.A4);
@@ -741,7 +867,107 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(stamp);
             }
             );
-            framework.AssertBothValid("ua1PrinterMAnnotNotInTagStructureTest");
+            framework.AssertBothValid("printerMAnnotNotInTagStructureTest", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InvisibleAnnotationArtifactTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfWatermarkAnnotation annotation = new PdfWatermarkAnnotation(new Rectangle(100, 100));
+                annotation.SetContents("Contents");
+                annotation.SetFlag(PdfAnnotation.INVISIBLE);
+                pdfPage.AddAnnotation(annotation);
+            }
+            );
+            framework.AssertBothValid("invisibleAnnotationArtifact", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void InvisibleAnnotationTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
+                stamp.SetContents("Contents");
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetFlag(PdfAnnotation.INVISIBLE);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(stamp.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(stamp);
+            }
+            );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothValid("invisibleAnnotation", pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertBothFail("invisibleAnnotation", PdfUAExceptionMessageConstants.INVISIBLE_ANNOT_SHALL_BE_AN_ARTIFACT
+                        , false, pdfUAConformance);
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NoViewAnnotationArtifactTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfWatermarkAnnotation annotation = new PdfWatermarkAnnotation(new Rectangle(100, 100));
+                annotation.SetContents("Contents");
+                annotation.SetFlag(PdfAnnotation.NO_VIEW);
+                pdfPage.AddAnnotation(annotation);
+            }
+            );
+            framework.AssertBothValid("noViewAnnotationArtifact", pdfUAConformance);
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void NoViewAnnotationTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
+                stamp.SetContents("Contents");
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetFlag(PdfAnnotation.NO_VIEW);
+                pdfPage.GetPdfObject().Put(PdfName.Annots, new PdfArray(stamp.GetPdfObject()));
+                TagTreePointer tagPointer = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                tagPointer.AddTag(StandardRoles.ANNOT);
+                tagPointer.SetPageForTagging(pdfPage).AddAnnotationTag(stamp);
+            }
+            );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothValid("noViewAnnotation", pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    framework.AssertBothFail("noViewAnnotation", PdfUAExceptionMessageConstants.NO_VIEW_ANNOT_SHALL_BE_AN_ARTIFACT
+                        , false, pdfUAConformance);
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void ToggleNoViewAnnotationTest(PdfUAConformance pdfUAConformance) {
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(100, 100));
+                stamp.SetContents("Contents");
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetFlag(PdfAnnotation.NO_VIEW);
+                stamp.SetFlag(PdfAnnotation.TOGGLE_NO_VIEW);
+                pdfPage.AddAnnotation(stamp);
+            }
+            );
+            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+                framework.AssertBothValid("noViewAnnotation", pdfUAConformance);
+            }
+            else {
+                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
+                    // TODO DEVSIX-9036. VeraPDF claims the document to be invalid, although it is valid.
+                    //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
+                    framework.AssertOnlyVeraPdfFail("toggleNoViewAnnotation", pdfUAConformance);
+                }
+            }
         }
 
         private PdfTextAnnotation CreateRichTextAnnotation() {
@@ -795,16 +1021,6 @@ namespace iText.Pdfua {
                 ).SetFontSize(20)).SetOverlayText(new PdfString("Redact CMYK courier-oblique"));
             redact.SetContents("redact annotation");
             return redact;
-        }
-
-        private static PdfFont LoadFont() {
-            try {
-                return PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                    );
-            }
-            catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
-            }
         }
 
         private class PdfCustomAnnot : PdfAnnotation {

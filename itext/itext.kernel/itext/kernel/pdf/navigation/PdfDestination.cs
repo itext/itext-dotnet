@@ -31,7 +31,53 @@ namespace iText.Kernel.Pdf.Navigation {
 
         public abstract PdfObject GetDestinationPage(IPdfNameTreeAccess names);
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfDestination"/>
+        /// implementation based on provided
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// from which
+        /// <see cref="PdfDestination"/>
+        /// shall be created
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfDestination"/>
+        /// implementation
+        /// </returns>
         public static iText.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject) {
+            return MakeDestination(pdfObject, true);
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfDestination"/>
+        /// implementation based on provided
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// from which
+        /// <see cref="PdfDestination"/>
+        /// shall be created
+        /// </param>
+        /// <param name="throwException">
+        /// if
+        /// <see langword="true"/>
+        /// , throws exception in case of invalid parameter
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfDestination"/>
+        /// implementation
+        /// </returns>
+        public static iText.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject, bool throwException
+            ) {
             if (pdfObject.GetObjectType() == PdfObject.STRING) {
                 return new PdfStringDestination((PdfString)pdfObject);
             }
@@ -42,8 +88,13 @@ namespace iText.Kernel.Pdf.Navigation {
                 else {
                     if (pdfObject.GetObjectType() == PdfObject.ARRAY) {
                         PdfArray destArray = (PdfArray)pdfObject;
-                        if (destArray.Size() == 0) {
-                            throw new ArgumentException();
+                        if (destArray.IsEmpty()) {
+                            if (throwException) {
+                                throw new ArgumentException();
+                            }
+                            else {
+                                return null;
+                            }
                         }
                         else {
                             PdfObject firstObj = destArray.Get(0);
@@ -60,7 +111,12 @@ namespace iText.Kernel.Pdf.Navigation {
                         }
                     }
                     else {
-                        throw new NotSupportedException();
+                        if (throwException) {
+                            throw new NotSupportedException();
+                        }
+                        else {
+                            return null;
+                        }
                     }
                 }
             }

@@ -36,18 +36,37 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         [LogMessage(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED, LogLevel = LogLevelConstants
             .WARN)]
-        public virtual void OpenNotUaDocumentTest() {
+        public virtual void OpenNotUa1DocumentTest() {
             NUnit.Framework.Assert.DoesNotThrow(() => new PdfUADocument(new PdfReader(SOURCE_FOLDER + "usualPdf.pdf"), 
                 new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "simple doc", "eng")));
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED, LogLevel = LogLevelConstants
+            .WARN)]
+        public virtual void OpenNotUa2DocumentTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new PdfUADocument(new PdfReader(SOURCE_FOLDER + "usualPdf.pdf"), 
+                new PdfWriter(new MemoryStream()), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "simple doc", "eng")));
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN, LogLevel = LogLevelConstants
             .WARN)]
-        public virtual void SettingWrongPdfVersionTest() {
-            PdfUADocument doc = new PdfUADocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_1_4)), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "en-us", "title"));
-            doc.Close();
+        public virtual void SettingWrongPdfVersionUA1Test() {
+            using (PdfUADocument doc = new PdfUADocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_1_4)), new PdfUAConfig(PdfUAConformance.PDF_UA_1, "en-us", "title"))) {
+                NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_1_7, doc.GetPdfVersion());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN, LogLevel = LogLevelConstants
+            .WARN)]
+        public virtual void SettingWrongPdfVersionUA2Test() {
+            using (PdfUADocument doc = new PdfUADocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_1_4)), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "en-us", "title"))) {
+                NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, doc.GetPdfVersion());
+            }
         }
     }
 }

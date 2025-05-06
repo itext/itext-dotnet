@@ -32,8 +32,7 @@ namespace iText.IO.Util {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/util/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/io/util/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/io/util/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {

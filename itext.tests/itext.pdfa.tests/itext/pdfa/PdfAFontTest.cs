@@ -34,10 +34,11 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfa.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFontTest : ExtendedITextTest {
 //\cond DO_NOT_DOCUMENT
@@ -46,8 +47,7 @@ namespace iText.Pdfa {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfAFontTest/";
+        internal static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfAFontTest/";
 //\endcond
 
         [NUnit.Framework.OneTimeSetUp]
@@ -325,6 +325,8 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 6)]
+        [NUnit.Framework.Ignore("DEVSIX-9125")]
         public virtual void PdfArrayWithUndefinedGlyphsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfArrayWithUndefinedGlyphs.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));

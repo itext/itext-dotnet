@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Woff2;
 
@@ -44,7 +45,7 @@ namespace iText.IO.Font {
                 }
             }
             try {
-                String fontNameLowerCase = baseName.ToLowerInvariant();
+                String fontNameLowerCase = StringNormalizer.ToLowerCase(baseName);
                 if (isBuiltinFonts14 || fontNameLowerCase.EndsWith(".afm") || fontNameLowerCase.EndsWith(".pfm")) {
                     fontDescriptor = FetchType1FontDescriptor(fontName, null);
                 }
@@ -124,7 +125,7 @@ namespace iText.IO.Font {
         }
 
         private static FontProgramDescriptor FetchTTCDescriptor(String baseName) {
-            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+            int ttcSplit = StringNormalizer.ToLowerCase(baseName).IndexOf(".ttc,", StringComparison.Ordinal);
             if (ttcSplit > 0) {
                 String ttcName;
                 int ttcIndex;

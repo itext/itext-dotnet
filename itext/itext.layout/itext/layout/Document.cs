@@ -94,6 +94,7 @@ namespace iText.Layout {
             this.pdfDocument = pdfDoc;
             this.pdfDocument.SetDefaultPageSize(pageSize);
             this.immediateFlush = immediateFlush;
+            this.EnsureRootTagIsCreated();
         }
 
         /// <summary>Closes the document and associated PdfDocument.</summary>

@@ -33,8 +33,7 @@ namespace iText.Forms {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormCopyWithGotoTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/forms/PdfFormCopyWithGotoTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms/PdfFormCopyWithGotoTest/";
 
         public static readonly String TARGET_DOC = SOURCE_FOLDER + "Target.pdf";
 

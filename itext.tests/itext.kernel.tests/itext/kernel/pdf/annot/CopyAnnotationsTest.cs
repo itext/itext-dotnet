@@ -32,8 +32,7 @@ namespace iText.Kernel.Pdf.Annot {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/annot" + "/CopyAnnotationsTest/";
 
-        public static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/annot/CopyAnnotationsTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/annot/CopyAnnotationsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

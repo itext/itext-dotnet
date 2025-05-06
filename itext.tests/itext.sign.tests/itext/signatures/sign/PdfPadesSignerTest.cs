@@ -23,13 +23,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Source;
 using iText.Bouncycastleconnector;
+using iText.Commons.Actions.Data;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.Kernel.Actions.Data;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -39,6 +42,10 @@ using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
+using NUnit.Framework;
+using Org.BouncyCastle.Tls;
+using Org.BouncyCastle.Utilities.Zlib;
+using Org.BouncyCastle.Utilities;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -53,8 +60,7 @@ namespace iText.Signatures.Sign {
         private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/sign/PdfPadesSignerTest/";
 
-        private static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/signatures/sign/PdfPadesSignerTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/signatures/sign/PdfPadesSignerTest/";
 
         private static readonly char[] password = "testpassphrase".ToCharArray();
 
@@ -235,6 +241,50 @@ namespace iText.Signatures.Sign {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void producerLineWithMetaInfoUsedTest() {
+            String fileName = "producerLineWithMetaInfoUsedTest.pdf";
+            String outFileName = destinationFolder + fileName;
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName;
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
+            String tsaCertFileName = certsSrc + "tsCertRsa.pem";
+            String caCertFileName = certsSrc + "rootRsa.pem";
+            IX509Certificate[] signRsaChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signRsaPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+            IExternalSignature pks = new PrivateKeySignature(signRsaPrivateKey, DigestAlgorithms.SHA256);
+            IX509Certificate[] tsaChain = PemFileHelper.ReadFirstChain(tsaCertFileName);
+            IPrivateKey tsaPrivateKey = PemFileHelper.ReadFirstKey(tsaCertFileName, password);
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            IPrivateKey caPrivateKey = PemFileHelper.ReadFirstKey(caCertFileName, password);
+            SignerProperties signerProperties = new SignerProperties();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
+            TestTsaClient testTsa = new TestTsaClient(JavaUtil.ArraysAsList(tsaChain), tsaPrivateKey);
+            ICrlClient crlClient = new TestCrlClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
+            TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, caPrivateKey);
+            padesSigner.SetOcspClient(ocspClient).SetCrlClient(crlClient);
+            padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
+
+            byte[] docBytes;
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                new PdfDocument(new PdfReader(srcFileName) ,new PdfWriter(outputStream)).Close();
+                docBytes = outputStream.ToArray();
+            }
+            
+            using (PdfDocument signedPdf = new PdfDocument(new PdfReader(outFileName))) {
+                using (PdfDocument regularPdf = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
+                    ProductData productData = ITextCoreProductData.GetInstance();
+                    String newlyAddedProducer = "iText\u00ae " + productData.GetPublicProductName() + " " +
+                        productData.GetVersion() + " \u00a9" + productData.GetSinceCopyrightYear() + "-"
+                        + productData.GetToCopyrightYear() + " Apryse Group NV";
+                    String actualProducerLine = signedPdf.GetDocumentInfo().GetProducer();
+                    String regularProducerLine = regularPdf.GetDocumentInfo().GetProducer();
+
+                    NUnit.Framework.Assert.IsTrue(actualProducerLine.Contains(regularProducerLine));
+                    NUnit.Framework.Assert.IsTrue(actualProducerLine.Contains(newlyAddedProducer));
+            }
+        }
+    }
         private SignerProperties CreateSignerProperties() {
             SignerProperties signerProperties = new SignerProperties();
             signerProperties.SetFieldName("Signature1");

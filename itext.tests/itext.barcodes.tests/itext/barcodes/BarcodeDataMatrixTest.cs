@@ -30,8 +30,7 @@ using iText.Test;
 namespace iText.Barcodes {
     [NUnit.Framework.Category("IntegrationTest")]
     public class BarcodeDataMatrixTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/barcodes/BarcodeDataMatrix/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/barcodes/BarcodeDataMatrix/";
 
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/barcodes/";

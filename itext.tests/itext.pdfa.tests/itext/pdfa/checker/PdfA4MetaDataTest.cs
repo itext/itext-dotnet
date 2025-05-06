@@ -35,8 +35,7 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4MetaDataTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/pdfa/PdfA4MetaDataTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4MetaDataTest/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
@@ -54,14 +53,13 @@ namespace iText.Pdfa.Checker {
                 new PdfA4Checker(PdfAConformance.PDF_A_4).CheckMetaData(dictionary);
             }
             );
-            NUnit.Framework.Assert.AreEqual(e.Message, PdfaExceptionMessageConstant.A_CATALOG_DICTIONARY_SHALL_CONTAIN_METADATA_ENTRY
-                );
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.METADATA_SHALL_BE_PRESENT_IN_THE_CATALOG_DICTIONARY
+                , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfA4DocumentMetaDataDocumentShallNotContainBytes() {
-            String startHeader = "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\" bytes=\"1234567890\"?>\n";
-            byte[] bytes = startHeader.GetBytes();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithBytes.xmp"));
             PdfA4Checker checker = new PdfA4Checker(PdfAConformance.PDF_A_4);
             PdfDictionary catalog = new PdfDictionary();
             catalog.Put(PdfName.Metadata, new PdfStream(bytes));
@@ -75,8 +73,7 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4DocumentMetaDataDocumentShallNotContainEncoding() {
-            String startHeader = "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\" encoding=\"UTF-8\"?>\n";
-            byte[] bytes = startHeader.GetBytes();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithEncoding.xmp"));
             PdfA4Checker checker = new PdfA4Checker(PdfAConformance.PDF_A_4);
             PdfDictionary catalog = new PdfDictionary();
             catalog.Put(PdfName.Metadata, new PdfStream(bytes));
@@ -90,12 +87,14 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void PdfA4DocumentMetaDataDocumentShallNotContainEncodingInAnyPacket() {
-            String startHeader = "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n";
-            startHeader += "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\" encoding=\"UTF-8\"?>\n";
-            byte[] bytes = startHeader.GetBytes();
+            byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "xmp/xmpWithEncodingSeveralPackets.xmp"
+                ));
             PdfA4Checker checker = new PdfA4Checker(PdfAConformance.PDF_A_4);
             PdfDictionary catalog = new PdfDictionary();
-            catalog.Put(PdfName.Metadata, new PdfStream(bytes));
+            PdfStream metadata = new PdfStream(bytes);
+            metadata.Put(PdfName.Type, PdfName.Metadata);
+            metadata.Put(PdfName.Subtype, PdfName.XML);
+            catalog.Put(PdfName.Metadata, metadata);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => {
                 checker.CheckMetaData(catalog);
             }
@@ -145,8 +144,8 @@ namespace iText.Pdfa.Checker {
                 checker.CheckMetaData(catalog);
             }
             );
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                , "4"), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , "4", null), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -180,8 +179,8 @@ namespace iText.Pdfa.Checker {
                 new PdfA4Checker(conformance).CheckMetaData(catalog);
             }
             );
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                , "4"), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , "4", null), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -205,8 +204,8 @@ namespace iText.Pdfa.Checker {
                 new PdfA4Checker(conformance).CheckMetaData(catalog);
             }
             );
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                , "4"), e_1.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , "4", 1), e_1.Message);
         }
 
         [NUnit.Framework.Test]
@@ -230,8 +229,8 @@ namespace iText.Pdfa.Checker {
                 new PdfA4Checker(conformance).CheckMetaData(catalog);
             }
             );
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                , "4"), e_1.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                , "4", null), e_1.Message);
         }
 
         [NUnit.Framework.Test]

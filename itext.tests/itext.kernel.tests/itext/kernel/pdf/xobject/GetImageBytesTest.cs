@@ -39,8 +39,7 @@ namespace iText.Kernel.Pdf.Xobject {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/xobject" + "/GetImageBytesTest/";
 
-        private static readonly String DESTINATION_FOLDER = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/xobject/GetImageBytesTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/xobject/GetImageBytesTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -123,14 +122,11 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithICCBasedAsAlternative() {
-            // TODO: DEVSIX-3538 (update test after fix)
-            // Android-Conversion-Ignore-Test (TODO DEVSIX-7079 increase memory available for virtual machine while test running)
             TestFile("separationCSWithICCBasedAsAlternative.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceCMYKAsAlternative() {
-            // TODO: DEVSIX-3538 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => {
                 TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
@@ -145,14 +141,12 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative() {
-            // TODO: DEVSIX-3538 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("separationCSWithDeviceRgbAsAlternative.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative2() {
-            // TODO: DEVSIX-3538 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("spotColorImagesSmall.pdf", "Im1", "png");
         }

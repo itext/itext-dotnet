@@ -209,7 +209,7 @@ namespace iText.IO.Font {
                 }
                 return b;
             }
-            IExtraEncoding extra = extraEncodings.Get(encoding.ToLowerInvariant());
+            IExtraEncoding extra = extraEncodings.Get(StringNormalizer.ToLowerCase(encoding));
             if (extra != null) {
                 byte[] b = extra.CharToByte(text, encoding);
                 if (b != null) {
@@ -338,7 +338,7 @@ namespace iText.IO.Font {
                 }
                 return new String(c);
             }
-            IExtraEncoding extra = extraEncodings.Get(encoding.ToLowerInvariant());
+            IExtraEncoding extra = extraEncodings.Get(StringNormalizer.ToLowerCase(encoding));
             if (extra != null) {
                 String text = extra.ByteToChar(bytes, encoding);
                 if (text != null) {
@@ -407,7 +407,7 @@ namespace iText.IO.Font {
         /// <param name="enc">the conversion class</param>
         public static void AddExtraEncoding(String name, IExtraEncoding enc) {
             lock (extraEncodings) {
-                extraEncodings.Put(name.ToLowerInvariant(), enc);
+                extraEncodings.Put(StringNormalizer.ToLowerCase(name), enc);
             }
         }
 

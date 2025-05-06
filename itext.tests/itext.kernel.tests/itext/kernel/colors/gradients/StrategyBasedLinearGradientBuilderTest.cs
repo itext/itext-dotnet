@@ -40,8 +40,7 @@ namespace iText.Kernel.Colors.Gradients {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/colors/gradients/StrategyBasedLinearGradientBuilderTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/colors/gradients/StrategyBasedLinearGradientBuilderTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/colors/gradients/StrategyBasedLinearGradientBuilderTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -75,7 +74,7 @@ namespace iText.Kernel.Colors.Gradients {
                 (new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE
                 )).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("noStrategyProvidedTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("noStrategyProvided.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -85,7 +84,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToRightTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToRight.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -95,7 +94,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToLeftTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToLeft.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -105,7 +104,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToBottomTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToBottom.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -115,7 +114,7 @@ namespace iText.Kernel.Colors.Gradients {
                 (ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToBottomRightTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToBottomRight.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -125,7 +124,7 @@ namespace iText.Kernel.Colors.Gradients {
                 (ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToBottomLeftTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToBottomLeft.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -135,7 +134,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToTopTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToTop.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -145,7 +144,7 @@ namespace iText.Kernel.Colors.Gradients {
                 ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToTopRightTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToTopRight.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -155,7 +154,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddColorStop(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            GenerateAndComparePdfs("builderToTopLeftTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderToTopLeft.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -165,7 +164,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderZeroAngleTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderZeroAngle.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -175,7 +174,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderPositiveAngleTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderPositiveAngle.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -185,7 +184,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderNegativeAngleTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("builderNegativeAngle.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -199,8 +198,7 @@ namespace iText.Kernel.Colors.Gradients {
             AffineTransform canvasTransform = AffineTransform.GetTranslateInstance(50, -50);
             canvasTransform.Scale(0.8, 1.1);
             canvasTransform.Rotate(Math.PI / 3, 400f, 550f);
-            GenerateAndComparePdfs("builderWithNoneSpreadingAndCanvasTransformTest.pdf", canvasTransform, gradientBuilder
-                );
+            GenerateAndComparePdfs("noneSpreadingCanvasTransform.pdf", canvasTransform, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -211,7 +209,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderWithToCornerAndInnerStopsAndNoneSpreadingTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("toCornerInnerStopsNoneSpreading.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -222,7 +220,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderWithToCornerAndInnerStopsAndPadSpreadingTest.pdf", null, gradientBuilder);
+            GenerateAndComparePdfs("toCornerInnerStopsPadSpreading.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -233,8 +231,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderWithToCornerAndInnerStopsAndReflectSpreadingTest.pdf", null, gradientBuilder
-                );
+            GenerateAndComparePdfs("toCornerInnerStopsReflectSpreading.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
@@ -245,8 +242,7 @@ namespace iText.Kernel.Colors.Gradients {
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
                 .RELATIVE)).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType
                 .RELATIVE));
-            GenerateAndComparePdfs("builderWithToCornerAndInnerStopsAndRepeatSpreadingTest.pdf", null, gradientBuilder
-                );
+            GenerateAndComparePdfs("toCornerInnerStopsRepeatSpreading.pdf", null, gradientBuilder);
         }
 
         private void GenerateAndComparePdfs(String fileName, AffineTransform transform, AbstractLinearGradientBuilder

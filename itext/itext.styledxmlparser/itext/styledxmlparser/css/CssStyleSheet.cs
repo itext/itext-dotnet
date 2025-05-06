@@ -31,6 +31,7 @@ using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
 using iText.StyledXmlParser.Css.Validate;
 using iText.StyledXmlParser.Node;
+using iText.StyledXmlParser.Util;
 
 namespace iText.StyledXmlParser.Css {
     /// <summary>Class that stores all the CSS statements, and thus acts as a CSS style sheet.</summary>
@@ -122,7 +123,9 @@ namespace iText.StyledXmlParser.Css {
             foreach (CssDeclaration declaration in declarations) {
                 IShorthandResolver shorthandResolver = ShorthandResolverFactory.GetShorthandResolver(declaration.GetProperty
                     ());
-                if (shorthandResolver == null) {
+                // Shorthands containing css variables are resolved later
+                // in com.itextpdf.styledxmlparser.util.StyleUtil#resolveCssVariables
+                if (shorthandResolver == null || CssVariableUtil.ContainsVarExpression(declaration.GetExpression())) {
                     PutDeclarationInMapIfValid(map, declaration);
                 }
                 else {

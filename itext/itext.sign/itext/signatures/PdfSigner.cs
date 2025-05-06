@@ -45,7 +45,6 @@ using iText.Kernel.Geom;
 using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
-using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
@@ -1253,6 +1252,31 @@ namespace iText.Signatures {
             return pageNumber;
         }
 
+        /// <summary>
+        /// Applies
+        /// <see cref="iText.Kernel.Pdf.Tagutils.AccessibilityProperties"/>
+        /// for provided signature field.
+        /// </summary>
+        /// <param name="formField">
+        /// 
+        /// <see cref="iText.Forms.Fields.PdfFormField"/>
+        /// the form field to which the accessibility properties should be applied
+        /// </param>
+        /// <param name="modelElement">
+        /// 
+        /// <see cref="iText.Layout.Tagging.IAccessibleElement"/>
+        /// the form field layout element with accessibility properties
+        /// </param>
+        /// <param name="pdfDocument">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// the document to which the form field belongs
+        /// </param>
+        protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, IAccessibleElement modelElement
+            , PdfDocument pdfDocument) {
+            PdfFormField.ApplyAccessibilityProperties(formField, modelElement, pdfDocument);
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal virtual PdfSignature CreateSignatureDictionary(bool includeDate) {
             PdfSignature dic = new PdfSignature();
@@ -1361,18 +1385,6 @@ namespace iText.Signatures {
 
         private bool IsDocumentPdf2() {
             return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
-        }
-
-        protected internal virtual void ApplyAccessibilityProperties(PdfFormField formField, IAccessibleElement modelElement
-            , PdfDocument pdfDocument) {
-            if (!pdfDocument.IsTagged()) {
-                return;
-            }
-            AccessibilityProperties properties = modelElement.GetAccessibilityProperties();
-            String alternativeDescription = properties.GetAlternateDescription();
-            if (alternativeDescription != null && !String.IsNullOrEmpty(alternativeDescription)) {
-                formField.SetAlternativeName(alternativeDescription);
-            }
         }
 
         private void ApplyDefaultPropertiesForTheNewField(PdfSignatureFormField sigField) {
@@ -1567,11 +1579,15 @@ namespace iText.Signatures {
             public PdfSignerDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
                 : base(reader, writer, properties) {
                 if (GetConformance().IsPdfA()) {
-                    PdfAChecker checker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance());
+                    PdfAChecker pdfAChecker = PdfADocument.GetCorrectCheckerFromConformance(GetConformance().GetAConformance()
+                        );
                     ValidationContainer validationContainer = new ValidationContainer();
-                    validationContainer.AddChecker(checker);
+                    validationContainer.AddChecker(pdfAChecker);
+                    if ("4".Equals(GetConformance().GetAConformance().GetPart())) {
+                        validationContainer.AddChecker(new Pdf20Checker(this));
+                    }
                     GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
-                    this.pdfPageFactory = new PdfAPageFactory(checker);
+                    this.pdfPageFactory = new PdfAPageFactory(pdfAChecker);
                     this.documentInfoHelper = new PdfADocumentInfoHelper(this);
                     this.defaultFontStrategy = new PdfADefaultFontStrategy(this);
                     SetFlushUnusedObjects(true);

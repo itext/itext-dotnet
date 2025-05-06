@@ -27,6 +27,7 @@ using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Utility class which performs XFA forms check according to PDF/UA specification.</summary>
+    [System.ObsoleteAttribute(@"in favour of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1XfaCheckUtil")]
     public sealed class XfaCheckUtil {
         // Path defined according to XFA specification
         private const String PATH_TO_DYNAMIC_RENDER = "xdp.config.acrobat.acrobat7.dynamicRender";

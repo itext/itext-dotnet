@@ -120,11 +120,13 @@ namespace iText.Kernel.Actions.Events {
 
         [NUnit.Framework.Test]
         public virtual void DoActionNullEventMapTest() {
+            ProductData productData = ITextCoreProductData.GetInstance();
+            String expectedProducer = "iText\u00ae " + productData.GetPublicProductName() + " " + productData.GetVersion
+                () + " \u00a9" + productData.GetSinceCopyrightYear() + "-" + productData.GetToCopyrightYear() + " Apryse Group NV";
             using (PdfDocument document = new FlushPdfDocumentEventTest.DummyPdfDocument(new PdfReader(SOURCE_FOLDER +
                  "hello.pdf"))) {
                 NUnit.Framework.Assert.DoesNotThrow(() => new FlushPdfDocumentEvent(document).DoAction());
-                NUnit.Framework.Assert.IsTrue(document.GetDocumentInfo().GetProducer().Contains("Apryse Group NV (no registered products)"
-                    ));
+                NUnit.Framework.Assert.IsTrue(document.GetDocumentInfo().GetProducer().Contains(expectedProducer));
             }
         }
 

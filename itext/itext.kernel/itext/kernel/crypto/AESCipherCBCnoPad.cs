@@ -25,6 +25,11 @@ using iText.Commons.Bouncycastle.Crypto;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
+    [System.ObsoleteAttribute(@"the AES-CBC cipher is a low-level cryptographic primitive
+    that requires careful understanding to use it safely.
+    This class is only a thin wrapper and is not intended for general use.
+    Instead, use API provided by cryptography libraries directly
+    or rely on high-level PDF encryption functionality.")]
     public class AESCipherCBCnoPad {
         private ICipherCBCnoPad cipher;
 

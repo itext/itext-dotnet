@@ -108,6 +108,8 @@ namespace iText.StyledXmlParser.Css {
             return sb.ToString();
         }
 
+        /// <summary>Gets the rule parameters.</summary>
+        /// <returns>the rule parameters</returns>
         public virtual String GetRuleParameters() {
             return ruleParameters;
         }

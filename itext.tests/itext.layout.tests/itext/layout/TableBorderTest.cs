@@ -30,6 +30,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
+using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout {
@@ -38,22 +39,9 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TableBorderTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/TableBorderTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/TableBorderTest/";
 
         public const String cmpPrefix = "cmp_";
-
-//\cond DO_NOT_DOCUMENT
-        internal String fileName;
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal String outFileName;
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal String cmpFileName;
-//\endcond
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -62,22 +50,22 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanOnThreePagesTest() {
-            fileName = "cellWithBigRowspanOnThreePagesTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "cellWithBigRowspanOnThreePagesTest.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetBorderCollapse(BorderCollapsePropertyValue
                 .SEPARATE);
             table.AddCell(new Cell(2, 1));
             table.AddCell(new Cell(1, 1).SetHeight(2000).SetBackgroundColor(ColorConstants.RED));
             table.AddCell(new Cell(1, 1));
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void IncompleteTableTest01() {
-            fileName = "incompleteTableTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "incompleteTableTest01.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             Cell cell;
@@ -97,13 +85,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void IncompleteTableTest02() {
-            fileName = "incompleteTableTest02.pdf";
-            Document doc = CreateDocument();
+            String fileName = "incompleteTableTest02.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 5));
             Cell cell;
@@ -121,14 +109,14 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void IncompleteTableTest03() {
-            fileName = "incompleteTableTest03.pdf";
-            Document doc = CreateDocument();
+            String fileName = "incompleteTableTest03.pdf";
+            Document doc = CreateDocument(fileName);
             Table innerTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             Cell cell = new Cell().Add(new Paragraph("Inner"));
             innerTable.AddCell(cell);
@@ -136,14 +124,14 @@ namespace iText.Layout {
             Table outerTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             outerTable.AddCell(innerTable);
             doc.Add(outerTable);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void IncompleteTableTest04() {
-            fileName = "incompleteTableTest04.pdf";
-            Document doc = CreateDocument();
+            String fileName = "incompleteTableTest04.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddCell(new Cell().Add(new Paragraph("Liberte")).SetBorderBottom(new SolidBorder(ColorConstants.BLUE
                 , 10)).SetHeight(40));
@@ -155,13 +143,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest02() {
-            fileName = "simpleBorderTest02.pdf";
-            Document doc = CreateDocument();
+            String fileName = "simpleBorderTest02.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             Cell cell;
             // row 1, cell 1
@@ -178,13 +166,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest03() {
-            fileName = "simpleBorderTest03.pdf";
-            Document doc = CreateDocument();
+            String fileName = "simpleBorderTest03.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.AddCell(new Cell().Add(new Paragraph("1")));
             table.AddCell(new Cell(2, 1).Add(new Paragraph("2")));
@@ -193,13 +181,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest04() {
-            fileName = "simpleBorderTest04.pdf";
-            Document doc = CreateDocument();
+            String fileName = "simpleBorderTest04.pdf";
+            Document doc = CreateDocument(fileName);
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
                  + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
@@ -216,13 +204,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void NoVerticalBorderTest() {
-            fileName = "noVerticalBorderTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "noVerticalBorderTest.pdf";
+            Document doc = CreateDocument(fileName);
             Table mainTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(ColorConstants.BLACK, 0.5f
                 ));
@@ -232,13 +220,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             mainTable.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(mainTable);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void WideBorderTest01() {
-            fileName = "wideBorderTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "wideBorderTest01.pdf";
+            Document doc = CreateDocument(fileName);
             doc.Add(new Paragraph("ROWS SHOULD BE THE SAME"));
             Table table = new Table(new float[] { 1, 3 });
             table.SetWidth(UnitValue.CreatePercentValue(50));
@@ -261,14 +249,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void WideBorderTest02() {
-            fileName = "wideBorderTest02.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "wideBorderTest02.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(902, 842));
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -361,14 +348,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void WideBorderTest03() {
-            fileName = "wideBorderTest03.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "wideBorderTest03.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(842, 400));
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -391,14 +377,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void WideBorderTest04() {
-            fileName = "wideBorderTest04.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "wideBorderTest04.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(200, 150));
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -415,14 +400,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest01() {
-            fileName = "borderCollapseTest01.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "borderCollapseTest01.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -433,14 +417,13 @@ namespace iText.Layout {
             cell.SetBorder(Border.NO_BORDER);
             table.AddCell(cell);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest02() {
-            fileName = "borderCollapseTest02.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "borderCollapseTest02.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Cell cell;
@@ -465,14 +448,13 @@ namespace iText.Layout {
             cell.SetBorder(Border.NO_BORDER);
             table.AddCell(cell);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest02A() {
-            fileName = "borderCollapseTest02A.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "borderCollapseTest02A.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Cell cell;
@@ -496,14 +478,13 @@ namespace iText.Layout {
                 table.AddCell(cell);
             }
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderCollapseTest03() {
-            fileName = "borderCollapseTest03.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "borderCollapseTest03.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Cell cell;
@@ -529,14 +510,13 @@ namespace iText.Layout {
             cell = new Cell(1, 2).Add(new Paragraph("5"));
             table.AddCell(cell);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SeparatedBorderTest01A() {
-            fileName = "separatedBorderTest01A.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "separatedBorderTest01A.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -547,14 +527,13 @@ namespace iText.Layout {
                      255, 60 * i % 255, 20 * i % 255), 10 * (i % 5) + 10)));
             }
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SeparatedBorderTest01B() {
-            fileName = "separatedBorderTest01B.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "separatedBorderTest01B.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -565,14 +544,13 @@ namespace iText.Layout {
                      255, 60 * i % 255, 20 * i % 255), 10 * (i % 5) + 10)));
             }
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SeparatedBorderTest01C() {
-            fileName = "separatedBorderTest01C.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "separatedBorderTest01C.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -582,14 +560,14 @@ namespace iText.Layout {
                      255, 60 * i % 255, 20 * i % 255), 10)));
             }
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
-            fileName = "infiniteLoopTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "infiniteLoopTest01.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 3 }));
             table.SetWidth(UnitValue.CreatePercentValue(50)).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
@@ -615,13 +593,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest01() {
-            fileName = "splitCellsTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest01.pdf";
+            Document doc = CreateDocument(fileName);
             String longText = "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
@@ -675,13 +653,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest02() {
-            fileName = "splitCellsTest02.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest02.pdf";
+            Document doc = CreateDocument(fileName);
             String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n";
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -710,14 +688,14 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitCellsTest03() {
-            fileName = "splitCellsTest03.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest03.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(100, 160));
             String textAlphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -731,14 +709,14 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest04() {
             // TODO (DEVSIX-1734 Run commented snippet to produce a bug.)
-            fileName = "splitCellsTest04.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest04.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 100 + 72));
             String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
@@ -752,17 +730,14 @@ namespace iText.Layout {
             table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetBorderTop(new SolidBorder(ColorConstants.YELLOW
                 , 20)));
             doc.Add(table);
-            //        doc.add(new AreaBreak());
-            //        table.setBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
-            //        doc.add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1734")]
         public virtual void SplitCellsTest04A() {
-            fileName = "splitCellsTest04A.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest04A.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 80 + 72));
             String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
@@ -776,13 +751,13 @@ namespace iText.Layout {
             table.AddFooterCell(new Cell().Add(new Paragraph("Footer")).SetBorderTop(new SolidBorder(ColorConstants.YELLOW
                 , 20)));
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest05() {
-            fileName = "splitCellsTest05.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest05.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -799,13 +774,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest06() {
-            fileName = "splitCellsTest06.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest06.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(300, 150));
             doc.Add(new Paragraph("No more"));
             doc.Add(new Paragraph("place"));
@@ -833,13 +808,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest07() {
-            fileName = "splitCellsTest07.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest07.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(133, 180));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -857,13 +832,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest08() {
-            fileName = "splitCellsTest08.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest08.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(134, 140));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -881,13 +856,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest09() {
-            fileName = "splitCellsTest09.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest09.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 160));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -904,13 +879,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10() {
-            fileName = "splitCellsTest10.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest10.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(136, 142));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -928,13 +903,13 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10A() {
-            fileName = "splitCellsTest10A.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest10A.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 140));
             String textAlphabet = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -948,14 +923,14 @@ namespace iText.Layout {
             table.AddCell(new Cell().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph(textAlphabet + "5")).
                 SetKeepTogether(true));
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1736")]
         public virtual void SplitCellsTest10B() {
-            fileName = "splitCellsTest10B.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest10B.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 110));
             String textAlphabet = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -974,13 +949,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest10C() {
-            fileName = "splitCellsTest10C.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitCellsTest10C.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(136, 142));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -1004,27 +979,27 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableAndCellBordersCollapseTest01() {
             // TODO DEVSIX-5834 Consider this test when deciding on the strategy:
             //  left-bottom corner could be magenta as in Chrome
-            fileName = "tableAndCellBordersCollapseTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableAndCellBordersCollapseTest01.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 100));
             table.AddCell(new Cell().Add(new Paragraph("Hello World")).SetBorderBottom(new SolidBorder(ColorConstants.
                 MAGENTA, 100)));
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest01() {
-            fileName = "tableWithHeaderFooterTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest01.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(1000, 1000));
             String text = "Cell";
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -1051,14 +1026,14 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
                 ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest02() {
             // TODO DEVSIX-5864 footer's top border / body's bottom border should be drawn by footer
-            fileName = "tableWithHeaderFooterTest02.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest02.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1500));
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header1")).SetBorderTop(new SolidBorder(ColorConstants
@@ -1089,14 +1064,14 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 2)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest02A() {
             // TODO DEVSIX-5864 footer's top border / body's bottom border should be drawn by footer
-            fileName = "tableWithHeaderFooterTest02A.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest02A.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1500));
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             for (int i = 1; i < 2; i += 2) {
@@ -1110,13 +1085,13 @@ namespace iText.Layout {
             table.AddFooterCell(new Cell().SetHeight(30).Add(new Paragraph("Footer2")).SetBorderTop(new SolidBorder(ColorConstants
                 .RED, 200)));
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest03() {
-            fileName = "tableWithHeaderFooterTest03.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest03.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().Add(new Paragraph("Header")).SetHeight(400).SetBorder(new SolidBorder(ColorConstants
                 .BLUE, 40)));
@@ -1146,13 +1121,13 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.MAGENTA, 5)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest04() {
-            fileName = "tableWithHeaderFooterTest04.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest04.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().Add(new Paragraph("Header")).SetBorder(new SolidBorder(ColorConstants.BLUE, 
                 40)));
@@ -1170,13 +1145,13 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.MAGENTA, 5)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest05() {
-            fileName = "tableWithHeaderFooterTest05.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest05.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddCell(new Cell().Add(new Paragraph("Cell")).SetBorder(new SolidBorder(ColorConstants.MAGENTA, 30))
                 .SetHeight(30));
@@ -1209,14 +1184,14 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell("Hello").SetBorder(new SolidBorder
                 (ColorConstants.ORANGE, 5)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06() {
-            fileName = "tableWithHeaderFooterTest06.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest06.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
@@ -1239,15 +1214,14 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06A() {
-            fileName = "tableWithHeaderFooterTest06A.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "tableWithHeaderFooterTest06A.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
@@ -1271,14 +1245,13 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void VerticalBordersInfluenceHorizontalTopAndBottomBordersTest() {
-            fileName = "verticalBordersInfluenceHorizontalTopAndbottomBordersTest.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "verticalBordersInfluenceHorizontalTopAndbottomBordersTest.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
@@ -1296,15 +1269,14 @@ namespace iText.Layout {
             }
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 10)]
         public virtual void TableWithHeaderFooterTest06B() {
-            fileName = "tableWithHeaderFooterTest06B.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String fileName = "tableWithHeaderFooterTest06B.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
@@ -1328,14 +1300,13 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest07() {
-            fileName = "tableWithHeaderFooterTest07.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + "cmp_" + fileName;
+            String fileName = "tableWithHeaderFooterTest07.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -1352,14 +1323,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest08() {
-            fileName = "tableWithHeaderFooterTest08.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + "cmp_" + fileName;
+            String fileName = "tableWithHeaderFooterTest08.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -1376,14 +1346,13 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest09() {
-            fileName = "tableWithHeaderFooterTest09.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + "cmp_" + fileName;
+            String fileName = "tableWithHeaderFooterTest09.pdf";
+            String outFileName = destinationFolder + fileName;
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)), PageSize.A3.Rotate());
             Cell headerCell1 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(ColorConstants.GREEN
                 , 30)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
@@ -1425,14 +1394,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest10() {
-            fileName = "tableWithHeaderFooterTest10.pdf";
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + "cmp_" + fileName;
+            String fileName = "tableWithHeaderFooterTest10.pdf";
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(380, 300));
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -1457,13 +1425,13 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest11() {
-            fileName = "tableWithHeaderFooterTest11.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest11.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(90));
             table.AddFooterCell(new Cell(1, 3).SetHeight(150).Add(new Paragraph("Footer")));
@@ -1486,14 +1454,14 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest11A() {
             String testName = "tableWithHeaderFooterTest11A.pdf";
             String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String cmpFileName = sourceFolder + cmpPrefix + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -1525,8 +1493,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest12() {
-            fileName = "tableWithHeaderFooterTest12.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest12.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new SolidBorder(ColorConstants
                 .BLUE, 5)));
@@ -1544,14 +1512,14 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Ignore("DEVSIX-1219")]
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest13() {
-            fileName = "tableWithHeaderFooterTest13.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest13.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new SolidBorder(ColorConstants
                 .BLUE, 5)));
@@ -1572,13 +1540,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest14() {
-            fileName = "tableWithHeaderFooterTest14.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest14.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(new float[3]);
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
@@ -1607,13 +1575,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest15() {
-            fileName = "tableWithHeaderFooterTest15.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest15.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().SetHeight(30).Add(new Paragraph("Header")).SetBorder(new DottedBorder(ColorConstants
                 .RED, 20)));
@@ -1630,13 +1598,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest16() {
-            fileName = "tableWithHeaderFooterTest16.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest16.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.AddHeaderCell(new Cell().Add(new Paragraph("Header 1")).SetBorderBottom(new SolidBorder(ColorConstants
                 .RED, 25)).SetBorderTop(new SolidBorder(ColorConstants.ORANGE, 27)));
@@ -1657,13 +1625,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest17() {
-            fileName = "tableWithHeaderFooterTest17.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest17.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(300, 300));
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(40));
@@ -1679,13 +1647,13 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest18() {
-            fileName = "tableWithHeaderFooterTest18.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest18.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(300, 400));
             // only footer
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1716,13 +1684,13 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest19() {
-            fileName = "tableWithHeaderFooterTest19.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest19.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(300, 400));
             // footer and body
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1751,14 +1719,14 @@ namespace iText.Layout {
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableWithHeaderFooterTest20() {
-            fileName = "tableWithHeaderFooterTest20.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableWithHeaderFooterTest20.pdf";
+            Document doc = CreateDocument(fileName);
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(300, 115 + 72));
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(10));
@@ -1769,13 +1737,13 @@ namespace iText.Layout {
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void CellBorderPriorityTest() {
-            fileName = "cellBorderPriorityTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "cellBorderPriorityTest.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             Cell cell = new Cell().Add(new Paragraph("Hello"));
             cell.SetBorderTop(new SolidBorder(ColorConstants.RED, 50));
@@ -1787,13 +1755,13 @@ namespace iText.Layout {
                 table.AddCell(cell.Clone(true));
             }
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void CellBorderPriorityTest02() {
-            fileName = "cellBorderPriorityTest02.pdf";
-            Document doc = CreateDocument();
+            String fileName = "cellBorderPriorityTest02.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             Color[] array = new Color[] { ColorConstants.RED, ColorConstants.GREEN, ColorConstants.BLUE, ColorConstants
                 .RED, ColorConstants.GREEN, ColorConstants.BLUE };
@@ -1809,13 +1777,13 @@ namespace iText.Layout {
                 table.AddCell(cell);
             }
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void CellsBorderPriorityTest() {
-            fileName = "cellsBorderPriorityTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "cellsBorderPriorityTest.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2));
             Cell cell = new Cell().Add(new Paragraph("1"));
             cell.SetBorder(new SolidBorder(ColorConstants.RED, 20));
@@ -1830,13 +1798,13 @@ namespace iText.Layout {
             cell.SetBorder(new SolidBorder(ColorConstants.BLACK, 20));
             table.AddCell(cell);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void TableBorderPriorityTest() {
-            fileName = "tableBorderPriorityTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "tableBorderPriorityTest.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.SetBorderTop(new SolidBorder(ColorConstants.RED, 20));
             table.SetBorderRight(new SolidBorder(ColorConstants.GREEN, 20));
@@ -1845,14 +1813,14 @@ namespace iText.Layout {
             Cell cell = new Cell().Add(new Paragraph("Hello"));
             table.AddCell(cell);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void SplitRowspanKeepTogetherTest() {
-            fileName = "splitRowspanKeepTogetherTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "splitRowspanKeepTogetherTest.pdf";
+            Document doc = CreateDocument(fileName);
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
                  + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
@@ -1872,15 +1840,15 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 4)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, Count = 2)]
         public virtual void ForcedPlacementTest01() {
-            fileName = "forcedPlacementTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "forcedPlacementTest01.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             table.SetWidth(10).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
@@ -1897,13 +1865,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void NoHorizontalBorderTest() {
-            fileName = "noHorizontalBorderTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "noHorizontalBorderTest.pdf";
+            Document doc = CreateDocument(fileName);
             Table mainTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
             Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderRight(new SolidBorder(ColorConstants.BLACK, 0.5f
                 ));
@@ -1915,13 +1883,13 @@ namespace iText.Layout {
             mainTable.SetHorizontalBorderSpacing(20);
             mainTable.SetVerticalBorderSpacing(20);
             doc.Add(mainTable);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BordersWithSpansTest01() {
-            fileName = "bordersWithSpansTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "bordersWithSpansTest01.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(10)).UseAllAvailableWidth();
             table.SetWidth(UnitValue.CreatePercentValue(100));
             table.AddCell(new Cell(1, 3).Add(new Paragraph(1 + "_" + 3 + "_")));
@@ -1935,13 +1903,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BordersWithSpansTest02() {
-            fileName = "bordersWithSpansTest02.pdf";
-            Document doc = CreateDocument();
+            String fileName = "bordersWithSpansTest02.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.AddCell(new Cell().Add(new Paragraph("Liberte")).SetBorder(new SolidBorder(ColorConstants.MAGENTA, 1
                 )));
@@ -1957,13 +1925,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void BordersWithSpansTest03() {
-            fileName = "bordersWithSpansTest03.pdf";
-            Document doc = CreateDocument();
+            String fileName = "bordersWithSpansTest03.pdf";
+            Document doc = CreateDocument(fileName);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.AddCell(new Cell(6, 1).Add(new Paragraph("Fra")).SetBorder(new SolidBorder(ColorConstants.ORANGE, 10
                 )));
@@ -1981,13 +1949,13 @@ namespace iText.Layout {
             table.SetHorizontalBorderSpacing(20);
             table.SetVerticalBorderSpacing(20);
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void HeaderTopBorderTest01() {
-            fileName = "headerTopBorderTest01.pdf";
-            Document doc = CreateDocument();
+            String fileName = "headerTopBorderTest01.pdf";
+            Document doc = CreateDocument(fileName);
             for (int i = 0; i < 29; ++i) {
                 doc.Add(new Paragraph("aaaaaaaaaaaa"));
             }
@@ -2000,13 +1968,13 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Paragraph("Correct result:"));
             doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void EqualBordersSameInstancesTest() {
-            fileName = "equalBordersSameInstancesTest.pdf";
-            Document doc = CreateDocument();
+            String fileName = "equalBordersSameInstancesTest.pdf";
+            Document doc = CreateDocument(fileName);
             Border border = new SolidBorder(ColorConstants.RED, 20);
             int colNum = 4;
             Table table = new Table(UnitValue.CreatePercentArray(colNum)).UseAllAvailableWidth();
@@ -2019,14 +1987,14 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
                 ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
-            CloseDocumentAndCompareOutputs(doc);
+            CloseDocumentAndCompareOutputs(doc, fileName);
         }
 
         [NUnit.Framework.Test]
         public virtual void VerticalMiddleBorderTest() {
             String testName = "verticalMiddleBorderTest.pdf";
             String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String cmpFileName = sourceFolder + cmpPrefix + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -2046,14 +2014,15 @@ namespace iText.Layout {
                 ));
         }
 
-        private Document CreateDocument() {
-            outFileName = destinationFolder + fileName;
-            cmpFileName = sourceFolder + cmpPrefix + fileName;
+        private static Document CreateDocument(String fileName) {
+            String outFileName = destinationFolder + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             return new Document(pdfDocument);
         }
 
-        private void CloseDocumentAndCompareOutputs(Document document) {
+        private static void CloseDocumentAndCompareOutputs(Document document, String fileName) {
+            String cmpFileName = sourceFolder + cmpPrefix + fileName;
+            String outFileName = destinationFolder + fileName;
             document.Close();
             String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder, "diff"
                 );

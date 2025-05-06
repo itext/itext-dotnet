@@ -38,8 +38,7 @@ namespace iText.Layout.Renderer {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FloatExampleTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/FloatExampleTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/FloatExampleTest/";
 
         private static readonly Color imageBorderColor = ColorConstants.LIGHT_GRAY;
 

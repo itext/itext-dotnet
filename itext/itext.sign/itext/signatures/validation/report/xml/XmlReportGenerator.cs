@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 
 namespace iText.Signatures.Validation.Report.Xml {
@@ -114,21 +115,21 @@ namespace iText.Signatures.Validation.Report.Xml {
                 subIndicationNode.InnerText = subIndication;
                 status.AppendChild(subIndicationNode);
             }
-            ICollection<Pair<String, String>> messages = signatureValidation.GetSignatureValidationStatus().GetMessages
+            ICollection<Tuple2<String, String>> messages = signatureValidation.GetSignatureValidationStatus().GetMessages
                 ();
             if (!messages.IsEmpty()) {
                 XmlNode associatedValidationReportData = doc.CreateElement("AssociatedValidationReportData");
                 status.AppendChild(associatedValidationReportData);
                 XmlNode additionalValidationReportData = doc.CreateElement("AdditionalValidationReportData");
                 associatedValidationReportData.AppendChild(additionalValidationReportData);
-                foreach (Pair<String, String> message in messages) {
+                foreach (Tuple2<String, String> message in messages) {
                     XmlNode reportData = doc.CreateElement("ReportData");
                     XmlNode type = doc.CreateElement("Type");
-                    type.InnerText = message.GetValue();
+                    type.InnerText = message.GetSecond();
                     reportData.AppendChild(type);
                     XmlElement value = doc.CreateElement("Value");
                     value.SetAttribute("type", XSI_NS, "xs:string");
-                    value.InnerText = message.GetKey();
+                    value.InnerText = message.GetFirst();
                     reportData.AppendChild(value);
                     additionalValidationReportData.AppendChild(reportData);
                 }

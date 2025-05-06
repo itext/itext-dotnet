@@ -37,6 +37,9 @@ namespace iText.StyledXmlParser.Util {
         private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.Commons.Utils.StringUtil.RegexCompile
             ("([\\w -]+)");
 
+        /// <summary>Splits passed `font-family` CSS string into list of font families or generic families.</summary>
+        /// <param name="fontFamilies">the CSS 'font-family' string</param>
+        /// <returns>list of font families or generic families</returns>
         public static IList<String> SplitFontFamily(String fontFamilies) {
             if (fontFamilies == null) {
                 return null;
@@ -61,6 +64,9 @@ namespace iText.StyledXmlParser.Util {
             return result;
         }
 
+        /// <summary>Removes quotes from a passed `font-family` CSS string.</summary>
+        /// <param name="fontFamily">the CSS 'font-family' string</param>
+        /// <returns>the unquoted CSS 'font-family' string</returns>
         public static String RemoveQuotes(String fontFamily) {
             Matcher selectMatcher = iText.Commons.Utils.Matcher.Match(FONT_FAMILY_PATTERN_QUOTED_SELECT, fontFamily);
             if (selectMatcher.Find()) {

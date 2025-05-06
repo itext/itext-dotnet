@@ -56,7 +56,7 @@ namespace iText.StyledXmlParser.Css.Util {
             if (cssValue == null) {
                 return false;
             }
-            String normalizedValue = cssValue.ToLowerInvariant().Trim();
+            String normalizedValue = StringNormalizer.Normalize(cssValue);
             return normalizedValue.EndsWith(")") && (normalizedValue.StartsWith(LINEAR_GRADIENT_FUNCTION_SUFFIX) || normalizedValue
                 .StartsWith(REPEATING_LINEAR_GRADIENT_FUNCTION_SUFFIX));
         }
@@ -77,7 +77,7 @@ namespace iText.StyledXmlParser.Css.Util {
         public static StrategyBasedLinearGradientBuilder ParseCssLinearGradient(String cssGradientValue, float emValue
             , float remValue) {
             if (IsCssLinearGradientValue(cssGradientValue)) {
-                cssGradientValue = cssGradientValue.ToLowerInvariant().Trim();
+                cssGradientValue = StringNormalizer.Normalize(cssGradientValue);
                 bool isRepeating = false;
                 String argumentsPart = null;
                 if (cssGradientValue.StartsWith(LINEAR_GRADIENT_FUNCTION_SUFFIX)) {

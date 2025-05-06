@@ -36,6 +36,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Kernel.Utils.Checkers;
 using iText.Kernel.Validation.Context;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
@@ -1116,20 +1117,7 @@ namespace iText.Kernel.Pdf {
             ) {
             if (GetDocument().IsTagged()) {
                 if (tagAnnotation) {
-                    TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                    if (!StandardRoles.ANNOT.Equals(tagPointer.GetRole()) && PdfVersion.PDF_1_4
-                                        // "Annot" tag was added starting from PDF 1.5
-                                        .CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                        if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfLinkAnnotation) && !(annotation is PdfPrinterMarkAnnotation
-                            )) {
-                            tagPointer.AddTag(StandardRoles.ANNOT);
-                        }
-                    }
-                    iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
-                    tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
-                    if (prevPage != null) {
-                        tagPointer.SetPageForTagging(prevPage);
-                    }
+                    TagAnnotation(annotation);
                 }
                 if (GetTabOrder() == null) {
                     SetTabOrder(PdfName.S);
@@ -1150,6 +1138,7 @@ namespace iText.Kernel.Pdf {
                 //Annots are indirect so need to be marked as modified
                 annots.SetModified();
             }
+            CheckIsoConformanceForAnnotation(annotation);
             return this;
         }
 
@@ -1672,6 +1661,106 @@ namespace iText.Kernel.Pdf {
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
+        }
+
+        private static bool IsAnnotInvisible(PdfAnnotation annotation) {
+            PdfNumber f = annotation.GetPdfObject().GetAsNumber(PdfName.F);
+            if (f == null) {
+                return false;
+            }
+            int flags = f.IntValue();
+            return PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                .NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW));
+        }
+
+        private void TagAnnotation(PdfAnnotation annotation) {
+            bool tagAdded = false;
+            bool presentInTagStructure = true;
+            bool isUA2 = IsPdfUA2Document();
+            TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+            if (isUA2 && IsAnnotInvisible(annotation)) {
+                if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
+                    if (!StandardRoles.ARTIFACT.Equals(tagPointer.GetRole())) {
+                        tagPointer.AddTag(StandardRoles.ARTIFACT);
+                        tagAdded = true;
+                    }
+                }
+                else {
+                    presentInTagStructure = false;
+                }
+            }
+            else {
+                tagAdded = AddAnnotationTag(tagPointer, annotation);
+            }
+            if (presentInTagStructure) {
+                iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
+                tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
+                if (prevPage != null) {
+                    tagPointer.SetPageForTagging(prevPage);
+                }
+            }
+            if (tagAdded) {
+                tagPointer.MoveToParent();
+            }
+        }
+
+        private bool IsPdfUA2Document() {
+            PdfUAConformance uaConformance = GetDocument().GetConformance().GetUAConformance();
+            if (uaConformance == null) {
+                try {
+                    uaConformance = PdfConformance.GetConformance(GetDocument().GetXmpMetadata()).GetUAConformance();
+                }
+                catch (XMPException) {
+                    return false;
+                }
+            }
+            return PdfUAConformance.PDF_UA_2 == uaConformance;
+        }
+
+        private void CheckIsoConformanceForAnnotation(PdfAnnotation annotation) {
+            GetDocument().CheckIsoConformance(new PdfAnnotationContext(annotation.GetPdfObject()));
+            if (annotation is PdfLinkAnnotation) {
+                PdfLinkAnnotation linkAnnotation = (PdfLinkAnnotation)annotation;
+                GetDocument().CheckIsoConformance(new PdfDestinationAdditionContext(linkAnnotation.GetDestinationObject())
+                    );
+                if (linkAnnotation.GetAction() != null && PdfName.GoTo.Equals(linkAnnotation.GetAction().Get(PdfName.S))) {
+                    // We only care about destinations, whose target lies within this document.
+                    // That's why GoToR and GoToE are ignored.
+                    GetDocument().CheckIsoConformance(new PdfDestinationAdditionContext(new PdfAction(linkAnnotation.GetAction
+                        ())));
+                }
+            }
+        }
+
+        private bool AddAnnotationTag(TagTreePointer tagPointer, PdfAnnotation annotation) {
+            if (annotation is PdfLinkAnnotation) {
+                // "Link" tag was added starting from PDF 1.4
+                if (PdfVersion.PDF_1_3.CompareTo(GetDocument().GetPdfVersion()) < 0) {
+                    if (!StandardRoles.LINK.Equals(tagPointer.GetRole())) {
+                        tagPointer.AddTag(StandardRoles.LINK);
+                        return true;
+                    }
+                }
+            }
+            else {
+                if (!(annotation is PdfWidgetAnnotation) && !(annotation is PdfPrinterMarkAnnotation)) {
+                    // "Annot" tag was added starting from PDF 1.5
+                    if (PdfVersion.PDF_1_4.CompareTo(GetDocument().GetPdfVersion()) < 0) {
+                        if (!StandardRoles.ANNOT.Equals(tagPointer.GetRole())) {
+                            tagPointer.AddTag(StandardRoles.ANNOT);
+                            return true;
+                        }
+                    }
+                }
+                if (annotation is PdfPrinterMarkAnnotation && PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) 
+                    <= 0) {
+                    if (!StandardRoles.ARTIFACT.Equals(tagPointer.GetRole())) {
+                        tagPointer.AddTag(StandardRoles.ARTIFACT);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private iText.Kernel.Pdf.PdfPage CopyTo(iText.Kernel.Pdf.PdfPage page, PdfDocument toDocument, IPdfPageExtraCopier

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Pdfua.Checkers;
@@ -28,7 +29,7 @@ namespace iText.Pdfua {
 //\cond DO_NOT_DOCUMENT
     /// <summary>The class implements PDF page factory which is used for creating correct PDF/UA documents.</summary>
     internal class PdfUAPageFactory : IPdfPageFactory {
-        private readonly PdfUA1Checker checker;
+        private readonly PdfUAChecker checker;
 
         /// <summary>
         /// Instantiates a new
@@ -37,7 +38,19 @@ namespace iText.Pdfua {
         /// <see cref="iText.Pdfua.Checkers.PdfUA1Checker"/>.
         /// </summary>
         /// <param name="checker">the PDF/UA checker</param>
+        [System.ObsoleteAttribute(@"in favour of PdfUAPageFactory(iText.Pdfua.Checkers.PdfUAChecker)")]
         public PdfUAPageFactory(PdfUA1Checker checker) {
+            this.checker = checker;
+        }
+
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="PdfUAPageFactory"/>
+        /// instance based on
+        /// <see cref="iText.Pdfua.Checkers.PdfUAChecker"/>.
+        /// </summary>
+        /// <param name="checker">the PDF/UA checker</param>
+        public PdfUAPageFactory(PdfUAChecker checker) {
             this.checker = checker;
         }
 

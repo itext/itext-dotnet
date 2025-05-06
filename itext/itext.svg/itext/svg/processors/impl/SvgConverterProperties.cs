@@ -22,10 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Font;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Media;
 using iText.StyledXmlParser.Resolver.Resource;
+using iText.Svg.Converter;
 using iText.Svg.Processors;
 using iText.Svg.Renderers.Factories;
 
@@ -57,6 +59,9 @@ namespace iText.Svg.Processors.Impl {
 
         private Rectangle customViewport = null;
 
+        private readonly AccessibilityProperties accessibilityProperties = new DefaultAccessibilityProperties(SvgConverter
+            .SVG_DEFAULT_ROLE);
+
         /// <summary>
         /// Creates a new
         /// <see cref="SvgConverterProperties"/>
@@ -85,6 +90,12 @@ namespace iText.Svg.Processors.Impl {
             return customViewport;
         }
 
+        /// <summary>Gets the accessibility properties.</summary>
+        /// <returns>the accessibility properties.</returns>
+        public virtual AccessibilityProperties GetAccessibilityProperties() {
+            return this.accessibilityProperties;
+        }
+
         /// <summary>Sets the custom viewport of SVG.</summary>
         /// <remarks>
         /// Sets the custom viewport of SVG.
@@ -96,12 +107,34 @@ namespace iText.Svg.Processors.Impl {
             this.customViewport = customViewport;
         }
 
+        /// <summary>Sets renderer factory.</summary>
+        /// <param name="rendererFactory">
+        /// 
+        /// <see cref="iText.Svg.Renderers.Factories.ISvgNodeRendererFactory"/>
+        /// to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetRendererFactory(ISvgNodeRendererFactory
              rendererFactory) {
             this.rendererFactory = rendererFactory;
             return this;
         }
 
+        /// <summary>Sets font provider.</summary>
+        /// <param name="fontProvider">
+        /// 
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// to set
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetFontProvider(FontProvider fontProvider) {
             this.fontProvider = fontProvider;
             return this;
@@ -116,6 +149,13 @@ namespace iText.Svg.Processors.Impl {
             return charset;
         }
 
+        /// <summary>Sets the character set.</summary>
+        /// <param name="charset">the character set to set</param>
+        /// <returns>
+        /// this
+        /// <see cref="SvgConverterProperties"/>
+        /// instance
+        /// </returns>
         public virtual iText.Svg.Processors.Impl.SvgConverterProperties SetCharset(String charset) {
             this.charset = charset;
             return this;

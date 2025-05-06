@@ -47,8 +47,7 @@ namespace iText.Layout {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TableTest/";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/TableTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/TableTest/";
 
         private const String TEXT_CONTENT = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -2919,9 +2918,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        public virtual void PreciseFittingBoldSimulatedTextInCellsTest() {
-            String fileName = "preciseFittingBoldSimulatedTextInCells.pdf";
+        public virtual void PreciseFittingItalicBoldSimulatedTextInCellsTest() {
+            String fileName = "preciseFittingItalicBoldSimulatedTextInCells.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
                 using (Document doc = new Document(pdfDocument)) {
                     int numberOfColumns = 9;
@@ -2929,7 +2927,14 @@ namespace iText.Layout {
                     table.UseAllAvailableWidth();
                     table.SetFixedLayout();
                     for (int i = 0; i < numberOfColumns; i++) {
-                        table.AddCell(new Cell().Add(new Paragraph("Description").SimulateBold()));
+                        Paragraph p = new Paragraph("Description");
+                        if (i % 2 == 0) {
+                            p.SimulateBold();
+                        }
+                        else {
+                            p.SimulateItalic();
+                        }
+                        table.AddCell(new Cell().Add(p));
                     }
                     doc.Add(table);
                 }

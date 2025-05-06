@@ -70,6 +70,14 @@ namespace iText.StyledXmlParser.Css {
             SplitDeclarationsIntoNormalAndImportant(declarations, normalDeclarations, importantDeclarations);
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="CssRuleSet"/>
+        /// from a selector and a list of normal and important declarations.
+        /// </summary>
+        /// <param name="selector">the CSS selector</param>
+        /// <param name="normalDeclarations">the list of normal declarations</param>
+        /// <param name="importantDeclarations">the list of important declarations</param>
         public CssRuleSet(ICssSelector selector, IList<CssDeclaration> normalDeclarations, IList<CssDeclaration> importantDeclarations
             ) {
             this.selector = selector;

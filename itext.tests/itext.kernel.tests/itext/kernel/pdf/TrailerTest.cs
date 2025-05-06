@@ -37,8 +37,7 @@ namespace iText.Kernel.Pdf {
     public class TrailerTest : ExtendedITextTest {
         private ProductData productData;
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/TrailerTest/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/TrailerTest/";
 
         private static readonly byte[] USERPASS = "user".GetBytes();
 

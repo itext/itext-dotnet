@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Forms.Form.Renderer;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Renderer;
@@ -35,15 +36,19 @@ namespace iText.Pdfua.Checkers.Utils {
         /// <see cref="LayoutCheckUtil"/>
         /// instance.
         /// </summary>
-        /// <param name="context">The validation context.</param>
+        /// <param name="context">the validation context</param>
         public LayoutCheckUtil(PdfUAValidationContext context) {
             this.context = context;
         }
 
         /// <summary>Checks renderer for PDF UA compliance.</summary>
-        /// <param name="renderer">The renderer to check.</param>
+        /// <param name="renderer">the renderer to check</param>
         public void CheckRenderer(IRenderer renderer) {
             if (renderer == null) {
+                return;
+            }
+            if (IsPartOfSignatureAppearance(renderer)) {
+                // Tagging of the current layout element will be skipped in that case.
                 return;
             }
             IPropertyContainer layoutElement = renderer.GetModelElement();
@@ -55,6 +60,17 @@ namespace iText.Pdfua.Checkers.Utils {
                     new TableCheckUtil(context).CheckTable((Table)layoutElement);
                 }
             }
+        }
+
+        private bool IsPartOfSignatureAppearance(IRenderer renderer) {
+            IRenderer parent = renderer.GetParent();
+            while (parent != null) {
+                if (parent is SignatureAppearanceRenderer) {
+                    return true;
+                }
+                parent = parent.GetParent();
+            }
+            return false;
         }
     }
 }

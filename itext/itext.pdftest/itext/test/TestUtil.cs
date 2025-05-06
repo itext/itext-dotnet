@@ -22,16 +22,51 @@
  */
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
 namespace iText.Test {
     public static class TestUtil {
-        public static String GetParentProjectDirectory(String testDirectory) {
-            DirectoryInfo projectDirectoryInfo = new DirectoryInfo(testDirectory);
-            while (!projectDirectoryInfo.Name.Equals("bin", StringComparison.OrdinalIgnoreCase)) {
+
+
+        private static Func<String, String> resourceLocator = (path) =>
+        {
+            DirectoryInfo projectDirectoryInfo = new DirectoryInfo(path);
+            while (!projectDirectoryInfo.Name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            {
                 projectDirectoryInfo = projectDirectoryInfo.Parent;
             }
             return projectDirectoryInfo.Parent.FullName;
+        };
+
+        private static Func<String> outputLocator = () =>
+        {
+            return NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext";
+        };
+
+        public static void SetResourceLocator(Func<String, String> newResourceLocator) {
+            resourceLocator = newResourceLocator;
+        }
+
+        public static String GetParentProjectDirectory(String testDirectory) {
+            try
+            {
+                return resourceLocator(testDirectory);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw new Exception("Error retrieving ParentProjectDirectory from " + testDirectory, e);
+            }
+        }
+
+        public static void SetOutputLocator(Func<String> newOutputLocator)
+        {
+            outputLocator = newOutputLocator;
+        }
+
+        public static String GetOutputPath() {
+            return outputLocator.Invoke();
         }
 
         public static void AreEqual(double[] expected, double[] actual, double margin)

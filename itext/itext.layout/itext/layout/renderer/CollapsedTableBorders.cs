@@ -135,20 +135,21 @@ namespace iText.Layout.Renderer {
         }
 
         public override IList<Border> GetVerticalBorder(int index) {
-            if (index == 0 || index == numberOfColumns) {
-                if (verticalBorderComputationResult.ContainsKey(index)) {
-                    return verticalBorderComputationResult.Get(index);
-                }
-                int tableBoundingBordersIndex = index == 0 ? 3 : 1;
-                IList<Border> borderList = TableBorderUtil.CreateAndFillBorderList(null, tableBoundingBorders[tableBoundingBordersIndex
-                    ], verticalBorders[index].Count);
-                IList<Border> result = GetCollapsedList(verticalBorders[index], borderList);
-                verticalBorderComputationResult.Put(index, result);
-                return result;
-            }
-            else {
+            //If not outermost we don't need to calculate collapsed borders
+            if (index != 0 && index != numberOfColumns) {
                 return verticalBorders[index];
             }
+            if (verticalBorderComputationResult.ContainsKey(index)) {
+                return verticalBorderComputationResult.Get(index);
+            }
+            int tableBoundingBordersIndex = index == 0 ? 3 : 1;
+            Border boundingBorder = tableBoundingBorders[tableBoundingBordersIndex];
+            IList<Border> verticalBorder = verticalBorders[index];
+            IList<Border> borderList = TableBorderUtil.CreateAndFillBorderList(null, boundingBorder, verticalBorder.Count
+                );
+            IList<Border> result = GetCollapsedList(verticalBorder, borderList);
+            verticalBorderComputationResult.Put(index, result);
+            return result;
         }
 
         public override IList<Border> GetHorizontalBorder(int index) {

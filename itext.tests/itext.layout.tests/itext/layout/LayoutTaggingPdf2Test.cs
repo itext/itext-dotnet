@@ -36,8 +36,7 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LayoutTaggingPdf2Test : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/layout/LayoutTaggingPdf2Test/";
+        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/LayoutTaggingPdf2Test/";
 
         public const String imageName = "Desert.jpg";
 
