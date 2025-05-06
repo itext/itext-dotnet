@@ -60,6 +60,8 @@ namespace iText.Pdfua.Checkers {
 
         private readonly PdfUAValidationContext context;
 
+        private readonly PdfUA2CanvasTextChecker textChecker = new PdfUA2CanvasTextChecker();
+
         /// <summary>
         /// Creates
         /// <see cref="PdfUA2Checker"/>
@@ -79,8 +81,9 @@ namespace iText.Pdfua.Checkers {
                     CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
                     CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
                     CheckFonts(pdfDocContext.GetDocumentFonts());
-                    new PdfUA2DestinationsChecker(pdfDocument).CheckDestinations();
+                    new PdfUA2DestinationsChecker(pdfDocContext.GetPdfDocument()).CheckDestinations();
                     PdfUA2XfaChecker.Check(pdfDocContext.GetPdfDocument());
+                    textChecker.CheckCollectedContexts(pdfDocContext.GetPdfDocument());
                     break;
                 }
 
@@ -125,6 +128,12 @@ namespace iText.Pdfua.Checkers {
                 case ValidationType.ANNOTATION: {
                     PdfAnnotationContext annotationContext = (PdfAnnotationContext)context;
                     PdfUA2AnnotationChecker.CheckAnnotation(annotationContext.GetAnnotation(), this.context);
+                    break;
+                }
+
+                case ValidationType.CANVAS_TEXT_ADDITION: {
+                    CanvasTextAdditionContext canvasTextAdditionContext = (CanvasTextAdditionContext)context;
+                    textChecker.CollectTextAdditionContext(canvasTextAdditionContext);
                     break;
                 }
             }

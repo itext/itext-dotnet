@@ -34,6 +34,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfa.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
@@ -324,6 +325,8 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 6)]
+        [NUnit.Framework.Ignore("DEVSIX-9125")]
         public virtual void PdfArrayWithUndefinedGlyphsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfArrayWithUndefinedGlyphs.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));

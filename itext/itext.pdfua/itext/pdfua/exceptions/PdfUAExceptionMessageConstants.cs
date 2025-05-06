@@ -186,6 +186,8 @@ namespace iText.Pdfua.Exceptions {
 
         public const String PRINTER_MARK_SHALL_BE_AN_ARTIFACT = "PrinterMark annotation shall be an artifact.";
 
+        public const String PUA_CONTENT_WITHOUT_ALT = "In all cases, where real content maps to Unicode PUA values, an ActualText or Alt entry shall be present.";
+
         public const String P_VALUE_IS_ABSENT_IN_ENCRYPTION_DICTIONARY = "Permissions are absent " + "in pdf encryption dictionary.";
 
         public const String RC_DIFFERENT_FROM_CONTENTS = "If markup annotation contains both RC and Contents " + "entries, they shall be textually equivalent.";

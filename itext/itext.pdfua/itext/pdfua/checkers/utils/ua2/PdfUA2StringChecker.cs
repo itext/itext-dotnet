@@ -40,18 +40,29 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
         /// </param>
         public static void CheckPdfString(PdfString @string) {
             // Only perform this check if PdfString is text string (intended to be human-readable).
-            if (PdfEncodings.PDF_DOC_ENCODING.Equals(@string.GetEncoding()) || PdfEncodings.UTF8.Equals(@string.GetEncoding
-                ()) || PdfEncodings.UNICODE_BIG.Equals(@string.GetEncoding())) {
-                for (int i = 0; i < getCharacterCodePoints(@string.GetValue()).Count; ++i) {
-                    int code = getCharacterCodePoints(@string.GetValue())[i];
+            if (PdfEncodings.PDF_DOC_ENCODING.Equals(@string.GetEncoding()) ||
+                PdfEncodings.UTF8.Equals(@string.GetEncoding()) ||
+                PdfEncodings.UNICODE_BIG.Equals(@string.GetEncoding())) {
+                if (StringContainsPua(@string.GetValue())) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
+                }
+            }
+        }
+
+        internal static bool StringContainsPua(string @string) {
+            if (@string != null) {
+                IList<int> characterCodePoints = getCharacterCodePoints(@string);
+                for (int i = 0; i < characterCodePoints.Count; ++i) {
+                    int code = characterCodePoints[i];
                     bool isPrivateArea = code >= 0xE000 && code <= 0xF8FF;
                     bool isSupplementaryPrivateAreaA = code >= 0xF0000 && code <= 0xFFFFD;
                     bool isSupplementaryPrivateAreaB = code >= 0x100000 && code <= 0x10FFFD;
                     if (isPrivateArea || isSupplementaryPrivateAreaA || isSupplementaryPrivateAreaB) {
-                        throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         private static IList<int> getCharacterCodePoints(string s) {
