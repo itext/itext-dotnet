@@ -56,7 +56,8 @@ namespace iText.StyledXmlParser.Css.Parse {
             while (itemMatcher.Find()) {
                 String selectorItem = itemMatcher.Group(0);
                 if (selectorItem[0] == ':') {
-                    selectorItems.Add(new CssPagePseudoClassSelectorItem(selectorItem.Substring(1).ToLowerInvariant()));
+                    selectorItems.Add(new CssPagePseudoClassSelectorItem(StringNormalizer.ToLowerCase(selectorItem.Substring(1
+                        ))));
                 }
                 else {
                     selectorItems.Add(new CssPageTypeSelectorItem(selectorItem));

@@ -220,7 +220,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <param name="src">string to test</param>
         /// <returns>true if source is under data URI scheme</returns>
         public static bool IsDataSrc(String src) {
-            return src != null && src.ToLowerInvariant().StartsWith(DATA_SCHEMA_PREFIX) && src.Contains(",");
+            return src != null && StringNormalizer.ToLowerCase(src).StartsWith(DATA_SCHEMA_PREFIX) && src.Contains(","
+                );
         }
 
         /// <summary>Resolves a given URI against the base URI.</summary>

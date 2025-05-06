@@ -20,28 +20,27 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Commons.Utils;
+using iText.IO.Font.Constants;
 using iText.Test;
 
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
-    public class FontProgramDescriptorFactoryTest : ExtendedITextTest {
+    public class FontProgramFactoryTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void KozminNamesTest() {
-            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("KozMinPro-Regular");
-            NUnit.Framework.Assert.AreEqual("KozMinPro-Regular", descriptor.GetFontName());
-            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("KozMinPro-Regular"), descriptor.GetFullNameLowerCase
-                ());
-            NUnit.Framework.Assert.AreEqual(400, descriptor.GetFontWeight());
+        public virtual void CreateRegisteredFontTest() {
+            NUnit.Framework.Assert.IsNull(FontProgramFactory.CreateRegisteredFont(null, FontStyles.NORMAL));
+            NUnit.Framework.Assert.IsNotNull(FontProgramFactory.CreateRegisteredFont("helvetica", FontStyles.UNDEFINED
+                ));
+            NUnit.Framework.Assert.IsNotNull(FontProgramFactory.CreateRegisteredFont("helvetica", FontStyles.BOLD));
+            NUnit.Framework.Assert.IsNotNull(FontProgramFactory.CreateRegisteredFont("helvetica", FontStyles.ITALIC));
         }
 
         [NUnit.Framework.Test]
-        public virtual void HelveticaNamesTest() {
-            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("Helvetica");
-            NUnit.Framework.Assert.AreEqual("Helvetica", descriptor.GetFontName());
-            NUnit.Framework.Assert.AreEqual("helvetica", descriptor.GetFullNameLowerCase());
-            NUnit.Framework.Assert.AreEqual("helvetica", descriptor.GetFullNameLowerCase());
-            NUnit.Framework.Assert.AreEqual(500, descriptor.GetFontWeight());
+        public virtual void RegisterFontFamilyTest() {
+            FontProgramFactory.RegisterFontFamily("somefont", "somefont", null);
+            NUnit.Framework.Assert.IsNull(FontProgramFactory.CreateRegisteredFont("somefont", FontStyles.UNDEFINED));
+            FontProgramFactory.RegisterFontFamily("somefont", "somefont regular", null);
+            NUnit.Framework.Assert.IsNull(FontProgramFactory.CreateRegisteredFont("somefont", FontStyles.UNDEFINED));
         }
     }
 }

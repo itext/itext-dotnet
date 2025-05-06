@@ -281,7 +281,7 @@ namespace iText.Signatures {
             foreach (byte b in bytes) {
                 buf.AppendHex(b);
             }
-            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpperInvariant();
+            return StringNormalizer.ToUpperCase(PdfEncodings.ConvertToString(buf.ToByteArray(), null));
         }
 
 //\cond DO_NOT_DOCUMENT

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 
 namespace iText.IO.Font.Constants {
     /// <summary>Font weight values and utility methods</summary>
@@ -60,7 +61,7 @@ namespace iText.IO.Font.Constants {
         /// <returns>corresponding weight int value</returns>
         public static int FromType1FontWeight(String weight) {
             int fontWeight = NORMAL;
-            switch (weight.ToLowerInvariant()) {
+            switch (StringNormalizer.ToLowerCase(weight)) {
                 case "ultralight": {
                     fontWeight = THIN;
                     break;
@@ -109,11 +110,7 @@ namespace iText.IO.Font.Constants {
                 case "heavy":
                 case "black":
                 case "ultra":
-                case "ultrablack": {
-                    fontWeight = BLACK;
-                    break;
-                }
-
+                case "ultrablack":
                 case "fat":
                 case "extrablack": {
                     fontWeight = BLACK;

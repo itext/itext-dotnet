@@ -20,25 +20,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.IO.Font;
+using System;
 using iText.Test;
 
-namespace iText.IO {
+namespace iText.Layout.Font {
     [NUnit.Framework.Category("UnitTest")]
-    public class AdobeGlyphListTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
-        public virtual void TestGlyphListCount() {
-            NUnit.Framework.Assert.AreEqual(4200, AdobeGlyphList.GetNameToUnicodeLength());
-            NUnit.Framework.Assert.AreEqual(3680, AdobeGlyphList.GetUnicodeToNameLength());
-        }
+    public class FontSetTest : ExtendedITextTest {
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         [NUnit.Framework.Test]
-        public virtual void NameToUnicodeTest() {
-            NUnit.Framework.Assert.AreEqual(496, AdobeGlyphList.NameToUnicode("jcaron"));
-            NUnit.Framework.Assert.AreEqual(0x1234, AdobeGlyphList.NameToUnicode("uni1234"));
-            NUnit.Framework.Assert.AreEqual(0xaaaa, AdobeGlyphList.NameToUnicode("uniaaaa"));
-            NUnit.Framework.Assert.AreEqual(-1, AdobeGlyphList.NameToUnicode("unixxxx"));
-            NUnit.Framework.Assert.AreEqual(-1, AdobeGlyphList.NameToUnicode("00x1234"));
+        public virtual void AddDirectoryTest() {
+            FontSet fs = new FontSet();
+            fs.AddDirectory(FONTS_FOLDER, true);
+            NUnit.Framework.Assert.IsTrue(fs.GetFonts().Count >= 30);
         }
     }
 }

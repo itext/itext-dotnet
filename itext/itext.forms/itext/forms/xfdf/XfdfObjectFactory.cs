@@ -447,7 +447,7 @@ namespace iText.Forms.Xfdf {
 
         // TODO DEVSIX-4132 implement update, refactor createXfdfAnnotation() method to accommodate the change.
         private static void AddCommonAnnotationAttributes(AnnotObject annot, PdfAnnotation pdfAnnotation) {
-            annot.SetName(pdfAnnotation.GetSubtype().GetValue().ToLowerInvariant());
+            annot.SetName(StringNormalizer.ToLowerCase(pdfAnnotation.GetSubtype().GetValue()));
             if (pdfAnnotation.GetColorObject() != null) {
                 annot.AddAttribute(new AttributeObject(XfdfConstants.COLOR, XfdfObjectUtils.ConvertColorToString(pdfAnnotation
                     .GetColorObject().ToFloatArray())));

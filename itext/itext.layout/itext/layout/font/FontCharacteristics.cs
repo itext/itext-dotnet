@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 
 namespace iText.Layout.Font {
     public sealed class FontCharacteristics {
@@ -90,7 +91,7 @@ namespace iText.Layout.Font {
         /// <returns>this element</returns>
         public iText.Layout.Font.FontCharacteristics SetFontStyle(String fs) {
             if (fs != null && fs.Length > 0) {
-                fs = fs.Trim().ToLowerInvariant();
+                fs = StringNormalizer.Normalize(fs);
                 if ("normal".Equals(fs)) {
                     isItalic = false;
                 }

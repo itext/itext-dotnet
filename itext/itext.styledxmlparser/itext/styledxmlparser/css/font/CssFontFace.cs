@@ -287,7 +287,7 @@ namespace iText.StyledXmlParser.Css.Font {
             /// <returns>a font format</returns>
             public static CssFontFace.FontFormat ParseFormat(String formatStr) {
                 if (formatStr != null && formatStr.Length > 0) {
-                    switch (Unquote(formatStr).ToLowerInvariant()) {
+                    switch (StringNormalizer.ToLowerCase(Unquote(formatStr))) {
                         case "truetype": {
                             return CssFontFace.FontFormat.TrueType;
                         }

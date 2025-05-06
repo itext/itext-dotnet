@@ -101,7 +101,7 @@ namespace iText.IO.Util {
                 // Do not check exception message because it is localized
             } catch(OperationCanceledException e) {
                 exceptionThrown = true;
-                NUnit.Framework.Assert.AreEqual("the operation was canceled.", e.Message.ToLower());
+                NUnit.Framework.Assert.AreEqual("the operation was canceled.", StringNormalizer.ToLowerCase(e.Message));
             }
 
             NUnit.Framework.Assert.True(exceptionThrown);

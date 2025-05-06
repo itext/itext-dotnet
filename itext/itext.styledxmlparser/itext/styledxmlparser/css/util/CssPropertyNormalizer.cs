@@ -70,7 +70,7 @@ namespace iText.StyledXmlParser.Css.Util {
                         else {
                             if ((str[i] == 'u' || str[i] == 'U') && iText.Commons.Utils.Matcher.Match(URL_PATTERN, str.Substring(i)).Find
                                 ()) {
-                                sb.Append(str.JSubstring(i, i + 4).ToLowerInvariant());
+                                sb.Append(StringNormalizer.ToLowerCase(str.JSubstring(i, i + 4)));
                                 i = AppendUrlContent(sb, str, i + 4);
                             }
                             else {

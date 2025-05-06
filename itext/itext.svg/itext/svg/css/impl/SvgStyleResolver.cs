@@ -54,8 +54,8 @@ namespace iText.Svg.Css.Impl {
 
         // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
         private static readonly String[] ELEMENTS_INHERITING_PARENT_STYLES = new String[] { SvgConstants.Tags.MARKER
-            , SvgConstants.Tags.LINEAR_GRADIENT, SvgConstants.Tags.LINEAR_GRADIENT.ToLowerInvariant(), SvgConstants.Tags
-            .PATTERN };
+            , SvgConstants.Tags.LINEAR_GRADIENT, StringNormalizer.ToLowerCase(SvgConstants.Tags.LINEAR_GRADIENT), 
+            SvgConstants.Tags.PATTERN };
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Css.Impl.SvgStyleResolver
             ));

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 
 namespace iText.IO.Font {
@@ -63,16 +64,16 @@ namespace iText.IO.Font {
 //\cond DO_NOT_DOCUMENT
         internal FontProgramDescriptor(FontNames fontNames, float italicAngle, bool isMonospace) {
             this.fontName = fontNames.GetFontName();
-            this.fontNameLowerCase = this.fontName.ToLowerInvariant();
-            this.fullNameLowerCase = fontNames.GetFullName()[0][3].ToLowerInvariant();
+            this.fontNameLowerCase = StringNormalizer.ToLowerCase(this.fontName);
+            this.fullNameLowerCase = StringNormalizer.ToLowerCase(fontNames.GetFullName()[0][3]);
             this.familyNameLowerCase = fontNames.GetFamilyName() != null && fontNames.GetFamilyName()[0][3] != null ? 
-                fontNames.GetFamilyName()[0][3].ToLowerInvariant() : null;
+                StringNormalizer.ToLowerCase(fontNames.GetFamilyName()[0][3]) : null;
             // For font family2 let's take the last element in array. The family in the 1st element has high chance
             // to be the same as returned by getFamilyName. Ideally we should take different families based on OS
             // but it breaks the compatibility, produces different results on different OSs etc.
             String[][] familyName2 = fontNames.GetFamilyName2();
-            this.familyName2LowerCase = familyName2 != null && familyName2[familyName2.Length - 1][3] != null ? familyName2
-                [familyName2.Length - 1][3].ToLowerInvariant() : null;
+            this.familyName2LowerCase = familyName2 != null && familyName2[familyName2.Length - 1][3] != null ? StringNormalizer
+                .ToLowerCase(familyName2[familyName2.Length - 1][3]) : null;
             this.style = fontNames.GetStyle();
             this.weight = fontNames.GetFontWeight();
             this.macStyle = fontNames.GetMacStyle();
@@ -157,7 +158,7 @@ namespace iText.IO.Font {
         private ICollection<String> ExtractFullFontNames(FontNames fontNames) {
             ICollection<String> uniqueFullNames = new HashSet<String>();
             foreach (String[] fullName in fontNames.GetFullName()) {
-                uniqueFullNames.Add(fullName[3].ToLowerInvariant());
+                uniqueFullNames.Add(StringNormalizer.ToLowerCase(fullName[3]));
             }
             return uniqueFullNames;
         }
@@ -168,7 +169,7 @@ namespace iText.IO.Font {
                     foreach (String[] name in fontNames.GetFamilyName()) {
                         if (TT_FAMILY_ORDER[k].Equals(name[0]) && TT_FAMILY_ORDER[k + 1].Equals(name[1]) && TT_FAMILY_ORDER[k + 2]
                             .Equals(name[2])) {
-                            return name[3].ToLowerInvariant();
+                            return StringNormalizer.ToLowerCase(name[3]);
                         }
                     }
                 }

@@ -90,7 +90,7 @@ namespace iText.Kernel.XMP.Impl
 		{
 			if (tree.GetName() != null && tree.GetName().Length >= Utils.UUID_LENGTH)
 			{
-				String nameStr = tree.GetName().ToLower();
+				String nameStr = tree.GetName().ToLower(System.Globalization.CultureInfo.InvariantCulture);
 				if (nameStr.StartsWith("uuid:"))
 				{
 					nameStr = nameStr.Substring(5);

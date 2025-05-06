@@ -62,7 +62,7 @@ namespace iText.StyledXmlParser.Css.Page {
         /// <param name="pageClass">the page class</param>
         /// <returns>the page context node</returns>
         public virtual iText.StyledXmlParser.Css.Page.PageContextNode AddPageClass(String pageClass) {
-            this.pageClasses.Add(pageClass.ToLowerInvariant());
+            this.pageClasses.Add(StringNormalizer.ToLowerCase(pageClass));
             return this;
         }
 

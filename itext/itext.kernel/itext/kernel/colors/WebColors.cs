@@ -231,7 +231,7 @@ namespace iText.Kernel.Colors {
         public static float[] GetCMYKArray(String name) {
             float[] color = null;
             try {
-                String colorName = name.ToLowerInvariant();
+                String colorName = StringNormalizer.ToLowerCase(name);
                 if (colorName.StartsWith("device-cmyk(")) {
                     String delim = "device-cmyk()/, \t\r\n\f";
                     StringTokenizer tok = new StringTokenizer(colorName, delim);
@@ -258,7 +258,7 @@ namespace iText.Kernel.Colors {
         public static float[] GetRGBAColor(String name) {
             float[] color = null;
             try {
-                String colorName = name.ToLowerInvariant();
+                String colorName = StringNormalizer.ToLowerCase(name);
                 bool colorStrWithoutHash = MissingHashColorFormat(colorName);
                 if (colorName.StartsWith("#") || colorStrWithoutHash) {
                     if (!colorStrWithoutHash) {

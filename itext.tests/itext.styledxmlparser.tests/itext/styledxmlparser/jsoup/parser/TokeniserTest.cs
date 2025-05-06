@@ -72,7 +72,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             NUnit.Framework.Assert.IsNotNull(el);
             NUnit.Framework.Assert.AreEqual("One", el.Text());
             iText.StyledXmlParser.Jsoup.Nodes.Attribute attribute = el.Attributes().AsList()[0];
-            NUnit.Framework.Assert.AreEqual(attrName.ToLowerInvariant(), attribute.Key);
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase(attrName), attribute.Key);
             NUnit.Framework.Assert.AreEqual("foo", attribute.Value);
         }
 

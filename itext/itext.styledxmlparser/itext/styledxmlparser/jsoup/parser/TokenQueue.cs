@@ -4,6 +4,7 @@ It may contain modifications beyond the original version.
 */
 using System;
 using System.Text;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Parser {
@@ -178,7 +179,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
         public virtual String ConsumeToIgnoreCase(String seq) {
             int start = pos;
             String first = seq.JSubstring(0, 1);
-            bool canScan = first.ToLowerInvariant().Equals(first.ToUpperInvariant());
+            bool canScan = StringNormalizer.ToLowerCase(first).Equals(StringNormalizer.ToUpperCase(first));
             // if first is not cased, use index of
             while (!IsEmpty()) {
                 if (Matches(seq)) {

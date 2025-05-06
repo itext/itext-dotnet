@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.StyledXmlParser;
+using iText.StyledXmlParser.Css.Page;
+using iText.StyledXmlParser.Css.Pseudo;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Test;
@@ -338,6 +340,15 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
             INode divNode = bodyNode.ChildNodes()[0];
             NUnit.Framework.Assert.IsFalse(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CssPageTypeSelectorItemMatchesTest() {
+            CssPageTypeSelectorItem item = new CssPageTypeSelectorItem("customPageName");
+            NUnit.Framework.Assert.IsFalse(item.Matches(new CssPseudoElementNode(null, "after")));
+            NUnit.Framework.Assert.IsTrue(item.Matches(new PageContextNode().SetPageTypeName("customPageName")));
+            NUnit.Framework.Assert.IsFalse(new CssPageTypeSelectorItem("AUTO").Matches(new PageContextNode().SetPageTypeName
+                ("AUTO")));
         }
     }
 }

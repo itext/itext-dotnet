@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.Kernel.Pdf;
@@ -35,7 +36,8 @@ namespace iText.Kernel.Font {
             if ((encoding == null || encoding.Length == 0) && type1Font.IsFontSpecific()) {
                 encoding = FontEncoding.FONT_SPECIFIC;
             }
-            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLowerInvariant().Equals(encoding.ToLowerInvariant())) {
+            if (encoding != null && StringNormalizer.ToLowerCase(FontEncoding.FONT_SPECIFIC).Equals(StringNormalizer.ToLowerCase
+                (encoding))) {
                 fontEncoding = FontEncoding.CreateFontSpecificEncoding();
             }
             else {

@@ -290,7 +290,7 @@ namespace iText.Forms.Xfdf {
             StringTokenizer st = new StringTokenizer(flagsString, delims);
             IList<String> flagsList = new List<String>();
             while (st.HasMoreTokens()) {
-                flagsList.Add(st.NextToken().ToLowerInvariant());
+                flagsList.Add(StringNormalizer.ToLowerCase(st.NextToken()));
             }
             IDictionary<String, int?> flagMap = new Dictionary<String, int?>();
             flagMap.Put(XfdfConstants.INVISIBLE, PdfAnnotation.INVISIBLE);
@@ -378,7 +378,8 @@ namespace iText.Forms.Xfdf {
 
         /// <summary>Converts float representation of the rgb color into a hex string representing the rgb color.</summary>
         private static String ConvertColorFloatToHex(float colorFloat) {
-            String result = "0" + JavaUtil.IntegerToHexString(((int)(colorFloat * 255 + 0.5))).ToUpperInvariant();
+            String result = "0" + StringNormalizer.ToUpperCase(JavaUtil.IntegerToHexString(((int)(colorFloat * 255 + 0.5
+                ))));
             return result.Substring(result.Length - 2);
         }
 
@@ -388,7 +389,7 @@ namespace iText.Forms.Xfdf {
             StringBuilder stb = new StringBuilder();
             char[] stringSymbols = idString.ToCharArray();
             foreach (char ch in stringSymbols) {
-                stb.Append(JavaUtil.IntegerToHexString((int)ch).ToUpperInvariant());
+                stb.Append(StringNormalizer.ToUpperCase(JavaUtil.IntegerToHexString((int)ch)));
             }
             return stb.ToString();
         }

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Barcodes.Exceptions;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -121,7 +122,7 @@ namespace iText.Barcodes {
         /// <param name="text">the text to create the bars</param>
         /// <returns>the bars</returns>
         public static byte[] GetBarsCodabar(String text) {
-            text = text.ToUpperInvariant();
+            text = StringNormalizer.ToUpperCase(text);
             int len = text.Length;
             if (len < 2) {
                 throw new ArgumentException(BarcodesExceptionMessageConstant.CODABAR_MUST_HAVE_AT_LEAST_START_AND_STOP_CHARACTER
@@ -153,7 +154,7 @@ namespace iText.Barcodes {
             if (code.Length < 2) {
                 return code;
             }
-            String text = code.ToUpperInvariant();
+            String text = StringNormalizer.ToUpperCase(code);
             int sum = 0;
             int len = text.Length;
             for (int k = 0; k < len; ++k) {

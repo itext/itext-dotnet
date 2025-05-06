@@ -75,15 +75,15 @@ namespace iText.IO.Font {
             if (fontName == null) {
                 return null;
             }
-            String lowerCaseFontName = fontName.ToLowerInvariant();
+            String lowerCaseFontName = StringNormalizer.ToLowerCase(fontName);
             IList<String> family = !lowerCaseFontName.EqualsIgnoreCase(StandardFonts.TIMES_ROMAN) ? fontFamilies.Get(lowerCaseFontName
-                ) : fontFamilies.Get(StandardFontFamilies.TIMES.ToLowerInvariant());
+                ) : fontFamilies.Get(StringNormalizer.ToLowerCase(StandardFontFamilies.TIMES));
             if (family != null) {
                 lock (family) {
                     // some bugs were fixed here by Daniel Marczisovszky
                     int s = style == FontStyles.UNDEFINED ? FontStyles.NORMAL : style;
                     foreach (String f in family) {
-                        String lcf = f.ToLowerInvariant();
+                        String lcf = StringNormalizer.ToLowerCase(f);
                         int fs = FontStyles.NORMAL;
                         if (lcf.Contains("bold")) {
                             fs |= FontStyles.BOLD;
@@ -103,20 +103,24 @@ namespace iText.IO.Font {
 //\endcond
 
         protected internal virtual void RegisterStandardFonts() {
-            fontNames.Put(StandardFonts.COURIER.ToLowerInvariant(), StandardFonts.COURIER);
-            fontNames.Put(StandardFonts.COURIER_BOLD.ToLowerInvariant(), StandardFonts.COURIER_BOLD);
-            fontNames.Put(StandardFonts.COURIER_OBLIQUE.ToLowerInvariant(), StandardFonts.COURIER_OBLIQUE);
-            fontNames.Put(StandardFonts.COURIER_BOLDOBLIQUE.ToLowerInvariant(), StandardFonts.COURIER_BOLDOBLIQUE);
-            fontNames.Put(StandardFonts.HELVETICA.ToLowerInvariant(), StandardFonts.HELVETICA);
-            fontNames.Put(StandardFonts.HELVETICA_BOLD.ToLowerInvariant(), StandardFonts.HELVETICA_BOLD);
-            fontNames.Put(StandardFonts.HELVETICA_OBLIQUE.ToLowerInvariant(), StandardFonts.HELVETICA_OBLIQUE);
-            fontNames.Put(StandardFonts.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), StandardFonts.HELVETICA_BOLDOBLIQUE);
-            fontNames.Put(StandardFonts.SYMBOL.ToLowerInvariant(), StandardFonts.SYMBOL);
-            fontNames.Put(StandardFonts.TIMES_ROMAN.ToLowerInvariant(), StandardFonts.TIMES_ROMAN);
-            fontNames.Put(StandardFonts.TIMES_BOLD.ToLowerInvariant(), StandardFonts.TIMES_BOLD);
-            fontNames.Put(StandardFonts.TIMES_ITALIC.ToLowerInvariant(), StandardFonts.TIMES_ITALIC);
-            fontNames.Put(StandardFonts.TIMES_BOLDITALIC.ToLowerInvariant(), StandardFonts.TIMES_BOLDITALIC);
-            fontNames.Put(StandardFonts.ZAPFDINGBATS.ToLowerInvariant(), StandardFonts.ZAPFDINGBATS);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.COURIER), StandardFonts.COURIER);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.COURIER_BOLD), StandardFonts.COURIER_BOLD);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.COURIER_OBLIQUE), StandardFonts.COURIER_OBLIQUE);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.COURIER_BOLDOBLIQUE), StandardFonts.COURIER_BOLDOBLIQUE
+                );
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.HELVETICA), StandardFonts.HELVETICA);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.HELVETICA_BOLD), StandardFonts.HELVETICA_BOLD);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.HELVETICA_OBLIQUE), StandardFonts.HELVETICA_OBLIQUE
+                );
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.HELVETICA_BOLDOBLIQUE), StandardFonts.HELVETICA_BOLDOBLIQUE
+                );
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.SYMBOL), StandardFonts.SYMBOL);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.TIMES_ROMAN), StandardFonts.TIMES_ROMAN);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.TIMES_BOLD), StandardFonts.TIMES_BOLD);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.TIMES_ITALIC), StandardFonts.TIMES_ITALIC);
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.TIMES_BOLDITALIC), StandardFonts.TIMES_BOLDITALIC
+                );
+            fontNames.Put(StringNormalizer.ToLowerCase(StandardFonts.ZAPFDINGBATS), StandardFonts.ZAPFDINGBATS);
         }
 
         protected internal virtual void RegisterStandardFontFamilies() {
@@ -126,30 +130,30 @@ namespace iText.IO.Font {
             family.Add(StandardFonts.COURIER_BOLD);
             family.Add(StandardFonts.COURIER_OBLIQUE);
             family.Add(StandardFonts.COURIER_BOLDOBLIQUE);
-            fontFamilies.Put(StandardFontFamilies.COURIER.ToLowerInvariant(), family);
+            fontFamilies.Put(StringNormalizer.ToLowerCase(StandardFontFamilies.COURIER), family);
             family = new List<String>();
             family.Add(StandardFonts.HELVETICA);
             family.Add(StandardFonts.HELVETICA_BOLD);
             family.Add(StandardFonts.HELVETICA_OBLIQUE);
             family.Add(StandardFonts.HELVETICA_BOLDOBLIQUE);
-            fontFamilies.Put(StandardFontFamilies.HELVETICA.ToLowerInvariant(), family);
+            fontFamilies.Put(StringNormalizer.ToLowerCase(StandardFontFamilies.HELVETICA), family);
             family = new List<String>();
             family.Add(StandardFonts.SYMBOL);
-            fontFamilies.Put(StandardFontFamilies.SYMBOL.ToLowerInvariant(), family);
+            fontFamilies.Put(StringNormalizer.ToLowerCase(StandardFontFamilies.SYMBOL), family);
             family = new List<String>();
             family.Add(StandardFonts.TIMES_ROMAN);
             family.Add(StandardFonts.TIMES_BOLD);
             family.Add(StandardFonts.TIMES_ITALIC);
             family.Add(StandardFonts.TIMES_BOLDITALIC);
-            fontFamilies.Put(StandardFontFamilies.TIMES.ToLowerInvariant(), family);
+            fontFamilies.Put(StringNormalizer.ToLowerCase(StandardFontFamilies.TIMES), family);
             family = new List<String>();
             family.Add(StandardFonts.ZAPFDINGBATS);
-            fontFamilies.Put(StandardFontFamilies.ZAPFDINGBATS.ToLowerInvariant(), family);
+            fontFamilies.Put(StringNormalizer.ToLowerCase(StandardFontFamilies.ZAPFDINGBATS), family);
         }
 
         protected internal virtual FontProgram GetFontProgram(String fontName, bool cached) {
             FontProgram fontProgram = null;
-            fontName = fontNames.Get(fontName.ToLowerInvariant());
+            fontName = fontNames.Get(StringNormalizer.ToLowerCase(fontName));
             if (fontName != null) {
                 fontProgram = FontProgramFactory.CreateFont(fontName, cached);
             }
@@ -186,7 +190,7 @@ namespace iText.IO.Font {
                     }
                     if (!inserted) {
                         family.Add(fullName);
-                        String newFullName = fullName.ToLowerInvariant();
+                        String newFullName = StringNormalizer.ToLowerCase(fullName);
                         if (newFullName.EndsWith("regular")) {
                             //remove "regular" at the end of the font name
                             newFullName = newFullName.JSubstring(0, newFullName.Length - 7).Trim();
@@ -217,12 +221,13 @@ namespace iText.IO.Font {
         /// <param name="alias">the alias you want to use for the font</param>
         internal virtual void RegisterFont(String path, String alias) {
             try {
-                if (path.ToLowerInvariant().EndsWith(".ttf") || path.ToLowerInvariant().EndsWith(".otf") || path.ToLowerInvariant
-                    ().IndexOf(".ttc,", StringComparison.Ordinal) > 0) {
+                String pathLc = StringNormalizer.ToLowerCase(path);
+                if (pathLc.EndsWith(".ttf") || pathLc.EndsWith(".otf") || pathLc.IndexOf(".ttc,", StringComparison.Ordinal
+                    ) > 0) {
                     FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(path);
                     fontNames.Put(descriptor.GetFontNameLowerCase(), path);
                     if (alias != null) {
-                        String lcAlias = alias.ToLowerInvariant();
+                        String lcAlias = StringNormalizer.ToLowerCase(alias);
                         fontNames.Put(lcAlias, path);
                         if (lcAlias.EndsWith("regular")) {
                             //do this job to give higher priority to regular fonts in comparison with light, narrow, etc
@@ -244,7 +249,7 @@ namespace iText.IO.Font {
                     }
                 }
                 else {
-                    if (path.ToLowerInvariant().EndsWith(".ttc")) {
+                    if (pathLc.EndsWith(".ttc")) {
                         TrueTypeCollection ttc = new TrueTypeCollection(path);
                         for (int i = 0; i < ttc.GetTTCSize(); i++) {
                             String fullPath = path + "," + i;
@@ -257,7 +262,7 @@ namespace iText.IO.Font {
                         }
                     }
                     else {
-                        if (path.ToLowerInvariant().EndsWith(".afm") || path.ToLowerInvariant().EndsWith(".pfm")) {
+                        if (pathLc.EndsWith(".afm") || pathLc.EndsWith(".pfm")) {
                             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(path);
                             RegisterFontFamily(descriptor.GetFamilyNameLowerCase(), descriptor.GetFullNameLowerCase(), null);
                             fontNames.Put(descriptor.GetFontNameLowerCase(), path);
@@ -312,7 +317,7 @@ namespace iText.IO.Font {
                 }
                 foreach (String file in files) {
                     try {
-                        String suffix = file.Length < 4 ? null : file.Substring(file.Length - 4).ToLowerInvariant();
+                        String suffix = file.Length < 4 ? null : StringNormalizer.ToLowerCase(file.Substring(file.Length - 4));
                         if (".afm".Equals(suffix) || ".pfm".Equals(suffix)) {
                             /* Only register Type 1 fonts with matching .pfb files */
                             String pfb = file.JSubstring(0, file.Length - 4) + ".pfb";
@@ -383,7 +388,7 @@ namespace iText.IO.Font {
         /// <param name="fontname">the name of the font that has to be checked.</param>
         /// <returns>true if the font is found</returns>
         internal virtual bool IsRegisteredFont(String fontname) {
-            return fontNames.ContainsKey(fontname.ToLowerInvariant());
+            return fontNames.ContainsKey(StringNormalizer.ToLowerCase(fontname));
         }
 //\endcond
 

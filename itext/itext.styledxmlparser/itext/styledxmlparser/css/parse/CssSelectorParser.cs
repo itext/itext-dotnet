@@ -154,7 +154,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// <param name="source">is the original source</param>
         private static void AppendPseudoSelector(IList<ICssSelectorItem> selectorItems, String pseudoSelector, Matcher
              match, String source) {
-            pseudoSelector = pseudoSelector.ToLowerInvariant();
+            pseudoSelector = StringNormalizer.ToLowerCase(pseudoSelector);
             pseudoSelector = HandleBracketsOfPseudoSelector(pseudoSelector, match, source);
             /*
             This :: notation is introduced by the current document in order to establish a discrimination between

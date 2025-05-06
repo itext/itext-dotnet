@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 using iText.Kernel.XMP.Properties;
@@ -297,7 +298,7 @@ namespace iText.Kernel.Pdf {
         /// if there is no PDF/A conformance for passed parameters
         /// </returns>
         public static PdfAConformance GetAConformance(String part, String level) {
-            String lowLetter = level == null ? null : level.ToUpperInvariant();
+            String lowLetter = StringNormalizer.ToUpperCase(level);
             bool aLevel = "A".Equals(lowLetter);
             bool bLevel = "B".Equals(lowLetter);
             bool uLevel = "U".Equals(lowLetter);

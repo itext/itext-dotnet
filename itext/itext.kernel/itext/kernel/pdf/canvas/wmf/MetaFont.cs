@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 
@@ -187,7 +188,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             catch (ArgumentException) {
                 faceName = iText.Commons.Utils.JavaUtil.GetStringForBytes(name, 0, k);
             }
-            faceName = faceName.ToLowerInvariant();
+            faceName = StringNormalizer.ToLowerCase(faceName);
         }
 
         /// <summary>Returns the Font.</summary>

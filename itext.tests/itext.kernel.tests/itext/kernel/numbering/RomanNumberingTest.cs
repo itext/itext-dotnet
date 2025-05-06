@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Numbering {
@@ -48,8 +49,9 @@ namespace iText.Kernel.Numbering {
         [NUnit.Framework.Test]
         public virtual void ToRomanTest() {
             String expected = "dcclvi";
-            NUnit.Framework.Assert.AreEqual(expected.ToUpperInvariant(), RomanNumbering.ToRoman(756, true));
-            NUnit.Framework.Assert.AreEqual(expected.ToLowerInvariant(), RomanNumbering.ToRoman(756, false));
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToUpperCase(expected), RomanNumbering.ToRoman(756, true));
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase(expected), RomanNumbering.ToRoman(756, false)
+                );
         }
 
         [NUnit.Framework.Test]

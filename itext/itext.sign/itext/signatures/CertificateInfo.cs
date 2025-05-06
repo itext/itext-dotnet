@@ -29,6 +29,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 
 namespace iText.Signatures {
@@ -173,7 +174,7 @@ namespace iText.Signatures {
                     }
                     /*MessageLocalization.getComposedMessage("badly.formated
                     .directory.string")*/
-                    String id = token.JSubstring(0, index).ToUpperInvariant();
+                    String id = StringNormalizer.ToUpperCase(token.JSubstring(0, index));
                     String value = token.Substring(index + 1);
                     IList<String> vs = values.Get(id);
                     if (vs == null) {

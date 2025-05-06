@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Css.Media {
@@ -50,9 +51,9 @@ namespace iText.StyledXmlParser.Css.Media {
         /// <param name="feature">the feature</param>
         /// <param name="value">the value</param>
         internal MediaExpression(String feature, String value) {
-            this.feature = feature.Trim().ToLowerInvariant();
+            this.feature = StringNormalizer.Normalize(feature);
             if (value != null) {
-                this.value = value.Trim().ToLowerInvariant();
+                this.value = StringNormalizer.Normalize(value);
             }
             String minPref = MediaRuleConstants.MIN + "-";
             String maxPref = MediaRuleConstants.MAX + "-";

@@ -73,7 +73,7 @@ namespace iText.Layout.Font {
             }
             foreach (String file in files) {
                 try {
-                    String suffix = file.Length < 4 ? null : file.Substring(file.Length - 4).ToLowerInvariant();
+                    String suffix = file.Length < 4 ? null : StringNormalizer.ToLowerCase(file.Substring(file.Length - 4));
                     if (".afm".Equals(suffix) || ".pfm".Equals(suffix)) {
                         // Add only Type 1 fonts with matching .pfb files.
                         String pfb = file.JSubstring(0, file.Length - 4) + ".pfb";
@@ -513,7 +513,7 @@ namespace iText.Layout.Font {
             if (fontName == null || fontName.Length == 0) {
                 return false;
             }
-            fontName = fontName.ToLowerInvariant();
+            fontName = StringNormalizer.ToLowerCase(fontName);
             foreach (FontInfo fi in GetFonts()) {
                 if (fontName.Equals(fi.GetDescriptor().GetFullNameLowerCase()) || fontName.Equals(fi.GetDescriptor().GetFontNameLowerCase
                     ())) {
@@ -539,7 +539,7 @@ namespace iText.Layout.Font {
             if (fontName == null || fontName.Length == 0) {
                 return JavaCollectionsUtil.EmptyList<FontInfo>();
             }
-            fontName = fontName.ToLowerInvariant();
+            fontName = StringNormalizer.ToLowerCase(fontName);
             IList<FontInfo> list = new List<FontInfo>();
             foreach (FontInfo fi in GetFonts()) {
                 if (fontName.Equals(fi.GetDescriptor().GetFullNameLowerCase()) || fontName.Equals(fi.GetDescriptor().GetFontNameLowerCase

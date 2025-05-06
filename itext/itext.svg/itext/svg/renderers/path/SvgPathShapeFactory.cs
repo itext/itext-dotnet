@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Svg.Renderers.Path.Impl;
 
 namespace iText.Svg.Renderers.Path {
@@ -52,8 +53,8 @@ namespace iText.Svg.Renderers.Path {
         ///     </returns>
         public static int GetArgumentCount(String name) {
             IDictionary<String, int?> map = new PathShapeMapper().GetArgumentCount();
-            if (map.ContainsKey(name.ToUpperInvariant())) {
-                return (int)map.Get(name.ToUpperInvariant());
+            if (map.ContainsKey(StringNormalizer.ToUpperCase(name))) {
+                return (int)map.Get(StringNormalizer.ToUpperCase(name));
             }
             return -1;
         }

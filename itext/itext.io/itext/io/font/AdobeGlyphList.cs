@@ -99,7 +99,7 @@ namespace iText.IO.Font {
             if (names2unicode.ContainsKey(name)) {
                 v = (int)names2unicode.Get(name);
             }
-            if (v == -1 && name.Length == 7 && name.ToLowerInvariant().StartsWith("uni")) {
+            if (v == -1 && name.Length == 7 && StringNormalizer.ToLowerCase(name).StartsWith("uni")) {
                 try {
                     return Convert.ToInt32(name.Substring(3), 16);
                 }

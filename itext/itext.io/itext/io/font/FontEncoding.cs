@@ -384,7 +384,7 @@ namespace iText.IO.Font {
         /// <param name="enc">the encoding to be normalized</param>
         /// <returns>the normalized encoding</returns>
         protected internal static String NormalizeEncoding(String enc) {
-            String tmp = enc == null ? "" : enc.ToLowerInvariant();
+            String tmp = enc == null ? "" : StringNormalizer.ToLowerCase(enc);
             switch (tmp) {
                 case "":
                 case "winansi":

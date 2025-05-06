@@ -149,7 +149,7 @@ namespace iText.Svg.Utils {
             String vbString = svgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (vbString == null) {
-                vbString = svgRenderer.GetAttribute(SvgConstants.Attributes.VIEWBOX.ToLowerInvariant());
+                vbString = svgRenderer.GetAttribute(StringNormalizer.ToLowerCase(SvgConstants.Attributes.VIEWBOX));
             }
             float[] values = null;
             if (vbString != null) {
