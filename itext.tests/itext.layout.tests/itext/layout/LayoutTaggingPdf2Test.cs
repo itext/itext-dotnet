@@ -149,12 +149,14 @@ namespace iText.Layout {
             html4Ns.AddNamespaceRoleMapping(LayoutTaggingPdf2Test.HtmlRoles.center, LayoutTaggingPdf2Test.HtmlRoles.center
                 , xhtmlNs);
             // test some tricky mapping cases
-            pdfDocument.GetStructTreeRoot().AddRoleMapping(h9, h1);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping(h1, h1);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping("Center", StandardRoles.P);
-            pdfDocument.GetStructTreeRoot().AddRoleMapping("I", StandardRoles.SPAN);
-            pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(null);
-            pdfDocument.GetTagStructureContext().GetAutoTaggingPointer().SetNamespaceForNewTags(xhtmlNs);
+            PdfStructTreeRoot structTreeRoot = pdfDocument.GetStructTreeRoot();
+            structTreeRoot.AddRoleMapping(h9, h1);
+            structTreeRoot.AddRoleMapping(h1, h1);
+            structTreeRoot.AddRoleMapping("Center", StandardRoles.P);
+            structTreeRoot.AddRoleMapping("I", StandardRoles.SPAN);
+            TagStructureContext tagStructureContext = pdfDocument.GetTagStructureContext();
+            tagStructureContext.SetDocumentDefaultNamespace(null);
+            tagStructureContext.GetAutoTaggingPointer().SetNamespaceForNewTags(xhtmlNs);
             Document document = new Document(pdfDocument);
             AddContentToDocInCustomNs(pdfDocument, null, xhtmlNs, html4Ns, h1, document);
             document.Close();

@@ -1330,9 +1330,9 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             iText.StyledXmlParser.Jsoup.Parser.Parser parser = iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().
                 SetTrackErrors(5);
             parser.ParseInput(html, "");
-            NUnit.Framework.Assert.AreEqual(1, parser.GetErrors().Count);
-            NUnit.Framework.Assert.AreEqual("18: Tag cannot be self closing; not a void tag", parser.GetErrors()[0].ToString
-                ());
+            ParseErrorList errorList = parser.GetErrors();
+            NUnit.Framework.Assert.AreEqual(1, errorList.Count);
+            NUnit.Framework.Assert.AreEqual("18: Tag cannot be self closing; not a void tag", errorList[0].ToString());
             NUnit.Framework.Assert.IsFalse(iText.StyledXmlParser.Jsoup.Jsoup.IsValid(html, Safelist.Relaxed()));
             String clean = iText.StyledXmlParser.Jsoup.Jsoup.Clean(html, Safelist.Relaxed());
             NUnit.Framework.Assert.AreEqual("<p>test</p> <div></div> <div> Two </div>", iText.StyledXmlParser.Jsoup.Internal.StringUtil

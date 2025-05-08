@@ -27,6 +27,7 @@ using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
@@ -106,9 +107,10 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            PageSize defaultSize = doc.GetDefaultPageSize();
+            canvas.MoveTo(defaultSize.GetLeft(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetTop());
             canvas.Fill();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT
@@ -118,7 +120,6 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest4() {
             String outPdf = destinationFolder + "pdfA2b_colorCheckTest4.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2b_colorCheckTest4.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
             Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -127,14 +128,15 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SetFillColor(ColorConstants.BLUE);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            PageSize defaultSize = doc.GetDefaultPageSize();
+            canvas.MoveTo(defaultSize.GetLeft(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetTop());
             canvas.Fill();
             canvas.SetFillColor(DeviceGray.BLACK);
-            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.MoveTo(defaultSize.GetLeft(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetTop());
             canvas.Fill();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.DEVICECMYK_MAY_BE_USED_ONLY_IF_THE_FILE_HAS_A_CMYK_PDFA_OUTPUT_INTENT_OR_DEFAULTCMYK_IN_USAGE_CONTEXT

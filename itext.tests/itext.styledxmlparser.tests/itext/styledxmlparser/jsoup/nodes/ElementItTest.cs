@@ -5,6 +5,7 @@ It may contain modifications beyond the original version.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
@@ -30,10 +31,10 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual(0, doc.Body().ChildNodes().Count);
             // but on a fresh look, all gone
             ((iText.StyledXmlParser.Jsoup.Nodes.Element)doc.Body().Empty()).AppendChild(wrapper);
-            iText.StyledXmlParser.Jsoup.Nodes.Element wrapperAcutal = doc.Body().Children()[0];
-            NUnit.Framework.Assert.AreEqual(wrapper, wrapperAcutal);
-            NUnit.Framework.Assert.AreEqual("El-1", wrapperAcutal.Children()[0].Text());
-            NUnit.Framework.Assert.AreEqual("El-" + rows, wrapperAcutal.Children()[rows - 1].Text());
+            iText.StyledXmlParser.Jsoup.Nodes.Element wrapperActual = doc.Body().Children()[0];
+            NUnit.Framework.Assert.AreEqual(wrapper, wrapperActual);
+            NUnit.Framework.Assert.AreEqual("El-1", wrapperActual.Children()[0].Text());
+            NUnit.Framework.Assert.AreEqual("El-" + rows, wrapperActual.Children()[rows - 1].Text());
             NUnit.Framework.Assert.IsTrue(runtime <= 1000);
         }
 
@@ -51,21 +52,23 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             wrapper.Append("<p>Prior Content</p>");
             wrapper.Append("<p>End Content</p>");
             NUnit.Framework.Assert.AreEqual(2, wrapper.childNodes.Count);
-            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> childNodes = doc.Body().ChildNodes();
+            iText.StyledXmlParser.Jsoup.Nodes.Element docBody = doc.Body();
+            IList<iText.StyledXmlParser.Jsoup.Nodes.Node> childNodes = docBody.ChildNodes();
             wrapper.InsertChildren(1, childNodes);
             long runtime = (System.DateTime.Now.Ticks - start) / 1000000;
             NUnit.Framework.Assert.AreEqual(rows + 2, wrapper.childNodes.Count);
             NUnit.Framework.Assert.AreEqual(rows, childNodes.Count);
             // child nodes is a wrapper, so still there
-            NUnit.Framework.Assert.AreEqual(0, doc.Body().ChildNodes().Count);
+            NUnit.Framework.Assert.AreEqual(0, docBody.ChildNodes().Count);
             // but on a fresh look, all gone
-            ((iText.StyledXmlParser.Jsoup.Nodes.Element)doc.Body().Empty()).AppendChild(wrapper);
+            ((iText.StyledXmlParser.Jsoup.Nodes.Element)docBody.Empty()).AppendChild(wrapper);
             iText.StyledXmlParser.Jsoup.Nodes.Element wrapperAcutal = doc.Body().Children()[0];
             NUnit.Framework.Assert.AreEqual(wrapper, wrapperAcutal);
-            NUnit.Framework.Assert.AreEqual("Prior Content", wrapperAcutal.Children()[0].Text());
-            NUnit.Framework.Assert.AreEqual("El-1", wrapperAcutal.Children()[1].Text());
-            NUnit.Framework.Assert.AreEqual("El-" + rows, wrapperAcutal.Children()[rows].Text());
-            NUnit.Framework.Assert.AreEqual("End Content", wrapperAcutal.Children()[rows + 1].Text());
+            Elements children = wrapperAcutal.Children();
+            NUnit.Framework.Assert.AreEqual("Prior Content", children[0].Text());
+            NUnit.Framework.Assert.AreEqual("El-1", children[1].Text());
+            NUnit.Framework.Assert.AreEqual("El-" + rows, children[rows].Text());
+            NUnit.Framework.Assert.AreEqual("End Content", children[rows + 1].Text());
             NUnit.Framework.Assert.IsTrue(runtime <= 1000);
         }
     }

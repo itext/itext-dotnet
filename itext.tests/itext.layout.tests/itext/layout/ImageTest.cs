@@ -768,8 +768,9 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             ImageData id = ImageDataFactory.Create(imgPath);
-            ImageData idAsTiff = ImageDataFactory.CreateTiff(UrlUtil.ToURL(imgPath), true, 1, true);
-            ImageData idAsTiffFalse = ImageDataFactory.CreateTiff(UrlUtil.ToURL(imgPath), false, 1, false);
+            Uri imageURL = UrlUtil.ToURL(imgPath);
+            ImageData idAsTiff = ImageDataFactory.CreateTiff(imageURL, true, 1, true);
+            ImageData idAsTiffFalse = ImageDataFactory.CreateTiff(imageURL, false, 1, false);
             document.Add(new iText.Layout.Element.Image(id));
             document.Add(new iText.Layout.Element.Image(idAsTiff));
             document.Add(new iText.Layout.Element.Image(idAsTiffFalse));

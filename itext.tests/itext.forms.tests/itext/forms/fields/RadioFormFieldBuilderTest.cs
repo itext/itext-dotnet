@@ -236,20 +236,21 @@ namespace iText.Forms.Fields {
             , PdfDocument pdfDoc, bool isAddedToRadioGroup) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             IList<PdfWidgetAnnotation> widgets = new List<PdfWidgetAnnotation>();
-            if (radioButtonFormField.GetWidget() != null) {
-                widgets.Add(radioButtonFormField.GetWidget());
-            }
-            // if a rectangle is assigned in the builder than we should check it
-            if (radioButtonFormField.GetWidget().GetRectangle() != null && radioButtonFormField.GetWidget().GetRectangle
-                ().ToRectangle() != null) {
-                NUnit.Framework.Assert.AreEqual(1, widgets.Count);
-                PdfWidgetAnnotation annotation = widgets[0];
-                NUnit.Framework.Assert.IsTrue(DUMMY_RECTANGLE.EqualsWithEpsilon(annotation.GetRectangle().ToRectangle()));
-                PutIfAbsent(expectedDictionary, PdfName.Rect, new PdfArray(DUMMY_RECTANGLE));
-                // if the radiobutton has been added to the radiogroup we expect the AP to be generated
-                if (isAddedToRadioGroup) {
-                    PutIfAbsent(expectedDictionary, PdfName.AP, radioButtonFormField.GetPdfObject().GetAsDictionary(PdfName.AP
-                        ));
+            PdfWidgetAnnotation buttonWidget = radioButtonFormField.GetWidget();
+            if (buttonWidget != null) {
+                widgets.Add(buttonWidget);
+                // if a rectangle is assigned in the builder than we should check it
+                PdfArray buttonWidgetRectangle = buttonWidget.GetRectangle();
+                if (buttonWidgetRectangle != null && buttonWidgetRectangle.ToRectangle() != null) {
+                    NUnit.Framework.Assert.AreEqual(1, widgets.Count);
+                    PdfWidgetAnnotation annotation = widgets[0];
+                    NUnit.Framework.Assert.IsTrue(DUMMY_RECTANGLE.EqualsWithEpsilon(annotation.GetRectangle().ToRectangle()));
+                    PutIfAbsent(expectedDictionary, PdfName.Rect, new PdfArray(DUMMY_RECTANGLE));
+                    // if the radiobutton has been added to the radiogroup we expect the AP to be generated
+                    if (isAddedToRadioGroup) {
+                        PutIfAbsent(expectedDictionary, PdfName.AP, radioButtonFormField.GetPdfObject().GetAsDictionary(PdfName.AP
+                            ));
+                    }
                 }
             }
             if (radioButtonFormField.pdfConformance != null && radioButtonFormField.pdfConformance.IsPdfAOrUa()) {

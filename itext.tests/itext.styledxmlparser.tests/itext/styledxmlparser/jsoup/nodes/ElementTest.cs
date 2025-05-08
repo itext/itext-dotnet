@@ -634,12 +634,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>Hello</p><p>There</p></div>");
             iText.StyledXmlParser.Jsoup.Nodes.Element p = doc.Select("p").First();
             p.Wrap("<div class='head'></div>");
+            iText.StyledXmlParser.Jsoup.Nodes.Element docBody = doc.Body();
             NUnit.Framework.Assert.AreEqual("<div><div class=\"head\"><p>Hello</p></div><p>There</p></div>", TextUtil.
-                StripNewlines(doc.Body().Html()));
+                StripNewlines(docBody.Html()));
             iText.StyledXmlParser.Jsoup.Nodes.Element ret = (iText.StyledXmlParser.Jsoup.Nodes.Element)p.Wrap("<div><div class=foo></div><p>What?</p></div>"
                 );
-            NUnit.Framework.Assert.AreEqual("<div><div class=\"head\"><div><div class=\"foo\"><p>Hello</p></div><p>What?</p></div></div><p>There</p></div>"
-                , TextUtil.StripNewlines(doc.Body().Html()));
+            NUnit.Framework.Assert.AreEqual("<div><div class=\"head\"><div><div class=\"foo\"><p>Hello</p></div>" + "<p>What?</p></div></div><p>There</p></div>"
+                , TextUtil.StripNewlines(docBody.Html()));
             NUnit.Framework.Assert.AreEqual(ret, p);
         }
 
@@ -801,14 +802,15 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             clone.Append("<span>Three");
             NUnit.Framework.Assert.AreEqual("<p><span>Two</span><span>Three</span></p>", TextUtil.StripNewlines(clone.
                 OuterHtml()));
-            NUnit.Framework.Assert.AreEqual("<div><p>One</p><p><span>Two</span></p></div>", TextUtil.StripNewlines(doc
-                .Body().Html()));
+            iText.StyledXmlParser.Jsoup.Nodes.Element docBody = doc.Body();
+            NUnit.Framework.Assert.AreEqual("<div><p>One</p><p><span>Two</span></p></div>", TextUtil.StripNewlines(docBody
+                .Html()));
             // not modified
-            doc.Body().AppendChild(clone);
+            docBody.AppendChild(clone);
             // adopt
             NUnit.Framework.Assert.IsNotNull(clone.Parent());
             NUnit.Framework.Assert.AreEqual("<div><p>One</p><p><span>Two</span></p></div><p><span>Two</span><span>Three</span></p>"
-                , TextUtil.StripNewlines(doc.Body().Html()));
+                , TextUtil.StripNewlines(docBody.Html()));
         }
 
         [NUnit.Framework.Test]
@@ -1641,13 +1643,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             AtomicLong counter = new AtomicLong(0);
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Traverse(new 
-                _NodeVisitor_1745(counter));
+                _NodeVisitor_1749(counter));
             NUnit.Framework.Assert.AreEqual(7, counter.Get());
             NUnit.Framework.Assert.AreEqual(div2, div);
         }
 
-        private sealed class _NodeVisitor_1745 : NodeVisitor {
-            public _NodeVisitor_1745(AtomicLong counter) {
+        private sealed class _NodeVisitor_1749 : NodeVisitor {
+            public _NodeVisitor_1749(AtomicLong counter) {
                 this.counter = counter;
             }
 
@@ -1667,12 +1669,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>One<p>Two<p>Three");
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Filter(new 
-                _NodeFilter_1767());
+                _NodeFilter_1771());
             NUnit.Framework.Assert.AreSame(div, div2);
         }
 
-        private sealed class _NodeFilter_1767 : NodeFilter {
-            public _NodeFilter_1767() {
+        private sealed class _NodeFilter_1771 : NodeFilter {
+            public _NodeFilter_1771() {
             }
 
             public override NodeFilter.FilterResult Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
@@ -1847,11 +1849,11 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
         public virtual void MoveChildrenToOuter() {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>One<p>Two<p>Three</div><div></div>");
             Elements divs = doc.Select("div");
-            iText.StyledXmlParser.Jsoup.Nodes.Element a = divs[0];
-            iText.StyledXmlParser.Jsoup.Nodes.Element b = doc.Body();
-            b.InsertChildren(-1, a.ChildNodes());
-            NUnit.Framework.Assert.AreEqual("<div></div>\n<div></div>\n<p>One</p>\n<p>Two</p>\n<p>Three</p>", doc.Body
-                ().Html());
+            iText.StyledXmlParser.Jsoup.Nodes.Element firstDiv = divs[0];
+            iText.StyledXmlParser.Jsoup.Nodes.Element body = doc.Body();
+            body.InsertChildren(-1, firstDiv.ChildNodes());
+            NUnit.Framework.Assert.AreEqual("<div></div>\n<div></div>\n<p>One</p>\n<p>Two</p>\n<p>Three</p>", body.Html
+                ());
         }
 
         [NUnit.Framework.Test]

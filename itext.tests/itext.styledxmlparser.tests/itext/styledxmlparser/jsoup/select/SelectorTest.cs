@@ -490,13 +490,14 @@ namespace iText.StyledXmlParser.Jsoup.Select {
             NUnit.Framework.Assert.AreEqual("0", divs3[0].Id());
             NUnit.Framework.Assert.AreEqual("1", divs3[1].Id());
             NUnit.Framework.Assert.AreEqual("2", divs3[2].Id());
-            Elements els1 = doc.Body().Select(":has(p)");
+            iText.StyledXmlParser.Jsoup.Nodes.Element body = doc.Body();
+            Elements els1 = body.Select(":has(p)");
             NUnit.Framework.Assert.AreEqual(3, els1.Count);
             // body, div, dib
             NUnit.Framework.Assert.AreEqual("body", els1.First().TagName());
             NUnit.Framework.Assert.AreEqual("0", els1[1].Id());
             NUnit.Framework.Assert.AreEqual("2", els1[2].Id());
-            Elements els2 = doc.Body().Select(":has(> span)");
+            Elements els2 = body.Select(":has(> span)");
             NUnit.Framework.Assert.AreEqual(2, els2.Count);
             // p, div
             NUnit.Framework.Assert.AreEqual("p", els2.First().TagName());

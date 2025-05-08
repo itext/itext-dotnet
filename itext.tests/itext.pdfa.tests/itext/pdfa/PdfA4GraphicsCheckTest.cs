@@ -311,7 +311,6 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest5() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_colorCheckTest5.pdf";
-            String cmpPdf = CMP_FOLDER + "cmp_pdfA4_colorCheckTest5.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -323,14 +322,15 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(ColorConstants.BLUE);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            PageSize defaultSize = doc.GetDefaultPageSize();
+            canvas.MoveTo(defaultSize.GetLeft(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetTop());
             canvas.Fill();
             canvas.SetFillColor(DeviceGray.BLACK);
-            canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
-            canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetTop());
+            canvas.MoveTo(defaultSize.GetLeft(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetBottom());
+            canvas.LineTo(defaultSize.GetRight(), defaultSize.GetTop());
             canvas.Fill();
             // Here we use RGB and CMYK at the same time. And only page output intent is taken into account not both.
             // So it throws on device RGB color.

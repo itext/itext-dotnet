@@ -343,11 +343,11 @@ namespace iText.Forms {
                 firstField.AddKid(mergedField);
                 acroForm.AddField(firstField);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
-                NUnit.Framework.Assert.AreEqual(1, acroForm.GetField("root").GetKids().Size());
-                NUnit.Framework.Assert.IsTrue(PdfFormAnnotationUtil.IsPureWidgetOrMergedField((PdfDictionary)acroForm.GetField
-                    ("root").GetKids().Get(0)));
-                NUnit.Framework.Assert.IsFalse(PdfFormAnnotationUtil.IsPureWidget((PdfDictionary)acroForm.GetField("root")
-                    .GetKids().Get(0)));
+                PdfArray kids = acroForm.GetField("root").GetKids();
+                NUnit.Framework.Assert.AreEqual(1, kids.Size());
+                PdfObject firstKid = kids.Get(0);
+                NUnit.Framework.Assert.IsTrue(PdfFormAnnotationUtil.IsPureWidgetOrMergedField((PdfDictionary)firstKid));
+                NUnit.Framework.Assert.IsFalse(PdfFormAnnotationUtil.IsPureWidget((PdfDictionary)firstKid));
             }
         }
 

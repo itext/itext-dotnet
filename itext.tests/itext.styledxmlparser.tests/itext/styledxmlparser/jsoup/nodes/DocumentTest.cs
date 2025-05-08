@@ -344,8 +344,9 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
 
         private Document CreateHtmlDocument(String charset) {
             Document doc = Document.CreateShell("");
-            doc.Head().AppendElement("meta").Attr("charset", charset);
-            doc.Head().AppendElement("meta").Attr("name", "charset").Attr("content", charset);
+            iText.StyledXmlParser.Jsoup.Nodes.Element docHead = doc.Head();
+            docHead.AppendElement("meta").Attr("charset", charset);
+            docHead.AppendElement("meta").Attr("name", "charset").Attr("content", charset);
             return doc;
         }
 

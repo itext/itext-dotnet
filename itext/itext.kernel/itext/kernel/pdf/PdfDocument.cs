@@ -2372,9 +2372,10 @@ namespace iText.Kernel.Pdf {
             if (page.IsFlushed()) {
                 throw new PdfException(KernelExceptionMessageConstant.FLUSHED_PAGE_CANNOT_BE_ADDED_OR_INSERTED, page);
             }
-            if (page.GetDocument() != null && this != page.GetDocument()) {
+            iText.Kernel.Pdf.PdfDocument document = page.GetDocument();
+            if (document != null && this != document) {
                 throw new PdfException(KernelExceptionMessageConstant.PAGE_CANNOT_BE_ADDED_TO_DOCUMENT_BECAUSE_IT_BELONGS_TO_ANOTHER_DOCUMENT
-                    ).SetMessageParams(page.GetDocument(), page.GetDocument().GetPageNumber(page), this);
+                    ).SetMessageParams(document, document.GetPageNumber(page), this);
             }
             catalog.GetPageTree().AddPage(index, page);
         }
