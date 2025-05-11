@@ -103,7 +103,7 @@ namespace iText.Kernel.XMP.Impl {
                     }
                 }
             }
-            return read > 0 || available ? read : -1;
+            return read > 0 || available ? read : XMPUtilsImpl.EofReadBytesValue();
         }
 
         /// <summary>Processes numeric escaped chars to find out if they are a control character.</summary>

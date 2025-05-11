@@ -674,6 +674,7 @@ namespace iText.Kernel.Pdf {
                     pdfConformance = PdfConformance.GetConformance(xmpMeta);
                 }
                 catch (XMPException) {
+                    pdfConformance = PdfConformance.PDF_NONE_CONFORMANCE;
                 }
             }
             return pdfConformance;

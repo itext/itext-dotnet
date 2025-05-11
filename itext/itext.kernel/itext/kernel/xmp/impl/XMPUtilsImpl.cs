@@ -57,6 +57,17 @@ namespace iText.Kernel.XMP.Impl
 		{
 		}
 
+		/// <summary>
+		/// Return value when eof encountered of <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>.
+		/// </summary>
+		/// <returns>
+		/// platform dependent eof read value (0 for C#)
+		/// </returns>
+		public static int EofReadBytesValue()
+		{
+			return 0;
+		}
+
 		// EMPTY
 		/// <seealso cref="iText.Kernel.XMP.XMPUtils.CatenateArrayItems(iText.Kernel.XMP.XMPMeta, System.String, System.String, System.String, System.String, bool)
 		/// 	"/>

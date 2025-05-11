@@ -75,7 +75,7 @@ namespace iText.Commons.Utils {
 		/// <param name="off">   Offset at which to start writing characters </param>
 		/// <param name="len">   Maximum number of characters to read
 		/// </param>
-		/// <returns>     The number of characters read, or -1 if the end of the
+		/// <returns>     The number of characters read, or 0 if the end of the
 		///             stream has been reached
 		/// </returns>
 		public override int Read(char[] cbuf, int off, int len) {

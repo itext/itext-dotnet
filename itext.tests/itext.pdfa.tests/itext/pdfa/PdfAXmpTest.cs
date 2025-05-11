@@ -29,6 +29,7 @@ using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -109,6 +110,34 @@ namespace iText.Pdfa {
                     NUnit.Framework.Assert.AreEqual(Count(expectedRdf, (byte)'<'), Count(rdf, (byte)'<'));
                     NUnit.Framework.Assert.IsNull(new CompareTool().CompareXmp(cmpFile, outFile, true));
                 }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithControlCharactersInXMPMetadata() {
+            String src = sourceFolder + "pdfs/docWithControlCharactersInXmp.pdf";
+            using (PdfADocument document = new PdfADocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new 
+                StampingProperties())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_A_3A, document.GetConformance());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithInvalidConformance() {
+            String src = sourceFolder + "pdfs/docWithInvalidConformance.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new StampingProperties
+                ())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_NONE_CONFORMANCE, document.GetConformance());
+            }
+        }
+
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithInvalidXMPMetadata() {
+            String src = sourceFolder + "pdfs/docWithInvalidMetadata.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new StampingProperties
+                ())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_NONE_CONFORMANCE, document.GetConformance());
             }
         }
 
